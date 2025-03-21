@@ -2,17 +2,23 @@ import {styled} from '@mui/material'
 import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
-import {
-  ApiV1,
-  AuthTokenStorageKey,
-  ContentWrapper,
-  SubscriptionListContainer,
-  useWebsiteBuilder
-} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {ComponentProps} from 'react'
+import {SubscriptionListContainer} from '@wepublish/membership/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  LoginWithJwtDocument,
+  MeDocument,
+  NavigationListDocument,
+  SubscriptionsDocument,
+  UserSession
+} from '@wepublish/website/api'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -47,28 +53,24 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (ctx: NextPageContext) =
   }
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
     const data = await client.mutate({
-      mutation: ApiV1.LoginWithJwtDocument,
+      mutation: LoginWithJwtDocument,
       variables: {
         jwt: ctx.query.jwt
       }
     })
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(data.data.createSessionWithJWT as ApiV1.UserSession),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict'
-      }
-    )
+    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
+      req: ctx.req,
+      res: ctx.res,
+      expires: new Date(data.data.createSessionWithJWT.expiresAt),
+      sameSite: 'strict'
+    })
   }
 
   const sessionProps = getSessionTokenProps(ctx)
@@ -76,18 +78,18 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (ctx: NextPageContext) =
   if (sessionProps.sessionToken) {
     await Promise.all([
       client.query({
-        query: ApiV1.MeDocument
+        query: MeDocument
       }),
       client.query({
-        query: ApiV1.SubscriptionsDocument
+        query: SubscriptionsDocument
       }),
       client.query({
-        query: ApiV1.NavigationListDocument
+        query: NavigationListDocument
       })
     ])
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, sessionProps)
+  const props = addClientCacheToV1Props(client, sessionProps)
 
   return props
 }

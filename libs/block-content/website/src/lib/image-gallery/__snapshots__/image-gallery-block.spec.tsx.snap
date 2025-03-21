@@ -14,7 +14,7 @@ exports[`Image Gallery Block should render Default 1`] = `
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -23,18 +23,18 @@ exports[`Image Gallery Block should render Default 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?0 1200w,
-https://unsplash.it/1000/400?0 1000w,
-https://unsplash.it/800/400?0 800w,
-https://unsplash.it/500/300?0 500w,
-https://unsplash.it/300/200?0 300w,
-https://unsplash.it/200/100?0 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -42,7 +42,7 @@ https://unsplash.it/200/100?0 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -51,18 +51,18 @@ https://unsplash.it/200/100?0 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?1 1200w,
-https://unsplash.it/1000/400?1 1000w,
-https://unsplash.it/800/400?1 800w,
-https://unsplash.it/500/300?1 500w,
-https://unsplash.it/300/200?1 300w,
-https://unsplash.it/200/100?1 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -70,7 +70,7 @@ https://unsplash.it/200/100?1 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -79,18 +79,18 @@ https://unsplash.it/200/100?1 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?2 1200w,
-https://unsplash.it/1000/400?2 1000w,
-https://unsplash.it/800/400?2 800w,
-https://unsplash.it/500/300?2 500w,
-https://unsplash.it/300/200?2 300w,
-https://unsplash.it/200/100?2 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -98,7 +98,7 @@ https://unsplash.it/200/100?2 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -107,18 +107,18 @@ https://unsplash.it/200/100?2 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?3 1200w,
-https://unsplash.it/1000/400?3 1000w,
-https://unsplash.it/800/400?3 800w,
-https://unsplash.it/500/300?3 500w,
-https://unsplash.it/300/200?3 300w,
-https://unsplash.it/200/100?3 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -126,7 +126,7 @@ https://unsplash.it/200/100?3 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -135,18 +135,18 @@ https://unsplash.it/200/100?3 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?4 1200w,
-https://unsplash.it/1000/400?4 1000w,
-https://unsplash.it/800/400?4 800w,
-https://unsplash.it/500/300?4 500w,
-https://unsplash.it/300/200?4 300w,
-https://unsplash.it/200/100?4 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -154,7 +154,7 @@ https://unsplash.it/200/100?4 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -163,18 +163,18 @@ https://unsplash.it/200/100?4 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?5 1200w,
-https://unsplash.it/1000/400?5 1000w,
-https://unsplash.it/800/400?5 800w,
-https://unsplash.it/500/300?5 500w,
-https://unsplash.it/300/200?5 300w,
-https://unsplash.it/200/100?5 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -182,7 +182,7 @@ https://unsplash.it/200/100?5 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -191,18 +191,18 @@ https://unsplash.it/200/100?5 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?6 1200w,
-https://unsplash.it/1000/400?6 1000w,
-https://unsplash.it/800/400?6 800w,
-https://unsplash.it/500/300?6 500w,
-https://unsplash.it/300/200?6 300w,
-https://unsplash.it/200/100?6 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -210,7 +210,7 @@ https://unsplash.it/200/100?6 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -219,18 +219,18 @@ https://unsplash.it/200/100?6 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?7 1200w,
-https://unsplash.it/1000/400?7 1000w,
-https://unsplash.it/800/400?7 800w,
-https://unsplash.it/500/300?7 500w,
-https://unsplash.it/300/200?7 300w,
-https://unsplash.it/200/100?7 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -238,7 +238,7 @@ https://unsplash.it/200/100?7 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -247,18 +247,18 @@ https://unsplash.it/200/100?7 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?8 1200w,
-https://unsplash.it/1000/400?8 1000w,
-https://unsplash.it/800/400?8 800w,
-https://unsplash.it/500/300?8 500w,
-https://unsplash.it/300/200?8 300w,
-https://unsplash.it/200/100?8 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -266,7 +266,7 @@ https://unsplash.it/200/100?8 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -275,18 +275,18 @@ https://unsplash.it/200/100?8 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?9 1200w,
-https://unsplash.it/1000/400?9 1000w,
-https://unsplash.it/800/400?9 800w,
-https://unsplash.it/500/300?9 500w,
-https://unsplash.it/300/200?9 300w,
-https://unsplash.it/200/100?9 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -294,7 +294,7 @@ https://unsplash.it/200/100?9 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -303,662 +303,18 @@ https://unsplash.it/200/100?9 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?10 1200w,
-https://unsplash.it/1000/400?10 1000w,
-https://unsplash.it/800/400?10 800w,
-https://unsplash.it/500/300?10 500w,
-https://unsplash.it/300/200?10 300w,
-https://unsplash.it/200/100?10 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-    </ul>
-  </figure>
-</DocumentFragment>
-`;
-
-exports[`Image Gallery Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <figure
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <ul
-      class="MuiImageList-root MuiImageList-standard emotion-2 emotion-3"
-      style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
-    >
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?0 1200w,
-https://unsplash.it/1000/400?0 1000w,
-https://unsplash.it/800/400?0 800w,
-https://unsplash.it/500/300?0 500w,
-https://unsplash.it/300/200?0 300w,
-https://unsplash.it/200/100?0 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?1 1200w,
-https://unsplash.it/1000/400?1 1000w,
-https://unsplash.it/800/400?1 800w,
-https://unsplash.it/500/300?1 500w,
-https://unsplash.it/300/200?1 300w,
-https://unsplash.it/200/100?1 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?2 1200w,
-https://unsplash.it/1000/400?2 1000w,
-https://unsplash.it/800/400?2 800w,
-https://unsplash.it/500/300?2 500w,
-https://unsplash.it/300/200?2 300w,
-https://unsplash.it/200/100?2 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?3 1200w,
-https://unsplash.it/1000/400?3 1000w,
-https://unsplash.it/800/400?3 800w,
-https://unsplash.it/500/300?3 500w,
-https://unsplash.it/300/200?3 300w,
-https://unsplash.it/200/100?3 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?4 1200w,
-https://unsplash.it/1000/400?4 1000w,
-https://unsplash.it/800/400?4 800w,
-https://unsplash.it/500/300?4 500w,
-https://unsplash.it/300/200?4 300w,
-https://unsplash.it/200/100?4 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?5 1200w,
-https://unsplash.it/1000/400?5 1000w,
-https://unsplash.it/800/400?5 800w,
-https://unsplash.it/500/300?5 500w,
-https://unsplash.it/300/200?5 300w,
-https://unsplash.it/200/100?5 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?6 1200w,
-https://unsplash.it/1000/400?6 1000w,
-https://unsplash.it/800/400?6 800w,
-https://unsplash.it/500/300?6 500w,
-https://unsplash.it/300/200?6 300w,
-https://unsplash.it/200/100?6 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?7 1200w,
-https://unsplash.it/1000/400?7 1000w,
-https://unsplash.it/800/400?7 800w,
-https://unsplash.it/500/300?7 500w,
-https://unsplash.it/300/200?7 300w,
-https://unsplash.it/200/100?7 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?8 1200w,
-https://unsplash.it/1000/400?8 1000w,
-https://unsplash.it/800/400?8 800w,
-https://unsplash.it/500/300?8 500w,
-https://unsplash.it/300/200?8 300w,
-https://unsplash.it/200/100?8 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?9 1200w,
-https://unsplash.it/1000/400?9 1000w,
-https://unsplash.it/800/400?9 800w,
-https://unsplash.it/500/300?9 500w,
-https://unsplash.it/300/200?9 300w,
-https://unsplash.it/200/100?9 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?10 1200w,
-https://unsplash.it/1000/400?10 1000w,
-https://unsplash.it/800/400?10 800w,
-https://unsplash.it/500/300?10 500w,
-https://unsplash.it/300/200?10 300w,
-https://unsplash.it/200/100?10 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-    </ul>
-  </figure>
-</DocumentFragment>
-`;
-
-exports[`Image Gallery Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <figure
-    class="emotion-0 emotion-1"
-  >
-    <ul
-      class="MuiImageList-root MuiImageList-standard emotion-2 emotion-3"
-      style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
-    >
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?0 1200w,
-https://unsplash.it/1000/400?0 1000w,
-https://unsplash.it/800/400?0 800w,
-https://unsplash.it/500/300?0 500w,
-https://unsplash.it/300/200?0 300w,
-https://unsplash.it/200/100?0 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?1 1200w,
-https://unsplash.it/1000/400?1 1000w,
-https://unsplash.it/800/400?1 800w,
-https://unsplash.it/500/300?1 500w,
-https://unsplash.it/300/200?1 300w,
-https://unsplash.it/200/100?1 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?2 1200w,
-https://unsplash.it/1000/400?2 1000w,
-https://unsplash.it/800/400?2 800w,
-https://unsplash.it/500/300?2 500w,
-https://unsplash.it/300/200?2 300w,
-https://unsplash.it/200/100?2 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?3 1200w,
-https://unsplash.it/1000/400?3 1000w,
-https://unsplash.it/800/400?3 800w,
-https://unsplash.it/500/300?3 500w,
-https://unsplash.it/300/200?3 300w,
-https://unsplash.it/200/100?3 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?4 1200w,
-https://unsplash.it/1000/400?4 1000w,
-https://unsplash.it/800/400?4 800w,
-https://unsplash.it/500/300?4 500w,
-https://unsplash.it/300/200?4 300w,
-https://unsplash.it/200/100?4 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?5 1200w,
-https://unsplash.it/1000/400?5 1000w,
-https://unsplash.it/800/400?5 800w,
-https://unsplash.it/500/300?5 500w,
-https://unsplash.it/300/200?5 300w,
-https://unsplash.it/200/100?5 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?6 1200w,
-https://unsplash.it/1000/400?6 1000w,
-https://unsplash.it/800/400?6 800w,
-https://unsplash.it/500/300?6 500w,
-https://unsplash.it/300/200?6 300w,
-https://unsplash.it/200/100?6 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?7 1200w,
-https://unsplash.it/1000/400?7 1000w,
-https://unsplash.it/800/400?7 800w,
-https://unsplash.it/500/300?7 500w,
-https://unsplash.it/300/200?7 300w,
-https://unsplash.it/200/100?7 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?8 1200w,
-https://unsplash.it/1000/400?8 1000w,
-https://unsplash.it/800/400?8 800w,
-https://unsplash.it/500/300?8 500w,
-https://unsplash.it/300/200?8 300w,
-https://unsplash.it/200/100?8 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?9 1200w,
-https://unsplash.it/1000/400?9 1000w,
-https://unsplash.it/800/400?9 800w,
-https://unsplash.it/500/300?9 500w,
-https://unsplash.it/300/200?9 300w,
-https://unsplash.it/200/100?9 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
-        </p>
-      </li>
-      <li
-        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
-        style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
-      >
-        <img
-          alt="An image description"
-          class="emotion-5 emotion-6"
-          loading="lazy"
-          sizes="(max-width: 400px) 200w,
-(max-width: 600px) 300w,
-(max-width: 1000px) 500w,
-(max-width: 1600px) 800w,
-(max-width: 2000px) 1000w,
-1200w"
-          srcset="https://unsplash.it/1200/400?10 1200w,
-https://unsplash.it/1000/400?10 1000w,
-https://unsplash.it/800/400?10 800w,
-https://unsplash.it/500/300?10 500w,
-https://unsplash.it/300/200?10 300w,
-https://unsplash.it/200/100?10 200w"
-          title="An image title"
-        />
-        <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
-        >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
     </ul>
@@ -980,7 +336,7 @@ exports[`Image Gallery Block should render WithoutCaption 1`] = `
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -989,18 +345,18 @@ exports[`Image Gallery Block should render WithoutCaption 1`] = `
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?0 1200w,
-https://unsplash.it/1000/400?0 1000w,
-https://unsplash.it/800/400?0 800w,
-https://unsplash.it/500/300?0 500w,
-https://unsplash.it/300/200?0 300w,
-https://unsplash.it/200/100?0 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-           (Bild: Foobar)
+           (Bild: Source)
         </p>
       </li>
       <li
@@ -1008,7 +364,7 @@ https://unsplash.it/200/100?0 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1017,18 +373,18 @@ https://unsplash.it/200/100?0 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?1 1200w,
-https://unsplash.it/1000/400?1 1000w,
-https://unsplash.it/800/400?1 800w,
-https://unsplash.it/500/300?1 500w,
-https://unsplash.it/300/200?1 300w,
-https://unsplash.it/200/100?1 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1036,7 +392,7 @@ https://unsplash.it/200/100?1 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1045,18 +401,18 @@ https://unsplash.it/200/100?1 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?2 1200w,
-https://unsplash.it/1000/400?2 1000w,
-https://unsplash.it/800/400?2 800w,
-https://unsplash.it/500/300?2 500w,
-https://unsplash.it/300/200?2 300w,
-https://unsplash.it/200/100?2 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1064,7 +420,7 @@ https://unsplash.it/200/100?2 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1073,18 +429,18 @@ https://unsplash.it/200/100?2 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?3 1200w,
-https://unsplash.it/1000/400?3 1000w,
-https://unsplash.it/800/400?3 800w,
-https://unsplash.it/500/300?3 500w,
-https://unsplash.it/300/200?3 300w,
-https://unsplash.it/200/100?3 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1092,7 +448,7 @@ https://unsplash.it/200/100?3 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1101,18 +457,18 @@ https://unsplash.it/200/100?3 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?4 1200w,
-https://unsplash.it/1000/400?4 1000w,
-https://unsplash.it/800/400?4 800w,
-https://unsplash.it/500/300?4 500w,
-https://unsplash.it/300/200?4 300w,
-https://unsplash.it/200/100?4 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1120,7 +476,7 @@ https://unsplash.it/200/100?4 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1129,18 +485,18 @@ https://unsplash.it/200/100?4 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?5 1200w,
-https://unsplash.it/1000/400?5 1000w,
-https://unsplash.it/800/400?5 800w,
-https://unsplash.it/500/300?5 500w,
-https://unsplash.it/300/200?5 300w,
-https://unsplash.it/200/100?5 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1148,7 +504,7 @@ https://unsplash.it/200/100?5 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1157,18 +513,18 @@ https://unsplash.it/200/100?5 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?6 1200w,
-https://unsplash.it/1000/400?6 1000w,
-https://unsplash.it/800/400?6 800w,
-https://unsplash.it/500/300?6 500w,
-https://unsplash.it/300/200?6 300w,
-https://unsplash.it/200/100?6 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-           (Bild: Foobar)
+           (Bild: Source)
         </p>
       </li>
       <li
@@ -1176,7 +532,7 @@ https://unsplash.it/200/100?6 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1185,18 +541,18 @@ https://unsplash.it/200/100?6 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?7 1200w,
-https://unsplash.it/1000/400?7 1000w,
-https://unsplash.it/800/400?7 800w,
-https://unsplash.it/500/300?7 500w,
-https://unsplash.it/300/200?7 300w,
-https://unsplash.it/200/100?7 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1204,7 +560,7 @@ https://unsplash.it/200/100?7 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1213,18 +569,18 @@ https://unsplash.it/200/100?7 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?8 1200w,
-https://unsplash.it/1000/400?8 1000w,
-https://unsplash.it/800/400?8 800w,
-https://unsplash.it/500/300?8 500w,
-https://unsplash.it/300/200?8 300w,
-https://unsplash.it/200/100?8 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1232,7 +588,7 @@ https://unsplash.it/200/100?8 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1241,18 +597,18 @@ https://unsplash.it/200/100?8 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?9 1200w,
-https://unsplash.it/1000/400?9 1000w,
-https://unsplash.it/800/400?9 800w,
-https://unsplash.it/500/300?9 500w,
-https://unsplash.it/300/200?9 300w,
-https://unsplash.it/200/100?9 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it 
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
       <li
@@ -1260,7 +616,7 @@ https://unsplash.it/200/100?9 200w"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
-          alt="An image description"
+          alt="DSC07717"
           class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
@@ -1269,18 +625,18 @@ https://unsplash.it/200/100?9 200w"
 (max-width: 1600px) 800w,
 (max-width: 2000px) 1000w,
 1200w"
-          srcset="https://unsplash.it/1200/400?10 1200w,
-https://unsplash.it/1000/400?10 1000w,
-https://unsplash.it/800/400?10 800w,
-https://unsplash.it/500/300?10 500w,
-https://unsplash.it/300/200?10 300w,
-https://unsplash.it/200/100?10 200w"
-          title="An image title"
+          srcset="https://unsplash.it/1200/400 1200w,
+https://unsplash.it/1000/400 1000w,
+https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
         />
         <p
           class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
-          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Foobar)
+          Image caption that is extremely long so it is bigger than the countainer that would display it (Bild: Source)
         </p>
       </li>
     </ul>

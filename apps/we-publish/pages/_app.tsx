@@ -1,12 +1,12 @@
 import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
-import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+import {RoutedAdminBar} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
@@ -91,7 +91,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
@@ -152,6 +152,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 </LogoLink>
               </FooterContainer>
             </Spacer>
+
+            <RoutedAdminBar />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
@@ -160,8 +162,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

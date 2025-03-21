@@ -10,6 +10,7 @@ import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker} from 'rsuite'
+import {PeerAvatar} from '../atoms/peer/peerAvatar'
 
 const ButtonWrapper = styled.div`
   margin: 10px;
@@ -62,7 +63,7 @@ export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerP
       virtualized
       cleanable
       value={list.map(author => author.id)}
-      data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
+      data={foundAuthors.map(author => ({value: author.id, label: author.name, peer: author.peer}))}
       placeholder={t('blocks.quote.author')}
       onSearch={searchKeyword => {
         setAuthorsFilter(searchKeyword)
@@ -75,6 +76,11 @@ export function AuthorCheckPicker({list, disabled, onChange}: AuthorCheckPickerP
         setAuthorsFilter('')
       }}
       block
+      renderMenuItem={(label, item) => {
+        const peer = foundAuthors.find(author => author.id === item.value)?.peer
+
+        return <PeerAvatar peer={peer}>{label}</PeerAvatar>
+      }}
       renderExtraFooter={() =>
         authorsFilter &&
         !data?.authors.nodes.length && (

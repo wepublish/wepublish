@@ -3,6 +3,7 @@ import {
   ApolloLink,
   ApolloProvider,
   DefaultOptions,
+  from,
   InMemoryCache,
   InMemoryCacheConfig,
   NormalizedCacheObject,
@@ -42,10 +43,7 @@ const createV1ApiClient = (
     new BatchHttpLink({uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20})
   )
 
-  const link = [...links, httpLink].reduce(
-    (links: ApolloLink | undefined, link) => (links ? links.concat(link) : link),
-    undefined
-  )
+  const link = from([...links, httpLink])
 
   let defaultOptions: DefaultOptions = {
     query: {

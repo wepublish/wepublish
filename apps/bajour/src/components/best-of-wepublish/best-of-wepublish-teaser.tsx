@@ -1,17 +1,16 @@
 import {css, styled} from '@mui/material'
-import {NextWepublishLink} from '@wepublish/utils/website'
 import {
-  ApiV1,
-  BuilderTeaserProps,
   selectTeaserImage,
   selectTeaserTitle,
   selectTeaserUrl,
-  TeaserWrapper,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  TeaserWrapper
+} from '@wepublish/block-content/website'
+import {NextWepublishLink} from '@wepublish/utils/website'
+import {ArticleTeaser} from '@wepublish/website/api'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-type BestOfWePublishTeaserProps = BuilderTeaserProps & {
-  teaser: ApiV1.PeerArticleTeaser
+type BestOfWePublishTeaserProps = Omit<BuilderTeaserProps, 'teaser'> & {
+  teaser: ArticleTeaser
 }
 
 const PeerLogoWrapper = styled('div')`
@@ -111,8 +110,8 @@ export const BestOfWePublishTeaser = ({teaser, alignment}: BestOfWePublishTeaser
   const title = teaser && selectTeaserTitle(teaser)
   const href = (teaser && selectTeaserUrl(teaser)) ?? ''
   const image = teaser && selectTeaserImage(teaser)
-  const peerName = teaser.peer?.name
-  const peerLogo = teaser.peer?.profile?.logo
+  const peerName = teaser.article?.peer?.name
+  const peerLogo = teaser.article?.peer?.profile?.logo
 
   return (
     <TeaserWrapper {...alignment}>

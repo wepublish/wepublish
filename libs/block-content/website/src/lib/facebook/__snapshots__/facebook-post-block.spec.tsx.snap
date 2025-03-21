@@ -7,11 +7,3 @@ exports[`Facebook Post Block should render Default 1`] = `
   />
 </DocumentFragment>
 `;
-
-exports[`Facebook Post Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-1jn5h8s-FacebookPostBlockWrapper emotion-0"
-  />
-</DocumentFragment>
-`;

@@ -1,5 +1,5 @@
 import {Meta} from '@storybook/react'
-import {EventStatus, EventTeaser, FullImageFragment, TeaserStyle} from '@wepublish/website/api'
+import {EventStatus, EventTeaser, FullImageFragment} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -77,22 +77,6 @@ export const Default = {
   }
 }
 
-export const WithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...eventTeaser,
-      style: TeaserStyle.Light
-    }
-  }
-}
-
 export const WithoutDescription = {
   args: {
     alignment: {
@@ -105,27 +89,6 @@ export const WithoutDescription = {
     teaser: {
       ...eventTeaser,
       lead: null
-    }
-  }
-}
-
-export const WithoutDescriptionWithLightStyle = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...eventTeaser,
-      style: TeaserStyle.Light,
-      lead: null,
-      event: {
-        ...eventTeaser.event,
-        description: []
-      }
     }
   }
 }

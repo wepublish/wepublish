@@ -1,17 +1,19 @@
 import {Button, styled} from '@mui/material'
+import {Image} from '@wepublish/image/website'
 import {NextWepublishLink} from '@wepublish/utils/website'
-import {ApiV1, BuilderTeaserGridBlockProps, Image} from '@wepublish/website'
+import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
+import {BuilderTeaserGridBlockProps} from '@wepublish/website/builder'
 
 import {isWithinTimeslot} from '../../utils/is-within-timeslot'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpg'
+import EscBg from './esc.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
-import EscBg from './esc.jpg'
 import {BriefingType, isBaselBriefingIgnoringBlockType} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
-  teasers?: ApiV1.CustomTeaser[]
+  teasers?: CustomTeaser[]
 }
 
 const baselBg = {
@@ -32,7 +34,7 @@ const baselBg = {
   s: BaselBg.src,
   xs: BaselBg.src,
   xxs: BaselBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const fcbBg = {
   id: '1234',
@@ -52,7 +54,7 @@ const fcbBg = {
   s: FcbBg.src,
   xs: FcbBg.src,
   xxs: FcbBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const fasnachtBg = {
   id: '1234',
@@ -72,7 +74,7 @@ const fasnachtBg = {
   s: FasnachtBg.src,
   xs: FasnachtBg.src,
   xxs: FasnachtBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const escBg = {
   id: '1234',
@@ -92,7 +94,7 @@ const escBg = {
   s: EscBg.src,
   xs: EscBg.src,
   xxs: EscBg.src
-} satisfies ApiV1.FullImageFragment
+} satisfies FullImageFragment
 
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {
   switch (briefing) {
@@ -365,7 +367,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let scheduledDate
 
   const teaser = teasers && teasers[0]
-  teaser?.properties.forEach(prop => {
+  teaser?.properties?.forEach(prop => {
     if (prop.key === 'showFrom') {
       showFrom = prop.value
     }

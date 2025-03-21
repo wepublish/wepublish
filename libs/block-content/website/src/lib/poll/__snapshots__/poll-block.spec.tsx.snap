@@ -8,7 +8,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
-      Question
+      Lorem Ipsum?
     </h1>
     <div
       class="emotion-4 emotion-5"
@@ -29,45 +29,362 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
             <span
               data-slate-string="true"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </span>
           </span>
         </p>
       </div>
     </div>
     <div
-      class="emotion-7 emotion-8"
+      class="emotion-10 emotion-11"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="button"
       >
-        Ja
+        Bazfoo
         <span
-          class="MuiTouchRipple-root emotion-10"
+          class="MuiTouchRipple-root emotion-13"
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="button"
       >
-        Nein
+        Foobar
         <span
-          class="MuiTouchRipple-root emotion-10"
+          class="MuiTouchRipple-root emotion-13"
         />
       </button>
     </div>
     <div
-      class="emotion-13 emotion-14"
+      class="emotion-16 emotion-17"
     >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
+      2300 Stimmen
     </div>
   </article>
 </DocumentFragment>
@@ -81,7 +398,7 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
-      Question
+      Lorem Ipsum?
     </h1>
     <div
       class="emotion-4 emotion-5"
@@ -102,85 +419,402 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
             <span
               data-slate-string="true"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </span>
           </span>
         </p>
       </div>
     </div>
     <div
-      class="emotion-7 emotion-8"
+      class="emotion-10 emotion-11"
     >
       <div
-        class="emotion-9 emotion-10"
+        class="emotion-12 emotion-13"
       >
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-14 emotion-15"
         >
           <div
-            class="emotion-13 emotion-14"
+            class="emotion-16 emotion-17"
           >
-            Ja
+            Bazfoo
           </div>
           <div
-            class="emotion-15 emotion-16"
+            class="emotion-18 emotion-19"
           >
-            52%
+            57%
           </div>
         </div>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-20 emotion-21"
         >
           <div
-            class="emotion-19 emotion-20"
+            class="emotion-22 emotion-23"
           />
           <div
-            class="emotion-21 emotion-22"
+            class="emotion-24 emotion-25"
           >
-            11 Stimmen
+            1300 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="emotion-9 emotion-10"
+        class="emotion-12 emotion-13"
       >
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-14 emotion-15"
         >
           <div
-            class="emotion-13 emotion-14"
+            class="emotion-16 emotion-17"
           >
-            Nein
+            Foobar
           </div>
           <div
-            class="emotion-15 emotion-16"
+            class="emotion-18 emotion-19"
           >
-            48%
+            43%
           </div>
         </div>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-20 emotion-21"
         >
           <div
-            class="emotion-33 emotion-20"
+            class="emotion-36 emotion-23"
           />
           <div
-            class="emotion-35 emotion-22"
+            class="emotion-38 emotion-25"
           >
-            10 Stimmen
+            1000 Stimmen
           </div>
         </div>
       </div>
     </div>
     <div
-      class="emotion-37 emotion-38"
+      class="emotion-40 emotion-41"
     >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
+      2300 Stimmen
     </div>
   </article>
 </DocumentFragment>
@@ -194,7 +828,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
-      Question
+      Lorem Ipsum?
     </h1>
     <div
       class="emotion-4 emotion-5"
@@ -215,45 +849,362 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
             <span
               data-slate-string="true"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </span>
           </span>
         </p>
       </div>
     </div>
     <div
-      class="emotion-7 emotion-8"
+      class="emotion-10 emotion-11"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="button"
       >
-        Ja
+        Bazfoo
         <span
-          class="MuiTouchRipple-root emotion-10"
+          class="MuiTouchRipple-root emotion-13"
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="button"
       >
-        Nein
+        Foobar
         <span
-          class="MuiTouchRipple-root emotion-10"
+          class="MuiTouchRipple-root emotion-13"
         />
       </button>
     </div>
     <div
-      class="emotion-13 emotion-14"
+      class="emotion-16 emotion-17"
     >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
+      2300 Stimmen
     </div>
   </article>
 </DocumentFragment>
@@ -264,7 +1215,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 - First value
 + Second value
 
-@@ -31,37 +31,77 @@
+@@ -353,35 +353,75 @@
             </span>
           </p>
         </div>
@@ -286,21 +1237,21 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
             >
-              Ja
+              Bazfoo
 -         <span
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +           </div>
 +           <div
 +             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
 +           >
-+             55%
++             57%
 +           </div>
 +         </div>
 +         <div
 +           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
 +         >
 +           <div
-+             class="css-6pz6b3-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-1iwr8da-PollBlockVoteBarFill e1v5g0xr1"
             />
 -       </button>
 -       <button
@@ -310,7 +1261,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 +           <div
 +             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
 +           >
-+             12 Stimmen
++             1301 Stimmen
 +           </div>
 +         </div>
 +       </div>
@@ -323,27 +1274,27 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
 +           >
-              Nein
+              Foobar
 -         <span
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +           </div>
 +           <div
 +             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
 +           >
-+             45%
++             43%
 +           </div>
 +         </div>
 +         <div
 +           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
 +         >
 +           <div
-+             class="css-1cibdzq-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-1lsykkr-PollBlockVoteBarFill e1v5g0xr1"
             />
 -       </button>
 +           <div
 +             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
 +           >
-+             10 Stimmen
++             1000 Stimmen
 +           </div>
 +         </div>
         </div>
@@ -351,13 +1302,11 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
--       21 Stimmen – Schliesst am 
-+       22 Stimmen – Schliesst am 
-        <time
-          datetime="2033-01-01"
-        >
-          01.01.2033 00:00
-        </time>"
+-       2300 Stimmen
++       2301 Stimmen
+      </div>
+    </article>
+  </DocumentFragment>"
 `;
 
 exports[`Poll Block should render Default 1`] = `
@@ -368,7 +1317,7 @@ exports[`Poll Block should render Default 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
-      Question
+      Lorem Ipsum?
     </h1>
     <div
       class="emotion-4 emotion-5"
@@ -389,85 +1338,402 @@ exports[`Poll Block should render Default 1`] = `
             <span
               data-slate-string="true"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </span>
           </span>
         </p>
       </div>
     </div>
     <div
-      class="emotion-7 emotion-8"
+      class="emotion-10 emotion-11"
     >
       <div
-        class="emotion-9 emotion-10"
+        class="emotion-12 emotion-13"
       >
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-14 emotion-15"
         >
           <div
-            class="emotion-13 emotion-14"
+            class="emotion-16 emotion-17"
           >
-            Ja
+            Bazfoo
           </div>
           <div
-            class="emotion-15 emotion-16"
+            class="emotion-18 emotion-19"
           >
-            52%
+            57%
           </div>
         </div>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-20 emotion-21"
         >
           <div
-            class="emotion-19 emotion-20"
+            class="emotion-22 emotion-23"
           />
           <div
-            class="emotion-21 emotion-22"
+            class="emotion-24 emotion-25"
           >
-            11 Stimmen
+            1300 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="emotion-9 emotion-10"
+        class="emotion-12 emotion-13"
       >
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-14 emotion-15"
         >
           <div
-            class="emotion-13 emotion-14"
+            class="emotion-16 emotion-17"
           >
-            Nein
+            Foobar
           </div>
           <div
-            class="emotion-15 emotion-16"
+            class="emotion-18 emotion-19"
           >
-            48%
+            43%
           </div>
         </div>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-20 emotion-21"
         >
           <div
-            class="emotion-33 emotion-20"
+            class="emotion-36 emotion-23"
           />
           <div
-            class="emotion-35 emotion-22"
+            class="emotion-38 emotion-25"
           >
-            10 Stimmen
+            1000 Stimmen
           </div>
         </div>
       </div>
     </div>
     <div
-      class="emotion-37 emotion-38"
+      class="emotion-40 emotion-41"
     >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
+      2300 Stimmen
     </div>
   </article>
 </DocumentFragment>
@@ -481,7 +1747,7 @@ exports[`Poll Block should render Voting 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
-      Question
+      Lorem Ipsum?
     </h1>
     <div
       class="emotion-4 emotion-5"
@@ -502,45 +1768,362 @@ exports[`Poll Block should render Voting 1`] = `
             <span
               data-slate-string="true"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </span>
           </span>
         </p>
       </div>
     </div>
     <div
-      class="emotion-7 emotion-8"
+      class="emotion-10 emotion-11"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="button"
       >
-        Ja
+        Bazfoo
         <span
-          class="MuiTouchRipple-root emotion-10"
+          class="MuiTouchRipple-root emotion-13"
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-9"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary emotion-12"
         tabindex="0"
         type="button"
       >
-        Nein
+        Foobar
         <span
-          class="MuiTouchRipple-root emotion-10"
+          class="MuiTouchRipple-root emotion-13"
         />
       </button>
     </div>
     <div
-      class="emotion-13 emotion-14"
+      class="emotion-16 emotion-17"
     >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
+      2300 Stimmen
     </div>
   </article>
 </DocumentFragment>
@@ -554,7 +2137,7 @@ exports[`Poll Block should render VotingClosed 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
     >
-      Question
+      Lorem Ipsum?
     </h1>
     <div
       class="emotion-4 emotion-5"
@@ -575,80 +2158,402 @@ exports[`Poll Block should render VotingClosed 1`] = `
             <span
               data-slate-string="true"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <strong
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                consectetur adipiscing elit, 
+              </span>
+            </strong>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <em
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              </span>
+            </em>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <u
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                Ut enim ad minim veniam, 
+              </span>
+            </u>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <del
+              data-slate-leaf="true"
+            >
+              <span
+                data-slate-string="true"
+              >
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              </span>
+            </del>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+            </span>
+          </span>
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </span>
           </span>
         </p>
       </div>
     </div>
     <div
-      class="emotion-7 emotion-8"
+      class="emotion-10 emotion-11"
     >
       <div
-        class="emotion-9 emotion-10"
+        class="emotion-12 emotion-13"
       >
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-14 emotion-15"
         >
           <div
-            class="emotion-13 emotion-14"
+            class="emotion-16 emotion-17"
           >
-            Ja
+            Bazfoo
           </div>
           <div
-            class="emotion-15 emotion-16"
+            class="emotion-18 emotion-19"
           >
-            52%
+            57%
           </div>
         </div>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-20 emotion-21"
         >
           <div
-            class="emotion-19 emotion-20"
+            class="emotion-22 emotion-23"
           />
           <div
-            class="emotion-21 emotion-22"
+            class="emotion-24 emotion-25"
           >
-            11 Stimmen
+            1300 Stimmen
           </div>
         </div>
       </div>
       <div
-        class="emotion-9 emotion-10"
+        class="emotion-12 emotion-13"
       >
         <div
-          class="emotion-11 emotion-12"
+          class="emotion-14 emotion-15"
         >
           <div
-            class="emotion-13 emotion-14"
+            class="emotion-16 emotion-17"
           >
-            Nein
+            Foobar
           </div>
           <div
-            class="emotion-15 emotion-16"
+            class="emotion-18 emotion-19"
           >
-            48%
+            43%
           </div>
         </div>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-20 emotion-21"
         >
           <div
-            class="emotion-33 emotion-20"
+            class="emotion-36 emotion-23"
           />
           <div
-            class="emotion-35 emotion-22"
+            class="emotion-38 emotion-25"
           >
-            10 Stimmen
+            1000 Stimmen
           </div>
         </div>
       </div>
     </div>
     <div
-      class="emotion-37 emotion-38"
+      class="emotion-40 emotion-41"
     >
-      21 Stimmen – Abstimmung beendet.
+      2300 Stimmen – Abstimmung beendet.
     </div>
   </article>
 </DocumentFragment>
@@ -659,7 +2564,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
 - First value
 + Second value
 
-@@ -31,37 +31,77 @@
+@@ -353,35 +353,75 @@
             </span>
           </p>
         </div>
@@ -681,21 +2586,21 @@ exports[`Poll Block should render VotingPlay 1`] = `
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
             >
-              Ja
+              Bazfoo
 -         <span
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +           </div>
 +           <div
 +             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
 +           >
-+             55%
++             57%
 +           </div>
 +         </div>
 +         <div
 +           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
 +         >
 +           <div
-+             class="css-6pz6b3-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-1iwr8da-PollBlockVoteBarFill e1v5g0xr1"
             />
 -       </button>
 -       <button
@@ -705,7 +2610,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
 +           <div
 +             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
 +           >
-+             12 Stimmen
++             1301 Stimmen
 +           </div>
 +         </div>
 +       </div>
@@ -718,27 +2623,27 @@ exports[`Poll Block should render VotingPlay 1`] = `
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
 +           >
-              Nein
+              Foobar
 -         <span
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 +           </div>
 +           <div
 +             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
 +           >
-+             45%
++             43%
 +           </div>
 +         </div>
 +         <div
 +           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
 +         >
 +           <div
-+             class="css-1cibdzq-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-1lsykkr-PollBlockVoteBarFill e1v5g0xr1"
             />
 -       </button>
 +           <div
 +             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
 +           >
-+             10 Stimmen
++             1000 Stimmen
 +           </div>
 +         </div>
         </div>
@@ -746,241 +2651,11 @@ exports[`Poll Block should render VotingPlay 1`] = `
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
--       21 Stimmen – Schliesst am 
-+       22 Stimmen – Schliesst am 
-        <time
-          datetime="2033-01-01"
-        >
-          01.01.2033 00:00
-        </time>"
-`;
-
-exports[`Poll Block should render WihtoutPoll 1`] = `<DocumentFragment />`;
-
-exports[`Poll Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <article
-    class="extra-classname emotion-0 emotion-1"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
-    >
-      Question
-    </h1>
-    <div
-      class="emotion-4 emotion-5"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
+-       2300 Stimmen
++       2301 Stimmen
       </div>
-    </div>
-    <div
-      class="emotion-7 emotion-8"
-    >
-      <div
-        class="emotion-9 emotion-10"
-      >
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <div
-            class="emotion-13 emotion-14"
-          >
-            Ja
-          </div>
-          <div
-            class="emotion-15 emotion-16"
-          >
-            52%
-          </div>
-        </div>
-        <div
-          class="emotion-17 emotion-18"
-        >
-          <div
-            class="emotion-19 emotion-20"
-          />
-          <div
-            class="emotion-21 emotion-22"
-          >
-            11 Stimmen
-          </div>
-        </div>
-      </div>
-      <div
-        class="emotion-9 emotion-10"
-      >
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <div
-            class="emotion-13 emotion-14"
-          >
-            Nein
-          </div>
-          <div
-            class="emotion-15 emotion-16"
-          >
-            48%
-          </div>
-        </div>
-        <div
-          class="emotion-17 emotion-18"
-        >
-          <div
-            class="emotion-33 emotion-20"
-          />
-          <div
-            class="emotion-35 emotion-22"
-          >
-            10 Stimmen
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="emotion-37 emotion-38"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
-`;
-
-exports[`Poll Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <article
-    class="emotion-0 emotion-1"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 emotion-2 emotion-3"
-    >
-      Question
-    </h1>
-    <div
-      class="emotion-4 emotion-5"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-6"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-    <div
-      class="emotion-7 emotion-8"
-    >
-      <div
-        class="emotion-9 emotion-10"
-      >
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <div
-            class="emotion-13 emotion-14"
-          >
-            Ja
-          </div>
-          <div
-            class="emotion-15 emotion-16"
-          >
-            52%
-          </div>
-        </div>
-        <div
-          class="emotion-17 emotion-18"
-        >
-          <div
-            class="emotion-19 emotion-20"
-          />
-          <div
-            class="emotion-21 emotion-22"
-          >
-            11 Stimmen
-          </div>
-        </div>
-      </div>
-      <div
-        class="emotion-9 emotion-10"
-      >
-        <div
-          class="emotion-11 emotion-12"
-        >
-          <div
-            class="emotion-13 emotion-14"
-          >
-            Nein
-          </div>
-          <div
-            class="emotion-15 emotion-16"
-          >
-            48%
-          </div>
-        </div>
-        <div
-          class="emotion-17 emotion-18"
-        >
-          <div
-            class="emotion-33 emotion-20"
-          />
-          <div
-            class="emotion-35 emotion-22"
-          >
-            10 Stimmen
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="emotion-37 emotion-38"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+    </article>
+  </DocumentFragment>"
 `;
 
 exports[`Poll Block should render WithError 1`] = `
@@ -988,7 +2663,7 @@ exports[`Poll Block should render WithError 1`] = `
 - First value
 + Second value
 
-@@ -31,10 +31,60 @@
+@@ -353,10 +353,60 @@
             </span>
           </p>
         </div>
@@ -1050,3 +2725,5 @@ exports[`Poll Block should render WithError 1`] = `
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-kctgaw-MuiButtonBase-root-MuiButton-root"
           tabindex="0""
 `;
+
+exports[`Poll Block should render WithoutPoll 1`] = `<DocumentFragment />`;

@@ -5,25 +5,25 @@ import {BuilderPageSEOProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useMemo} from 'react'
 
 export const getPageSEO = (page: Page) => {
-  const firstTitle = page.blocks?.find(isTitleBlock)
-  const firstRichText = page.blocks?.find(isRichTextBlock)
-  const firstImageBlock = page.blocks?.find(isImageBlock)
+  const firstTitle = page.latest.blocks?.find(isTitleBlock)
+  const firstRichText = page.latest.blocks?.find(isRichTextBlock)
+  const firstImageBlock = page.latest.blocks?.find(isImageBlock)
 
   const socialMediaDescription =
-    page.socialMediaDescription ||
-    page.description ||
+    page.latest.socialMediaDescription ||
+    page.latest.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
   const description =
-    page.socialMediaDescription ||
-    page.description ||
+    page.latest.socialMediaDescription ||
+    page.latest.description ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const image = (page.socialMediaImage ?? page.image ?? firstImageBlock?.image) as
+  const image = (page.latest.socialMediaImage ?? page.latest.image ?? firstImageBlock?.image) as
     | FullImageFragment
     | undefined
 
-  const title = page.title || firstTitle?.title || page.socialMediaTitle
-  const socialMediaTitle = page.socialMediaTitle || page.title || firstTitle?.title
-  const headline = firstTitle?.title || page.title
+  const title = page.latest.title || firstTitle?.title || page.latest.socialMediaTitle
+  const socialMediaTitle = page.latest.socialMediaTitle || page.latest.title || firstTitle?.title
+  const headline = firstTitle?.title || page.latest.title
   const url = page.url
 
   return {
@@ -35,17 +35,28 @@ export const getPageSEO = (page: Page) => {
     url,
     image,
     tags: page.tags,
+    updatedAt: page.latest.publishedAt,
     publishedAt: page.publishedAt,
     schema: {
       '@context': 'http://schema.org',
       '@type': 'WebPage',
       keywords: page.tags.join(','),
-      image,
+      image: image
+        ? {
+            height: image.height,
+            width: image.width,
+            representativeOfPage: true,
+            contentUrl: image.url,
+            thumbnailUrl: image.m,
+            url: image.url,
+            encodingFormat: image.mimeType
+          }
+        : undefined,
       description,
       datePublished: page.publishedAt,
       name: title,
       headline,
-      identifier: page.id,
+      identifier: page.slug,
       url
     }
   }

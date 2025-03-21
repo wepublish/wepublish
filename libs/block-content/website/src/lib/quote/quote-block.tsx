@@ -1,8 +1,8 @@
 import {styled, css} from '@mui/material'
 import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
+import {BlockContent, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
 
-export const isQuoteBlock = (block: Block): block is QuoteBlockType =>
+export const isQuoteBlock = (block: Pick<BlockContent, '__typename'>): block is QuoteBlockType =>
   block.__typename === 'QuoteBlock'
 
 const imageStyles = css`

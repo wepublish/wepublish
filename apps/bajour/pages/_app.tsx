@@ -2,15 +2,17 @@ import {EmotionCache} from '@emotion/cache'
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  FooterContainer,
-  FooterPaperWrapper,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
@@ -67,7 +69,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 const NavBar = styled(NavbarContainer)`
@@ -158,6 +160,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
               </MainGrid>
 
+              <RoutedAdminBar />
+
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
@@ -176,7 +180,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   )
 }
 
-const withApollo = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
 const ConnectedApp = withApollo(CustomApp)
 
 export {ConnectedApp as default}

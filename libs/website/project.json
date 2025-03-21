@@ -3,28 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/website/src",
   "projectType": "library",
-  "tags": ["publishable"],
+  "tags": [],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/website",
-        "tsConfig": "libs/website/tsconfig.lib.json",
-        "packageJson": "libs/website/package.json",
-        "main": "libs/website/src/index.ts",
-        "assets": ["libs/website/*.md"],
-        "external": "all",
-        "rootDir": ".",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "updateBuildableProjectDepsInPackageJson": true,
-        "additionalEntryPoints": ["libs/website/src/server.ts"],
-        "generateExportsField": true
-      }
     },
     "test": {
       "executor": "@nx/jest:jest",
