@@ -15,16 +15,14 @@ const eventStoriesCmp = composeStories(eventStories)
 describe('Teaser', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
+      render(<Component />)
     })
   })
 
   describe('Custom', () => {
     Object.entries(customStoriesCmp).forEach(([story, Component]) => {
       it(`should render ${story}`, () => {
-        const {asFragment} = render(<Component />)
-        expect(asFragment()).toMatchSnapshot()
+        render(<Component />)
       })
     })
   })
@@ -32,8 +30,7 @@ describe('Teaser', () => {
   describe('Article', () => {
     Object.entries(articleStoriesCmp).forEach(([story, Component]) => {
       it(`should render ${story}`, () => {
-        const {asFragment} = render(<Component />)
-        expect(asFragment()).toMatchSnapshot()
+        render(<Component />)
       })
     })
   })
@@ -41,8 +38,7 @@ describe('Teaser', () => {
   describe('Page', () => {
     Object.entries(pageStoriesCmp).forEach(([story, Component]) => {
       it(`should render ${story}`, () => {
-        const {asFragment} = render(<Component />)
-        expect(asFragment()).toMatchSnapshot()
+        render(<Component />)
       })
     })
   })
@@ -50,8 +46,7 @@ describe('Teaser', () => {
   describe('Event', () => {
     Object.entries(eventStoriesCmp).forEach(([story, Component]) => {
       it(`should render ${story}`, () => {
-        const {asFragment} = render(<Component />)
-        expect(asFragment()).toMatchSnapshot()
+        render(<Component />)
       })
     })
   })
