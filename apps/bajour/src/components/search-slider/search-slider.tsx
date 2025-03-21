@@ -102,11 +102,11 @@ const SearchContainer = styled('div')`
   padding-right: ${({theme}) => theme.spacing(4)};
 
   text-align: end;
-  font-size: ${({theme}) => theme.typography.subtitle2};
+  font-size: ${({theme}) => theme.typography.subtitle2.fontSize};
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     padding-right: 0;
-    font-size: ${({theme}) => theme.typography.subtitle1};
+    font-size: ${({theme}) => theme.typography.subtitle1.fontSize};
   }
 `
 

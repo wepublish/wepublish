@@ -33,7 +33,7 @@ const HotAndTrendingLinkList = styled('ul')`
 const HotAndTrendingLink = styled('li')`
   padding-bottom: ${({theme}) => theme.spacing(2)};
   border-bottom: currentColor 1px solid;
-  font-size: ${({theme}) => theme.typography.h6};
+  font-size: ${({theme}) => theme.typography.h6.fontSize};
   font-weight: 600;
 
   &:last-child {
