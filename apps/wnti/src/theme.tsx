@@ -1,14 +1,21 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
-import {Hanken_Grotesk} from 'next/font/google'
+import localFont from 'next/font/local'
 import {PartialDeep} from 'type-fest'
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
+const Faro = localFont({
+  src: [
+    {
+      path: './fonts/FaroWeb-DisplayLucky.woff2',
+      weight: '800',
+      style: 'normal'
+    },
+    {
+      path: './fonts/FaroWeb-SemiBoldLucky.woff2',
+      weight: '600',
+      style: 'normal'
+    }
+  ]
 })
 
 const {
@@ -17,58 +24,75 @@ const {
 
 const theme = createTheme(WePTheme, {
   palette: {
-    primary: augmentColor({color: {main: '#0E9FED', light: '#36addf', contrastText: '#fff'}})
+    primary: augmentColor({color: {main: '#232524', light: '#F2BDB8', contrastText: '#FFF'}}),
+    secondary: augmentColor({color: {main: '#FFEDEB', contrastText: '#000'}}),
+    accent: augmentColor({color: {main: '#FFEDEB', contrastText: '#000'}})
   },
   typography: {
     h1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h3: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h4: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '800'
     },
     h5: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     h6: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '16px'
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '600'
     },
     body2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: '600'
     },
     button: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     caption: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     overline: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
     },
-    fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    fontFamily: [Faro.style.fontFamily, 'sans-serif'].join(',')
   },
   components: {
     MuiButton: {
       styleOverrides: {
-        containedSizeLarge: () => ({
+        containedSizeLarge: {
           padding: `${WePTheme.spacing(1.5)} ${WePTheme.spacing(3)}`,
-          fontSize: '1.1em'
-        })
+          fontSize: '1.1em',
+          color: '#000',
+          backgroundColor: '#F2BDB8'
+        },
+        contained: {
+          color: '#000',
+          backgroundColor: '#F2BDB8 !important'
+        },
+        outlined: {
+          color: '#F2BDB8',
+          borderColor: '#F2BDB8'
+        }
       }
     }
   }

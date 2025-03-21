@@ -3,7 +3,7 @@
 const {composePlugins, withNx} = require('@nx/next')
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: !!process.env.ANALYZE_BUNDLE,
+  enabled: process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false
 })
 
@@ -25,60 +25,6 @@ const nextConfig = {
       MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
       MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || ''
     }
-  },
-  async redirects() {
-    return [
-      {
-        source: '/a/:id((?!tag|preview).*)/:slug',
-        destination: '/a/:slug',
-        permanent: false
-      },
-      {
-        source: '/zh/rubrik/:slug',
-        destination: '/a/tag/:slug',
-        permanent: false
-      },
-      {
-        source: '/redaktion',
-        destination: '/author',
-        permanent: false
-      },
-      {
-        source: '/agenda',
-        destination: '/event',
-        permanent: false
-      },
-      {
-        source: '/account/profile',
-        destination: '/profile',
-        permanent: false
-      },
-      {
-        source: '/account/subscriptions',
-        destination: '/profile/subscription',
-        permanent: false
-      },
-      {
-        source: '/fluchtmigration-cricket',
-        destination: '/a/schnuppertraining-cricket-der-populaerste-sport-afghanistans',
-        permanent: false
-      },
-      {
-        source: '/fluchtmigration-podium-arbeitsmarkt',
-        destination: '/a/podium-wie-zugaenglich-ist-unser-arbeitsmarkt',
-        permanent: false
-      },
-      {
-        source: '/fluchtmigration-mitmachmarkt',
-        destination: '/a/mitmachmarkt-wo-kann-ich-mich-engagieren',
-        permanent: false
-      },
-      {
-        source: '/tipp',
-        destination: '/a/crowdfunding-tsueritipp',
-        permanent: false
-      }
-    ]
   }
 }
 

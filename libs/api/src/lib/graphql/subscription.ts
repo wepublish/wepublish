@@ -1,9 +1,8 @@
 import {Subscription} from '@prisma/client'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -31,7 +30,7 @@ import {GraphQLUser} from './user'
 export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'Subscription',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     user: {
@@ -90,7 +89,7 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     memberPlanID: {type: GraphQLString},
     paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
     userHasAddress: {type: GraphQLBoolean},
-    userID: {type: GraphQLID},
+    userID: {type: GraphQLString},
     extendable: {type: GraphQLBoolean}
   }
 })
@@ -123,7 +122,7 @@ export const GraphQLSubscriptionDeactivationInput = new GraphQLInputObjectType({
 export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
   name: 'SubscriptionInput',
   fields: {
-    userID: {type: new GraphQLNonNull(GraphQLID)},
+    userID: {type: new GraphQLNonNull(GraphQLString)},
     memberPlanID: {type: new GraphQLNonNull(GraphQLString)},
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},

@@ -1,19 +1,26 @@
 import {styled} from '@mui/material'
-import {PageBanner} from '@wepublish/website'
-import {BuilderBannerProps} from '@wepublish/website'
+import {
+  Banner,
+  BannerCloseButton,
+  BannerContent,
+  BannerCta,
+  BannerImage,
+  BannerText,
+  BannerTitle
+} from '@wepublish/banner/website'
 
-const BajourBannerInner = styled(PageBanner.Banner)(
+const BajourBanner = styled(Banner)(
   ({theme}) => `
-${PageBanner.BannerContent} {
+${BannerContent} {
   padding: ${theme.spacing(2)};
 }
 
-${PageBanner.BannerCloseButton} {
+${BannerCloseButton} {
   top: ${theme.spacing(2)};
   right: ${theme.spacing(2)};
 }
 
-${PageBanner.BannerCta} {
+${BannerCta} {
   display: none;
 }
 
@@ -32,19 +39,15 @@ ${PageBanner.BannerCta} {
     width: 20%;
   }
 
-  ${PageBanner.BannerCta} {
+  ${BannerCta} {
     display: block;
     margin-top: 0;
   }
 
-  ${PageBanner.BannerImage}, ${PageBanner.BannerTitle}, ${PageBanner.BannerText}, ${
-    PageBanner.BannerCloseButton
-  }, [data-role='CANCEL'], [data-role='OTHER'] {
+  ${BannerImage}, ${BannerTitle}, ${BannerText}, ${BannerCloseButton}, [data-role='CANCEL'], [data-role='OTHER'] {
     display: none;
   }
 }`
 )
 
-export function BajourBanner(props: BuilderBannerProps) {
-  return <BajourBannerInner {...props} />
-}
+export {BajourBanner}

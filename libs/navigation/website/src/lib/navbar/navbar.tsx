@@ -1,9 +1,19 @@
-import {AppBar, GlobalStyles, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {
+  AppBar,
+  Box,
+  GlobalStyles,
+  SxProps,
+  Theme,
+  Toolbar,
+  css,
+  styled,
+  useTheme
+} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
+import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 import {TextToIcon} from '@wepublish/ui'
 
@@ -17,9 +27,11 @@ declare module 'react' {
 const cssVariables = (theme: Theme) => css`
   :root {
     --navbar-height: ${theme.spacing(6.5)};
+
     ${theme.breakpoints.up('md')} {
       --navbar-height: ${theme.spacing(7.5)};
     }
+
     ${theme.breakpoints.up('lg')} {
       --navbar-height: ${theme.spacing(12.5)};
     }
@@ -141,10 +153,6 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
   ${({theme}) => theme.breakpoints.up('md')} {
     gap: ${({theme}) => theme.spacing(2)};
   }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    padding-right: 0;
-  }
 `
 
 export const NavbarIconButtonWrapper = styled('div')`
@@ -187,6 +195,13 @@ const useLogoLinkStyles = (isMenuOpen: boolean) => {
   )
 }
 
+const buttonStyles: SxProps<Theme> = theme => ({
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '1.1em',
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
+  }
+})
+
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
   width: auto;
@@ -199,7 +214,7 @@ const useImageStyles = () => {
   return useMemo(
     () => css`
       max-height: ${theme.spacing(5)};
-      max-width: ${theme.spacing(25)};
+      max-width: ${theme.spacing(15)};
 
       ${theme.breakpoints.up('md')} {
         max-height: ${theme.spacing(6)};
@@ -224,12 +239,12 @@ export function Navbar({
   iconSlug,
   data,
   logo,
+  hasRunningSubscription,
+  hasUnpaidInvoices,
   loginUrl = '/login',
   profileUrl = '/profile',
-  subscriptionsUrl = '/profile/subscription',
-  actions
+  subscribeUrl = '/mitmachen'
 }: BuilderNavbarProps) {
-  const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
@@ -259,12 +274,13 @@ export function Navbar({
   )
 
   const {
-    elements: {IconButton, Image, Link}
+    elements: {IconButton, Image, Link, Button}
   } = useWebsiteBuilder()
 
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={theme => cssVariables(theme)} />
+
       <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
         <NavbarInnerWrapper>
           <NavbarMain>
@@ -295,22 +311,27 @@ export function Navbar({
           </Link>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {actions}
-
-            {hasUser && subscriptionsUrl && (
-              <Link href={subscriptionsUrl}>
-                <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments aria-label={'Subscriptions'} />
-                </IconButton>
-              </Link>
+            {hasUnpaidInvoices && profileUrl && (
+              <Button
+                LinkComponent={Link}
+                href={profileUrl}
+                color="warning"
+                startIcon={<MdWarning />}
+                sx={buttonStyles}>
+                <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
+              </Button>
             )}
 
-            {(hasUser ? profileUrl : loginUrl) && (
-              <Link href={hasUser ? profileUrl : loginUrl}>
-                <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
-                  <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
-                </IconButton>
-              </Link>
+            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
+              <Button LinkComponent={Link} href={subscribeUrl} sx={buttonStyles}>
+                Member werden
+              </Button>
+            )}
+
+            {hasRunningSubscription && !hasUnpaidInvoices && profileUrl && (
+              <Button LinkComponent={Link} href={profileUrl} sx={buttonStyles}>
+                Mein Konto
+              </Button>
             )}
           </NavbarActions>
         </NavbarInnerWrapper>
@@ -318,21 +339,19 @@ export function Navbar({
 
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
         <NavPaper
+          hasRunningSubscription={hasRunningSubscription}
+          hasUnpaidInvoices={hasUnpaidInvoices}
+          subscribeUrl={subscribeUrl}
           profileUrl={profileUrl}
-          subscriptionsUrl={subscriptionsUrl}
           loginUrl={loginUrl}
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}>
-          {iconItems?.links.map(link => {
-            const url = navigationLinkToUrl(link)
-
-            return (
-              <Link href={url} color="inherit">
-                <TextToIcon title={link.label} size={32} />
-              </Link>
-            )
-          })}
+          {iconItems?.links.map((link, index) => (
+            <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
+              <TextToIcon title={link.label} size={32} />
+            </Link>
+          ))}
 
           {children}
         </NavPaper>
@@ -441,9 +460,8 @@ export const NavPaperChildrenWrapper = styled('div')`
 `
 
 export const NavPaperActions = styled('div')`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  display: flex;
+  flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(2)};
   margin-top: ${({theme}) => theme.spacing(5)};
 `
@@ -453,16 +471,20 @@ const NavPaper = ({
   categories,
   loginUrl,
   profileUrl,
-  subscriptionsUrl,
+  subscribeUrl,
   closeMenu,
+  hasRunningSubscription,
+  hasUnpaidInvoices,
   children
 }: PropsWithChildren<{
   loginUrl?: string | null
   profileUrl?: string | null
-  subscriptionsUrl?: string | null
+  subscribeUrl?: string | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
+  hasRunningSubscription: boolean
+  hasUnpaidInvoices: boolean
 }>) => {
   const {
     elements: {Link, Button, H4, H6}
@@ -488,53 +510,61 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
-          {!hasUser && loginUrl && (
+          {hasUnpaidInvoices && profileUrl && (
             <Button
               LinkComponent={Link}
-              href={loginUrl}
+              href={profileUrl}
+              variant="contained"
+              color="warning"
+              onClick={closeMenu}
+              startIcon={<MdWarning />}>
+              Offene Rechnung
+            </Button>
+          )}
+
+          {!hasRunningSubscription && subscribeUrl && (
+            <Button
+              LinkComponent={Link}
+              href={subscribeUrl}
               variant="contained"
               color="secondary"
               onClick={closeMenu}>
-              Login
+              Member werden
+            </Button>
+          )}
+
+          {hasUser && profileUrl && (
+            <Button
+              LinkComponent={Link}
+              href={profileUrl}
+              variant="outlined"
+              color="secondary"
+              onClick={closeMenu}>
+              Mein Konto
             </Button>
           )}
 
           {hasUser && (
-            <>
-              {profileUrl && (
-                <Button
-                  LinkComponent={Link}
-                  href={profileUrl}
-                  variant="contained"
-                  color="secondary"
-                  onClick={closeMenu}>
-                  Mein Konto
-                </Button>
-              )}
+            <Button
+              onClick={() => {
+                logout()
+                closeMenu()
+              }}
+              variant="contained"
+              color="primary">
+              Logout
+            </Button>
+          )}
 
-              {subscriptionsUrl && (
-                <Button
-                  LinkComponent={Link}
-                  href={subscriptionsUrl}
-                  variant="contained"
-                  color="accent"
-                  onClick={closeMenu}>
-                  Meine Abos
-                </Button>
-              )}
-
-              {loginUrl && (
-                <Button
-                  onClick={() => {
-                    logout()
-                    closeMenu()
-                  }}
-                  variant="outlined"
-                  color="secondary">
-                  Logout
-                </Button>
-              )}
-            </>
+          {!hasUser && loginUrl && (
+            <Button
+              LinkComponent={Link}
+              href={loginUrl}
+              variant="outlined"
+              color="secondary"
+              onClick={closeMenu}>
+              Login
+            </Button>
           )}
         </NavPaperActions>
       </NavPaperMainLinks>

@@ -1,7 +1,7 @@
 import {applyDecorators} from '@nestjs/common'
-import {OneOf} from '@wepublish/authentication/api'
+import {OneOf} from '@wepublish/nest-modules'
 import {PermissionsGuard} from './permission.guard'
-import {Permission} from './permissions'
+import {Permission} from '@wepublish/permissions'
 import {AddMetadata} from '@wepublish/nest-modules'
 
 export const PERMISSIONS_METADATA_KEY = 'permissions'

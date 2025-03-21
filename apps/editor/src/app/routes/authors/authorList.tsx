@@ -20,6 +20,7 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PaddedCell,
+  PeerAvatar,
   PermissionControl,
   Table,
   TableWrapper
@@ -39,7 +40,6 @@ import {
   Pagination,
   Table as RTable
 } from 'rsuite'
-import {RowDataType} from 'rsuite-table'
 
 const {Column, HeaderCell, Cell} = RTable
 
@@ -133,6 +133,7 @@ function AuthorList() {
         <ListViewHeader>
           <h2>{t('authors.overview.authors')}</h2>
         </ListViewHeader>
+
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
           <ListViewActions>
             <Link to="/authors/create">
@@ -167,35 +168,40 @@ function AuthorList() {
           <Column width={100} align="left" resizable>
             <HeaderCell>{}</HeaderCell>
             <CellSmallPadding>
-              {(rowData: RowDataType<FullAuthorFragment>) => (
+              {(rowData: FullAuthorFragment) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
               )}
             </CellSmallPadding>
           </Column>
+
           <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
             <Cell dataKey="name">
-              {(rowData: RowDataType<FullAuthorFragment>) => (
-                <Link to={`/authors/edit/${rowData.id}`}>
-                  {rowData.name || t('authors.overview.untitled')}
-                </Link>
+              {(rowData: FullAuthorFragment) => (
+                <PeerAvatar peer={rowData.peer}>
+                  <Link to={`/authors/edit/${rowData.id}`}>
+                    {rowData.name || t('authors.overview.untitled')}
+                  </Link>
+                </PeerAvatar>
               )}
             </Cell>
           </Column>
+
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: RowDataType<FullAuthorFragment>) =>
+              {({createdAt}: FullAuthorFragment) =>
                 t('authors.overview.createdAt', {
                   createdAt: new Date(createdAt)
                 })
               }
             </Cell>
           </Column>
+
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
             <PaddedCell>
-              {(rowData: RowDataType<FullAuthorFragment>) => (
+              {(rowData: FullAuthorFragment) => (
                 <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton

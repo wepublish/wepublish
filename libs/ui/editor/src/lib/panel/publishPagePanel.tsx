@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Checkbox, Message, Modal} from 'rsuite'
+import {Button, Message, Modal} from 'rsuite'
 
 import {PageMetadata} from './pageMetadataPanel'
 import {
@@ -14,45 +14,16 @@ import {
 
 export interface PublishPagePanelProps {
   publishedAtDate?: Date
-  updatedAtDate?: Date
-  publishAtDate?: Date
-  pendingPublishDate?: Date
   metadata: PageMetadata
 
   onClose(): void
-  onConfirm(publishedAt: Date, publishAt: Date, updatedAt?: Date): void
+  onConfirm(publishedAt: Date): void
 }
 
-function PublishPagePanel({
-  publishedAtDate,
-  updatedAtDate,
-  publishAtDate,
-  pendingPublishDate,
-  metadata,
-  onClose,
-  onConfirm
-}: PublishPagePanelProps) {
+function PublishPagePanel({publishedAtDate, metadata, onClose, onConfirm}: PublishPagePanelProps) {
   const now = new Date()
-
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(publishedAtDate ?? now)
-
-  const [publishAt, setPublishAt] = useState<Date | undefined>(publishAtDate ?? undefined)
-
-  const [updatedAt, setUpdatedAt] = useState<Date | undefined>(
-    updatedAtDate?.getTime() === publishedAtDate?.getTime() ? undefined : updatedAtDate
-  )
-
-  const [isPublishDateActive, setIsPublishDateActive] = useState<boolean>(
-    !(publishedAt?.getTime() === publishAt?.getTime() || !publishAt) ?? false
-  )
-
   const {t} = useTranslation()
-
-  useEffect(() => {
-    if (!publishAt || !isPublishDateActive) {
-      setPublishAt(publishedAt)
-    }
-  }, [isPublishDateActive, publishedAt])
 
   return (
     <>
@@ -61,11 +32,12 @@ function PublishPagePanel({
       </Modal.Header>
 
       <Modal.Body>
-        {pendingPublishDate && (
+        {publishedAt && publishedAt > now && (
           <Message type="warning">
-            {t('pageEditor.panels.pagePending', {pendingPublishDate})}
+            {t('pageEditor.panels.pagePending', {pendingPublishDate: publishedAt})}
           </Message>
         )}
+
         <div style={{maxWidth: '200px'}}>
           <DateTimePicker
             dateTime={publishedAt}
@@ -73,43 +45,6 @@ function PublishPagePanel({
             changeDate={date => setPublishedAt(date)}
           />
         </div>
-
-        <div style={{maxWidth: '200px'}}>
-          <DateTimePicker
-            dateTime={updatedAt}
-            label={t('pageEditor.panels.updateDate')}
-            changeDate={date => setUpdatedAt(date)}
-          />
-        </div>
-        {updatedAt && publishedAt && updatedAt < publishedAt ? (
-          <Message type="warning">{t('pageEditor.panels.updateDateWarning')}</Message>
-        ) : (
-          ''
-        )}
-
-        <Checkbox
-          checked={isPublishDateActive}
-          onChange={(_, checked) => {
-            setIsPublishDateActive(checked)
-          }}>
-          {t('pageEditor.panels.publishAtDateCheckbox')}
-        </Checkbox>
-
-        {isPublishDateActive ? (
-          <div style={{maxWidth: '200px'}}>
-            <DateTimePicker
-              disabled={!isPublishDateActive}
-              dateTime={!isPublishDateActive ? undefined : publishAt}
-              label={t('pageEditor.panels.publishAt')}
-              changeDate={date => {
-                setPublishAt(date)
-              }}
-              helpInfo={t('pageEditor.panels.dateExplanationPopOver')}
-            />
-          </div>
-        ) : (
-          ''
-        )}
 
         <DescriptionList>
           <DescriptionListItem label={t('pageEditor.panels.url')}>
@@ -176,8 +111,8 @@ function PublishPagePanel({
       <Modal.Footer>
         <Button
           appearance="primary"
-          disabled={!publishedAt || (updatedAt && updatedAt < publishedAt)}
-          onClick={() => onConfirm(publishedAt!, publishAt!, updatedAt)}>
+          disabled={!publishedAt}
+          onClick={() => onConfirm(publishedAt!)}>
           {t('pageEditor.panels.confirm')}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>

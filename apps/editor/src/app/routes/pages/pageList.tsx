@@ -1,16 +1,17 @@
+import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
 import {
-  CommentItemType,
+  FullPageFragment,
+  getApiClientV2,
   PageFilter,
   PageListDocument,
   PageListQuery,
-  PageRefFragment,
   PageSort,
-  useCreateCommentMutation,
   useDeletePageMutation,
   useDuplicatePageMutation,
   usePageListQuery,
   useUnpublishPageMutation
-} from '@wepublish/editor/api'
+} from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -25,7 +26,6 @@ import {
   ListViewContainer,
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
-  PagePreviewLinkPanel,
   PermissionControl,
   StatusBadge,
   Table,
@@ -33,10 +33,9 @@ import {
 } from '@wepublish/ui/editor'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
+import {MdAdd, MdComment, MdContentCopy, MdDelete, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
 import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
 
 interface State {
   state: string
@@ -57,8 +56,6 @@ function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
       return PageSort.CreatedAt
     case 'modifiedAt':
       return PageSort.ModifiedAt
-    case 'publishAt':
-      return PageSort.PublishAt
     case 'publishedAt':
       return PageSort.PublishedAt
     default:
@@ -73,8 +70,7 @@ function PageList() {
   const [filter, setFilter] = useState({} as PageFilter)
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [isPagePreviewLinkOpen, setPagePreviewLinkOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState<RowDataType<PageRefFragment>>()
+  const [currentPage, setCurrentPage] = useState<FullPageFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [page, setPage] = useState(1)
@@ -82,9 +78,10 @@ function PageList() {
   const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
-  const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
-  const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
-  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
+  const client = getApiClientV2()
+  const [deletePage, {loading: isDeleting}] = useDeletePageMutation({client})
+  const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation({client})
+  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation({client})
 
   const pageListVariables = {
     filter: filter || undefined,
@@ -99,8 +96,9 @@ function PageList() {
     refetch,
     loading: isLoading
   } = usePageListQuery({
+    client,
     variables: pageListVariables,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   })
 
   const pages = useMemo(() => data?.pages?.nodes ?? [], [data])
@@ -161,7 +159,7 @@ function PageList() {
           <Column width={125} align="left" resizable>
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<PageRefFragment>) => {
+              {(rowData: FullPageFragment) => {
                 const states: State[] = []
 
                 if (rowData.draft) states.push({state: 'draft', text: t('pages.overview.draft')})
@@ -182,7 +180,7 @@ function PageList() {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('pages.overview.title')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<PageRefFragment>) => (
+              {(rowData: FullPageFragment) => (
                 <Link to={`/pages/edit/${rowData.id}`}>
                   {rowData.latest.title || t('pages.overview.untitled')}
                 </Link>
@@ -193,14 +191,14 @@ function PageList() {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
-              {(pageRef: RowDataType<PageRefFragment>) =>
+              {(pageRef: FullPageFragment) =>
                 pageRef.published?.publishedAt
                   ? t('pageEditor.overview.publishedAt', {
                       publicationDate: new Date(pageRef.published.publishedAt)
                     })
-                  : pageRef.pending?.publishAt
+                  : pageRef.pending?.publishedAt
                   ? t('pageEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
+                      publishedAtIfPending: new Date(pageRef.pending?.publishedAt)
                     })
                   : t('pages.overview.notPublished')
               }
@@ -210,7 +208,7 @@ function PageList() {
           <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<PageRefFragment>) =>
+              {({modifiedAt}: FullPageFragment) =>
                 t('pageEditor.overview.modifiedAt', {
                   modificationDate: new Date(modifiedAt)
                 })
@@ -221,7 +219,7 @@ function PageList() {
           <Column width={220} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <IconButtonCell>
-              {(rowData: RowDataType<PageRefFragment>) => (
+              {(rowData: FullPageFragment) => (
                 <>
                   <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
                     <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
@@ -249,21 +247,6 @@ function PageList() {
                           setCurrentPage(rowData)
                           setConfirmAction(ConfirmAction.Duplicate)
                           setConfirmationDialogOpen(true)
-                        }}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-
-                  <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
-                    <IconButtonTooltip caption={t('pageEditor.overview.preview')}>
-                      <IconButton
-                        icon={<MdPreview />}
-                        disabled={!rowData.draft}
-                        circle
-                        size="sm"
-                        onClick={() => {
-                          setCurrentPage(rowData)
-                          setPagePreviewLinkOpen(true)
                         }}
                       />
                     </IconButtonTooltip>
@@ -330,15 +313,6 @@ function PageList() {
         />
       </TableWrapper>
 
-      <Modal open={isPagePreviewLinkOpen} size="sm" onClose={() => setPagePreviewLinkOpen(false)}>
-        {currentPage && (
-          <PagePreviewLinkPanel
-            props={{id: currentPage.id}}
-            onClose={() => setPagePreviewLinkOpen(false)}
-          />
-        )}
-      </Modal>
-
       <Modal
         open={isConfirmationDialogOpen}
         size="sm"
@@ -371,9 +345,9 @@ function PageList() {
             </DescriptionListItem>
 
             <DescriptionListItem label={t('pages.panels.updatedAt')}>
-              {currentPage?.latest.updatedAt &&
+              {currentPage?.modifiedAt &&
                 t('pages.panels.updatedAtDate', {
-                  updatedAtDate: new Date(currentPage.latest.updatedAt)
+                  updatedAtDate: new Date(currentPage.modifiedAt)
                 })}
             </DescriptionListItem>
 
@@ -481,6 +455,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_PAGE',
   'CAN_DELETE_PAGE',
   'CAN_PUBLISH_PAGE',
-  'CAN_GET_PAGE_PREVIEW_LINK'
+  CanPreview.id
 ])(PageList)
 export {CheckedPermissionComponent as PageList}

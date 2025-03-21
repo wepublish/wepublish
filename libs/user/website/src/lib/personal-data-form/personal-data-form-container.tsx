@@ -12,7 +12,7 @@ import {
   BuilderPersonalDataFormProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {ChangeEvent} from 'react'
+import {ChangeEvent, useCallback} from 'react'
 
 export type PersonalDataFormContainerProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
@@ -34,39 +34,45 @@ export function PersonalDataFormContainer<T extends BuilderPersonalDataFormField
   const [updatePassword] = useUpdatePasswordMutation()
   const [updateUser] = useUpdateUserMutation()
 
-  const handleOnImageUpload = async (input: ChangeEvent<HTMLInputElement> | null) => {
-    await uploadImage({
-      variables: {
-        uploadImageInput: input ? {file: input.target?.files![0] as File} : null
-      }
-    })
-  }
-
-  const handleOnUpdate = async (
-    variables: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
-  ) => {
-    const {password, passwordRepeated, ...userInput} = variables
-    const updates = [
-      updateUser({
+  const handleOnImageUpload = useCallback(
+    async (input: ChangeEvent<HTMLInputElement> | null) => {
+      await uploadImage({
         variables: {
-          input: userInput
+          uploadImageInput: input ? {file: input.target?.files![0] as File} : null
         }
       })
-    ] as Promise<unknown>[]
+    },
+    [uploadImage]
+  )
 
-    if (password && passwordRepeated) {
-      updates.push(
-        updatePassword({
+  const handleOnUpdate = useCallback(
+    async (
+      variables: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
+    ) => {
+      const {password, passwordRepeated, ...userInput} = variables
+      const updates = [
+        updateUser({
           variables: {
-            password,
-            passwordRepeated
+            input: userInput
           }
         })
-      )
-    }
+      ]
 
-    await Promise.all(updates)
-  }
+      if (password && passwordRepeated) {
+        updates.push(
+          updatePassword({
+            variables: {
+              password,
+              passwordRepeated
+            }
+          })
+        )
+      }
+
+      await Promise.all(updates)
+    },
+    [updatePassword, updateUser]
+  )
 
   if (!user) {
     return null

@@ -1,22 +1,27 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {PaymentAmountPicker} from '@wepublish/membership/website'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  PaymentAmountPicker,
-  TitleBlock,
-  TitleBlockTitle,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -26,16 +31,17 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {Paywall} from '../src/components/paywall'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
+import {TsriBanner} from '../src/components/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
-import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
+import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -44,7 +50,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -104,7 +112,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
@@ -126,7 +134,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Break: TsriBreakBlock,
               Quote: TsriQuoteBlock,
               RichText: TsriRichText,
-              Title: TsriTitle
+              Title: TsriTitle,
+              Subscribe: MitmachenInner
             }}
             blockStyles={{
               ContextBox: TsriContextBox
@@ -135,7 +144,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}>
+            }}
+            Banner={TsriBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -167,15 +177,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  actions={<MitmachenButton />}
                 />
 
                 <main>
                   <MainSpacer maxWidth="lg">
-                    <NoSsr>
-                      <Paywall />
-                    </NoSsr>
-
                     <Component {...pageProps} />
                   </MainSpacer>
                 </main>
@@ -186,6 +191,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
+
+              <RoutedAdminBar />
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
@@ -207,8 +214,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

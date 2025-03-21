@@ -1,14 +1,12 @@
 import {css, FormControlLabel, Radio, RadioGroup, styled} from '@mui/material'
 import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Currency} from '@wepublish/website/api'
-import {forwardRef, PropsWithChildren} from 'react'
+import {forwardRef, PropsWithChildren, useMemo} from 'react'
 import {formatCurrency} from '../../formatters/format-currency'
-
-const pickerItems = [1000, 1500, 2000]
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 150px);
+  grid-template-columns: repeat(auto-fit, 125px);
   align-items: top;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(2)};
@@ -88,13 +86,32 @@ export const PaymentAmountPickerItem = forwardRef<HTMLButtonElement, PaymentAmou
 
 export const PaymentAmountPicker = forwardRef<HTMLInputElement, BuilderPaymentAmountProps>(
   (
-    {className, currency, amountPerMonthMin, amountPerMonthTarget, name, error, value, onChange},
+    {
+      className,
+      slug,
+      currency,
+      amountPerMonthMin,
+      amountPerMonthTarget,
+      name,
+      error,
+      value,
+      onChange
+    },
     ref
   ) => {
     const {
       elements: {TextField},
-      meta: {locale}
+      meta: {locale, siteTitle}
     } = useWebsiteBuilder()
+
+    const pickerItems = useMemo(() => {
+      switch (siteTitle) {
+        case 'WNTI':
+          return slug?.includes('donate') ? [10000, 15000, 20000] : [1000, 1500, 2000]
+        default:
+          return [1000, 1500, 2000]
+      }
+    }, [siteTitle, slug])
 
     return (
       <PaymentAmountPickerWrapper
@@ -133,7 +150,7 @@ export const PaymentAmountPicker = forwardRef<HTMLInputElement, BuilderPaymentAm
                 type={'number'}
                 fullWidth
                 error={!!error}
-                helperText={error?.message}
+                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
                 inputProps={{
                   step: 'any',
                   min: amountPerMonthMin / 100

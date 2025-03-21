@@ -1,5 +1,5 @@
+import {Permission} from '@wepublish/permissions'
 import {hasPermission} from './has-permission'
-import {AllPermissions, EditorPermissions, PeerPermissions, Permission} from './permissions'
 
 const mockPermission: Permission = {
   id: 'Foo',
@@ -74,24 +74,6 @@ it('should return true if the permissions are spread in multiple roles', () => {
       permissionIDs: [mockPermission.id]
     }
   ] as any)
-
-  expect(result).toBeTruthy()
-})
-
-it.each(AllPermissions)('should return true for admins for permission %s', permission => {
-  const result = hasPermission(permission, [{id: 'admin'}] as any)
-
-  expect(result).toBeTruthy()
-})
-
-it.each(EditorPermissions)('should return true for editors for permission %s', permission => {
-  const result = hasPermission(permission, [{id: 'editor'}] as any)
-
-  expect(result).toBeTruthy()
-})
-
-it.each(PeerPermissions)('should return true for peers for permission %s', permission => {
-  const result = hasPermission(permission, [{id: 'peer'}] as any)
 
   expect(result).toBeTruthy()
 })

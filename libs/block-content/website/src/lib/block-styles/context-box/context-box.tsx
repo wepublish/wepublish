@@ -6,7 +6,7 @@ import {allPass} from 'ramda'
 import {hasBlockStyle} from '../../blocks'
 import {isBreakBlock} from '../../break/break-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block, LinkPageBreakBlock} from '@wepublish/website/api'
+import {BlockContent, BreakBlock} from '@wepublish/website/api'
 
 export const ContextBoxWrapper = styled('aside')`
   display: grid;
@@ -29,16 +29,15 @@ export const ContextBoxTitle = styled('div')`
 
 export const ContextBoxCollapse = styled('div')<{expanded: boolean}>`
   height: ${({theme}) => theme.spacing(15)};
-  max-height: ${({theme}) => theme.spacing(15)};
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  interpolate-size: allow-keywords;
+  transition: height 0.3s ease-in-out;
   font-style: italic;
 
   ${({theme, expanded}) =>
     expanded &&
     css`
       height: auto;
-      max-height: ${theme.spacing(100)};
     `}
 `
 
@@ -81,5 +80,6 @@ export const ContextBox = ({className, richText, text}: BuilderBlockStyleProps['
   )
 }
 
-export const isContextBoxBlockStyle = (block: Block): block is LinkPageBreakBlock =>
-  allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block)
+export const isContextBoxBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is BreakBlock => allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block)

@@ -2,9 +2,9 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {Checkbox, FormControlLabel, styled} from '@mui/material'
 import {
   Challenge,
-  UserForm,
   defaultRegisterSchema,
   requiredRegisterSchema,
+  UserForm,
   useUser,
   zodAlwaysRefine
 } from '@wepublish/authentication/website'
@@ -13,6 +13,7 @@ import {
   FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
+  ResubscribeMutationVariables,
   SubscribeMutationVariables,
   UserAddressInput
 } from '@wepublish/website/api'
@@ -25,7 +26,7 @@ import {
 import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
-import {formatCurrency} from '../formatters/format-currency'
+import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
@@ -44,7 +45,8 @@ const subscribeSchema = z.object({
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
     PaymentPeriodicity.Yearly
-  ])
+  ]),
+  payTransactionFee: z.boolean()
 })
 
 export const SubscribeWrapper = styled('form')`
@@ -140,9 +142,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   className,
   onSubscribe,
   onSubscribeWithRegister,
+  onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate
+  donate,
+  transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
+  transactionFeeText,
+  returningUserId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
@@ -150,7 +156,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
-    PaymentAmount
+    PaymentAmount,
+    TransactionFee
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const [openConfirm, setOpenConfirm] = useState(false)
@@ -166,6 +173,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [fields]
   )
+  const hasUserContext = hasUser || !!returningUserId
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
@@ -189,11 +197,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const {control, handleSubmit, watch, setValue, resetField} = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUser ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
       autoRenew: true,
+      payTransactionFee: false,
       memberPlanId: defaults?.memberPlanSlug
         ? memberPlans.data?.memberPlans.nodes.find(
             memberPlan => memberPlan.slug === defaults?.memberPlanSlug
@@ -211,7 +220,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId')
   const selectedPaymentPeriodicity = watch<'paymentPeriodicity'>('paymentPeriodicity')
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId')
-  const monthlyAmount = watch<'monthlyAmount'>('monthlyAmount')
+  const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee')
+  const monthlyAmount =
+    watch<'monthlyAmount'>('monthlyAmount') +
+    (payTransactionFee ? transactionFee(watch<'monthlyAmount'>('monthlyAmount')) : 0)
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
   const sortedMemberPlans = useMemo(
@@ -258,7 +270,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     true,
     selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,
-    monthlyAmount,
+    watch<'monthlyAmount'>('monthlyAmount'),
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale
   )
@@ -274,6 +286,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
     if (hasUser) {
       return callAction(onSubscribe)(subscribeData)
+    }
+
+    if (returningUserId) {
+      const resubscribeData: ResubscribeMutationVariables = {
+        ...subscribeData,
+        userId: returningUserId
+      }
+
+      return callAction(onResubscribe)(resubscribeData)
     }
 
     const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
@@ -367,6 +388,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
+      {!hasUser && returningUserId && (
+        <SubscribeSection>
+          <H5 component="h2">
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
+            zurück!
+          </H5>
+        </SubscribeSection>
+      )}
+
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
@@ -375,14 +405,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {hasOpenInvoices && (
           <Alert severity="warning">
             Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
         {alreadyHasSubscription && (
           <Alert severity="warning">
             Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem{' '}
-            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
@@ -414,6 +444,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               <PaymentAmount
                 {...field}
                 error={error}
+                slug={selectedMemberPlan?.slug}
                 donate={!!donate?.(selectedMemberPlan)}
                 amountPerMonthMin={amountPerMonthMin}
                 amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
@@ -423,7 +454,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         />
 
-        {!hasUser && <UserForm control={control} fields={fields} />}
+        {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -476,8 +507,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         </SubscribePayment>
       </SubscribeSection>
-
-      {!hasUser && (
+      {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
 
@@ -501,7 +531,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
+
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
+
+      <SubscribeSection>
+        <Controller
+          name={'payTransactionFee'}
+          control={control}
+          render={({field: feeField}) => <TransactionFee text={transactionFeeText} {...feeField} />}
+        />
+      </SubscribeSection>
 
       <SubscribeNarrowSection>
         <Button
@@ -544,14 +583,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {hasOpenInvoices && (
           <Paragraph gutterBottom={false}>
             Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
 
         {alreadyHasSubscription && (
           <Paragraph gutterBottom={false}>
             Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
-            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+            <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
       </MembershipModal>

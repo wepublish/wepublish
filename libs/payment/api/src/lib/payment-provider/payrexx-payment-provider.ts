@@ -41,7 +41,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
-    const apiKey = props.req.query?.apiKey as string
+    const apiKey = props.req.query?.['apiKey'] as string
 
     if (!this.timeConstantCompare(apiKey, this.webhookApiKey)) {
       return {

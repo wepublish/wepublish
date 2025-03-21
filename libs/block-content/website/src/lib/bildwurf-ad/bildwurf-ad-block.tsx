@@ -1,11 +1,12 @@
 import {useCallback, useEffect} from 'react'
-import {BildwurfAdBlock as BildwurfAdBlockType, Block} from '@wepublish/website/api'
+import {BildwurfAdBlock as BildwurfAdBlockType, BlockContent} from '@wepublish/website/api'
 
 import styled from '@emotion/styled'
 import {BuilderBildwurfAdBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const isBildwurfAdBlock = (block: Block): block is BildwurfAdBlockType =>
-  block.__typename === 'BildwurfAdBlock'
+export const isBildwurfAdBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is BildwurfAdBlockType => block.__typename === 'BildwurfAdBlock'
 
 export const BildwurfBlockWrapper = styled('div')`
   #bildwurf-ad-in-content {
@@ -31,7 +32,7 @@ export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps
 
   const loadAd = useCallback(() => {
     try {
-      window._ASO.loadAd('bildwurf-injection-wrapper', zoneID)
+      window._ASO.loadAd('bildwurf-injection-wrapper', zoneID ?? '')
     } catch (error) {
       // do nothing
     }

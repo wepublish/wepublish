@@ -1,7 +1,6 @@
+import {useHasActiveSubscription} from '@wepublish/membership/website'
 import Head from 'next/head'
 import {useEffect} from 'react'
-
-import {useHasSubscription} from '../paywall/has-subscription'
 
 declare global {
   // https://help.consentmanager.net/books/cmp/page/implementing-a-pay-or-accept-%28pur%29-model
@@ -13,7 +12,7 @@ declare global {
 }
 
 export const PURModel = () => {
-  const hasSubscription = useHasSubscription()
+  const hasSubscription = useHasActiveSubscription()
 
   useEffect(() => {
     window.cmp_pur_loggedin = hasSubscription

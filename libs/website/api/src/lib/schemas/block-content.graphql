@@ -1,14 +1,72 @@
-fragment BlockWithoutTeaser on Block {
+fragment FullPageTeaser on PageTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  page {
+    ...PageWithoutBlocks
+  }
+}
+
+fragment FullArticleTeaser on ArticleTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  article {
+    ...ArticleWithoutBlocks
+
+    latest {
+      blocks {
+        __typename
+
+        ... on PollBlock {
+          blockStyle: blockStyleName
+          poll {
+            ...FullPoll
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment FullEventTeaser on EventTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  event {
+    ...FullEvent
+  }
+}
+
+fragment BlockWithoutTeaser on BlockContent {
   __typename
 
   ... on TitleBlock {
-    blockStyle
+    blockStyle: blockStyleName
     title
     lead
   }
 
   ... on ImageBlock {
-    blockStyle
+    blockStyle: blockStyleName
     caption
     linkUrl
     image {
@@ -17,7 +75,7 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on ImageGalleryBlock {
-    blockStyle
+    blockStyle: blockStyleName
     images {
       caption
       image {
@@ -27,7 +85,7 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on QuoteBlock {
-    blockStyle
+    blockStyle: blockStyleName
     quote
     author
     image {
@@ -36,31 +94,35 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on RichTextBlock {
-    blockStyle
+    blockStyle: blockStyleName
     richText
   }
 
   ... on HTMLBlock {
-    blockStyle
+    blockStyle: blockStyleName
     html
   }
 
-  ... on EventBlock {
+  ... on SubscribeBlock {
     blockStyle
+  }
+
+  ... on EventBlock {
+    blockStyle: blockStyleName
     events {
       ...FullEvent
     }
   }
 
   ... on PollBlock {
-    blockStyle
+    blockStyle: blockStyleName
     poll {
       ...FullPoll
     }
   }
 
   ... on ListicleBlock {
-    blockStyle
+    blockStyle: blockStyleName
     items {
       title
       richText
@@ -70,78 +132,75 @@ fragment BlockWithoutTeaser on Block {
     }
   }
 
-  ... on LinkPageBreakBlock {
-    blockStyle
+  ... on BreakBlock {
+    blockStyle: blockStyleName
     text
     richText
-    layoutOption
     hideButton
     linkTarget
     linkText
     linkURL
-    styleOption
-    templateOption
     image {
       ...FullImage
     }
   }
 
   ... on FacebookPostBlock {
-    blockStyle
+    blockStyle: blockStyleName
     userID
     postID
   }
 
   ... on FacebookVideoBlock {
-    blockStyle
+    blockStyle: blockStyleName
     userID
     videoID
   }
 
   ... on InstagramPostBlock {
-    blockStyle
+    blockStyle: blockStyleName
     postID
   }
 
   ... on TwitterTweetBlock {
-    blockStyle
+    blockStyle: blockStyleName
     userID
     tweetID
   }
 
   ... on VimeoVideoBlock {
-    blockStyle
+    blockStyle: blockStyleName
     videoID
   }
 
   ... on YouTubeVideoBlock {
-    blockStyle
+    blockStyle: blockStyleName
     videoID
   }
 
   ... on SoundCloudTrackBlock {
-    blockStyle
+    blockStyle: blockStyleName
     trackID
   }
 
   ... on PolisConversationBlock {
-    blockStyle
+    blockStyle: blockStyleName
     conversationID
   }
 
   ... on TikTokVideoBlock {
-    blockStyle
+    blockStyle: blockStyleName
     userID
     videoID
   }
 
   ... on BildwurfAdBlock {
-    blockStyle
+    blockStyle: blockStyleName
     zoneID
   }
 
-  ... on EmbedBlock {
-    blockStyle
+  ... on IFrameBlock {
+    blockStyle: blockStyleName
     url
     title
     width
@@ -153,87 +212,19 @@ fragment BlockWithoutTeaser on Block {
 
 fragment FullTeaser on Teaser {
   ... on ArticleTeaser {
-    style
-
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    article {
-      ...ArticleWithoutBlocks
-
-      blocks {
-        __typename
-
-        ... on PollBlock {
-          blockStyle
-          poll {
-            ...FullPoll
-          }
-        }
-      }
-    }
-  }
-
-  ... on PeerArticleTeaser {
-    style
-
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    peer {
-      ...FullPeer
-    }
-
-    article {
-      ...ArticleWithoutBlocks
-    }
+    ...FullArticleTeaser
   }
 
   ... on PageTeaser {
-    style
-
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    page {
-      ...PageWithoutBlocks
-    }
+    ...FullPageTeaser
   }
 
   ... on EventTeaser {
-    style
-
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    event {
-      ...FullEvent
-    }
+    ...FullEventTeaser
   }
 
   ... on CustomTeaser {
-    style
-
+    type
     image {
       ...FullImage
     }
@@ -249,41 +240,56 @@ fragment FullTeaser on Teaser {
   }
 }
 
-fragment FullBlock on Block {
+fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
+  type
+  blockStyle: blockStyleName
+  flexTeasers {
+    alignment {
+      x
+      y
+      w
+      h
+    }
+
+    teaser {
+      ...FullTeaser
+    }
+  }
+}
+
+fragment FullTeaserGridBlock on TeaserGridBlock {
+  type
+  blockStyle: blockStyleName
+  teasers {
+    ...FullTeaser
+  }
+  numColumns
+}
+
+fragment FullTeaserListBlock on TeaserListBlock {
+  title
+  type
+  blockStyle: blockStyleName
+  filter {
+    tags
+  }
+  teasers {
+    ...FullTeaser
+  }
+}
+
+fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
-    blockStyle
-    flexTeasers {
-      alignment {
-        x
-        y
-        w
-        h
-      }
-
-      teaser {
-        ...FullTeaser
-      }
-    }
+    ...FullTeaserGridFlexBlock
   }
 
   ... on TeaserGridBlock {
-    blockStyle
-    teasers {
-      ...FullTeaser
-    }
-    numColumns
+    ...FullTeaserGridBlock
   }
 
   ... on TeaserListBlock {
-    title
-    blockStyle
-    filter {
-      tags
-    }
-    teasers {
-      ...FullTeaser
-    }
+    ...FullTeaserListBlock
   }
 }

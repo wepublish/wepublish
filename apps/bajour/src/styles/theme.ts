@@ -84,6 +84,13 @@ const theme = createTheme({}, WepTheme, {
             backgroundColor: 'transparent',
             borderWidth: '3px'
           }
+        },
+        contained: {
+          '@media (hover: none)': {
+            ':hover': {
+              backgroundColor: '#ffbaba'
+            }
+          }
         }
       }
     }

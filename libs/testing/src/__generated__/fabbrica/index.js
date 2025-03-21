@@ -27,10 +27,6 @@ const modelFieldDefinitions = [{
                 type: "MetadataProperty",
                 relationName: "ArticleRevisionToMetadataProperty"
             }, {
-                name: "image",
-                type: "Image",
-                relationName: "articleRevisionImage"
-            }, {
                 name: "authors",
                 type: "ArticleRevisionAuthor",
                 relationName: "ArticleRevisionToArticleRevisionAuthor"
@@ -39,21 +35,21 @@ const modelFieldDefinitions = [{
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionToArticleRevisionSocialMediaAuthor"
             }, {
+                name: "image",
+                type: "Image",
+                relationName: "articleRevisionImage"
+            }, {
                 name: "socialMediaImage",
                 type: "Image",
                 relationName: "articleRevisionSocialMediaImage"
             }, {
-                name: "PublishedArticle",
+                name: "article",
                 type: "Article",
-                relationName: "publishedArticleRevision"
+                relationName: "ArticleToArticleRevision"
             }, {
-                name: "PendingArticle",
-                type: "Article",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "DraftArticle",
-                type: "Article",
-                relationName: "draftArticleRevision"
+                name: "user",
+                type: "User",
+                relationName: "ArticleRevisionToUser"
             }]
     }, {
         name: "ArticleRevisionAuthor",
@@ -80,17 +76,9 @@ const modelFieldDefinitions = [{
     }, {
         name: "Article",
         fields: [{
-                name: "published",
-                type: "ArticleRevision",
-                relationName: "publishedArticleRevision"
-            }, {
-                name: "pending",
-                type: "ArticleRevision",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "draft",
-                type: "ArticleRevision",
-                relationName: "draftArticleRevision"
+                name: "peer",
+                type: "Peer",
+                relationName: "ArticleToPeer"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -99,6 +87,10 @@ const modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedArticles",
                 relationName: "ArticleToTaggedArticles"
+            }, {
+                name: "revisions",
+                type: "ArticleRevision",
+                relationName: "ArticleToArticleRevision"
             }, {
                 name: "trackingPixels",
                 type: "ArticleTrackingPixels",
@@ -158,6 +150,10 @@ const modelFieldDefinitions = [{
                 name: "articlesAsSocialMediaAuthor",
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionSocialMediaAuthorToAuthor"
+            }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "AuthorToPeer"
             }, {
                 name: "tags",
                 type: "TaggedAuthors",
@@ -220,6 +216,10 @@ const modelFieldDefinitions = [{
                 type: "PageRevision",
                 relationName: "pageRevisionImage"
             }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "ImageToPeer"
+            }, {
                 name: "users",
                 type: "User",
                 relationName: "ImageToUser"
@@ -246,10 +246,6 @@ const modelFieldDefinitions = [{
     }, {
         name: "Comment",
         fields: [{
-                name: "peer",
-                type: "Peer",
-                relationName: "CommentToPeer"
-            }, {
                 name: "revisions",
                 type: "CommentsRevisions",
                 relationName: "CommentToCommentsRevisions"
@@ -396,6 +392,10 @@ const modelFieldDefinitions = [{
                 type: "Page",
                 relationName: "failPage"
             }, {
+                name: "confirmationPage",
+                type: "Page",
+                relationName: "confirmationPage"
+            }, {
                 name: "subscription",
                 type: "Subscription",
                 relationName: "MemberPlanToSubscription"
@@ -441,32 +441,20 @@ const modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "pageRevisionSocialMediaImage"
             }, {
-                name: "PublishedPage",
+                name: "page",
                 type: "Page",
-                relationName: "publishedPageRevision"
+                relationName: "PageToPageRevision"
             }, {
-                name: "PendingPage",
-                type: "Page",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "DraftPage",
-                type: "Page",
-                relationName: "draftPageRevision"
+                name: "user",
+                type: "User",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "Page",
         fields: [{
-                name: "published",
+                name: "revisions",
                 type: "PageRevision",
-                relationName: "publishedPageRevision"
-            }, {
-                name: "pending",
-                type: "PageRevision",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "draft",
-                type: "PageRevision",
-                relationName: "draftPageRevision"
+                relationName: "PageToPageRevision"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -483,6 +471,10 @@ const modelFieldDefinitions = [{
                 name: "memberPlansFail",
                 type: "MemberPlan",
                 relationName: "failPage"
+            }, {
+                name: "memberPlansConfirmation",
+                type: "MemberPlan",
+                relationName: "confirmationPage"
             }, {
                 name: "banners",
                 type: "Banner",
@@ -539,9 +531,21 @@ const modelFieldDefinitions = [{
     }, {
         name: "Peer",
         fields: [{
-                name: "comments",
-                type: "Comment",
-                relationName: "CommentToPeer"
+                name: "articles",
+                type: "Article",
+                relationName: "ArticleToPeer"
+            }, {
+                name: "images",
+                type: "Image",
+                relationName: "ImageToPeer"
+            }, {
+                name: "tags",
+                type: "Tag",
+                relationName: "PeerToTag"
+            }, {
+                name: "authors",
+                type: "Author",
+                relationName: "AuthorToPeer"
             }]
     }, {
         name: "Token",
@@ -654,23 +658,23 @@ const modelFieldDefinitions = [{
                 type: "PaymentProviderCustomer",
                 relationName: "PaymentProviderCustomerToUser"
             }, {
-                name: "Comment",
+                name: "comments",
                 type: "Comment",
                 relationName: "CommentToUser"
             }, {
-                name: "Session",
+                name: "sessions",
                 type: "Session",
                 relationName: "SessionToUser"
             }, {
-                name: "Subscription",
+                name: "subscriptions",
                 type: "Subscription",
                 relationName: "SubscriptionToUser"
             }, {
-                name: "CommentRating",
+                name: "commentRatings",
                 type: "CommentRating",
                 relationName: "CommentRatingToUser"
             }, {
-                name: "PollVote",
+                name: "pollVotes",
                 type: "PollVote",
                 relationName: "PollVoteToUser"
             }, {
@@ -678,9 +682,17 @@ const modelFieldDefinitions = [{
                 type: "MailLog",
                 relationName: "MailLogToUser"
             }, {
-                name: "UserConsent",
+                name: "consents",
                 type: "UserConsent",
                 relationName: "UserToUserConsent"
+            }, {
+                name: "articleRevisions",
+                type: "ArticleRevision",
+                relationName: "ArticleRevisionToUser"
+            }, {
+                name: "pageRevisions",
+                type: "PageRevision",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "UserRole",
@@ -691,6 +703,10 @@ const modelFieldDefinitions = [{
     }, {
         name: "Tag",
         fields: [{
+                name: "peer",
+                type: "Peer",
+                relationName: "PeerToTag"
+            }, {
                 name: "comments",
                 type: "TaggedComments",
                 relationName: "TagToTaggedComments"
@@ -989,6 +1005,12 @@ function isArticleRevisionimageFactory(x) {
 function isArticleRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isArticleRevisionarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function isArticleRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
 function autoGenerateArticleRevisionScalarsOrEnums({ seq }) {
     return {
         breaking: getScalarFieldValueGenerator().Boolean({ modelName: "ArticleRevision", fieldName: "breaking", isId: false, isUnique: false, seq }),
@@ -1018,7 +1040,13 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
                 } : defaultData.image,
                 socialMediaImage: isArticleRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
                     create: yield defaultData.socialMediaImage.build()
-                } : defaultData.socialMediaImage
+                } : defaultData.socialMediaImage,
+                article: isArticleRevisionarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                user: isArticleRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1057,7 +1085,7 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
 export function defineArticleRevisionFactory(options) {
-    return defineArticleRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
+    return defineArticleRevisionFactoryInternal(options);
 }
 function isArticleRevisionAuthorrevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -1205,14 +1233,8 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
 export function defineArticleRevisionSocialMediaAuthorFactory(options) {
     return defineArticleRevisionSocialMediaAuthorFactoryInternal(options);
 }
-function isArticlepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticlependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticledraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
+function isArticlepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
 }
 function autoGenerateArticleScalarsOrEnums({ seq }) {
     return {
@@ -1236,15 +1258,9 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
-                published: isArticlepublishedFactory(defaultData.published) ? {
-                    create: yield defaultData.published.build()
-                } : defaultData.published,
-                pending: isArticlependingFactory(defaultData.pending) ? {
-                    create: yield defaultData.pending.build()
-                } : defaultData.pending,
-                draft: isArticledraftFactory(defaultData.draft) ? {
-                    create: yield defaultData.draft.build()
-                } : defaultData.draft
+                peer: isArticlepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1564,6 +1580,9 @@ export function defineAuthorsLinksFactory(options) {
 function isAuthorimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isAuthorpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateAuthorScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "Author", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -1589,7 +1608,10 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
             const defaultAssociations = {
                 image: isAuthorimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
-                } : defaultData.image
+                } : defaultData.image,
+                peer: isAuthorpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1772,6 +1794,9 @@ export function defineFocalPointFactory(options) {
 function isImagefocalPointFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "FocalPoint";
 }
+function isImagepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateImageScalarsOrEnums({ seq }) {
     return {
         id: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "id", isId: true, isUnique: false, seq }),
@@ -1802,7 +1827,10 @@ function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: 
             const defaultAssociations = {
                 focalPoint: isImagefocalPointFactory(defaultData.focalPoint) ? {
                     create: yield defaultData.focalPoint.build()
-                } : defaultData.focalPoint
+                } : defaultData.focalPoint,
+                peer: isImagepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1909,9 +1937,6 @@ function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolv
 export function defineCommentsRevisionsFactory(options) {
     return defineCommentsRevisionsFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-function isCommentpeerFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
-}
 function isCommentguestUserImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
@@ -1921,7 +1946,7 @@ function isCommentuserFactory(x) {
 function autoGenerateCommentScalarsOrEnums({ seq }) {
     return {
         itemID: getScalarFieldValueGenerator().String({ modelName: "Comment", fieldName: "itemID", isId: false, isUnique: false, seq }),
-        itemType: "peerArticle",
+        itemType: "article",
         state: "approved",
         authorType: "team"
     };
@@ -1943,9 +1968,6 @@ function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
-                peer: isCommentpeerFactory(defaultData.peer) ? {
-                    create: yield defaultData.peer.build()
-                } : defaultData.peer,
                 guestUserImage: isCommentguestUserImageFactory(defaultData.guestUserImage) ? {
                     create: yield defaultData.guestUserImage.build()
                 } : defaultData.guestUserImage,
@@ -2643,6 +2665,9 @@ function isMemberPlansuccessPageFactory(x) {
 function isMemberPlanfailPageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
 }
+function isMemberPlanconfirmationPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
 function autoGenerateMemberPlanScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -2681,7 +2706,10 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
                 } : defaultData.successPage,
                 failPage: isMemberPlanfailPageFactory(defaultData.failPage) ? {
                     create: yield defaultData.failPage.build()
-                } : defaultData.failPage
+                } : defaultData.failPage,
+                confirmationPage: isMemberPlanconfirmationPageFactory(defaultData.confirmationPage) ? {
+                    create: yield defaultData.confirmationPage.build()
+                } : defaultData.confirmationPage
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -2871,9 +2899,14 @@ function isPageRevisionimageFactory(x) {
 function isPageRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isPageRevisionpageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isPageRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
 function autoGeneratePageRevisionScalarsOrEnums({ seq }) {
     return {
-        title: getScalarFieldValueGenerator().String({ modelName: "PageRevision", fieldName: "title", isId: false, isUnique: false, seq }),
         blocks: getScalarFieldValueGenerator().Json({ modelName: "PageRevision", fieldName: "blocks", isId: false, isUnique: false, seq })
     };
 }
@@ -2899,7 +2932,13 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
                 } : defaultData.image,
                 socialMediaImage: isPageRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
                     create: yield defaultData.socialMediaImage.build()
-                } : defaultData.socialMediaImage
+                } : defaultData.socialMediaImage,
+                page: isPageRevisionpageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page,
+                user: isPageRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -2938,16 +2977,7 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export function definePageRevisionFactory(options) {
-    return definePageRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
-}
-function isPagepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagedraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
+    return definePageRevisionFactoryInternal(options);
 }
 function autoGeneratePageScalarsOrEnums({ seq }) {
     return {};
@@ -2968,17 +2998,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {
-                published: isPagepublishedFactory(defaultData.published) ? {
-                    create: yield defaultData.published.build()
-                } : defaultData.published,
-                pending: isPagependingFactory(defaultData.pending) ? {
-                    create: yield defaultData.pending.build()
-                } : defaultData.pending,
-                draft: isPagedraftFactory(defaultData.draft) ? {
-                    create: yield defaultData.draft.build()
-                } : defaultData.draft
-            };
+            const defaultAssociations = {};
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });
@@ -4153,6 +4173,9 @@ function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits
 export function defineSettingFactory(options) {
     return defineSettingFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
+function isTagpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateTagScalarsOrEnums({ seq }) {
     return {
         type: "Comment"
@@ -4174,7 +4197,11 @@ function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: tr
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {};
+            const defaultAssociations = {
+                peer: isTagpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });

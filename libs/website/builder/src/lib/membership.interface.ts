@@ -2,8 +2,9 @@ import {QueryResult} from '@apollo/client'
 import {RadioProps} from '@mui/material'
 import {
   ChallengeQuery,
-  FullSubscriptionFragment,
   FullInvoiceFragment,
+  FullMemberPlanFragment,
+  FullSubscriptionFragment,
   InvoicesQuery,
   MemberPlanListQuery,
   PaymentMethod,
@@ -11,7 +12,6 @@ import {
   RegisterMutationVariables,
   SubscribeMutationVariables,
   SubscriptionsQuery,
-  FullMemberPlanFragment,
   Currency
 } from '@wepublish/website/api'
 import {BuilderRegistrationFormProps} from './authentication.interface'
@@ -31,6 +31,7 @@ export type BuilderSubscriptionListProps = Pick<
 > & {
   className?: string
   invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
+  subscribeUrl: string
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
 }
@@ -60,9 +61,9 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
-  'amountPerMonthMin' | 'currency'
+  'amountPerMonthMin' | 'currency' | 'extendable'
 > &
-  RadioProps & {className?: string}
+  RadioProps & {className?: string} & {slug: string}
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined
@@ -80,6 +81,14 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
+export type BuilderTransactionFeeProps = {
+  text?: string
+  className?: string
+  onChange: (value: boolean) => void
+  name?: string
+  value?: boolean
+}
+
 export type BuilderPaymentAmountProps = {
   amountPerMonthMin: number
   amountPerMonthTarget: number | undefined
@@ -90,6 +99,7 @@ export type BuilderPaymentAmountProps = {
   value: number
   error: FieldError | undefined
   className?: string
+  slug?: string
 }
 
 export type BuilderSubscribeProps<
@@ -107,6 +117,9 @@ export type BuilderSubscribeProps<
   onSubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>
+  onResubscribe?: (
+    data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) => Promise<void>
   defaults?: Partial<{
     memberPlanSlug: string | null
     email: string
@@ -116,4 +129,7 @@ export type BuilderSubscribeProps<
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
+  transactionFee?: (monthlyAmount: number) => number
+  transactionFeeText?: string
+  returningUserId?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

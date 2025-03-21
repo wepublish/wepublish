@@ -1,10 +1,6 @@
 import {css, NoSsr, styled} from '@mui/material'
-import {
-  ArticleDate,
-  ArticleDateWrapper,
-  BuilderArticleDateProps,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import {ArticleDate, ArticleDateWrapper} from '@wepublish/article/website'
+import {BuilderArticleDateProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdShare} from 'react-icons/md'
 
 const iconButtonStyles = css`
@@ -48,8 +44,8 @@ export const MannschaftArticleDateWithShare = ({article}: BuilderArticleDateProp
               onClick={async () => {
                 await navigator.share({
                   url: article.url,
-                  title: article.title,
-                  text: article.lead ?? undefined
+                  title: article.latest.title ?? undefined,
+                  text: article.latest.lead ?? undefined
                 })
               }}
               css={iconButtonStyles}>

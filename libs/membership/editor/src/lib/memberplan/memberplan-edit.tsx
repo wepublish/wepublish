@@ -12,12 +12,12 @@ import {
   useUpdateMemberPlanMutation
 } from '@wepublish/editor/api'
 import {
+  createCheckedPermissionComponent,
+  generateID,
   ListValue,
   SingleView,
   SingleViewContent,
-  SingleViewTitle,
-  createCheckedPermissionComponent,
-  generateID
+  SingleViewTitle
 } from '@wepublish/ui/editor'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -164,7 +164,8 @@ function MemberPlanEdit() {
       maxCount: memberPlan.maxCount,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,
-      failPageId: memberPlan.failPageId
+      failPageId: memberPlan.failPageId,
+      confirmationPageId: memberPlan.confirmationPageId
     } as MemberPlanInput
 
     // update member plan

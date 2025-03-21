@@ -33,7 +33,8 @@ export class NovaMediaAdapter implements MediaAdapter {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
       body: form,
-      signal: AbortSignal.timeout(50000)
+      // will work with newer node version, @ts-expect-error doesn't work here unfortunately
+      signal: AbortSignal.timeout(50000) as any
     })
 
     const json = await response.json()
@@ -104,7 +105,8 @@ export class NovaMediaAdapter implements MediaAdapter {
       if (image?.focalPoint?.x) {
         xFocalPoint = image.focalPoint.x > 0.6 ? 'right' : image.focalPoint.x < 0.4 ? 'left' : ''
 
-        yFocalPoint = image.focalPoint.y > 0.6 ? 'bottom' : image.focalPoint.y < 0.4 ? 'top' : ''
+        yFocalPoint =
+          image.focalPoint.y ?? 0 > 0.6 ? 'bottom' : image.focalPoint.y ?? 0 < 0.4 ? 'top' : ''
       }
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined

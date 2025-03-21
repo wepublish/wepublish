@@ -3,7 +3,7 @@
 const {composePlugins, withNx} = require('@nx/next')
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: !!process.env.ANALYZE_BUNDLE,
+  enabled: process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false
 })
 
@@ -17,6 +17,16 @@ const nextConfig = {
       API_URL: process.env.API_URL || '',
       GA_ID: process.env.GA_ID || ''
     }
+  },
+  async redirects() {
+    return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
+      {
+        source: '/abo',
+        destination: '/mitmachen',
+        permanent: false
+      }
+    ]
   }
 }
 

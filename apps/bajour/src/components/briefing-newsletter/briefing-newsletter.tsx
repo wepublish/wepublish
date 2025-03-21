@@ -1,6 +1,6 @@
 import {Button, styled} from '@mui/material'
 import {H1} from '@wepublish/ui'
-import {useWebsiteBuilder} from '@wepublish/website'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 import {ReactComponent as Logo} from '../../logo.svg'
 import BaselBriefingBg from '../briefing/basel.jpg'

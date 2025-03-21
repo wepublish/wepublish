@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {Teaser, TeaserMetadata, TeaserTags} from '@wepublish/website'
+import {Teaser, TeaserMetadata, TeaserTags} from '@wepublish/block-content/website'
 
 export const MannschaftBaseTeaser = styled(Teaser)`
   grid-template-areas:

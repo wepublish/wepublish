@@ -1,5 +1,7 @@
 import {Badge, styled} from '@mui/material'
-import {ApiV1, ArticleTags, BuilderArticleMetaProps, useWebsiteBuilder} from '@wepublish/website'
+import {ArticleTags} from '@wepublish/article/website'
+import {useCommentListQuery} from '@wepublish/website/api'
+import {BuilderArticleMetaProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {FaCommentSlash, FaRegComment} from 'react-icons/fa6'
 
 export const ArticleMetaWrapper = styled('div')`
@@ -9,7 +11,9 @@ export const ArticleMetaWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const ArticleMetaComments = styled('div')``
+export const ArticleMetaComments = styled('div')`
+  margin-right: ${({theme}) => theme.spacing(2)};
+`
 
 const ArticleMetaBadge = styled(Badge)`
   .MuiBadge-badge {
@@ -25,7 +29,7 @@ export const TsriArticleMeta = ({article, className}: BuilderArticleMetaProps) =
   const {
     elements: {Link}
   } = useWebsiteBuilder()
-  const {data} = ApiV1.useCommentListQuery({
+  const {data} = useCommentListQuery({
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id

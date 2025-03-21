@@ -5,7 +5,7 @@ import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
-import {Block, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
 import {hasBlockStyle} from '../../blocks'
 import {
   alignmentForTeaserBlock,
@@ -192,6 +192,6 @@ export const TeaserSlider = ({
 }
 
 export const isTeaserSliderBlockStyle = (
-  block: Block
+  block: BlockContent
 ): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
