@@ -1,7 +1,8 @@
 import {BlockContent, TeaserListBlock as TeaserListBlockType} from '@wepublish/website/api'
 import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {alignmentForTeaserBlock} from './teaser-grid-block'
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 
 export const isTeaserListBlock = (
   block: Pick<BlockContent, '__typename'>

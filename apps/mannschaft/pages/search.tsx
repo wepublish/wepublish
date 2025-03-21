@@ -1,4 +1,5 @@
-import {Box, css, Skeleton, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {Box, css, Skeleton} from '@mui/material'
 import {articleToTeaser} from '@wepublish/article/website'
 import {alignmentForTeaserBlock} from '@wepublish/block-content/website'
 import {Article} from '@wepublish/website/api'

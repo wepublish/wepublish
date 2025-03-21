@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, IFrameBlock as IFrameBlockType} from '@wepublish/website/api'
 import {BuilderIFrameBlockProps} from '@wepublish/website/builder'
 import {css} from '@emotion/react'

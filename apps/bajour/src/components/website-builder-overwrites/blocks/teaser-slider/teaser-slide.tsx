@@ -1,4 +1,5 @@
-import {css, styled, Theme, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
+import {css, Theme} from '@mui/material'
 import {
   selectTeaserAuthors,
   selectTeaserDate,
@@ -8,7 +9,6 @@ import {
   selectTeaserUrl
 } from '@wepublish/block-content/website'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useMemo} from 'react'
 
 import {fluidTypography} from '../teaser-overwrite.style'
 
@@ -53,19 +53,15 @@ const leadStyles = css`
   font-weight: 300;
 `
 
-const useButtonStyles = (theme: Theme) => {
-  return useMemo(
-    () => css`
-      margin-top: ${theme.spacing(2)};
-      justify-self: end;
+const buttonStyles = (theme: Theme) =>
+  css`
+    margin-top: ${theme.spacing(2)};
+    justify-self: end;
 
-      ${theme.breakpoints.up('xl')} {
-        margin-top: ${theme.spacing(4)};
-      }
-    `,
-    [theme]
-  )
-}
+    ${theme.breakpoints.up('xl')} {
+      margin-top: ${theme.spacing(4)};
+    }
+  `
 
 export const TeaserSlide = ({teaser, className}: Omit<BuilderTeaserProps, 'alignment'>) => {
   const title = teaser && selectTeaserTitle(teaser)
@@ -75,8 +71,6 @@ export const TeaserSlide = ({teaser, className}: Omit<BuilderTeaserProps, 'align
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
 
-  const theme = useTheme()
-  const buttonStyles = useButtonStyles(theme)
   const {
     elements: {Image, H5, Paragraph, Button, Link},
     date

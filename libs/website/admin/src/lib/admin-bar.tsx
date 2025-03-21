@@ -1,4 +1,4 @@
-import {SpeedDial, SpeedDialAction, SpeedDialIcon, styled, useTheme} from '@mui/material'
+import {SpeedDial, SpeedDialAction, SpeedDialIcon, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {MdAdminPanelSettings, MdPreview} from 'react-icons/md'
 import {PREVIEW_MODE_KEY} from './preview-link'
@@ -6,6 +6,7 @@ import {CanPreview} from '@wepublish/permissions'
 import {ComponentProps, memo, useEffect, useMemo} from 'react'
 import {useApolloClient} from '@apollo/client'
 import {useSessionStorage} from '@wepublish/ui'
+import styled from '@emotion/styled'
 
 export const AdminBarWrapper = styled(SpeedDial)`
   position: fixed;

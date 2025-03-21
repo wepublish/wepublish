@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {FooterInnerWrapper} from '@wepublish/navigation/website'
 import {Footer as WepFooter} from '@wepublish/navigation/website'
 

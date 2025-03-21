@@ -1,4 +1,5 @@
-import {css, Pagination, styled, TextField} from '@mui/material'
+import styled from '@emotion/styled'
+import {css, Pagination, TextField} from '@mui/material'
 import {articleToTeaser} from '@wepublish/article/website'
 import {alignmentForTeaserBlock} from '@wepublish/block-content/website'
 import {Button} from '@wepublish/ui'

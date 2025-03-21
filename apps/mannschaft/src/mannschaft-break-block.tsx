@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   BreakBlock,
   hasBlockStyle,
@@ -69,6 +69,6 @@ export const MannschaftBreakBlock = styled(BreakBlock)`
   }
 
   ${HeadingWithoutImage} {
-    font-size: ${({theme}) => theme.typography.h3};
+    font-size: ${({theme}) => theme.typography.h3.fontSize};
   }
 `

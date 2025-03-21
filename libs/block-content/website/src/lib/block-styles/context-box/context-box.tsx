@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {useReducer} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
 import {RichTextBlock} from '../../richtext/richtext-block'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderArticleDateProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const ArticleDateWrapper = styled('time')`

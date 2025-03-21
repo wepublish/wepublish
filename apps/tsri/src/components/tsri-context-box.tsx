@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   ContextBox,
   ContextBoxCollapse,
@@ -14,7 +14,7 @@ export const TsriContextBox = styled(ContextBox)`
 
   ${ContextBoxTitle} {
     grid-column: 2/3;
-    font-size: ${({theme}) => theme.typography.h6};
+    font-size: ${({theme}) => theme.typography.h6.fontSize};
     font-weight: ${({theme}) => theme.typography.fontWeightBold};
   }
 

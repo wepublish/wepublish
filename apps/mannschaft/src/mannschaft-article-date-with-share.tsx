@@ -1,4 +1,5 @@
-import {css, NoSsr, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css, NoSsr} from '@mui/material'
 import {ArticleDate, ArticleDateWrapper} from '@wepublish/article/website'
 import {BuilderArticleDateProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdShare} from 'react-icons/md'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {alignmentForTeaserBlock, TeaserGridBlockWrapper} from '@wepublish/block-content/website'
 import {ArticleTeaser} from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps} from '@wepublish/website/builder'

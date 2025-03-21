@@ -1,6 +1,6 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ArticleSEO} from '@wepublish/article/website'
 import {isIFrameBlock, isRichTextBlock, RichTextBlock} from '@wepublish/block-content/website'
 import {CommentListItemShare} from '@wepublish/comments/website'
@@ -100,20 +100,19 @@ const SearchContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
   padding-right: ${({theme}) => theme.spacing(4)};
-
   text-align: end;
-  font-size: ${({theme}) => theme.typography.subtitle2};
+  font-size: ${({theme}) => theme.typography.subtitle2.fontSize};
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     padding-right: 0;
-    font-size: ${({theme}) => theme.typography.subtitle1};
+    font-size: ${({theme}) => theme.typography.subtitle1.fontSize};
   }
 `
 
 const SearchHits = styled('div')`
   padding-top: ${({theme}) => theme.spacing(0.5)};
   padding-bottom: ${({theme}) => theme.spacing(0.5)};
-  font-size: ${({theme}) => theme.typography.subtitle1};
+  font-size: ${({theme}) => theme.typography.subtitle1.fontSize};
   font-weight: 700;
 `
 

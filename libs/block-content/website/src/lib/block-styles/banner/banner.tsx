@@ -1,5 +1,5 @@
 import {css} from '@mui/material'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, BreakBlock} from '@wepublish/website/api'
 import {useWebsiteBuilder, BuilderBlockStyleProps} from '@wepublish/website/builder'
 import {isBreakBlock} from '../../break/break-block'

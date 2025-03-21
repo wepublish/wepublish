@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, FacebookPostBlock as FacebookPostBlockType} from '@wepublish/website/api'
 import {BuilderFacebookPostBlockProps} from '@wepublish/website/builder'
 

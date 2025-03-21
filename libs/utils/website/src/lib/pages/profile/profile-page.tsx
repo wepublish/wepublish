@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {setCookie} from 'cookies-next'
 import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'

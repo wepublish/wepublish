@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, TitleBlock as TitleBlockType} from '@wepublish/website/api'
 import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {H3} from '@wepublish/ui'

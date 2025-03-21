@@ -1,4 +1,5 @@
-import {Theme, css, styled, useTheme} from '@mui/material'
+import {Theme, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 

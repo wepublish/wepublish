@@ -1,5 +1,5 @@
+import styled from '@emotion/styled'
 import {campaigns} from '@mailchimp/mailchimp_marketing'
-import {styled} from '@mui/material'
 import {TeaserWrapper} from '@wepublish/block-content/website'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
@@ -34,7 +34,7 @@ const DailyBriefingLinkList = styled('ul')`
 const DailyBriefingLink = styled('li')`
   padding-bottom: ${({theme}) => theme.spacing(2)};
   border-bottom: currentColor 1px solid;
-  font-size: ${({theme}) => theme.typography.h6};
+  font-size: ${({theme}) => theme.typography.h6.fontSize};
   font-weight: 600;
 
   &:last-child {

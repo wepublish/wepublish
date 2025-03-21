@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {isPollBlock} from '@wepublish/block-content/website'
 import {Comment} from '@wepublish/comments/website'
 import {Image} from '@wepublish/image/website'

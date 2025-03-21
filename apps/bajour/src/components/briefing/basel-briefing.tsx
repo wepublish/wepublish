@@ -1,4 +1,5 @@
-import {Button, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {Button} from '@mui/material'
 import {Image} from '@wepublish/image/website'
 import {NextWepublishLink} from '@wepublish/utils/website'
 import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'

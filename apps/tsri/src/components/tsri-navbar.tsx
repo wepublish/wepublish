@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Navbar, NavbarInnerWrapper} from '@wepublish/navigation/website'
 
 export const TsriNavbar = styled(Navbar)`

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, VimeoVideoBlock as VimeoVideoBlockType} from '@wepublish/website/api'
 import {BuilderVimeoVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'

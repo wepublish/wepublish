@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderListicleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, ListicleBlock as ListicleBlockType} from '@wepublish/website/api'
 

@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, styled} from '@mui/material'
+import {Checkbox, FormControlLabel} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   Challenge,
   defaultRegisterSchema,

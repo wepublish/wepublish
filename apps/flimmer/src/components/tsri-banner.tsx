@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Banner, BannerCloseButton, BannerContent, BannerTitle} from '@wepublish/banner/website'
 
 const TsriBanner = styled(Banner)(

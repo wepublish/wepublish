@@ -1,4 +1,5 @@
-import {ImageList, ImageListItem, styled} from '@mui/material'
+import {ImageList, ImageListItem} from '@mui/material'
+import styled from '@emotion/styled'
 import {BlockContent, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
 import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType} from '@wepublish/website/api'
 

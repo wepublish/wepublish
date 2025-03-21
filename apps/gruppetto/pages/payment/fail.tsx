@@ -1,4 +1,5 @@
-import {Alert, CircularProgress, styled, Typography} from '@mui/material'
+import styled from '@emotion/styled'
+import {Alert, CircularProgress, Typography} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {
   CheckInvoiceStatusQuery,

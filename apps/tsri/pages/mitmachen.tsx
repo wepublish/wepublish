@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {AuthTokenStorageKey, UserFormWrapper} from '@wepublish/authentication/website'
 import {SubscribeWrapper} from '@wepublish/membership/website'
 import {PageContainer} from '@wepublish/page/website'

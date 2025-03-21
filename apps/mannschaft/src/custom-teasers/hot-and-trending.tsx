@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {TeaserWrapper} from '@wepublish/block-content/website'
 import {useHotAndTrendingQuery} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -33,7 +33,7 @@ const HotAndTrendingLinkList = styled('ul')`
 const HotAndTrendingLink = styled('li')`
   padding-bottom: ${({theme}) => theme.spacing(2)};
   border-bottom: currentColor 1px solid;
-  font-size: ${({theme}) => theme.typography.h6};
+  font-size: ${({theme}) => theme.typography.h6.fontSize};
   font-weight: 600;
 
   &:last-child {

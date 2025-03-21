@@ -1,10 +1,11 @@
-import {Chip, css, styled, useTheme} from '@mui/material'
+import {Chip, css, Theme} from '@mui/material'
+import styled from '@emotion/styled'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-import {PropsWithChildren, useMemo} from 'react'
+import {PropsWithChildren} from 'react'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -210,29 +211,22 @@ export const TeaserImageWrapper = styled('div')`
   }
 `
 
-const useImageStyles = () => {
-  const theme = useTheme()
+const imageStyles = (theme: Theme) => css`
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
 
-  return useMemo(
-    () => css`
-      max-height: 400px;
-      width: 100%;
-      object-fit: cover;
-      grid-column: 1/13;
-      transition: transform 0.3s ease-in-out;
-      aspect-ratio: 1.8;
+  :where(${TeaserWrapper}:hover &) {
+    transform: scale(1.1);
+  }
 
-      :where(${TeaserWrapper}:hover &) {
-        transform: scale(1.1);
-      }
-
-      ${theme.breakpoints.up('md')} {
-        aspect-ratio: 1;
-      }
-    `,
-    [theme]
-  )
-}
+  ${theme.breakpoints.up('md')} {
+    aspect-ratio: 1;
+  }
+`
 
 export const TeaserContentWrapper = styled('div')`
   display: grid;
@@ -357,8 +351,6 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
     date,
     elements: {Image, Paragraph, H4}
   } = useWebsiteBuilder()
-
-  const imageStyles = useImageStyles()
 
   return (
     <TeaserWrapper {...alignment}>

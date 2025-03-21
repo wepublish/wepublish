@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ArticleWrapper} from '@wepublish/article/website'
 import {Image} from '@wepublish/image/website'
 import {Link} from '@wepublish/ui'

@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {ArticleAuthor} from '@wepublish/author/website'
 import {CommentListContainer} from '@wepublish/comments/website'

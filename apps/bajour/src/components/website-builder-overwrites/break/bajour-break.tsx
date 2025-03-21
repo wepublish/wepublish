@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BreakBlock, hasBlockStyle, isBreakBlock} from '@wepublish/block-content/website'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 import {allPass} from 'ramda'

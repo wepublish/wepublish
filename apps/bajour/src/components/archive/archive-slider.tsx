@@ -1,6 +1,7 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {selectTeaserDate, selectTeaserImage} from '@wepublish/block-content/website'
 import {Teaser} from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'

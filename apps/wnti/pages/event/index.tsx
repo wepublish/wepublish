@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {DateTimePicker} from '@mui/x-date-pickers'
 import {EventListContainer} from '@wepublish/event/website'
 import {EventSort, SortOrder} from '@wepublish/website/api'

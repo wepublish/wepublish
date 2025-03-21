@@ -58,7 +58,7 @@
     "@nestjs/cli": "^10.1.11",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.1.0",
-    "@next/bundle-analyzer": "^13.4.19",
+    "@next/bundle-analyzer": "^15.1.5",
     "@nx/cypress": "18.2.4",
     "@nx/eslint": "18.2.4",
     "@nx/eslint-plugin": "18.2.4",
@@ -143,7 +143,7 @@
     "cypress": "^13.6.6",
     "dotenv": "^8.2.0",
     "eslint": "8.57.0",
-    "eslint-config-next": "13.4.1",
+    "eslint-config-next": "15.1.5",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-cypress": "2.15.1",
@@ -242,7 +242,7 @@
     "@nestjs/platform-express": "^10.4.5",
     "@nestjs/schedule": "^4.1.1",
     "@nestjs/terminus": "^10.2.3",
-    "@next/third-parties": "^14.2.1",
+    "@next/third-parties": "^15.1.5",
     "@prisma/client": "^5.0.0",
     "@quramy/prisma-fabbrica": "^1.0.2",
     "@sentry/nestjs": "^8.34.0",
@@ -270,7 +270,7 @@
     "browser-image-compression": "^1.0.16",
     "buffer": "^6.0.3",
     "cache-manager": "^5.2.0",
-    "cookies-next": "^2.1.1",
+    "cookies-next": "^5.1.0",
     "core-js": "3.36.1",
     "cors": "~2.8.5",
     "cron": "^2.3.0",
@@ -310,7 +310,7 @@
     "minio": "^8.0.1",
     "nanoid": "^2.1.7",
     "nestjs-zod": "^3.0.0",
-    "next": "~13.4.12",
+    "next": "^15.2.3",
     "node-cache": "^5.1.2",
     "node-fetch": "2.6.7",
     "openid-client": "^3.14.0",
@@ -347,7 +347,7 @@
     "regenerator-runtime": "0.13.7",
     "rsuite": "^5.40.0",
     "rxjs": "^7.8.0",
-    "sharp": "^0.33.4",
+    "sharp": "^0.33.5",
     "slate": "^0.58.1",
     "slate-history": "^0.58.1",
     "slate-hyperscript": "^0.58.1",
@@ -360,7 +360,7 @@
     "zod-i18n-map": "^2.13.1"
   },
   "optionalDependencies": {
-    "@img/sharp-darwin-arm64": "^0.33.4",
-    "@img/sharp-linux-x64": "^0.33.4"
+    "@img/sharp-darwin-arm64": "^0.33.5",
+    "@img/sharp-linux-x64": "^0.33.5"
   }
 }

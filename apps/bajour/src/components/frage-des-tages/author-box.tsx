@@ -1,5 +1,5 @@
 import {css} from '@emotion/react'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {Author} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {memo} from 'react'

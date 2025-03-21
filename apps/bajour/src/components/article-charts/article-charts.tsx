@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {useHotAndTrendingQuery} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 

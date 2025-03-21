@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BreakBlock, HeadingWithImage, HeadingWithoutImage} from '@wepublish/block-content/website'
 
 export const TsriBreakBlock = styled(BreakBlock)`

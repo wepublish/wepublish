@@ -1,4 +1,5 @@
-import {CircularProgress, styled, Typography} from '@mui/material'
+import styled from '@emotion/styled'
+import {CircularProgress, Typography} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {useCheckInvoiceStatusLazyQuery, useInvoicesLazyQuery} from '@wepublish/website/api'
 import {GetServerSideProps} from 'next'

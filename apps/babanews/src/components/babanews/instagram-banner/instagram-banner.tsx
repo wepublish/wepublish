@@ -1,5 +1,5 @@
+import styled from '@emotion/styled'
 import {css, Theme, useTheme} from '@mui/material'
-import {styled} from '@mui/material'
 import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 import {IoLogoInstagram} from 'react-icons/io'

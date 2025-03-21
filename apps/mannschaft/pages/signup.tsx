@@ -1,4 +1,5 @@
-import {styled, Typography} from '@mui/material'
+import styled from '@emotion/styled'
+import {Typography} from '@mui/material'
 import {RegistrationFormContainer, useUser} from '@wepublish/authentication/website'
 import {
   addClientCacheToV1Props,
