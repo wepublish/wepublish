@@ -43,6 +43,7 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
+import {TsriArticleDate} from '../src/components/tsri-article-date'
 
 setDefaultOptions({
   locale: de
@@ -127,6 +128,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             Navbar={TsriNavbar}
+            ArticleDate={TsriArticleDate}
             ArticleMeta={TsriArticleMeta}
             PaymentAmount={PaymentAmountPicker}
             elements={{Link: NextWepublishLink}}
