@@ -100,7 +100,6 @@ const SearchContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
   padding-right: ${({theme}) => theme.spacing(4)};
-
   text-align: end;
   font-size: ${({theme}) => theme.typography.subtitle2.fontSize};
 
@@ -113,7 +112,7 @@ const SearchContainer = styled('div')`
 const SearchHits = styled('div')`
   padding-top: ${({theme}) => theme.spacing(0.5)};
   padding-bottom: ${({theme}) => theme.spacing(0.5)};
-  font-size: ${({theme}) => theme.typography.subtitle1};
+  font-size: ${({theme}) => theme.typography.subtitle1.fontSize};
   font-weight: 700;
 `
 

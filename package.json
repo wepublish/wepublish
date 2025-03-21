@@ -310,7 +310,7 @@
     "minio": "^8.0.1",
     "nanoid": "^2.1.7",
     "nestjs-zod": "^3.0.0",
-    "next": "~15.1.5",
+    "next": "^15.2.3",
     "node-cache": "^5.1.2",
     "node-fetch": "2.6.7",
     "openid-client": "^3.14.0",
@@ -347,7 +347,7 @@
     "regenerator-runtime": "0.13.7",
     "rsuite": "^5.40.0",
     "rxjs": "^7.8.0",
-    "sharp": "^0.33.4",
+    "sharp": "^0.33.5",
     "slate": "^0.58.1",
     "slate-history": "^0.58.1",
     "slate-hyperscript": "^0.58.1",
@@ -360,7 +360,7 @@
     "zod-i18n-map": "^2.13.1"
   },
   "optionalDependencies": {
-    "@img/sharp-darwin-arm64": "^0.33.4",
-    "@img/sharp-linux-x64": "^0.33.4"
+    "@img/sharp-darwin-arm64": "^0.33.5",
+    "@img/sharp-linux-x64": "^0.33.5"
   }
 }
