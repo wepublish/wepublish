@@ -24,7 +24,6 @@ export function Article({className, data, children, loading, error}: BuilderArti
   const {
     ArticleSEO,
     ArticleAuthors,
-    elements: {Link},
     ArticleMeta,
     blocks: {Blocks}
   } = useWebsiteBuilder()
