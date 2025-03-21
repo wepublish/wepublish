@@ -17,7 +17,7 @@ mutation CreateSubscription($input: SubscriptionInput!) {
   }
 }
 
-mutation RenewSubscription($id: ID!) {
+mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     id
   }

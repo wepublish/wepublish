@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType} from '@wepublish/website/api'
 
@@ -9,7 +9,7 @@ export const ArticleAuthorsWrapper = styled('div')`
 
 export const ArticleAuthors = ({article, className}: BuilderArticleAuthorsProps) => {
   const {AuthorChip, ArticleDate} = useWebsiteBuilder()
-  const authors = article?.authors.filter(author => !author.hideOnArticle) || []
+  const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
 
   if (!authors.length) {
     return

@@ -73,7 +73,7 @@ function PollEditView() {
       pollId: params.id
     },
     onError: onErrorToast,
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
 
   // updating poll

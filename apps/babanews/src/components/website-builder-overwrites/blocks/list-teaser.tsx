@@ -1,12 +1,12 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
-  Image,
   Teaser,
   TeaserImageWrapper,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {Image} from '@wepublish/image/website'
 
 export const TeaserImgStyled = styled(Image)`
   width: 100%;

@@ -6,13 +6,11 @@ import {
   PartialType,
   OmitType,
   registerEnumType,
-  PickType,
-  ID
+  PickType
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
-import {PageV2} from '@wepublish/event/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Descendant} from 'slate'
 
@@ -56,7 +54,7 @@ class AvailablePaymentMethod {
 
 @ObjectType()
 class MemberPlan {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -92,22 +90,28 @@ class MemberPlan {
   @Field(() => [AvailablePaymentMethod])
   availablePaymentMethods!: AvailablePaymentMethod[]
 
-  @Field(() => ID, {nullable: true})
+  @Field(() => String, {nullable: true})
   successPageId?: string
 
-  @Field({nullable: true})
-  successPage?: PageV2
+  // @Field({nullable: true})
+  // successPage?: Page
 
-  @Field(() => ID, {nullable: true})
+  @Field(() => String, {nullable: true})
   failPageId?: string
 
-  @Field({nullable: true})
-  failPage?: PageV2
+  // @Field({nullable: true})
+  // failPage?: Page
+
+  @Field(() => String, {nullable: true})
+  confirmationPageId?: string
+
+  // @Field({nullable: true})
+  // confirmationPage?: Page
 }
 
 @ObjectType()
 export class PaymentMethod {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()

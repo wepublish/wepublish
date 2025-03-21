@@ -1,4 +1,4 @@
-import {Permission} from '@wepublish/permissions/api'
+import {Permission} from '@wepublish/permissions'
 import {ApolloServer} from 'apollo-server-express'
 import {
   CreateUserRole,

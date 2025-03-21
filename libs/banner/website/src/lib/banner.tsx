@@ -1,4 +1,5 @@
-import {Link, styled} from '@mui/material'
+import {Link} from '@mui/material'
+import styled from '@emotion/styled'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps} from '@wepublish/website/builder'

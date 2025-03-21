@@ -1,5 +1,16 @@
 import {capitalize} from '@mui/material'
-import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
+import {TagType} from '@prisma/client'
+import {ArticleListContainer} from '@wepublish/article/website'
+import {
+  addClientCacheToV1Props,
+  ArticleListDocument,
+  getV1ApiClient,
+  NavigationListDocument,
+  PeerProfileDocument,
+  TagDocument,
+  useArticleListQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -36,7 +47,7 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
     [page, tagId]
   )
 
-  const {data} = ApiV1.useArticleListQuery({
+  const {data} = useArticleListQuery({
     fetchPolicy: 'cache-only',
     variables
   })
@@ -88,13 +99,13 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {tag} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   const tagResult = await client.query({
-    query: ApiV1.TagDocument,
+    query: TagDocument,
     variables: {
       tag,
-      type: ApiV1.TagType.Article
+      type: TagType.Article
     }
   })
 
@@ -108,7 +119,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   await Promise.all([
     client.query({
-      query: ApiV1.ArticleListDocument,
+      query: ArticleListDocument,
       variables: {
         take,
         skip: 0,
@@ -118,14 +129,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {
+  const props = addClientCacheToV1Props(client, {
     tagId
   })
 

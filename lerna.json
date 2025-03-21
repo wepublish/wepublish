@@ -15,26 +15,13 @@
   },
   "command": {
     "version": {
-      "allowBranch": [
-        "master",
-        "r/*"
-      ],
+      "allowBranch": ["master", "r/*"],
       "changelog": false
     },
     "publish": {
-      "ignoreChanges": [
-        "*.md",
-        "*.txt"
-      ],
+      "ignoreChanges": ["*.md", "*.txt"],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": [
-    "apps/editor",
-    "libs/analytics",
-    "libs/api",
-    "libs/nest-modules",
-    "libs/website",
-    "libs/ui"
-  ]
+  "packages": ["apps/editor", "libs/analytics", "libs/api", "libs/nest-modules"]
 }

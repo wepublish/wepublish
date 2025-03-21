@@ -4833,7 +4833,7 @@ export type ImageUrLsFragment = {
   column6URL?: string | null
 }
 
-export type ImageRefFragment = {
+export type FullImageFragment = {
   __typename?: 'Image'
   id: string
   link?: string | null

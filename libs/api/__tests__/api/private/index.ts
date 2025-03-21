@@ -28,148 +28,10 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
-
 export type AllowedSettingVals = {
   __typename?: 'AllowedSettingVals';
   boolChoice?: Maybe<Scalars['Boolean']>;
   stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export type Article = {
-  __typename?: 'Article';
-  createdAt: Scalars['DateTime'];
-  disableComments?: Maybe<Scalars['Boolean']>;
-  draft?: Maybe<ArticleRevision>;
-  hidden?: Maybe<Scalars['Boolean']>;
-  id: Scalars['ID'];
-  latest: ArticleRevision;
-  modifiedAt: Scalars['DateTime'];
-  pending?: Maybe<ArticleRevision>;
-  published?: Maybe<ArticleRevision>;
-  shared: Scalars['Boolean'];
-  tags: Array<Tag>;
-  trackingPixels?: Maybe<Array<Maybe<TrackingPixel>>>;
-};
-
-export type ArticleConnection = {
-  __typename?: 'ArticleConnection';
-  nodes: Array<Article>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type ArticleCreatedAction = {
-  __typename?: 'ArticleCreatedAction';
-  article: Article;
-  date: Scalars['DateTime'];
-};
-
-export type ArticleFilter = {
-  authors?: InputMaybe<Array<Scalars['ID']>>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  includeHidden?: InputMaybe<Scalars['Boolean']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  publicationDateFrom?: InputMaybe<DateFilter>;
-  publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  shared?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type ArticleInput = {
-  authorIDs: Array<Scalars['ID']>;
-  blocks: Array<BlockInput>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: InputMaybe<Scalars['String']>;
-  disableComments?: InputMaybe<Scalars['Boolean']>;
-  hidden?: InputMaybe<Scalars['Boolean']>;
-  hideAuthor: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  likes?: InputMaybe<Scalars['Int']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  seoTitle?: InputMaybe<Scalars['String']>;
-  shared: Scalars['Boolean'];
-  slug?: InputMaybe<Scalars['Slug']>;
-  socialMediaAuthorIDs: Array<Scalars['ID']>;
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['ID']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
-};
-
-export type ArticleNavigationLink = BaseNavigationLink & {
-  __typename?: 'ArticleNavigationLink';
-  article?: Maybe<Article>;
-  label: Scalars['String'];
-};
-
-export type ArticleNavigationLinkInput = {
-  articleID: Scalars['ID'];
-  label: Scalars['String'];
-};
-
-export type ArticleRevision = {
-  __typename?: 'ArticleRevision';
-  authors: Array<Author>;
-  blocks: Array<Block>;
-  breaking: Scalars['Boolean'];
-  canonicalUrl?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  hideAuthor: Scalars['Boolean'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  likes?: Maybe<Scalars['Int']>;
-  preTitle?: Maybe<Scalars['String']>;
-  properties: Array<Properties>;
-  publishAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  revision: Scalars['Int'];
-  seoTitle?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  socialMediaAuthors: Array<Author>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Tags now live on the Article itself */
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  url: Scalars['String'];
-};
-
-export enum ArticleSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PublishAt = 'publishAt',
-  PublishedAt = 'publishedAt',
-  UpdatedAt = 'updatedAt'
-}
-
-export type ArticleTeaser = {
-  __typename?: 'ArticleTeaser';
-  article?: Maybe<Article>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type ArticleTeaserInput = {
-  articleID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type AuthProvider = {
@@ -185,12 +47,13 @@ export type Author = {
   hideOnArticle?: Maybe<Scalars['Boolean']>;
   hideOnTeam?: Maybe<Scalars['Boolean']>;
   hideOnTeaser?: Maybe<Scalars['Boolean']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   image?: Maybe<Image>;
   jobTitle?: Maybe<Scalars['String']>;
   links?: Maybe<Array<AuthorLink>>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  peer?: Maybe<Peer>;
   slug: Scalars['Slug'];
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -203,16 +66,10 @@ export type AuthorConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type AuthorCreatedAction = {
-  __typename?: 'AuthorCreatedAction';
-  author: Author;
-  date: Scalars['DateTime'];
-};
-
 export type AuthorFilter = {
   hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type AuthorInput = {
@@ -220,12 +77,12 @@ export type AuthorInput = {
   hideOnArticle?: InputMaybe<Scalars['Boolean']>;
   hideOnTeam?: InputMaybe<Scalars['Boolean']>;
   hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['ID']>;
+  imageID?: InputMaybe<Scalars['String']>;
   jobTitle?: InputMaybe<Scalars['String']>;
   links?: InputMaybe<Array<AuthorLinkInput>>;
   name: Scalars['String'];
   slug: Scalars['Slug'];
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type AuthorLink = {
@@ -258,52 +115,6 @@ export type AvailablePaymentMethodInput = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
-export type BaseNavigationLink = {
-  label: Scalars['String'];
-};
-
-export type BildwurfAdBlock = {
-  __typename?: 'BildwurfAdBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  zoneID: Scalars['String'];
-};
-
-export type BildwurfAdBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  zoneID: Scalars['String'];
-};
-
-export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
-
-export type BlockInput = {
-  bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
-  comment?: InputMaybe<CommentBlockInput>;
-  embed?: InputMaybe<EmbedBlockInput>;
-  event?: InputMaybe<EventBlockInput>;
-  facebookPost?: InputMaybe<FacebookPostBlockInput>;
-  facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
-  html?: InputMaybe<HtmlBlockInput>;
-  image?: InputMaybe<ImageBlockInput>;
-  imageGallery?: InputMaybe<ImageGalleryBlockInput>;
-  instagramPost?: InputMaybe<InstagramPostBlockInput>;
-  linkPageBreak?: InputMaybe<LinkPageBreakBlockInput>;
-  listicle?: InputMaybe<ListicleBlockInput>;
-  polisConversation?: InputMaybe<PolisConversationBlockInput>;
-  poll?: InputMaybe<PollBlockInput>;
-  quote?: InputMaybe<QuoteBlockInput>;
-  richText?: InputMaybe<RichTextBlockInput>;
-  soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
-  subscribe?: InputMaybe<SubscribeBlockInput>;
-  teaserGrid?: InputMaybe<TeaserGridBlockInput>;
-  teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
-  teaserList?: InputMaybe<TeaserListBlockInput>;
-  tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
-  title?: InputMaybe<TitleBlockInput>;
-  twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
-  vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
-  youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
-};
-
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -311,13 +122,12 @@ export type Comment = {
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
   guestUsername?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  itemID: Scalars['ID'];
+  id: Scalars['String'];
+  itemID: Scalars['String'];
   itemType: CommentItemType;
   modifiedAt: Scalars['DateTime'];
   overriddenRatings?: Maybe<Array<OverriddenRating>>;
   parentComment?: Maybe<Comment>;
-  peerId?: Maybe<Scalars['ID']>;
   rejectionReason?: Maybe<CommentRejectionReason>;
   revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
@@ -333,31 +143,6 @@ export enum CommentAuthorType {
   VerifiedUser = 'verifiedUser'
 }
 
-export type CommentBlock = {
-  __typename?: 'CommentBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  comments: Array<Comment>;
-  filter: CommentBlockFilter;
-};
-
-export type CommentBlockFilter = {
-  __typename?: 'CommentBlockFilter';
-  comments?: Maybe<Array<Scalars['ID']>>;
-  item?: Maybe<Scalars['ID']>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type CommentBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  filter: CommentBlockInputFilter;
-};
-
-export type CommentBlockInputFilter = {
-  comments?: InputMaybe<Array<Scalars['ID']>>;
-  item?: InputMaybe<Scalars['ID']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
 export type CommentConnection = {
   __typename?: 'CommentConnection';
   nodes: Array<Comment>;
@@ -365,36 +150,29 @@ export type CommentConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type CommentCreatedAction = {
-  __typename?: 'CommentCreatedAction';
-  comment: Comment;
-  date: Scalars['DateTime'];
-};
-
 export type CommentFilter = {
-  item?: InputMaybe<Scalars['ID']>;
-  itemID?: InputMaybe<Scalars['ID']>;
+  item?: InputMaybe<Scalars['String']>;
+  itemID?: InputMaybe<Scalars['String']>;
   itemType?: InputMaybe<CommentItemType>;
   states?: InputMaybe<Array<CommentState>>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum CommentItemType {
   Article = 'article',
-  Page = 'page',
-  PeerArticle = 'peerArticle'
+  Page = 'page'
 }
 
 export type CommentRatingOverrideUpdateInput = {
-  answerId: Scalars['ID'];
+  answerId: Scalars['String'];
   value?: InputMaybe<Scalars['Int']>;
 };
 
 export type CommentRatingSystemAnswer = {
   __typename?: 'CommentRatingSystemAnswer';
   answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  ratingSystemId: Scalars['ID'];
+  id: Scalars['String'];
+  ratingSystemId: Scalars['String'];
   type: RatingSystemType;
 };
 
@@ -439,7 +217,7 @@ export type CreatePeerInput = {
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   token: Scalars['String'];
@@ -450,225 +228,18 @@ export enum Currency {
   Eur = 'EUR'
 }
 
-export type CustomTeaser = {
-  __typename?: 'CustomTeaser';
-  contentUrl?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  properties?: Maybe<Array<Properties>>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type CustomTeaserInput = {
-  contentUrl?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type DateFilter = {
   comparison: DateFilterComparison;
   date?: InputMaybe<Scalars['DateTime']>;
 };
 
 export enum DateFilterComparison {
-  Eq = 'eq',
-  Gt = 'gt',
-  Gte = 'gte',
-  Lt = 'lt',
-  Lte = 'lte'
+  Equal = 'Equal',
+  GreaterThan = 'GreaterThan',
+  GreaterThanOrEqual = 'GreaterThanOrEqual',
+  LowerThan = 'LowerThan',
+  LowerThanOrEqual = 'LowerThanOrEqual'
 }
-
-export type EmbedBlock = {
-  __typename?: 'EmbedBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['Int']>;
-  sandbox?: Maybe<Scalars['String']>;
-  styleCustom?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-};
-
-export type EmbedBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['Int']>;
-  sandbox?: InputMaybe<Scalars['String']>;
-  styleCustom?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  url?: InputMaybe<Scalars['String']>;
-  width?: InputMaybe<Scalars['Int']>;
-};
-
-export type Event = {
-  __typename?: 'Event';
-  description?: Maybe<Scalars['RichText']>;
-  endsAt?: Maybe<Scalars['DateTime']>;
-  externalSourceId?: Maybe<Scalars['String']>;
-  externalSourceName?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
-  status: EventStatus;
-  tags: Array<Tag>;
-  url: Scalars['String'];
-};
-
-export type EventBlock = {
-  __typename?: 'EventBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  events: Array<Event>;
-  filter: EventBlockFilter;
-};
-
-export type EventBlockFilter = {
-  __typename?: 'EventBlockFilter';
-  events?: Maybe<Array<Scalars['ID']>>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type EventBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  filter: EventBlockInputFilter;
-};
-
-export type EventBlockInputFilter = {
-  events?: InputMaybe<Array<Scalars['ID']>>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
-export type EventConnection = {
-  __typename?: 'EventConnection';
-  nodes: Array<Event>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type EventCreatedAction = {
-  __typename?: 'EventCreatedAction';
-  date: Scalars['DateTime'];
-  event: Event;
-};
-
-export type EventFilter = {
-  from?: InputMaybe<Scalars['DateTime']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-  to?: InputMaybe<Scalars['DateTime']>;
-  upcomingOnly?: InputMaybe<Scalars['Boolean']>;
-};
-
-export enum EventSort {
-  CreatedAt = 'CreatedAt',
-  EndsAt = 'EndsAt',
-  ModifiedAt = 'ModifiedAt',
-  StartsAt = 'StartsAt'
-}
-
-export enum EventStatus {
-  Cancelled = 'Cancelled',
-  Postponed = 'Postponed',
-  Rescheduled = 'Rescheduled',
-  Scheduled = 'Scheduled'
-}
-
-export type EventTeaser = {
-  __typename?: 'EventTeaser';
-  event?: Maybe<Event>;
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type EventTeaserInput = {
-  eventID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export type ExternalNavigationLink = BaseNavigationLink & {
-  __typename?: 'ExternalNavigationLink';
-  label: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type ExternalNavigationLinkInput = {
-  label: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type FacebookPostBlock = {
-  __typename?: 'FacebookPostBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  postID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type FacebookPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  postID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type FacebookVideoBlock = {
-  __typename?: 'FacebookVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type FacebookVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type FlexAlignment = {
-  __typename?: 'FlexAlignment';
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type FlexAlignmentInput = {
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type FlexTeaser = {
-  __typename?: 'FlexTeaser';
-  alignment: FlexAlignment;
-  teaser?: Maybe<Teaser>;
-};
-
-export type FlexTeaserInput = {
-  alignment: FlexAlignmentInput;
-  blockStyle?: InputMaybe<Scalars['String']>;
-  teaser?: InputMaybe<TeaserInput>;
-};
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
@@ -679,7 +250,7 @@ export type FocalPoint = {
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem';
   answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
 };
 
@@ -688,32 +259,10 @@ export type FullPoll = {
   answers: Array<PollAnswerWithVoteCount>;
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources: Array<PollExternalVoteSource>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
-};
-
-export type GalleryImageEdge = {
-  __typename?: 'GalleryImageEdge';
-  caption?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-};
-
-export type GalleryImageEdgeInput = {
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-};
-
-export type HtmlBlock = {
-  __typename?: 'HTMLBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  html?: Maybe<Scalars['String']>;
-};
-
-export type HtmlBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  html?: InputMaybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -726,7 +275,7 @@ export type Image = {
   focalPoint?: Maybe<FocalPoint>;
   format: Scalars['String'];
   height: Scalars['Int'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   license?: Maybe<Scalars['String']>;
   link?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
@@ -744,21 +293,6 @@ export type ImageTransformUrlArgs = {
   input?: InputMaybe<ImageTransformation>;
 };
 
-export type ImageBlock = {
-  __typename?: 'ImageBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  caption?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  linkUrl?: Maybe<Scalars['String']>;
-};
-
-export type ImageBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  caption?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  linkUrl?: InputMaybe<Scalars['String']>;
-};
-
 export type ImageConnection = {
   __typename?: 'ImageConnection';
   nodes: Array<Image>;
@@ -769,17 +303,6 @@ export type ImageConnection = {
 export type ImageFilter = {
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type ImageGalleryBlock = {
-  __typename?: 'ImageGalleryBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  images: Array<GalleryImageEdge>;
-};
-
-export type ImageGalleryBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  images?: InputMaybe<Array<InputMaybe<GalleryImageEdgeInput>>>;
 };
 
 export enum ImageOutput {
@@ -814,27 +337,16 @@ export type InputPoint = {
   y: Scalars['Float'];
 };
 
-export type InstagramPostBlock = {
-  __typename?: 'InstagramPostBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  postID: Scalars['String'];
-};
-
-export type InstagramPostBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  postID: Scalars['String'];
-};
-
 export type Invoice = {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: Maybe<Scalars['ID']>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
   total: Scalars['Int'];
@@ -851,16 +363,16 @@ export type InvoiceFilter = {
   canceledAt?: InputMaybe<Scalars['Date']>;
   mail?: InputMaybe<Scalars['String']>;
   paidAt?: InputMaybe<Scalars['Date']>;
-  subscriptionID?: InputMaybe<Scalars['ID']>;
-  userID?: InputMaybe<Scalars['ID']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceInput = {
   description?: InputMaybe<Scalars['String']>;
   items: Array<InvoiceItemInput>;
   mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
-  subscriptionID?: InputMaybe<Scalars['ID']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceItem = {
@@ -895,85 +407,26 @@ export type JwtToken = {
   token: Scalars['String'];
 };
 
-export type LinkPageBreakBlock = {
-  __typename?: 'LinkPageBreakBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  hideButton: Scalars['Boolean'];
-  image?: Maybe<Image>;
-  /** @deprecated Use block styles instead of this */
-  layoutOption?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkURL?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  /** @deprecated Use block styles instead of this */
-  styleOption?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  templateOption?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
-};
-
-export type LinkPageBreakBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  hideButton: Scalars['Boolean'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  layoutOption?: InputMaybe<Scalars['String']>;
-  linkTarget?: InputMaybe<Scalars['String']>;
-  linkText?: InputMaybe<Scalars['String']>;
-  linkURL?: InputMaybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  styleOption?: InputMaybe<Scalars['String']>;
-  templateOption?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['String']>;
-};
-
-export type ListicleBlock = {
-  __typename?: 'ListicleBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  items: Array<ListicleItem>;
-};
-
-export type ListicleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  items?: InputMaybe<Array<InputMaybe<ListicleItemInput>>>;
-};
-
-export type ListicleItem = {
-  __typename?: 'ListicleItem';
-  image?: Maybe<Image>;
-  richText: Scalars['RichText'];
-  title: Scalars['String'];
-};
-
-export type ListicleItemInput = {
-  imageID?: InputMaybe<Scalars['ID']>;
-  richText: Scalars['RichText'];
-  title: Scalars['String'];
-};
-
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
-  confirmationPage?: Maybe<Page>;
-  confirmationPageId?: Maybe<Scalars['ID']>;
+  confirmationPageId?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
-  failPage?: Maybe<Page>;
-  failPageId?: Maybe<Scalars['ID']>;
-  id: Scalars['ID'];
+  failPageId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   image?: Maybe<Image>;
   maxCount?: Maybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: Maybe<Scalars['ID']>;
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
-  successPage?: Maybe<Page>;
-  successPageId?: Maybe<Scalars['ID']>;
+  successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -995,17 +448,17 @@ export type MemberPlanInput = {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
-  confirmationPageId?: InputMaybe<Scalars['ID']>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
-  failPageId?: InputMaybe<Scalars['ID']>;
-  imageID?: InputMaybe<Scalars['ID']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']>;
   maxCount?: InputMaybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['ID']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   slug: Scalars['String'];
-  successPageId?: InputMaybe<Scalars['ID']>;
+  successPageId?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1018,14 +471,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
-  createArticle: Article;
   createAuthor?: Maybe<Author>;
   createComment: Comment;
-  createEvent?: Maybe<Event>;
   createInvoice?: Maybe<Invoice>;
   createMemberPlan?: Maybe<MemberPlan>;
-  createNavigation?: Maybe<Navigation>;
-  createPage: Page;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPaymentMethod?: Maybe<PaymentMethod>;
   createPeer: Peer;
@@ -1041,15 +490,11 @@ export type Mutation = {
   createToken: CreatedToken;
   createUser?: Maybe<User>;
   createUserRole?: Maybe<UserRole>;
-  deleteArticle?: Maybe<Article>;
   deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
-  deleteEvent?: Maybe<Event>;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
   deleteMemberPlan?: Maybe<MemberPlan>;
-  deleteNavigation?: Maybe<Navigation>;
-  deletePage?: Maybe<Page>;
   deletePaymentMethod?: Maybe<PaymentMethod>;
   deletePeer?: Maybe<Peer>;
   deletePoll?: Maybe<FullPoll>;
@@ -1061,12 +506,8 @@ export type Mutation = {
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   deleteUserRole?: Maybe<UserRole>;
-  duplicateArticle: Article;
-  duplicatePage: Page;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
-  publishArticle?: Maybe<Article>;
-  publishPage?: Maybe<Page>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
@@ -1076,17 +517,11 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
-  unpublishArticle?: Maybe<Article>;
-  unpublishPage?: Maybe<Page>;
-  updateArticle?: Maybe<Article>;
   updateAuthor?: Maybe<Author>;
   updateComment: Comment;
-  updateEvent?: Maybe<Event>;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updateMemberPlan?: Maybe<MemberPlan>;
-  updateNavigation?: Maybe<Navigation>;
-  updatePage?: Maybe<Page>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
   updatePeer: Peer;
   updatePeerProfile: PeerProfile;
@@ -1102,18 +537,13 @@ export type Mutation = {
 
 
 export type MutationApproveCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationCancelSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateArticleArgs = {
-  input: ArticleInput;
 };
 
 
@@ -1123,25 +553,11 @@ export type MutationCreateAuthorArgs = {
 
 
 export type MutationCreateCommentArgs = {
-  itemID: Scalars['ID'];
+  itemID: Scalars['String'];
   itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['ID']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  parentID?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
-};
-
-
-export type MutationCreateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  externalSourceId?: InputMaybe<Scalars['String']>;
-  externalSourceName?: InputMaybe<Scalars['String']>;
-  imageId?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  startsAt: Scalars['DateTime'];
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 
@@ -1152,16 +568,6 @@ export type MutationCreateInvoiceArgs = {
 
 export type MutationCreateMemberPlanArgs = {
   input: MemberPlanInput;
-};
-
-
-export type MutationCreateNavigationArgs = {
-  input: NavigationInput;
-};
-
-
-export type MutationCreatePageArgs = {
-  input: PageInput;
 };
 
 
@@ -1189,19 +595,19 @@ export type MutationCreatePollArgs = {
 
 export type MutationCreatePollAnswerArgs = {
   answer?: InputMaybe<Scalars['String']>;
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
 };
 
 
 export type MutationCreatePollExternalVoteSourceArgs = {
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCreateRatingSystemAnswerArgs = {
   answer?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['ID'];
+  ratingSystemId: Scalars['String'];
   type?: InputMaybe<RatingSystemType>;
 };
 
@@ -1252,113 +658,83 @@ export type MutationCreateUserRoleArgs = {
 };
 
 
-export type MutationDeleteArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationDeleteAuthorArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeleteEventArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteImageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeleteNavigationArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeletePageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePeerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePollArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePollAnswerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteTagArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteTokenArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteUserRoleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDuplicateArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDuplicatePageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -1368,52 +744,36 @@ export type MutationImportSubscriptionArgs = {
 
 
 export type MutationMarkInvoiceAsPaidArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationPublishArticleArgs = {
-  id: Scalars['ID'];
-  publishAt?: InputMaybe<Scalars['DateTime']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']>;
-};
-
-
-export type MutationPublishPageArgs = {
-  id: Scalars['ID'];
-  publishAt?: InputMaybe<Scalars['DateTime']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
 };
 
 
 export type MutationRejectCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
 };
 
 
 export type MutationRenewSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
 };
 
 
 export type MutationResetUserPasswordArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   password: Scalars['String'];
   sendMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 
 export type MutationRevokeSessionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -1428,95 +788,51 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
-export type MutationUnpublishArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationUnpublishPageArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationUpdateArticleArgs = {
-  id: Scalars['ID'];
-  input: ArticleInput;
-};
-
-
 export type MutationUpdateAuthorArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: AuthorInput;
 };
 
 
 export type MutationUpdateCommentArgs = {
   featured?: InputMaybe<Scalars['Boolean']>;
-  guestUserImageID?: InputMaybe<Scalars['ID']>;
+  guestUserImageID?: InputMaybe<Scalars['String']>;
   guestUsername?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput>>;
   revision?: InputMaybe<CommentRevisionUpdateInput>;
   source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
-  userID?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type MutationUpdateEventArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  externalSourceId?: InputMaybe<Scalars['String']>;
-  externalSourceName?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
-  imageId?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  status?: InputMaybe<EventStatus>;
-  tagIds?: InputMaybe<Array<Scalars['ID']>>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateImageArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdateImageInput;
 };
 
 
 export type MutationUpdateInvoiceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: InvoiceInput;
 };
 
 
 export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: MemberPlanInput;
 };
 
 
-export type MutationUpdateNavigationArgs = {
-  id: Scalars['ID'];
-  input: NavigationInput;
-};
-
-
-export type MutationUpdatePageArgs = {
-  id: Scalars['ID'];
-  input: PageInput;
-};
-
-
 export type MutationUpdatePaymentMethodArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: PaymentMethodInput;
 };
 
 
 export type MutationUpdatePeerArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdatePeerInput;
 };
 
@@ -1532,7 +848,7 @@ export type MutationUpdatePollArgs = {
   externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
   infoText?: InputMaybe<Scalars['RichText']>;
   opensAt?: InputMaybe<Scalars['DateTime']>;
-  pollId: Scalars['ID'];
+  pollId: Scalars['String'];
   question?: InputMaybe<Scalars['String']>;
 };
 
@@ -1540,7 +856,7 @@ export type MutationUpdatePollArgs = {
 export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
   name?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['ID'];
+  ratingSystemId: Scalars['String'];
 };
 
 
@@ -1550,26 +866,26 @@ export type MutationUpdateSettingListArgs = {
 
 
 export type MutationUpdateSubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: SubscriptionInput;
 };
 
 
 export type MutationUpdateTagArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserInput;
 };
 
 
 export type MutationUpdateUserRoleArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserRoleInput;
 };
 
@@ -1578,70 +894,11 @@ export type MutationUploadImageArgs = {
   input: UploadImageInput;
 };
 
-export type Navigation = {
-  __typename?: 'Navigation';
-  id: Scalars['ID'];
-  key: Scalars['String'];
-  links: Array<NavigationLink>;
-  name: Scalars['String'];
-};
-
-export type NavigationInput = {
-  key: Scalars['String'];
-  links: Array<NavigationLinkInput>;
-  name: Scalars['String'];
-};
-
-export type NavigationLink = ArticleNavigationLink | ExternalNavigationLink | PageNavigationLink;
-
-export type NavigationLinkInput = {
-  article?: InputMaybe<ArticleNavigationLinkInput>;
-  external?: InputMaybe<ExternalNavigationLinkInput>;
-  page?: InputMaybe<PageNavigationLinkInput>;
-};
-
 export type OAuth2Account = {
   __typename?: 'OAuth2Account';
   provider: Scalars['String'];
   scope: Scalars['String'];
   type: Scalars['String'];
-};
-
-export type Page = {
-  __typename?: 'Page';
-  createdAt: Scalars['DateTime'];
-  draft?: Maybe<PageRevision>;
-  id: Scalars['ID'];
-  latest: PageRevision;
-  modifiedAt: Scalars['DateTime'];
-  pending?: Maybe<PageRevision>;
-  published?: Maybe<PageRevision>;
-  shared: Scalars['Boolean'];
-  tags: Array<Tag>;
-};
-
-export type PageConnection = {
-  __typename?: 'PageConnection';
-  nodes: Array<Page>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PageCreatedAction = {
-  __typename?: 'PageCreatedAction';
-  date: Scalars['DateTime'];
-  page: Page;
-};
-
-export type PageFilter = {
-  description?: InputMaybe<Scalars['String']>;
-  draft?: InputMaybe<Scalars['Boolean']>;
-  pending?: InputMaybe<Scalars['Boolean']>;
-  publicationDateFrom?: InputMaybe<DateFilter>;
-  publicationDateTo?: InputMaybe<DateFilter>;
-  published?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type PageInfo = {
@@ -1652,83 +909,10 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
-export type PageInput = {
-  blocks: Array<BlockInput>;
-  description?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  properties: Array<PropertiesInput>;
-  slug: Scalars['Slug'];
-  socialMediaDescription?: InputMaybe<Scalars['String']>;
-  socialMediaImageID?: InputMaybe<Scalars['ID']>;
-  socialMediaTitle?: InputMaybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title: Scalars['String'];
-};
-
-export type PageNavigationLink = BaseNavigationLink & {
-  __typename?: 'PageNavigationLink';
-  label: Scalars['String'];
-  page?: Maybe<Page>;
-};
-
-export type PageNavigationLinkInput = {
-  label: Scalars['String'];
-  pageID: Scalars['ID'];
-};
-
-export type PageRevision = {
-  __typename?: 'PageRevision';
-  blocks: Array<Block>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  properties: Array<Properties>;
-  publishAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-  revision: Scalars['Int'];
-  slug?: Maybe<Scalars['Slug']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaImage?: Maybe<Image>;
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Tags now live on the Page itself */
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  url: Scalars['String'];
-};
-
-export enum PageSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PublishAt = 'publishAt',
-  PublishedAt = 'publishedAt',
-  UpdatedAt = 'updatedAt'
-}
-
-export type PageTeaser = {
-  __typename?: 'PageTeaser';
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  page?: Maybe<Page>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type PageTeaserInput = {
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  pageID: Scalars['ID'];
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type Payment = {
   __typename?: 'Payment';
   createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   intentData?: Maybe<Scalars['String']>;
   intentID?: Maybe<Scalars['String']>;
   intentSecret?: Maybe<Scalars['String']>;
@@ -1752,8 +936,8 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['ID'];
-  paymentMethodID?: InputMaybe<Scalars['ID']>;
+  invoiceID: Scalars['String'];
+  paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   successURL?: InputMaybe<Scalars['String']>;
 };
@@ -1763,7 +947,7 @@ export type PaymentMethod = {
   active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
@@ -1790,7 +974,7 @@ export enum PaymentPeriodicity {
 
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -1819,49 +1003,12 @@ export type Peer = {
   __typename?: 'Peer';
   createdAt: Scalars['DateTime'];
   hostURL: Scalars['String'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   isDisabled?: Maybe<Scalars['Boolean']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   profile?: Maybe<PeerProfile>;
   slug: Scalars['String'];
-};
-
-export type PeerArticle = {
-  __typename?: 'PeerArticle';
-  article: Article;
-  peer: Peer;
-  peeredArticleURL: Scalars['String'];
-};
-
-export type PeerArticleConnection = {
-  __typename?: 'PeerArticleConnection';
-  nodes: Array<PeerArticle>;
-  pageInfo: UnidirectionalPageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PeerArticleTeaser = {
-  __typename?: 'PeerArticleTeaser';
-  article?: Maybe<Article>;
-  articleID: Scalars['ID'];
-  image?: Maybe<Image>;
-  lead?: Maybe<Scalars['String']>;
-  peer?: Maybe<Peer>;
-  preTitle?: Maybe<Scalars['String']>;
-  /** @deprecated Use block styles instead of this */
-  style: TeaserStyle;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type PeerArticleTeaserInput = {
-  articleID: Scalars['ID'];
-  imageID?: InputMaybe<Scalars['ID']>;
-  lead?: InputMaybe<Scalars['String']>;
-  peerID: Scalars['ID'];
-  preTitle?: InputMaybe<Scalars['String']>;
-  style?: InputMaybe<TeaserStyle>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type PeerProfile = {
@@ -1879,11 +1026,11 @@ export type PeerProfile = {
 };
 
 export type PeerProfileInput = {
-  callToActionImageID?: InputMaybe<Scalars['ID']>;
+  callToActionImageID?: InputMaybe<Scalars['String']>;
   callToActionImageURL?: InputMaybe<Scalars['String']>;
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
-  logoID?: InputMaybe<Scalars['ID']>;
+  logoID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
@@ -1896,21 +1043,10 @@ export type Permission = {
   id: Scalars['String'];
 };
 
-export type PolisConversationBlock = {
-  __typename?: 'PolisConversationBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  conversationID: Scalars['String'];
-};
-
-export type PolisConversationBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  conversationID: Scalars['String'];
-};
-
 export type Poll = {
   __typename?: 'Poll';
   closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -1918,27 +1054,16 @@ export type Poll = {
 export type PollAnswer = {
   __typename?: 'PollAnswer';
   answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  pollId: Scalars['ID'];
+  id: Scalars['String'];
+  pollId: Scalars['String'];
 };
 
 export type PollAnswerWithVoteCount = {
   __typename?: 'PollAnswerWithVoteCount';
   answer?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  pollId: Scalars['ID'];
+  id: Scalars['String'];
+  pollId: Scalars['String'];
   votes: Scalars['Int'];
-};
-
-export type PollBlock = {
-  __typename?: 'PollBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  poll?: Maybe<FullPoll>;
-};
-
-export type PollBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  pollId?: InputMaybe<Scalars['ID']>;
 };
 
 export type PollConnection = {
@@ -1951,13 +1076,13 @@ export type PollConnection = {
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
   amount: Scalars['VoteValue'];
-  answerId: Scalars['ID'];
-  id: Scalars['ID'];
+  answerId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   source?: Maybe<Scalars['String']>;
   voteAmounts: Array<PollExternalVote>;
 };
@@ -1972,17 +1097,11 @@ export enum PollSort {
   OpensAt = 'OpensAt'
 }
 
-export type PollStartedAction = {
-  __typename?: 'PollStartedAction';
-  date: Scalars['DateTime'];
-  poll: Poll;
-};
-
 export type PollWithAnswers = {
   __typename?: 'PollWithAnswers';
   answers?: Maybe<Array<PollAnswer>>;
   closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
@@ -2002,41 +1121,26 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  actions: Array<Action>;
-  article?: Maybe<Article>;
-  articlePreviewLink?: Maybe<Scalars['String']>;
-  articles: ArticleConnection;
   authProviders: Array<AuthProvider>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
-  event?: Maybe<Event>;
-  events?: Maybe<EventConnection>;
   image?: Maybe<Image>;
   images: ImageConnection;
-  /** This query returns a list of original ids of imported events */
-  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
-  navigation?: Maybe<Navigation>;
-  navigations: Array<Navigation>;
   newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
-  page?: Maybe<Page>;
-  pagePreviewLink?: Maybe<Scalars['String']>;
-  pages: PageConnection;
   payment?: Maybe<Payment>;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
   paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
   peer?: Maybe<Peer>;
-  peerArticle?: Maybe<Article>;
-  peerArticles: PeerArticleConnection;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   permissions?: Maybe<Array<Permission>>;
@@ -2059,40 +1163,19 @@ export type Query = {
 };
 
 
-export type QueryArticleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryArticlePreviewLinkArgs = {
-  hours: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryArticlesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<ArticleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryAuthProvidersArgs = {
   redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<AuthorFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2102,12 +1185,12 @@ export type QueryAuthorsArgs = {
 
 
 export type QueryCommentArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QueryCommentsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<CommentFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2122,28 +1205,13 @@ export type QueryCreateJwtForUserArgs = {
 };
 
 
-export type QueryEventArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryEventsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<EventFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<EventSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryImageArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryImagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<ImageFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2153,12 +1221,12 @@ export type QueryImagesArgs = {
 
 
 export type QueryInvoiceArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryInvoicesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<InvoiceFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2168,13 +1236,13 @@ export type QueryInvoicesArgs = {
 
 
 export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
 };
 
 
 export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2183,50 +1251,23 @@ export type QueryMemberPlansArgs = {
 };
 
 
-export type QueryNavigationArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  key?: InputMaybe<Scalars['ID']>;
-};
-
-
 export type QueryNewSubscribersPerMonthArgs = {
   monthsBack?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QueryPageArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-};
-
-
-export type QueryPagePreviewLinkArgs = {
-  hours: Scalars['Int'];
-  id: Scalars['ID'];
-};
-
-
-export type QueryPagesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
-  filter?: InputMaybe<PageFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PageSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryPaymentMethodArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryPaymentsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<PaymentFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2236,35 +1277,17 @@ export type QueryPaymentsArgs = {
 
 
 export type QueryPeerArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryPeerArticleArgs = {
-  id: Scalars['ID'];
-  peerID: Scalars['ID'];
-};
-
-
-export type QueryPeerArticlesArgs = {
-  cursors?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<ArticleFilter>;
-  first?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  peerFilter?: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ArticleSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
 };
 
 
 export type QueryPollArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryPollsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<PollFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2285,12 +1308,12 @@ export type QuerySettingArgs = {
 
 
 export type QuerySubscriptionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QuerySubscriptionsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<SubscriptionFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2305,7 +1328,7 @@ export type QuerySubscriptionsAsCsvArgs = {
 
 
 export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2315,17 +1338,17 @@ export type QueryTagsArgs = {
 
 
 export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryUserRoleArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryUserRolesArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<UserRoleFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2335,7 +1358,7 @@ export type QueryUserRolesArgs = {
 
 
 export type QueryUsersArgs = {
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<UserFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2343,41 +1366,15 @@ export type QueryUsersArgs = {
   take?: InputMaybe<Scalars['Int']>;
 };
 
-export type QuoteBlock = {
-  __typename?: 'QuoteBlock';
-  author?: Maybe<Scalars['String']>;
-  blockStyle?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
-  quote?: Maybe<Scalars['String']>;
-};
-
-export type QuoteBlockInput = {
-  author?: InputMaybe<Scalars['String']>;
-  blockStyle?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['ID']>;
-  quote?: InputMaybe<Scalars['String']>;
-};
-
 export enum RatingSystemType {
   Star = 'star'
 }
-
-export type RichTextBlock = {
-  __typename?: 'RichTextBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-};
-
-export type RichTextBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-};
 
 export type Session = {
   __typename?: 'Session';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   user: User;
 };
 
@@ -2385,14 +1382,14 @@ export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   token: Scalars['String'];
   user: User;
 };
 
 export type Setting = {
   __typename?: 'Setting';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
   value: Scalars['GraphQLSettingValueType'];
@@ -2428,26 +1425,6 @@ export enum SortOrder {
   Descending = 'Descending'
 }
 
-export type SoundCloudTrackBlock = {
-  __typename?: 'SoundCloudTrackBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  trackID: Scalars['String'];
-};
-
-export type SoundCloudTrackBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  trackID: Scalars['String'];
-};
-
-export type SubscribeBlock = {
-  __typename?: 'SubscribeBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-};
-
-export type SubscribeBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-};
-
 export type SubscribersPerMonth = {
   __typename?: 'SubscribersPerMonth';
   month: Scalars['String'];
@@ -2461,7 +1438,7 @@ export type Subscription = {
   currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlan: MemberPlan;
   modifiedAt: Scalars['DateTime'];
   monthlyAmount: Scalars['Int'];
@@ -2478,12 +1455,6 @@ export type SubscriptionConnection = {
   nodes: Array<Subscription>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
-};
-
-export type SubscriptionCreatedAction = {
-  __typename?: 'SubscriptionCreatedAction';
-  date: Scalars['DateTime'];
-  subscription: Subscription;
 };
 
 export type SubscriptionDeactivation = {
@@ -2522,7 +1493,7 @@ export type SubscriptionFilter = {
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['ID']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type SubscriptionInput = {
@@ -2536,7 +1507,7 @@ export type SubscriptionInput = {
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertiesInput>;
   startsAt: Scalars['DateTime'];
-  userID: Scalars['ID'];
+  userID: Scalars['String'];
 };
 
 export type SubscriptionPeriod = {
@@ -2544,8 +1515,8 @@ export type SubscriptionPeriod = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   endsAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  invoiceID: Scalars['ID'];
+  id: Scalars['String'];
+  invoiceID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   startsAt: Scalars['DateTime'];
 };
@@ -2557,7 +1528,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
   type?: Maybe<TagType>;
@@ -2590,121 +1561,10 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser;
-
-export type TeaserGridBlock = {
-  __typename?: 'TeaserGridBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  numColumns: Scalars['Int'];
-  teasers: Array<Maybe<Teaser>>;
-};
-
-export type TeaserGridBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  numColumns: Scalars['Int'];
-  teasers: Array<InputMaybe<TeaserInput>>;
-};
-
-export type TeaserGridFlexBlock = {
-  __typename?: 'TeaserGridFlexBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  flexTeasers: Array<Maybe<FlexTeaser>>;
-};
-
-export type TeaserGridFlexBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  flexTeasers: Array<FlexTeaserInput>;
-};
-
-export type TeaserInput = {
-  article?: InputMaybe<ArticleTeaserInput>;
-  custom?: InputMaybe<CustomTeaserInput>;
-  event?: InputMaybe<EventTeaserInput>;
-  page?: InputMaybe<PageTeaserInput>;
-  peerArticle?: InputMaybe<PeerArticleTeaserInput>;
-};
-
-export type TeaserListBlock = {
-  __typename?: 'TeaserListBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  filter: TeaserListBlockFilter;
-  skip?: Maybe<Scalars['Int']>;
-  sort?: Maybe<TeaserListBlockSort>;
-  take?: Maybe<Scalars['Int']>;
-  teaserType?: Maybe<TeaserType>;
-  teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type TeaserListBlockFilter = {
-  __typename?: 'TeaserListBlockFilter';
-  tagObjects: Array<Tag>;
-  tags?: Maybe<Array<Scalars['ID']>>;
-};
-
-export type TeaserListBlockFilterInput = {
-  tags?: InputMaybe<Array<Scalars['ID']>>;
-};
-
-export type TeaserListBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  filter: TeaserListBlockFilterInput;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TeaserListBlockSort>;
-  take?: InputMaybe<Scalars['Int']>;
-  teaserType?: InputMaybe<TeaserType>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum TeaserListBlockSort {
-  HotAndTrending = 'hotAndTrending',
-  PublishedAt = 'publishedAt'
-}
-
-export enum TeaserStyle {
-  Default = 'default',
-  Light = 'light',
-  Text = 'text'
-}
-
-export enum TeaserType {
-  Article = 'article',
-  Custom = 'custom',
-  Event = 'event',
-  Page = 'page',
-  PeerArticle = 'peerArticle'
-}
-
-export type TikTokVideoBlock = {
-  __typename?: 'TikTokVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type TikTokVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type TitleBlock = {
-  __typename?: 'TitleBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type TitleBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type Token = {
   __typename?: 'Token';
   createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
 };
@@ -2713,48 +1573,9 @@ export type TokenInput = {
   name: Scalars['String'];
 };
 
-export type TrackingPixel = {
-  __typename?: 'TrackingPixel';
-  error?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  pixelUid?: Maybe<Scalars['String']>;
-  trackingPixelMethod: TrackingPixelMethod;
-  uri?: Maybe<Scalars['String']>;
-};
-
-export type TrackingPixelMethod = {
-  __typename?: 'TrackingPixelMethod';
-  id: Scalars['ID'];
-  trackingPixelProviderID: Scalars['String'];
-  trackingPixelProviderType: TrackingPixelProviderType;
-};
-
-export enum TrackingPixelProviderType {
-  Prolitteris = 'prolitteris'
-}
-
-export type TwitterTweetBlock = {
-  __typename?: 'TwitterTweetBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  tweetID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type TwitterTweetBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  tweetID: Scalars['String'];
-  userID: Scalars['String'];
-};
-
-export type UnidirectionalPageInfo = {
-  __typename?: 'UnidirectionalPageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-};
-
 export type UpdateCommentRatingSystemAnswer = {
   answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   type?: InputMaybe<RatingSystemType>;
 };
 
@@ -2779,16 +1600,16 @@ export type UpdatePeerInput = {
 
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type UpdatePollExternalVote = {
   amount?: InputMaybe<Scalars['VoteValue']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type UpdatePollExternalVoteSources = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
@@ -2858,12 +1679,6 @@ export type UserConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type UserCreatedAction = {
-  __typename?: 'UserCreatedAction';
-  date: Scalars['DateTime'];
-  user: User;
-};
-
 export type UserFilter = {
   name?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
@@ -2881,7 +1696,7 @@ export type UserInput = {
   name: Scalars['String'];
   properties: Array<PropertiesInput>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
-  userImageID?: InputMaybe<Scalars['ID']>;
+  userImageID?: InputMaybe<Scalars['String']>;
 };
 
 export type UserRole = {
@@ -2929,7 +1744,7 @@ export type UserSubscription = {
   createdAt: Scalars['DateTime'];
   currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   invoices: Array<Invoice>;
   memberPlan: MemberPlan;
   modifiedAt: Scalars['DateTime'];
@@ -2941,101 +1756,11 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
-export type VimeoVideoBlock = {
-  __typename?: 'VimeoVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
-export type VimeoVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
-export type YouTubeVideoBlock = {
-  __typename?: 'YouTubeVideoBlock';
-  blockStyle?: Maybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
-export type YouTubeVideoBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>;
-  videoID: Scalars['String'];
-};
-
 export type OverriddenRating = {
   __typename?: 'overriddenRating';
-  answerId: Scalars['ID'];
+  answerId: Scalars['String'];
   value?: Maybe<Scalars['Int']>;
 };
-
-export type MutationArticleFragment = { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, preTitle?: string | null, lead?: string | null, slug?: string | null, breaking: boolean, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> } };
-
-export type ArticleRefFragment = { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type ArticleListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
-  take?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type ArticleListQuery = { __typename?: 'Query', articles: { __typename?: 'ArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type PeerArticleListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursors?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type PeerArticleListQuery = { __typename?: 'Query', peerArticles: { __typename?: 'PeerArticleConnection', totalCount: number, nodes: Array<{ __typename?: 'PeerArticle', peer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null }, article: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } }>, pageInfo: { __typename?: 'UnidirectionalPageInfo', endCursor?: string | null, hasNextPage: boolean } } };
-
-export type CreateArticleMutationVariables = Exact<{
-  input: ArticleInput;
-}>;
-
-
-export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, preTitle?: string | null, lead?: string | null, slug?: string | null, breaking: boolean, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> } } };
-
-export type UpdateArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: ArticleInput;
-}>;
-
-
-export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle?: { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, preTitle?: string | null, lead?: string | null, slug?: string | null, breaking: boolean, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> } } | null };
-
-export type PublishArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-  publishAt: Scalars['DateTime'];
-  publishedAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-}>;
-
-
-export type PublishArticleMutation = { __typename?: 'Mutation', publishArticle?: { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, preTitle?: string | null, lead?: string | null, slug?: string | null, breaking: boolean, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> } } | null };
-
-export type UnpublishArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type UnpublishArticleMutation = { __typename?: 'Mutation', unpublishArticle?: { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, preTitle?: string | null, lead?: string | null, slug?: string | null, breaking: boolean, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> } } | null };
-
-export type DeleteArticleMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteArticleMutation = { __typename?: 'Mutation', deleteArticle?: { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, preTitle?: string | null, lead?: string | null, slug?: string | null, breaking: boolean, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }> } } | null };
-
-export type ArticleQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', id: string, shared: boolean, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null }>, pending?: { __typename?: 'ArticleRevision', publishAt?: string | null } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, slug?: string | null, preTitle?: string | null, title?: string | null, lead?: string | null, hideAuthor: boolean, breaking: boolean, socialMediaTitle?: string | null, socialMediaDescription?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, authors: Array<{ __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, socialMediaAuthors: Array<{ __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, socialMediaImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
 
 export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
@@ -3043,7 +1768,7 @@ export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: De
 
 export type AuthorListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
@@ -3052,7 +1777,7 @@ export type AuthorListQueryVariables = Exact<{
 export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3066,7 +1791,7 @@ export type CreateAuthorMutationVariables = Exact<{
 export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type UpdateAuthorMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: AuthorInput;
 }>;
 
@@ -3074,77 +1799,11 @@ export type UpdateAuthorMutationVariables = Exact<{
 export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type DeleteAuthorMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-type FullTeaser_ArticleTeaser_Fragment = { __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
-
-type FullTeaser_CustomTeaser_Fragment = { __typename?: 'CustomTeaser' };
-
-type FullTeaser_EventTeaser_Fragment = { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-type FullTeaser_PageTeaser_Fragment = { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
-
-type FullTeaser_PeerArticleTeaser_Fragment = { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null };
-
-export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_CustomTeaser_Fragment | FullTeaser_EventTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment;
-
-type FullBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock' };
-
-type FullBlock_CommentBlock_Fragment = { __typename: 'CommentBlock' };
-
-type FullBlock_EmbedBlock_Fragment = { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null };
-
-type FullBlock_EventBlock_Fragment = { __typename: 'EventBlock' };
-
-type FullBlock_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock', userID: string, postID: string };
-
-type FullBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock', userID: string, videoID: string };
-
-type FullBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock' };
-
-type FullBlock_ImageBlock_Fragment = { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-type FullBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
-
-type FullBlock_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock', postID: string };
-
-type FullBlock_LinkPageBreakBlock_Fragment = { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null };
-
-type FullBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> };
-
-type FullBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock' };
-
-type FullBlock_PollBlock_Fragment = { __typename: 'PollBlock' };
-
-type FullBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-type FullBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', richText: Descendant[] };
-
-type FullBlock_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', trackID: string };
-
-type FullBlock_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock' };
-
-type FullBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> };
-
-type FullBlock_TeaserGridFlexBlock_Fragment = { __typename: 'TeaserGridFlexBlock' };
-
-type FullBlock_TeaserListBlock_Fragment = { __typename: 'TeaserListBlock' };
-
-type FullBlock_TikTokVideoBlock_Fragment = { __typename: 'TikTokVideoBlock' };
-
-type FullBlock_TitleBlock_Fragment = { __typename: 'TitleBlock', title?: string | null, lead?: string | null };
-
-type FullBlock_TwitterTweetBlock_Fragment = { __typename: 'TwitterTweetBlock', userID: string, tweetID: string };
-
-type FullBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', videoID: string };
-
-type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', videoID: string };
-
-export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_SubscribeBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
@@ -3156,7 +1815,7 @@ export type FullCommentFragment = { __typename?: 'Comment', id: string, state: C
 
 export type CommentListQueryVariables = Exact<{
   filter?: InputMaybe<CommentFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3167,21 +1826,21 @@ export type CommentListQueryVariables = Exact<{
 export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'CommentConnection', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type CommentQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
 
 export type ApproveCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
 
 export type RejectCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
 }>;
 
@@ -3189,7 +1848,7 @@ export type RejectCommentMutationVariables = Exact<{
 export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type RequestChangesOnCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
 }>;
 
@@ -3197,14 +1856,14 @@ export type RequestChangesOnCommentMutationVariables = Exact<{
 export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type UpdateCommentMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   revision?: InputMaybe<CommentRevisionUpdateInput>;
-  userID?: InputMaybe<Scalars['ID']>;
+  userID?: InputMaybe<Scalars['String']>;
   guestUsername?: InputMaybe<Scalars['String']>;
-  guestUserImageID?: InputMaybe<Scalars['ID']>;
+  guestUserImageID?: InputMaybe<Scalars['String']>;
   featured?: InputMaybe<Scalars['Boolean']>;
   source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
   ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
 }>;
 
@@ -3212,80 +1871,22 @@ export type UpdateCommentMutationVariables = Exact<{
 export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
 
 export type CreateCommentMutationVariables = Exact<{
-  itemID: Scalars['ID'];
+  itemID: Scalars['String'];
   itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['ID']>;
+  parentID?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['RichText']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
 export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
 
 export type DeleteCommentMutationVariables = Exact<{
-  deleteCommentId: Scalars['ID'];
+  deleteCommentId: Scalars['String'];
 }>;
 
 
 export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', id: string } };
-
-export type EventRefFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> };
-
-export type EventListQueryVariables = Exact<{
-  filter?: InputMaybe<EventFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<EventSort>;
-}>;
-
-
-export type EventListQuery = { __typename?: 'Query', events?: { __typename?: 'EventConnection', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
-
-export type EventQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type EventQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-export type CreateEventMutationVariables = Exact<{
-  name: Scalars['String'];
-  lead?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  location?: InputMaybe<Scalars['String']>;
-  startsAt: Scalars['DateTime'];
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['ID']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-}>;
-
-
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-export type UpdateEventMutationVariables = Exact<{
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
-  lead?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  status?: InputMaybe<EventStatus>;
-  location?: InputMaybe<Scalars['String']>;
-  startsAt?: InputMaybe<Scalars['DateTime']>;
-  endsAt?: InputMaybe<Scalars['DateTime']>;
-  imageId?: InputMaybe<Scalars['ID']>;
-  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
-}>;
-
-
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
-
-export type DeleteEventMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -3295,7 +1896,7 @@ export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: s
 
 export type ImageListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
@@ -3304,7 +1905,7 @@ export type ImageListQueryVariables = Exact<{
 export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'ImageConnection', nodes: Array<{ __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImageQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3318,7 +1919,7 @@ export type UploadImageMutationVariables = Exact<{
 export type UploadImageMutation = { __typename?: 'Mutation', uploadImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type UpdateImageMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdateImageInput;
 }>;
 
@@ -3326,106 +1927,11 @@ export type UpdateImageMutationVariables = Exact<{
 export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type DeleteImageMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> };
-
-export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type NavigationListQuery = { __typename?: 'Query', navigations: Array<{ __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> }> };
-
-export type NavigationQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type NavigationQuery = { __typename?: 'Query', navigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type CreateNavigationMutationVariables = Exact<{
-  input: NavigationInput;
-}>;
-
-
-export type CreateNavigationMutation = { __typename?: 'Mutation', createNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type UpdateNavigationMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: NavigationInput;
-}>;
-
-
-export type UpdateNavigationMutation = { __typename?: 'Mutation', updateNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type DeleteNavigationMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation?: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename: 'ExternalNavigationLink', label: string, url: string } | { __typename: 'PageNavigationLink', label: string, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null }> } | null };
-
-export type MutationPageFragment = { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } };
-
-export type PageRefFragment = { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type PageListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
-  take?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PageConnection', totalCount: number, nodes: Array<{ __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type CreatePageMutationVariables = Exact<{
-  input: PageInput;
-}>;
-
-
-export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } };
-
-export type UpdatePageMutationVariables = Exact<{
-  id: Scalars['ID'];
-  input: PageInput;
-}>;
-
-
-export type UpdatePageMutation = { __typename?: 'Mutation', updatePage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
-
-export type PublishPageMutationVariables = Exact<{
-  id: Scalars['ID'];
-  publishAt?: InputMaybe<Scalars['DateTime']>;
-  publishedAt?: InputMaybe<Scalars['DateTime']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']>;
-}>;
-
-
-export type PublishPageMutation = { __typename?: 'Mutation', publishPage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
-
-export type UnpublishPageMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type UnpublishPageMutation = { __typename?: 'Mutation', unpublishPage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
-
-export type DeletePageMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type DeletePageMutation = { __typename?: 'Mutation', deletePage?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, pending?: { __typename?: 'PageRevision', publishAt?: string | null, revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
-
-export type PageQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-
-export type PageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null }>, pending?: { __typename?: 'PageRevision', publishAt?: string | null } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, slug?: string | null, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock', userID: string, videoID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Descendant[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'RichTextBlock', richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, event?: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> } | null } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, createdAt: string, modifiedAt: string, draft?: { __typename?: 'PageRevision', revision: number } | null, pending?: { __typename?: 'PageRevision', revision: number } | null, published?: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'PageRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, title?: string | null, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, createdAt: string, modifiedAt: string, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, draft?: { __typename?: 'ArticleRevision', revision: number } | null, pending?: { __typename?: 'ArticleRevision', revision: number } | null, published?: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number } | null, latest: { __typename?: 'ArticleRevision', publishedAt?: string | null, updatedAt?: string | null, revision: number, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } } | null };
 
 export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
@@ -3451,7 +1957,7 @@ export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
 export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string }> | null };
 
 export type PeerQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3465,7 +1971,7 @@ export type CreatePeerMutationVariables = Exact<{
 export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } };
 
 export type UpdatePeerMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UpdatePeerInput;
 }>;
 
@@ -3473,7 +1979,7 @@ export type UpdatePeerMutationVariables = Exact<{
 export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } };
 
 export type DeletePeerMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3487,7 +1993,7 @@ export type CreateSubscriptionMutationVariables = Exact<{
 export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string, paidUntil?: string | null, monthlyAmount: number, extendable: boolean, user?: { __typename?: 'User', id: string } | null, memberPlan: { __typename?: 'MemberPlan', id: string }, paymentMethod: { __typename?: 'PaymentMethod', id: string } } | null };
 
 export type RenewSubscriptionMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3495,7 +2001,7 @@ export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscrip
 
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -3514,7 +2020,7 @@ export type CreateTagMutationVariables = Exact<{
 export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   tag?: InputMaybe<Scalars['String']>;
 }>;
 
@@ -3522,7 +2028,7 @@ export type UpdateTagMutationVariables = Exact<{
 export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3532,7 +2038,7 @@ export type FullUserFragment = { __typename?: 'User', id: string, name: string, 
 
 export type UserListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
@@ -3546,7 +2052,7 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
 
 export type UserQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3561,7 +2067,7 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
 
 export type UpdateUserMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserInput;
 }>;
 
@@ -3569,7 +2075,7 @@ export type UpdateUserMutationVariables = Exact<{
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
 
 export type ResetUserPasswordMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   password: Scalars['String'];
 }>;
 
@@ -3577,7 +2083,7 @@ export type ResetUserPasswordMutationVariables = Exact<{
 export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetUserPassword?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
 
 export type DeleteUserMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3604,7 +2110,7 @@ export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: 
 
 export type UserRoleListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['ID']>;
+  cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
@@ -3618,7 +2124,7 @@ export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
 export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
 
 export type UserRoleQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -3632,7 +2138,7 @@ export type CreateUserRoleMutationVariables = Exact<{
 export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type UpdateUserRoleMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
   input: UserRoleInput;
 }>;
 
@@ -3640,51 +2146,12 @@ export type UpdateUserRoleMutationVariables = Exact<{
 export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export type DeleteUserRoleMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
-export const MutationArticle = gql`
-    fragment MutationArticle on Article {
-  id
-  shared
-  tags {
-    id
-    tag
-  }
-  draft {
-    publishedAt
-    updatedAt
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    title
-    preTitle
-    lead
-    slug
-    breaking
-    properties {
-      key
-      value
-      public
-    }
-  }
-}
-    `;
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
   url
@@ -3856,94 +2323,6 @@ export const FullImage = gql`
   ...ImageRef
 }
     ${ImageRef}`;
-export const PageRef = gql`
-    fragment PageRef on Page {
-  id
-  createdAt
-  modifiedAt
-  draft {
-    revision
-  }
-  pending {
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    title
-    description
-    image {
-      ...ImageRef
-    }
-  }
-}
-    ${ImageRef}`;
-export const ArticleRef = gql`
-    fragment ArticleRef on Article {
-  id
-  createdAt
-  modifiedAt
-  tags {
-    id
-    tag
-  }
-  draft {
-    revision
-  }
-  pending {
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    preTitle
-    title
-    lead
-    image {
-      ...ImageRef
-    }
-  }
-}
-    ${ImageRef}`;
-export const FullNavigation = gql`
-    fragment FullNavigation on Navigation {
-  id
-  key
-  name
-  links {
-    __typename
-    ... on PageNavigationLink {
-      label
-      page {
-        ...PageRef
-      }
-    }
-    ... on ArticleNavigationLink {
-      label
-      article {
-        ...ArticleRef
-      }
-    }
-    ... on ExternalNavigationLink {
-      label
-      url
-    }
-  }
-}
-    ${PageRef}
-${ArticleRef}`;
 export const PeerRef = gql`
     fragment PeerRef on Peer {
   id
@@ -3979,346 +2358,8 @@ export const PeerWithProfile = gql`
 }
     ${PeerRef}
 ${FullPeerProfile}`;
-export const EventRef = gql`
-    fragment EventRef on Event {
-  id
-  name
-  lead
-  description
-  status
-  location
-  image {
-    ...ImageRef
-  }
-  tags {
-    id
-    tag
-  }
-  startsAt
-  endsAt
-}
-    ${ImageRef}`;
-export const FullTeaser = gql`
-    fragment FullTeaser on Teaser {
-  ... on ArticleTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    article {
-      ...ArticleRef
-    }
-  }
-  ... on PeerArticleTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    peer {
-      ...PeerWithProfile
-    }
-    articleID
-    article {
-      ...ArticleRef
-    }
-  }
-  ... on PageTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    page {
-      ...PageRef
-    }
-  }
-  ... on EventTeaser {
-    style
-    image {
-      ...ImageRef
-    }
-    preTitle
-    title
-    lead
-    event {
-      ...EventRef
-    }
-  }
-}
-    ${ImageRef}
-${ArticleRef}
-${PeerWithProfile}
-${PageRef}
-${EventRef}`;
-export const FullBlock = gql`
-    fragment FullBlock on Block {
-  __typename
-  ... on TitleBlock {
-    title
-    lead
-  }
-  ... on RichTextBlock {
-    richText
-  }
-  ... on QuoteBlock {
-    quote
-    author
-    image {
-      ...ImageRef
-    }
-  }
-  ... on LinkPageBreakBlock {
-    text
-    linkText
-    linkURL
-  }
-  ... on ImageBlock {
-    caption
-    image {
-      ...ImageRef
-    }
-  }
-  ... on ImageGalleryBlock {
-    images {
-      caption
-      image {
-        ...ImageRef
-      }
-    }
-  }
-  ... on ListicleBlock {
-    items {
-      title
-      image {
-        ...ImageRef
-      }
-      richText
-    }
-  }
-  ... on FacebookPostBlock {
-    userID
-    postID
-  }
-  ... on FacebookVideoBlock {
-    userID
-    videoID
-  }
-  ... on InstagramPostBlock {
-    postID
-  }
-  ... on TwitterTweetBlock {
-    userID
-    tweetID
-  }
-  ... on VimeoVideoBlock {
-    videoID
-  }
-  ... on YouTubeVideoBlock {
-    videoID
-  }
-  ... on SoundCloudTrackBlock {
-    trackID
-  }
-  ... on EmbedBlock {
-    url
-    title
-    width
-    height
-    styleCustom
-    sandbox
-  }
-  ... on TeaserGridBlock {
-    teasers {
-      ...FullTeaser
-    }
-    numColumns
-  }
-}
-    ${ImageRef}
-${FullTeaser}`;
-export const MutationPage = gql`
-    fragment MutationPage on Page {
-  id
-  tags {
-    id
-    tag
-  }
-  draft {
-    publishedAt
-    updatedAt
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    slug
-    title
-    description
-    image {
-      ...ImageRef
-    }
-    properties {
-      key
-      value
-      public
-    }
-    blocks {
-      ...FullBlock
-    }
-  }
-}
-    ${ImageRef}
-${FullBlock}`;
-export const ArticleList = gql`
-    query ArticleList($filter: String, $cursor: ID, $take: Int) {
-  articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
-    nodes {
-      ...ArticleRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${ArticleRef}`;
-export const PeerArticleList = gql`
-    query PeerArticleList($filter: String, $cursors: String, $take: Int) {
-  peerArticles(take: $take, cursors: $cursors, filter: {title: $filter}) {
-    nodes {
-      peer {
-        ...PeerWithProfile
-      }
-      article {
-        ...ArticleRef
-      }
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-    totalCount
-  }
-}
-    ${PeerWithProfile}
-${ArticleRef}`;
-export const CreateArticle = gql`
-    mutation CreateArticle($input: ArticleInput!) {
-  createArticle(input: $input) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticle}`;
-export const UpdateArticle = gql`
-    mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
-  updateArticle(id: $id, input: $input) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticle}`;
-export const PublishArticle = gql`
-    mutation PublishArticle($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
-  publishArticle(
-    id: $id
-    publishAt: $publishAt
-    publishedAt: $publishedAt
-    updatedAt: $updatedAt
-  ) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticle}`;
-export const UnpublishArticle = gql`
-    mutation UnpublishArticle($id: ID!) {
-  unpublishArticle(id: $id) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticle}`;
-export const DeleteArticle = gql`
-    mutation DeleteArticle($id: ID!) {
-  deleteArticle(id: $id) {
-    ...MutationArticle
-  }
-}
-    ${MutationArticle}`;
-export const Article = gql`
-    query Article($id: ID!) {
-  article(id: $id) {
-    id
-    shared
-    tags {
-      id
-      tag
-      type
-    }
-    pending {
-      publishAt
-    }
-    published {
-      publishedAt
-      updatedAt
-    }
-    latest {
-      publishedAt
-      updatedAt
-      revision
-      slug
-      preTitle
-      title
-      lead
-      image {
-        ...ImageRef
-      }
-      properties {
-        key
-        value
-        public
-      }
-      authors {
-        ...AuthorRef
-      }
-      hideAuthor
-      breaking
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaAuthors {
-        ...AuthorRef
-      }
-      socialMediaImage {
-        ...ImageRef
-      }
-      blocks {
-        ...FullBlock
-      }
-    }
-  }
-}
-    ${ImageRef}
-${AuthorRef}
-${FullBlock}`;
 export const AuthorList = gql`
-    query AuthorList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullAuthor
@@ -4334,7 +2375,7 @@ export const AuthorList = gql`
 }
     ${FullAuthor}`;
 export const Author = gql`
-    query Author($id: ID!) {
+    query Author($id: String!) {
   author(id: $id) {
     ...FullAuthor
   }
@@ -4348,21 +2389,21 @@ export const CreateAuthor = gql`
 }
     ${FullAuthor}`;
 export const UpdateAuthor = gql`
-    mutation UpdateAuthor($id: ID!, $input: AuthorInput!) {
+    mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
   updateAuthor(id: $id, input: $input) {
     ...FullAuthor
   }
 }
     ${FullAuthor}`;
 export const DeleteAuthor = gql`
-    mutation DeleteAuthor($id: ID!) {
+    mutation DeleteAuthor($id: String!) {
   deleteAuthor(id: $id) {
     ...FullAuthor
   }
 }
     ${FullAuthor}`;
 export const CommentList = gql`
-    query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+    query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(
     filter: $filter
     cursor: $cursor
@@ -4385,21 +2426,21 @@ export const CommentList = gql`
 }
     ${FullComment}`;
 export const Comment = gql`
-    query Comment($id: ID!) {
+    query Comment($id: String!) {
   comment(id: $id) {
     ...FullComment
   }
 }
     ${FullComment}`;
 export const ApproveComment = gql`
-    mutation ApproveComment($id: ID!) {
+    mutation ApproveComment($id: String!) {
   approveComment(id: $id) {
     state
   }
 }
     `;
 export const RejectComment = gql`
-    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
+    mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
   rejectComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
@@ -4407,7 +2448,7 @@ export const RejectComment = gql`
 }
     `;
 export const RequestChangesOnComment = gql`
-    mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+    mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
   requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
     state
     rejectionReason
@@ -4415,7 +2456,7 @@ export const RequestChangesOnComment = gql`
 }
     `;
 export const UpdateComment = gql`
-    mutation updateComment($id: ID!, $revision: CommentRevisionUpdateInput, $userID: ID, $guestUsername: String, $guestUserImageID: ID, $featured: Boolean, $source: String, $tagIds: [ID!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
+    mutation updateComment($id: String!, $revision: CommentRevisionUpdateInput, $userID: String, $guestUsername: String, $guestUserImageID: String, $featured: Boolean, $source: String, $tagIds: [String!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
   updateComment(
     id: $id
     revision: $revision
@@ -4432,7 +2473,7 @@ export const UpdateComment = gql`
 }
     ${FullComment}`;
 export const CreateComment = gql`
-    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+    mutation createComment($itemID: String!, $itemType: CommentItemType!, $parentID: String, $text: RichText, $tagIds: [String!]) {
   createComment(
     itemID: $itemID
     itemType: $itemType
@@ -4445,85 +2486,14 @@ export const CreateComment = gql`
 }
     ${FullComment}`;
 export const DeleteComment = gql`
-    mutation DeleteComment($deleteCommentId: ID!) {
+    mutation DeleteComment($deleteCommentId: String!) {
   deleteComment(id: $deleteCommentId) {
     id
   }
 }
     `;
-export const EventList = gql`
-    query EventList($filter: EventFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
-  events(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...EventRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${EventRef}`;
-export const Event = gql`
-    query Event($id: ID!) {
-  event(id: $id) {
-    ...EventRef
-  }
-}
-    ${EventRef}`;
-export const CreateEvent = gql`
-    mutation CreateEvent($name: String!, $lead: String, $description: RichText, $location: String, $startsAt: DateTime!, $endsAt: DateTime, $imageId: ID, $tagIds: [ID!]) {
-  createEvent(
-    name: $name
-    lead: $lead
-    description: $description
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-  ) {
-    ...EventRef
-  }
-}
-    ${EventRef}`;
-export const UpdateEvent = gql`
-    mutation UpdateEvent($id: ID!, $name: String, $lead: String, $description: RichText, $status: EventStatus, $location: String, $startsAt: DateTime, $endsAt: DateTime, $imageId: ID, $tagIds: [ID!]) {
-  updateEvent(
-    id: $id
-    name: $name
-    lead: $lead
-    description: $description
-    status: $status
-    location: $location
-    startsAt: $startsAt
-    endsAt: $endsAt
-    imageId: $imageId
-    tagIds: $tagIds
-  ) {
-    ...EventRef
-  }
-}
-    ${EventRef}`;
-export const DeleteEvent = gql`
-    mutation DeleteEvent($id: ID!) {
-  deleteEvent(id: $id) {
-    ...EventRef
-  }
-}
-    ${EventRef}`;
 export const ImageList = gql`
-    query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...ImageRef
@@ -4538,7 +2508,7 @@ export const ImageList = gql`
 }
     ${ImageRef}`;
 export const Image = gql`
-    query Image($id: ID!) {
+    query Image($id: String!) {
   image(id: $id) {
     ...FullImage
   }
@@ -4552,148 +2522,19 @@ export const UploadImage = gql`
 }
     ${ImageRef}`;
 export const UpdateImage = gql`
-    mutation UpdateImage($id: ID!, $input: UpdateImageInput!) {
+    mutation UpdateImage($id: String!, $input: UpdateImageInput!) {
   updateImage(id: $id, input: $input) {
     ...FullImage
   }
 }
     ${FullImage}`;
 export const DeleteImage = gql`
-    mutation DeleteImage($id: ID!) {
+    mutation DeleteImage($id: String!) {
   deleteImage(id: $id) {
     ...FullImage
   }
 }
     ${FullImage}`;
-export const NavigationList = gql`
-    query NavigationList {
-  navigations {
-    ...FullNavigation
-  }
-}
-    ${FullNavigation}`;
-export const Navigation = gql`
-    query Navigation($id: ID!) {
-  navigation(id: $id) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigation}`;
-export const CreateNavigation = gql`
-    mutation CreateNavigation($input: NavigationInput!) {
-  createNavigation(input: $input) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigation}`;
-export const UpdateNavigation = gql`
-    mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
-  updateNavigation(id: $id, input: $input) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigation}`;
-export const DeleteNavigation = gql`
-    mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id) {
-    ...FullNavigation
-  }
-}
-    ${FullNavigation}`;
-export const PageList = gql`
-    query PageList($filter: String, $cursor: ID, $take: Int) {
-  pages(take: $take, cursor: $cursor, filter: {title: $filter}) {
-    nodes {
-      ...PageRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${PageRef}`;
-export const CreatePage = gql`
-    mutation CreatePage($input: PageInput!) {
-  createPage(input: $input) {
-    ...MutationPage
-  }
-}
-    ${MutationPage}`;
-export const UpdatePage = gql`
-    mutation UpdatePage($id: ID!, $input: PageInput!) {
-  updatePage(id: $id, input: $input) {
-    ...MutationPage
-  }
-}
-    ${MutationPage}`;
-export const PublishPage = gql`
-    mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
-  publishPage(
-    id: $id
-    publishAt: $publishAt
-    publishedAt: $publishedAt
-    updatedAt: $updatedAt
-  ) {
-    ...MutationPage
-  }
-}
-    ${MutationPage}`;
-export const UnpublishPage = gql`
-    mutation UnpublishPage($id: ID!) {
-  unpublishPage(id: $id) {
-    ...MutationPage
-  }
-}
-    ${MutationPage}`;
-export const DeletePage = gql`
-    mutation DeletePage($id: ID!) {
-  deletePage(id: $id) {
-    ...MutationPage
-  }
-}
-    ${MutationPage}`;
-export const Page = gql`
-    query Page($id: ID!) {
-  page(id: $id) {
-    id
-    tags {
-      id
-      tag
-      type
-    }
-    pending {
-      publishAt
-    }
-    published {
-      publishedAt
-      updatedAt
-    }
-    latest {
-      publishedAt
-      updatedAt
-      slug
-      title
-      description
-      image {
-        ...ImageRef
-      }
-      properties {
-        key
-        value
-        public
-      }
-      blocks {
-        ...FullBlock
-      }
-    }
-  }
-}
-    ${ImageRef}
-${FullBlock}`;
 export const PeerProfile = gql`
     query PeerProfile {
   peerProfile {
@@ -4716,7 +2557,7 @@ export const PeerList = gql`
 }
     ${PeerRef}`;
 export const Peer = gql`
-    query Peer($id: ID!) {
+    query Peer($id: String!) {
   peer(id: $id) {
     ...PeerRef
   }
@@ -4730,14 +2571,14 @@ export const CreatePeer = gql`
 }
     ${PeerRef}`;
 export const UpdatePeer = gql`
-    mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
+    mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
   updatePeer(id: $id, input: $input) {
     ...PeerRef
   }
 }
     ${PeerRef}`;
 export const DeletePeer = gql`
-    mutation DeletePeer($id: ID!) {
+    mutation DeletePeer($id: String!) {
   deletePeer(id: $id) {
     ...PeerRef
   }
@@ -4764,14 +2605,14 @@ export const CreateSubscription = gql`
 }
     `;
 export const RenewSubscription = gql`
-    mutation RenewSubscription($id: ID!) {
+    mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     id
   }
 }
     `;
 export const TagList = gql`
-    query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
+    query TagList($filter: TagFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(
     filter: $filter
     cursor: $cursor
@@ -4803,7 +2644,7 @@ export const CreateTag = gql`
 }
     `;
 export const UpdateTag = gql`
-    mutation UpdateTag($id: ID!, $tag: String) {
+    mutation UpdateTag($id: String!, $tag: String) {
   updateTag(id: $id, tag: $tag) {
     id
     tag
@@ -4811,7 +2652,7 @@ export const UpdateTag = gql`
 }
     `;
 export const DeleteTag = gql`
-    mutation DeleteTag($id: ID!) {
+    mutation DeleteTag($id: String!) {
   deleteTag(id: $id) {
     id
     tag
@@ -4819,7 +2660,7 @@ export const DeleteTag = gql`
 }
     `;
 export const UserList = gql`
-    query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query UserList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUser
@@ -4842,7 +2683,7 @@ export const Me = gql`
 }
     ${FullUser}`;
 export const User = gql`
-    query User($id: ID!) {
+    query User($id: String!) {
   user(id: $id) {
     ...FullUser
   }
@@ -4856,21 +2697,21 @@ export const CreateUser = gql`
 }
     ${FullUser}`;
 export const UpdateUser = gql`
-    mutation UpdateUser($id: ID!, $input: UserInput!) {
+    mutation UpdateUser($id: String!, $input: UserInput!) {
   updateUser(id: $id, input: $input) {
     ...FullUser
   }
 }
     ${FullUser}`;
 export const ResetUserPassword = gql`
-    mutation ResetUserPassword($id: ID!, $password: String!) {
+    mutation ResetUserPassword($id: String!, $password: String!) {
   resetUserPassword(id: $id, password: $password) {
     ...FullUser
   }
 }
     ${FullUser}`;
 export const DeleteUser = gql`
-    mutation DeleteUser($id: ID!) {
+    mutation DeleteUser($id: String!) {
   deleteUser(id: $id) {
     ...FullUser
   }
@@ -4897,7 +2738,7 @@ export const CreateSessionWithJwt = gql`
 }
     `;
 export const UserRoleList = gql`
-    query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+    query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUserRole
@@ -4920,7 +2761,7 @@ export const PermissionList = gql`
 }
     ${FullPermission}`;
 export const UserRole = gql`
-    query UserRole($id: ID!) {
+    query UserRole($id: String!) {
   userRole(id: $id) {
     ...FullUserRole
   }
@@ -4934,14 +2775,14 @@ export const CreateUserRole = gql`
 }
     ${FullUserRole}`;
 export const UpdateUserRole = gql`
-    mutation UpdateUserRole($id: ID!, $input: UserRoleInput!) {
+    mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
   updateUserRole(id: $id, input: $input) {
     ...FullUserRole
   }
 }
     ${FullUserRole}`;
 export const DeleteUserRole = gql`
-    mutation DeleteUserRole($id: ID!) {
+    mutation DeleteUserRole($id: String!) {
   deleteUserRole(id: $id) {
     ...FullUserRole
   }

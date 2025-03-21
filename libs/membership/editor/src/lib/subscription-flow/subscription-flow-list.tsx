@@ -1,6 +1,5 @@
 import {DndContext, DragEndEvent} from '@dnd-kit/core'
 import {
-  styled,
   Table,
   TableBody,
   TableCell,
@@ -13,6 +12,7 @@ import {
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {
   FullMailTemplateFragment,
+  getApiClientV2,
   SubscriptionEvent,
   SubscriptionInterval,
   useCreateSubscriptionFlowMutation,
@@ -27,7 +27,6 @@ import {
 } from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
-  getApiClientV2,
   ListViewContainer,
   ListViewHeader,
   PermissionControl
@@ -48,6 +47,7 @@ import {SubscriptionClientContext} from './graphql-client-context'
 import {SubscriptionFlowHeadline} from './subscription-flow-headline'
 import {TimelineBody} from './timeline/timeline-body'
 import {TimelineHead} from './timeline/timeline-head'
+import styled from '@emotion/styled'
 
 export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 

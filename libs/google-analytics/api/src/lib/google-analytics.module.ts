@@ -5,6 +5,7 @@ import {
   GoogleAnalyticsService
 } from './google-analytics.service'
 import {PrismaModule} from '@wepublish/nest-modules'
+import {ArticleModule} from '@wepublish/article/api'
 
 export type GoogleAnalyticsOptionsFactory = {
   createGoogleAnalyticsOptions(): Promise<GoogleAnalyticsConfig> | GoogleAnalyticsConfig
@@ -18,7 +19,7 @@ export interface GoogleAnalyticsAsyncOptions extends Pick<ModuleMetadata, 'impor
 }
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, ArticleModule],
   providers: [GoogleAnalyticsService],
   exports: [GoogleAnalyticsService]
 })
