@@ -3,7 +3,6 @@ import {
   ArticleListQueryVariables,
   ArticleSort,
   getV1ApiClient,
-  Page,
   PageListQueryVariables,
   PageSort,
   SitemapPageListDocument,
