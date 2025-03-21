@@ -1,6 +1,6 @@
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {Inject, Injectable} from '@nestjs/common'
-import {Prisma, PrismaClient} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
 import {EventFromSource} from './events-import.model'

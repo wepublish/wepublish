@@ -54,7 +54,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {type Node, Element, Text} from 'slate'
+import {type Node, Descendant, Element, Text} from 'slate'
 
 import {ClientSettings} from '../../../shared/types'
 
@@ -103,7 +103,7 @@ function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
       return charLength + (node.text as string).length
     }
 
-    return countRichtextChars(charLength, node.children as Node[])
+    return countRichtextChars(charLength, node.children as Descendant[])
   }, blocksCharLength)
 }
 

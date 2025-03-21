@@ -1,4 +1,4 @@
-import {Node} from 'slate'
+import {Descendant, Node} from 'slate'
 
 export const mockRichText = () =>
   [
@@ -122,4 +122,4 @@ export const mockRichText = () =>
         }
       ]
     }
-  ] as Node[]
+  ] as Descendant[]
