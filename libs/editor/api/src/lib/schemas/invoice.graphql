@@ -21,7 +21,7 @@ fragment Invoice on Invoice {
 }
 
 query Invoices(
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $filter: InvoiceFilter
@@ -39,13 +39,13 @@ query Invoices(
   }
 }
 
-mutation UpdateInvoice($updateInvoiceId: ID!, $input: InvoiceInput!) {
+mutation UpdateInvoice($updateInvoiceId: String!, $input: InvoiceInput!) {
   updateInvoice(id: $updateInvoiceId, input: $input) {
     ...Invoice
   }
 }
 
-mutation MarkInvoiceAsPaid($id: ID!) {
+mutation MarkInvoiceAsPaid($id: String!) {
   markInvoiceAsPaid(id: $id) {
     ...Invoice
   }

@@ -1,22 +1,13 @@
-fragment ArticleWithoutBlocks on Article {
+fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   id
   publishedAt
-  updatedAt
+  createdAt
   preTitle
   title
   lead
-  slug
-  breaking
   lead
-  publishedAt
   title
-  url
-  peeredArticleURL
-  disableComments
-
-  tags {
-    ...FullTag
-  }
+  canonicalUrl
 
   authors {
     ...FullAuthor
@@ -37,35 +28,72 @@ fragment ArticleWithoutBlocks on Article {
   }
 }
 
-fragment FullArticle on Article {
-  ...ArticleWithoutBlocks
+fragment FullArticleRevision on ArticleRevision {
+  ...ArticleRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
   }
 }
 
-query Article($slug: Slug, $id: ID, $token: String) {
-  article(slug: $slug, id: $id, token: $token) {
-    ...FullArticle
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  modifiedAt
+  url
+  slug
+  likes
+  disableComments
+  peerId
+  peerArticleId
+
+  tags {
+    ...FullTag
+  }
+
+  trackingPixels {
+    ...FullTrackingPixel
+  }
+
+  latest {
+    ...ArticleRevisionWithoutBlocks
+  }
+
+  peer {
+    ...FullPeer
   }
 }
 
-query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
-  peerArticle(peerSlug: $peerSlug, peerID: $peerId, id: $articleId) {
+fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+
+  latest {
+    ...FullArticleRevision
+  }
+}
+
+query Article($slug: String, $id: String) {
+  article(slug: $slug, id: $id) {
     ...FullArticle
   }
 }
 
 query ArticleList(
   $filter: ArticleFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: ArticleSort
 ) {
-  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  articles(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...ArticleWithoutBlocks
     }
@@ -78,5 +106,48 @@ query ArticleList(
     }
 
     totalCount
+  }
+}
+
+query FullArticleList(
+  $filter: ArticleFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation LikeArticle($id: String!) {
+  likeArticle(id: $id) {
+    ...FullArticle
+  }
+}
+
+mutation DislikeArticle($id: String!) {
+  dislikeArticle(id: $id) {
+    ...FullArticle
   }
 }

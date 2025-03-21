@@ -1,5 +1,12 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
-import {Article, ArticleDate, ArticleList, ArticleSEO} from '@wepublish/article/website'
+import {
+  Article,
+  ArticleAuthors,
+  ArticleDate,
+  ArticleList,
+  ArticleSEO,
+  ArticleTags
+} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {
   Author,
@@ -15,8 +22,8 @@ import {
   Blocks,
   BreakBlock,
   CommentBlock,
+  IFrameBlock,
   ContextBox,
-  EmbedBlock,
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
@@ -60,11 +67,13 @@ import {
   InvoiceListItem,
   MemberPlanItem,
   MemberPlanPicker,
+  PaymentAmountSlider,
   PaymentMethodPicker,
   PeriodicityPicker,
   Subscribe,
   SubscriptionList,
-  SubscriptionListItem
+  SubscriptionListItem,
+  TransactionFee
 } from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
@@ -107,9 +116,6 @@ const styles = (theme: Theme) => css`
     scroll-padding-top: ${theme.spacing(7)};
     font-family: ${theme.typography.fontFamily};
     hyphens: auto;
-    hyphenate-limit-chars: auto 10 10;
-    -webkit-hyphenate-limit-before: 10;
-    -webkit-hyphenate-limit-after: 10;
     word-break: break-word;
 
     ${theme.breakpoints.up('lg')} {
@@ -152,6 +158,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleAuthors={ArticleAuthors}
+          ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
           PeerInformation={PeerInformation}
@@ -180,7 +188,9 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           MemberPlanPicker={MemberPlanPicker}
           MemberPlanItem={MemberPlanItem}
           PeriodicityPicker={PeriodicityPicker}
+          PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
+          TransactionFee={TransactionFee}
           Subscribe={Subscribe}
           elements={{
             TextField,
@@ -222,7 +232,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserList: TeaserListBlock,
             Teaser,
             BildwurfAd: BildwurfAdBlock,
-            Embed: EmbedBlock,
+            IFrame: IFrameBlock,
             FacebookPost: FacebookPostBlock,
             FacebookVideo: FacebookVideoBlock,
             InstagramPost: InstagramPostBlock,

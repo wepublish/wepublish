@@ -4,8 +4,12 @@ exports[`StatsService should query for article count 1`] = `
 [
   {
     "where": {
-      "publishedId": {
-        "not": null,
+      "revisions": {
+        "some": {
+          "publishedAt": {
+            "not": null,
+          },
+        },
       },
     },
   },

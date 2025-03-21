@@ -29,9 +29,3 @@ query NavigationList {
     ...FullNavigation
   }
 }
-
-query Navigation($slug: ID) {
-  navigation(key: $slug) {
-    ...FullNavigation
-  }
-}

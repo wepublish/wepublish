@@ -3,6 +3,8 @@ import type { ArticleRevision } from "@prisma/client";
 import type { ArticleRevisionAuthor } from "@prisma/client";
 import type { ArticleRevisionSocialMediaAuthor } from "@prisma/client";
 import type { Article } from "@prisma/client";
+import type { ArticleTrackingPixels } from "@prisma/client";
+import type { TrackingPixelMethod } from "@prisma/client";
 import type { TaggedArticles } from "@prisma/client";
 import type { AuthorsLinks } from "@prisma/client";
 import type { Author } from "@prisma/client";
@@ -59,6 +61,7 @@ import type { PeriodicJob } from "@prisma/client";
 import type { BlockStyle } from "@prisma/client";
 import type { Banner } from "@prisma/client";
 import type { BannerAction } from "@prisma/client";
+import type { TrackingPixelProviderType } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
@@ -74,6 +77,7 @@ import type { EventStatus } from "@prisma/client";
 import type { UserEvent } from "@prisma/client";
 import type { SubscriptionEvent } from "@prisma/client";
 import type { BlockType } from "@prisma/client";
+import type { LoginStatus } from "@prisma/client";
 import type { BannerActionRole } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { Resolver } from "@quramy/prisma-fabbrica/lib/internal";
@@ -146,37 +150,39 @@ type ArticleRevisionsocialMediaImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutArticleRevisionSocialMediaImagesInput["create"]>;
 };
+type ArticleRevisionarticleFactory = {
+    _factoryFor: "Article";
+    build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutRevisionsInput["create"]>;
+};
+type ArticleRevisionuserFactory = {
+    _factoryFor: "User";
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutArticleRevisionsInput["create"]>;
+};
 type ArticleRevisionFactoryDefineInput = {
     id?: string;
+    createdAt?: Date;
     preTitle?: string | null;
     title?: string | null;
     lead?: string | null;
     seoTitle?: string | null;
-    slug?: string | null;
-    tags?: Prisma.ArticleRevisionCreatetagsInput | Prisma.Enumerable<string>;
     canonicalUrl?: string | null;
     breaking?: boolean;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
+    searchPlainText?: string | null;
     hideAuthor?: boolean;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
-    revision?: number;
-    createdAt?: Date;
-    modifiedAt?: Date | null;
-    updatedAt?: Date | null;
-    publishAt?: Date | null;
     publishedAt?: Date | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutArticleRevisionInput;
-    image?: ArticleRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput;
     authors?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutRevisionInput;
     socialMediaAuthors?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutRevisionInput;
+    image?: ArticleRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput;
     socialMediaImage?: ArticleRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutArticleRevisionSocialMediaImagesInput;
-    PublishedArticle?: Prisma.ArticleCreateNestedManyWithoutPublishedInput;
-    PendingArticle?: Prisma.ArticleCreateNestedManyWithoutPendingInput;
-    DraftArticle?: Prisma.ArticleCreateNestedManyWithoutDraftInput;
+    article: ArticleRevisionarticleFactory | Prisma.ArticleCreateNestedOneWithoutRevisionsInput;
+    user?: ArticleRevisionuserFactory | Prisma.UserCreateNestedOneWithoutArticleRevisionsInput;
 };
 type ArticleRevisionFactoryDefineOptions = {
-    defaultData?: Resolver<ArticleRevisionFactoryDefineInput, BuildDataOptions>;
+    defaultData: Resolver<ArticleRevisionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
             data: Resolver<Partial<ArticleRevisionFactoryDefineInput>, BuildDataOptions>;
@@ -203,7 +209,7 @@ export interface ArticleRevisionFactoryInterface<TOptions extends ArticleRevisio
  * @param options
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
-export declare function defineArticleRevisionFactory<TOptions extends ArticleRevisionFactoryDefineOptions>(options?: TOptions): ArticleRevisionFactoryInterface<TOptions>;
+export declare function defineArticleRevisionFactory<TOptions extends ArticleRevisionFactoryDefineOptions>(options: TOptions): ArticleRevisionFactoryInterface<TOptions>;
 type ArticleRevisionAuthorrevisionFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutAuthorsInput["create"]>;
@@ -286,30 +292,26 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions exten
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionSocialMediaAuthorFactory<TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions>(options: TOptions): ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions>;
-type ArticlepublishedFactory = {
-    _factoryFor: "ArticleRevision";
-    build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput["create"]>;
-};
-type ArticlependingFactory = {
-    _factoryFor: "ArticleRevision";
-    build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput["create"]>;
-};
-type ArticledraftFactory = {
-    _factoryFor: "ArticleRevision";
-    build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput["create"]>;
+type ArticlepeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutArticlesInput["create"]>;
 };
 type ArticleFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
+    publishedAt?: Date | null;
+    slug?: string | null;
     shared?: boolean;
     hidden?: boolean;
     disableComments?: boolean;
-    published?: ArticlepublishedFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput;
-    pending?: ArticlependingFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput;
-    draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
+    likes?: number;
+    peerArticleId?: string | null;
+    peer?: ArticlepeerFactory | Prisma.PeerCreateNestedOneWithoutArticlesInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
     tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
+    revisions?: Prisma.ArticleRevisionCreateNestedManyWithoutArticleInput;
+    trackingPixels?: Prisma.ArticleTrackingPixelsCreateNestedManyWithoutArticleInput;
 };
 type ArticleFactoryDefineOptions = {
     defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>;
@@ -340,6 +342,90 @@ export interface ArticleFactoryInterface<TOptions extends ArticleFactoryDefineOp
  * @returns factory {@link ArticleFactoryInterface}
  */
 export declare function defineArticleFactory<TOptions extends ArticleFactoryDefineOptions>(options?: TOptions): ArticleFactoryInterface<TOptions>;
+type ArticleTrackingPixelsarticleFactory = {
+    _factoryFor: "Article";
+    build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutTrackingPixelsInput["create"]>;
+};
+type ArticleTrackingPixelstrackingPixelMethodFactory = {
+    _factoryFor: "TrackingPixelMethod";
+    build: () => PromiseLike<Prisma.TrackingPixelMethodCreateNestedOneWithoutArticleTrackingPixelsInput["create"]>;
+};
+type ArticleTrackingPixelsFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    uri?: string | null;
+    pixelUid?: string | null;
+    error?: string | null;
+    article: ArticleTrackingPixelsarticleFactory | Prisma.ArticleCreateNestedOneWithoutTrackingPixelsInput;
+    trackingPixelMethod: ArticleTrackingPixelstrackingPixelMethodFactory | Prisma.TrackingPixelMethodCreateNestedOneWithoutArticleTrackingPixelsInput;
+};
+type ArticleTrackingPixelsFactoryDefineOptions = {
+    defaultData: Resolver<ArticleTrackingPixelsFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<ArticleTrackingPixelsFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type ArticleTrackingPixelsTraitKeys<TOptions extends ArticleTrackingPixelsFactoryDefineOptions> = keyof TOptions["traits"];
+export interface ArticleTrackingPixelsFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "ArticleTrackingPixels";
+    build(inputData?: Partial<Prisma.ArticleTrackingPixelsCreateInput>): PromiseLike<Prisma.ArticleTrackingPixelsCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.ArticleTrackingPixelsCreateInput>): PromiseLike<Prisma.ArticleTrackingPixelsCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.ArticleTrackingPixelsCreateInput>[]): PromiseLike<Prisma.ArticleTrackingPixelsCreateInput[]>;
+    pickForConnect(inputData: ArticleTrackingPixels): Pick<ArticleTrackingPixels, "id">;
+    create(inputData?: Partial<Prisma.ArticleTrackingPixelsCreateInput>): PromiseLike<ArticleTrackingPixels>;
+    createList(inputData: number | readonly Partial<Prisma.ArticleTrackingPixelsCreateInput>[]): PromiseLike<ArticleTrackingPixels[]>;
+    createForConnect(inputData?: Partial<Prisma.ArticleTrackingPixelsCreateInput>): PromiseLike<Pick<ArticleTrackingPixels, "id">>;
+}
+export interface ArticleTrackingPixelsFactoryInterface<TOptions extends ArticleTrackingPixelsFactoryDefineOptions = ArticleTrackingPixelsFactoryDefineOptions> extends ArticleTrackingPixelsFactoryInterfaceWithoutTraits {
+    use(name: ArticleTrackingPixelsTraitKeys<TOptions>, ...names: readonly ArticleTrackingPixelsTraitKeys<TOptions>[]): ArticleTrackingPixelsFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link ArticleTrackingPixels} model.
+ *
+ * @param options
+ * @returns factory {@link ArticleTrackingPixelsFactoryInterface}
+ */
+export declare function defineArticleTrackingPixelsFactory<TOptions extends ArticleTrackingPixelsFactoryDefineOptions>(options: TOptions): ArticleTrackingPixelsFactoryInterface<TOptions>;
+type TrackingPixelMethodFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    trackingPixelProviderID?: string;
+    trackingPixelProviderType?: TrackingPixelProviderType;
+    ArticleTrackingPixels?: Prisma.ArticleTrackingPixelsCreateNestedManyWithoutTrackingPixelMethodInput;
+};
+type TrackingPixelMethodFactoryDefineOptions = {
+    defaultData?: Resolver<TrackingPixelMethodFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<TrackingPixelMethodFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type TrackingPixelMethodTraitKeys<TOptions extends TrackingPixelMethodFactoryDefineOptions> = keyof TOptions["traits"];
+export interface TrackingPixelMethodFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "TrackingPixelMethod";
+    build(inputData?: Partial<Prisma.TrackingPixelMethodCreateInput>): PromiseLike<Prisma.TrackingPixelMethodCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.TrackingPixelMethodCreateInput>): PromiseLike<Prisma.TrackingPixelMethodCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.TrackingPixelMethodCreateInput>[]): PromiseLike<Prisma.TrackingPixelMethodCreateInput[]>;
+    pickForConnect(inputData: TrackingPixelMethod): Pick<TrackingPixelMethod, "id">;
+    create(inputData?: Partial<Prisma.TrackingPixelMethodCreateInput>): PromiseLike<TrackingPixelMethod>;
+    createList(inputData: number | readonly Partial<Prisma.TrackingPixelMethodCreateInput>[]): PromiseLike<TrackingPixelMethod[]>;
+    createForConnect(inputData?: Partial<Prisma.TrackingPixelMethodCreateInput>): PromiseLike<Pick<TrackingPixelMethod, "id">>;
+}
+export interface TrackingPixelMethodFactoryInterface<TOptions extends TrackingPixelMethodFactoryDefineOptions = TrackingPixelMethodFactoryDefineOptions> extends TrackingPixelMethodFactoryInterfaceWithoutTraits {
+    use(name: TrackingPixelMethodTraitKeys<TOptions>, ...names: readonly TrackingPixelMethodTraitKeys<TOptions>[]): TrackingPixelMethodFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link TrackingPixelMethod} model.
+ *
+ * @param options
+ * @returns factory {@link TrackingPixelMethodFactoryInterface}
+ */
+export declare function defineTrackingPixelMethodFactory<TOptions extends TrackingPixelMethodFactoryDefineOptions>(options?: TOptions): TrackingPixelMethodFactoryInterface<TOptions>;
 type TaggedArticlesarticleFactory = {
     _factoryFor: "Article";
     build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutTagsInput["create"]>;
@@ -428,6 +514,10 @@ type AuthorimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutAuthorInput["create"]>;
 };
+type AuthorpeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutAuthorsInput["create"]>;
+};
 type AuthorFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -443,6 +533,7 @@ type AuthorFactoryDefineInput = {
     image?: AuthorimageFactory | Prisma.ImageCreateNestedOneWithoutAuthorInput;
     articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput;
     articlesAsSocialMediaAuthor?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutAuthorInput;
+    peer?: AuthorpeerFactory | Prisma.PeerCreateNestedOneWithoutAuthorsInput;
     tags?: Prisma.TaggedAuthorsCreateNestedManyWithoutAuthorInput;
 };
 type AuthorFactoryDefineOptions = {
@@ -559,6 +650,10 @@ type ImagefocalPointFactory = {
     _factoryFor: "FocalPoint";
     build: () => PromiseLike<Prisma.FocalPointCreateNestedOneWithoutImageInput["create"]>;
 };
+type ImagepeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutImagesInput["create"]>;
+};
 type ImageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -585,6 +680,7 @@ type ImageFactoryDefineInput = {
     articleRevisionImages?: Prisma.ArticleRevisionCreateNestedManyWithoutImageInput;
     pageRevisionSocialMediaImages?: Prisma.PageRevisionCreateNestedManyWithoutSocialMediaImageInput;
     pageRevisionImages?: Prisma.PageRevisionCreateNestedManyWithoutImageInput;
+    peer?: ImagepeerFactory | Prisma.PeerCreateNestedOneWithoutImagesInput;
     users?: Prisma.UserCreateNestedManyWithoutUserImageInput;
     events?: Prisma.EventCreateNestedManyWithoutImageInput;
     paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutImageInput;
@@ -660,17 +756,13 @@ export interface CommentsRevisionsFactoryInterface<TOptions extends CommentsRevi
  * @returns factory {@link CommentsRevisionsFactoryInterface}
  */
 export declare function defineCommentsRevisionsFactory<TOptions extends CommentsRevisionsFactoryDefineOptions>(options?: TOptions): CommentsRevisionsFactoryInterface<TOptions>;
-type CommentpeerFactory = {
-    _factoryFor: "Peer";
-    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutCommentsInput["create"]>;
-};
 type CommentguestUserImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutCommentInput["create"]>;
 };
 type CommentuserFactory = {
     _factoryFor: "User";
-    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentInput["create"]>;
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentsInput["create"]>;
 };
 type CommentFactoryDefineInput = {
     id?: string;
@@ -685,10 +777,9 @@ type CommentFactoryDefineInput = {
     authorType?: CommentAuthorType;
     guestUsername?: string | null;
     featured?: boolean;
-    peer?: CommentpeerFactory | Prisma.PeerCreateNestedOneWithoutCommentsInput;
     revisions?: Prisma.CommentsRevisionsCreateNestedManyWithoutCommentInput;
     guestUserImage?: CommentguestUserImageFactory | Prisma.ImageCreateNestedOneWithoutCommentInput;
-    user?: CommentuserFactory | Prisma.UserCreateNestedOneWithoutCommentInput;
+    user?: CommentuserFactory | Prisma.UserCreateNestedOneWithoutCommentsInput;
     tags?: Prisma.TaggedCommentsCreateNestedManyWithoutCommentInput;
     ratings?: Prisma.CommentRatingCreateNestedManyWithoutCommentInput;
     overriddenRatings?: Prisma.CommentRatingOverrideCreateNestedManyWithoutCommentInput;
@@ -846,7 +937,7 @@ export interface CommentRatingSystemAnswerFactoryInterface<TOptions extends Comm
 export declare function defineCommentRatingSystemAnswerFactory<TOptions extends CommentRatingSystemAnswerFactoryDefineOptions>(options: TOptions): CommentRatingSystemAnswerFactoryInterface<TOptions>;
 type CommentRatinguserFactory = {
     _factoryFor: "User";
-    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentRatingInput["create"]>;
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentRatingsInput["create"]>;
 };
 type CommentRatinganswerFactory = {
     _factoryFor: "CommentRatingSystemAnswer";
@@ -863,7 +954,7 @@ type CommentRatingFactoryDefineInput = {
     value?: number;
     fingerprint?: string | null;
     disabled?: boolean;
-    user?: CommentRatinguserFactory | Prisma.UserCreateNestedOneWithoutCommentRatingInput;
+    user?: CommentRatinguserFactory | Prisma.UserCreateNestedOneWithoutCommentRatingsInput;
     answer: CommentRatinganswerFactory | Prisma.CommentRatingSystemAnswerCreateNestedOneWithoutRatingsInput;
     comment: CommentRatingcommentFactory | Prisma.CommentCreateNestedOneWithoutRatingsInput;
 };
@@ -1140,6 +1231,10 @@ type MemberPlanfailPageFactory = {
     _factoryFor: "Page";
     build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansFailInput["create"]>;
 };
+type MemberPlanconfirmationPageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutMemberPlansConfirmationInput["create"]>;
+};
 type MemberPlanFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -1159,6 +1254,7 @@ type MemberPlanFactoryDefineInput = {
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
     successPage?: MemberPlansuccessPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansSuccessInput;
     failPage?: MemberPlanfailPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansFailInput;
+    confirmationPage?: MemberPlanconfirmationPageFactory | Prisma.PageCreateNestedOneWithoutMemberPlansConfirmationInput;
     subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
 };
@@ -1288,30 +1384,32 @@ type PageRevisionsocialMediaImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput["create"]>;
 };
+type PageRevisionpageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutRevisionsInput["create"]>;
+};
+type PageRevisionuserFactory = {
+    _factoryFor: "User";
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPageRevisionsInput["create"]>;
+};
 type PageRevisionFactoryDefineInput = {
     id?: string;
-    revision?: number;
     createdAt?: Date;
-    modifiedAt?: Date | null;
-    updatedAt?: Date | null;
     publishedAt?: Date | null;
-    publishAt?: Date | null;
-    slug?: string | null;
-    title?: string;
+    title?: string | null;
     description?: string | null;
-    tags?: Prisma.PageRevisionCreatetagsInput | Prisma.Enumerable<string>;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
+    searchPlainText?: string | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutPageRevisionInput;
     image?: PageRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput;
     socialMediaImage?: PageRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput;
-    PublishedPage?: Prisma.PageCreateNestedManyWithoutPublishedInput;
-    PendingPage?: Prisma.PageCreateNestedManyWithoutPendingInput;
-    DraftPage?: Prisma.PageCreateNestedManyWithoutDraftInput;
+    page: PageRevisionpageFactory | Prisma.PageCreateNestedOneWithoutRevisionsInput;
+    user?: PageRevisionuserFactory | Prisma.UserCreateNestedOneWithoutPageRevisionsInput;
 };
 type PageRevisionFactoryDefineOptions = {
-    defaultData?: Resolver<PageRevisionFactoryDefineInput, BuildDataOptions>;
+    defaultData: Resolver<PageRevisionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
             data: Resolver<Partial<PageRevisionFactoryDefineInput>, BuildDataOptions>;
@@ -1338,30 +1436,19 @@ export interface PageRevisionFactoryInterface<TOptions extends PageRevisionFacto
  * @param options
  * @returns factory {@link PageRevisionFactoryInterface}
  */
-export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options?: TOptions): PageRevisionFactoryInterface<TOptions>;
-type PagepublishedFactory = {
-    _factoryFor: "PageRevision";
-    build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPublishedPageInput["create"]>;
-};
-type PagependingFactory = {
-    _factoryFor: "PageRevision";
-    build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPendingPageInput["create"]>;
-};
-type PagedraftFactory = {
-    _factoryFor: "PageRevision";
-    build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput["create"]>;
-};
+export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options: TOptions): PageRevisionFactoryInterface<TOptions>;
 type PageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
-    published?: PagepublishedFactory | Prisma.PageRevisionCreateNestedOneWithoutPublishedPageInput;
-    pending?: PagependingFactory | Prisma.PageRevisionCreateNestedOneWithoutPendingPageInput;
-    draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
+    publishedAt?: Date | null;
+    slug?: string | null;
+    revisions?: Prisma.PageRevisionCreateNestedManyWithoutPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
     memberPlansSuccess?: Prisma.MemberPlanCreateNestedManyWithoutSuccessPageInput;
     memberPlansFail?: Prisma.MemberPlanCreateNestedManyWithoutFailPageInput;
+    memberPlansConfirmation?: Prisma.MemberPlanCreateNestedManyWithoutConfirmationPageInput;
     banners?: Prisma.BannerCreateNestedManyWithoutShowOnPagesInput;
 };
 type PageFactoryDefineOptions = {
@@ -1582,7 +1669,10 @@ type PeerFactoryDefineInput = {
     hostURL?: string;
     token?: string;
     isDisabled?: boolean;
-    comments?: Prisma.CommentCreateNestedManyWithoutPeerInput;
+    articles?: Prisma.ArticleCreateNestedManyWithoutPeerInput;
+    images?: Prisma.ImageCreateNestedManyWithoutPeerInput;
+    tags?: Prisma.TagCreateNestedManyWithoutPeerInput;
+    authors?: Prisma.AuthorCreateNestedManyWithoutPeerInput;
 };
 type PeerFactoryDefineOptions = {
     defaultData?: Resolver<PeerFactoryDefineInput, BuildDataOptions>;
@@ -1652,14 +1742,14 @@ export interface TokenFactoryInterface<TOptions extends TokenFactoryDefineOption
 export declare function defineTokenFactory<TOptions extends TokenFactoryDefineOptions>(options?: TOptions): TokenFactoryInterface<TOptions>;
 type SessionuserFactory = {
     _factoryFor: "User";
-    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSessionInput["create"]>;
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSessionsInput["create"]>;
 };
 type SessionFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     expiresAt?: Date;
     token?: string;
-    user: SessionuserFactory | Prisma.UserCreateNestedOneWithoutSessionInput;
+    user: SessionuserFactory | Prisma.UserCreateNestedOneWithoutSessionsInput;
 };
 type SessionFactoryDefineOptions = {
     defaultData: Resolver<SessionFactoryDefineInput, BuildDataOptions>;
@@ -1793,7 +1883,11 @@ type SubscriptionmemberPlanFactory = {
 };
 type SubscriptionuserFactory = {
     _factoryFor: "User";
-    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSubscriptionInput["create"]>;
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSubscriptionsInput["create"]>;
+};
+type SubscriptionreplacesSubscriptionFactory = {
+    _factoryFor: "Subscription";
+    build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutReplacedByInput["create"]>;
 };
 type SubscriptionFactoryDefineInput = {
     id?: string;
@@ -1806,12 +1900,15 @@ type SubscriptionFactoryDefineInput = {
     paidUntil?: Date | null;
     extendable?: boolean;
     currency?: Currency;
+    confirmed?: boolean;
     periods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutSubscriptionInput;
     deactivation?: SubscriptiondeactivationFactory | Prisma.SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput;
     paymentMethod: SubscriptionpaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutSubscriptionInput;
     memberPlan: SubscriptionmemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutSubscriptionInput;
-    user: SubscriptionuserFactory | Prisma.UserCreateNestedOneWithoutSubscriptionInput;
+    user: SubscriptionuserFactory | Prisma.UserCreateNestedOneWithoutSubscriptionsInput;
+    replacesSubscription?: SubscriptionreplacesSubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutReplacedByInput;
+    replacedBy?: Prisma.SubscriptionCreateNestedManyWithoutReplacesSubscriptionInput;
     invoices?: Prisma.InvoiceCreateNestedManyWithoutSubscriptionInput;
 };
 type SubscriptionFactoryDefineOptions = {
@@ -2006,13 +2103,15 @@ type UserFactoryDefineInput = {
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutUserInput;
     oauth2Accounts?: Prisma.UserOAuth2AccountCreateNestedManyWithoutUserInput;
     paymentProviderCustomers?: Prisma.PaymentProviderCustomerCreateNestedManyWithoutUserInput;
-    Comment?: Prisma.CommentCreateNestedManyWithoutUserInput;
-    Session?: Prisma.SessionCreateNestedManyWithoutUserInput;
-    Subscription?: Prisma.SubscriptionCreateNestedManyWithoutUserInput;
-    CommentRating?: Prisma.CommentRatingCreateNestedManyWithoutUserInput;
-    PollVote?: Prisma.PollVoteCreateNestedManyWithoutUserInput;
+    comments?: Prisma.CommentCreateNestedManyWithoutUserInput;
+    sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
+    subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput;
+    commentRatings?: Prisma.CommentRatingCreateNestedManyWithoutUserInput;
+    pollVotes?: Prisma.PollVoteCreateNestedManyWithoutUserInput;
     mailSent?: Prisma.MailLogCreateNestedManyWithoutRecipientInput;
-    UserConsent?: Prisma.UserConsentCreateNestedManyWithoutUserInput;
+    consents?: Prisma.UserConsentCreateNestedManyWithoutUserInput;
+    articleRevisions?: Prisma.ArticleRevisionCreateNestedManyWithoutUserInput;
+    pageRevisions?: Prisma.PageRevisionCreateNestedManyWithoutUserInput;
 };
 type UserFactoryDefineOptions = {
     defaultData?: Resolver<UserFactoryDefineInput, BuildDataOptions>;
@@ -2118,6 +2217,10 @@ export interface SettingFactoryInterface<TOptions extends SettingFactoryDefineOp
  * @returns factory {@link SettingFactoryInterface}
  */
 export declare function defineSettingFactory<TOptions extends SettingFactoryDefineOptions>(options?: TOptions): SettingFactoryInterface<TOptions>;
+type TagpeerFactory = {
+    _factoryFor: "Peer";
+    build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutTagsInput["create"]>;
+};
 type TagFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -2125,6 +2228,7 @@ type TagFactoryDefineInput = {
     type?: TagType;
     tag?: string | null;
     main?: boolean;
+    peer?: TagpeerFactory | Prisma.PeerCreateNestedOneWithoutTagsInput;
     comments?: Prisma.TaggedCommentsCreateNestedManyWithoutTagInput;
     events?: Prisma.TaggedEventsCreateNestedManyWithoutTagInput;
     authors?: Prisma.TaggedAuthorsCreateNestedManyWithoutTagInput;
@@ -2245,7 +2349,7 @@ export interface PollAnswerFactoryInterface<TOptions extends PollAnswerFactoryDe
 export declare function definePollAnswerFactory<TOptions extends PollAnswerFactoryDefineOptions>(options: TOptions): PollAnswerFactoryInterface<TOptions>;
 type PollVoteuserFactory = {
     _factoryFor: "User";
-    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPollVoteInput["create"]>;
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPollVotesInput["create"]>;
 };
 type PollVoteanswerFactory = {
     _factoryFor: "PollAnswer";
@@ -2261,7 +2365,7 @@ type PollVoteFactoryDefineInput = {
     modifiedAt?: Date;
     fingerprint?: string | null;
     disabled?: boolean;
-    user?: PollVoteuserFactory | Prisma.UserCreateNestedOneWithoutPollVoteInput;
+    user?: PollVoteuserFactory | Prisma.UserCreateNestedOneWithoutPollVotesInput;
     answer: PollVoteanswerFactory | Prisma.PollAnswerCreateNestedOneWithoutVotesInput;
     poll: PollVotepollFactory | Prisma.PollCreateNestedOneWithoutVotesInput;
 };
@@ -2516,7 +2620,7 @@ type UserConsentconsentFactory = {
 };
 type UserConsentuserFactory = {
     _factoryFor: "User";
-    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutUserConsentInput["create"]>;
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutConsentsInput["create"]>;
 };
 type UserConsentFactoryDefineInput = {
     id?: string;
@@ -2524,7 +2628,7 @@ type UserConsentFactoryDefineInput = {
     modifiedAt?: Date;
     value?: boolean;
     consent: UserConsentconsentFactory | Prisma.ConsentCreateNestedOneWithoutUserConsentsInput;
-    user: UserConsentuserFactory | Prisma.UserCreateNestedOneWithoutUserConsentInput;
+    user: UserConsentuserFactory | Prisma.UserCreateNestedOneWithoutConsentsInput;
 };
 type UserConsentFactoryDefineOptions = {
     defaultData: Resolver<UserConsentFactoryDefineInput, BuildDataOptions>;
@@ -2815,6 +2919,7 @@ type BannerFactoryDefineInput = {
     cta?: string | null;
     active?: boolean;
     showOnArticles?: boolean;
+    showForLoginStatus?: LoginStatus;
     image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;
     showOnPages?: Prisma.PageCreateNestedManyWithoutBannersInput;
     actions?: Prisma.BannerActionCreateNestedManyWithoutBannerInput;

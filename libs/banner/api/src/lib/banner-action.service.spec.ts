@@ -1,12 +1,14 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {BannerActionRole, PrismaClient} from '@prisma/client'
+import {BannerAction, BannerActionRole, LoginStatus, PrismaClient} from '@prisma/client'
 import {BannerActionService} from './banner-action.service'
+import {Banner} from './banner.model'
+import {} from './banner-action.model'
 
 describe('BannerActionService', () => {
   let service: BannerActionService
   let prisma: PrismaClient
 
-  const bannerAction = {
+  const bannerAction: BannerAction = {
     id: '1',
     createdAt: new Date(),
     modifiedAt: new Date(),
@@ -17,17 +19,15 @@ describe('BannerActionService', () => {
     bannerId: '1'
   }
 
-  const banner = {
+  const banner: Banner = {
     id: '1',
-    createdAt: new Date(),
-    modifiedAt: new Date(),
     title: 'Test Banner',
     text: 'Test Banner Text',
-    cta: null,
-    imageId: null,
+    cta: undefined,
+    imageId: undefined,
     active: true,
-    tags: [],
-    showOnArticles: true
+    showOnArticles: true,
+    showForLoginStatus: LoginStatus.ALL
   }
 
   beforeEach(async () => {

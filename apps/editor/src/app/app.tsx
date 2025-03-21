@@ -12,6 +12,7 @@ import {
   UserConsentList
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
+import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
   MailTemplateList,
@@ -61,7 +62,6 @@ import {TokenList} from './routes/tokens/tokenList'
 import {UserRoleList} from './routes/userRoles/userRoleList'
 import {UserEditView} from './routes/users/userEditView'
 import {UserList} from './routes/users/userList'
-import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -80,7 +80,7 @@ const Logout = () => {
       localStorage.removeItem(LocalStorageKey.SessionToken)
       authDispatch({type: AuthDispatchActionType.Logout})
     }
-  }, [session])
+  }, [authDispatch, logout, session])
 
   return <Navigate to="/login" replace />
 }

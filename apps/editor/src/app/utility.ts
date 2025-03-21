@@ -1,15 +1,8 @@
-import {ApolloClient, ApolloLink, createHttpLink, InMemoryCache} from '@apollo/client'
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
+import {getSettings} from '@wepublish/editor/api-v2'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-
-import {ElementID} from '../shared/elementID'
-import {ClientSettings} from '../shared/types'
-
-export enum LocalStorageKey {
-  SessionToken = 'sessionToken'
-}
 
 export const addOrUpdateOneInArray = (
   array: Record<string | 'id', any>[] | null | undefined,
@@ -165,43 +158,6 @@ export function flattenDOMTokenList(list: DOMTokenList) {
     string = `${string} ${element}`
   }
   return string.substring(1)
-}
-
-export function getSettings(): ClientSettings {
-  const defaultSettings = {
-    apiURL: 'http://localhost:4000',
-    peerByDefault: false,
-    imgMinSizeToCompress: 10
-  }
-
-  const settingsJson = document.getElementById(ElementID.Settings)
-
-  return settingsJson
-    ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
-    : defaultSettings
-}
-
-const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem(LocalStorageKey.SessionToken)
-  const context = operation.getContext()
-
-  operation.setContext({
-    headers: {
-      authorization: token ? `Bearer ${token}` : '',
-      ...context.headers
-    },
-    credentials: 'include',
-    ...context
-  })
-  return forward(operation)
-})
-
-export function getApiClientV2() {
-  const {apiURL} = getSettings()
-  return new ApolloClient({
-    link: authLink.concat(createHttpLink({uri: `${apiURL}/v1`, fetch})),
-    cache: new InMemoryCache()
-  })
 }
 
 /**

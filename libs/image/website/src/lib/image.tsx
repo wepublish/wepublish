@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps, BuilderImageWidths} from '@wepublish/website/builder'
 import {useImageProps} from './image.context'

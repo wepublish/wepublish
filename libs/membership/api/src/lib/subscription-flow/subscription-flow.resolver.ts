@@ -4,9 +4,8 @@ import {
   CanDeleteSubscriptionFlow,
   CanGetPaymentMethods,
   CanGetSubscriptionFlows,
-  CanUpdateSubscriptionFlow,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanUpdateSubscriptionFlow
+} from '@wepublish/permissions'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {
   PaymentMethod,
@@ -17,6 +16,7 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {PrismaClient} from '@prisma/client'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {

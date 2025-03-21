@@ -21,6 +21,18 @@
               }
             ]
           }
+        ],
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@mui/material",
+                "importNames": ["styled"],
+                "message": "Please import 'styled' from '@emotion/styled' instead."
+              }
+            ]
+          }
         ]
       }
     },

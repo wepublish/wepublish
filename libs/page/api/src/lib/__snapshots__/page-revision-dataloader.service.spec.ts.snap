@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageRevisionDataloaderService load should load many 1`] = `
+[
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "123",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "123",
+        "publishedAt": {
+          "gt": 2023-01-01T00:00:00.000Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "123",
+        "publishedAt": {
+          "lte": 2023-01-01T00:00:00.000Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "321",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "321",
+        "publishedAt": {
+          "gt": 2023-01-01T00:00:00.000Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "321",
+        "publishedAt": {
+          "lte": 2023-01-01T00:00:00.000Z,
+        },
+      },
+    },
+  ],
+]
+`;
+
+exports[`PageRevisionDataloaderService load should load one 1`] = `
+[
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "123",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "123",
+        "publishedAt": {
+          "gt": 2023-01-01T00:00:00.000Z,
+        },
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": {
+        "createdAt": "desc",
+      },
+      "where": {
+        "pageId": "123",
+        "publishedAt": {
+          "lte": 2023-01-01T00:00:00.000Z,
+        },
+      },
+    },
+  ],
+]
+`;
+
+exports[`PageRevisionDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

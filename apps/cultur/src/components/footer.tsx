@@ -1,5 +1,9 @@
-import {styled} from '@mui/material'
-import {Footer as WepFooter, FooterInnerWrapper, FooterPaperWrapper} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {
+  Footer as WepFooter,
+  FooterInnerWrapper,
+  FooterPaperWrapper
+} from '@wepublish/navigation/website'
 
 export const Footer = styled(WepFooter)`
   background-color: transparent;

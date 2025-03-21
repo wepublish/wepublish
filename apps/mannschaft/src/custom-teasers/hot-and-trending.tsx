@@ -1,7 +1,7 @@
-import {UTCDate} from '@date-fns/utc'
-import {styled} from '@mui/material'
-import {ApiV1, BuilderTeaserProps, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
-import {startOfDay} from 'date-fns'
+import styled from '@emotion/styled'
+import {TeaserWrapper} from '@wepublish/block-content/website'
+import {useHotAndTrendingQuery} from '@wepublish/website/api'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 import {useMemo} from 'react'
 
@@ -33,7 +33,7 @@ const HotAndTrendingLinkList = styled('ul')`
 const HotAndTrendingLink = styled('li')`
   padding-bottom: ${({theme}) => theme.spacing(2)};
   border-bottom: currentColor 1px solid;
-  font-size: ${({theme}) => theme.typography.h6};
+  font-size: ${({theme}) => theme.typography.h6.fontSize};
   font-weight: 600;
 
   &:last-child {
@@ -46,9 +46,14 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
     elements: {H4, Link}
   } = useWebsiteBuilder()
 
-  const yesterday = useMemo(() => startOfDay(new UTCDate()).toISOString(), [])
+  const yesterday = useMemo(() => {
+    const now = new Date()
+    now.setUTCHours(0, 0, 0, 0)
 
-  const {data} = ApiV1.useHotAndTrendingQuery({
+    return now.toISOString()
+  }, [])
+
+  const {data} = useHotAndTrendingQuery({
     variables: {
       take: 5,
       start: yesterday
@@ -64,7 +69,7 @@ export const HotAndTrendingTeaser = ({alignment, teaser}: BuilderTeaserProps) =>
           {data?.hotAndTrending.map(article => (
             <HotAndTrendingLink key={article.id}>
               <Link href={article.url} color="inherit" underline="none">
-                {article.title}
+                {article.latest.title}
               </Link>
             </HotAndTrendingLink>
           ))}
