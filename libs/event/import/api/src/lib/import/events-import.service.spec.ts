@@ -3,7 +3,6 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {EventStatus, PrismaClient} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
 import {Cache} from 'cache-manager'
-import {Node} from 'slate'
 import {AgendaBaselService} from './agenda-basel.service'
 import {EventFromSource, ImportedEventSort} from './events-import.model'
 import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.service'
@@ -51,7 +50,7 @@ describe('EventsImportService', () => {
     createdAt: new Date(),
     modifiedAt: new Date(),
     name: 'Event 1',
-    description: {} as Node[],
+    description: [],
     status: EventStatus.Scheduled,
     location: '',
     externalSourceId: '',

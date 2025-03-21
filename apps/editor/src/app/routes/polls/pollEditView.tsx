@@ -18,7 +18,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 const DateLabel = styled(Form.ControlLabel)`
   margin-right: 8px;
@@ -262,7 +262,7 @@ function PollEditView() {
                       if (!poll) {
                         return
                       }
-                      setPoll({...poll, infoText: value as Node[]})
+                      setPoll({...poll, infoText: value as Descendant[]})
                     }}
                   />
                 </div>

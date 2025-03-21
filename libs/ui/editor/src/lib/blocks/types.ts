@@ -1,6 +1,6 @@
 import {FullPoll, Tag} from '@wepublish/editor/api'
 import nanoid from 'nanoid'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
@@ -23,7 +23,7 @@ export interface BaseBlockValue {
 }
 
 export interface RichTextBlockValue extends BaseBlockValue {
-  richText: Node[]
+  richText: Descendant[]
 }
 
 export interface ImageBlockValue extends BaseBlockValue {
@@ -44,7 +44,7 @@ export interface ImageGalleryBlockValue extends BaseBlockValue {
 export interface ListicleItem {
   title: string | null | undefined
   image: FullImageFragment | null
-  richText: Node[]
+  richText: Descendant[]
 }
 
 export interface ListicleBlockValue extends BaseBlockValue {

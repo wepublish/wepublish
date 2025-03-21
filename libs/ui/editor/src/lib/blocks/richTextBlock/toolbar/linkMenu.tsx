@@ -3,12 +3,12 @@ import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdLinkOff} from 'react-icons/md'
 import {Button, ButtonToolbar, Col as RCol, Form, IconButton, InputGroup, Row} from 'rsuite'
-import {Editor, Range, Transforms} from 'slate'
+import {type Element as ElementType, Editor, Element, Range, Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
 import {SubMenuContext} from '../../../atoms/toolbar'
-import {InlineFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+import {InlineFormat} from '@wepublish/richtext'
 
 const {Group, Control, ControlLabel, HelpText} = Form
 
@@ -74,9 +74,10 @@ export function LinkMenu() {
     const nodes = Array.from(
       WepublishEditor.nodes(editor, {
         at: editor.selection ?? undefined,
-        match: node => node.type === InlineFormat.Link
+        match: node => Element.isElement(node) && node.type === InlineFormat.Link
       })
-    )
+    ) as ElementType[][]
+
     const tuple = nodes[0]
     if (tuple) {
       const [node] = tuple
@@ -222,7 +223,7 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
       const nodes = Array.from(
         WepublishEditor.nodes(editor, {
           at: selection,
-          match: node => node.type === InlineFormat.Link
+          match: node => Element.isElement(node) && node.type === InlineFormat.Link
         })
       )
       const tuple = nodes[0]
@@ -244,7 +245,9 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
       Transforms.select(editor, selection)
     }
   }
-  Transforms.unwrapNodes(editor, {match: node => node.type === InlineFormat.Link})
+  Transforms.unwrapNodes(editor, {
+    match: node => Element.isElement(node) && node.type === InlineFormat.Link
+  })
   Transforms.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
   Transforms.collapse(editor, {edge: 'end'})
 
@@ -256,5 +259,7 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
 }
 
 function removeLink(editor: Editor) {
-  Transforms.unwrapNodes(editor, {match: node => node.type === InlineFormat.Link})
+  Transforms.unwrapNodes(editor, {
+    match: node => Element.isElement(node) && node.type === InlineFormat.Link
+  })
 }

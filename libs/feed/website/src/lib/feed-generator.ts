@@ -1,7 +1,7 @@
 import {Article} from '@wepublish/website/api'
 import type {Feed, Item} from 'feed'
 import {getArticleSEO} from '@wepublish/article/website'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 import {isRichTextBlock} from '@wepublish/block-content/website'
 import {toHtml} from '@wepublish/richtext'
 
@@ -26,7 +26,7 @@ export const generateFeed =
           }
 
           return acc
-        }, [] as Node[]) ?? []
+        }, [] as Descendant[]) ?? []
       )
 
       return {

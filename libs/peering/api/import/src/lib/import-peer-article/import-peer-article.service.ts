@@ -229,14 +229,14 @@ export class ImportPeerArticleService {
             create: {
               name: author.name,
               slug: author.slug,
-              bio: author.bio as Prisma.JsonArray,
+              bio: author.bio as any[],
               hideOnTeam: true,
               imageID: imageId,
               peerId
             },
             update: {
               name: author.name,
-              bio: author.bio as Prisma.JsonArray,
+              bio: author.bio as any[],
               imageID: imageId
             }
           })

@@ -1,3 +1,4 @@
+import {generateSitemap} from '@wepublish/feed/website'
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
@@ -9,7 +10,6 @@ import {
   SitemapPageListDocument,
   SortOrder
 } from '@wepublish/website/api'
-import {generateSitemap} from '@wepublish/feed/website'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 import process from 'node:process'
