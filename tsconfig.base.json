@@ -206,6 +206,9 @@
       "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/website/translations/*": [
         "libs/website/translations/src/lib/*"
+      ],
+      "@wepublish/website/form-builder": [
+        "libs/website/form-builder/src/index.ts"
       ]
     },
     "strict": false,
