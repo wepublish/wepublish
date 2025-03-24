@@ -1,5 +1,7 @@
-import {ApiV1, hasBlockStyle, isTeaserGridBlock} from '@wepublish/website'
+import {hasBlockStyle, isTeaserGridBlock} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock} from '@wepublish/website/api'
 import {allPass} from 'ramda'
 
-export const isBestOfWePublish = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
-  allPass([hasBlockStyle('BestOfWePublish'), isTeaserGridBlock])(block)
+export const isBestOfWePublish = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserGridBlock => allPass([hasBlockStyle('BestOfWePublish'), isTeaserGridBlock])(block)

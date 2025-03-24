@@ -2,7 +2,6 @@ import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
 import {FullNavigationFragment, Navigation} from '@wepublish/website/api'
 import {Footer} from './footer'
-import {css} from '@emotion/react'
 
 const navigation = {
   id: 'cldx7kcpi1168oapxftiqsh0p',
@@ -181,30 +180,6 @@ export const WithError = {
     error: new ApolloError({
       errorMessage: 'Foobar'
     }),
-    slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
-  }
-}
-
-export const WithClassName = {
-  args: {
-    data: {
-      navigations
-    },
-    className: 'extra-classname',
-    slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
-  }
-}
-
-export const WithEmotion = {
-  args: {
-    data: {
-      navigations
-    },
-    css: css`
-      background-color: #eee;
-    `,
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']]
   }

@@ -2,7 +2,7 @@ import {Args, Int, Query, Resolver} from '@nestjs/graphql'
 import {Inject} from '@nestjs/common'
 import {Article as ArticleModel} from '../article.model'
 import {Article} from '@prisma/client'
-import {Public} from '@wepublish/permissions/api'
+import {Public} from '@wepublish/authentication/api'
 
 export const HOT_AND_TRENDING_DATA_SOURCE = Symbol('HOT_AND_TRENDING_DATA_SOURCE')
 
@@ -32,15 +32,12 @@ export class HotAndTrendingResolver {
     })
     start: Date | null,
     @Args('take', {nullable: true, type: () => Int, defaultValue: 10}) take: number
-  ): Promise<ArticleModel[]> {
+  ): Promise<Article[]> {
     const result = await this.datasource.getMostViewedArticles({
       start,
       take
     })
 
-    return result.map(({id}) => ({
-      __typename: 'Article',
-      id
-    }))
+    return result
   }
 }

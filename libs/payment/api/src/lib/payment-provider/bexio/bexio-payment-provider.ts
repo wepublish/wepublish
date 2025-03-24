@@ -123,7 +123,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    *
    * @returns {Promise<void>} Resolves when the remote invoice is successfully created.
    */
-  async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
+  override async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
     await this.bexioCreate(props.invoice.id, true)
   }
 

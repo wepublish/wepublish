@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
+import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions'
 import {Invoice, Prisma, PrismaClient} from '@prisma/client'
 import {InvoiceWithItems} from '@wepublish/payment/api'
 
@@ -100,16 +100,20 @@ export const markInvoiceAsPaid = async (
     }
   })
 
+  if (!invoice) {
+    throw new Error('Invoice not found')
+  }
+
+  if (!invoice.subscriptionID) {
+    throw new Error('Subscription not found')
+  }
+
   await prismaClient.subscription.update({
     where: {id: invoice.subscriptionID},
     data: {
       confirmed: true
     }
   })
-
-  if (!invoice) {
-    throw new Error('Invoice not found')
-  }
 
   // Should not happen since an invoice is limited to one subscription
   if (invoice.subscriptionPeriods.length !== 1) {

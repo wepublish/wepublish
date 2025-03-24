@@ -47,7 +47,7 @@ fragment FullImage on Image {
   ...ImageRef
 }
 
-query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...ImageRef
@@ -61,7 +61,7 @@ query ImageList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   }
 }
 
-query Image($id: ID!) {
+query Image($id: String!) {
   image(id: $id) {
     ...FullImage
   }
@@ -73,13 +73,13 @@ mutation UploadImage($input: UploadImageInput!) {
   }
 }
 
-mutation UpdateImage($id: ID!, $input: UpdateImageInput!) {
+mutation UpdateImage($id: String!, $input: UpdateImageInput!) {
   updateImage(id: $id, input: $input) {
     ...FullImage
   }
 }
 
-mutation DeleteImage($id: ID!) {
+mutation DeleteImage($id: String!) {
   deleteImage(id: $id) {
     ...FullImage
   }

@@ -22,9 +22,9 @@ const defaultOptions: DefaultOptions = {
 const cache = new InMemoryCache({
   possibleTypes: possibleTypes.possibleTypes,
   resultCaching: false,
+  resultCacheMaxSize: 0,
   addTypename: true,
-  canonizeResults: true,
-  resultCacheMaxSize: 0
+  canonizeResults: true
 })
 
 export const parameters = {

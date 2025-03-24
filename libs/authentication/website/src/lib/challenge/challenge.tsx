@@ -1,6 +1,6 @@
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {CaptchaType, Challenge as ChallengeType} from '@wepublish/website/api'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {forwardRef, useEffect} from 'react'
 import {TextFieldProps} from '@wepublish/ui'
 import Turnstile, {useTurnstile} from 'react-turnstile'

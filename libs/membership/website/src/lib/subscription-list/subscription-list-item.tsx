@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {SubscriptionDeactivationReason} from '@wepublish/website/api'
 import {
   BuilderSubscriptionListItemProps,
@@ -193,7 +193,6 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
-      {/* confirm cancel */}
       <MembershipModal
         open={!!confirmCancel}
         onSubmit={async () => {
@@ -212,7 +211,6 @@ export function SubscriptionListItem({
         </Paragraph>
       </MembershipModal>
 
-      {/* confirm extend */}
       <MembershipModal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}

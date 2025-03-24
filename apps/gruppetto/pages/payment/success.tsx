@@ -1,5 +1,7 @@
-import {CircularProgress, styled, Typography} from '@mui/material'
-import {ApiV1, useUser} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {CircularProgress, Typography} from '@mui/material'
+import {useUser} from '@wepublish/authentication/website'
+import {useCheckInvoiceStatusLazyQuery, useInvoicesLazyQuery} from '@wepublish/website/api'
 import {GetServerSideProps} from 'next'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
@@ -51,8 +53,8 @@ export default function PaymentSuccess({host}: PaymentSuccessProps) {
   const {hasUser, user} = useUser()
   const [hasOpenInvoices, setHasOpenInvoices] = useState<boolean>()
 
-  const [checkInvoice] = ApiV1.useCheckInvoiceStatusLazyQuery()
-  const [getInvoices] = ApiV1.useInvoicesLazyQuery({
+  const [checkInvoice] = useCheckInvoiceStatusLazyQuery()
+  const [getInvoices] = useInvoicesLazyQuery({
     onCompleted: async data => {
       const invoices = await Promise.all(
         data?.invoices.map(async ({id}) => {

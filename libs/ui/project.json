@@ -3,24 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/ui/src",
   "projectType": "library",
-  "tags": ["publishable"],
+  "tags": [],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/ui",
-        "tsConfig": "libs/ui/tsconfig.lib.json",
-        "packageJson": "libs/ui/package.json",
-        "main": "libs/ui/src/index.ts",
-        "assets": ["libs/ui/*.md"],
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "updateBuildableProjectDepsInPackageJson": true
-      }
     },
     "test": {
       "executor": "@nx/jest:jest",
