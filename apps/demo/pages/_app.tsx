@@ -43,7 +43,6 @@ i18next
   .init({
     partialBundledLanguages: true,
     lng: 'de',
-    partialBundledLanguages: true,
     fallbackLng: 'de',
     supportedLngs: ['de'],
     resources: {
