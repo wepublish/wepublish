@@ -17,12 +17,12 @@ import {previewLink} from '@wepublish/website/admin'
 import {UserSession} from '@wepublish/website/api'
 import {createWithV1ApiClient} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
-import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -175,7 +175,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  subscribeUrl={''}
+                  subscribeBtn={null}
                 />
 
                 <main>

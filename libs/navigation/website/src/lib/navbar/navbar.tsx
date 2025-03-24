@@ -6,7 +6,7 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon} from '@wepublish/ui'
+import {ButtonProps, TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -208,9 +208,9 @@ export function Navbar({
   logo,
   hasRunningSubscription,
   hasUnpaidInvoices,
-  loginUrl = '/login',
-  profileUrl = '/profile',
-  subscribeUrl = '/mitmachen'
+  loginBtn = {href: '/login'},
+  profileBtn = {href: '/profile'},
+  subscribeBtn = {href: '/mitmachen'}
 }: BuilderNavbarProps) {
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
@@ -273,25 +273,25 @@ export function Navbar({
           </Link>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUnpaidInvoices && profileUrl && (
+            {hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
-                href={profileUrl}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}>
+                sx={buttonStyles}
+                {...profileBtn}>
                 <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
-              <Button LinkComponent={Link} href={subscribeUrl} sx={buttonStyles}>
+            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
+              <Button LinkComponent={Link} sx={buttonStyles} {...subscribeBtn}>
                 Member werden
               </Button>
             )}
 
-            {hasRunningSubscription && !hasUnpaidInvoices && profileUrl && (
-              <Button LinkComponent={Link} href={profileUrl} sx={buttonStyles}>
+            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
+              <Button LinkComponent={Link} sx={buttonStyles} {...profileBtn}>
                 Mein Konto
               </Button>
             )}
@@ -303,9 +303,9 @@ export function Navbar({
         <NavPaper
           hasRunningSubscription={hasRunningSubscription}
           hasUnpaidInvoices={hasUnpaidInvoices}
-          subscribeUrl={subscribeUrl}
-          profileUrl={profileUrl}
-          loginUrl={loginUrl}
+          subscribeBtn={subscribeBtn}
+          profileBtn={profileBtn}
+          loginBtn={loginBtn}
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}>
@@ -431,17 +431,17 @@ export const NavPaperActions = styled('div')`
 const NavPaper = ({
   main,
   categories,
-  loginUrl,
-  profileUrl,
-  subscribeUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   closeMenu,
   hasRunningSubscription,
   hasUnpaidInvoices,
   children
 }: PropsWithChildren<{
-  loginUrl?: string | null
-  profileUrl?: string | null
-  subscribeUrl?: string | null
+  loginBtn?: ButtonProps | null
+  profileBtn?: ButtonProps | null
+  subscribeBtn?: ButtonProps | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
@@ -472,36 +472,36 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
-          {hasUnpaidInvoices && profileUrl && (
+          {hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}
-              href={profileUrl}
               variant="contained"
               color="warning"
               onClick={closeMenu}
-              startIcon={<MdWarning />}>
+              startIcon={<MdWarning />}
+              {...profileBtn}>
               Offene Rechnung
             </Button>
           )}
 
-          {!hasRunningSubscription && subscribeUrl && (
+          {!hasRunningSubscription && subscribeBtn && (
             <Button
               LinkComponent={Link}
-              href={subscribeUrl}
               variant="contained"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...subscribeBtn}>
               Member werden
             </Button>
           )}
 
-          {hasUser && profileUrl && (
+          {hasUser && profileBtn && (
             <Button
               LinkComponent={Link}
-              href={profileUrl}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...profileBtn}>
               Mein Konto
             </Button>
           )}
@@ -518,13 +518,13 @@ const NavPaper = ({
             </Button>
           )}
 
-          {!hasUser && loginUrl && (
+          {!hasUser && loginBtn && (
             <Button
               LinkComponent={Link}
-              href={loginUrl}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...loginBtn}>
               Login
             </Button>
           )}

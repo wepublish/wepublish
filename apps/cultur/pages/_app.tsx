@@ -155,8 +155,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                loginUrl={''}
-                subscribeUrl={''}
+                loginBtn={null}
+                subscribeBtn={null}
               />
 
               <main>
