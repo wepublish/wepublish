@@ -6,6 +6,7 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
+import {useTranslation} from 'react-i18next'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
@@ -215,6 +216,8 @@ export function Navbar({
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
+  const {t} = useTranslation()
+
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
   const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
@@ -286,7 +289,7 @@ export function Navbar({
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
               <Button LinkComponent={Link} sx={buttonStyles} {...subscribeBtn}>
-                Member werden
+                {t('navbar.subscribe')}
               </Button>
             )}
 
@@ -451,6 +454,7 @@ const NavPaper = ({
   const {
     elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
   const {hasUser, logout} = useUser()
   const theme = useTheme()
 
@@ -491,7 +495,7 @@ const NavPaper = ({
               color="secondary"
               onClick={closeMenu}
               {...subscribeBtn}>
-              Member werden
+              {t('navbar.subscribe')}
             </Button>
           )}
 

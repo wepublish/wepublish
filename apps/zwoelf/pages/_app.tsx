@@ -24,13 +24,17 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import deOverriden from '../locales/deOverriden.json'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {ZwoelfBaseTeaser} from '../src/zwoelf-base-teaser'
+import {ZwoelfFocusTeaser} from '../src/zwoelf-focus-teaser'
 
 setDefaultOptions({
   locale: de
@@ -39,7 +43,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
@@ -112,7 +116,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Script={Script}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
-            meta={{siteTitle}}>
+            meta={{siteTitle}}
+            blocks={{Teaser: ZwoelfBaseTeaser}}
+            blockStyles={{
+              FocusTeaser: ZwoelfFocusTeaser
+            }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -140,10 +148,14 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['abo']]}
+                  categorySlugs={[['about']]}
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
+                  subscribeBtn={{
+                    href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
+                    target: '_blank'
+                  }}
                   loginBtn={null}
                 />
 
@@ -153,7 +165,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </MainSpacer>
                 </main>
 
-                <FooterContainer slug="main" categorySlugs={[['abo']]}>
+                <FooterContainer slug="main" categorySlugs={[['about']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
