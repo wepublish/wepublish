@@ -33,7 +33,17 @@ export const getEventSEO = (event: Event) => {
       keywords: event.tags?.map(tag => tag.tag).join(','),
       eventStatus: event.status,
       location: event.location,
-      image,
+      image: image
+        ? {
+            height: image.height,
+            width: image.width,
+            representativeOfPage: true,
+            contentUrl: image.url,
+            thumbnailUrl: image.m,
+            url: image.url,
+            encodingFormat: image.mimeType
+          }
+        : undefined,
       name: event.name,
       description
     }

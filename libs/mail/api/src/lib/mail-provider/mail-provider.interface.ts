@@ -48,11 +48,7 @@ export type WithUrlAndStatus<T> = T & {
   status: MailTemplateStatus
 }
 
-export class MailProviderError extends Error {
-  constructor(public message: string) {
-    super(message)
-  }
-}
+export class MailProviderError extends Error {}
 
 export interface MailProvider {
   readonly id: string

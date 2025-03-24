@@ -1,14 +1,14 @@
 import {css} from '@emotion/react'
 import {Theme, useTheme} from '@mui/material'
 import {
-  ApiV1,
-  BuilderCommentProps,
   Comment,
   CommentAuthor,
   CommentContent,
   CommentFlair,
   CommentName
-} from '@wepublish/website'
+} from '@wepublish/comments/website'
+import {Tag} from '@wepublish/website/api'
+import {BuilderCommentProps} from '@wepublish/website/builder'
 
 const bajourTags = {
   QuelleHervorheben: 'Quelle hervorheben',
@@ -34,8 +34,8 @@ export const BajourComment = (props: BuilderCommentProps) => {
   const {tags} = props
   const theme = useTheme()
 
-  const highlightSourceTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.QuelleHervorheben)
-  const moderationTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.Moderation)
+  const highlightSourceTag = tags.some((tag: Tag) => tag.tag === bajourTags.QuelleHervorheben)
+  const moderationTag = tags.some((tag: Tag) => tag.tag === bajourTags.Moderation)
 
   const commentStyles = moderationTag
     ? highlightModeration(theme)

@@ -1,6 +1,6 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanCreateToken, CanDeleteToken} from '@wepublish/permissions/api'
+import {CanCreateToken, CanDeleteToken} from '@wepublish/permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
 import {generateToken} from '../session/session.mutation'
 

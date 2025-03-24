@@ -3,7 +3,7 @@ import {TestingModule, Test} from '@nestjs/testing'
 import {Reflector} from '@nestjs/core'
 import {PERMISSIONS_METADATA_KEY} from './permission.decorator'
 import {GqlExecutionContext} from '@nestjs/graphql'
-import {Permission} from './permissions'
+import {Permission} from '@wepublish/permissions'
 
 jest.mock('@nestjs/graphql', () => {
   const original = jest.requireActual('@nestjs/graphql')

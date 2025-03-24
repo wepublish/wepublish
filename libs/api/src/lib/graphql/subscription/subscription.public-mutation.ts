@@ -72,7 +72,7 @@ export const updatePublicSubscription = async (
   const paymentProvider = paymentProviders.find(
     paymentProvider => paymentProvider.id === paymentProviderID
   )
-  if (paymentProvider.remoteManagedSubscription) {
+  if (paymentProvider?.remoteManagedSubscription) {
     await handleRemoteManagedSubscription({
       paymentProvider,
       originalSubscription: subscription,

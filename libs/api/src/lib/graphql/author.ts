@@ -1,6 +1,5 @@
 import {
   GraphQLNonNull,
-  GraphQLID,
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
@@ -20,6 +19,7 @@ import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver} from '../utility'
 import {GraphQLTag} from './tag/tag'
+import {GraphQLPeer} from './peer'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
@@ -32,7 +32,7 @@ export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
 export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -72,7 +72,13 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     },
     hideOnArticle: {type: GraphQLBoolean},
     hideOnTeaser: {type: GraphQLBoolean},
-    hideOnTeam: {type: GraphQLBoolean}
+    hideOnTeam: {type: GraphQLBoolean},
+    peer: {
+      type: GraphQLPeer,
+      resolve: createProxyingResolver(({peerId}, args, {loaders}) => {
+        return peerId ? loaders.peer.load(peerId) : null
+      })
+    }
   }
 })
 
@@ -80,7 +86,7 @@ export const GraphQLAuthorFilter = new GraphQLInputObjectType({
   name: 'AuthorFilter',
   fields: {
     name: {type: GraphQLString},
-    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     hideOnTeam: {type: GraphQLBoolean}
   }
 })
@@ -119,10 +125,23 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLinkInput))},
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
-    imageID: {type: GraphQLID},
-    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    imageID: {type: GraphQLString},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     hideOnArticle: {type: GraphQLBoolean},
     hideOnTeaser: {type: GraphQLBoolean},
     hideOnTeam: {type: GraphQLBoolean}
   }
 })
+
+export const GraphQLAuthorResolver = {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
+    const {id} = reference
+    const author = await loaders.authorsByID.load(id)
+
+    if (!author) {
+      throw new Error('Author not found')
+    }
+
+    return author
+  }
+}

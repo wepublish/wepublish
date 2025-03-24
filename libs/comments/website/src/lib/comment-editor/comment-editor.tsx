@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, Modal, Theme, css, styled, useTheme} from '@mui/material'
+import {IconButton, Modal, Theme, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   Challenge,
   IntendedRouteExpiryInSeconds,

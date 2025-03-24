@@ -1,6 +1,6 @@
 import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
 import {hashPassword} from '../../db/user'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {Context} from '../../context'
 import {Validator} from '../../validator'
 import {mailLogType} from '@wepublish/mail/api'

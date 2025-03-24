@@ -1,4 +1,5 @@
-import {Checkbox, darken, FormControlLabel, lighten, styled} from '@mui/material'
+import {Checkbox, darken, FormControlLabel, lighten} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderTransactionFeeProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef, useId} from 'react'
 import {MdFavorite} from 'react-icons/md'

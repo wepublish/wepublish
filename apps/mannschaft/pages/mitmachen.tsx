@@ -1,5 +1,5 @@
 import {SubscribePage, useUserCountry} from '@wepublish/utils/website'
-import {ApiV1} from '@wepublish/website'
+import {Currency} from '@wepublish/website/api'
 
 export default function Mitmachen() {
   const userCountry = useUserCountry() ?? 'CH'
@@ -9,10 +9,10 @@ export default function Mitmachen() {
       filter={memberPlans =>
         memberPlans.filter(memberPlan => {
           if (userCountry === 'CH') {
-            return memberPlan.currency === ApiV1.Currency.Chf
+            return memberPlan.currency === Currency.Chf
           }
 
-          return memberPlan.currency === ApiV1.Currency.Eur
+          return memberPlan.currency === Currency.Eur
         })
       }
       fields={['firstName', 'address', 'birthday', 'password', 'passwordRepeated']}

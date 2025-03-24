@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment} from '@wepublish/editor/api'
+import {FullImageFragment} from '@wepublish/editor/api'
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAddCircle, MdArrowLeft, MdArrowRight, MdBuild, MdEdit, MdPhoto} from 'react-icons/md'
@@ -85,7 +85,7 @@ export function ImageGalleryBlock({
     }
   }, [])
 
-  function handleImageChange(image: ImageRefFragment | null) {
+  function handleImageChange(image: FullImageFragment | null) {
     onChange({
       ...value,
       images: Object.assign([], value.images, {
@@ -175,7 +175,7 @@ export function ImageGalleryBlock({
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(value: ImageRefFragment | null) => {
+          onSelect={(value: FullImageFragment | null) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
