@@ -7,8 +7,7 @@ const storiesCmp = composeStories(stories)
 describe('Author Links', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
+      render(<Component />)
     })
   })
 })

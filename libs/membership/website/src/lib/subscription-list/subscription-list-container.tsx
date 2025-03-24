@@ -8,7 +8,8 @@ import {
   useSubscriptionsQuery,
   ExtendSubscriptionMutation,
   FullMemberPlanFragment,
-  FullSubscriptionFragment
+  FullSubscriptionFragment,
+  usePageLazyQuery
 } from '@wepublish/website/api'
 import {
   BuilderContainerProps,
@@ -52,6 +53,10 @@ export function SubscriptionListContainer({
     }
   })
 
+  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
+  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
+  const [fetchPage] = usePageLazyQuery()
+
   const filteredSubscriptions = useMemo(
     () =>
       produce(data, draftData => {
@@ -67,11 +72,19 @@ export function SubscriptionListContainer({
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
-            onClose={success => {
+            onClose={async success => {
               if (stripeMemberPlan) {
-                window.location.href = success
-                  ? stripeMemberPlan.successPage?.url ?? ''
-                  : stripeMemberPlan.failPage?.url ?? ''
+                const page = await fetchPage({
+                  variables: {
+                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
+                  }
+                })
+
+                window.location.href = page.data?.page.url ?? ''
+
+                // window.location.href = success
+                //   ? stripeMemberPlan.successPage?.url ?? ''
+                //   : stripeMemberPlan.failPage?.url ?? ''
               }
             }}
           />
@@ -98,11 +111,26 @@ export function SubscriptionListContainer({
           )?.memberPlan
           setStripeMemberPlan(memberPlan)
 
+          const [successPage, failPage] = await Promise.all([
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            }),
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            })
+          ])
+
           await extend({
             variables: {
               subscriptionId,
-              failureURL: memberPlan?.failPage?.url,
-              successURL: memberPlan?.successPage?.url
+              successURL: successPage.data?.page.url,
+              failureURL: failPage.data?.page.url
+              // failureURL: memberPlan?.failPage?.url,
+              // successURL: memberPlan?.successPage?.url
             }
           })
         }}

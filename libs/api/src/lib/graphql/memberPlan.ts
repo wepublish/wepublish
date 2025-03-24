@@ -7,7 +7,6 @@ import {createProxyingResolver} from '../utility'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -19,7 +18,6 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 import {AvailablePaymentMethod, Currency, PaymentPeriodicity} from '@prisma/client'
-import {GraphQLPage, GraphQLPublicPage} from './page'
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
   name: 'Currency',
@@ -102,7 +100,7 @@ export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
   fields: () => ({
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -126,35 +124,35 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     },
-    migrateToTargetPaymentMethodID: {type: GraphQLID},
-    successPageId: {type: GraphQLID},
-    successPage: {
-      type: GraphQLPage,
-      resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
-        return successPageId ? loaders.pages.load(successPageId) : null
-      })
-    },
-    failPageId: {type: GraphQLID},
-    failPage: {
-      type: GraphQLPage,
-      resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
-        return failPageId ? loaders.pages.load(failPageId) : null
-      })
-    },
-    confirmationPageId: {type: GraphQLID},
-    confirmationPage: {
-      type: GraphQLPage,
-      resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
-        return confirmationPageId ? loaders.pages.load(confirmationPageId) : null
-      })
-    }
+    migrateToTargetPaymentMethodID: {type: GraphQLString},
+    successPageId: {type: GraphQLString},
+    // successPage: {
+    //   type: GraphQLPage,
+    //   resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
+    //     return successPageId ? loaders.pages.load(successPageId) : null
+    //   })
+    // },
+    failPageId: {type: GraphQLString},
+    // failPage: {
+    //   type: GraphQLPage,
+    //   resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
+    //     return failPageId ? loaders.pages.load(failPageId) : null
+    //   })
+    // },
+    confirmationPageId: {type: GraphQLString}
+    // confirmationPage: {
+    //   type: GraphQLPage,
+    //   resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
+    //     return confirmationPageId ? loaders.pages.load(confirmationPageId) : null
+    //   })
+    // }
   })
 })
 
 export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
   fields: () => ({
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLString)},
@@ -176,27 +174,27 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
         new GraphQLList(new GraphQLNonNull(GraphQLPublicAvailablePaymentMethod))
       )
     },
-    successPageId: {type: GraphQLID},
-    successPage: {
-      type: GraphQLPublicPage,
-      resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
-        return successPageId ? loaders.publicPagesByID.load(successPageId) : null
-      })
-    },
-    failPageId: {type: GraphQLID},
-    failPage: {
-      type: GraphQLPublicPage,
-      resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
-        return failPageId ? loaders.publicPagesByID.load(failPageId) : null
-      })
-    },
-    confirmationPageId: {type: GraphQLID},
-    confirmationPage: {
-      type: GraphQLPublicPage,
-      resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
-        return confirmationPageId ? loaders.publicPagesByID.load(confirmationPageId) : null
-      })
-    }
+    successPageId: {type: GraphQLString},
+    // successPage: {
+    //   type: GraphQLPublicPage,
+    //   resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
+    //     return successPageId ? loaders.publicPagesByID.load(successPageId) : null
+    //   })
+    // },
+    failPageId: {type: GraphQLString},
+    // failPage: {
+    //   type: GraphQLPublicPage,
+    //   resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
+    //     return failPageId ? loaders.publicPagesByID.load(failPageId) : null
+    //   })
+    // },
+    confirmationPageId: {type: GraphQLString}
+    // confirmationPage: {
+    //   type: GraphQLPublicPage,
+    //   resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
+    //     return confirmationPageId ? loaders.publicPagesByID.load(confirmationPageId) : null
+    //   })
+    // }
   })
 })
 
@@ -253,7 +251,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   fields: () => ({
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLString)},
-    imageID: {type: GraphQLID},
+    imageID: {type: GraphQLString},
     description: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -267,9 +265,9 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
       )
     },
-    migrateToTargetPaymentMethodID: {type: GraphQLID},
-    successPageId: {type: GraphQLID},
-    failPageId: {type: GraphQLID},
-    confirmationPageId: {type: GraphQLID}
+    migrateToTargetPaymentMethodID: {type: GraphQLString},
+    successPageId: {type: GraphQLString},
+    failPageId: {type: GraphQLString},
+    confirmationPageId: {type: GraphQLString}
   })
 })

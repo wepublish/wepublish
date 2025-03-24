@@ -6,14 +6,14 @@ import {
   UpdateCrowdfundingInput
 } from './crowdfunding.model'
 import {CrowdfundingService} from './crowdfunding.service'
+import {Permissions} from '@wepublish/permissions/api'
 import {
-  Permissions,
   CanGetCrowdfunding,
   CanCreateCrowdfunding,
   CanUpdateCrowdfunding,
   CanGetCrowdfundings,
   CanDeleteCrowdfunding
-} from '@wepublish/permissions/api'
+} from '@wepublish/permissions'
 import {CrowdfundingGoal} from './crowdfunding-goal.model'
 import {CrowdfundingGoalService} from './crowdfunding-goal.service'
 

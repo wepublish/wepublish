@@ -1,49 +1,49 @@
 fragment FullUser on User {
+  id
+  name
+  email
+  emailVerifiedAt
+  subscriptions {
     id
-    name
-    email
-    emailVerifiedAt
-    subscriptions {
-        id
-        memberPlan {
-            id
-            slug
-        }
+    memberPlan {
+      id
+      slug
     }
-    flair
+  }
+  flair
 }
 
-query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
-    users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-        nodes {
-            ...FullUser
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+query UserList($filter: String, $cursor: String, $take: Int, $skip: Int) {
+  users(filter: {text: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+    nodes {
+      ...FullUser
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }
 
 mutation CreateUser($input: UserInput!, $password: String!) {
-    createUser(input: $input, password: $password) {
-        ...FullUser
-    }
+  createUser(input: $input, password: $password) {
+    ...FullUser
+  }
 }
 
-mutation UpdateUser($id: ID!, $input: UserInput!) {
-    updateUser(id: $id, input: $input) {
-        ...FullUser
-    }
+mutation UpdateUser($id: String!, $input: UserInput!) {
+  updateUser(id: $id, input: $input) {
+    ...FullUser
+  }
 }
 
-mutation DeleteUser($id: ID!) {
-    deleteUser(id: $id) {
-        ...FullUser
-    }
+mutation DeleteUser($id: String!) {
+  deleteUser(id: $id) {
+    ...FullUser
+  }
 }

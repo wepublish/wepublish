@@ -13,20 +13,20 @@ fragment FullEvent on Event {
   }
   startsAt
   endsAt
-  # createdAt
-  # modifiedAt
+  createdAt
+  modifiedAt
   url
 }
 
 query EventList(
   $filter: EventFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: EventSort
 ) {
-  events(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  events(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullEvent
     }
@@ -42,7 +42,7 @@ query EventList(
   }
 }
 
-query Event($id: ID!) {
+query Event($id: String!) {
   event(id: $id) {
     ...FullEvent
   }

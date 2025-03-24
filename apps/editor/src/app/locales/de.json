@@ -107,7 +107,6 @@
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
@@ -899,17 +898,25 @@
     },
     "peerArticles": {
       "articleImage": "Teaserbild",
-      "authors": "Autor:innen",
       "filterByPeer": "Nach Peer filtern",
       "lead": "Lead",
-      "notPublished": "Noch nicht publiziert",
-      "originalArticle": "Original Artikel",
       "peer": "Peer",
       "peerArticles": "Peerbare Artikel",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
       "title": "Titel",
-      "toOriginalArticle": "Zum Original Artikel"
+
+      "import": {
+        "import": "Importieren",
+        "title": "Artikel importieren",
+        "includeAuthors": "Autoren des Artikels importieren",
+        "includeAuthorsHint": "Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den gleichen Namen trägt, werden die unterschieden.",
+        "includeTags": "Tags des Artikels importieren",
+        "includeTagsHint": "Importiert die Tags des Artikels solange sie nicht schon existieren.",
+        "includeImages": "Bilder des Artikels importieren",
+        "includeImagesHint": "Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals importiert.",
+        "confirm": "Ja, Artikel importieren"
+      }
     },
     "peerList": {
       "overview": {

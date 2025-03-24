@@ -23,7 +23,6 @@ import {
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
-  MediaAdapterService,
   MembershipModule,
   MolliePaymentProvider,
   NeverChargePaymentProvider,
@@ -39,20 +38,35 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   SystemInfoModule,
+  SubscriptionModule,
   VersionInformationModule
 } from '@wepublish/api'
-import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
+import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
-import {BlockStylesModule} from '@wepublish/block-content/api'
+import {BlockContentModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {ProlitterisTrackingPixelProvider, TrackingPixelModule} from '@wepublish/tracking-pixel/api'
-import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
+import {PageModule} from '@wepublish/page/api'
+import {PeerModule} from '@wepublish/peering/api'
+import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
+import {CommentModule} from '@wepublish/comments/api'
+import {ArticleModule} from '@wepublish/article/api'
+import {PhraseModule} from '@wepublish/phrase/api'
+import {ActionModule} from '@wepublish/action/api'
+import {NavigationModule} from '@wepublish/navigation/api'
+import {UserModule} from '@wepublish/user/api'
+import {
+  ProlitterisTrackingPixelProvider,
+  TrackingPixelProvider,
+  TrackingPixelsModule
+} from '@wepublish/tracking-pixel/api'
+import {HttpModule, HttpService} from '@nestjs/axios'
+import {MediaAdapterModule} from '@wepublish/image/api'
 
 @Global()
 @Module({
@@ -63,6 +77,7 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
         return {
           resolvers: {RichText: GraphQLRichText},
           autoSchemaFile: './apps/api-example/schema-v2.graphql',
@@ -71,11 +86,11 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
           cache: 'bounded',
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
-          allowBatchedHttpRequests: true
-        }
+          allowBatchedHttpRequests: true,
+          inheritResolversFromInterfaces: true
+        } as ApolloDriverConfig
       }
     }),
-
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
@@ -136,9 +151,9 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
       inject: [ConfigService],
       global: true
     }),
-    TrackingPixelModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
+    TrackingPixelsModule.registerAsync({
+      imports: [ConfigModule, HttpModule],
+      useFactory: async (config: ConfigService, httpClient: HttpService) => {
         const trackingPixelProviders: TrackingPixelProvider[] = []
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
 
@@ -151,17 +166,26 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
         for (const trackingPixelProvider of trackingPixelProvidersRaw) {
           if (trackingPixelProvider.type === 'prolitteris') {
             trackingPixelProviders.push(
-              new ProlitterisTrackingPixelProvider({
-                id: trackingPixelProvider.id,
-                type: trackingPixelProvider.type,
-                name: trackingPixelProvider.name,
-                memberNr: trackingPixelProvider.memberNr,
-                username: trackingPixelProvider.username,
-                password: trackingPixelProvider.password,
-                onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
-                publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
-                usePublisherInternalKey: Boolean(trackingPixelProvider.usePublisherInternalKey)
-              })
+              new ProlitterisTrackingPixelProvider(
+                trackingPixelProvider.id,
+                trackingPixelProvider.name,
+                trackingPixelProvider.type,
+                trackingPixelProvider.usePublisherInternalKey
+                  ? {
+                      memberNr: trackingPixelProvider.memberNr,
+                      onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                      publisherInternalKeyDomain: trackingPixelProvider.publisherInternalKeyDomain,
+                      usePublisherInternalKey: true
+                    }
+                  : {
+                      memberNr: trackingPixelProvider.memberNr,
+                      username: trackingPixelProvider.username,
+                      password: trackingPixelProvider.password,
+                      onlyPaidContentAccess: Boolean(trackingPixelProvider.onlyPaidContentAccess),
+                      usePublisherInternalKey: false
+                    },
+                httpClient
+              )
             )
           } else {
             throw new Error(
@@ -169,10 +193,10 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
             )
           }
         }
+
         return {trackingPixelProviders}
       },
-      inject: [ConfigService],
-      global: true
+      inject: [ConfigService, HttpService]
     }),
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
@@ -308,7 +332,17 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
     StatsModule,
     SettingModule,
     EventModule,
-    BlockStylesModule,
+    PageModule,
+    PeerModule,
+    CommentModule,
+    ArticleModule,
+    BlockContentModule,
+    PollModule,
+    PhraseModule,
+    ActionModule,
+    UserModule,
+    SubscriptionModule,
+    NavigationModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,
@@ -320,7 +354,6 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
-    PollModule,
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({
@@ -342,12 +375,17 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
     }),
     BannerApiModule,
     VersionInformationModule,
-    CrowdfundingApiModule
-  ],
-  exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
-  providers: [
-    {
-      provide: MediaAdapterService,
+    CrowdfundingApiModule,
+    ImportPeerArticleModule,
+    URLAdapterModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => {
+        return new URLAdapter(config.getOrThrow('WEBSITE_URL'))
+      },
+      inject: [ConfigService]
+    }),
+    MediaAdapterModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
@@ -369,7 +407,10 @@ import {TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
         )
       },
       inject: [ConfigService]
-    },
+    })
+  ],
+  exports: ['SYSTEM_INFO_KEY'],
+  providers: [
     {
       provide: 'SYSTEM_INFO_KEY',
       useFactory: (config: ConfigService) => {

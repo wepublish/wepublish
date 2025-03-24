@@ -1,11 +1,9 @@
+import {FullImageFragment, Tag, TagType} from '@wepublish/editor/api'
 import {
   EventStatus,
-  ImageRefFragment,
   MutationCreateEventArgs,
-  MutationUpdateEventArgs,
-  Tag,
-  TagType
-} from '@wepublish/editor/api'
+  MutationUpdateEventArgs
+} from '@wepublish/editor/api-v2'
 import {
   ChooseEditImage,
   DateTimePicker,
@@ -21,8 +19,9 @@ import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
-  image?: ImageRefFragment | null
+  image?: FullImageFragment | null
   tags?: Pick<Tag, 'id' | 'tag'>[]
+  externalSourceName?: string
 }
 
 type EventFormProps = {

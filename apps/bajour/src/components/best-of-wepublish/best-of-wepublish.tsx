@@ -1,10 +1,7 @@
-import {styled} from '@mui/material'
-import {
-  alignmentForTeaserBlock,
-  ApiV1,
-  BuilderTeaserGridBlockProps,
-  TeaserGridBlockWrapper
-} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {alignmentForTeaserBlock, TeaserGridBlockWrapper} from '@wepublish/block-content/website'
+import {ArticleTeaser} from '@wepublish/website/api'
+import {BuilderTeaserGridBlockProps} from '@wepublish/website/builder'
 
 import {BestOfWePublishTeaser} from './best-of-wepublish-teaser'
 
@@ -92,8 +89,8 @@ const MoreButton = styled('a')`
 
 export const BestOfWePublish = ({teasers, numColumns, blockStyle}: BuilderTeaserGridBlockProps) => {
   const filteredTeasers = teasers.filter(
-    (teaser): teaser is ApiV1.PeerArticleTeaser =>
-      teaser?.__typename === 'PeerArticleTeaser' && Boolean(teaser.article)
+    (teaser): teaser is ArticleTeaser =>
+      teaser?.__typename === 'ArticleTeaser' && Boolean(teaser.article?.peerId)
   )
 
   return (

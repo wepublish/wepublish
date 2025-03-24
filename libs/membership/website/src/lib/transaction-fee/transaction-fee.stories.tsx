@@ -1,4 +1,3 @@
-import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {useState} from 'react'
@@ -34,23 +33,5 @@ export const WithCustomText: StoryObj<typeof TransactionFee> = {
   args: {
     ...Default.args,
     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-  }
-}
-
-export const WithClassName: StoryObj<typeof TransactionFee> = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion: StoryObj<typeof TransactionFee> = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }
