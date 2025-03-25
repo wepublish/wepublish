@@ -1,21 +1,22 @@
 import {EmotionCache} from '@emotion/cache'
-import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
+import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleTagManager} from '@next/third-parties/google'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
-import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+import {RoutedAdminBar} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
-import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -105,7 +106,7 @@ const ButtonLink = styled('a')`
 `
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 let oneSignalInitialized = false
@@ -220,6 +221,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
+              <RoutedAdminBar />
+
               {publicRuntimeConfig.env.GTM_ID && (
                 <>
                   <PURModel />
@@ -240,8 +243,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

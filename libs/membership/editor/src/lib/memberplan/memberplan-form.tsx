@@ -1,11 +1,11 @@
 import React, {Dispatch, SetStateAction, useMemo, useState} from 'react'
 import {
   AvailablePaymentMethod,
-  Currency,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  ImageRefFragment,
-  PaymentMethod
+  FullImageFragment,
+  PaymentMethod,
+  Currency
 } from '@wepublish/editor/api'
 import {
   Button,
@@ -25,7 +25,6 @@ import {
   Toggle
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
-import styled from '@emotion/styled'
 import {slugify} from '@wepublish/utils'
 import {
   ALL_PAYMENT_PERIODICITIES,
@@ -41,6 +40,7 @@ import {
 } from '@wepublish/ui/editor'
 import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
 import {Alert} from '@mui/material'
+import styled from '@emotion/styled'
 
 const {ControlLabel, HelpText, Control} = RForm
 
@@ -557,7 +557,7 @@ export function MemberPlanForm({
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(image: ImageRefFragment) => {
+          onSelect={(image: FullImageFragment) => {
             setChooseModalOpen(false)
             if (!memberPlan) {
               return

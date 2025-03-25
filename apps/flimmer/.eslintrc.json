@@ -11,24 +11,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/flimmer/pages"],
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": [
-                  "@wepublish/*/website",
-                  "@wepublish/website/*",
-                  "!@wepublish/utils/website",
-                  "!@wepublish/website/translations",
-                  "!@wepublish/website/server"
-                ],
-                "message": "Please use @wepublish/website instead."
-              }
-            ]
-          }
-        ],
+        "@next/next/no-html-link-for-pages": ["error", "apps/zwoelf/pages"],
         "simple-import-sort/imports": 1,
         "simple-import-sort/exports": 1
       }

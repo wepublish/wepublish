@@ -1,6 +1,8 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {ArticleWrapper} from '@wepublish/article/website'
+import {Image} from '@wepublish/image/website'
 import {Link} from '@wepublish/ui'
-import {ArticleWrapper, BuilderAuthor, Image, useWebsiteBuilder} from '@wepublish/website'
+import {BuilderAuthor, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 
 const TsriAdvertiserContainer = styled(Link)`

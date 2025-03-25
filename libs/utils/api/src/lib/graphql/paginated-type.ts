@@ -1,5 +1,5 @@
 import {Type} from '@nestjs/common'
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, Int, ObjectType} from '@nestjs/graphql'
 
 @ObjectType()
 export class PageInfo {
@@ -28,7 +28,7 @@ export function PaginatedType<T>(classRef: Type<T>): Type<PaginatedObjectType<T>
     @Field(type => [classRef])
     nodes!: T[]
 
-    @Field()
+    @Field(() => Int)
     totalCount!: number
 
     @Field(type => PageInfo)

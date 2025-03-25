@@ -1,8 +1,9 @@
-import {css, FormControlLabel, Radio, RadioGroup, styled} from '@mui/material'
+import {css, FormControlLabel, Radio, RadioGroup} from '@mui/material'
 import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Currency} from '@wepublish/website/api'
 import {forwardRef, PropsWithChildren, useMemo} from 'react'
 import {formatCurrency} from '../../formatters/format-currency'
+import styled from '@emotion/styled'
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;

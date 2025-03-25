@@ -2,6 +2,7 @@ import {DefaultOptions, InMemoryCache} from '@apollo/client'
 import {MockedProvider} from '@apollo/client/testing'
 import {Preview} from '@storybook/react'
 import {possibleTypes} from '@wepublish/website/api'
+import i18 from './i18next'
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -21,9 +22,9 @@ const defaultOptions: DefaultOptions = {
 const cache = new InMemoryCache({
   possibleTypes: possibleTypes.possibleTypes,
   resultCaching: false,
+  resultCacheMaxSize: 0,
   addTypename: true,
-  canonizeResults: true,
-  resultCacheMaxSize: 0
+  canonizeResults: true
 })
 
 export const parameters = {
@@ -33,5 +34,6 @@ export const parameters = {
     showWarnings: false,
     assumeImmutableResults: true,
     defaultOptions
-  }
+  },
+  i18
 } as Preview['parameters']

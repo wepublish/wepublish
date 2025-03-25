@@ -2,7 +2,7 @@ import {Resolver, ResolveField, Parent, Query} from '@nestjs/graphql'
 import {StatsService} from './stats.service'
 import {GraphQLISODateTime} from '@nestjs/graphql'
 import {Stats} from './stats.model'
-import {Public} from '@wepublish/permissions/api'
+import {Public} from '@wepublish/authentication/api'
 
 @Resolver(() => Stats)
 export class StatsResolver {

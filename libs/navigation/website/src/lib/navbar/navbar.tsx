@@ -1,21 +1,13 @@
-import {
-  AppBar,
-  Box,
-  GlobalStyles,
-  SxProps,
-  Theme,
-  Toolbar,
-  css,
-  styled,
-  useTheme
-} from '@mui/material'
+import {AppBar, Box, GlobalStyles, SxProps, Theme, Toolbar, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon} from '@wepublish/ui'
+import {useTranslation} from 'react-i18next'
+import {ButtonProps, TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -47,20 +39,13 @@ export const NavbarWrapper = styled('nav')`
   background-color: ${({theme}) => theme.palette.background.default};
 `
 
-const useAppBarStyles = (isMenuOpen: boolean) => {
-  const theme = useTheme()
-
-  return useMemo(
-    () =>
-      isMenuOpen
-        ? css`
-            background-color: ${theme.palette.primary.main};
-            color: ${theme.palette.primary.contrastText};
-          `
-        : null,
-    [theme, isMenuOpen]
-  )
-}
+const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+  isMenuOpen
+    ? css`
+        background-color: ${theme.palette.primary.main};
+        color: ${theme.palette.primary.contrastText};
+      `
+    : null
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -104,22 +89,15 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
   }
 `
 
-const useNavbarLinkStyles = () => {
-  const theme = useTheme()
+const navbarLinkStyles = (theme: Theme) => css`
+  font-size: 1rem;
+  text-decoration: none;
+  color: ${theme.palette.common.black};
 
-  return useMemo(
-    () => css`
-      font-size: 1rem;
-      text-decoration: none;
-      color: ${theme.palette.common.black};
-
-      ${theme.breakpoints.up('md')} {
-        font-size: 1.3rem;
-      }
-    `,
-    [theme]
-  )
-}
+  ${theme.breakpoints.up('md')} {
+    font-size: 1.3rem;
+  }
+`
 
 export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
   display: grid;
@@ -177,23 +155,19 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-const useLogoLinkStyles = (isMenuOpen: boolean) => {
-  return useMemo(
-    () => css`
-      color: unset;
-      display: grid;
-      align-items: center;
-      justify-items: center;
-      justify-self: center;
+const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+  css`
+    color: unset;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    justify-self: center;
 
-      ${isMenuOpen &&
-      css`
-        z-index: -1;
-      `}
-    `,
-    [isMenuOpen]
-  )
-}
+    ${isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
+  `
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
@@ -209,26 +183,20 @@ export const NavbarLogoWrapper = styled('div')`
 
 export const NavbarSpacer = styled('div')``
 
-const useImageStyles = () => {
-  const theme = useTheme()
-  return useMemo(
-    () => css`
-      max-height: ${theme.spacing(5)};
-      max-width: ${theme.spacing(15)};
+const imageStyles = (theme: Theme) => css`
+  max-height: ${theme.spacing(5)};
+  max-width: ${theme.spacing(15)};
 
-      ${theme.breakpoints.up('md')} {
-        max-height: ${theme.spacing(6)};
-        max-width: ${theme.spacing(30)};
-      }
+  ${theme.breakpoints.up('md')} {
+    max-height: ${theme.spacing(6)};
+    max-width: ${theme.spacing(30)};
+  }
 
-      ${theme.breakpoints.up('lg')} {
-        max-height: ${theme.spacing(9)};
-        max-width: ${theme.spacing(38)};
-      }
-    `,
-    [theme]
-  )
-}
+  ${theme.breakpoints.up('lg')} {
+    max-height: ${theme.spacing(9)};
+    max-width: ${theme.spacing(38)};
+  }
+`
 
 export function Navbar({
   className,
@@ -241,17 +209,14 @@ export function Navbar({
   logo,
   hasRunningSubscription,
   hasUnpaidInvoices,
-  loginUrl = '/login',
-  profileUrl = '/profile',
-  subscribeUrl = '/mitmachen'
+  loginBtn = {href: '/login'},
+  profileBtn = {href: '/profile'},
+  subscribeBtn = {href: '/mitmachen'}
 }: BuilderNavbarProps) {
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
-  const imageStyles = useImageStyles()
-  const appBarStyles = useAppBarStyles(isMenuOpen)
-  const logoLinkStyles = useLogoLinkStyles(isMenuOpen)
-  const navbarLinkStyles = useNavbarLinkStyles()
+  const {t} = useTranslation()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
@@ -281,7 +246,7 @@ export function Navbar({
     <NavbarWrapper className={className}>
       <GlobalStyles styles={theme => cssVariables(theme)} />
 
-      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
+      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles(isMenuOpen)}>
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
@@ -302,7 +267,7 @@ export function Navbar({
             )}
           </NavbarMain>
 
-          <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+          <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
             <NavbarLogoWrapper>
               {!!logo && (
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
@@ -311,25 +276,25 @@ export function Navbar({
           </Link>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUnpaidInvoices && profileUrl && (
+            {hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
-                href={profileUrl}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}>
+                sx={buttonStyles}
+                {...profileBtn}>
                 <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
-              <Button LinkComponent={Link} href={subscribeUrl} sx={buttonStyles}>
-                Member werden
+            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
+              <Button LinkComponent={Link} sx={buttonStyles} {...subscribeBtn}>
+                {t('navbar.subscribe')}
               </Button>
             )}
 
-            {hasRunningSubscription && !hasUnpaidInvoices && profileUrl && (
-              <Button LinkComponent={Link} href={profileUrl} sx={buttonStyles}>
+            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
+              <Button LinkComponent={Link} sx={buttonStyles} {...profileBtn}>
                 Mein Konto
               </Button>
             )}
@@ -341,9 +306,9 @@ export function Navbar({
         <NavPaper
           hasRunningSubscription={hasRunningSubscription}
           hasUnpaidInvoices={hasUnpaidInvoices}
-          subscribeUrl={subscribeUrl}
-          profileUrl={profileUrl}
-          loginUrl={loginUrl}
+          subscribeBtn={subscribeBtn}
+          profileBtn={profileBtn}
+          loginBtn={loginBtn}
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}>
@@ -394,7 +359,7 @@ export const NavPaperCategory = styled('div')`
 export const NavPaperName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body2};
+  font-size: ${({theme}) => theme.typography.body2.fontSize};
 `
 
 export const NavPaperSeparator = styled('hr')`
@@ -469,17 +434,17 @@ export const NavPaperActions = styled('div')`
 const NavPaper = ({
   main,
   categories,
-  loginUrl,
-  profileUrl,
-  subscribeUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   closeMenu,
   hasRunningSubscription,
   hasUnpaidInvoices,
   children
 }: PropsWithChildren<{
-  loginUrl?: string | null
-  profileUrl?: string | null
-  subscribeUrl?: string | null
+  loginBtn?: ButtonProps | null
+  profileBtn?: ButtonProps | null
+  subscribeBtn?: ButtonProps | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
@@ -489,6 +454,7 @@ const NavPaper = ({
   const {
     elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
   const {hasUser, logout} = useUser()
   const theme = useTheme()
 
@@ -510,36 +476,36 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
-          {hasUnpaidInvoices && profileUrl && (
+          {hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}
-              href={profileUrl}
               variant="contained"
               color="warning"
               onClick={closeMenu}
-              startIcon={<MdWarning />}>
+              startIcon={<MdWarning />}
+              {...profileBtn}>
               Offene Rechnung
             </Button>
           )}
 
-          {!hasRunningSubscription && subscribeUrl && (
+          {!hasRunningSubscription && subscribeBtn && (
             <Button
               LinkComponent={Link}
-              href={subscribeUrl}
               variant="contained"
               color="secondary"
-              onClick={closeMenu}>
-              Member werden
+              onClick={closeMenu}
+              {...subscribeBtn}>
+              {t('navbar.subscribe')}
             </Button>
           )}
 
-          {hasUser && profileUrl && (
+          {hasUser && profileBtn && (
             <Button
               LinkComponent={Link}
-              href={profileUrl}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...profileBtn}>
               Mein Konto
             </Button>
           )}
@@ -556,13 +522,13 @@ const NavPaper = ({
             </Button>
           )}
 
-          {!hasUser && loginUrl && (
+          {!hasUser && loginBtn && (
             <Button
               LinkComponent={Link}
-              href={loginUrl}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...loginBtn}>
               Login
             </Button>
           )}

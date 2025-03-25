@@ -112,7 +112,6 @@
         "statePublished": "Statut : Publié",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titre",
         "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo",
         "totalCharCount": "Le nombre total de caractères est de {{totalCharCount}}",
@@ -892,17 +891,13 @@
     },
     "peerArticles": {
       "articleImage": "Image de l'article",
-      "authors": "Auteurs·trices",
       "filterByPeer": "Filtrer par peer",
       "lead": "Lead",
-      "notPublished": "Pas encore publié",
-      "originalArticle": "Article original",
       "peer": "Peer",
       "peerArticles": "Articles pairables",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Date de publication",
-      "title": "Titre",
-      "toOriginalArticle": "Vers l'article original"
+      "title": "Titre"
     },
     "peerList": {
       "overview": {

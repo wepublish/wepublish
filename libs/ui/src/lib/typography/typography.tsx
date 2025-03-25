@@ -1,5 +1,5 @@
-import {css, Link as MuiLink, LinkTypeMap, Typography, useTheme} from '@mui/material'
-import {AnchorHTMLAttributes, forwardRef, HTMLAttributes, useMemo} from 'react'
+import {css, Link as MuiLink, LinkTypeMap, Theme, Typography} from '@mui/material'
+import {AnchorHTMLAttributes, forwardRef, HTMLAttributes} from 'react'
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   component?: React.ElementType
@@ -59,23 +59,14 @@ export type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {
   gutterBottom?: boolean
 }
 
-const useGutterStyles = () => {
-  const theme = useTheme()
-
-  return useMemo(
-    () => css`
-      &.MuiTypography-gutterBottom {
-        margin-bottom: ${theme.spacing(3)};
-      }
-    `,
-    [theme]
-  )
-}
+const gutterStyles = (theme: Theme) => css`
+  &.MuiTypography-gutterBottom {
+    margin-bottom: ${theme.spacing(3)};
+  }
+`
 
 export const Paragraph = forwardRef<HTMLParagraphElement, ParagraphProps>(
   ({children, gutterBottom = true, ...props}, ref) => {
-    const gutterStyles = useGutterStyles()
-
     return (
       <Typography
         {...props}

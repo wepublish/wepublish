@@ -1,31 +1,34 @@
 import {EmotionCache} from '@emotion/cache'
+import styled from '@emotion/styled'
 import {
   Container,
   createTheme,
   css,
   CssBaseline,
-  styled,
   Theme,
   ThemeOptions,
   ThemeProvider
 } from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {theme} from '@wepublish/ui'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
-import deTranlations from '@wepublish/website/translations/de.json'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -127,7 +130,7 @@ const NavBar = styled(NavbarContainer)`
 const {publicRuntimeConfig} = getConfig()
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
@@ -226,6 +229,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </FooterContainer>
               </Spacer>
 
+              <RoutedAdminBar />
+
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
@@ -237,8 +242,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   )
 }
 
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
 
 export {ConnectedApp as default}

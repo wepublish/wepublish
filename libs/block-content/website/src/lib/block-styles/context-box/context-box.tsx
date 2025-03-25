@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {useReducer} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
 import {RichTextBlock} from '../../richtext/richtext-block'
@@ -6,7 +7,7 @@ import {allPass} from 'ramda'
 import {hasBlockStyle} from '../../blocks'
 import {isBreakBlock} from '../../break/break-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block, LinkPageBreakBlock} from '@wepublish/website/api'
+import {BlockContent, BreakBlock} from '@wepublish/website/api'
 
 export const ContextBoxWrapper = styled('aside')`
   display: grid;
@@ -80,5 +81,6 @@ export const ContextBox = ({className, richText, text}: BuilderBlockStyleProps['
   )
 }
 
-export const isContextBoxBlockStyle = (block: Block): block is LinkPageBreakBlock =>
-  allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block)
+export const isContextBoxBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is BreakBlock => allPass([hasBlockStyle('ContextBox'), isBreakBlock])(block)
