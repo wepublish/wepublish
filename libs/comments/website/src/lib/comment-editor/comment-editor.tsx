@@ -8,7 +8,7 @@ import {
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {toPlaintext} from '@wepublish/richtext'
+import {BlockFormat, toPlaintext} from '@wepublish/richtext'
 import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
 import {add} from 'date-fns'
@@ -230,7 +230,7 @@ export const CommentEditor = ({
       ...data,
       text: [
         {
-          type: 'paragraph',
+          type: BlockFormat.Paragraph,
           children: [
             {
               text: comment

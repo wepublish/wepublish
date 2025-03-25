@@ -1,9 +1,9 @@
-import {Element, Node, Text} from 'slate'
+import {Descendant, Element, Node, Text} from 'slate'
 import {compose} from 'ramda'
 
 export const truncateParagraph =
   (maxLength: number) =>
-  (paragraph: Node | undefined): Node | undefined => {
+  (paragraph: Descendant | undefined): Descendant | undefined => {
     let textLength = 0
 
     if (!Element.isElement(paragraph)) {
@@ -37,7 +37,7 @@ export const truncateParagraph =
   }
 
 export const findFirstParagraph = (nodes: Node[] | undefined | null) =>
-  nodes?.find((node): node is Node => Element.isElement(node) && node.type === 'paragraph')
+  nodes?.find((node): node is Element => Element.isElement(node) && node.type === 'paragraph')
 
 export const truncateFirstParagraph = (maxLength: number) =>
   compose(node => (node ? [node] : node), truncateParagraph(maxLength), findFirstParagraph)

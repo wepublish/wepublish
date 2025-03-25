@@ -1,6 +1,7 @@
 import {BlockFormat, InlineFormat, TextFormat} from '@wepublish/richtext'
 import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
 import {is} from 'ramda'
+import {Element, Text} from 'slate'
 
 export enum ElementNodeFields {
   Type = 'type',
@@ -100,8 +101,8 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
     throw createRichTextError(`Expected object, found ${value}.`, path)
   }
 
-  const isTextNode = value.text != undefined
-  const isElementNode = value.children != undefined
+  const isTextNode = Text.isText(value)
+  const isElementNode = Element.isElement(value)
 
   if (isTextNode && isElementNode) {
     throw createRichTextError(`Field "text" and "children" are mutually exclusive.`, path)

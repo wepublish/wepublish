@@ -1,4 +1,4 @@
-import {Descendant, Node} from 'slate'
+import {Descendant} from 'slate'
 
 export const mockRichText = () =>
   [
