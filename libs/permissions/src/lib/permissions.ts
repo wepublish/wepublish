@@ -791,6 +791,10 @@ export const CanDeleteBlockStyle: Permission = {
 }
 
 export const AllPermissions: Permission[] = [
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
   CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,

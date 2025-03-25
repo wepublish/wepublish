@@ -50,6 +50,10 @@ fragment FullCrowdfunding on Crowdfunding {
   goals {
     ...FullCrowdfundingGoal
   }
+
+  memberPlans {
+    id
+  }
 }
 
 fragment FullCrowdfundingGoal on CrowdfundingGoal {

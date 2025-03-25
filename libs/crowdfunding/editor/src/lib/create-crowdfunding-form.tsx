@@ -10,6 +10,7 @@ import {useNavigate} from 'react-router-dom'
 import {CrowdfundingForm} from './crowdfunding-form'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {Form, Schema} from 'rsuite'
+import {CreateCrowdfundingMutation} from '../../../../editor/api-v2/src'
 
 export const CreateCrowdfundingForm = () => {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ export const CreateCrowdfundingForm = () => {
 
   const [crowdfunding, setCrowdfunding] = useState({} as CreateCrowdfundingInput)
 
-  const {StringType, BooleanType} = Schema.Types
+  const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     name: StringType().isRequired()
   })
@@ -32,9 +33,12 @@ export const CreateCrowdfundingForm = () => {
     onError: error => {
       console.log(error)
     },
-    onCompleted: crowdfunding => {
+    onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
       if (shouldClose) {
         navigate(closePath)
+      }
+      {
+        navigate(`/crowdfundings/edit/${crowdfunding.createCrowdfunding.id}`)
       }
     }
   })

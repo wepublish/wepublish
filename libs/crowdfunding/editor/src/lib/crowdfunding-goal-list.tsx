@@ -2,6 +2,7 @@ import React from 'react'
 import {CreateCrowdfundingGoalInput} from '@wepublish/editor/api-v2'
 import {useTranslation} from 'react-i18next'
 import {Button, Col, Form, Grid, Row} from 'rsuite'
+import {CurrencyInput} from '../../../../ui/editor/src'
 
 interface CrowdfundingGoalListProps {
   goals: CreateCrowdfundingGoalInput[]
@@ -18,7 +19,7 @@ export const CrowdfundingGoalList = ({
 }: CrowdfundingGoalListProps) => {
   const {t} = useTranslation()
 
-  const handleChange = (index: number, field: string, value: string) => {
+  const handleChange = (index: number, field: string, value: string | number) => {
     const updatedGoal = {...goals[index], [field]: value}
     onUpdate(index, updatedGoal)
   }
@@ -49,10 +50,11 @@ export const CrowdfundingGoalList = ({
               />
             </Col>
             <Col xs={5}>
-              <Form.Control
+              <CurrencyInput
                 name="amount"
-                value={goal.amount}
-                onChange={value => handleChange(index, 'amount', value)}
+                currency=""
+                centAmount={goal.amount}
+                onChange={value => handleChange(index, 'amount', value || 0)}
               />
             </Col>
             <Col xs={4}>
