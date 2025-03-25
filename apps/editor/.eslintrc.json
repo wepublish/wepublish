@@ -1,7 +1,7 @@
 {
   "extends": ["plugin:@nx/react", "../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
-  "plugins": ["i18next", "simple-import-sort"],
+  "plugins": ["i18next"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -64,8 +64,6 @@
             "ignore": ["—", "&"]
           }
         ],
-        "simple-import-sort/imports": 1,
-        "simple-import-sort/exports": 1,
         "import/first": 1,
         "import/newline-after-import": 1,
         "import/no-duplicates": 1

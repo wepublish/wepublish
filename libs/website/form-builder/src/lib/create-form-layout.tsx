@@ -35,7 +35,7 @@ export const createFormLayout = <Mapping extends FormSchemaMapping, FormProps ex
     renderBefore: RenderBefore
   }: {
     schema: Schema
-    formProps: FormProps
+    formProps?: FormProps
     inputProps?: Record<Keys, unknown>
     defaultValues?: Partial<v.InferInput<Schema>>
     form?: UseFormReturn<v.InferOutput<Schema>>

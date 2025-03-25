@@ -10,9 +10,18 @@ export const getComponentBySchema = <Mapping extends FormSchemaMapping>(
   let result: InputSchemaMapping | undefined | null
 
   if (isArraySchema(input)) {
-    result =
-      mapping.find(([schema]) => isArraySchema(schema) && input.item.type === schema.item.type) ??
-      null
+    if (input.item.type === 'object') {
+      result =
+        mapping.find(
+          ([schema]) => isArraySchema(schema) && input.item.entries === schema.item.entries
+        ) ?? null
+    }
+
+    if (!result) {
+      result =
+        mapping.find(([schema]) => isArraySchema(schema) && input.item.type === schema.item.type) ??
+        null
+    }
   }
 
   if (isEnumSchema(input)) {

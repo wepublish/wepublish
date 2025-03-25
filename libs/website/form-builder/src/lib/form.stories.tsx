@@ -1,10 +1,10 @@
 import * as v from 'valibot'
 import {createFormLayout} from './create-form-layout'
 import {StoryObj} from '@storybook/react'
-import {TextField} from '@wepublish/ui'
 import styled from '@emotion/styled'
 import {action} from '@storybook/addon-actions'
 import {FormSchemaMapping} from './utility/input-schema-mapping'
+import {TextField} from '@mui/material'
 
 const testFormSchema: FormSchemaMapping = [
   [
