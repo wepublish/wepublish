@@ -19,19 +19,8 @@ export function ArticleListContainer({
   filter
 }: ArticleListContainerProps) {
   const {ArticleList} = useWebsiteBuilder()
-  const {data, loading, error, refetch} = useArticleListQuery({
-    variables,
-    onCompleted: async data => {
-      // refetch if there are less than 4 articles
-      if (data.articles?.nodes.length < 4) {
-        await refetch({
-          filter: {
-            tags: []
-          },
-          take: 4
-        })
-      }
-    }
+  const {data, loading, error} = useArticleListQuery({
+    variables
   })
 
   const filteredArticles = useMemo(
