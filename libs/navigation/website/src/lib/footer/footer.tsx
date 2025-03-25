@@ -1,4 +1,5 @@
-import {Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {Theme, Toolbar, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'

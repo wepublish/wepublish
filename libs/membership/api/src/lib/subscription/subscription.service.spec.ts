@@ -512,7 +512,7 @@ describe('SubscriptionPaymentsService', () => {
     subscription = await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 6})
     })
-    const subscription2 = await SubscriptionFactory.create({
+    const Subscription = await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 5})
     })
     const subscription3 = await SubscriptionFactory.create({
@@ -524,7 +524,7 @@ describe('SubscriptionPaymentsService', () => {
     )
     expect(subscriptionsToExtend.length).toEqual(2)
     await prismaClient.subscription.deleteMany({
-      where: {id: {in: [subscription.id, subscription2.id, subscription3.id]}}
+      where: {id: {in: [subscription.id, Subscription.id, subscription3.id]}}
     })
   })
 

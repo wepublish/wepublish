@@ -1,6 +1,6 @@
 import {
   CreateBannerActionInput,
-  ImageRefFragment,
+  FullImageFragment,
   LoginStatus,
   UpdateBannerInput,
   getApiClientV2,
@@ -22,7 +22,7 @@ export const EditBannerForm = () => {
 
   const closePath = '/banners'
 
-  const [banner, setBanner] = useState<UpdateBannerInput & {image?: ImageRefFragment | null}>({
+  const [banner, setBanner] = useState<UpdateBannerInput & {image?: FullImageFragment | null}>({
     id: bannerId,
     title: '',
     text: '',
@@ -40,12 +40,11 @@ export const EditBannerForm = () => {
     },
     skip: !id,
     onCompleted: data => {
-      const {__typename, ...inputWithoutTypename} = data.banner
-      setBanner({imageId: inputWithoutTypename.image?.id, ...inputWithoutTypename})
+      setBanner({imageId: data.banner.image?.id, ...data.banner})
     }
   })
 
-  const {StringType, BooleanType} = Schema.Types
+  const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     title: StringType().isRequired(),
     text: StringType().isRequired()

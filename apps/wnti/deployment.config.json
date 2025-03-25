@@ -2,7 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "custom_domain": "https://wnti.wepublish.media",
+      "custom_domain": "https://wnti.ch",
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us17",
         "GA_ID": "",

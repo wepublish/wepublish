@@ -9,7 +9,7 @@ fragment FullUser on User {
   }
 }
 
-query UserList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+query UserList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUser
@@ -32,7 +32,7 @@ query Me {
   }
 }
 
-query User($id: ID!) {
+query User($id: String!) {
   user(id: $id) {
     ...FullUser
   }
@@ -44,19 +44,19 @@ mutation CreateUser($input: UserInput!, $password: String!) {
   }
 }
 
-mutation UpdateUser($id: ID!, $input: UserInput!) {
+mutation UpdateUser($id: String!, $input: UserInput!) {
   updateUser(id: $id, input: $input) {
     ...FullUser
   }
 }
 
-mutation ResetUserPassword($id: ID!, $password: String!) {
+mutation ResetUserPassword($id: String!, $password: String!) {
   resetUserPassword(id: $id, password: $password) {
     ...FullUser
   }
 }
 
-mutation DeleteUser($id: ID!) {
+mutation DeleteUser($id: String!) {
   deleteUser(id: $id) {
     ...FullUser
   }

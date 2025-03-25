@@ -1,22 +1,28 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
+import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {PaymentAmountPicker} from '@wepublish/membership/website'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  PaymentAmountPicker,
-  TitleBlock,
-  TitleBlockTitle,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -44,7 +50,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -104,11 +112,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'Wnti'
+  const siteTitle = 'WNTI'
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -157,7 +165,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
                 <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <meta name="apple-mobile-web-app-title" content="Wnti" />
+                <meta name="apple-mobile-web-app-title" content="WNTI" />
                 <link rel="manifest" href="/site.webmanifest" />
               </Head>
 
@@ -167,6 +175,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
+                  subscribeBtn={null}
                 />
 
                 <main>
@@ -181,6 +190,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
+
+              <RoutedAdminBar />
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
@@ -202,8 +213,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

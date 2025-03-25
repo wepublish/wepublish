@@ -1,5 +1,8 @@
-import {css, styled} from '@mui/material'
-import {ApiV1, PollBlockProvider, usePollBlock} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
+import {PollBlockProvider, usePollBlock} from '@wepublish/block-content/website'
+import {CommentItemType, CommentSort, SortOrder, useArticleQuery} from '@wepublish/website/api'
+import {BuilderPollBlockProps} from '@wepublish/website/builder'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useState} from 'react'
 
@@ -106,7 +109,7 @@ const PollBlockStyled = styled(PollBlock)`
   }
 `
 
-export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
+export const FdtPollBlock = ({poll}: BuilderPollBlockProps) => {
   const router = useRouter()
   const {
     query: {slug}
@@ -116,14 +119,14 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
   const [error, setError] = useState<Error>()
   const {vote} = usePollBlock()
 
-  const {data: articleData} = ApiV1.useArticleQuery({
+  const {data: articleData} = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string
     }
   })
 
-  const author = articleData?.article?.authors[0]
+  const author = articleData?.article?.latest.authors[0]
 
   const autoVote = useCallback(async () => {
     const answerId = router.query.answerId as string
@@ -151,7 +154,9 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
       <FrageDesTagesContainer>
         <FrageDesTagesWrapper>
           <PollWrapper>
-            {articleData?.article?.image && <FdtArticleImage image={articleData.article.image} />}
+            {articleData?.article?.latest.image && (
+              <FdtArticleImage image={articleData.article.latest.image} />
+            )}
             <PollBlockStyled poll={poll} />
           </PollWrapper>
 
@@ -169,10 +174,10 @@ export const FdtPollBlock = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
               <CommentListContainer
                 id={articleData?.article?.id || ''}
                 variables={{
-                  sort: ApiV1.CommentSort.Rating,
-                  order: ApiV1.SortOrder.Descending
+                  sort: CommentSort.Rating,
+                  order: SortOrder.Descending
                 }}
-                type={ApiV1.CommentItemType.Article}
+                type={CommentItemType.Article}
                 maxCommentDepth={1}
               />
             )}

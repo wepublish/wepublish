@@ -36,7 +36,7 @@ export function InstagramProvider({children}: InstagramProviderProps) {
 }
 
 export interface InstagramPostEmbedProps {
-  postID: string
+  postID: string | null | undefined
 }
 
 export function InstagramPostEmbed({postID}: InstagramPostEmbedProps) {
@@ -60,13 +60,15 @@ export function InstagramPostEmbed({postID}: InstagramPostEmbedProps) {
 
   return (
     <InstagramEmbed>
-      <blockquote
-        className="instagram-media"
-        data-width="100%"
-        data-instgrm-captioned
-        data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(postID)}/`}
-        data-instgrm-version="12"
-      />
+      {postID && (
+        <blockquote
+          className="instagram-media"
+          data-width="100%"
+          data-instgrm-captioned
+          data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(postID)}/`}
+          data-instgrm-version="12"
+        />
+      )}
     </InstagramEmbed>
   )
 }
