@@ -1,5 +1,8 @@
+import styled from '@emotion/styled'
+import {AppBar, Box, css} from '@mui/material'
+import {Structure} from '../structure'
+import {BuilderNavAppBarProps} from '@wepublish/website/builder'
 import {
-  BuilderNavAppBarProps,
   HomeLogoButton,
   LoggedInButtons,
   LoggedOutButtons,
@@ -7,15 +10,13 @@ import {
   NavbarLinks,
   NavbarMain,
   NavbarOpenCloseButton
-} from '@wepublish/website'
-import {AppBar, Box, css, styled} from '@mui/material'
-import {Structure} from '../structure'
+} from '@wepublish/navigation/website'
 
 export const OnlineReportsNavAppBar = ({
   logo,
-  loginUrl,
-  profileUrl,
-  subscriptionsUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   headerItems,
   menuToggle,
   actions
@@ -37,8 +38,8 @@ export const OnlineReportsNavAppBar = ({
 
               <NavbarActions>
                 {actions}
-                <LoggedInButtons profileUrl={profileUrl} subscriptionsUrl={subscriptionsUrl} />
-                <LoggedOutButtons loginUrl={loginUrl} />
+                <LoggedInButtons profileBtn={profileBtn} subscribeBtn={subscribeBtn} />
+                <LoggedOutButtons loginBtn={loginBtn} />
                 <NavbarOpenCloseButton toggle={menuToggle} />
               </NavbarActions>
             </NavbarInnerWrapper>

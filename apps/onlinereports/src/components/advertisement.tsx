@@ -1,4 +1,5 @@
-import {Box, styled, useMediaQuery, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
+import {Box, useMediaQuery, useTheme} from '@mui/material'
 import ReviveAd from './revive-ad'
 
 type AdvertisementProps = {

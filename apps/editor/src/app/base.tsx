@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {CanPreview} from '@wepublish/permissions'
 import {PermissionControl, Version} from '@wepublish/ui/editor'
 import {de, enUS, fr} from 'date-fns/locale'
 import {forwardRef, ReactNode, useEffect, useState} from 'react'
@@ -176,7 +177,7 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_ARTICLE',
                     'CAN_DELETE_ARTICLE',
                     'CAN_PUBLISH_ARTICLE',
-                    'CAN_GET_ARTICLE_PREVIEW_LINK',
+                    CanPreview.id,
                     'CAN_GET_PEER_ARTICLES',
                     'CAN_GET_PEER_ARTICLE',
                     'CAN_GET_TAGS'
@@ -192,7 +193,7 @@ export function Base({children}: BaseProps) {
                         'CAN_CREATE_ARTICLE',
                         'CAN_DELETE_ARTICLE',
                         'CAN_PUBLISH_ARTICLE',
-                        'CAN_GET_ARTICLE_PREVIEW_LINK'
+                        CanPreview.id
                       ]}>
                       <Nav.Item
                         as={NavLink}
@@ -239,7 +240,7 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_PAGE',
                     'CAN_DELETE_PAGE',
                     'CAN_PUBLISH_PAGE',
-                    'CAN_GET_PAGE_PREVIEW_LINK',
+                    CanPreview.id,
                     'CAN_GET_TAGS'
                   ]}>
                   <Nav.Menu eventKey={'pages'} title={t('navbar.pages')} icon={<MdDashboard />}>
@@ -250,7 +251,7 @@ export function Base({children}: BaseProps) {
                         'CAN_CREATE_PAGE',
                         'CAN_DELETE_PAGE',
                         'CAN_PUBLISH_PAGE',
-                        'CAN_GET_PAGE_PREVIEW_LINK'
+                        CanPreview.id
                       ]}>
                       <Nav.Item
                         as={NavLink}

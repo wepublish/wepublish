@@ -1,27 +1,23 @@
 import {EmotionCache} from '@emotion/cache'
-import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
+import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  ArticleInfoWrapper,
-  BreakBlockWrapper,
-  ContentWrapperStyled,
-  EventBlockWrapper,
-  FooterContainer,
-  FooterPaperWrapper,
-  ImageBlockWrapper,
-  NavbarContainer,
-  RichTextBlockWrapper,
-  SliderWrapper,
-  TitleBlockWrapper,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -35,6 +31,7 @@ import {ReactComponent as Logo} from '../src/logo.svg'
 import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
 import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import theme from '../src/theme'
+import Mitmachen from './mitmachen'
 
 import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
 import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
@@ -47,6 +44,17 @@ import {
   OnlineReportsQuoteBlock,
   OnlineReportsQuoteBlockWrapper
 } from '../src/components/quote-block'
+import {ArticleInfoWrapper} from '@wepublish/article/website'
+import {
+  BreakBlockWrapper,
+  EventBlockWrapper,
+  ImageBlockWrapper,
+  RichTextBlockWrapper,
+  SliderWrapper,
+  TitleBlockWrapper
+} from '@wepublish/block-content/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {ContentWrapperStyled} from '@wepublish/content/website'
 
 setDefaultOptions({
   locale: de
@@ -55,7 +63,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -159,7 +169,7 @@ const AdvertisementPlacer = styled('div')`
 `
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
@@ -181,7 +191,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Teaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
-              Quote: OnlineReportsQuoteBlock
+              Quote: OnlineReportsQuoteBlock,
+              Subscribe: Mitmachen
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
@@ -230,6 +241,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </Footer>
               </Spacer>
+
+              <RoutedAdminBar />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
@@ -239,8 +252,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

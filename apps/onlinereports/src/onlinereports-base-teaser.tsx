@@ -1,4 +1,5 @@
-import {Box, css, styled, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
+import {Box, css, useTheme} from '@mui/material'
 import {
   Teaser,
   TeaserAuthors,
@@ -11,7 +12,7 @@ import {
   TeaserTime,
   TeaserTitle,
   TeaserWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
 import {useMemo} from 'react'
 
 export const useImageStyles = () => {
@@ -99,7 +100,10 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
   }
 
   ${TeaserTitle} {
-    ${({theme}) => theme.typography.h3};
+    font-family: ${({theme}) => theme.typography.h3.fontFamily};
+    font-size: ${({theme}) => theme.typography.h3.fontSize};
+    font-weight: ${({theme}) => theme.typography.h3.fontWeight};
+    color: ${({theme}) => theme.typography.h3.color};
   }
 
   ${TeaserLead} {
@@ -111,7 +115,10 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
   }
 
   ${TeaserAuthors} {
-    ${({theme}) => theme.typography.body2};
+    font-family: ${({theme}) => theme.typography.body2.fontFamily};
+    font-size: ${({theme}) => theme.typography.body2.fontSize};
+    font-weight: ${({theme}) => theme.typography.body2.fontWeight};
+    color: ${({theme}) => theme.typography.body2.color};
   }
 
   ${TeaserTime} {

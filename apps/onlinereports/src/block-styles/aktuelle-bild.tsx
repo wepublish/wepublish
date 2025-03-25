@@ -1,6 +1,4 @@
 import {
-  ApiV1,
-  BuilderTeaserListBlockProps,
   hasBlockStyle,
   isFilledTeaser,
   isTeaserListBlock,
@@ -12,20 +10,22 @@ import {
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserSlider,
-  TeaserTitle,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  TeaserTitle
+} from '@wepublish/block-content/website'
 import {allPass} from 'ramda'
 
-import {Box, styled, Typography} from '@mui/material'
+import styled from '@emotion/styled'
+import {Box, Typography} from '@mui/material'
 import {
   OnlineReportsTeaserPreTitleWrapper,
   OnlineReportsTeaserTitleWrapper
 } from '../onlinereports-base-teaser'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const IsAktuelleBildTeasers = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
+  block: BlockContent
+): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block)
 
 export const AktuelleBild = ({

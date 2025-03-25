@@ -1,22 +1,23 @@
+import styled from '@emotion/styled'
+import {Box} from '@mui/material'
+
 import {
   alignmentForTeaserBlock,
-  ApiV1,
-  BuilderTeaserListBlockProps,
   hasBlockStyle,
   isFilledTeaser,
-  isTeaserListBlock,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  isTeaserListBlock
+} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
-import {Box, styled} from '@mui/material'
-import {RuckSpiegelTeaser} from '../custom-teasers/ruck-spiegel'
 import {Advertisement} from '../components/advertisement'
 import {BlueBox} from '../components/blue-box'
+import {RuckSpiegelTeaser} from '../custom-teasers/ruck-spiegel'
 
 export const isRuckSpiegelTeasers = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
+  block: BlockContent
+): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('RuckSpiegel'), isTeaserListBlock])(block)
 
 export const RuckSpiegelBlockStyle = ({

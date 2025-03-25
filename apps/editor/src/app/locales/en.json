@@ -107,15 +107,12 @@
         "statePublished": "Status: Published",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "likeCount": "Likes",
         "type": "Type",
         "untitled": "Untitled",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
         "url": "URL",
         "urlPlaceholder": "https://canonical-url.com",
@@ -332,6 +329,9 @@
         "label": "HTML",
         "placeholder": "Paste your HTML block here..",
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+      },
+      "subscribe": {
+        "label": "Subscribe"
       },
       "image": {
         "label": "Image",
@@ -902,8 +902,6 @@
         "tags": "Tags",
         "title": "SEO Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "url": "URL",
         "value": "Value"
       }
@@ -958,17 +956,25 @@
     },
     "peerArticles": {
       "articleImage": "Article image",
-      "authors": "Authors",
       "filterByPeer": "Filter by peer",
       "lead": "Lead",
-      "notPublished": "Not yet published",
-      "originalArticle": "Original article",
       "peer": "Peer",
       "peerArticles": "Peerable Articles",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-      "toOriginalArticle": "To original article"
+
+      "import": {
+        "import": "Import",
+        "title": "Import article",
+        "includeAuthors": "Import authors of the article",
+        "includeAuthorsHint": "Imported or updated authors of the article. If another person has the same name, they will be distinguished.",
+        "includeTags": "Import tags of the article",
+        "includeTagsHint": "Imports the tags of the article as long as they do not already exist.",
+        "includeImages": "Import images of the article",
+        "includeImagesHint": "Images that appear in the metadata or blocks of the article are also imported. If the same image exists several times, it will also be imported several times.",
+        "confirm": "Yes, import article"
+      }
     },
     "peerList": {
       "overview": {

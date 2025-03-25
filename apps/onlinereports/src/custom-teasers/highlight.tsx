@@ -1,7 +1,12 @@
-import {styled} from '@mui/material'
-import {TeaserLead, TeaserPreTitle, TeaserPreTitleNoContent, TeaserTitle} from '@wepublish/website'
+import {
+  TeaserLead,
+  TeaserPreTitle,
+  TeaserPreTitleNoContent,
+  TeaserTitle
+} from '@wepublish/block-content/website'
 
 import {OnlineReportsBaseTeaser} from '../onlinereports-base-teaser'
+import styled from '@emotion/styled'
 
 export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
   grid-column: span 3;

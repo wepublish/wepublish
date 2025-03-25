@@ -1,6 +1,7 @@
-import {BuilderTeaserProps, extractTeaserData, useWebsiteBuilder} from '@wepublish/website'
-import {styled} from '@mui/material'
 import {MdEast} from 'react-icons/md'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {extractTeaserData} from '@wepublish/block-content/website'
+import styled from '@emotion/styled'
 
 const NewsTeaserUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const {title, preTitle, href} = extractTeaserData(teaser)

@@ -1,5 +1,6 @@
-import {css, styled} from '@mui/material'
-import {ComponentProps, createContext, PropsWithChildren, useContext} from 'react'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
+import {createContext, useContext, PropsWithChildren, ComponentProps} from 'react'
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
@@ -30,7 +31,7 @@ export const useFullWidthContent = () => {
 
 export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2.5)};
+  gap: ${({theme}) => theme.spacing(7)};
 
   ${({theme, fullWidth}) =>
     !fullWidth &&

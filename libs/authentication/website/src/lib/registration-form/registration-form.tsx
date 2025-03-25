@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {RegisterMutationVariables} from '@wepublish/website/api'
 import {
   BuilderRegistrationFormProps,

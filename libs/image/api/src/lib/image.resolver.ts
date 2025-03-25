@@ -1,7 +1,7 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
 import {ImageV2} from './image.model'
 import {ImageDataloaderService} from './image-dataloader.service'
-import {Public} from '@wepublish/permissions/api'
+import {Public} from '@wepublish/authentication/api'
 
 @Resolver(() => ImageV2)
 export class ImageResolver {

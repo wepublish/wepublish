@@ -1,6 +1,6 @@
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
-import {AppBar, Box, css, styled, Toolbar, useTheme} from '@mui/material'
-import {useMemo} from 'react'
+import styled from '@emotion/styled'
+import {AppBar, Box, css, Theme, Toolbar} from '@mui/material'
 import {BuilderNavAppBarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
 import {UseToggle} from '@wepublish/ui'
@@ -9,16 +9,19 @@ import {FullNavigationFragment} from '@wepublish/website/api'
 
 export const NavAppBar = ({
   logo,
-  loginUrl,
-  profileUrl,
-  subscriptionsUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   headerItems,
   menuToggle,
   actions
 }: BuilderNavAppBarProps) => {
-  const appBarStyles = useAppBarStyles(menuToggle.value)
   return (
-    <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
+    <AppBar
+      position="static"
+      elevation={0}
+      color={'transparent'}
+      css={appBarStyles(menuToggle.value)}>
       <NavbarInnerWrapper>
         <NavbarMain>
           <NavbarIconButtonWrapper>
@@ -34,8 +37,8 @@ export const NavAppBar = ({
         <HomeLogoButton logo={logo} menuToggle={menuToggle} />
         <NavbarActions isMenuOpen={menuToggle.value}>
           {actions}
-          <LoggedInButtons profileUrl={profileUrl} subscriptionsUrl={subscriptionsUrl} />
-          <LoggedOutButtons loginUrl={loginUrl} />
+          <LoggedInButtons profileBtn={profileBtn} subscribeBtn={subscribeBtn} />
+          <LoggedOutButtons loginBtn={loginBtn} />
         </NavbarActions>
       </NavbarInnerWrapper>
     </AppBar>
@@ -45,13 +48,15 @@ export const NavAppBar = ({
 type HomeLogoButton = Pick<BuilderNavAppBarProps, 'logo' | 'menuToggle'> & {className?: string}
 
 export const HomeLogoButton = ({logo, menuToggle, className}: HomeLogoButton) => {
-  const logoLinkStyles = useLogoLinkStyles(menuToggle.value)
-  const imageStyles = useImageStyles()
   const {
     elements: {Link, Image}
   } = useWebsiteBuilder()
   return (
-    <Link href="/" aria-label="Startseite" css={logoLinkStyles} className={className}>
+    <Link
+      href="/"
+      aria-label="Startseite"
+      css={logoLinkStyles(menuToggle.value)}
+      className={className}>
       <NavbarLogoWrapper>
         {!!logo && <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />}
       </NavbarLogoWrapper>
@@ -59,9 +64,9 @@ export const HomeLogoButton = ({logo, menuToggle, className}: HomeLogoButton) =>
   )
 }
 
-type LoggedInButtonsProps = Pick<BuilderNavAppBarProps, 'subscriptionsUrl' | 'profileUrl'>
+type LoggedInButtonsProps = Pick<BuilderNavAppBarProps, 'subscribeBtn' | 'profileBtn'>
 
-export const LoggedInButtons = ({subscriptionsUrl, profileUrl}: LoggedInButtonsProps) => {
+export const LoggedInButtons = ({subscribeBtn, profileBtn}: LoggedInButtonsProps) => {
   const {hasUser} = useUser()
   const {
     elements: {Link, IconButton}
@@ -72,15 +77,15 @@ export const LoggedInButtons = ({subscriptionsUrl, profileUrl}: LoggedInButtonsP
   }
   return (
     <>
-      {subscriptionsUrl && (
-        <Link href={subscriptionsUrl}>
+      {subscribeBtn && (
+        <Link href={subscribeBtn?.href}>
           <IconButton css={{fontSize: '2em', color: 'black'}}>
             <MdOutlinePayments aria-label={'Subscriptions'} />
           </IconButton>
         </Link>
       )}
 
-      <Link href={profileUrl}>
+      <Link href={profileBtn?.href}>
         <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
           <MdAccountCircle aria-label="Profil" />
         </IconButton>
@@ -89,9 +94,9 @@ export const LoggedInButtons = ({subscriptionsUrl, profileUrl}: LoggedInButtonsP
   )
 }
 
-type LoggedOutButtonsProps = Pick<BuilderNavAppBarProps, 'loginUrl'>
+type LoggedOutButtonsProps = Pick<BuilderNavAppBarProps, 'loginBtn'>
 
-export const LoggedOutButtons = ({loginUrl}: LoggedOutButtonsProps) => {
+export const LoggedOutButtons = ({loginBtn}: LoggedOutButtonsProps) => {
   const {hasUser} = useUser()
   const {
     elements: {Link, IconButton}
@@ -102,7 +107,7 @@ export const LoggedOutButtons = ({loginUrl}: LoggedOutButtonsProps) => {
   }
   return (
     <>
-      <Link href={loginUrl}>
+      <Link href={loginBtn?.href}>
         <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
           <MdAccountCircle aria-label="Login" />
         </IconButton>
@@ -130,20 +135,13 @@ export const MenuItems = ({items}: MenuItemsProps) => {
   )
 }
 
-export const useAppBarStyles = (isMenuOpen: boolean) => {
-  const theme = useTheme()
-
-  return useMemo(
-    () =>
-      isMenuOpen
-        ? css`
-            background-color: ${theme.palette.primary.main};
-            color: ${theme.palette.primary.contrastText};
-          `
-        : null,
-    [theme, isMenuOpen]
-  )
-}
+const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+  isMenuOpen
+    ? css`
+        background-color: ${theme.palette.primary.main};
+        color: ${theme.palette.primary.contrastText};
+      `
+    : null
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -166,8 +164,9 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
     isMenuOpen &&
     css`
       z-index: -1;
-    `} @media (
-  min-width: 740px) {
+    `}
+
+  @media (min-width: 740px) {
     // custom for maximum space usage
     display: flex;
 
@@ -242,43 +241,36 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-const useLogoLinkStyles = (isMenuOpen: boolean) => {
-  return useMemo(
-    () => css`
-      ${isMenuOpen &&
-      css`
-        z-index: -1;
-      `}
-    `,
-    [isMenuOpen]
-  )
-}
+const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+  css`
+    color: unset;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    justify-self: center;
+    ${isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
+  `
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
   width: auto;
 `
 
-const useImageStyles = () => {
-  const theme = useTheme()
-  return useMemo(
-    () => css`
-      max-height: ${theme.spacing(5)};
-      max-width: ${theme.spacing(25)};
-
-      ${theme.breakpoints.up('md')} {
-        max-height: ${theme.spacing(6)};
-        max-width: ${theme.spacing(30)};
-      }
-
-      ${theme.breakpoints.up('lg')} {
-        max-height: ${theme.spacing(9)};
-        max-width: ${theme.spacing(38)};
-      }
-    `,
-    [theme]
-  )
-}
+const imageStyles = (theme: Theme) => css`
+  max-height: ${theme.spacing(5)};
+  max-width: ${theme.spacing(15)};
+  ${theme.breakpoints.up('md')} {
+    max-height: ${theme.spacing(6)};
+    max-width: ${theme.spacing(30)};
+  }
+  ${theme.breakpoints.up('lg')} {
+    max-height: ${theme.spacing(9)};
+    max-width: ${theme.spacing(38)};
+  }
+`
 
 type NavbarOpenCloseButtonProps = {
   toggle: UseToggle

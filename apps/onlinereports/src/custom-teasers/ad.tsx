@@ -1,9 +1,9 @@
 import {css, GlobalStyles, Theme, useTheme} from '@mui/material'
-import {BuilderTeaserProps} from '@wepublish/website'
 import {allPass, anyPass} from 'ramda'
 import {useId, useMemo} from 'react'
 import {Ad} from 'react-ad-manager'
 import {AdSizeType} from 'react-ad-manager/dist/types'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 
 export const isAdTeaser = allPass([
   ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',

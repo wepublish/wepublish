@@ -1,19 +1,16 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {css, styled} from '@mui/material'
-import {
-  ApiV1,
-  BuilderTeaserGridBlockProps,
-  selectTeaserDate,
-  selectTeaserImage,
-  useWebsiteBuilder
-} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
+import {selectTeaserDate, selectTeaserImage} from '@wepublish/block-content/website'
+import {Teaser} from '@wepublish/website/api'
+import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useKeenSlider} from 'keen-slider/react'
 import {DOMAttributes, useState} from 'react'
 
 type ArchiveSliderProps = {
   teasers: BuilderTeaserGridBlockProps['teasers']
-  setTeaser: (teaser: ApiV1.Teaser) => void
+  setTeaser: (teaser: Teaser) => void
 }
 
 const SliderWrapper = styled('div')`
@@ -131,7 +128,7 @@ export const ArchiveSlider = ({teasers, setTeaser}: ArchiveSliderProps) => {
 }
 
 type ArchiveSlideProps = {
-  teaser: ApiV1.Teaser
+  teaser: Teaser
   isCurrent: boolean
   onClick: DOMAttributes<HTMLDivElement>['onClick']
 }

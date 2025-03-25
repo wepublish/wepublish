@@ -1,11 +1,11 @@
 import {FullImageFragment, FullNavigationFragment} from '@wepublish/website/api'
 import {PropsWithChildren, ReactNode} from 'react'
-import {UseToggle} from '@wepublish/ui'
+import {ButtonProps, UseToggle} from '@wepublish/ui'
 
 export type BuilderNavAppBarProps = PropsWithChildren<{
-  loginUrl?: string
-  profileUrl?: string
-  subscriptionsUrl?: string
+  loginBtn?: ButtonProps | null
+  profileBtn?: ButtonProps | null
+  subscribeBtn?: ButtonProps | null
   logo?: FullImageFragment | null
   headerItems: FullNavigationFragment | null | undefined
   menuToggle: UseToggle

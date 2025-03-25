@@ -3,10 +3,10 @@ import {
   alignmentForTeaserBlock,
   BlockRenderer,
   BreakBlock,
-  BuilderBlockRendererProps,
   isBreakBlock,
   isTeaserListBlock
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {BuilderBlockRendererProps} from '@wepublish/website/builder'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 

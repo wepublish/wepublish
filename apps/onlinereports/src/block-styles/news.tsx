@@ -1,22 +1,21 @@
+import styled from '@emotion/styled'
+import {Box} from '@mui/material'
+
 import {
   alignmentForTeaserBlock,
-  ApiV1,
-  BuilderTeaserListBlockProps,
   hasBlockStyle,
   isFilledTeaser,
-  isTeaserListBlock,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  isTeaserListBlock
+} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
-import {NewsTeaser} from '../custom-teasers/news'
-import {Box, styled} from '@mui/material'
 import {Advertisement} from '../components/advertisement'
 import {BlueBox} from '../components/blue-box'
+import {NewsTeaser} from '../custom-teasers/news'
 
-export const isNewsTeasers = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
+export const isNewsTeasers = (block: BlockContent): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block)
 
 export const NewsBlockStyle = ({
@@ -74,6 +73,7 @@ const NewsTeaserListWrapper = styled(Box)`
 
   ${BlueBox} {
     grid-column: span 3;
+
     ${({theme}) => theme.breakpoints.up('md')} {
       grid-column: span 2;
     }
@@ -81,6 +81,7 @@ const NewsTeaserListWrapper = styled(Box)`
 
   ${Filler} {
     grid-column: span 3;
+
     ${({theme}) => theme.breakpoints.up('md')} {
       grid-column: span 1;
     }

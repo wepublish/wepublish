@@ -1,5 +1,5 @@
-import {styled} from '@mui/material'
 import theme from './theme'
+import styled from '@emotion/styled'
 
 export const Structure = styled('div')`
   display: grid;

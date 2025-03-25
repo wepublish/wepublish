@@ -1,6 +1,7 @@
 import React from 'react'
 import {MdAlarmOn, MdCelebration, MdFilterAlt} from 'react-icons/md'
-import {styled, TableCell} from '@mui/material'
+import {TableCell} from '@mui/material'
+import styled from '@emotion/styled'
 import {useTranslation} from 'react-i18next'
 import {PermissionControl} from '@wepublish/ui/editor'
 

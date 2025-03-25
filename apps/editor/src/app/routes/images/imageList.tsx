@@ -3,10 +3,10 @@ import {
   FullImageFragment,
   ImageListDocument,
   ImageListQuery,
-  ImageRefFragment,
   useDeleteImageMutation,
   useImageListQuery
 } from '@wepublish/editor/api'
+import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -19,7 +19,6 @@ import {
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
-  LocalStorageKey,
   PaddedCell,
   PermissionControl,
   Table,
@@ -152,7 +151,7 @@ function ImageList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
+  const [currentImage, setCurrentImage] = useState<FullImageFragment>()
 
   const [activePage, setActivePage] = useState(1)
   const [limit, setLimit] = useState(DEFAULT_TABLE_PAGE_SIZES[0])
@@ -386,10 +385,10 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
 export {CheckedPermissionComponent as ImageList}
 
 interface ImageGridViewProps {
-  images: ImageRefFragment[]
+  images: FullImageFragment[]
   isLoading?: boolean
 
-  setCurrentImage(image: ImageRefFragment): void
+  setCurrentImage(image: FullImageFragment): void
   setConfirmationDialogOpen(isOpen: boolean): void
 }
 
@@ -447,7 +446,7 @@ const ImageListView = ({
       <Column width={160} align="left" resizable>
         <HeaderCell>{t('images.overview.image')}</HeaderCell>
         <RCell>
-          {(rowData: RowDataType<ImageRefFragment>) => (
+          {(rowData: RowDataType<FullImageFragment>) => (
             <Link to={`/images/edit/${rowData.id}`}>
               <Img src={rowData.thumbURL || ''} />
             </Link>
@@ -457,7 +456,7 @@ const ImageListView = ({
       <Column width={160} align="left" resizable>
         <HeaderCell>{t('images.overview.title')}</HeaderCell>
         <RCell className="displayThreeLinesOnly">
-          {(rowData: RowDataType<ImageRefFragment>) => (
+          {(rowData: RowDataType<FullImageFragment>) => (
             <p className={'displayThreeLinesOnly'}>
               {rowData.title ? rowData.title : t('images.overview.untitled')}
             </p>
@@ -467,7 +466,7 @@ const ImageListView = ({
       <Column width={340} align="left" resizable>
         <HeaderCell>{t('images.overview.description')}</HeaderCell>
         <RCell className={'displayThreeLinesOnly'}>
-          {(rowData: RowDataType<ImageRefFragment>) => (
+          {(rowData: RowDataType<FullImageFragment>) => (
             <p className={'displayThreeLinesOnly'}>
               {rowData.description ? rowData.description : t('images.overview.noDescription')}
             </p>
@@ -478,7 +477,7 @@ const ImageListView = ({
       <Column width={250} align="left" resizable>
         <HeaderCell>{t('images.overview.filename')}</HeaderCell>
         <RCell>
-          {(rowData: RowDataType<ImageRefFragment>) => (
+          {(rowData: RowDataType<FullImageFragment>) => (
             <p className={'displayThreeLinesOnly'}>{rowData.filename ? rowData.filename : ''}</p>
           )}
         </RCell>
@@ -487,7 +486,7 @@ const ImageListView = ({
       <Column width={100} align="center" resizable fixed="right">
         <HeaderCell>{t('images.overview.actions')}</HeaderCell>
         <PaddedCell>
-          {(rowData: RowDataType<ImageRefFragment>) => (
+          {(rowData: RowDataType<FullImageFragment>) => (
             <>
               <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
                 <IconButtonTooltip caption={t('images.overview.edit')}>
@@ -506,7 +505,7 @@ const ImageListView = ({
                     color="red"
                     onClick={event => {
                       event.preventDefault()
-                      setCurrentImage(rowData as ImageRefFragment)
+                      setCurrentImage(rowData as FullImageFragment)
                       setConfirmationDialogOpen(true)
                     }}
                   />

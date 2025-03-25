@@ -1,5 +1,7 @@
-import {BuilderTeaserListBlockProps, TeaserListBlock, useWebsiteBuilder} from '@wepublish/website'
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {TeaserListBlock} from '@wepublish/block-content/website'
+import styled from '@emotion/styled'
 
 const ORTeaserListBlockWrapper = styled('div')`
   //grid-column: span 3;

@@ -1,5 +1,6 @@
-import {styled, Typography} from '@mui/material'
-import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {Typography} from '@mui/material'
+import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const OnlineReportsQuoteBlockWrapper = styled('div')`
   display: flex;

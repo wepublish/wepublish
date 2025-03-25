@@ -13,7 +13,7 @@ query RatingSystem {
 }
 
 mutation UpdateRatingSystem(
-  $ratingSystemId: ID!
+  $ratingSystemId: String!
   $name: String
   $answers: [UpdateCommentRatingSystemAnswer!]
 ) {
@@ -30,7 +30,11 @@ mutation UpdateRatingSystem(
   }
 }
 
-mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!, $answer: String) {
+mutation CreateRatingSystemAnswer(
+  $ratingSystemId: String!
+  $type: RatingSystemType!
+  $answer: String
+) {
   createRatingSystemAnswer(ratingSystemId: $ratingSystemId, type: $type, answer: $answer) {
     answer
     id
@@ -39,7 +43,7 @@ mutation CreateRatingSystemAnswer($ratingSystemId: ID!, $type: RatingSystemType!
   }
 }
 
-mutation DeleteRatingSystemAnswer($answerId: ID!) {
+mutation DeleteRatingSystemAnswer($answerId: String!) {
   deleteRatingSystemAnswer(id: $answerId) {
     id
   }

@@ -22,8 +22,8 @@ import {
   Blocks,
   BreakBlock,
   CommentBlock,
+  IFrameBlock,
   ContextBox,
-  EmbedBlock,
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
@@ -72,7 +72,8 @@ import {
   PeriodicityPicker,
   Subscribe,
   SubscriptionList,
-  SubscriptionListItem
+  SubscriptionListItem,
+  TransactionFee
 } from '@wepublish/membership/website'
 import {Footer, NavAppBar, Navbar, NavPaper} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
@@ -191,6 +192,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           PeriodicityPicker={PeriodicityPicker}
           PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
+          TransactionFee={TransactionFee}
           Subscribe={Subscribe}
           elements={{
             TextField,
@@ -232,7 +234,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserList: TeaserListBlock,
             Teaser,
             BildwurfAd: BildwurfAdBlock,
-            Embed: EmbedBlock,
+            IFrame: IFrameBlock,
             FacebookPost: FacebookPostBlock,
             FacebookVideo: FacebookVideoBlock,
             InstagramPost: InstagramPostBlock,

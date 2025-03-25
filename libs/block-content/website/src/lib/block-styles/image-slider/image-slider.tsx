@@ -15,7 +15,7 @@ import {
   useSlidesPadding,
   useSlidesPerViewResponsive
 } from '../teaser-slider/teaser-slider'
-import {Block, ImageGalleryBlock} from '@wepublish/website/api'
+import {BlockContent, ImageGalleryBlock} from '@wepublish/website/api'
 
 export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => {
   const {
@@ -72,5 +72,6 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
   )
 }
 
-export const isImageSliderBlockStyle = (block: Block): block is ImageGalleryBlock =>
-  allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block)
+export const isImageSliderBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is ImageGalleryBlock => allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block)

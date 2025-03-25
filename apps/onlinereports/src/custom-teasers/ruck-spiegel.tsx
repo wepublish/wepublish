@@ -1,5 +1,6 @@
-import {BuilderTeaserProps, extractTeaserData, useWebsiteBuilder} from '@wepublish/website'
-import {styled} from '@mui/material'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {extractTeaserData} from '@wepublish/block-content/website'
+import styled from '@emotion/styled'
 
 const RuckSpiegelUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const {title, href} = extractTeaserData(teaser)

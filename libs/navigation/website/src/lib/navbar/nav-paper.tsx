@@ -1,4 +1,5 @@
-import {css, styled, Theme, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
+import {css, Theme, useTheme} from '@mui/material'
 import {BuilderNavPaperProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useUser} from '@wepublish/authentication/website'
 import {navigationLinkToUrl} from '../link-to-url'
@@ -35,10 +36,10 @@ export const NavPaperCategory = styled('div')`
   grid-auto-rows: max-content;
 `
 
-export const NavPaperName = styled('span')`
+export const NavPaperName = styled('div')`
   text-transform: uppercase;
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body2};
+  font-size: ${({theme}) => theme.typography.body2.fontSize};
 `
 
 export const NavPaperSeparator = styled('hr')`
@@ -114,9 +115,9 @@ export const NavPaperActions = styled('div')`
 export const NavPaper = ({
   main,
   categories,
-  loginUrl,
-  profileUrl,
-  subscriptionsUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   closeMenu,
   children,
   iconItems
@@ -158,10 +159,10 @@ export const NavPaper = ({
         })}
 
         <NavPaperActions>
-          {!hasUser && loginUrl && (
+          {!hasUser && loginBtn && (
             <Button
               LinkComponent={Link}
-              href={loginUrl}
+              href={loginBtn.href}
               variant="contained"
               color="secondary"
               onClick={closeMenu}>
@@ -171,10 +172,10 @@ export const NavPaper = ({
 
           {hasUser && (
             <>
-              {profileUrl && (
+              {profileBtn && (
                 <Button
                   LinkComponent={Link}
-                  href={profileUrl}
+                  href={profileBtn.href}
                   variant="contained"
                   color="secondary"
                   onClick={closeMenu}>
@@ -182,10 +183,10 @@ export const NavPaper = ({
                 </Button>
               )}
 
-              {subscriptionsUrl && (
+              {subscribeBtn && (
                 <Button
                   LinkComponent={Link}
-                  href={subscriptionsUrl}
+                  href={subscribeBtn.href}
                   variant="contained"
                   color="accent"
                   onClick={closeMenu}>
@@ -193,7 +194,7 @@ export const NavPaper = ({
                 </Button>
               )}
 
-              {loginUrl && (
+              {loginBtn && (
                 <Button
                   onClick={() => {
                     logout()

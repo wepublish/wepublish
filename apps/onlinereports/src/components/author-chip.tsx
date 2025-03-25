@@ -1,5 +1,6 @@
-import {css, styled} from '@mui/material'
-import {BuilderAuthorChipProps, useWebsiteBuilder} from '@wepublish/website'
+import {css} from '@mui/material'
+import {BuilderAuthorChipProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import styled from '@emotion/styled'
 
 export const AuthorChipWrapper = styled('div')`
   display: flex;

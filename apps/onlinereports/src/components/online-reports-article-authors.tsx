@@ -1,6 +1,6 @@
-import {AuthorChipImageWrapper, avatarImageStyles} from './author-chip'
-import {AuthorChipName, BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {AuthorChipImageWrapper, AuthorChipName, avatarImageStyles} from './author-chip'
+import {BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const ArticleAuthorsWrapper = styled('div')`
   display: grid;
@@ -43,7 +43,7 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
     elements: {Image, Link}
   } = useWebsiteBuilder()
 
-  const authors = article?.authors.filter(author => !author.hideOnArticle) || []
+  const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
   if (!authors.length) {
     return
   }

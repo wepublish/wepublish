@@ -18,3 +18,5 @@ export const formatCurrency = (
 
   return result
 }
+
+export const roundUpTo5Cents = (amount: number) => +(Math.ceil(amount * 20) / 20)

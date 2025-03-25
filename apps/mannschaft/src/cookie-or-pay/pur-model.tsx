@@ -1,4 +1,4 @@
-import {useHasActiveSubscription} from '@wepublish/website'
+import {useHasActiveSubscription} from '@wepublish/membership/website'
 import Head from 'next/head'
 import {useEffect} from 'react'
 

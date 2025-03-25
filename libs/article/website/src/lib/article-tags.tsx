@@ -1,4 +1,5 @@
-import {Chip, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {Chip} from '@mui/material'
 import {BuilderArticleMetaProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const ArticleTagsWrapper = styled('div')`

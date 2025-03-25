@@ -1,5 +1,7 @@
-import {BuilderTeaserProps, extractTeaserData} from '@wepublish/website'
-import {Box, styled, Typography} from '@mui/material'
+import styled from '@emotion/styled'
+import {Box, Typography} from '@mui/material'
+import {extractTeaserData} from '@wepublish/block-content/website'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 
 const GelesenUndGedachtUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {

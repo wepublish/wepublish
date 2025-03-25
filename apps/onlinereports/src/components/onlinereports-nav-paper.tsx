@@ -1,8 +1,10 @@
-import {css, IconButton, styled} from '@mui/material'
-import {BuilderNavPaperProps, navigationLinkToUrl, useWebsiteBuilder} from '@wepublish/website'
+import {css, IconButton} from '@mui/material'
 import {TextToIcon} from '@wepublish/ui'
 import {MdClose, MdSearch} from 'react-icons/md'
 import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
+import {navigationLinkToUrl} from '@wepublish/navigation/website'
+import {BuilderNavPaperProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import styled from '@emotion/styled'
 
 const NavPaperOverlay = styled('div')`
   position: absolute;
@@ -60,9 +62,9 @@ export const NavPaperChildrenWrapper = styled(NavStructure)`
 export const OnlineReportsNavPaper = ({
   main,
   categories,
-  loginUrl,
-  profileUrl,
-  subscriptionsUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   closeMenu,
   children,
   iconItems

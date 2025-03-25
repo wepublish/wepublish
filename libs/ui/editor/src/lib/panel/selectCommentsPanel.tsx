@@ -23,6 +23,7 @@ import {IconButtonTooltip, PermissionControl, SelectTags} from '../atoms'
 import {RichTextBlock} from '../blocks'
 import {CommentBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
+import {CommentBlockCommentFragment} from '@wepublish/editor/api-v2'
 
 const CheckboxWrapper = styled.div`
   height: 46px;
@@ -67,16 +68,17 @@ const onErrorToast = (error: ApolloError) => {
   }
 }
 
-const commentUsernameGenerator = (t: TFunction<'translation'>) => (comment: FullCommentFragment) =>
-  comment?.user
-    ? `${comment?.user.name}`
-    : ` ${comment?.guestUsername} ${t('comments.panels.unregisteredUser')}`
+const commentUsernameGenerator =
+  (t: TFunction<'translation'>) => (comment: CommentBlockCommentFragment) =>
+    comment?.user
+      ? `${comment?.user.name}`
+      : ` ${comment?.guestUsername} ${t('comments.panels.unregisteredUser')}`
 
 export type SelectCommentPanelProps = {
   itemId: string | null | undefined
   selectedFilter: CommentBlockValue['filter']
   onClose(): void
-  onSelect(filter: CommentBlockValue['filter'], comments: FullCommentFragment[]): void
+  onSelect(filter: CommentBlockValue['filter'], comments: CommentBlockCommentFragment[]): void
 }
 
 export function SelectCommentPanel({
@@ -108,10 +110,14 @@ export function SelectCommentPanel({
           item: itemId,
           comments: commentFilter || []
         },
-        data?.comments.nodes.filter(({id}) => commentFilter?.includes(id)) ?? []
+        (data?.comments.nodes.filter(({id}) => commentFilter?.includes(id)) ??
+          []) as CommentBlockCommentFragment[]
       )
     } else {
-      onSelect({item: itemId, tags: tagFilter || []}, data?.comments.nodes ?? [])
+      onSelect(
+        {item: itemId, tags: tagFilter || []},
+        (data?.comments.nodes ?? []) as CommentBlockCommentFragment[]
+      )
     }
   }
 
@@ -181,7 +187,7 @@ export function SelectCommentPanel({
             <Table.Column width={36}>
               <Table.HeaderCell>{''}</Table.HeaderCell>
               <TableCellNoPadding>
-                {(rowData: RowDataType<FullCommentFragment>) => (
+                {(rowData: RowDataType<CommentBlockCommentFragment>) => (
                   <CheckboxWrapper>
                     <Checkbox
                       defaultChecked={commentFilter?.includes(rowData.id) ?? false}
@@ -204,8 +210,8 @@ export function SelectCommentPanel({
           <Table.Column width={250} resizable>
             <Table.HeaderCell>{t('blocks.comment.displayName')}</Table.HeaderCell>
             <Table.Cell>
-              {(rowData: RowDataType<FullCommentFragment>) =>
-                getUsername(rowData as FullCommentFragment)
+              {(rowData: RowDataType<CommentBlockCommentFragment>) =>
+                getUsername(rowData as CommentBlockCommentFragment)
               }
             </Table.Cell>
           </Table.Column>

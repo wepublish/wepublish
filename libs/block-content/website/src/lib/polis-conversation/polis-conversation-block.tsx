@@ -1,9 +1,13 @@
-import {styled} from '@mui/material'
-import {Block, PolisConversationBlock as PolisConversationBlockType} from '@wepublish/website/api'
+import styled from '@emotion/styled'
+import {
+  BlockContent,
+  PolisConversationBlock as PolisConversationBlockType
+} from '@wepublish/website/api'
 import {BuilderPolisConversationBlockProps} from '@wepublish/website/builder'
 
-export const isPolisConversationBlock = (block: Block): block is PolisConversationBlockType =>
-  block.__typename === 'PolisConversationBlock'
+export const isPolisConversationBlock = (
+  block: BlockContent
+): block is PolisConversationBlockType => block.__typename === 'PolisConversationBlock'
 
 export const PolisConversationBlockWrapper = styled('div')``
 
