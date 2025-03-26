@@ -81,7 +81,7 @@ export function createRichTextError(message: string, path: string[]) {
   return new Error(path.length > 0 ? `Error at path "${path.join('.')}": ${message}` : message)
 }
 
-const TextNodeFieldsArr: string[] = Object.values(TextFormat)
+const TextNodeFieldsArr: string[] = [...Object.values(TextFormat), 'text']
 const ElmentNodeFieldsArr: string[] = Object.values(ElementNodeFields)
 
 const LinkNodeFieldsArr: string[] = [

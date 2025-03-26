@@ -3,7 +3,7 @@ import {compose} from 'ramda'
 
 export const truncateParagraph =
   (maxLength: number) =>
-  (paragraph: Descendant | undefined): Descendant | undefined => {
+  (paragraph: Node | undefined): Descendant | undefined => {
     let textLength = 0
 
     if (!Element.isElement(paragraph)) {
@@ -36,8 +36,8 @@ export const truncateParagraph =
     return truncated
   }
 
-export const findFirstParagraph = (nodes: Node[] | undefined | null) =>
-  nodes?.find((node): node is Element => Element.isElement(node) && node.type === 'paragraph')
+export const findFirstParagraph = (nodes: Node[] | undefined | null): Node | undefined =>
+  nodes?.find(node => Element.isElement(node) && node.type === 'paragraph')
 
 export const truncateFirstParagraph = (maxLength: number) =>
   compose(node => (node ? [node] : node), truncateParagraph(maxLength), findFirstParagraph)

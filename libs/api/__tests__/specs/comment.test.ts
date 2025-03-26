@@ -12,6 +12,7 @@ import {PrismaClient} from '@prisma/client'
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 import {AddComment, CommentInput, Comments} from '../api/public'
 import nanoid from 'nanoid'
+import {Descendant} from 'slate'
 
 let clientPrivateAsAdmin: ApolloServer
 let clientPublicAsUser: ApolloServer
@@ -142,7 +143,7 @@ const richTextNodes = [
       }
     ]
   }
-]
+] as Descendant[]
 
 describe('Comments', () => {
   describe('create', () => {
@@ -319,6 +320,7 @@ describe('Comments', () => {
       itemType: CommentItemType.Article,
       text: richTextNodes
     }
+
     const res = await testServerPublic.executeOperation({
       query: AddComment,
       variables: {
