@@ -91,6 +91,10 @@ export const PageSEO = ({page}: BuilderPageSEOProps) => {
       <meta key={'og:url'} property="og:url" content={seo.url} />
       <link key={'canonical'} rel="canonical" href={seo.url} />
 
+      {seo.updatedAt && (
+        <meta key={`og:updated_time`} property="og:updated_time" content={seo.updatedAt} />
+      )}
+
       {seo.image && (
         <>
           <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
