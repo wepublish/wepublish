@@ -303,11 +303,12 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
+  crowdfunding?: InputMaybe<CrowdfundingBlockInput>;
   embed?: InputMaybe<IFrameBlockInput>;
   event?: InputMaybe<EventBlockInput>;
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
@@ -346,6 +347,7 @@ export type BlockStyle = {
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   FacebookPost = 'FacebookPost',
@@ -609,6 +611,21 @@ export type Crowdfunding = {
   name: Scalars['String'];
 };
 
+export type CrowdfundingBlock = BaseBlock & {
+  __typename?: 'CrowdfundingBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  crowdfunding?: Maybe<Crowdfunding>;
+  crowdfundingId?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type CrowdfundingBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  crowdfundingId?: InputMaybe<Scalars['String']>;
+};
+
 export type CrowdfundingGoal = {
   __typename?: 'CrowdfundingGoal';
   amount: Scalars['Float'];
@@ -691,6 +708,7 @@ export type DeletePollVotesResult = {
 
 export enum EditorBlockType {
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',

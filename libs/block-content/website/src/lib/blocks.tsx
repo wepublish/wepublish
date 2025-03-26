@@ -36,6 +36,7 @@ import {isImageSliderBlockStyle} from './block-styles/image-slider/image-slider'
 import {isFocusTeaserBlockStyle} from './block-styles/focus-teaser/focus-teaser'
 import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
+import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
 
 export const hasBlockStyle =
   (blockStyle: string) =>
@@ -96,6 +97,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
       [isSubscribeBlock, block => <blocks.Subscribe {...block} />],
       [isEventBlock, block => <blocks.Event {...block} />],
       [isPollBlock, block => <blocks.Poll {...block} />],
+      [isCrowdfundingBlock, block => <blocks.Crowdfunding {...block} />],
       [isListicleBlock, block => <blocks.Listicle {...block} />],
       [isCommentBlock, block => <blocks.Comment {...block} />]
     ])(block)

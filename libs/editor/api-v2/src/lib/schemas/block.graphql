@@ -87,6 +87,14 @@ fragment BlockWithoutTeaser on BlockContent {
     }
   }
 
+  ... on CrowdfundingBlock {
+    blockStyle
+    type
+    crowdfunding {
+      id
+    }
+  }
+
   ... on ListicleBlock {
     blockStyle
     type

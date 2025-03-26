@@ -1269,6 +1269,7 @@ enum BlockType {
   TeaserList     @map("teaserList")
   HTML           @map("html")
   Subscribe      @map("subscribe")
+  Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
   Comment        @map("comment")
   Event          @map("event")
@@ -1349,9 +1350,9 @@ model Crowdfunding {
 }
 
 model CrowdfundingGoal {
-  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt      DateTime      @default(now())
-  modifiedAt     DateTime      @updatedAt
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime     @default(now())
+  modifiedAt     DateTime     @updatedAt
   title          String
   description    String?
   amount         Int

@@ -36,6 +36,7 @@ import {
 import {TeaserListBlock, TeaserListBlockInput} from './teaser/teaser-list.model'
 import {mapTeaserUnionMap} from './teaser/teaser.model'
 import {SubscribeBlock, SubscribeBlockInput} from './subscribe/subscribe-block.model'
+import {CrowdfundingBlock, CrowdfundingBlockInput} from './crowdfunding/crowdfunding-block.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -53,6 +54,7 @@ export const BlockContent = createUnionType({
       EventBlock,
       CommentBlock,
       PollBlock,
+      CrowdfundingBlock,
       IFrameBlock,
       BildwurfAdBlock,
       FacebookPostBlock,
@@ -89,6 +91,8 @@ export const BlockContent = createUnionType({
         return BreakBlock.name
       case BlockType.Poll:
         return PollBlock.name
+      case BlockType.Crowdfunding:
+        return CrowdfundingBlock.name
       case BlockType.Event:
         return EventBlock.name
       case BlockType.Comment:
@@ -153,6 +157,8 @@ export class BlockContentInput {
   [BlockType.LinkPageBreak]?: BreakBlockInput;
   @Field(() => PollBlockInput, {nullable: true})
   [BlockType.Poll]?: PollBlockInput;
+  @Field(() => CrowdfundingBlockInput, {nullable: true})
+  [BlockType.Crowdfunding]?: CrowdfundingBlockInput;
   @Field(() => EventBlockInput, {nullable: true})
   [BlockType.Event]?: EventBlockInput;
   @Field(() => CommentBlockInput, {nullable: true})

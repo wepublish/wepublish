@@ -320,6 +320,7 @@ export type BlockContent =
   | BildwurfAdBlock
   | BreakBlock
   | CommentBlock
+  | CrowdfundingBlock
   | EventBlock
   | FacebookPostBlock
   | FacebookVideoBlock
@@ -348,6 +349,7 @@ export type BlockContent =
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>
   comment?: InputMaybe<CommentBlockInput>
+  crowdfunding?: InputMaybe<CrowdfundingBlockInput>
   embed?: InputMaybe<IFrameBlockInput>
   event?: InputMaybe<EventBlockInput>
   facebookPost?: InputMaybe<FacebookPostBlockInput>
@@ -386,6 +388,7 @@ export type BlockStyle = {
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   FacebookPost = 'FacebookPost',
@@ -651,6 +654,21 @@ export type Crowdfunding = {
   name: Scalars['String']
 }
 
+export type CrowdfundingBlock = BaseBlock & {
+  __typename?: 'CrowdfundingBlock'
+  blockStyle?: Maybe<Scalars['String']>
+  blockStyleName?: Maybe<Scalars['String']>
+  crowdfunding?: Maybe<Crowdfunding>
+  crowdfundingId?: Maybe<Scalars['String']>
+  type: BlockType
+}
+
+export type CrowdfundingBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>
+  blockStyleName?: InputMaybe<Scalars['String']>
+  crowdfundingId?: InputMaybe<Scalars['String']>
+}
+
 export type CrowdfundingGoal = {
   __typename?: 'CrowdfundingGoal'
   amount: Scalars['Float']
@@ -734,6 +752,7 @@ export type DeletePollVotesResult = {
 
 export enum EditorBlockType {
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',
@@ -3480,6 +3499,13 @@ type BlockWithoutTeaser_CommentBlock_Fragment = {
   comments: Array<{__typename?: 'Comment'; id: string}>
 }
 
+type BlockWithoutTeaser_CrowdfundingBlock_Fragment = {
+  __typename: 'CrowdfundingBlock'
+  blockStyle?: string | null
+  type: BlockType
+  crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
+}
+
 type BlockWithoutTeaser_EventBlock_Fragment = {
   __typename: 'EventBlock'
   blockStyle?: string | null
@@ -3683,6 +3709,7 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_BildwurfAdBlock_Fragment
   | BlockWithoutTeaser_BreakBlock_Fragment
   | BlockWithoutTeaser_CommentBlock_Fragment
+  | BlockWithoutTeaser_CrowdfundingBlock_Fragment
   | BlockWithoutTeaser_EventBlock_Fragment
   | BlockWithoutTeaser_FacebookPostBlock_Fragment
   | BlockWithoutTeaser_FacebookVideoBlock_Fragment
@@ -3729,6 +3756,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {__typename: 'BildwurfAdBlock'}
         | {__typename: 'BreakBlock'}
         | {__typename: 'CommentBlock'}
+        | {__typename: 'CrowdfundingBlock'}
         | {__typename: 'EventBlock'}
         | {__typename: 'FacebookPostBlock'}
         | {__typename: 'FacebookVideoBlock'}
@@ -3856,6 +3884,13 @@ type FullBlock_CommentBlock_Fragment = {
     comments?: Array<string> | null
   }
   comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type FullBlock_CrowdfundingBlock_Fragment = {
+  __typename: 'CrowdfundingBlock'
+  blockStyle?: string | null
+  type: BlockType
+  crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
 }
 
 type FullBlock_EventBlock_Fragment = {
@@ -4038,6 +4073,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4160,6 +4196,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'BildwurfAdBlock'}
                 | {__typename: 'BreakBlock'}
                 | {__typename: 'CommentBlock'}
+                | {__typename: 'CrowdfundingBlock'}
                 | {__typename: 'EventBlock'}
                 | {__typename: 'FacebookPostBlock'}
                 | {__typename: 'FacebookVideoBlock'}
@@ -4281,6 +4318,7 @@ type FullBlock_TeaserListBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4410,6 +4448,7 @@ export type FullBlockFragment =
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_BreakBlock_Fragment
   | FullBlock_CommentBlock_Fragment
+  | FullBlock_CrowdfundingBlock_Fragment
   | FullBlock_EventBlock_Fragment
   | FullBlock_FacebookPostBlock_Fragment
   | FullBlock_FacebookVideoBlock_Fragment
@@ -4495,6 +4534,13 @@ type ImportBlock_CommentBlock_Fragment = {
     comments?: Array<string> | null
   }
   comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type ImportBlock_CrowdfundingBlock_Fragment = {
+  __typename: 'CrowdfundingBlock'
+  blockStyle?: string | null
+  type: BlockType
+  crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
 }
 
 type ImportBlock_EventBlock_Fragment = {
@@ -4677,6 +4723,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4799,6 +4846,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'BildwurfAdBlock'}
                 | {__typename: 'BreakBlock'}
                 | {__typename: 'CommentBlock'}
+                | {__typename: 'CrowdfundingBlock'}
                 | {__typename: 'EventBlock'}
                 | {__typename: 'FacebookPostBlock'}
                 | {__typename: 'FacebookVideoBlock'}
@@ -4920,6 +4968,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -5049,6 +5098,7 @@ export type ImportBlockFragment =
   | ImportBlock_BildwurfAdBlock_Fragment
   | ImportBlock_BreakBlock_Fragment
   | ImportBlock_CommentBlock_Fragment
+  | ImportBlock_CrowdfundingBlock_Fragment
   | ImportBlock_EventBlock_Fragment
   | ImportBlock_FacebookPostBlock_Fragment
   | ImportBlock_FacebookVideoBlock_Fragment
@@ -5224,6 +5274,12 @@ export type ArticleQuery = {
             comments: Array<{__typename?: 'Comment'; id: string}>
           }
         | {
+            __typename: 'CrowdfundingBlock'
+            blockStyle?: string | null
+            type: BlockType
+            crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
+          }
+        | {
             __typename: 'EventBlock'
             type: BlockType
             blockStyle?: string | null
@@ -5384,6 +5440,7 @@ export type ArticleQuery = {
                         | {__typename: 'BildwurfAdBlock'}
                         | {__typename: 'BreakBlock'}
                         | {__typename: 'CommentBlock'}
+                        | {__typename: 'CrowdfundingBlock'}
                         | {__typename: 'EventBlock'}
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
@@ -5505,6 +5562,7 @@ export type ArticleQuery = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'BreakBlock'}
                           | {__typename: 'CommentBlock'}
+                          | {__typename: 'CrowdfundingBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
@@ -5625,6 +5683,7 @@ export type ArticleQuery = {
                         | {__typename: 'BildwurfAdBlock'}
                         | {__typename: 'BreakBlock'}
                         | {__typename: 'CommentBlock'}
+                        | {__typename: 'CrowdfundingBlock'}
                         | {__typename: 'EventBlock'}
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
@@ -5875,6 +5934,13 @@ export const BlockWithoutTeaser = gql`
       type
       poll {
         ...FullPoll
+      }
+    }
+    ... on CrowdfundingBlock {
+      blockStyle
+      type
+      crowdfunding {
+        id
       }
     }
     ... on ListicleBlock {
@@ -6279,6 +6345,7 @@ const result: PossibleTypesResultData = {
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
+      'CrowdfundingBlock',
       'EventBlock',
       'FacebookPostBlock',
       'FacebookVideoBlock',
@@ -6309,6 +6376,7 @@ const result: PossibleTypesResultData = {
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
+      'CrowdfundingBlock',
       'EventBlock',
       'FacebookPostBlock',
       'FacebookVideoBlock',

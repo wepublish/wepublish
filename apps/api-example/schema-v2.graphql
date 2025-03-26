@@ -236,11 +236,12 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
   comment: CommentBlockInput
+  crowdfunding: CrowdfundingBlockInput
   embed: IFrameBlockInput
   event: EventBlockInput
   facebookPost: FacebookPostBlockInput
@@ -278,6 +279,7 @@ type BlockStyle {
 enum BlockType {
   BildwurfAd
   Comment
+  Crowdfunding
   Embed
   Event
   FacebookPost
@@ -426,6 +428,20 @@ type Crowdfunding {
   name: String!
 }
 
+type CrowdfundingBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  crowdfunding: Crowdfunding
+  crowdfundingId: String
+  type: BlockType!
+}
+
+input CrowdfundingBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  crowdfundingId: String
+}
+
 type CrowdfundingGoal {
   amount: Float!
   createdAt: DateTime!
@@ -507,6 +523,7 @@ type DeletePollVotesResult {
 
 enum EditorBlockType {
   Comment
+  Crowdfunding
   Embed
   Event
   HTML
