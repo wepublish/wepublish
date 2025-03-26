@@ -9,7 +9,7 @@ import {RowDataType} from 'rsuite-table'
 
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PollStateIndication} from '../atoms/poll/pollStateIndication'
-import {CrowdfundingBlockValue} from '../blocks/types'
+import {PollBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 export function PollOpensAtView({poll}: {poll: Poll}) {
@@ -54,9 +54,9 @@ const onErrorToast = (error: ApolloError) => {
 }
 
 export type SelectPollPanelProps = {
-  selectedPoll: CrowdfundingBlockValue['poll'] | null | undefined
+  selectedPoll: PollBlockValue['poll'] | null | undefined
   onClose(): void
-  onSelect(poll: CrowdfundingBlockValue['poll'] | null | undefined): void
+  onSelect(poll: PollBlockValue['poll'] | null | undefined): void
 }
 
 export function SelectPollPanel({selectedPoll, onClose, onSelect}: SelectPollPanelProps) {
