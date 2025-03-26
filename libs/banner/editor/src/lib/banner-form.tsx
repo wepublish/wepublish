@@ -5,7 +5,8 @@ import {
   PageWithoutBlocksFragment,
   UpdateBannerInput,
   usePageListQuery,
-  LoginStatus
+  LoginStatus,
+  getApiClientV2
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -35,7 +36,9 @@ export const BannerForm = (props: BannerFormProps) => {
     props.onChange({...props.banner, [name]: value})
   }
 
+  const client = getApiClientV2()
   const {data: pageData} = usePageListQuery({
+    client,
     variables: {take: 50},
     fetchPolicy: 'cache-and-network'
   })
