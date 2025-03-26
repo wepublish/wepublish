@@ -23,7 +23,7 @@ export const RichTextBlock = ({className, richText}: BuilderRichTextBlockProps) 
     <RichTextBlockWrapper className={className}>
       <Slate
         editor={editor}
-        value={richText ?? defaultValue}
+        initialValue={richText ?? defaultValue}
         onChange={newValue => {
           // readonly
         }}>

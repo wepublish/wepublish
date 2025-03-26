@@ -97,7 +97,7 @@ export class EventService {
       },
       data: {
         ...input,
-        description: description as Prisma.InputJsonValue[],
+        description: description as any[],
         tags: tagIds
           ? {
               connectOrCreate: tagIds.map(tagId => ({
@@ -130,7 +130,7 @@ export class EventService {
     return this.prisma.event.create({
       data: {
         ...input,
-        description: description as Prisma.InputJsonValue[],
+        description: description as any[],
         tags: tagIds?.length
           ? {
               createMany: {
