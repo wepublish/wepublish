@@ -94,7 +94,7 @@ const TableCellNodeFieldsArr: string[] = [
   ...Object.values(TableCellNodeFields)
 ]
 
-const BlockFormatArr: string[] = Object.values(BlockFormat)
+const BlockFormatArr: string[] = [...Object.values(BlockFormat), ...Object.values(InlineFormat)]
 
 export function parseRichTextNode(value: unknown, path: string[] = []): RichTextNode {
   if (!is(Object, value)) {
