@@ -56,11 +56,6 @@ export const CreateCrowdfundingForm = () => {
     return goalCleaned
   }
 
-  const removeTypename = (page: any) => {
-    const {__typename, ...pageCleaned} = page
-    return pageCleaned
-  }
-
   const handleAddGoal = (goal: CreateCrowdfundingGoalInput) => {
     setCrowdfunding({
       ...crowdfunding,
