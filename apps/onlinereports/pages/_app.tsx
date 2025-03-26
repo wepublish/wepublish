@@ -1,20 +1,11 @@
 import {EmotionCache} from '@emotion/cache'
-import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
-import {
-  authLink,
-  NextWepublishLink,
-  RoutedAdminBar,
-  SessionProvider
-} from '@wepublish/utils/website'
 import {previewLink} from '@wepublish/website/admin'
 import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
-import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
+import deTranlations from '@wepublish/website/translations/de.json'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
@@ -26,13 +17,11 @@ import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
-
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
 import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
-
 import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
 import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
@@ -55,6 +44,15 @@ import {
 } from '@wepublish/block-content/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {ContentWrapperStyled} from '@wepublish/content/website'
+import styled from '@emotion/styled'
+import {
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 
 setDefaultOptions({
   locale: de
