@@ -40,6 +40,7 @@ export const SliderTitle = styled('div')`
 
 export const SliderBallContainer = styled('div')`
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(1)};
 `
