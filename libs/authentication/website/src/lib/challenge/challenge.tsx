@@ -1,9 +1,9 @@
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {CaptchaType, Challenge as ChallengeType} from '@wepublish/website/api'
 import styled from '@emotion/styled'
-import {forwardRef, useEffect} from 'react'
+import {forwardRef} from 'react'
 import {TextFieldProps} from '@wepublish/ui'
-import Turnstile, {useTurnstile} from 'react-turnstile'
+import Turnstile from 'react-turnstile'
 
 export type BuilderChallengeProps = {
   challenge: ChallengeType
@@ -12,16 +12,9 @@ export type BuilderChallengeProps = {
 
 export const CfTurnstileChallenge = forwardRef<HTMLInputElement, BuilderChallengeProps>(
   ({challenge, ...inputProps}: BuilderChallengeProps, ref) => {
-    const turnstile = useTurnstile()
-
-    useEffect(() => {
-      if (turnstile?.isExpired()) {
-        turnstile?.reset()
-      }
-    }, [challenge, turnstile])
-
     return (
       <Turnstile
+        refreshExpired="auto"
         sitekey={challenge.challengeID ?? ''}
         theme="light"
         language={'de'}
