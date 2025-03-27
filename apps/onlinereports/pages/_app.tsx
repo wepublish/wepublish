@@ -18,8 +18,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {OnlineReportsNavAppBar} from '../src/components/onlinereports-nav-app-bar'
-import {OnlineReportsNavPaper} from '../src/components/onlinereports-nav-paper'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
@@ -53,6 +51,7 @@ import {
 } from '@wepublish/utils/website'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
 
 setDefaultOptions({
   locale: de
@@ -182,8 +181,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Script={Script}
             AuthorChip={OnlineReportsAuthorChip}
             ArticleAuthors={OnlineReportsArticleAuthors}
-            NavPaper={OnlineReportsNavPaper}
-            NavAppBar={OnlineReportsNavAppBar}
+            Navbar={OnlineReportsNavbar}
             elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: OnlineReportsTeaser,

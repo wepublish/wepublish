@@ -3,8 +3,9 @@ import {TextToIcon} from '@wepublish/ui'
 import {MdClose, MdSearch} from 'react-icons/md'
 import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
-import {BuilderNavPaperProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import styled from '@emotion/styled'
+import {BuilderNavPaperProps} from './nav-paper'
 
 const NavPaperOverlay = styled('div')`
   position: absolute;

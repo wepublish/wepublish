@@ -22,13 +22,13 @@ import {
   Blocks,
   BreakBlock,
   CommentBlock,
-  IFrameBlock,
   ContextBox,
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
   FocusTeaser,
   HtmlBlock,
+  IFrameBlock,
   ImageBlock,
   ImageGalleryBlock,
   ImageSlider,
@@ -75,7 +75,7 @@ import {
   SubscriptionListItem,
   TransactionFee
 } from '@wepublish/membership/website'
-import {Footer, NavAppBar, Navbar, NavPaper} from '@wepublish/navigation/website'
+import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
@@ -164,8 +164,6 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Banner={PageBanner}
           PeerInformation={PeerInformation}
           Navbar={Navbar}
-          NavAppBar={NavAppBar}
-          NavPaper={NavPaper}
           Footer={Footer}
           Event={Event}
           EventSEO={EventSEO}

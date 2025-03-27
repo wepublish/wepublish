@@ -1,9 +1,21 @@
 import styled from '@emotion/styled'
 import {css, Theme, useTheme} from '@mui/material'
-import {BuilderNavPaperProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useUser} from '@wepublish/authentication/website'
-import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon} from '@wepublish/ui'
+import {ButtonProps, TextToIcon} from '@wepublish/ui'
+import {FullNavigationFragment} from '@wepublish/website/api'
+import {PropsWithChildren} from 'react'
+import {navigationLinkToUrl} from '@wepublish/navigation/website'
+
+export type BuilderNavPaperProps = PropsWithChildren<{
+  loginBtn?: ButtonProps | null
+  profileBtn?: ButtonProps | null
+  subscribeBtn?: ButtonProps | null
+  main: FullNavigationFragment | null | undefined
+  categories: FullNavigationFragment[][]
+  iconItems: FullNavigationFragment | null | undefined
+  closeMenu: () => void
+}>
 
 export const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};

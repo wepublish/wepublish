@@ -1,16 +1,15 @@
 import styled from '@emotion/styled'
 import {AppBar, Box, css} from '@mui/material'
 import {Structure} from '../structure'
-import {BuilderNavAppBarProps} from '@wepublish/website/builder'
+import {NavbarLinks, NavbarMain} from '@wepublish/navigation/website'
 import {
+  BuilderNavAppBarProps,
   HomeLogoButton,
   LoggedInButtons,
   LoggedOutButtons,
   MenuItems,
-  NavbarLinks,
-  NavbarMain,
   NavbarOpenCloseButton
-} from '@wepublish/navigation/website'
+} from './nav-app-bar'
 
 export const OnlineReportsNavAppBar = ({
   logo,
