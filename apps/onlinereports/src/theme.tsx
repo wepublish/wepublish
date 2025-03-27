@@ -45,7 +45,7 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
       fontSize: '32px',
       [breakpoints.up('md')]: {
-        fontSize: '40px'
+        fontSize: '44px'
       },
       fontWeight: 700
     },
@@ -66,7 +66,12 @@ const theme = createTheme(WePTheme, {
       fontWeight: 700
     },
     h4: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '24px',
+      [breakpoints.up('md')]: {
+        fontSize: '24px'
+      },
+      fontWeight: 700
     },
     h5: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
@@ -76,7 +81,8 @@ const theme = createTheme(WePTheme, {
     },
     body1: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
-      fontWeight: 300
+      fontWeight: 300,
+      fontSize: 18
     },
     body2: {
       fontWeight: 300,

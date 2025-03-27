@@ -34,8 +34,8 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
       'image image pretitle'
       'image image title'
       'image image lead'
-      'image image tags'
       'image image authors'
+      'image image tags'
       'image image .';
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 20px auto auto auto auto auto;
@@ -50,7 +50,12 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
   }
 
   ${TeaserTitle} {
-    ${({theme}) => theme.typography.h1};
+    font-size: ${({theme}) => theme.typography.h1.fontSize};
+    font-family: ${({theme}) => theme.typography.h1.fontFamily};
+    font-weight: ${({theme}) => theme.typography.h1.fontWeight};
+    ${({theme}) => theme.breakpoints.up('md')} {
+      font-size: 44px;
+    }
   }
 
   ${TeaserLead} {

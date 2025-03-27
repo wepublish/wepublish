@@ -1,9 +1,10 @@
-import {css, GlobalStyles, styled, Theme} from '@mui/material'
+import {css, GlobalStyles, Theme} from '@mui/material'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps} from '@wepublish/website/builder'
 import {useToggle} from '@wepublish/ui'
 import {OnlineReportsNavAppBar} from './onlinereports-nav-app-bar'
 import {OnlineReportsNavPaper} from './onlinereports-nav-paper'
+import styled from '@emotion/styled'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

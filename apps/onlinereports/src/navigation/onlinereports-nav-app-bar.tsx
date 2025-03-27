@@ -75,19 +75,19 @@ export const NavStructure = styled('div')`
   margin-right: auto;
 
   padding: ${({theme}) => theme.spacing(3)};
-  padding-top: ${({theme}) => theme.spacing(0.5)};
-  padding-bottom: ${({theme}) => theme.spacing(0.5)};
+  padding-top: ${({theme}) => theme.spacing(0)};
+  padding-bottom: ${({theme}) => theme.spacing(0)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      min-height: 120px;
+      //min-height: 120px;
     }
 
     ${theme.breakpoints.up('md')} {
       padding-left: ${theme.spacing(5)};
       padding-right: ${theme.spacing(5)};
-      padding-top: ${theme.spacing(2)};
-      padding-bottom: ${theme.spacing(1)};
+      padding-top: ${theme.spacing(0)};
+      padding-bottom: ${theme.spacing(0)};
     }
   `}
 `
@@ -97,7 +97,14 @@ export const NavbarInnerWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
   grid-auto-flow: column;
   justify-items: center;
-  min-height: ${({theme}) => theme.spacing(10)};
+  ${({theme}) => css`
+    min-height: 92px;
+    max-height: 92px;
+    ${theme.breakpoints.up('md')} {
+      min-height: 112px;
+      max-height: 112px;
+    }
+  `}
   align-items: center;
   grid-template-columns: auto 1fr auto;
 `

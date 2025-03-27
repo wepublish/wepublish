@@ -13,7 +13,7 @@ export const AuthorChipWrapper = styled('div')`
 
 export const AuthorChipImageWrapper = styled('div')`
   display: grid;
-  width: 60px;
+  width: 50px;
 `
 
 export const AuthorChipContent = styled('div')`

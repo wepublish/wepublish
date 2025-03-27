@@ -38,6 +38,9 @@ import {
   ImageBlockWrapper,
   RichTextBlockWrapper,
   SliderWrapper,
+  TitleBlock,
+  TitleBlockLead,
+  TitleBlockTitle,
   TitleBlockWrapper
 } from '@wepublish/block-content/website'
 import {WebsiteProvider} from '@wepublish/website'
@@ -52,6 +55,7 @@ import {
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
+import {OnlineReportsArticle} from '../src/components/article'
 
 setDefaultOptions({
   locale: de
@@ -81,21 +85,31 @@ const Spacer = styled(Structure)`
   }
 `
 
-const MainContent = styled('main')`
+const MainContainer = styled('div')`
   grid-column: 2/3;
+  display: grid;
+  row-gap: ${({theme}) => theme.spacing(2.5)};
+  margin-bottom: ${({theme}) => theme.spacing(2.5)};
 
+  ${({theme}) => theme.breakpoints.up('md')} {
+    row-gap: ${({theme}) => theme.spacing(4)};
+    margin-bottom: ${({theme}) => theme.spacing(4)};
+  }
+`
+
+const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
 
-  row-gap: ${({theme}) => theme.spacing(2.5)};
+  row-gap: ${({theme}) => theme.spacing(10)};
   padding-right: ${({theme}) => theme.spacing(2.5)};
 
   ${ContentWrapperStyled} {
-    ${theme.breakpoints.down('md')} {
+    ${({theme}) => theme.breakpoints.down('md')} {
       row-gap: ${({theme}) => theme.spacing(7.5)};
     }
 
-    ${theme.breakpoints.up('md')} {
+    ${({theme}) => theme.breakpoints.up('md')} {
       row-gap: ${({theme}) => theme.spacing(4)};
 
       &
@@ -113,6 +127,7 @@ const MainContent = styled('main')`
       }
     }
   }
+
   ${theme.breakpoints.down('lg')} {
     padding-left: ${({theme}) => theme.spacing(2.5)};
     padding-right: ${({theme}) => theme.spacing(2.5)};
@@ -147,6 +162,23 @@ const Footer = styled(FooterContainer)`
   }
 `
 
+const OnlineReportsTitle = styled(TitleBlock)`
+  ${TitleBlockTitle} {
+    margin-top: ${({theme}) => theme.spacing(4)};
+    margin-bottom: -${({theme}) => theme.spacing(2)};
+    font-size: ${({theme}) => theme.typography.h1.fontSize};
+    font-family: ${({theme}) => theme.typography.h1.fontFamily};
+    font-weight: ${({theme}) => theme.typography.h1.fontWeight};
+    ${({theme}) => theme.breakpoints.up('md')} {
+      font-size: 44px;
+    }
+  }
+
+  ${TitleBlockLead} {
+    font-size: -${({theme}) => theme.typography.body1.fontSize};
+  }
+`
+
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -155,7 +187,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
 const AdvertisementPlacer = styled('div')`
   padding-left: ${({theme}) => theme.spacing(2.5)};
   position: sticky;
-  top: 140px;
+  top: 112px;
   margin-bottom: ${({theme}) => theme.spacing(2.5)};
   grid-column: 3/4;
   overflow: hidden;
@@ -183,12 +215,14 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             ArticleAuthors={OnlineReportsArticleAuthors}
             Navbar={OnlineReportsNavbar}
             elements={{Link: NextWepublishLink}}
+            Article={OnlineReportsArticle}
             blocks={{
               Teaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
               Quote: OnlineReportsQuoteBlock,
-              Subscribe: Mitmachen
+              Subscribe: Mitmachen,
+              Title: OnlineReportsTitle
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
@@ -224,10 +258,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   headerSlug="header"
                   iconSlug="icons"
                 />
-                <MainContent>
+                <MainContainer>
                   <Advertisement type={'whiteboard'} />
-                  <Component {...pageProps} />
-                </MainContent>
+                  <MainContent>
+                    <Component {...pageProps} />
+                  </MainContent>
+                </MainContainer>
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>

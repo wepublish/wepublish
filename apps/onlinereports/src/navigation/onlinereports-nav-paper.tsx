@@ -1,11 +1,16 @@
-import {css, IconButton} from '@mui/material'
+import {css, IconButton, useTheme} from '@mui/material'
 import {TextToIcon} from '@wepublish/ui'
 import {MdClose, MdSearch} from 'react-icons/md'
 import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import styled from '@emotion/styled'
-import {BuilderNavPaperProps} from './nav-paper'
+import {
+  BuilderNavPaperProps,
+  NavPaperCategoryLinks,
+  navPaperLinkStyling,
+  NavPaperName
+} from './nav-paper'
 
 const NavPaperOverlay = styled('div')`
   position: absolute;
@@ -73,6 +78,7 @@ export const OnlineReportsNavPaper = ({
   const {
     elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
+  const theme = useTheme()
 
   return (
     <NavPaperOverlay>
@@ -169,28 +175,29 @@ export const OnlineReportsNavPaper = ({
                   {categoryArray.map(nav => (
                     <NavPaperCategory key={nav.id}>
                       <Item onClick={closeMenu}>{nav.name}</Item>
-                      {/*<NavPaperName>{nav.name}</NavPaperName>*/}
-                      {/*<H6 component="span" css={{fontWeight: '700'}}>*/}
-                      {/*  {nav.name}*/}
-                      {/*</H6>*/}
-                      {/*<NavPaperCategoryLinks>*/}
-                      {/*  {nav.links?.map((link, index) => {*/}
-                      {/*    const url = navigationLinkToUrl(link)*/}
-                      {/*    return (*/}
-                      {/*      <Link*/}
-                      {/*        href={url}*/}
-                      {/*        key={index}*/}
-                      {/*        color="inherit"*/}
-                      {/*        underline="none"*/}
-                      {/*        css={navPaperLinkStyling(theme)}*/}
-                      {/*        onClick={closeMenu}>*/}
-                      {/*        <H6 component="span" css={{fontWeight: '700'}}>*/}
-                      {/*          {link.label}*/}
-                      {/*        </H6>*/}
-                      {/*      </Link>*/}
-                      {/*    )*/}
-                      {/*  })}*/}
-                      {/*</NavPaperCategoryLinks>*/}
+
+                      <NavPaperName>{nav.name}</NavPaperName>
+                      <H6 component="span" css={{fontWeight: '700'}}>
+                        {nav.name}
+                      </H6>
+                      <NavPaperCategoryLinks>
+                        {nav.links?.map((link, index) => {
+                          const url = navigationLinkToUrl(link)
+                          return (
+                            <Link
+                              href={url}
+                              key={index}
+                              color="inherit"
+                              underline="none"
+                              css={navPaperLinkStyling(theme)}
+                              onClick={closeMenu}>
+                              <H6 component="span" css={{fontWeight: '700'}}>
+                                {link.label}
+                              </H6>
+                            </Link>
+                          )
+                        })}
+                      </NavPaperCategoryLinks>
                     </NavPaperCategory>
                   ))}
                 </>

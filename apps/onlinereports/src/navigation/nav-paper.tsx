@@ -78,7 +78,7 @@ export const NavPaperLinksGroup = styled('div')`
   `}
 `
 
-const navPaperLinkStyling = (theme: Theme) => css`
+export const navPaperLinkStyling = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
