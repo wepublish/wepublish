@@ -1,16 +1,12 @@
 import {css, IconButton, useTheme} from '@mui/material'
-import {TextToIcon} from '@wepublish/ui'
-import {MdClose, MdSearch} from 'react-icons/md'
+import {TextToIcon, useToggle} from '@wepublish/ui'
+import {MdClose, MdExpandLess, MdExpandMore, MdSearch} from 'react-icons/md'
 import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import styled from '@emotion/styled'
-import {
-  BuilderNavPaperProps,
-  NavPaperCategoryLinks,
-  navPaperLinkStyling,
-  NavPaperName
-} from './nav-paper'
+import {BuilderNavPaperProps, navPaperLinkStyling} from './nav-paper'
+import {FullNavigationFragment} from '@wepublish/website/api'
 
 const NavPaperOverlay = styled('div')`
   position: absolute;
@@ -65,6 +61,45 @@ export const NavPaperChildrenWrapper = styled(NavStructure)`
   `}
 `
 
+type OnlineReportsNavCategoryProps = {
+  navigation: FullNavigationFragment
+  closeMenu: () => void
+}
+
+export const NavigationCategory = ({navigation: nav, closeMenu}: OnlineReportsNavCategoryProps) => {
+  const {
+    elements: {Link, H6}
+  } = useWebsiteBuilder()
+  const theme = useTheme()
+  const subItemsToggle = useToggle()
+
+  return (
+    <NavigationCategoryWrapper>
+      <NavigationTopItem onClick={subItemsToggle.toggle}>
+        {nav.name} {subItemsToggle.value ? <MdExpandLess /> : <MdExpandMore />}{' '}
+      </NavigationTopItem>
+      {subItemsToggle.value && (
+        <NavigationCategorySubItems>
+          {nav.links?.map((link, index) => {
+            const url = navigationLinkToUrl(link)
+            return (
+              <Link
+                href={url}
+                key={index}
+                color="inherit"
+                underline="none"
+                css={navPaperLinkStyling(theme)}
+                onClick={closeMenu}>
+                <NavigationSubItem>{link.label}</NavigationSubItem>
+              </Link>
+            )
+          })}
+        </NavigationCategorySubItems>
+      )}
+    </NavigationCategoryWrapper>
+  )
+}
+
 export const OnlineReportsNavPaper = ({
   main,
   categories,
@@ -101,108 +136,23 @@ export const OnlineReportsNavPaper = ({
               </IconButton>
             </NavbarActions>
           </NavbarInnerWrapper>
-          {/*{children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}*/}
 
-          {/*<NavPaperMainLinks>*/}
-          {/*  {main?.links.map((link, index) => {*/}
-          {/*    const url = navigationLinkToUrl(link)*/}
-
-          {/*    return (*/}
-          {/*      <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>*/}
-          {/*        <H4 component="span" css={{fontWeight: '700'}}>*/}
-          {/*          {link.label}*/}
-          {/*        </H4>*/}
-          {/*      </Link>*/}
-          {/*    )*/}
-          {/*  })}*/}
-
-          {/*  <NavPaperActions>*/}
-          {/*    {!hasUser && loginUrl && (*/}
-          {/*      <Button*/}
-          {/*        LinkComponent={Link}*/}
-          {/*        href={loginUrl}*/}
-          {/*        variant="contained"*/}
-          {/*        color="secondary"*/}
-          {/*        onClick={closeMenu}>*/}
-          {/*        Login*/}
-          {/*      </Button>*/}
-          {/*    )}*/}
-
-          {/*    {hasUser && (*/}
-          {/*      <>*/}
-          {/*        {profileUrl && (*/}
-          {/*          <Button*/}
-          {/*            LinkComponent={Link}*/}
-          {/*            href={profileUrl}*/}
-          {/*            variant="contained"*/}
-          {/*            color="secondary"*/}
-          {/*            onClick={closeMenu}>*/}
-          {/*            Mein Konto*/}
-          {/*          </Button>*/}
-          {/*        )}*/}
-
-          {/*        {subscriptionsUrl && (*/}
-          {/*          <Button*/}
-          {/*            LinkComponent={Link}*/}
-          {/*            href={subscriptionsUrl}*/}
-          {/*            variant="contained"*/}
-          {/*            color="accent"*/}
-          {/*            onClick={closeMenu}>*/}
-          {/*            Meine Abos*/}
-          {/*          </Button>*/}
-          {/*        )}*/}
-
-          {/*        {loginUrl && (*/}
-          {/*          <Button*/}
-          {/*            onClick={() => {*/}
-          {/*              logout()*/}
-          {/*              closeMenu()*/}
-          {/*            }}*/}
-          {/*            variant="outlined"*/}
-          {/*            color="secondary">*/}
-          {/*            Logout*/}
-          {/*          </Button>*/}
-          {/*        )}*/}
-          {/*      </>*/}
-          {/*    )}*/}
-          {/*  </NavPaperActions>*/}
-          {/*</NavPaperMainLinks>*/}
-
-          <ItemsWrapper>
+          <NavigationWrapper>
             {!!categories.length &&
-              categories.map((categoryArray, arrayIndex) => (
-                <>
-                  {categoryArray.map(nav => (
-                    <NavPaperCategory key={nav.id}>
-                      <Item onClick={closeMenu}>{nav.name}</Item>
-
-                      <NavPaperName>{nav.name}</NavPaperName>
-                      <H6 component="span" css={{fontWeight: '700'}}>
-                        {nav.name}
-                      </H6>
-                      <NavPaperCategoryLinks>
-                        {nav.links?.map((link, index) => {
-                          const url = navigationLinkToUrl(link)
-                          return (
-                            <Link
-                              href={url}
-                              key={index}
-                              color="inherit"
-                              underline="none"
-                              css={navPaperLinkStyling(theme)}
-                              onClick={closeMenu}>
-                              <H6 component="span" css={{fontWeight: '700'}}>
-                                {link.label}
-                              </H6>
-                            </Link>
-                          )
-                        })}
-                      </NavPaperCategoryLinks>
-                    </NavPaperCategory>
-                  ))}
-                </>
-              ))}
-          </ItemsWrapper>
+              categories
+                .flat()
+                .map(nav => (
+                  <NavigationCategory key={nav.id} navigation={nav} closeMenu={closeMenu} />
+                ))}
+            {main?.links.map((link, index) => {
+              const url = navigationLinkToUrl(link)
+              return (
+                <Link key={index} href={url} color="inherit">
+                  <NavigationTopItem onClick={closeMenu}>{link.label}</NavigationTopItem>
+                </Link>
+              )
+            })}
+          </NavigationWrapper>
 
           <IconsWrapper>
             {iconItems?.links.map(link => {
@@ -235,11 +185,43 @@ const SemiTransparentCover = styled(Cover)`
   grid-area: semiTransparentCover;
 `
 
-const Item = styled('span')`
-  font-weight: 500;
-  font-size: 24px;
-  //line-height: 1.2em;
+const NavigationWrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({theme}) => theme.spacing(2)};
 `
 
-const ItemsWrapper = styled('div')``
+const NavigationCategoryWrapper = styled('span')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+const NavigationTopItem = styled('span')`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.2em;
+  align-content: end;
+
+  cursor: pointer;
+  user-select: none;
+`
+
+const NavigationCategorySubItems = styled('span')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({theme}) => theme.spacing(1.5)};
+  padding-top: ${({theme}) => theme.spacing(1)};
+  padding-bottom: ${({theme}) => theme.spacing(2)};
+`
+
+const NavigationSubItem = styled('span')`
+  display: block;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 1.2em;
+`
 const IconsWrapper = styled('div')``
