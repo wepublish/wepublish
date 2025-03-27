@@ -1,19 +1,14 @@
 import styled from '@emotion/styled'
 import {Box} from '@mui/material'
 
-import {
-  alignmentForTeaserBlock,
-  hasBlockStyle,
-  isFilledTeaser,
-  isTeaserListBlock
-} from '@wepublish/block-content/website'
+import {hasBlockStyle, isFilledTeaser, isTeaserListBlock} from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
 import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
 import {Advertisement} from '../components/advertisement'
 import {BlueBox} from '../components/blue-box'
-import {GelesenUndGedachtTeaser} from '../custom-teasers/gelesen-und-gedacht'
+import {GelesenUndGedachtTeaserContent} from '../custom-teasers/gelesen-und-gedacht'
 
 export const isGelesenUndGedacthTeasers = (
   block: BlockContent
@@ -41,16 +36,10 @@ export const GelesenUndGedachtBlockStyle = ({
       <BlueBox>
         <TeaserList>
           {filledTeasers.map((teaser, index) => (
-            <GelesenUndGedachtTeaser
-              key={index}
-              teaser={teaser}
-              numColumns={numColumns}
-              alignment={alignmentForTeaserBlock(index, numColumns)}
-              blockStyle={blockStyle}
-            />
+            <GelesenUndGedachtTeaserContent key={index} teaser={teaser} />
           ))}
         </TeaserList>
-        <Link href={'/a/tag/gelesen-und-gedacht'}>
+        <Link href={'/a/tag/Gelesen%20&%20gedacht'}>
           <b>Zum Archiv {'->'}</b>
         </Link>
       </BlueBox>

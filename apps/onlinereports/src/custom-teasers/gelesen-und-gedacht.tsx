@@ -1,10 +1,32 @@
 import styled from '@emotion/styled'
 import {Box, Typography} from '@mui/material'
-import {extractTeaserData} from '@wepublish/block-content/website'
+import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
 import {BuilderTeaserProps} from '@wepublish/website/builder'
 import {useMemo} from 'react'
+import {allPass} from 'ramda'
+import {ArticleTeaser} from '@wepublish/website/api'
+import {BlueBox} from '../components/blue-box'
 
-const GelesenUndGedachtUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
+export const isGelesenUndGedachtTeaser = allPass([
+  ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'ArticleTeaser',
+  ({teaser}: BuilderTeaserProps) =>
+    !!(teaser as ArticleTeaser).article?.tags.map(t => t.tag).includes('Gelesen & gedacht')
+])
+
+export const GelesenUndGedachtTeaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
+  return (
+    <TeaserWrapper {...alignment}>
+      <BlueBox>
+        <GelesenUndGedachtTeaserContent teaser={teaser} className={className} />
+      </BlueBox>
+    </TeaserWrapper>
+  )
+}
+
+const GelesenUndGedachtUnstyled = ({
+  teaser,
+  className
+}: Pick<BuilderTeaserProps, 'className' | 'teaser'>) => {
   const {title, lead} = extractTeaserData(teaser)
   const [gelesen, source, gedacht] = useMemo(() => {
     return [title, ...(lead?.split(/\n+/, 2) ?? [])]
@@ -24,7 +46,7 @@ const GelesenUndGedachtUnstyled = ({teaser, alignment, className}: BuilderTeaser
   )
 }
 
-export const GelesenUndGedachtTeaser = styled(GelesenUndGedachtUnstyled)`
+export const GelesenUndGedachtTeaserContent = styled(GelesenUndGedachtUnstyled)`
   display: flex;
   flex-direction: column;
   gap: ${({theme}) => theme.spacing(2)};
