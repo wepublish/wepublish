@@ -31,7 +31,7 @@ import {
   OnlineReportsQuoteBlock,
   OnlineReportsQuoteBlockWrapper
 } from '../src/components/quote-block'
-import {ArticleInfoWrapper} from '@wepublish/article/website'
+import {ArticleBottomMeta, ArticleTopMeta, OnlineReportsArticle} from '../src/components/article'
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
@@ -55,7 +55,6 @@ import {
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
-import {OnlineReportsArticle} from '../src/components/article'
 
 setDefaultOptions({
   locale: de
@@ -115,7 +114,8 @@ const MainContent = styled('main')`
       &
         > :is(
           ${RichTextBlockWrapper},
-            ${ArticleInfoWrapper},
+            ${ArticleTopMeta},
+            ${ArticleBottomMeta},
             ${TitleBlockWrapper},
             ${OnlineReportsQuoteBlockWrapper}
         ) {

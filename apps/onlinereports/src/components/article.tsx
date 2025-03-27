@@ -13,6 +13,14 @@ export const ArticleWrapper = styled(ContentWrapper)`
     }
   }
 `
+export const ArticleTopMeta = styled('aside')`
+  grid-row-start: 2;
+`
+export const ArticleBottomMeta = styled('aside')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({theme}) => theme.spacing(5)};
+`
 
 export function OnlineReportsArticle({
   className,
@@ -25,10 +33,18 @@ export function OnlineReportsArticle({
     ArticleSEO,
     ArticleAuthors,
     ArticleMeta,
-    blocks: {Blocks}
+    blocks: {Blocks},
+    elements: {H3, Button}
   } = useWebsiteBuilder()
 
   const article = data?.article as ArticleType
+
+  const scrollToComments = () => {
+    const el = document.getElementById('comments')
+    if (el) {
+      el.scrollIntoView({behavior: 'smooth'})
+    }
+  }
 
   return (
     <ArticleWrapper className={className}>
@@ -36,11 +52,15 @@ export function OnlineReportsArticle({
 
       <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
 
-      {article && <ArticleAuthors article={article} />}
+      <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
+
+      <ArticleBottomMeta>
+        {article && <ArticleMeta article={article} />}
+        <H3>Ihre Meinung zu diesem Artikel</H3>
+        <Button onClick={scrollToComments}>Kommentare</Button>
+      </ArticleBottomMeta>
 
       {children}
-
-      {article && <ArticleMeta article={article} />}
 
       <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
     </ArticleWrapper>
