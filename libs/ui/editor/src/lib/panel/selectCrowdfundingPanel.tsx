@@ -1,15 +1,12 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Message, Table, toaster} from 'rsuite'
+import {Button, Drawer, IconButton, Message, Table, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 import {CrowdfundingBlockValue} from '../blocks'
-import {
-  Crowdfunding,
-  useCrowdfundingsLazyQuery,
-  useCrowdfundingsQuery
-} from '@wepublish/editor/api-v2'
+import {Crowdfunding, getApiClientV2, useCrowdfundingsQuery} from '@wepublish/editor/api-v2'
+import {IconButtonTooltip} from '../atoms'
+import {MdAddCircle} from 'react-icons/md'
 
 const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
@@ -37,10 +34,12 @@ export function SelectCrowdfundingPanel({
   onSelect
 }: SelectCrowdfundingPanelProps) {
   const {t} = useTranslation()
+  const client = getApiClientV2()
 
   const {data, loading} = useCrowdfundingsQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    client
   })
 
   return (
@@ -64,14 +63,29 @@ export function SelectCrowdfundingPanel({
           rowClassName={rowData =>
             rowData?.id === selectedCrowdfunding?.id ? 'highlighted-row' : ''
           }>
-          <Table.Column resizable>
-            <Table.HeaderCell>{t('crowdfundingList.id')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: RowDataType<Crowdfunding>) => rowData.id}</Table.Cell>
-          </Table.Column>
-
           <Table.Column resizable width={200}>
             <Table.HeaderCell>{t('crowdfundingList.name')}</Table.HeaderCell>
             <Table.Cell>{(rowData: RowDataType<Crowdfunding>) => rowData.name}</Table.Cell>
+          </Table.Column>
+
+          <Table.Column width={125}>
+            <Table.HeaderCell align="center">{t('blocks.crowdfunding.select')}</Table.HeaderCell>
+            <Table.Cell align="center">
+              {(rowData: RowDataType<Crowdfunding>) => (
+                <IconButtonTooltip caption={t('blocks.crowdfunding.select')}>
+                  <IconButton
+                    icon={<MdAddCircle />}
+                    appearance="primary"
+                    circle
+                    size="xs"
+                    onClick={() => {
+                      onSelect(rowData as Crowdfunding)
+                      onClose()
+                    }}
+                  />
+                </IconButtonTooltip>
+              )}
+            </Table.Cell>
           </Table.Column>
         </Table>
       </DrawerBody>
