@@ -81,6 +81,10 @@ SET "articleId" = a.id
 FROM "articles" a
 WHERE ar.id = a."draftId" OR ar.id = a."pendingId" OR ar.id = a."publishedId";
 
+-- Some older medias have revisions without articles.
+-- We are cleaning that up here as the NOT NULL condition will fail.
+DELETE FROM "articles.revisions" WHERE "articleId" IS NULL;
+
 -- AlterTable
 ALTER TABLE "articles.revisions" ALTER COLUMN "articleId" SET NOT NULL;
 
@@ -186,6 +190,10 @@ UPDATE "pages.revisions" pr
 SET "pageId" = p.id
 FROM "pages" p
 WHERE pr.id = p."draftId" OR pr.id = p."pendingId" OR pr.id = p."publishedId";
+
+-- Some older medias have revisions without pages.
+-- We are cleaning that up here as the NOT NULL condition will fail.
+DELETE FROM "pages.revisions" WHERE "pageId" IS NULL;
 
 -- AlterTable
 ALTER TABLE "pages.revisions" ALTER COLUMN "pageId" SET NOT NULL;

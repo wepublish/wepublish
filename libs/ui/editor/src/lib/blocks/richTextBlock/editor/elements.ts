@@ -1,19 +1,18 @@
-import {Element as SlateElement} from 'slate'
+import {BlockFormat} from '@wepublish/richtext'
+import {Element} from 'slate'
 
-import {BlockFormat} from './formats'
-
-export function emptyTextParagraph(): SlateElement {
+export function emptyTextParagraph(): Element {
   return {type: BlockFormat.Paragraph, children: [{text: ''}]}
 }
 
-export interface TableCell extends SlateElement {
+export interface TableCell extends Element {
   type: BlockFormat.TableCell
   borderColor: string
 }
 
 export const DEFAULT_BORDER_COLOR: TableCell['borderColor'] = '#000000'
 
-export function emptyCellsTable(nrows: number, ncols: number): SlateElement[] {
+export function emptyCellsTable(nrows: number, ncols: number): Element[] {
   return [
     {
       type: BlockFormat.Table,
