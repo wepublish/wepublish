@@ -117,7 +117,7 @@ export const OnlineReportsNavPaper = ({
 
   return (
     <NavPaperOverlay>
-      <SemiTransparentCover />
+      <SemiTransparentCover onClick={closeMenu} />
       {/*<NavPaperPositioner>*/}
       <NavPaperWrapper>
         <NavStructure>
@@ -189,6 +189,7 @@ const NavigationWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   gap: ${({theme}) => theme.spacing(2)};
+  align-items: start;
 `
 
 const NavigationCategoryWrapper = styled('span')`
@@ -198,7 +199,7 @@ const NavigationCategoryWrapper = styled('span')`
 `
 
 const NavigationTopItem = styled('span')`
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
   font-weight: 500;
