@@ -159,6 +159,7 @@ const Footer = styled(FooterContainer)`
 
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
+    background-color: #323232;
   }
 `
 
@@ -267,7 +268,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
-                <Footer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <Footer slug="footer" categorySlugs={[['footer-about-us']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>
