@@ -3,8 +3,7 @@ import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
-import {ArticleListWrapper} from '@wepublish/article/website'
-import {ArticleTrackingPixels} from '../../../../libs/article/website/src/lib/article-tracking-pixels'
+import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
 
 export const ArticleWrapper = styled(ContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -13,13 +12,27 @@ export const ArticleWrapper = styled(ContentWrapper)`
     }
   }
 `
+
+export const ArticlePreTitle = styled('div')`
+  margin-top: ${({theme}) => theme.spacing(4)};
+  margin-bottom: -${({theme}) => theme.spacing(7)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-bottom: -${({theme}) => theme.spacing(3.5)};
+  }
+  color: ${({theme}) => theme.palette.primary.main};
+  grid-row-start: 1;
+  font-weight: 500;
+`
+
 export const ArticleTopMeta = styled('aside')`
-  grid-row-start: 2;
+  grid-row-start: 3;
 `
 export const ArticleBottomMeta = styled('aside')`
   display: flex;
   flex-direction: column;
   gap: ${({theme}) => theme.spacing(5)};
+  align-items: start;
 `
 
 export function OnlineReportsArticle({
@@ -53,6 +66,8 @@ export function OnlineReportsArticle({
       <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
 
       <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
+
+      <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
 
       <ArticleBottomMeta>
         {article && <ArticleMeta article={article} />}

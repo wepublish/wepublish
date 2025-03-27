@@ -31,10 +31,17 @@ import {
   OnlineReportsQuoteBlock,
   OnlineReportsQuoteBlockWrapper
 } from '../src/components/quote-block'
-import {ArticleBottomMeta, ArticleTopMeta, OnlineReportsArticle} from '../src/components/article'
+import {
+  ArticleBottomMeta,
+  ArticlePreTitle,
+  ArticleTopMeta,
+  OnlineReportsArticle
+} from '../src/components/article'
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
+  HeadingWithImage,
+  HeadingWithoutImage,
   ImageBlockWrapper,
   RichTextBlockWrapper,
   SliderWrapper,
@@ -116,6 +123,7 @@ const MainContent = styled('main')`
           ${RichTextBlockWrapper},
             ${ArticleTopMeta},
             ${ArticleBottomMeta},
+            ${ArticlePreTitle},
             ${TitleBlockWrapper},
             ${OnlineReportsQuoteBlockWrapper}
         ) {
@@ -125,6 +133,13 @@ const MainContent = styled('main')`
       & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
         grid-column: 2/12;
       }
+    }
+
+    ${HeadingWithoutImage}, ${HeadingWithImage} {
+      text-transform: none;
+      font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
+      font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
+      font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
     }
   }
 
@@ -165,7 +180,6 @@ const Footer = styled(FooterContainer)`
 
 const OnlineReportsTitle = styled(TitleBlock)`
   ${TitleBlockTitle} {
-    margin-top: ${({theme}) => theme.spacing(4)};
     margin-bottom: -${({theme}) => theme.spacing(2)};
     font-size: ${({theme}) => theme.typography.h1.fontSize};
     font-family: ${({theme}) => theme.typography.h1.fontFamily};
