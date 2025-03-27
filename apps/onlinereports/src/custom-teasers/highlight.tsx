@@ -34,8 +34,8 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
       'image image pretitle'
       'image image title'
       'image image lead'
-      'image image tags'
       'image image authors'
+      'image image tags'
       'image image .';
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 20px auto auto auto auto auto;

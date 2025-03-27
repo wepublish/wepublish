@@ -6,7 +6,7 @@ export const Structure = styled('div')`
   align-items: flex-start;
   grid-template-columns: 1fr 994px minmax(auto, 320px) 1fr;
 
-  row-gap: ${({theme}) => theme.spacing(2.5)};
+  row-gap: ${({theme}) => theme.spacing(0)};
 
   ${theme.breakpoints.up('md')} {
     //column-gap: ${theme.spacing(2.5)};

@@ -38,6 +38,9 @@ import {
   ImageBlockWrapper,
   RichTextBlockWrapper,
   SliderWrapper,
+  TitleBlock,
+  TitleBlockLead,
+  TitleBlockTitle,
   TitleBlockWrapper
 } from '@wepublish/block-content/website'
 import {WebsiteProvider} from '@wepublish/website'
@@ -113,6 +116,7 @@ const MainContent = styled('main')`
       }
     }
   }
+
   ${theme.breakpoints.down('lg')} {
     padding-left: ${({theme}) => theme.spacing(2.5)};
     padding-right: ${({theme}) => theme.spacing(2.5)};
@@ -147,6 +151,18 @@ const Footer = styled(FooterContainer)`
   }
 `
 
+const OnlineReportsTitle = styled(TitleBlock)`
+  ${TitleBlockTitle} {
+    margin-top: ${({theme}) => theme.spacing(3)};
+    margin-bottom: -${({theme}) => theme.spacing(2)};
+    ${({theme}) => theme.typography.h1};
+  }
+
+  ${TitleBlockLead} {
+    font-size: -${({theme}) => theme.typography.body1.fontSize};
+  }
+`
+
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -155,7 +171,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
 const AdvertisementPlacer = styled('div')`
   padding-left: ${({theme}) => theme.spacing(2.5)};
   position: sticky;
-  top: 140px;
+  top: 112px;
   margin-bottom: ${({theme}) => theme.spacing(2.5)};
   grid-column: 3/4;
   overflow: hidden;
@@ -188,7 +204,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
               Quote: OnlineReportsQuoteBlock,
-              Subscribe: Mitmachen
+              Subscribe: Mitmachen,
+              Title: OnlineReportsTitle
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
