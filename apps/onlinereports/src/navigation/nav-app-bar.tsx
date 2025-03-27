@@ -273,6 +273,7 @@ export const NavbarLogoWrapper = styled('div')`
 const imageStyles = (theme: Theme) => css`
   max-height: ${theme.spacing(6)};
   max-width: ${theme.spacing(38)};
+
   ${theme.breakpoints.up('md')} {
     max-height: ${theme.spacing(8)};
     max-width: ${theme.spacing(38)};

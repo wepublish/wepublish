@@ -1,4 +1,4 @@
-import {css, IconButton, useTheme} from '@mui/material'
+import {IconButton, useTheme} from '@mui/material'
 import {TextToIcon, useToggle} from '@wepublish/ui'
 import {MdClose, MdExpandLess, MdExpandMore, MdSearch} from 'react-icons/md'
 import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
@@ -43,22 +43,10 @@ export const NavPaperCategory = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
   grid-auto-rows: max-content;
 `
-export const NavPaperChildrenWrapper = styled(NavStructure)`
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-  justify-items: center;
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      position: absolute;
-      grid-template-columns: auto;
-      justify-items: start;
-      width: calc(100% / 6);
-      gap: ${theme.spacing(3)};
-      padding-top: ${theme.spacing(10)};
-    }
-  `}
+export const NavPaperStructure = styled(NavStructure)`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `
 
 type OnlineReportsNavCategoryProps = {
@@ -120,7 +108,7 @@ export const OnlineReportsNavPaper = ({
       <SemiTransparentCover onClick={closeMenu} />
       {/*<NavPaperPositioner>*/}
       <NavPaperWrapper>
-        <NavStructure>
+        <NavPaperStructure>
           <NavbarInnerWrapper>
             <NavbarActions>
               <Link href="/search" color="inherit" onClick={closeMenu}>
@@ -154,18 +142,18 @@ export const OnlineReportsNavPaper = ({
             })}
           </NavigationWrapper>
 
+          <Filler />
           <IconsWrapper>
-            {iconItems?.links.map(link => {
+            {iconItems?.links.map((link, index) => {
               const url = navigationLinkToUrl(link)
-
               return (
-                <Link href={url} color="inherit">
+                <Link key={index} href={url} color="inherit">
                   <TextToIcon title={link.label} size={32} />
                 </Link>
               )
             })}
           </IconsWrapper>
-        </NavStructure>
+        </NavPaperStructure>
       </NavPaperWrapper>
       {/*</NavPaperPositioner>*/}
       <Cover />
@@ -183,6 +171,10 @@ const SemiTransparentCover = styled(Cover)`
   opacity: 0.6;
   background-color: #70787e;
   grid-area: semiTransparentCover;
+`
+
+const Filler = styled('div')`
+  flex-grow: 1;
 `
 
 const NavigationWrapper = styled('div')`
@@ -225,4 +217,9 @@ const NavigationSubItem = styled('span')`
   font-size: 24px;
   line-height: 1.2em;
 `
-const IconsWrapper = styled('div')``
+const IconsWrapper = styled('div')`
+  display: flex;
+  flex-direction: row;
+  gap: ${({theme}) => theme.spacing(3.5)};
+  justify-content: end;
+`
