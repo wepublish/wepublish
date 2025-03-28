@@ -11,6 +11,7 @@ import {
 import {AktuelleBild, IsAktuelleBildTeasers} from './block-styles/aktuelle-bild'
 import {BuilderBlockRendererProps} from '@wepublish/website/builder'
 import {BlockRenderer} from '@wepublish/block-content/website'
+import {Advertisement} from './components/advertisement'
 
 export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
@@ -24,5 +25,21 @@ export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => 
       ]),
     []
   )
-  return extraBlockMap(props.block) ?? <BlockRenderer {...props} />
+  const block = extraBlockMap(props.block) ?? <BlockRenderer {...props} />
+
+  if (props.type === 'Page') {
+    return block
+  }
+
+  return (
+    <>
+      {block}
+      {[6].includes(props.index + 1) && props.index < props.count - 1 && (
+        <Advertisement type={'half-page'} />
+      )}
+      {[3, 10].includes(props.index + 1) && props.index < props.count - 1 && (
+        <Advertisement type={'small'} />
+      )}
+    </>
+  )
 }
