@@ -1,65 +1,121 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
-import {Hanken_Grotesk} from 'next/font/google'
+import {Inter, Lora} from 'next/font/google'
 import {PartialDeep} from 'type-fest'
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
+const inter = Inter({
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal'],
   subsets: ['latin'],
   display: 'swap',
   preload: true
 })
 
-const {
-  palette: {augmentColor}
-} = WePTheme
+const lora = Lora({
+  weight: ['600'],
+  style: ['italic'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
+const {breakpoints} = WePTheme
+
+const palette: ThemeOptions['palette'] = {
+  ...WePTheme.palette,
+  text: {
+    primary: '#141414',
+    secondary: '#10243A',
+    disabled: '#7C7C7C'
+  },
+  primary: {
+    main: '#E1190F',
+    contrastText: '#fff'
+  },
+  secondary: {
+    main: '#89B9DC',
+    contrastText: '#10243A'
+  }
+}
 
 const theme = createTheme(WePTheme, {
-  palette: {
-    primary: augmentColor({color: {main: '#89B9DC', light: '#89B9DC', contrastText: '#fff'}})
-  },
+  palette,
   typography: {
     h1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '32px',
+      [breakpoints.up('md')]: {
+        fontSize: '44px'
+      },
+      fontWeight: 700
     },
     h2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '28px',
+      [breakpoints.up('md')]: {
+        fontSize: '36px'
+      },
+      fontWeight: 700
     },
     h3: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '24px',
+      [breakpoints.up('md')]: {
+        fontSize: '24px'
+      },
+      fontWeight: 700
     },
     h4: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '24px',
+      [breakpoints.up('md')]: {
+        fontSize: '24px'
+      },
+      fontWeight: 700
     },
     h5: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     h6: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 300,
+      fontSize: 18
     },
     body2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontWeight: 300,
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      color: palette?.text?.disabled ?? 'inherit'
     },
     button: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     caption: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     overline: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [lora.style.fontFamily, 'sans-serif'].join(','),
+      fontStyle: 'italic',
+      fontWeight: 600
     },
-    fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+  },
+  components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: 'none'
+        }
+      }
+    }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 

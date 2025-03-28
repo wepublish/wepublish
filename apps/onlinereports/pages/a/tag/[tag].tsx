@@ -1,6 +1,5 @@
 import {capitalize} from '@mui/material'
 import {ArticleListContainer} from '@wepublish/article/website'
-import {TagType} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
@@ -8,6 +7,7 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
+  TagType,
   useArticleListQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'

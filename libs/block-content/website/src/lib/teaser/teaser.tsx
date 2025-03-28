@@ -1,11 +1,11 @@
-import {Chip, css, Theme} from '@mui/material'
-import styled from '@emotion/styled'
+import {Chip, css, useTheme} from '@mui/material'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-import {PropsWithChildren} from 'react'
+import {PropsWithChildren, useMemo} from 'react'
+import styled from '@emotion/styled'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -211,22 +211,29 @@ export const TeaserImageWrapper = styled('div')`
   }
 `
 
-const imageStyles = (theme: Theme) => css`
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
+export const useImageStyles = () => {
+  const theme = useTheme()
 
-  :where(${TeaserWrapper}:hover &) {
-    transform: scale(1.1);
-  }
+  return useMemo(
+    () => css`
+      max-height: 400px;
+      width: 100%;
+      object-fit: cover;
+      grid-column: 1/13;
+      transition: transform 0.3s ease-in-out;
+      aspect-ratio: 1.8;
 
-  ${theme.breakpoints.up('md')} {
-    aspect-ratio: 1;
-  }
-`
+      :where(${TeaserWrapper}:hover &) {
+        transform: scale(1.1);
+      }
+
+      ${theme.breakpoints.up('md')} {
+        aspect-ratio: 1;
+      }
+    `,
+    [theme]
+  )
+}
 
 export const TeaserContentWrapper = styled('div')`
   display: grid;
@@ -337,20 +344,28 @@ const TeaserContent = ({
   return <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
 }
 
-export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const title = teaser && selectTeaserTitle(teaser)
+export const extractTeaserData = (teaser: BuilderTeaserProps['teaser']) => {
   const preTitle = teaser && selectTeaserPreTitle(teaser)
-  const lead = teaser && selectTeaserLead(teaser)
-  const href = (teaser && selectTeaserUrl(teaser)) ?? ''
-  const image = teaser && selectTeaserImage(teaser)
-  const publishDate = teaser && selectTeaserDate(teaser)
-  const authors = teaser && selectTeaserAuthors(teaser)
-  const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
+  return {
+    title: teaser && selectTeaserTitle(teaser),
+    preTitle,
+    lead: teaser && selectTeaserLead(teaser),
+    href: (teaser && selectTeaserUrl(teaser)) ?? '',
+    image: teaser && selectTeaserImage(teaser),
+    publishDate: teaser && selectTeaserDate(teaser),
+    authors: teaser && selectTeaserAuthors(teaser),
+    tags: teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
+  }
+}
 
+export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
+  const {title, preTitle, lead, href, image, publishDate, authors, tags} = extractTeaserData(teaser)
   const {
     date,
     elements: {Image, Paragraph, H4}
   } = useWebsiteBuilder()
+
+  const imageStyles = useImageStyles()
 
   return (
     <TeaserWrapper {...alignment}>

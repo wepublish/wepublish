@@ -68,7 +68,7 @@ export const SliderBallFill = styled('span')`
   height: 100%;
 `
 
-export const useSlidesPerView = () => {
+export const useSlidesPerViewResponsive = () => {
   const theme = useTheme()
 
   const sm = useMediaQuery(theme.breakpoints.up('sm'), {
@@ -120,12 +120,15 @@ export const useSlidesPadding = () => {
   return 16
 }
 
+type TeaserSliderProps = BuilderBlockStyleProps['TeaserSlider'] & {useSlidesPerView?: () => number}
+
 export const TeaserSlider = ({
   blockStyle,
   className,
   teasers,
+  useSlidesPerView = useSlidesPerViewResponsive,
   ...props
-}: BuilderBlockStyleProps['TeaserSlider']) => {
+}: TeaserSliderProps) => {
   const {
     elements: {H5},
     blocks: {Teaser}

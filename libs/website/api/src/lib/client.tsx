@@ -10,7 +10,7 @@ import {
   split
 } from '@apollo/client'
 import {BatchHttpLink} from '@apollo/client/link/batch-http'
-import {mergeDeepLeft} from 'ramda'
+import {mergeDeepRight} from 'ramda'
 import possibleTypes from './graphql'
 
 import {ComponentType, memo, useMemo} from 'react'
@@ -95,7 +95,7 @@ export const getV1ApiClient = (
 
   if (cache) {
     const existingCache = client.extract()
-    const data = mergeDeepLeft(existingCache, cache) as NormalizedCacheObject
+    const data = mergeDeepRight(existingCache, cache) as NormalizedCacheObject
 
     client.cache.restore(data)
   }
