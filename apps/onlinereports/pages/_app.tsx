@@ -62,6 +62,7 @@ import {
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
+import {AdblockOverlay} from '../src/components/adblock-detector'
 
 setDefaultOptions({
   locale: de
@@ -266,6 +267,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <meta name="theme-color" content="#ffffff" />
               </Head>
 
+              <AdblockOverlay />
               <Spacer>
                 <NavBar
                   categorySlugs={[['categories', 'about-us']]}
