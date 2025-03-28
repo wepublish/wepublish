@@ -34,7 +34,7 @@ export const OnlineReportsQuoteBlock = ({
   className
 }: BuilderQuoteBlockProps) => {
   const {
-    elements: {H4, Image, Paragraph}
+    elements: {Image, Paragraph}
   } = useWebsiteBuilder()
 
   return (
@@ -48,7 +48,11 @@ export const OnlineReportsQuoteBlock = ({
         )}
       </QuoteContent>
 
-      {image && <ImageWrapper>{image && <Image image={image} />}</ImageWrapper>}
+      {image && (
+        <ImageWrapper>
+          <Image image={image} />
+        </ImageWrapper>
+      )}
     </OnlineReportsQuoteBlockWrapper>
   )
 }
