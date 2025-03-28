@@ -221,5 +221,6 @@ const IconsWrapper = styled('div')`
   display: flex;
   flex-direction: row;
   gap: ${({theme}) => theme.spacing(3.5)};
+  margin-bottom: ${({theme}) => theme.spacing(3.5)};
   justify-content: end;
 `
