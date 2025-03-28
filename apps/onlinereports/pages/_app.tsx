@@ -185,6 +185,7 @@ const OnlineReportsTitle = styled(TitleBlock)`
     font-size: ${({theme}) => theme.typography.h1.fontSize};
     font-family: ${({theme}) => theme.typography.h1.fontFamily};
     font-weight: ${({theme}) => theme.typography.h1.fontWeight};
+
     ${({theme}) => theme.breakpoints.up('md')} {
       font-size: 44px;
     }
@@ -209,7 +210,7 @@ const AdvertisementPlacer = styled('div')`
   overflow: hidden;
 
   @media (max-width: 1200px) {
-    display: none;
+    //display: none;
   }
 `
 
@@ -265,6 +266,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
                 <meta name="msapplication-TileColor" content="#ffffff" />
                 <meta name="theme-color" content="#ffffff" />
+                <script src="//servedby.revive-adserver.net/asyncjs.php" async />
               </Head>
 
               <AdblockOverlay />

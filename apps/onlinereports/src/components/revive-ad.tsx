@@ -7,19 +7,12 @@ interface ReviveAdProps {
 
 export const ReviveAd: React.FC<ReviveAdProps> = ({zoneId, reviveId}) => {
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = '//servedby.revive-adserver.net/asyncjs.php'
-    script.async = true
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
+    if ((window as any).reviveAsync) {
+      ;(window as any).reviveAsync[reviveId].refresh()
     }
-  }, [])
+  }, [reviveId])
 
-  return (
-    <ins data-revive-zoneid={zoneId} data-revive-id={reviveId} style={{display: 'block'}}></ins>
-  )
+  return <ins data-revive-zoneid={zoneId} data-revive-id={reviveId} style={{display: 'block'}} />
 }
 
 export default ReviveAd
