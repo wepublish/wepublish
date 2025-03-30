@@ -34,12 +34,12 @@ const GelesenUndGedachtUnstyled = ({
   return (
     <Box className={className}>
       <Gelesen>
-        <Box>Gelesen...</Box>
+        <Box>Gelesen ...</Box>
         <GelesenQuote variant={'subtitle2'}>{gelesen}</GelesenQuote>
         <GelesenSource>{source}</GelesenSource>
       </Gelesen>
       <Gedacht>
-        <Box>...und dabei gedacht</Box>
+        <Box>... und dabei gedacht</Box>
         <GedachtText variant={'subtitle2'}>{gedacht}</GedachtText>
       </Gedacht>
     </Box>

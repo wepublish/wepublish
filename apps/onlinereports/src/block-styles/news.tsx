@@ -47,7 +47,7 @@ export const NewsBlockStyle = ({
             ))}
           </TeaserList>
           <Link href={'/a/tag/news'}>
-            <b>Weitere news {'->'}</b>
+            <b>Weitere News {'->'}</b>
           </Link>
         </BlueBox>
 
