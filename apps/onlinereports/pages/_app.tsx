@@ -112,7 +112,7 @@ const MainContent = styled('main')`
 
   ${ContentWrapperStyled} {
     ${({theme}) => theme.breakpoints.down('md')} {
-      row-gap: ${({theme}) => theme.spacing(7.5)};
+      row-gap: ${({theme}) => theme.spacing(5)};
     }
 
     ${({theme}) => theme.breakpoints.up('md')} {
