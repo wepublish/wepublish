@@ -1,40 +1,57 @@
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {extractTeaserData} from '@wepublish/block-content/website'
+import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
 import styled from '@emotion/styled'
+import {BlueBox} from '../components/blue-box'
+import {allPass} from 'ramda'
+import {ArticleTeaser} from '@wepublish/website/api'
 
-const RuckSpiegelUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const {title, href} = extractTeaserData(teaser)
+export const isRuckSpiegelTeaser = allPass([
+  ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'ArticleTeaser',
+  ({teaser}: BuilderTeaserProps) =>
+    !!(teaser as ArticleTeaser).article?.tags.map(t => t.tag).includes('RückSpiegel')
+])
+
+const RuckSpiegelTeaserWrapper = styled(TeaserWrapper)`
+  height: 100%;
+`
+
+export const RuckSpiegelTeaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
+  return (
+    <RuckSpiegelTeaserWrapper {...alignment}>
+      <BlueBox>
+        <RuckSpiegelTeaserContent teaser={teaser} className={className} />
+      </BlueBox>
+    </RuckSpiegelTeaserWrapper>
+  )
+}
+
+const RuckSpiegelUnstyled = ({
+  teaser,
+  className
+}: Pick<BuilderTeaserProps, 'className' | 'teaser'>) => {
+  const {lead, href} = extractTeaserData(teaser)
   const {
     elements: {H4, Link}
   } = useWebsiteBuilder()
   return (
-    <Link href={href} className={className}>
-      <div>
-        <H4 gutterBottom>{title}</H4>
-      </div>
-    </Link>
+    <div className={className}>
+      <H4 gutterBottom>{lead}</H4>
+    </div>
   )
 }
 
-export const RuckSpiegelTeaser = styled(RuckSpiegelUnstyled)`
+export const RuckSpiegelTeaserContent = styled(RuckSpiegelUnstyled)`
   color: ${({theme}) => theme.palette.text.primary};
   padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(0)}`};
-  border-bottom: 1px solid ${({theme}) => theme.palette.divider};
+
   text-decoration: none;
+
+  &:not(:first-of-type:last-of-type) {
+    border-bottom: 1px solid ${({theme}) => theme.palette.divider};
+  }
 
   * {
     font-size: 18px !important;
-  }
-
-  > div {
-    padding-top: ${({theme}) => `${theme.spacing(1)}`};
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    :first-child {
-      flex-grow: 1;
-    }
   }
 
   > span {

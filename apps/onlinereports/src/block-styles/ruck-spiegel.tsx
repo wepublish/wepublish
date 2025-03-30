@@ -1,19 +1,14 @@
 import styled from '@emotion/styled'
 import {Box} from '@mui/material'
 
-import {
-  alignmentForTeaserBlock,
-  hasBlockStyle,
-  isFilledTeaser,
-  isTeaserListBlock
-} from '@wepublish/block-content/website'
+import {hasBlockStyle, isFilledTeaser, isTeaserListBlock} from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
 import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
 import {Advertisement} from '../components/advertisement'
 import {BlueBox} from '../components/blue-box'
-import {RuckSpiegelTeaser} from '../custom-teasers/ruck-spiegel'
+import {RuckSpiegelTeaserContent} from '../custom-teasers/ruck-spiegel'
 
 export const isRuckSpiegelTeasers = (
   block: BlockContent
@@ -39,16 +34,10 @@ export const RuckSpiegelBlockStyle = ({
         <TeaserList>
           <H2 gutterBottom>{title}</H2>
           {filledTeasers.map((teaser, index) => (
-            <RuckSpiegelTeaser
-              key={index}
-              teaser={teaser}
-              numColumns={numColumns}
-              alignment={alignmentForTeaserBlock(index, numColumns)}
-              blockStyle={blockStyle}
-            />
+            <RuckSpiegelTeaserContent key={index} teaser={teaser} />
           ))}
         </TeaserList>
-        <Link href={'/a/tag/ruckspiegel'}>
+        <Link href={'/a/tag/RückSpiegel'}>
           <b>Zum Archiv {'->'}</b>
         </Link>
       </BlueBox>
