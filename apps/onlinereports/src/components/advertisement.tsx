@@ -8,7 +8,7 @@ type AdvertisementProps = {
 
 export const Advertisement = ({type}: AdvertisementProps) => {
   const theme = useTheme()
-  const notLg = useMediaQuery(theme.breakpoints.down('lg'), {
+  const notLg = useMediaQuery(theme.breakpoints.down('sm'), {
     ssrMatchMedia: () => ({matches: false})
   })
 
@@ -39,7 +39,7 @@ export const Advertisement = ({type}: AdvertisementProps) => {
 }
 
 const AdBox = styled(Box)`
-  background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
+  //background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
   //border: 5px solid #eee;
   margin: 0 auto;
 `
@@ -47,8 +47,9 @@ const AdBox = styled(Box)`
 const Wideboard = styled(AdBox)`
   &,
   img {
-    height: 250px;
-    width: 994px;
+    max-height: 250px;
+    height: auto;
+    width: 100%;
   }
 `
 

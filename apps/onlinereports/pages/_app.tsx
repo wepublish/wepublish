@@ -149,6 +149,10 @@ const MainContent = styled('main')`
   }
 `
 
+const WideboardPlacer = styled('div')`
+  margin-bottom: -${({theme}) => theme.spacing(5)};
+`
+
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
@@ -253,8 +257,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   iconSlug="icons"
                 />
                 <MainContainer>
-                  <Advertisement type={'whiteboard'} />
                   <MainContent>
+                    <WideboardPlacer>
+                      <Advertisement type={'whiteboard'} />
+                    </WideboardPlacer>
                     <Component {...pageProps} />
                   </MainContent>
                 </MainContainer>
