@@ -108,8 +108,7 @@ const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
 
-  row-gap: ${({theme}) => theme.spacing(10)};
-  padding-right: ${({theme}) => theme.spacing(2.5)};
+  row-gap: ${({theme}) => theme.spacing(7.5)};
 
   ${ContentWrapperStyled} {
     ${({theme}) => theme.breakpoints.down('md')} {
@@ -186,7 +185,7 @@ const AdvertisementPlacer = styled('div')`
   overflow: hidden;
 
   @media (max-width: 1200px) {
-    //display: none;
+    display: none;
   }
 `
 
