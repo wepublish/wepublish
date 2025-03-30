@@ -48,7 +48,7 @@ export const AktuelleBild = ({
         <Typography>
           Ein interessantes Bild geschossen? Mailen Sie es uns (mit Adresse & Datum)!
         </Typography>
-        <Link href={'/a/tag/ruckspiegel'}>
+        <Link href={'/a/tag/Das%20Wort%20zum%20Bild'}>
           <b>Zum Archiv {'->'}</b>
         </Link>
       </SideInfo>
