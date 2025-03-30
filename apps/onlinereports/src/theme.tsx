@@ -117,6 +117,15 @@ const theme = createTheme(WePTheme, {
           textDecoration: 'none'
         }
       }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontWeight: 700,
+          textTransform: 'none',
+          fontSize: '18px'
+        }
+      }
     }
   }
 } as PartialDeep<Theme> | ThemeOptions)

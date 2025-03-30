@@ -130,6 +130,9 @@ const MainContent = styled('main')`
         grid-column: 3/11;
       }
 
+      ${RichTextBlockWrapper} {
+      }
+
       & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
         grid-column: 2/12;
       }

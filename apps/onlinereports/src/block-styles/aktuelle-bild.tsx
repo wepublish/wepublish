@@ -29,7 +29,6 @@ export const IsAktuelleBildTeasers = (
   allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block)
 
 export const AktuelleBild = ({
-  title,
   teasers,
   blockStyle,
   className
@@ -42,11 +41,15 @@ export const AktuelleBild = ({
   } = useWebsiteBuilder()
 
   return (
-    <AktuelleBildWrapper>
+    <AktuelleBildWrapper className={className}>
       <SideInfo>
         <H2>Das Wort zum Bild</H2>
         <Typography>
-          Ein interessantes Bild geschossen? Mailen Sie es uns (mit Adresse & Datum)!
+          Ein interessantes Bild geschossen?{' '}
+          <Link href={'mailto:redaktion@onlinereports.ch?subject=Das Wort zum Build'}>
+            Mailen Sie es uns
+          </Link>{' '}
+          (mit Adresse & Datum)!
         </Typography>
         <Link href={'/a/tag/Das%20Wort%20zum%20Bild'}>
           <b>Zum Archiv {'->'}</b>
