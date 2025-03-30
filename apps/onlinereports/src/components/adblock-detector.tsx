@@ -45,6 +45,8 @@ export const AdblockOverlay = () => {
       const adElements = document.querySelectorAll('ins[data-revive-zoneid]')
       if (!adElements.length) return
 
+      const reviveLoaded = !!(window as any).reviveAsync
+
       let adBlocked = false
 
       adElements.forEach(el => {
@@ -66,7 +68,7 @@ export const AdblockOverlay = () => {
 
       const dismissedUntil = localStorage.getItem(OVERLAY_KEY)
       const now = Date.now()
-      if (adBlocked && (!dismissedUntil || now > parseInt(dismissedUntil, 10))) {
+      if (reviveLoaded && adBlocked && (!dismissedUntil || now > parseInt(dismissedUntil, 10))) {
         setShowOverlay(true)
         document.body.style.overflow = 'hidden'
       }
