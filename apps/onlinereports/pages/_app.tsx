@@ -17,7 +17,6 @@ import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
@@ -59,10 +58,11 @@ import {
   RoutedAdminBar,
   SessionProvider
 } from '@wepublish/utils/website'
-import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
+import {NavbarContainer} from '@wepublish/navigation/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
 import {AdblockOverlay} from '../src/components/adblock-detector'
+import {OnlineReportsFooter} from '../src/components/footer'
 
 setDefaultOptions({
   locale: de
@@ -150,33 +150,9 @@ const MainContent = styled('main')`
   }
 `
 
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
-`
-
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
-`
-const Footer = styled(FooterContainer)`
-  grid-column: -1/1;
-
-  ${FooterPaperWrapper} {
-    color: ${({theme}) => theme.palette.common.white};
-    background-color: #323232;
-  }
 `
 
 const OnlineReportsTitle = styled(TitleBlock)`
@@ -286,11 +262,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
-                <Footer slug="footer" categorySlugs={[['footer-about-us']]}>
-                  <LogoLink href="/" aria-label="Startseite">
-                    <LogoWrapper />
-                  </LogoLink>
-                </Footer>
+                <OnlineReportsFooter />
               </Spacer>
 
               <RoutedAdminBar />

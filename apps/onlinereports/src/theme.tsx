@@ -77,7 +77,9 @@ const theme = createTheme(WePTheme, {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
     },
     h6: {
-      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 500,
+      fontSize: '18px'
     },
     body1: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
