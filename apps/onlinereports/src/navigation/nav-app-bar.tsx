@@ -267,7 +267,9 @@ const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
-  width: auto;
+  img {
+    width: auto;
+  }
 `
 
 const imageStyles = (theme: Theme) => css`
