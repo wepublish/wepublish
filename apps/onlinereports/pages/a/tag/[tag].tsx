@@ -16,6 +16,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 import {z} from 'zod'
+import styled from '@emotion/styled'
 
 const take = 25
 
@@ -28,9 +29,16 @@ type ArticleListByTagProps = {
   tagId: string
 }
 
+const TagArticleListWrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({theme}) => theme.spacing(2.5)};
+  margin-top: ${({theme}) => theme.spacing(4)};
+`
+
 export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   const {
-    elements: {H3, Alert, Pagination}
+    elements: {H1, Alert, Pagination}
   } = useWebsiteBuilder()
 
   const {query, replace} = useRouter()
@@ -61,8 +69,8 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   }, [data?.articles.totalCount])
 
   return (
-    <>
-      <H3 component="h1">{capitalize(tag)}</H3>
+    <TagArticleListWrapper>
+      <H1 component="h1">{capitalize(tag)}</H1>
 
       {data && !data.articles.nodes.length && (
         <Alert severity="info">Keine Artikel vorhanden</Alert>
@@ -85,7 +93,7 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
           }
         />
       )}
-    </>
+    </TagArticleListWrapper>
   )
 }
 
