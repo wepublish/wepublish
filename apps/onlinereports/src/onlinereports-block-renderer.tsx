@@ -12,8 +12,10 @@ import {AktuelleBild, IsAktuelleBildTeasers} from './block-styles/aktuelle-bild'
 import {BuilderBlockRendererProps} from '@wepublish/website/builder'
 import {BlockRenderer} from '@wepublish/block-content/website'
 import {Advertisement} from './components/advertisement'
+import {useArticleContext} from './context/article-context'
 
 export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => {
+  const {article} = useArticleContext()
   const extraBlockMap = useMemo(
     () =>
       cond([
@@ -30,15 +32,18 @@ export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => 
   if (props.type === 'Page') {
     return block
   }
+  const position = props.index + 1
+  const adsDisabledTags = ['Anzeige', 'Publireportage']
+  const adsDisabled = article?.tags.some(({tag}) => tag && adsDisabledTags.includes(tag)) ?? true
 
   return (
     <>
       {block}
-      {[6].includes(props.index + 1) && props.index < props.count - 1 && (
-        <Advertisement type={'half-page'} />
-      )}
-      {[3, 10].includes(props.index + 1) && props.index < props.count - 1 && (
-        <Advertisement type={'small'} />
+      {!adsDisabled && (
+        <>
+          {position === 6 && <Advertisement type={'half-page'} />}
+          {position !== 6 && position % 3 === 0 && <Advertisement type={'small'} />}
+        </>
       )}
     </>
   )

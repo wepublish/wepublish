@@ -4,6 +4,7 @@ import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
+import {ArticleProvider} from '../context/article-context'
 
 export const ArticleWrapper = styled(ContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -20,6 +21,7 @@ export const ArticlePreTitle = styled('div')`
   ${({theme}) => theme.breakpoints.up('md')} {
     margin-bottom: -${({theme}) => theme.spacing(3.5)};
   }
+
   color: ${({theme}) => theme.palette.primary.main};
   grid-row-start: 1;
   font-weight: 500;
@@ -60,24 +62,26 @@ export function OnlineReportsArticle({
   }
 
   return (
-    <ArticleWrapper className={className}>
-      {article && <ArticleSEO article={article} />}
+    <ArticleProvider article={article}>
+      <ArticleWrapper className={className}>
+        {article && <ArticleSEO article={article} />}
 
-      <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
+        <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
 
-      <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
+        <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
 
-      <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
+        <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
 
-      <ArticleBottomMeta>
-        {article && <ArticleMeta article={article} />}
-        <H3>Ihre Meinung zu diesem Artikel</H3>
-        <Button onClick={scrollToComments}>Kommentare</Button>
-      </ArticleBottomMeta>
+        <ArticleBottomMeta>
+          {article && <ArticleMeta article={article} />}
+          <H3>Ihre Meinung zu diesem Artikel</H3>
+          <Button onClick={scrollToComments}>Kommentare</Button>
+        </ArticleBottomMeta>
 
-      {children}
+        {children}
 
-      <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
-    </ArticleWrapper>
+        <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
+      </ArticleWrapper>
+    </ArticleProvider>
   )
 }
