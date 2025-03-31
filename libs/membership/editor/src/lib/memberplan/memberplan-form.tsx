@@ -232,19 +232,21 @@ export function MemberPlanForm({
             <Col xs={24}>
               <Form.ControlLabel>{t('memberPlanEdit.description')}</Form.ControlLabel>
               <div className="richTextFrame">
-                <RichTextBlock
-                  value={memberPlan?.description || []}
-                  disabled={loading}
-                  onChange={newDescription => {
-                    if (!memberPlan) {
-                      return
-                    }
-                    setMemberPlan({
-                      ...memberPlan,
-                      description: (newDescription as RichTextBlockValue['richText']) || []
-                    })
-                  }}
-                />
+                {memberPlan && (
+                  <RichTextBlock
+                    value={memberPlan?.description || []}
+                    disabled={loading}
+                    onChange={newDescription => {
+                      if (!memberPlan) {
+                        return
+                      }
+                      setMemberPlan({
+                        ...memberPlan,
+                        description: (newDescription as RichTextBlockValue['richText']) || []
+                      })
+                    }}
+                  />
+                )}
               </div>
             </Col>
           </Row>
