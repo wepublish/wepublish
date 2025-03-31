@@ -5,7 +5,7 @@ import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-n
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import styled from '@emotion/styled'
-import {BuilderNavPaperProps, navPaperLinkStyling} from './nav-paper'
+import {BuilderNavPaperProps, MemberButtons, navPaperLinkStyling} from './nav-paper'
 import {FullNavigationFragment} from '@wepublish/website/api'
 
 const NavPaperOverlay = styled('div')`
@@ -140,6 +140,12 @@ export const OnlineReportsNavPaper = ({
                 </Link>
               )
             })}
+            <MemberButtons
+              loginBtn={loginBtn}
+              subscribeBtn={subscribeBtn}
+              profileBtn={profileBtn}
+              closeMenu={closeMenu}
+            />
           </NavigationWrapper>
 
           <Filler />

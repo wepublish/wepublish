@@ -144,11 +144,11 @@ export const NavPaper = ({
     <NavPaperWrapper>
       {children && (
         <NavPaperChildrenWrapper>
-          {iconItems?.links.map(link => {
+          {iconItems?.links.map((link, index) => {
             const url = navigationLinkToUrl(link)
 
             return (
-              <Link href={url} color="inherit">
+              <Link key={index} href={url} color="inherit">
                 <TextToIcon title={link.label} size={32} />
               </Link>
             )
@@ -169,57 +169,12 @@ export const NavPaper = ({
             </Link>
           )
         })}
-
-        <NavPaperActions>
-          {!hasUser && loginBtn && (
-            <Button
-              LinkComponent={Link}
-              href={loginBtn.href}
-              variant="contained"
-              color="secondary"
-              onClick={closeMenu}>
-              Login
-            </Button>
-          )}
-
-          {hasUser && (
-            <>
-              {profileBtn && (
-                <Button
-                  LinkComponent={Link}
-                  href={profileBtn.href}
-                  variant="contained"
-                  color="secondary"
-                  onClick={closeMenu}>
-                  Mein Konto
-                </Button>
-              )}
-
-              {subscribeBtn && (
-                <Button
-                  LinkComponent={Link}
-                  href={subscribeBtn.href}
-                  variant="contained"
-                  color="accent"
-                  onClick={closeMenu}>
-                  Meine Abos
-                </Button>
-              )}
-
-              {loginBtn && (
-                <Button
-                  onClick={() => {
-                    logout()
-                    closeMenu()
-                  }}
-                  variant="outlined"
-                  color="secondary">
-                  Logout
-                </Button>
-              )}
-            </>
-          )}
-        </NavPaperActions>
+        <MemberButtons
+          loginBtn={loginBtn}
+          subscribeBtn={subscribeBtn}
+          profileBtn={profileBtn}
+          closeMenu={closeMenu}
+        />
       </NavPaperMainLinks>
 
       {!!categories.length &&
@@ -255,5 +210,69 @@ export const NavPaper = ({
           </NavPaperLinksGroup>
         ))}
     </NavPaperWrapper>
+  )
+}
+
+export const MemberButtons = ({
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
+  closeMenu
+}: Pick<BuilderNavPaperProps, 'loginBtn' | 'profileBtn' | 'subscribeBtn' | 'closeMenu'>) => {
+  const {hasUser, logout} = useUser()
+  const {
+    elements: {Button, Link}
+  } = useWebsiteBuilder()
+  return (
+    <NavPaperActions>
+      {!hasUser && loginBtn && (
+        <Button
+          LinkComponent={Link}
+          href={loginBtn.href}
+          variant="contained"
+          color="secondary"
+          onClick={closeMenu}>
+          Login
+        </Button>
+      )}
+
+      {hasUser && (
+        <>
+          {profileBtn && (
+            <Button
+              LinkComponent={Link}
+              href={profileBtn.href}
+              variant="contained"
+              color="secondary"
+              onClick={closeMenu}>
+              Mein Konto
+            </Button>
+          )}
+
+          {subscribeBtn && (
+            <Button
+              LinkComponent={Link}
+              href={subscribeBtn.href}
+              variant="contained"
+              color="accent"
+              onClick={closeMenu}>
+              Meine Abos
+            </Button>
+          )}
+
+          {loginBtn && (
+            <Button
+              onClick={() => {
+                logout()
+                closeMenu()
+              }}
+              variant="outlined"
+              color="secondary">
+              Logout
+            </Button>
+          )}
+        </>
+      )}
+    </NavPaperActions>
   )
 }
