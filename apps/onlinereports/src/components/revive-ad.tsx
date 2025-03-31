@@ -12,7 +12,13 @@ export const ReviveAd: React.FC<ReviveAdProps> = ({zoneId, reviveId}) => {
     }
   }, [reviveId])
 
-  return <ins data-revive-zoneid={zoneId} data-revive-id={reviveId} style={{display: 'block'}} />
+  return (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: `
+            <ins data-revive-zoneid="${zoneId}" data-revive-id="${reviveId}" style="display: block;"></ins>
+          `
+      }}
+    />
+  )
 }
-
-export default ReviveAd

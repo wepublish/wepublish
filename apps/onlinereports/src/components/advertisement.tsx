@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import {Box, useMediaQuery, useTheme} from '@mui/material'
 import {ReviveAd} from './revive-ad'
+import {useRouter} from 'next/router'
+import {useEffect, useState} from 'react'
 
 type AdvertisementProps = {
   type: 'whiteboard' | 'half-page' | 'small'
@@ -11,6 +13,18 @@ export const Advertisement = ({type}: AdvertisementProps) => {
   const notLg = useMediaQuery(theme.breakpoints.down('sm'), {
     ssrMatchMedia: () => ({matches: false})
   })
+  const [version, setVersion] = useState(0)
+
+  const router = useRouter()
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setVersion(version => version + 1)
+    }
+    router.events.on('routeChangeComplete', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router])
 
   if (type === 'whiteboard' && notLg) {
     type = 'small'
@@ -20,19 +34,19 @@ export const Advertisement = ({type}: AdvertisementProps) => {
     case 'whiteboard':
       return (
         <Wideboard>
-          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23516'} />
+          <ReviveAd key={version} reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23516'} />
         </Wideboard>
       )
     case 'half-page':
       return (
         <HalfPage>
-          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23515'} />
+          <ReviveAd key={version} reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23515'} />
         </HalfPage>
       )
     case 'small':
       return (
         <Small>
-          <ReviveAd reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23517'} />
+          <ReviveAd key={version} reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23517'} />
         </Small>
       )
   }
@@ -50,6 +64,7 @@ const Wideboard = styled(AdBox)`
     max-height: 250px;
     height: auto;
     width: 100%;
+    aspect-ratio: 994/250;
   }
 `
 
