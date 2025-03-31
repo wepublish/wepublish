@@ -16,7 +16,7 @@ export const ArticleWrapper = styled(ContentWrapper)`
 
 export const ArticlePreTitle = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
-  margin-bottom: -${({theme}) => theme.spacing(7)};
+  margin-bottom: -${({theme}) => theme.spacing(5)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     margin-bottom: -${({theme}) => theme.spacing(3.5)};
