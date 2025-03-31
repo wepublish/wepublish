@@ -64,6 +64,7 @@ import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
 import {AdblockOverlay} from '../src/components/adblock-detector'
 import {OnlineReportsFooter} from '../src/components/footer'
 import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
+import {OnlineReportsRenderElement} from '../src/render-element'
 
 setDefaultOptions({
   locale: de
@@ -216,6 +217,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
             RegistrationForm={OnlineReportsRegistrationForm}
+            richtext={{RenderElement: OnlineReportsRenderElement}}
             elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: OnlineReportsTeaser,

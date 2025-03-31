@@ -74,9 +74,9 @@ const theme = createTheme(WePTheme, {
     },
     h4: {
       fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '24px',
+      fontSize: '21px',
       [breakpoints.up('md')]: {
-        fontSize: '24px'
+        fontSize: '21px'
       },
       fontWeight: 700
     },
