@@ -4,7 +4,12 @@ import {useTranslation} from 'react-i18next'
 import {Button, Drawer, IconButton, Message, Table, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 import {CrowdfundingBlockValue} from '../blocks'
-import {Crowdfunding, getApiClientV2, useCrowdfundingsQuery} from '@wepublish/editor/api-v2'
+import {
+  Crowdfunding,
+  CrowdfundingWithActiveGoal,
+  getApiClientV2,
+  useCrowdfundingsQuery
+} from '@wepublish/editor/api-v2'
 import {IconButtonTooltip} from '../atoms'
 import {MdAddCircle} from 'react-icons/md'
 
@@ -79,7 +84,7 @@ export function SelectCrowdfundingPanel({
                     circle
                     size="xs"
                     onClick={() => {
-                      onSelect(rowData as Crowdfunding)
+                      onSelect(rowData as CrowdfundingWithActiveGoal)
                       onClose()
                     }}
                   />

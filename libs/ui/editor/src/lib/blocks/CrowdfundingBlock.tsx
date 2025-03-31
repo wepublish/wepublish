@@ -69,7 +69,7 @@ export const CrowdfundingBlock = ({
                 <h3>Crowdfunding {crowdfunding.name}</h3>
               </CrowdfundingRow>
               <CrowdfundingRow>
-                <Progress.Line percent={30} />
+                <Progress.Line percent={crowdfunding.activeCrowdfundingGoal?.progress || 0} />
               </CrowdfundingRow>
               <CrowdfundingRow>
                 <Button

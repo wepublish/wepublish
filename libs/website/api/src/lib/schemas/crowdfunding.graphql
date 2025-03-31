@@ -1,3 +1,11 @@
-fragment Crowdfunding on Crowdfunding {
+fragment CrowdfundingWithActiveGoal on CrowdfundingWithActiveGoal {
   id
+  name
+
+  activeCrowdfundingGoal {
+    progress
+    id
+    title
+    amount
+  }
 }

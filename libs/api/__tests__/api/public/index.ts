@@ -615,7 +615,7 @@ export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
   __typename?: 'CrowdfundingBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
-  crowdfunding?: Maybe<Crowdfunding>;
+  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
   crowdfundingId?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -1013,7 +1013,7 @@ export type HasOptionalArticle = {
 };
 
 export type HasOptionalCrowdfunding = {
-  crowdfunding?: Maybe<Crowdfunding>;
+  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
   crowdfundingId?: Maybe<Scalars['String']>;
 };
 

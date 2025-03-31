@@ -93,6 +93,13 @@ fragment BlockWithoutTeaser on BlockContent {
     crowdfunding {
       id
       name
+      activeCrowdfundingGoal {
+        id
+        title
+        description
+        amount
+        progress
+      }
     }
   }
 

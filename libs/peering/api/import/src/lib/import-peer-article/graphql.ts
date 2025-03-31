@@ -659,7 +659,7 @@ export type CrowdfundingBlock = BaseBlock &
     __typename?: 'CrowdfundingBlock'
     blockStyle?: Maybe<Scalars['String']>
     blockStyleName?: Maybe<Scalars['String']>
-    crowdfunding?: Maybe<Crowdfunding>
+    crowdfunding?: Maybe<CrowdfundingWithActiveGoal>
     crowdfundingId?: Maybe<Scalars['String']>
     type: BlockType
   }
@@ -1061,7 +1061,7 @@ export type HasOptionalArticle = {
 }
 
 export type HasOptionalCrowdfunding = {
-  crowdfunding?: Maybe<Crowdfunding>
+  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>
   crowdfundingId?: Maybe<Scalars['String']>
 }
 
@@ -3531,7 +3531,19 @@ type BlockWithoutTeaser_CrowdfundingBlock_Fragment = {
   __typename: 'CrowdfundingBlock'
   blockStyle?: string | null
   type: BlockType
-  crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
+  crowdfunding?: {
+    __typename?: 'CrowdfundingWithActiveGoal'
+    id: string
+    name: string
+    activeCrowdfundingGoal?: {
+      __typename?: 'CrowdfundingGoalWithProgress'
+      id: string
+      title: string
+      description?: string | null
+      amount: number
+      progress?: number | null
+    } | null
+  } | null
 }
 
 type BlockWithoutTeaser_EventBlock_Fragment = {
@@ -3918,7 +3930,19 @@ type FullBlock_CrowdfundingBlock_Fragment = {
   __typename: 'CrowdfundingBlock'
   blockStyle?: string | null
   type: BlockType
-  crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
+  crowdfunding?: {
+    __typename?: 'CrowdfundingWithActiveGoal'
+    id: string
+    name: string
+    activeCrowdfundingGoal?: {
+      __typename?: 'CrowdfundingGoalWithProgress'
+      id: string
+      title: string
+      description?: string | null
+      amount: number
+      progress?: number | null
+    } | null
+  } | null
 }
 
 type FullBlock_EventBlock_Fragment = {
@@ -4568,7 +4592,19 @@ type ImportBlock_CrowdfundingBlock_Fragment = {
   __typename: 'CrowdfundingBlock'
   blockStyle?: string | null
   type: BlockType
-  crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
+  crowdfunding?: {
+    __typename?: 'CrowdfundingWithActiveGoal'
+    id: string
+    name: string
+    activeCrowdfundingGoal?: {
+      __typename?: 'CrowdfundingGoalWithProgress'
+      id: string
+      title: string
+      description?: string | null
+      amount: number
+      progress?: number | null
+    } | null
+  } | null
 }
 
 type ImportBlock_EventBlock_Fragment = {
@@ -5305,7 +5341,19 @@ export type ArticleQuery = {
             __typename: 'CrowdfundingBlock'
             blockStyle?: string | null
             type: BlockType
-            crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
+            crowdfunding?: {
+              __typename?: 'CrowdfundingWithActiveGoal'
+              id: string
+              name: string
+              activeCrowdfundingGoal?: {
+                __typename?: 'CrowdfundingGoalWithProgress'
+                id: string
+                title: string
+                description?: string | null
+                amount: number
+                progress?: number | null
+              } | null
+            } | null
           }
         | {
             __typename: 'EventBlock'
@@ -5970,6 +6018,13 @@ export const BlockWithoutTeaser = gql`
       crowdfunding {
         id
         name
+        activeCrowdfundingGoal {
+          id
+          title
+          description
+          amount
+          progress
+        }
       }
     }
     ... on ListicleBlock {

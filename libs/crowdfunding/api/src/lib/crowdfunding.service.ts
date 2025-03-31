@@ -29,7 +29,7 @@ export class CrowdfundingService {
     }
   }
 
-  private async getActiveGoalWithProgress({
+  public async getActiveGoalWithProgress({
     crowdfunding
   }: {
     crowdfunding: CrowdfundingWithActiveGoal
@@ -66,7 +66,7 @@ export class CrowdfundingService {
 
     return {
       ...activeGoal,
-      progress: (totalAmount * 100) / activeGoal.amount
+      progress: Math.round((totalAmount * 100) / activeGoal.amount)
     }
   }
 

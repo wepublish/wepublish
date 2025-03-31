@@ -124,7 +124,7 @@ fragment BlockWithoutTeaser on BlockContent {
   ... on CrowdfundingBlock {
     blockStyle: blockStyleName
     crowdfunding {
-      ...Crowdfunding
+      ...CrowdfundingWithActiveGoal
     }
   }
 

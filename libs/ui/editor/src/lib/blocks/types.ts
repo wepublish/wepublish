@@ -9,9 +9,10 @@ import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
   CommentBlockCommentFragment,
+  CrowdfundingWithActiveGoal,
   EditorBlockType,
   FullBlockFragment,
-  FullCrowdfundingFragment,
+  FullCrowdfundingWithActiveGoalFragment,
   FullEventFragment,
   FullImageFragment,
   PageWithoutBlocksFragment,
@@ -68,7 +69,7 @@ export interface PollBlockValue extends BaseBlockValue {
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
-  crowdfunding: Partial<FullCrowdfundingFragment> | null | undefined
+  crowdfunding: Partial<FullCrowdfundingWithActiveGoalFragment> | null | undefined
 }
 
 export interface EventBlockValue extends BaseBlockValue {
