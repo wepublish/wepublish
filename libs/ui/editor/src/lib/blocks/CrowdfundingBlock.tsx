@@ -1,9 +1,9 @@
 import {useTranslation} from 'react-i18next'
 import {BlockProps} from '../atoms/blockList'
 import {useEffect, useState} from 'react'
-import {Drawer, IconButton, Progress, Panel as RPanel} from 'rsuite'
+import {Button, Drawer, IconButton, Progress, Panel as RPanel} from 'rsuite'
 import {PlaceholderInput} from '../atoms'
-import {MdEdit} from 'react-icons/md'
+import {MdEdit, MdOpenInNew} from 'react-icons/md'
 import styled from '@emotion/styled'
 import {CrowdfundingBlockValue} from '.'
 import {SelectCrowdfundingPanel} from '../panel/selectCrowdfundingPanel'
@@ -70,6 +70,15 @@ export const CrowdfundingBlock = ({
               </CrowdfundingRow>
               <CrowdfundingRow>
                 <Progress.Line percent={30} />
+              </CrowdfundingRow>
+              <CrowdfundingRow>
+                <Button
+                  href={`/crowdfundings/edit/${crowdfunding.id}`}
+                  target="_blank"
+                  appearance="ghost"
+                  endIcon={<MdOpenInNew />}>
+                  {crowdfunding.name} öffnen
+                </Button>
               </CrowdfundingRow>
             </Crowdfunding>
           )}
