@@ -11,9 +11,9 @@ import {Article, HasArticle} from '@wepublish/article/api'
 import {HasPage, Page} from '@wepublish/page/api'
 
 export enum NavigationLinkType {
-  Page = 'page',
-  Article = 'article',
-  External = 'external'
+  Page = 'Page',
+  Article = 'Article',
+  External = 'External'
 }
 
 registerEnumType(NavigationLinkType, {
