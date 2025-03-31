@@ -21,7 +21,7 @@ const Overlay = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 50vh;
+  min-height: 60vh;
   background: ${({theme}) => theme.palette.background.paper};
   z-index: 9999;
   padding: 3rem 1rem;
@@ -31,7 +31,13 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
 
-  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5vw), 0 100%);
+`
+
+const Buttons = styled('div')`
+  display: flex;
+  flex-direction: row;
+  gap: ${({theme}) => theme.spacing(3)};
 `
 
 export const AdblockOverlay = () => {
@@ -45,8 +51,6 @@ export const AdblockOverlay = () => {
       const adElements = document.querySelectorAll('ins[data-revive-zoneid]')
       if (!adElements.length) return
 
-      const reviveLoaded = !!(window as any).reviveAsync
-
       let adBlocked = false
 
       adElements.forEach(el => {
@@ -59,7 +63,7 @@ export const AdblockOverlay = () => {
         if (isHidden) {
           adBlocked = true
 
-          const wrapper = elAsHTMLElement.closest('div, section, article')
+          const wrapper = elAsHTMLElement.parentElement?.parentElement
           if (wrapper) {
             ;(wrapper as HTMLElement).style.display = 'none'
           }
@@ -68,11 +72,11 @@ export const AdblockOverlay = () => {
 
       const dismissedUntil = localStorage.getItem(OVERLAY_KEY)
       const now = Date.now()
-      if (reviveLoaded && adBlocked && (!dismissedUntil || now > parseInt(dismissedUntil, 10))) {
+      if (adBlocked && (!dismissedUntil || now > parseInt(dismissedUntil, 10))) {
         setShowOverlay(true)
         document.body.style.overflow = 'hidden'
       }
-    }, 1200)
+    }, 2200)
 
     return () => clearTimeout(timeout)
   }, [])
@@ -91,19 +95,24 @@ export const AdblockOverlay = () => {
       <Backdrop />
       <Overlay role="alertdialog" aria-modal="true">
         <Typography variant="h5" fontWeight={700} gutterBottom>
-          Warum kann ich diese Seite nicht lesen?
+          Warum Sie diese Seite nicht lesen können?
         </Typography>
         <Typography variant="body1" gutterBottom maxWidth={600}>
-          Du siehst diese Seite, weil du einen Ad-Blocker installiert hast. <br />
-          Das Geld aus der Werbung ermöglicht unseren Journalismus und ist für uns sehr wichtig.
+          Sie haben einen Ad-Blocker installiert. Doch nur dank des Umsatzes aus der Werbung können
+          wir Ihnen weiterhin einen kostenlosen Zugang zu unseren journalistischen Inhalten bieten.
         </Typography>
         <Typography variant="body1" gutterBottom>
-          Danke, dass du den Ad-Blocker deaktivierst und die Seite neu lädst.
+          Danke, dass Sie den Ad-Blocker deaktivieren und die Seite neu laden.
         </Typography>
 
-        <Button color="primary" variant="contained" sx={{mt: 3}} onClick={handleClose}>
-          Wie du deinen Ad-Blocker deaktivierst
-        </Button>
+        <Buttons>
+          <Button color="primary" variant="contained" sx={{mt: 3}} href={'/'} onClick={handleClose}>
+            Wie Sie den Adblocker deaktivieren
+          </Button>
+          <Button color="secondary" variant="contained" sx={{mt: 3}} onClick={handleClose}>
+            Fenster schliessen
+          </Button>
+        </Buttons>
       </Overlay>
     </>
   )
