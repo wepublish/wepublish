@@ -51,7 +51,7 @@ export const AdblockOverlay = () => {
       const adElements = document.querySelectorAll('ins[data-revive-zoneid]')
       if (!adElements.length) return
 
-      let adBlocked = false
+      let adBlocked = true
 
       adElements.forEach(el => {
         const elAsHTMLElement = el as HTMLElement
@@ -61,12 +61,12 @@ export const AdblockOverlay = () => {
           getComputedStyle(elAsHTMLElement).display === 'none'
 
         if (isHidden) {
-          adBlocked = true
-
           const wrapper = elAsHTMLElement.parentElement?.parentElement
           if (wrapper) {
             ;(wrapper as HTMLElement).style.display = 'none'
           }
+        } else {
+          adBlocked = false
         }
       })
 
