@@ -42,7 +42,6 @@ export class CrowdfundingService {
       })
       ?.find((goal, goalIndex) => {
         const progress = (totalAmount * 100) / goal.amount
-        console.log('progress', totalAmount, goal.amount)
 
         // if total amount is still 0 return first goal
         if (totalAmount === 0 && goalIndex === 0) {
