@@ -63,6 +63,7 @@ import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
 import {AdblockOverlay} from '../src/components/adblock-detector'
 import {OnlineReportsFooter} from '../src/components/footer'
+import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
 
 setDefaultOptions({
   locale: de
@@ -214,6 +215,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             ArticleAuthors={OnlineReportsArticleAuthors}
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
+            RegistrationForm={OnlineReportsRegistrationForm}
             elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: OnlineReportsTeaser,
