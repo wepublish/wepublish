@@ -451,8 +451,28 @@ type CrowdfundingGoal {
   title: String!
 }
 
+type CrowdfundingGoalWithProgress {
+  amount: Float!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  modifiedAt: DateTime!
+  progress: Float
+  title: String!
+}
+
 type CrowdfundingMemberPlan {
   id: ID!
+  name: String!
+}
+
+type CrowdfundingWithActiveGoal {
+  activeCrowdfundingGoal: CrowdfundingGoalWithProgress
+  createdAt: DateTime!
+  goals: [CrowdfundingGoal!]!
+  id: ID!
+  memberPlans: [CrowdfundingMemberPlan!]!
+  modifiedAt: DateTime!
   name: String!
 }
 
@@ -1501,8 +1521,8 @@ type Query {
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
-  """Get a single crowdfunding by id"""
-  crowdfunding(id: ID!): Crowdfunding!
+  """Get a single crowdfunding by id with calculated progress"""
+  crowdfunding(id: ID!): CrowdfundingWithActiveGoal!
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!

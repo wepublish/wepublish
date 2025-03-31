@@ -28,6 +28,12 @@ export class CrowdfundingGoal {
   amount!: number
 }
 
+@ObjectType()
+export class CrowdfundingGoalWithProgress extends CrowdfundingGoal {
+  @Field(() => Number, {nullable: true})
+  progress?: number
+}
+
 @InputType()
 export class CreateCrowdfundingGoalInput extends PickType(
   CrowdfundingGoal,

@@ -55,7 +55,9 @@ function CrowdfundingList() {
             <HeaderCell>{t('crowdfunding.list.name')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Crowdfunding>) => (
-                <Link to={`/crowdfundings/edit/${rowData.id}`}>{rowData.name}</Link>
+                <Link to={`/crowdfundings/edit/${rowData.id}`}>
+                  {rowData.name || 'Crowdfunding ohne Namen'}
+                </Link>
               )}
             </RCell>
           </Column>

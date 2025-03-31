@@ -680,9 +680,31 @@ export type CrowdfundingGoal = {
   title: Scalars['String']
 }
 
+export type CrowdfundingGoalWithProgress = {
+  __typename?: 'CrowdfundingGoalWithProgress'
+  amount: Scalars['Float']
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  modifiedAt: Scalars['DateTime']
+  progress?: Maybe<Scalars['Float']>
+  title: Scalars['String']
+}
+
 export type CrowdfundingMemberPlan = {
   __typename?: 'CrowdfundingMemberPlan'
   id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type CrowdfundingWithActiveGoal = {
+  __typename?: 'CrowdfundingWithActiveGoal'
+  activeCrowdfundingGoal?: Maybe<CrowdfundingGoalWithProgress>
+  createdAt: Scalars['DateTime']
+  goals: Array<CrowdfundingGoal>
+  id: Scalars['ID']
+  memberPlans: Array<CrowdfundingMemberPlan>
+  modifiedAt: Scalars['DateTime']
   name: Scalars['String']
 }
 
@@ -2498,8 +2520,8 @@ export type Query = {
    *
    */
   consents: Array<Consent>
-  /** Get a single crowdfunding by id */
-  crowdfunding: Crowdfunding
+  /** Get a single crowdfunding by id with calculated progress */
+  crowdfunding: CrowdfundingWithActiveGoal
   /** Returns a paginated list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>
   /** Returns a event by id. */

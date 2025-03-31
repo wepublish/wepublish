@@ -35,7 +35,7 @@ export const EditCrowdfundingForm = () => {
     },
     skip: !id,
     onCompleted: data => {
-      const {__typename, ...inputWithoutTypename} = data.crowdfunding
+      const {__typename, activeCrowdfundingGoal, ...inputWithoutTypename} = data.crowdfunding
       setCrowdfunding(inputWithoutTypename)
     }
   })

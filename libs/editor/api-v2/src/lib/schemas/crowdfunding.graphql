@@ -6,7 +6,7 @@ query Crowdfundings {
 
 query Crowdfunding($id: ID!) {
   crowdfunding(id: $id) {
-    ...FullCrowdfunding
+    ...FullCrowdfundingWithActiveGoal
   }
 }
 
@@ -43,6 +43,20 @@ input UpdateCrowdfundingInput {
   goals: [CreateCrowdfundingGoalInput!]
 }
 
+fragment FullCrowdfundingWithActiveGoal on CrowdfundingWithActiveGoal {
+  id
+  name
+  goals {
+    ...FullCrowdfundingGoal
+  }
+  activeCrowdfundingGoal {
+    ...FullCrowdfundingGoalWithProgress
+  }
+  memberPlans {
+    id
+  }
+}
+
 fragment FullCrowdfunding on Crowdfunding {
   id
   name
@@ -61,4 +75,12 @@ fragment FullCrowdfundingGoal on CrowdfundingGoal {
   title
   description
   amount
+}
+
+fragment FullCrowdfundingGoalWithProgress on CrowdfundingGoalWithProgress {
+  id
+  title
+  description
+  amount
+  progress
 }

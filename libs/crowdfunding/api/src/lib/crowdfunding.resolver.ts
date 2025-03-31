@@ -3,6 +3,7 @@ import {
   CreateCrowdfundingInput,
   Crowdfunding,
   CrowdfundingId,
+  CrowdfundingWithActiveGoal,
   UpdateCrowdfundingInput
 } from './crowdfunding.model'
 import {CrowdfundingService} from './crowdfunding.service'
@@ -25,7 +26,9 @@ export class CrowdfundingResolver {
   ) {}
 
   @Permissions(CanGetCrowdfunding)
-  @Query(() => Crowdfunding, {description: 'Get a single crowdfunding by id'})
+  @Query(() => CrowdfundingWithActiveGoal, {
+    description: 'Get a single crowdfunding by id with calculated progress'
+  })
   public crowdfunding(@Args() {id}: CrowdfundingId) {
     return this.crowdfundingService.getCrowdfundingById(id)
   }

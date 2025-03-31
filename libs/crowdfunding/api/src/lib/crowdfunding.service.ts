@@ -1,12 +1,17 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {CreateCrowdfundingInput, UpdateCrowdfundingInput} from './crowdfunding.model'
+import {
+  CreateCrowdfundingInput,
+  CrowdfundingWithActiveGoal,
+  UpdateCrowdfundingInput
+} from './crowdfunding.model'
+import {CrowdfundingGoalWithProgress} from './crowdfunding-goal.model'
 
 @Injectable()
 export class CrowdfundingService {
   constructor(private prisma: PrismaClient) {}
 
-  async getCrowdfundingById(id: string) {
+  async getCrowdfundingById(id: string): Promise<CrowdfundingWithActiveGoal> {
     const crowdfunding = await this.prisma.crowdfunding.findUnique({
       where: {
         id
@@ -18,7 +23,74 @@ export class CrowdfundingService {
     })
     if (!crowdfunding) throw new NotFoundException()
 
-    return crowdfunding
+    return {
+      ...crowdfunding,
+      activeCrowdfundingGoal: await this.getActiveGoalWithProgress({crowdfunding})
+    }
+  }
+
+  private async getActiveGoalWithProgress({
+    crowdfunding
+  }: {
+    crowdfunding: CrowdfundingWithActiveGoal
+  }): Promise<CrowdfundingGoalWithProgress | undefined> {
+    const totalAmount = await this.getTotalAmount({crowdfunding})
+
+    const activeGoal = crowdfunding.goals
+      ?.sort((goalA, goalB) => {
+        return goalA.amount - goalB.amount
+      })
+      ?.find((goal, goalIndex) => {
+        const progress = (totalAmount * 100) / goal.amount
+        console.log('progress', totalAmount, goal.amount)
+
+        // if total amount is still 0 return first goal
+        if (totalAmount === 0 && goalIndex === 0) {
+          return true
+        }
+
+        // progress in the middle of this goal
+        if (progress < 100) {
+          return true
+        }
+
+        // last goal
+        if (goalIndex + 1 === crowdfunding.goals?.length) {
+          return true
+        }
+      })
+
+    if (!activeGoal) {
+      return
+    }
+
+    return {
+      ...activeGoal,
+      progress: (totalAmount * 100) / activeGoal.amount
+    }
+  }
+
+  private async getTotalAmount({
+    crowdfunding
+  }: {
+    crowdfunding: CrowdfundingWithActiveGoal
+  }): Promise<number> {
+    const memberPlanIds: string[] = crowdfunding.memberPlans?.map(memberPlan => memberPlan.id) || []
+
+    const subscriptions = await this.prisma.subscription.findMany({
+      where: {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      },
+      select: {
+        monthlyAmount: true
+      }
+    })
+
+    return subscriptions
+      .map(subscription => subscription.monthlyAmount)
+      .reduce((total, monthlyAmount) => total + monthlyAmount, 0)
   }
 
   async getCrowdfundings() {

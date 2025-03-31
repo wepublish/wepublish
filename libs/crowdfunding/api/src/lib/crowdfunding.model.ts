@@ -1,5 +1,9 @@
 import {ArgsType, Directive, Field, ID, InputType, ObjectType, PickType} from '@nestjs/graphql'
-import {CreateCrowdfundingGoalInput, CrowdfundingGoal} from './crowdfunding-goal.model'
+import {
+  CreateCrowdfundingGoalInput,
+  CrowdfundingGoal,
+  CrowdfundingGoalWithProgress
+} from './crowdfunding-goal.model'
 
 /**
  * This Memberplan is only here to provide the interface and
@@ -41,6 +45,12 @@ export class Crowdfunding {
 
   @Field(type => [CrowdfundingMemberPlan])
   memberPlans?: CrowdfundingMemberPlan[]
+}
+
+@ObjectType()
+export class CrowdfundingWithActiveGoal extends Crowdfunding {
+  @Field(() => CrowdfundingGoalWithProgress, {nullable: true})
+  activeCrowdfundingGoal?: CrowdfundingGoalWithProgress
 }
 
 @ArgsType()
