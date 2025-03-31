@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next'
 import {BlockProps} from '../atoms/blockList'
 import {useEffect, useState} from 'react'
-import {Drawer, IconButton, Panel as RPanel} from 'rsuite'
+import {Drawer, IconButton, Progress, Panel as RPanel} from 'rsuite'
 import {PlaceholderInput} from '../atoms'
 import {MdEdit} from 'react-icons/md'
 import styled from '@emotion/styled'
@@ -15,13 +15,20 @@ const IconWrapper = styled.div`
   right: 0;
 `
 
-const Poll = styled.div`
+const Crowdfunding = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+`
+
+const CrowdfundingRow = styled.div`
+  width: 100%;
+  text-align: center;
 `
 
 const Panel = styled(RPanel)`
@@ -51,20 +58,25 @@ export const CrowdfundingBlock = ({
       <Panel bodyFill bordered>
         <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
           {crowdfunding && (
-            <Poll>
+            <Crowdfunding>
               <IconWrapper>
                 <IconButton size="lg" icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
-                  {t('blocks.poll.edit')}
+                  {t('blocks.crowdfunding.edit')}
                 </IconButton>
               </IconWrapper>
 
-              {crowdfunding.name}
-            </Poll>
+              <CrowdfundingRow>
+                <h2>Crowdfunding {crowdfunding.name}</h2>
+              </CrowdfundingRow>
+              <CrowdfundingRow>
+                <Progress.Line percent={30} />
+              </CrowdfundingRow>
+            </Crowdfunding>
           )}
         </PlaceholderInput>
       </Panel>
 
-      <Drawer size="lg" open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+      <Drawer size="sm" open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <SelectCrowdfundingPanel
           selectedCrowdfunding={crowdfunding}
           onClose={() => setIsDialogOpen(false)}

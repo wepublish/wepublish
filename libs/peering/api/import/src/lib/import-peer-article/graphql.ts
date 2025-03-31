@@ -654,14 +654,15 @@ export type Crowdfunding = {
   name: Scalars['String']
 }
 
-export type CrowdfundingBlock = BaseBlock & {
-  __typename?: 'CrowdfundingBlock'
-  blockStyle?: Maybe<Scalars['String']>
-  blockStyleName?: Maybe<Scalars['String']>
-  crowdfunding?: Maybe<Crowdfunding>
-  crowdfundingId?: Maybe<Scalars['String']>
-  type: BlockType
-}
+export type CrowdfundingBlock = BaseBlock &
+  HasOptionalCrowdfunding & {
+    __typename?: 'CrowdfundingBlock'
+    blockStyle?: Maybe<Scalars['String']>
+    blockStyleName?: Maybe<Scalars['String']>
+    crowdfunding?: Maybe<Crowdfunding>
+    crowdfundingId?: Maybe<Scalars['String']>
+    type: BlockType
+  }
 
 export type CrowdfundingBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>
@@ -1035,6 +1036,11 @@ export type HasImage = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>
   articleID?: Maybe<Scalars['String']>
+}
+
+export type HasOptionalCrowdfunding = {
+  crowdfunding?: Maybe<Crowdfunding>
+  crowdfundingId?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalEvent = {
@@ -3503,7 +3509,7 @@ type BlockWithoutTeaser_CrowdfundingBlock_Fragment = {
   __typename: 'CrowdfundingBlock'
   blockStyle?: string | null
   type: BlockType
-  crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
+  crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
 }
 
 type BlockWithoutTeaser_EventBlock_Fragment = {
@@ -3890,7 +3896,7 @@ type FullBlock_CrowdfundingBlock_Fragment = {
   __typename: 'CrowdfundingBlock'
   blockStyle?: string | null
   type: BlockType
-  crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
+  crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
 }
 
 type FullBlock_EventBlock_Fragment = {
@@ -4540,7 +4546,7 @@ type ImportBlock_CrowdfundingBlock_Fragment = {
   __typename: 'CrowdfundingBlock'
   blockStyle?: string | null
   type: BlockType
-  crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
+  crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
 }
 
 type ImportBlock_EventBlock_Fragment = {
@@ -5277,7 +5283,7 @@ export type ArticleQuery = {
             __typename: 'CrowdfundingBlock'
             blockStyle?: string | null
             type: BlockType
-            crowdfunding?: {__typename?: 'Crowdfunding'; id: string} | null
+            crowdfunding?: {__typename?: 'Crowdfunding'; id: string; name: string} | null
           }
         | {
             __typename: 'EventBlock'
@@ -5941,6 +5947,7 @@ export const BlockWithoutTeaser = gql`
       type
       crowdfunding {
         id
+        name
       }
     }
     ... on ListicleBlock {
@@ -6420,6 +6427,7 @@ const result: PossibleTypesResultData = {
       'QuoteBlock'
     ],
     HasOptionalArticle: ['ArticleTeaser'],
+    HasOptionalCrowdfunding: ['CrowdfundingBlock'],
     HasOptionalEvent: ['EventTeaser'],
     HasOptionalPage: ['PageTeaser'],
     HasOptionalPeerLc: ['Article', 'PeerArticle'],

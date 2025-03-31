@@ -428,7 +428,7 @@ type Crowdfunding {
   name: String!
 }
 
-type CrowdfundingBlock implements BaseBlock {
+type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   blockStyle: String
   blockStyleName: String
   crowdfunding: Crowdfunding
@@ -779,6 +779,11 @@ interface HasImage {
 interface HasOptionalArticle {
   article: Article
   articleID: String
+}
+
+interface HasOptionalCrowdfunding {
+  crowdfunding: Crowdfunding
+  crowdfundingId: String
 }
 
 interface HasOptionalEvent {

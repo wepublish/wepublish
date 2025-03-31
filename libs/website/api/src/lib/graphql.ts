@@ -613,7 +613,7 @@ export type Crowdfunding = {
   name: Scalars['String'];
 };
 
-export type CrowdfundingBlock = BaseBlock & {
+export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
   __typename?: 'CrowdfundingBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
@@ -990,6 +990,11 @@ export type HasImage = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
   articleID?: Maybe<Scalars['String']>;
+};
+
+export type HasOptionalCrowdfunding = {
+  crowdfunding?: Maybe<Crowdfunding>;
+  crowdfundingId?: Maybe<Scalars['String']>;
 };
 
 export type HasOptionalEvent = {
@@ -7252,6 +7257,9 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "HasOptionalArticle": [
       "ArticleTeaser"
+    ],
+    "HasOptionalCrowdfunding": [
+      "CrowdfundingBlock"
     ],
     "HasOptionalEvent": [
       "EventTeaser"

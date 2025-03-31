@@ -8,7 +8,7 @@ export class HasCrowdfundingResolver {
   constructor(private dataloader: CrowdfundingDataloaderService) {}
 
   @ResolveField(() => Crowdfunding, {nullable: true})
-  public article(@Parent() block: HasOptionalCrowdfunding | HasCrowdfunding) {
+  public crowdfunding(@Parent() block: HasOptionalCrowdfunding | HasCrowdfunding) {
     const id = block.crowdfundingId
 
     if (!id) {
