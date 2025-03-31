@@ -19,7 +19,10 @@ const lora = Lora({
   preload: true
 })
 
-const {breakpoints} = WePTheme
+const {
+  breakpoints,
+  palette: {augmentColor}
+} = WePTheme
 
 const palette: ThemeOptions['palette'] = {
   ...WePTheme.palette,
@@ -28,14 +31,18 @@ const palette: ThemeOptions['palette'] = {
     secondary: '#10243A',
     disabled: '#7C7C7C'
   },
-  primary: {
-    main: '#E1190F',
-    contrastText: '#fff'
-  },
-  secondary: {
-    main: '#89B9DC',
-    contrastText: '#10243A'
-  }
+  primary: augmentColor({
+    color: {
+      main: '#E1190F',
+      contrastText: '#fff'
+    }
+  }),
+  secondary: augmentColor({
+    color: {
+      main: '#89B9DC',
+      contrastText: '#10243A'
+    }
+  })
 }
 
 const theme = createTheme(WePTheme, {
