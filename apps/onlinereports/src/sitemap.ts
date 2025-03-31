@@ -18,7 +18,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
 
   const generate = generateSitemap({
     siteUrl,
-    title: 'We.Publish'
+    title: 'OnlineReports'
   })
 
   const {publicRuntimeConfig} = getConfig()

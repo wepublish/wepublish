@@ -201,7 +201,7 @@ type CustomAppProps = AppProps<{
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'We.Publish'
+  const siteTitle = 'OnlineReports'
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -213,8 +213,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             AuthorChip={OnlineReportsAuthorChip}
             ArticleAuthors={OnlineReportsArticleAuthors}
             Navbar={OnlineReportsNavbar}
-            elements={{Link: NextWepublishLink}}
             Article={OnlineReportsArticle}
+            elements={{Link: NextWepublishLink}}
             blocks={{
               Teaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
