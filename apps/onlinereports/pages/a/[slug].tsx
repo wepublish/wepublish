@@ -19,6 +19,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 import styled from '@emotion/styled'
+import {Advertisement} from '../../src/components/advertisement'
 
 export const ArticleWrapper = styled('div')`
   display: grid;
@@ -71,6 +72,7 @@ export default function ArticleBySlugOrId() {
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}
+      <Advertisement type={'small'} />
     </>
   )
 }
