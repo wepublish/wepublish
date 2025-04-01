@@ -2208,11 +2208,19 @@ export type PeerArticleRevision = {
   __typename?: 'PeerArticleRevision';
   authors: Array<Author>;
   id: Scalars['String'];
-  image?: Maybe<Image>;
+  image?: Maybe<PeerImage>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   seoTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+};
+
+export type PeerImage = {
+  __typename?: 'PeerImage';
+  id: Scalars['String'];
+  license?: Maybe<Scalars['String']>;
+  source?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
 };
 
 export type PeerProfile = {
