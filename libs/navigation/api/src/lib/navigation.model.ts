@@ -11,9 +11,9 @@ import {Article, HasArticle} from '@wepublish/article/api'
 import {HasPage, Page} from '@wepublish/page/api'
 
 export enum NavigationLinkType {
-  Page = 'Page',
-  Article = 'Article',
-  External = 'External'
+  Page = 'page',
+  Article = 'article',
+  External = 'external'
 }
 
 registerEnumType(NavigationLinkType, {
@@ -43,8 +43,8 @@ export class Navigation {
 
 @InterfaceType({
   isAbstract: true,
-  resolveType(value) {
-    switch (value.type) {
+  resolveType(value: BaseNavigationLink) {
+    switch (value.type.toLowerCase()) {
       case NavigationLinkType.Article:
         return ArticleNavigationLink
       case NavigationLinkType.Page:
