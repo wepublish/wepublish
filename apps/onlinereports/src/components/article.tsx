@@ -66,7 +66,11 @@ export function OnlineReportsArticle({
       <ArticleWrapper className={className}>
         {article && <ArticleSEO article={article} />}
 
-        <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
+        <Blocks
+          key={article.id}
+          blocks={(article?.latest.blocks as BlockContent[]) ?? []}
+          type="Article"
+        />
 
         <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
 
