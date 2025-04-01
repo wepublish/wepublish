@@ -1304,11 +1304,18 @@ input PeerArticleFilter {
 type PeerArticleRevision {
   authors: [Author!]!
   id: String!
-  image: Image
+  image: PeerImage
   lead: String
   preTitle: String
   seoTitle: String
   title: String
+}
+
+type PeerImage {
+  id: String!
+  license: String
+  source: String
+  url: String!
 }
 
 type PeriodicJob {

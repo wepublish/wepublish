@@ -34,7 +34,13 @@ export function Article({className, data, children, loading, error}: BuilderArti
     <ArticleWrapper className={className}>
       {article && <ArticleSEO article={article} />}
 
-      <Blocks blocks={(article?.latest.blocks as BlockContent[]) ?? []} type="Article" />
+      {article && (
+        <Blocks
+          key={article.id}
+          blocks={(article.latest.blocks as BlockContent[]) ?? []}
+          type="Article"
+        />
+      )}
 
       <ArticleInfoWrapper>
         {article && <ArticleAuthors article={article} />}
