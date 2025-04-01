@@ -95,12 +95,13 @@ export const LoggedInButtons = ({subscribeBtn, profileBtn}: LoggedInButtonsProps
           </IconButton>
         </Link>
       )}
-
-      <Link href={profileBtn?.href}>
-        <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
-          <MdAccountCircle aria-label="Profil" />
-        </IconButton>
-      </Link>
+      {profileBtn && (
+        <Link href={profileBtn?.href}>
+          <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
+            <MdAccountCircle aria-label="Profil" />
+          </IconButton>
+        </Link>
+      )}
     </>
   )
 }
@@ -118,11 +119,13 @@ export const LoggedOutButtons = ({loginBtn}: LoggedOutButtonsProps) => {
   }
   return (
     <>
-      <Link href={loginBtn?.href}>
-        <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
-          <MdAccountCircle aria-label="Login" />
-        </IconButton>
-      </Link>
+      {loginBtn && (
+        <Link href={loginBtn?.href}>
+          <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
+            <MdAccountCircle aria-label="Login" />
+          </IconButton>
+        </Link>
+      )}
     </>
   )
 }
@@ -175,9 +178,8 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
     isMenuOpen &&
     css`
       z-index: -1;
-    `}
-
-  @media (min-width: 740px) {
+    `} @media (
+  min-width: 740px) {
     // custom for maximum space usage
     display: flex;
 
@@ -267,6 +269,7 @@ const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
+
   img {
     width: auto;
   }

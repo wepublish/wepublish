@@ -260,17 +260,15 @@ export const MemberButtons = ({
             </Button>
           )}
 
-          {loginBtn && (
-            <Button
-              onClick={() => {
-                logout()
-                closeMenu()
-              }}
-              variant="outlined"
-              color="secondary">
-              Logout
-            </Button>
-          )}
+          <Button
+            onClick={() => {
+              logout()
+              closeMenu()
+            }}
+            variant="outlined"
+            color="secondary">
+            Logout
+          </Button>
         </>
       )}
     </NavPaperActions>

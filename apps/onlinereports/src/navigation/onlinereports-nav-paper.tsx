@@ -188,6 +188,10 @@ const NavigationWrapper = styled('div')`
   flex-direction: column;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: start;
+
+  .MuiButton-outlined {
+    color: ${({theme}) => theme.palette.secondary.contrastText}!important;
+  }
 `
 
 const NavigationCategoryWrapper = styled('span')`

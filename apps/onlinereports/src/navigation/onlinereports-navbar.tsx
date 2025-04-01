@@ -70,9 +70,9 @@ export function OnlineReportsNavbar({
   className,
   children,
   logo,
-  loginBtn = {href: '/login'},
-  profileBtn = {href: '/profile'},
-  subscribeBtn = {href: '/mitmachen'},
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   hasRunningSubscription,
   hasUnpaidInvoices,
   ...menuProps
