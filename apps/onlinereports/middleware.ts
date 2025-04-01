@@ -1,8 +1,16 @@
 import {NextRequest, NextResponse} from 'next/server'
+import {redirectMap} from './redirectMap'
 
 export async function middleware(request: NextRequest) {
   const {pathname} = request.nextUrl
   console.log(`Checking ${pathname}`)
+
+  const htmlFile = pathname.substring(1) // Remove leading slash
+  if (redirectMap.has(htmlFile)) {
+    const newPath = `/${redirectMap.get(htmlFile)}`
+    return NextResponse.redirect(new URL(newPath, request.url), 301)
+  }
+
   const externalHostname = 'https://onlinereports.ch'
   const externalUrl = `${externalHostname}${pathname}`
   try {
