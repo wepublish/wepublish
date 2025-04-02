@@ -3,6 +3,7 @@ fragment FullBanner on Banner {
   title
   text
   cta
+  delay
 
   showOnArticles
   showOnPages {

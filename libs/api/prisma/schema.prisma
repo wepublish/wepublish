@@ -1297,6 +1297,8 @@ model Banner {
 
   active Boolean @default(true)
 
+  delay              Int         @default(0)
+
   showOnArticles     Boolean     @default(true)
   showOnPages        Page[]
   showForLoginStatus LoginStatus @default(ALL)
