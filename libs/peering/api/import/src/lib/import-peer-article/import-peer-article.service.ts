@@ -12,7 +12,8 @@ import {
   ListicleItemInput,
   PollBlockInput,
   TeaserGridBlockInput,
-  TeaserListBlockInput
+  TeaserListBlockInput,
+  TeaserSlotsBlockInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {createSafeHostUrl} from '@wepublish/peering/api'
@@ -22,14 +23,14 @@ import {pipe, replace, toLower} from 'ramda'
 import {ValueOf} from 'type-fest'
 import {
   Article,
+  ArticleFilter as GqlArticleFilter,
   ArticleList,
   ArticleListQuery,
   ArticleListQueryVariables,
   ArticleQuery,
   ArticleQueryVariables,
-  FullImageFragment,
-  ArticleFilter as GqlArticleFilter,
-  DateFilter as GqlDateFilter
+  DateFilter as GqlDateFilter,
+  FullImageFragment
 } from './graphql'
 import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
 
@@ -385,6 +386,10 @@ export class ImportPeerArticleService {
               type: BlockType.TeaserGrid,
               teasers: []
             } as TeaserGridBlockInput
+          }
+
+          case 'TeaserSlotsBlock': {
+            return {} as TeaserSlotsBlockInput
           }
 
           case 'TeaserListBlock': {

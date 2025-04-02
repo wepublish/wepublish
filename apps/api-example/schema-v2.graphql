@@ -236,7 +236,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -260,6 +260,7 @@ input BlockContentInput {
   teaserGrid: TeaserGridBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
   teaserList: TeaserListBlockInput
+  teaserSlots: TeaserSlotsBlockInput
   tikTokVideo: TikTokVideoBlockInput
   title: TitleBlockInput
   twitterTweet: TwitterTweetBlockInput
@@ -297,6 +298,7 @@ enum BlockType {
   TeaserGrid
   TeaserGridFlex
   TeaserList
+  TeaserSlots
   TikTokVideo
   Title
   TwitterTweet
@@ -483,6 +485,7 @@ enum EditorBlockType {
   TeaserGrid6
   TeaserGridFlex
   TeaserList
+  TeaserSlot
   Title
 }
 
@@ -1771,6 +1774,56 @@ input TeaserListBlockInput {
 enum TeaserListBlockSort {
   HotAndTrending
   PublishedAt
+}
+
+type TeaserSlot {
+  teaser: Teaser!
+  type: TeaserSlotType!
+}
+
+input TeaserSlotInput {
+  teasers: [TeaserInput!]
+  type: TeaserSlotType! = Autofill
+}
+
+enum TeaserSlotType {
+  Autofill
+  Manual
+}
+
+type TeaserSlotsAutofillConfig implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  enabled: Boolean!
+  filter: TeaserListBlockFilter!
+  sort: TeaserListBlockSort
+  teaserType: TeaserType!
+  type: BlockType!
+}
+
+input TeaserSlotsAutofillConfigInput {
+  enabled: Boolean!
+  filter: TeaserListBlockFilterInput!
+  sort: TeaserListBlockSort = PublishedAt
+  teaserType: TeaserType!
+}
+
+type TeaserSlotsBlock implements BaseBlock {
+  autofillConfig: TeaserSlotsAutofillConfig!
+  blockStyle: String
+  blockStyleName: String
+  slots: [TeaserSlot!]!
+  teasers: [Teaser]!
+  title: String
+  type: BlockType!
+}
+
+input TeaserSlotsBlockInput {
+  autofillConfig: TeaserSlotsAutofillConfigInput!
+  blockStyle: String
+  blockStyleName: String
+  slots: [TeaserSlotInput!]!
+  title: String
 }
 
 enum TeaserType {

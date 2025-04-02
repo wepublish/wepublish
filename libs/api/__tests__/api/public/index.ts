@@ -303,7 +303,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -327,6 +327,7 @@ export type BlockContentInput = {
   teaserGrid?: InputMaybe<TeaserGridBlockInput>;
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
   teaserList?: InputMaybe<TeaserListBlockInput>;
+  teaserSlots?: InputMaybe<TeaserSlotsBlockInput>;
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
   title?: InputMaybe<TitleBlockInput>;
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
@@ -365,6 +366,7 @@ export enum BlockType {
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   TikTokVideo = 'TikTokVideo',
   Title = 'Title',
   TwitterTweet = 'TwitterTweet',
@@ -664,6 +666,7 @@ export enum EditorBlockType {
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   Title = 'Title'
 }
 
@@ -3187,6 +3190,59 @@ export enum TeaserListBlockSort {
   HotAndTrending = 'HotAndTrending',
   PublishedAt = 'PublishedAt'
 }
+
+export type TeaserSlot = {
+  __typename?: 'TeaserSlot';
+  teaser: Teaser;
+  type: TeaserSlotType;
+};
+
+export type TeaserSlotInput = {
+  teasers?: InputMaybe<Array<TeaserInput>>;
+  type?: TeaserSlotType;
+};
+
+export enum TeaserSlotType {
+  Autofill = 'Autofill',
+  Manual = 'Manual'
+}
+
+export type TeaserSlotsAutofillConfig = BaseBlock & {
+  __typename?: 'TeaserSlotsAutofillConfig';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  enabled: Scalars['Boolean'];
+  filter: TeaserListBlockFilter;
+  sort?: Maybe<TeaserListBlockSort>;
+  teaserType: TeaserType;
+  type: BlockType;
+};
+
+export type TeaserSlotsAutofillConfigInput = {
+  enabled: Scalars['Boolean'];
+  filter: TeaserListBlockFilterInput;
+  sort?: InputMaybe<TeaserListBlockSort>;
+  teaserType: TeaserType;
+};
+
+export type TeaserSlotsBlock = BaseBlock & {
+  __typename?: 'TeaserSlotsBlock';
+  autofillConfig: TeaserSlotsAutofillConfig;
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  slots: Array<TeaserSlot>;
+  teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type TeaserSlotsBlockInput = {
+  autofillConfig: TeaserSlotsAutofillConfigInput;
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  slots: Array<TeaserSlotInput>;
+  title?: InputMaybe<Scalars['String']>;
+};
 
 export enum TeaserType {
   Article = 'Article',

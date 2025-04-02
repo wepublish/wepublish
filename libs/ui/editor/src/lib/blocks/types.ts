@@ -15,6 +15,8 @@ import {
   FullImageFragment,
   PageWithoutBlocksFragment,
   TeaserListBlockSort,
+  TeaserSlotsAutofillConfigInput,
+  TeaserSlotType,
   TeaserType
 } from '@wepublish/editor/api-v2'
 
@@ -229,11 +231,19 @@ export interface BaseTeaser {
 }
 
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
+
 export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
+
 export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
+
 export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
 export type Teaser = ArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+
+export type TeaserSlot = {
+  type: TeaserSlotType
+  teaser?: Teaser | null
+}
 
 export interface TeaserListBlockValue extends BaseBlockValue {
   title?: string | null
@@ -271,6 +281,13 @@ export interface TeaserGridFlexBlockValue extends BaseBlockValue {
   flexTeasers: FlexTeaser[]
 }
 
+export interface TeaserSlotsBlockValue extends BaseBlockValue {
+  title?: string | null
+  autofillConfig: TeaserSlotsAutofillConfigInput
+  slots: Array<TeaserSlot>
+  teasers: Array<Teaser | null>
+}
+
 export type RichTextBlockListValue = BlockListValue<EditorBlockType.RichText, RichTextBlockValue>
 export type ImageBlockListValue = BlockListValue<EditorBlockType.Image, ImageBlockValue>
 export type ImageGalleryBlockListValue = BlockListValue<
@@ -304,6 +321,11 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
   TeaserGridFlexBlockValue
 >
 
+export type TeaserSlotsBlockListValue = BlockListValue<
+  EditorBlockType.TeaserSlots,
+  TeaserSlotsBlockValue
+>
+
 export type HTMLBlockListValue = BlockListValue<EditorBlockType.Html, HTMLBlockValue>
 
 export type PollBlockListValue = BlockListValue<EditorBlockType.Poll, PollBlockValue>
@@ -325,6 +347,7 @@ export type BlockValue =
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
   | TeaserGridFlexBlockListValue
+  | TeaserSlotsBlockListValue
   | HTMLBlockListValue
   | SubscribeBlockListValue
   | PollBlockListValue
@@ -570,6 +593,26 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
           blockStyle: block.value.blockStyle,
           teaserType: block.value.teaserType,
           sort: block.value.sort
+        }
+      }
+
+    case EditorBlockType.TeaserSlots:
+      return {
+        teaserSlots: {
+          title: block.value.title,
+          autofillConfig: {
+            ...block.value.autofillConfig,
+            enabled: block.value.autofillConfig.enabled ?? false
+          },
+          slots: block.value.slots ?? [
+            {type: TeaserSlotType.Manual},
+            {type: TeaserSlotType.Manual},
+            {type: TeaserSlotType.Manual},
+            {type: TeaserSlotType.Manual},
+            {type: TeaserSlotType.Manual},
+            {type: TeaserSlotType.Manual}
+          ],
+          blockStyle: block.value.blockStyle
         }
       }
 
