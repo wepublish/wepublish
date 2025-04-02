@@ -30,6 +30,7 @@ input CreateBannerInput {
   title: String!
   text: String!
   active: Boolean!
+  delay: Int!
   showOnArticles: Boolean!
   showForLoginStatus: LoginStatus!
   actions: [CreateBannerActionInput]!
@@ -37,9 +38,9 @@ input CreateBannerInput {
 }
 
 input CreateBannerActionInput {
-  label: string!
-  url: string!
-  style: string!
+  label: String!
+  url: String!
+  style: String!
 }
 
 input UpdateBannerInput {
@@ -47,6 +48,7 @@ input UpdateBannerInput {
   title: String!
   text: String!
   active: Boolean!
+  delay: Int!
   showOnArticles: Boolean!
   showForLoginStatus: LoginStatus!
   actions: [CreateBannerActionInput!]
@@ -64,6 +66,8 @@ fragment FullBanner on Banner {
   cta
 
   active
+
+  delay
 
   showOnArticles
   showOnPages {

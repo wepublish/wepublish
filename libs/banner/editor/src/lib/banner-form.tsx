@@ -1,3 +1,4 @@
+import React, {SyntheticEvent} from 'react'
 import {
   CreateBannerActionInput,
   CreateBannerInput,
@@ -10,9 +11,20 @@ import {
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {CheckPicker, Drawer, Form, Input, Panel, RadioGroup, Toggle, Radio} from 'rsuite'
+import {
+  CheckPicker,
+  Drawer,
+  Form,
+  Input,
+  Panel,
+  RadioGroup,
+  Toggle,
+  Radio,
+  InputNumber
+} from 'rsuite'
 import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
+import e from 'express'
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
   image?: FullImageFragment | null
@@ -69,6 +81,16 @@ export const BannerForm = (props: BannerFormProps) => {
             rows={5}
             value={props.banner.text}
             onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="delay">
+          <Form.ControlLabel>{t('banner.form.delay')}</Form.ControlLabel>
+          <Form.Control
+            name="delay"
+            accepter={InputNumber}
+            value={props.banner.delay}
+            onChange={(v, e) => handleChange(parseInt(v, 10), e)}
           />
         </Form.Group>
 

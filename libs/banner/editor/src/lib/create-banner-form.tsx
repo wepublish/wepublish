@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   CreateBannerActionInput,
   CreateBannerInput,
@@ -22,10 +23,11 @@ export const CreateBannerForm = () => {
   const [banner, setBanner] = useState({
     active: false,
     showOnArticles: false,
-    showForLoginStatus: LoginStatus.All
+    showForLoginStatus: LoginStatus.All,
+    delay: 0
   } as CreateBannerInput & {image?: FullImageFragment | null})
 
-  const {StringType, BooleanType} = Schema.Types
+  const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     title: StringType().isRequired(),
     text: StringType().isRequired()

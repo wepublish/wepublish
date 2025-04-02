@@ -2921,6 +2921,7 @@ type BannerFactoryDefineInput = {
     text?: string;
     cta?: string | null;
     active?: boolean;
+    delay?: number;
     showOnArticles?: boolean;
     showForLoginStatus?: LoginStatus;
     image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;

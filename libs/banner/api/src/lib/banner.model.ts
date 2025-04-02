@@ -1,4 +1,12 @@
-import {ArgsType, Field, InputType, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  OmitType,
+  registerEnumType
+} from '@nestjs/graphql'
 import {BannerAction, CreateBannerActionInput} from './banner-action.model'
 import {Image} from '@wepublish/image/api'
 import {LoginStatus} from '@prisma/client'
@@ -39,6 +47,9 @@ export class Banner {
 
   @Field()
   active!: boolean
+
+  @Field(() => Int)
+  delay!: number
 
   @Field()
   showOnArticles!: boolean

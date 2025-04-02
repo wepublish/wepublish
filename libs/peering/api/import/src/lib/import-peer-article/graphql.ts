@@ -244,6 +244,7 @@ export type Banner = {
   actions?: Maybe<Array<BannerAction>>
   active: Scalars['Boolean']
   cta?: Maybe<Scalars['String']>
+  delay: Scalars['Int']
   id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
@@ -620,6 +621,7 @@ export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>
   active: Scalars['Boolean']
   cta?: InputMaybe<Scalars['String']>
+  delay: Scalars['Int']
   imageId?: InputMaybe<Scalars['String']>
   showForLoginStatus: LoginStatus
   showOnArticles: Scalars['Boolean']
@@ -3346,6 +3348,7 @@ export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>
   active: Scalars['Boolean']
   cta?: InputMaybe<Scalars['String']>
+  delay: Scalars['Int']
   id: Scalars['String']
   imageId?: InputMaybe<Scalars['String']>
   showForLoginStatus: LoginStatus

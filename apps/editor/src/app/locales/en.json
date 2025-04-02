@@ -223,6 +223,7 @@
         "title": "Title (maximized only)",
         "text": "Text (maximized only)",
         "cta": "Call to action (minimized only)",
+        "delay": "Delay in seconds",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
