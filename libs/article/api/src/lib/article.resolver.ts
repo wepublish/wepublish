@@ -154,7 +154,7 @@ export class ArticleResolver {
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
     if (!isPreview || !hasPermission(CanGetArticle, user?.roles ?? [])) {
-      return published
+      return published ?? pending
     }
 
     return draft ?? pending ?? published
