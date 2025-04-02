@@ -1157,7 +1157,7 @@
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
-      "artcilePage": "Articles & Pages",
+      "articlePage": "Articles & Pages",
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
