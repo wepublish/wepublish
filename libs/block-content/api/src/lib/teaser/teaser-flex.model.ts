@@ -31,7 +31,7 @@ export class FlexTeaser {
   alignment!: FlexAlignment
 
   @Field(() => Teaser, {nullable: true})
-  teaser?: typeof Teaser
+  teaser?: typeof Teaser | null
 }
 
 @InputType()
@@ -44,7 +44,7 @@ export class FlexTeaserInput extends OmitType(
   alignment!: FlexAlignmentInput
 
   @Field(() => TeaserInput, {nullable: true})
-  teaser?: TeaserInput
+  teaser?: TeaserInput | null
 }
 
 @ObjectType({
