@@ -200,6 +200,7 @@ fragment FullTeaser on Teaser {
             ...FullImage
         }
 
+        type
         preTitle
         title
         lead
@@ -228,6 +229,7 @@ fragment FullTeaser on Teaser {
             ...FullImage
         }
 
+        type
         preTitle
         title
         lead
@@ -242,6 +244,7 @@ fragment FullTeaser on Teaser {
             ...FullImage
         }
 
+        type
         preTitle
         title
         lead
@@ -256,6 +259,7 @@ fragment FullTeaser on Teaser {
             ...FullImage
         }
 
+        type
         preTitle
         title
         lead
@@ -341,8 +345,13 @@ fragment FullBlock on BlockContent {
         slots {
             type
             teaser {
+                __typename
                 ...FullTeaser
             }
+        },
+        teasers {
+            ...FullTeaser
         }
+
     }
 }

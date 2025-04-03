@@ -13,6 +13,7 @@ import {
   FullBlockFragment,
   FullEventFragment,
   FullImageFragment,
+  FullTeaserFragment,
   PageWithoutBlocksFragment,
   TeaserInput,
   TeaserListBlockSort,
@@ -974,6 +975,31 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
+    case 'TeaserSlotsBlock':
+      return {
+        key,
+        type: EditorBlockType.TeaserSlots,
+        value: {
+          blockStyle: block.blockStyle,
+          slots: block.slots.map(({teaser, type}) => ({
+            type,
+            teaser: {
+              ...teaser,
+              type:
+                teaser?.__typename === 'ArticleTeaser'
+                  ? TeaserType.Article
+                  : teaser?.__typename === 'PageTeaser'
+                  ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser'
+                  ? TeaserType.Event
+                  : TeaserType.Custom
+            } as Teaser
+          })),
+          autofillConfig: block.autofillConfig,
+          teasers: block.teasers.map(mapTeaserToQueryTeaser)
+        }
+      }
+
     case 'BreakBlock':
       return {
         key,
@@ -1027,9 +1053,12 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
   }
 }
 
-const mapTeaserToQueryTeaser = (teaser: Partial<Teaser> | null | undefined): Teaser | null => {
-  switch (teaser?.type) {
-    case TeaserType.Article:
+const mapTeaserToQueryTeaser = (teaser: FullTeaserFragment | null | undefined): Teaser | null => {
+  if (!teaser) {
+    return null
+  }
+  switch (teaser.__typename) {
+    case 'ArticleTeaser':
       return teaser.article
         ? {
             type: TeaserType.Article,
@@ -1041,7 +1070,7 @@ const mapTeaserToQueryTeaser = (teaser: Partial<Teaser> | null | undefined): Tea
           }
         : null
 
-    case TeaserType.Page:
+    case 'PageTeaser':
       return teaser.page
         ? {
             type: TeaserType.Page,
@@ -1053,7 +1082,7 @@ const mapTeaserToQueryTeaser = (teaser: Partial<Teaser> | null | undefined): Tea
           }
         : null
 
-    case TeaserType.Event:
+    case 'EventTeaser':
       return teaser.event
         ? {
             type: TeaserType.Event,
@@ -1065,7 +1094,7 @@ const mapTeaserToQueryTeaser = (teaser: Partial<Teaser> | null | undefined): Tea
           }
         : null
 
-    case TeaserType.Custom:
+    case 'CustomTeaser':
       return teaser
         ? {
             type: TeaserType.Custom,

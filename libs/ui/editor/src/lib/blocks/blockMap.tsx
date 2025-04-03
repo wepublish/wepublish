@@ -35,12 +35,16 @@ import {TeaserGridBlock} from './teaserGridBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
 import {TitleBlock} from './titleBlock'
 import {BlockValue, EmbedType} from './types'
-import {EditorBlockType, TeaserListBlockSort, TeaserType} from '@wepublish/editor/api-v2'
+import {
+  EditorBlockType,
+  TeaserListBlockSort,
+  TeaserSlotType,
+  TeaserType
+} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
 import {SubscribeBlock} from './subscribeBlock'
 import {TeaserSlotsBlock} from './teaserSlotsBlock'
-import {TeaserSlotType} from '@wepublish/block-content/api'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
