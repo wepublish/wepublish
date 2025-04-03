@@ -7,20 +7,7 @@ import {PrismaModule} from '@wepublish/nest-modules'
 import {SettingsResolver} from './settings.resolver'
 import {SettingsService} from './settings.service'
 import {GraphQLSettingValueType} from './settings.model'
-
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/',
-      cache: 'bounded'
-    }),
-    PrismaModule
-  ],
-  providers: [SettingsResolver, SettingsService, GraphQLSettingValueType]
-})
-export class AppModule {}
+import {SettingDataloaderService} from './setting-dataloader.service'
 
 const settingsListQuery = `
   query settings($filter: SettingFilter) {
@@ -69,65 +56,68 @@ const updateSettingMutation = `
   }
 `
 
+const mockSettingFindMany = jest.fn().mockResolvedValue([
+  {
+    id: '123',
+    name: 'allowCommentEditing',
+    value: true,
+    settingRestriction: {
+      maxValue: 100,
+      minValue: 10,
+      inputLength: 10,
+      allowedValues: {
+        stringChoice: 'some-string',
+        boolChoice: true
+      }
+    }
+  },
+  {
+    id: '123',
+    name: 'allowGuestCommenting',
+    value: true,
+    settingRestriction: {
+      maxValue: 100,
+      minValue: 10,
+      inputLength: 10,
+      allowedValues: {
+        stringChoice: 'some-string',
+        boolChoice: true
+      }
+    }
+  }
+])
+
+const mockSettingFindUnique = jest.fn().mockResolvedValue({
+  id: '123',
+  name: 'allowCommentEditing',
+  value: true,
+  settingRestriction: {
+    maxValue: 100,
+    minValue: 10,
+    inputLength: 10,
+    allowedValues: {
+      stringChoice: 'some-string',
+      boolChoice: true
+    }
+  }
+})
+
+const mockSettingUpdate = jest.fn().mockResolvedValue({
+  id: '123',
+  name: 'allowCommentEditing',
+  value: true,
+  settingRestriction: {
+    maxValue: 100,
+    minValue: 10,
+    inputLength: 10,
+    allowedValues: {
+      stringChoice: 'some-string',
+      boolChoice: true
+    }
+  }
+})
+
 jest.mock('@prisma/client', () => {
-  const mockSettingFindMany = jest.fn().mockResolvedValue([
-    {
-      id: '123',
-      name: 'allowCommentEditing',
-      value: true,
-      settingRestriction: {
-        maxValue: 100,
-        minValue: 10,
-        inputLength: 10,
-        allowedValues: {
-          stringChoice: 'some-string',
-          boolChoice: true
-        }
-      }
-    },
-    {
-      id: '123',
-      name: 'allowGuestCommenting',
-      value: true,
-      settingRestriction: {
-        maxValue: 100,
-        minValue: 10,
-        inputLength: 10,
-        allowedValues: {
-          stringChoice: 'some-string',
-          boolChoice: true
-        }
-      }
-    }
-  ])
-  const mockSettingFindUnique = jest.fn().mockResolvedValue({
-    id: '123',
-    name: 'allowCommentEditing',
-    value: true,
-    settingRestriction: {
-      maxValue: 100,
-      minValue: 10,
-      inputLength: 10,
-      allowedValues: {
-        stringChoice: 'some-string',
-        boolChoice: true
-      }
-    }
-  })
-  const mockSettingUpdate = jest.fn().mockResolvedValue({
-    id: '123',
-    name: 'allowCommentEditing',
-    value: true,
-    settingRestriction: {
-      maxValue: 100,
-      minValue: 10,
-      inputLength: 10,
-      allowedValues: {
-        stringChoice: 'some-string',
-        boolChoice: true
-      }
-    }
-  })
   return {
     PrismaClient: jest.fn().mockImplementation(() => {
       return {
@@ -140,6 +130,31 @@ jest.mock('@prisma/client', () => {
     })
   }
 })
+
+@Module({
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      path: '/',
+      cache: 'bounded'
+    }),
+    PrismaModule
+  ],
+  providers: [
+    SettingsResolver,
+    SettingsService,
+    GraphQLSettingValueType,
+    {
+      provide: SettingDataloaderService,
+      useValue: {
+        load: () => mockSettingFindUnique,
+        prime: jest.fn()
+      }
+    }
+  ]
+})
+export class AppModule {}
 
 describe('SettingsResolver', () => {
   let app: INestApplication
