@@ -33,6 +33,7 @@ CREATE UNIQUE INDEX "authors_slug_no_peerId" ON "authors"("slug") where "authors
 
 -- AlterEnum
 BEGIN;
+DELETE FROM "comments" where "itemType" = 'peerArticle'::"CommentItemType";
 CREATE TYPE "CommentItemType_new" AS ENUM ('article', 'page');
 ALTER TABLE "comments" ALTER COLUMN "itemType" TYPE "CommentItemType_new" USING ("itemType"::text::"CommentItemType_new");
 ALTER TYPE "CommentItemType" RENAME TO "CommentItemType_old";
