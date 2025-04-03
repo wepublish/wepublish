@@ -1,0 +1,85 @@
+import styled from '@emotion/styled'
+import {Box, useMediaQuery, useTheme} from '@mui/material'
+import {ReviveAd} from './revive-ad'
+import {useRouter} from 'next/router'
+import {useEffect, useState} from 'react'
+
+type AdvertisementProps = {
+  type: 'whiteboard' | 'half-page' | 'small'
+}
+
+export const Advertisement = ({type}: AdvertisementProps) => {
+  const theme = useTheme()
+  const notLg = useMediaQuery(theme.breakpoints.down('sm'), {
+    ssrMatchMedia: () => ({matches: false})
+  })
+  const [version, setVersion] = useState(0)
+
+  const router = useRouter()
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setVersion(version => version + 1)
+    }
+    router.events.on('routeChangeComplete', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router])
+
+  if (type === 'whiteboard' && notLg) {
+    type = 'small'
+  }
+
+  switch (type) {
+    case 'whiteboard':
+      return (
+        <Wideboard>
+          <ReviveAd key={version} reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23516'} />
+        </Wideboard>
+      )
+    case 'half-page':
+      return (
+        <HalfPage>
+          <ReviveAd key={version} reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23515'} />
+        </HalfPage>
+      )
+    case 'small':
+      return (
+        <Small>
+          <ReviveAd key={version} reviveId={'727bec5e09208690b050ccfc6a45d384'} zoneId={'23517'} />
+        </Small>
+      )
+  }
+}
+
+const AdBox = styled(Box)`
+  //background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
+  //border: 5px solid #eee;
+  margin: 0 auto;
+`
+
+const Wideboard = styled(AdBox)`
+  &,
+  img {
+    max-height: 250px;
+    height: auto;
+    width: 100%;
+    aspect-ratio: 994/250;
+  }
+`
+
+const HalfPage = styled(AdBox)`
+  &,
+  img {
+    height: 600px;
+    width: 300px;
+  }
+`
+
+const Small = styled(AdBox)`
+  &,
+  img {
+    height: 250px;
+    width: 300px;
+  }
+`

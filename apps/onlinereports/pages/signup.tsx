@@ -45,7 +45,7 @@ export default function SignUp() {
         (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
       </Typography>
 
-      <RegistrationFormContainer />
+      <RegistrationFormContainer fields={['firstName']} />
     </SignupWrapper>
   )
 }

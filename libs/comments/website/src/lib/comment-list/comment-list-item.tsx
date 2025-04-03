@@ -78,7 +78,8 @@ export const CommentListItem = ({
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const maxDepthHit = maxCommentDepth != null && commentDepth >= maxCommentDepth
-  const canReply = (anonymousCanComment || hasLoggedInUser) && !maxDepthHit
+  // const canReply = (anonymousCanComment || hasLoggedInUser) && !maxDepthHit
+  const canReply = !maxDepthHit
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)

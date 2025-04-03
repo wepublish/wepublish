@@ -54,12 +54,24 @@ export const SubscribeWrapper = styled('form')`
   display: grid;
   gap: ${({theme}) => theme.spacing(5)};
   align-content: start;
+  grid-template-areas:
+    'returning'
+    'memberPlans'
+    'monthlyAmount'
+    'userForm'
+    'paymentPeriodicity'
+    'challenge'
+    'transactionFee'
+    'cta';
 `
 
-export const SubscribeSection = styled('div')`
+export const SubscribeSection = styled('div')<{
+  area?: string
+}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   align-content: start;
+  grid-area: ${({area}) => area || 'auto'};
 
   &:empty {
     display: none;
@@ -390,7 +402,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
       {!hasUser && returningUserId && (
-        <SubscribeSection>
+        <SubscribeSection area={'returning'}>
           <H5 component="h2">
             {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
             zurück!
@@ -398,7 +410,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribeSection>
       )}
 
-      <SubscribeSection>
+      <SubscribeSection area={'memberPlans'}>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
         )}
@@ -432,7 +444,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {memberPlans.error && <ApiAlert error={memberPlans.error} severity="error" />}
       </SubscribeSection>
 
-      <SubscribeSection>
+      <SubscribeSection area={'monthlyAmount'}>
         <Controller
           name={'monthlyAmount'}
           control={control}
@@ -454,11 +466,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             </SubscribeAmount>
           )}
         />
-
-        {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
 
-      <SubscribeSection>
+      {!hasUserContext && (
+        <SubscribeSection area={'userForm'}>
+          <UserForm control={control} fields={fields} />
+        </SubscribeSection>
+      )}
+
+      <SubscribeSection area={'paymentPeriodicity'}>
         {allPaymentMethods && allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
@@ -509,7 +525,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
       {!hasUserContext && (
-        <SubscribeSection>
+        <SubscribeSection area={'challenge'}>
           <H5 component="h2">Spam-Schutz</H5>
 
           {challenge.data?.challenge && (
@@ -535,7 +551,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
-      <SubscribeSection>
+      <SubscribeSection area={'transactionFee'}>
         <Controller
           name={'payTransactionFee'}
           control={control}
@@ -543,7 +559,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         />
       </SubscribeSection>
 
-      <SubscribeNarrowSection>
+      <SubscribeNarrowSection area={'cta'}>
         <Button
           size={'large'}
           disabled={

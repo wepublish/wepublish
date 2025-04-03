@@ -8236,4 +8236,3 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
   }
 };
       export default result;
-    
