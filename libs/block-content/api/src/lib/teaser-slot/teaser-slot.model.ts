@@ -21,6 +21,6 @@ export class TeaserSlot {
 
 @InputType()
 export class TeaserSlotInput extends OmitType(TeaserSlot, ['teaser'] as const, InputType) {
-  @Field(() => [TeaserInput], {nullable: true})
-  teasers?: TeaserInput
+  @Field(() => TeaserInput, {nullable: true})
+  teaser?: TeaserInput
 }

@@ -485,7 +485,7 @@ enum EditorBlockType {
   TeaserGrid6
   TeaserGridFlex
   TeaserList
-  TeaserSlot
+  TeaserSlots
   Title
 }
 
@@ -1782,7 +1782,7 @@ type TeaserSlot {
 }
 
 input TeaserSlotInput {
-  teasers: [TeaserInput!]
+  teaser: TeaserInput
   type: TeaserSlotType! = Autofill
 }
 

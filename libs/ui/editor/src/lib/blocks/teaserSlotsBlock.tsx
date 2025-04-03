@@ -358,7 +358,7 @@ export function TeaserSlot({
         <TeaserWrapper autofill={!manualOverride}>
           {manualOverride && !teaser && <PlaceholderInput onAddClick={onChoose} />}
           {/*{!manualOverride && <span>Autofilled</span>}*/}
-          {teaser && ContentForTeaser(teaser, numColumns)}
+          {teaser && <ContentForTeaser teaser={teaser} numColumns={numColumns} />}
         </TeaserWrapper>
         <TeaserToolbar>
           {manualOverride && teaser && (

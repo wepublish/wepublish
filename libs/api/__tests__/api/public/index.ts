@@ -3198,7 +3198,7 @@ export type TeaserSlot = {
 };
 
 export type TeaserSlotInput = {
-  teasers?: InputMaybe<Array<TeaserInput>>;
+  teaser?: InputMaybe<TeaserInput>;
   type?: TeaserSlotType;
 };
 

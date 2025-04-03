@@ -213,8 +213,7 @@ export function TeaserBlock({
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
           <Teaser>
-            {ContentForTeaser(teaser, numColumns)}
-
+            <ContentForTeaser teaser={teaser} numColumns={numColumns} />
             <IconWrapper>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton icon={<MdArticle />} onClick={onChoose} />
@@ -235,7 +234,12 @@ export function TeaserBlock({
   )
 }
 
-export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
+export type ContentForTeaserProps = {
+  teaser: TeaserTypeMixed
+  numColumns?: number
+}
+
+export function ContentForTeaser({teaser, numColumns}: ContentForTeaserProps) {
   const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {

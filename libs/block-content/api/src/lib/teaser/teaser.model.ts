@@ -158,6 +158,7 @@ export function mapTeaserUnionMap(value: TeaserInput | undefined): typeof Teaser
   const valueKeys = Object.keys(value) as TeaserType[]
 
   if (valueKeys.length === 0) {
+    return undefined
     throw new Error(`Received no teaser types.`)
   }
 
