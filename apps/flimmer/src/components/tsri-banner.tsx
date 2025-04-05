@@ -18,8 +18,8 @@ const TsriBanner = styled(Banner)(
   }
 
   ${BannerCloseButton} {
-    top: ${theme.spacing(2)};
-    right: ${theme.spacing(2)};
+    top: ${theme.spacing(1)};
+    right: ${theme.spacing(1)};
 
     ${theme.breakpoints.up('md')} {
       top: ${theme.spacing(6)};

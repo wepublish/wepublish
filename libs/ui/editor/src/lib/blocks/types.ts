@@ -699,7 +699,7 @@ export function mapTeaserToTeaserInput(teaser: Teaser | null | undefined): Tease
       }
   }
 
-  return {}
+  return null
 }
 
 export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue {

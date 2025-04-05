@@ -1430,7 +1430,7 @@ type Query {
   article(id: String, slug: String): Article!
 
   """Returns a paginated list of articles based on the filters given."""
-  articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+  articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
@@ -1489,13 +1489,13 @@ type Query {
   page(id: String, slug: String): Page!
 
   """Returns a paginated list of pages based on the filters given."""
-  pages(cursorId: String, filter: PageFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
+  pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
 
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
 
   """Returns a paginated list of peer articles based on the filters given."""
-  peerArticles(filter: PeerArticleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
+  peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """

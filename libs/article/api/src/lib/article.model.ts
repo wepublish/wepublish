@@ -244,7 +244,7 @@ export class ArticleListArgs {
   @Field(() => ArticleSort, {nullable: true, defaultValue: ArticleSort.PublishedAt})
   sort?: ArticleSort
 
-  @Field(() => SortOrder, {nullable: true, defaultValue: SortOrder.Ascending})
+  @Field(() => SortOrder, {nullable: true, defaultValue: SortOrder.Descending})
   order?: SortOrder
 
   @Field(() => Int, {nullable: true, defaultValue: 10})
