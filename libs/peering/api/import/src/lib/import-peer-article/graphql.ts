@@ -338,6 +338,7 @@ export type BlockContent =
   | TeaserGridBlock
   | TeaserGridFlexBlock
   | TeaserListBlock
+  | TeaserSlotsBlock
   | TikTokVideoBlock
   | TitleBlock
   | TwitterTweetBlock
@@ -367,6 +368,7 @@ export type BlockContentInput = {
   teaserGrid?: InputMaybe<TeaserGridBlockInput>
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>
   teaserList?: InputMaybe<TeaserListBlockInput>
+  teaserSlots?: InputMaybe<TeaserSlotsBlockInput>
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>
   title?: InputMaybe<TitleBlockInput>
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>
@@ -405,6 +407,7 @@ export enum BlockType {
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   TikTokVideo = 'TikTokVideo',
   Title = 'Title',
   TwitterTweet = 'TwitterTweet',
@@ -707,6 +710,7 @@ export enum EditorBlockType {
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   Title = 'Title'
 }
 
@@ -3134,6 +3138,59 @@ export enum TeaserListBlockSort {
   PublishedAt = 'PublishedAt'
 }
 
+export type TeaserSlot = {
+  __typename?: 'TeaserSlot'
+  teaser?: Maybe<Teaser>
+  type: TeaserSlotType
+}
+
+export type TeaserSlotInput = {
+  teaser?: InputMaybe<TeaserInput>
+  type?: TeaserSlotType
+}
+
+export enum TeaserSlotType {
+  Autofill = 'Autofill',
+  Manual = 'Manual'
+}
+
+export type TeaserSlotsAutofillConfig = BaseBlock & {
+  __typename?: 'TeaserSlotsAutofillConfig'
+  blockStyle?: Maybe<Scalars['String']>
+  blockStyleName?: Maybe<Scalars['String']>
+  enabled: Scalars['Boolean']
+  filter?: Maybe<TeaserListBlockFilter>
+  sort?: Maybe<TeaserListBlockSort>
+  teaserType?: Maybe<TeaserType>
+  type: BlockType
+}
+
+export type TeaserSlotsAutofillConfigInput = {
+  enabled: Scalars['Boolean']
+  filter?: InputMaybe<TeaserListBlockFilterInput>
+  sort?: InputMaybe<TeaserListBlockSort>
+  teaserType?: InputMaybe<TeaserType>
+}
+
+export type TeaserSlotsBlock = BaseBlock & {
+  __typename?: 'TeaserSlotsBlock'
+  autofillConfig: TeaserSlotsAutofillConfig
+  blockStyle?: Maybe<Scalars['String']>
+  blockStyleName?: Maybe<Scalars['String']>
+  slots: Array<TeaserSlot>
+  teasers: Array<Maybe<Teaser>>
+  title?: Maybe<Scalars['String']>
+  type: BlockType
+}
+
+export type TeaserSlotsBlockInput = {
+  autofillConfig: TeaserSlotsAutofillConfigInput
+  blockStyle?: InputMaybe<Scalars['String']>
+  blockStyleName?: InputMaybe<Scalars['String']>
+  slots: Array<TeaserSlotInput>
+  title?: InputMaybe<Scalars['String']>
+}
+
 export enum TeaserType {
   Article = 'Article',
   Custom = 'Custom',
@@ -3573,6 +3630,8 @@ type BlockWithoutTeaser_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridF
 
 type BlockWithoutTeaser_TeaserListBlock_Fragment = {__typename: 'TeaserListBlock'}
 
+type BlockWithoutTeaser_TeaserSlotsBlock_Fragment = {__typename: 'TeaserSlotsBlock'}
+
 type BlockWithoutTeaser_TikTokVideoBlock_Fragment = {
   __typename: 'TikTokVideoBlock'
   blockStyle?: string | null
@@ -3635,6 +3694,7 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_TeaserGridBlock_Fragment
   | BlockWithoutTeaser_TeaserGridFlexBlock_Fragment
   | BlockWithoutTeaser_TeaserListBlock_Fragment
+  | BlockWithoutTeaser_TeaserSlotsBlock_Fragment
   | BlockWithoutTeaser_TikTokVideoBlock_Fragment
   | BlockWithoutTeaser_TitleBlock_Fragment
   | BlockWithoutTeaser_TwitterTweetBlock_Fragment
@@ -3644,6 +3704,7 @@ export type BlockWithoutTeaserFragment =
 
 type FullTeaser_ArticleTeaser_Fragment = {
   __typename?: 'ArticleTeaser'
+  type: string
   preTitle?: string | null
   title?: string | null
   lead?: string | null
@@ -3686,6 +3747,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {__typename: 'TeaserGridBlock'}
         | {__typename: 'TeaserGridFlexBlock'}
         | {__typename: 'TeaserListBlock'}
+        | {__typename: 'TeaserSlotsBlock'}
         | {__typename: 'TikTokVideoBlock'}
         | {__typename: 'TitleBlock'}
         | {__typename: 'TwitterTweetBlock'}
@@ -3699,6 +3761,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
 
 type FullTeaser_CustomTeaser_Fragment = {
   __typename?: 'CustomTeaser'
+  type: string
   preTitle?: string | null
   title?: string | null
   lead?: string | null
@@ -3720,6 +3783,7 @@ type FullTeaser_CustomTeaser_Fragment = {
 
 type FullTeaser_EventTeaser_Fragment = {
   __typename?: 'EventTeaser'
+  type: string
   preTitle?: string | null
   title?: string | null
   lead?: string | null
@@ -3735,6 +3799,7 @@ type FullTeaser_EventTeaser_Fragment = {
 
 type FullTeaser_PageTeaser_Fragment = {
   __typename?: 'PageTeaser'
+  type: string
   preTitle?: string | null
   title?: string | null
   lead?: string | null
@@ -3953,6 +4018,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
   teasers: Array<
     | {
         __typename?: 'ArticleTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -3995,6 +4061,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
               | {__typename: 'TikTokVideoBlock'}
               | {__typename: 'TitleBlock'}
               | {__typename: 'TwitterTweetBlock'}
@@ -4007,6 +4074,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
       }
     | {
         __typename?: 'CustomTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4027,6 +4095,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
       }
     | {
         __typename?: 'EventTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4041,6 +4110,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
       }
     | {
         __typename?: 'PageTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4075,6 +4145,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
     teaser?:
       | {
           __typename?: 'ArticleTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4117,6 +4188,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'TeaserGridBlock'}
                 | {__typename: 'TeaserGridFlexBlock'}
                 | {__typename: 'TeaserListBlock'}
+                | {__typename: 'TeaserSlotsBlock'}
                 | {__typename: 'TikTokVideoBlock'}
                 | {__typename: 'TitleBlock'}
                 | {__typename: 'TwitterTweetBlock'}
@@ -4129,6 +4201,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
         }
       | {
           __typename?: 'CustomTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4149,6 +4222,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
         }
       | {
           __typename?: 'EventTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4163,6 +4237,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
         }
       | {
           __typename?: 'PageTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4196,6 +4271,7 @@ type FullBlock_TeaserListBlock_Fragment = {
   teasers: Array<
     | {
         __typename?: 'ArticleTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4238,6 +4314,7 @@ type FullBlock_TeaserListBlock_Fragment = {
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
               | {__typename: 'TikTokVideoBlock'}
               | {__typename: 'TitleBlock'}
               | {__typename: 'TwitterTweetBlock'}
@@ -4250,6 +4327,7 @@ type FullBlock_TeaserListBlock_Fragment = {
       }
     | {
         __typename?: 'CustomTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4270,6 +4348,7 @@ type FullBlock_TeaserListBlock_Fragment = {
       }
     | {
         __typename?: 'EventTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4284,6 +4363,248 @@ type FullBlock_TeaserListBlock_Fragment = {
       }
     | {
         __typename?: 'PageTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        page?: {__typename?: 'Page'; id: string} | null
+      }
+    | null
+  >
+}
+
+type FullBlock_TeaserSlotsBlock_Fragment = {
+  __typename: 'TeaserSlotsBlock'
+  title?: string | null
+  blockStyle?: string | null
+  type: BlockType
+  autofillConfig: {
+    __typename?: 'TeaserSlotsAutofillConfig'
+    enabled: boolean
+    sort?: TeaserListBlockSort | null
+    teaserType?: TeaserType | null
+    filter?: {
+      __typename?: 'TeaserListBlockFilter'
+      tags?: Array<string> | null
+      tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+    } | null
+  }
+  slots: Array<{
+    __typename?: 'TeaserSlot'
+    type: TeaserSlotType
+    teaser?:
+      | {
+          __typename: 'ArticleTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          article?: {
+            __typename?: 'Article'
+            id: string
+            published?: {
+              __typename?: 'ArticleRevision'
+              blocks: Array<
+                | {__typename: 'BildwurfAdBlock'}
+                | {__typename: 'BreakBlock'}
+                | {__typename: 'CommentBlock'}
+                | {__typename: 'EventBlock'}
+                | {__typename: 'FacebookPostBlock'}
+                | {__typename: 'FacebookVideoBlock'}
+                | {__typename: 'HTMLBlock'}
+                | {__typename: 'IFrameBlock'}
+                | {__typename: 'ImageBlock'}
+                | {__typename: 'ImageGalleryBlock'}
+                | {__typename: 'InstagramPostBlock'}
+                | {__typename: 'ListicleBlock'}
+                | {__typename: 'PolisConversationBlock'}
+                | {
+                    __typename: 'PollBlock'
+                    blockStyle?: string | null
+                    type: BlockType
+                    poll?: {__typename?: 'FullPoll'; id: string} | null
+                  }
+                | {__typename: 'QuoteBlock'}
+                | {__typename: 'RichTextBlock'}
+                | {__typename: 'SoundCloudTrackBlock'}
+                | {__typename: 'SubscribeBlock'}
+                | {__typename: 'TeaserGridBlock'}
+                | {__typename: 'TeaserGridFlexBlock'}
+                | {__typename: 'TeaserListBlock'}
+                | {__typename: 'TeaserSlotsBlock'}
+                | {__typename: 'TikTokVideoBlock'}
+                | {__typename: 'TitleBlock'}
+                | {__typename: 'TwitterTweetBlock'}
+                | {__typename: 'UnknownBlock'}
+                | {__typename: 'VimeoVideoBlock'}
+                | {__typename: 'YouTubeVideoBlock'}
+              >
+            } | null
+          } | null
+        }
+      | {
+          __typename: 'CustomTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          contentUrl?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          properties?: Array<{
+            __typename?: 'NonDbProperty'
+            key: string
+            value: string
+            public: boolean
+          }> | null
+        }
+      | {
+          __typename: 'EventTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          event?: {__typename?: 'Event'; id: string} | null
+        }
+      | {
+          __typename: 'PageTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          page?: {__typename?: 'Page'; id: string} | null
+        }
+      | null
+  }>
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        article?: {
+          __typename?: 'Article'
+          id: string
+          published?: {
+            __typename?: 'ArticleRevision'
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BreakBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
+              | {__typename: 'HTMLBlock'}
+              | {__typename: 'IFrameBlock'}
+              | {__typename: 'ImageBlock'}
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  blockStyle?: string | null
+                  type: BlockType
+                  poll?: {__typename?: 'FullPoll'; id: string} | null
+                }
+              | {__typename: 'QuoteBlock'}
+              | {__typename: 'RichTextBlock'}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'UnknownBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
+        } | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        properties?: Array<{
+          __typename?: 'NonDbProperty'
+          key: string
+          value: string
+          public: boolean
+        }> | null
+      }
+    | {
+        __typename?: 'EventTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        event?: {__typename?: 'Event'; id: string} | null
+      }
+    | {
+        __typename?: 'PageTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4362,6 +4683,7 @@ export type FullBlockFragment =
   | FullBlock_TeaserGridBlock_Fragment
   | FullBlock_TeaserGridFlexBlock_Fragment
   | FullBlock_TeaserListBlock_Fragment
+  | FullBlock_TeaserSlotsBlock_Fragment
   | FullBlock_TikTokVideoBlock_Fragment
   | FullBlock_TitleBlock_Fragment
   | FullBlock_TwitterTweetBlock_Fragment
@@ -4592,6 +4914,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
   teasers: Array<
     | {
         __typename?: 'ArticleTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4634,6 +4957,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
               | {__typename: 'TikTokVideoBlock'}
               | {__typename: 'TitleBlock'}
               | {__typename: 'TwitterTweetBlock'}
@@ -4646,6 +4970,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
       }
     | {
         __typename?: 'CustomTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4666,6 +4991,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
       }
     | {
         __typename?: 'EventTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4680,6 +5006,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
       }
     | {
         __typename?: 'PageTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4714,6 +5041,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
     teaser?:
       | {
           __typename?: 'ArticleTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4756,6 +5084,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'TeaserGridBlock'}
                 | {__typename: 'TeaserGridFlexBlock'}
                 | {__typename: 'TeaserListBlock'}
+                | {__typename: 'TeaserSlotsBlock'}
                 | {__typename: 'TikTokVideoBlock'}
                 | {__typename: 'TitleBlock'}
                 | {__typename: 'TwitterTweetBlock'}
@@ -4768,6 +5097,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
         }
       | {
           __typename?: 'CustomTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4788,6 +5118,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
         }
       | {
           __typename?: 'EventTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4802,6 +5133,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
         }
       | {
           __typename?: 'PageTeaser'
+          type: string
           preTitle?: string | null
           title?: string | null
           lead?: string | null
@@ -4835,6 +5167,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
   teasers: Array<
     | {
         __typename?: 'ArticleTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4877,6 +5210,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
               | {__typename: 'TeaserGridBlock'}
               | {__typename: 'TeaserGridFlexBlock'}
               | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
               | {__typename: 'TikTokVideoBlock'}
               | {__typename: 'TitleBlock'}
               | {__typename: 'TwitterTweetBlock'}
@@ -4889,6 +5223,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
       }
     | {
         __typename?: 'CustomTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4909,6 +5244,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
       }
     | {
         __typename?: 'EventTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -4923,6 +5259,248 @@ type ImportBlock_TeaserListBlock_Fragment = {
       }
     | {
         __typename?: 'PageTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        page?: {__typename?: 'Page'; id: string} | null
+      }
+    | null
+  >
+}
+
+type ImportBlock_TeaserSlotsBlock_Fragment = {
+  __typename: 'TeaserSlotsBlock'
+  title?: string | null
+  blockStyle?: string | null
+  type: BlockType
+  autofillConfig: {
+    __typename?: 'TeaserSlotsAutofillConfig'
+    enabled: boolean
+    sort?: TeaserListBlockSort | null
+    teaserType?: TeaserType | null
+    filter?: {
+      __typename?: 'TeaserListBlockFilter'
+      tags?: Array<string> | null
+      tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+    } | null
+  }
+  slots: Array<{
+    __typename?: 'TeaserSlot'
+    type: TeaserSlotType
+    teaser?:
+      | {
+          __typename: 'ArticleTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          article?: {
+            __typename?: 'Article'
+            id: string
+            published?: {
+              __typename?: 'ArticleRevision'
+              blocks: Array<
+                | {__typename: 'BildwurfAdBlock'}
+                | {__typename: 'BreakBlock'}
+                | {__typename: 'CommentBlock'}
+                | {__typename: 'EventBlock'}
+                | {__typename: 'FacebookPostBlock'}
+                | {__typename: 'FacebookVideoBlock'}
+                | {__typename: 'HTMLBlock'}
+                | {__typename: 'IFrameBlock'}
+                | {__typename: 'ImageBlock'}
+                | {__typename: 'ImageGalleryBlock'}
+                | {__typename: 'InstagramPostBlock'}
+                | {__typename: 'ListicleBlock'}
+                | {__typename: 'PolisConversationBlock'}
+                | {
+                    __typename: 'PollBlock'
+                    blockStyle?: string | null
+                    type: BlockType
+                    poll?: {__typename?: 'FullPoll'; id: string} | null
+                  }
+                | {__typename: 'QuoteBlock'}
+                | {__typename: 'RichTextBlock'}
+                | {__typename: 'SoundCloudTrackBlock'}
+                | {__typename: 'SubscribeBlock'}
+                | {__typename: 'TeaserGridBlock'}
+                | {__typename: 'TeaserGridFlexBlock'}
+                | {__typename: 'TeaserListBlock'}
+                | {__typename: 'TeaserSlotsBlock'}
+                | {__typename: 'TikTokVideoBlock'}
+                | {__typename: 'TitleBlock'}
+                | {__typename: 'TwitterTweetBlock'}
+                | {__typename: 'UnknownBlock'}
+                | {__typename: 'VimeoVideoBlock'}
+                | {__typename: 'YouTubeVideoBlock'}
+              >
+            } | null
+          } | null
+        }
+      | {
+          __typename: 'CustomTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          contentUrl?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          properties?: Array<{
+            __typename?: 'NonDbProperty'
+            key: string
+            value: string
+            public: boolean
+          }> | null
+        }
+      | {
+          __typename: 'EventTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          event?: {__typename?: 'Event'; id: string} | null
+        }
+      | {
+          __typename: 'PageTeaser'
+          type: string
+          preTitle?: string | null
+          title?: string | null
+          lead?: string | null
+          image?: {
+            __typename?: 'Image'
+            id: string
+            url?: string | null
+            license?: string | null
+            source?: string | null
+          } | null
+          page?: {__typename?: 'Page'; id: string} | null
+        }
+      | null
+  }>
+  teasers: Array<
+    | {
+        __typename?: 'ArticleTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        article?: {
+          __typename?: 'Article'
+          id: string
+          published?: {
+            __typename?: 'ArticleRevision'
+            blocks: Array<
+              | {__typename: 'BildwurfAdBlock'}
+              | {__typename: 'BreakBlock'}
+              | {__typename: 'CommentBlock'}
+              | {__typename: 'EventBlock'}
+              | {__typename: 'FacebookPostBlock'}
+              | {__typename: 'FacebookVideoBlock'}
+              | {__typename: 'HTMLBlock'}
+              | {__typename: 'IFrameBlock'}
+              | {__typename: 'ImageBlock'}
+              | {__typename: 'ImageGalleryBlock'}
+              | {__typename: 'InstagramPostBlock'}
+              | {__typename: 'ListicleBlock'}
+              | {__typename: 'PolisConversationBlock'}
+              | {
+                  __typename: 'PollBlock'
+                  blockStyle?: string | null
+                  type: BlockType
+                  poll?: {__typename?: 'FullPoll'; id: string} | null
+                }
+              | {__typename: 'QuoteBlock'}
+              | {__typename: 'RichTextBlock'}
+              | {__typename: 'SoundCloudTrackBlock'}
+              | {__typename: 'SubscribeBlock'}
+              | {__typename: 'TeaserGridBlock'}
+              | {__typename: 'TeaserGridFlexBlock'}
+              | {__typename: 'TeaserListBlock'}
+              | {__typename: 'TeaserSlotsBlock'}
+              | {__typename: 'TikTokVideoBlock'}
+              | {__typename: 'TitleBlock'}
+              | {__typename: 'TwitterTweetBlock'}
+              | {__typename: 'UnknownBlock'}
+              | {__typename: 'VimeoVideoBlock'}
+              | {__typename: 'YouTubeVideoBlock'}
+            >
+          } | null
+        } | null
+      }
+    | {
+        __typename?: 'CustomTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        contentUrl?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        properties?: Array<{
+          __typename?: 'NonDbProperty'
+          key: string
+          value: string
+          public: boolean
+        }> | null
+      }
+    | {
+        __typename?: 'EventTeaser'
+        type: string
+        preTitle?: string | null
+        title?: string | null
+        lead?: string | null
+        image?: {
+          __typename?: 'Image'
+          id: string
+          url?: string | null
+          license?: string | null
+          source?: string | null
+        } | null
+        event?: {__typename?: 'Event'; id: string} | null
+      }
+    | {
+        __typename?: 'PageTeaser'
+        type: string
         preTitle?: string | null
         title?: string | null
         lead?: string | null
@@ -5001,6 +5579,7 @@ export type ImportBlockFragment =
   | ImportBlock_TeaserGridBlock_Fragment
   | ImportBlock_TeaserGridFlexBlock_Fragment
   | ImportBlock_TeaserListBlock_Fragment
+  | ImportBlock_TeaserSlotsBlock_Fragment
   | ImportBlock_TikTokVideoBlock_Fragment
   | ImportBlock_TitleBlock_Fragment
   | ImportBlock_TwitterTweetBlock_Fragment
@@ -5299,6 +5878,7 @@ export type ArticleQuery = {
             teasers: Array<
               | {
                   __typename?: 'ArticleTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5341,6 +5921,7 @@ export type ArticleQuery = {
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TeaserSlotsBlock'}
                         | {__typename: 'TikTokVideoBlock'}
                         | {__typename: 'TitleBlock'}
                         | {__typename: 'TwitterTweetBlock'}
@@ -5353,6 +5934,7 @@ export type ArticleQuery = {
                 }
               | {
                   __typename?: 'CustomTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5373,6 +5955,7 @@ export type ArticleQuery = {
                 }
               | {
                   __typename?: 'EventTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5387,6 +5970,7 @@ export type ArticleQuery = {
                 }
               | {
                   __typename?: 'PageTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5420,6 +6004,7 @@ export type ArticleQuery = {
               teaser?:
                 | {
                     __typename?: 'ArticleTeaser'
+                    type: string
                     preTitle?: string | null
                     title?: string | null
                     lead?: string | null
@@ -5462,6 +6047,7 @@ export type ArticleQuery = {
                           | {__typename: 'TeaserGridBlock'}
                           | {__typename: 'TeaserGridFlexBlock'}
                           | {__typename: 'TeaserListBlock'}
+                          | {__typename: 'TeaserSlotsBlock'}
                           | {__typename: 'TikTokVideoBlock'}
                           | {__typename: 'TitleBlock'}
                           | {__typename: 'TwitterTweetBlock'}
@@ -5474,6 +6060,7 @@ export type ArticleQuery = {
                   }
                 | {
                     __typename?: 'CustomTeaser'
+                    type: string
                     preTitle?: string | null
                     title?: string | null
                     lead?: string | null
@@ -5494,6 +6081,7 @@ export type ArticleQuery = {
                   }
                 | {
                     __typename?: 'EventTeaser'
+                    type: string
                     preTitle?: string | null
                     title?: string | null
                     lead?: string | null
@@ -5508,6 +6096,7 @@ export type ArticleQuery = {
                   }
                 | {
                     __typename?: 'PageTeaser'
+                    type: string
                     preTitle?: string | null
                     title?: string | null
                     lead?: string | null
@@ -5540,6 +6129,7 @@ export type ArticleQuery = {
             teasers: Array<
               | {
                   __typename?: 'ArticleTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5582,6 +6172,7 @@ export type ArticleQuery = {
                         | {__typename: 'TeaserGridBlock'}
                         | {__typename: 'TeaserGridFlexBlock'}
                         | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TeaserSlotsBlock'}
                         | {__typename: 'TikTokVideoBlock'}
                         | {__typename: 'TitleBlock'}
                         | {__typename: 'TwitterTweetBlock'}
@@ -5594,6 +6185,7 @@ export type ArticleQuery = {
                 }
               | {
                   __typename?: 'CustomTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5614,6 +6206,7 @@ export type ArticleQuery = {
                 }
               | {
                   __typename?: 'EventTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5628,6 +6221,247 @@ export type ArticleQuery = {
                 }
               | {
                   __typename?: 'PageTeaser'
+                  type: string
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
+                  page?: {__typename?: 'Page'; id: string} | null
+                }
+              | null
+            >
+          }
+        | {
+            __typename: 'TeaserSlotsBlock'
+            title?: string | null
+            blockStyle?: string | null
+            type: BlockType
+            autofillConfig: {
+              __typename?: 'TeaserSlotsAutofillConfig'
+              enabled: boolean
+              sort?: TeaserListBlockSort | null
+              teaserType?: TeaserType | null
+              filter?: {
+                __typename?: 'TeaserListBlockFilter'
+                tags?: Array<string> | null
+                tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
+              } | null
+            }
+            slots: Array<{
+              __typename?: 'TeaserSlot'
+              type: TeaserSlotType
+              teaser?:
+                | {
+                    __typename: 'ArticleTeaser'
+                    type: string
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
+                    article?: {
+                      __typename?: 'Article'
+                      id: string
+                      published?: {
+                        __typename?: 'ArticleRevision'
+                        blocks: Array<
+                          | {__typename: 'BildwurfAdBlock'}
+                          | {__typename: 'BreakBlock'}
+                          | {__typename: 'CommentBlock'}
+                          | {__typename: 'EventBlock'}
+                          | {__typename: 'FacebookPostBlock'}
+                          | {__typename: 'FacebookVideoBlock'}
+                          | {__typename: 'HTMLBlock'}
+                          | {__typename: 'IFrameBlock'}
+                          | {__typename: 'ImageBlock'}
+                          | {__typename: 'ImageGalleryBlock'}
+                          | {__typename: 'InstagramPostBlock'}
+                          | {__typename: 'ListicleBlock'}
+                          | {__typename: 'PolisConversationBlock'}
+                          | {
+                              __typename: 'PollBlock'
+                              blockStyle?: string | null
+                              type: BlockType
+                              poll?: {__typename?: 'FullPoll'; id: string} | null
+                            }
+                          | {__typename: 'QuoteBlock'}
+                          | {__typename: 'RichTextBlock'}
+                          | {__typename: 'SoundCloudTrackBlock'}
+                          | {__typename: 'SubscribeBlock'}
+                          | {__typename: 'TeaserGridBlock'}
+                          | {__typename: 'TeaserGridFlexBlock'}
+                          | {__typename: 'TeaserListBlock'}
+                          | {__typename: 'TeaserSlotsBlock'}
+                          | {__typename: 'TikTokVideoBlock'}
+                          | {__typename: 'TitleBlock'}
+                          | {__typename: 'TwitterTweetBlock'}
+                          | {__typename: 'UnknownBlock'}
+                          | {__typename: 'VimeoVideoBlock'}
+                          | {__typename: 'YouTubeVideoBlock'}
+                        >
+                      } | null
+                    } | null
+                  }
+                | {
+                    __typename: 'CustomTeaser'
+                    type: string
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    contentUrl?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
+                    properties?: Array<{
+                      __typename?: 'NonDbProperty'
+                      key: string
+                      value: string
+                      public: boolean
+                    }> | null
+                  }
+                | {
+                    __typename: 'EventTeaser'
+                    type: string
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
+                    event?: {__typename?: 'Event'; id: string} | null
+                  }
+                | {
+                    __typename: 'PageTeaser'
+                    type: string
+                    preTitle?: string | null
+                    title?: string | null
+                    lead?: string | null
+                    image?: {
+                      __typename?: 'Image'
+                      id: string
+                      url?: string | null
+                      license?: string | null
+                      source?: string | null
+                    } | null
+                    page?: {__typename?: 'Page'; id: string} | null
+                  }
+                | null
+            }>
+            teasers: Array<
+              | {
+                  __typename?: 'ArticleTeaser'
+                  type: string
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
+                  article?: {
+                    __typename?: 'Article'
+                    id: string
+                    published?: {
+                      __typename?: 'ArticleRevision'
+                      blocks: Array<
+                        | {__typename: 'BildwurfAdBlock'}
+                        | {__typename: 'BreakBlock'}
+                        | {__typename: 'CommentBlock'}
+                        | {__typename: 'EventBlock'}
+                        | {__typename: 'FacebookPostBlock'}
+                        | {__typename: 'FacebookVideoBlock'}
+                        | {__typename: 'HTMLBlock'}
+                        | {__typename: 'IFrameBlock'}
+                        | {__typename: 'ImageBlock'}
+                        | {__typename: 'ImageGalleryBlock'}
+                        | {__typename: 'InstagramPostBlock'}
+                        | {__typename: 'ListicleBlock'}
+                        | {__typename: 'PolisConversationBlock'}
+                        | {
+                            __typename: 'PollBlock'
+                            blockStyle?: string | null
+                            type: BlockType
+                            poll?: {__typename?: 'FullPoll'; id: string} | null
+                          }
+                        | {__typename: 'QuoteBlock'}
+                        | {__typename: 'RichTextBlock'}
+                        | {__typename: 'SoundCloudTrackBlock'}
+                        | {__typename: 'SubscribeBlock'}
+                        | {__typename: 'TeaserGridBlock'}
+                        | {__typename: 'TeaserGridFlexBlock'}
+                        | {__typename: 'TeaserListBlock'}
+                        | {__typename: 'TeaserSlotsBlock'}
+                        | {__typename: 'TikTokVideoBlock'}
+                        | {__typename: 'TitleBlock'}
+                        | {__typename: 'TwitterTweetBlock'}
+                        | {__typename: 'UnknownBlock'}
+                        | {__typename: 'VimeoVideoBlock'}
+                        | {__typename: 'YouTubeVideoBlock'}
+                      >
+                    } | null
+                  } | null
+                }
+              | {
+                  __typename?: 'CustomTeaser'
+                  type: string
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  contentUrl?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
+                  properties?: Array<{
+                    __typename?: 'NonDbProperty'
+                    key: string
+                    value: string
+                    public: boolean
+                  }> | null
+                }
+              | {
+                  __typename?: 'EventTeaser'
+                  type: string
+                  preTitle?: string | null
+                  title?: string | null
+                  lead?: string | null
+                  image?: {
+                    __typename?: 'Image'
+                    id: string
+                    url?: string | null
+                    license?: string | null
+                    source?: string | null
+                  } | null
+                  event?: {__typename?: 'Event'; id: string} | null
+                }
+              | {
+                  __typename?: 'PageTeaser'
+                  type: string
                   preTitle?: string | null
                   title?: string | null
                   lead?: string | null
@@ -5925,6 +6759,7 @@ export const FullTeaser = gql`
       image {
         ...FullImage
       }
+      type
       preTitle
       title
       lead
@@ -5948,6 +6783,7 @@ export const FullTeaser = gql`
       image {
         ...FullImage
       }
+      type
       preTitle
       title
       lead
@@ -5959,6 +6795,7 @@ export const FullTeaser = gql`
       image {
         ...FullImage
       }
+      type
       preTitle
       title
       lead
@@ -5970,6 +6807,7 @@ export const FullTeaser = gql`
       image {
         ...FullImage
       }
+      type
       preTitle
       title
       lead
@@ -6030,6 +6868,33 @@ export const FullBlock = gql`
         tagObjects {
           id
           tag
+        }
+      }
+      teasers {
+        ...FullTeaser
+      }
+    }
+    ... on TeaserSlotsBlock {
+      title
+      blockStyle
+      type
+      autofillConfig {
+        enabled
+        filter {
+          tags
+          tagObjects {
+            id
+            tag
+          }
+        }
+        sort
+        teaserType
+      }
+      slots {
+        type
+        teaser {
+          __typename
+          ...FullTeaser
         }
       }
       teasers {
@@ -6231,6 +7096,8 @@ const result: PossibleTypesResultData = {
       'TeaserGridBlock',
       'TeaserGridFlexBlock',
       'TeaserListBlock',
+      'TeaserSlotsAutofillConfig',
+      'TeaserSlotsBlock',
       'TikTokVideoBlock',
       'TitleBlock',
       'TwitterTweetBlock',
@@ -6261,6 +7128,7 @@ const result: PossibleTypesResultData = {
       'TeaserGridBlock',
       'TeaserGridFlexBlock',
       'TeaserListBlock',
+      'TeaserSlotsBlock',
       'TikTokVideoBlock',
       'TitleBlock',
       'TwitterTweetBlock',
