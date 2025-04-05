@@ -45,7 +45,7 @@ export class ArticleResolver {
     if (id != null) {
       const article = await this.articleDataloader.load(id)
 
-      if (!article?.peerId) {
+      if (article && !article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(id)
       }
 
@@ -53,7 +53,13 @@ export class ArticleResolver {
     }
 
     if (slug != null) {
-      return this.articleService.getArticleBySlug(slug)
+      const article = await this.articleService.getArticleBySlug(slug)
+
+      if (article && !article?.peerId) {
+        await this.trackingPixelService.addMissingArticleTrackingPixels(article.id)
+      }
+
+      return article
     }
 
     throw new BadRequestException('id or slug required.')
