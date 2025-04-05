@@ -44,7 +44,7 @@ export class TeaserSlotsBlockResolver {
         articles = (
           await this.articleService.getArticles({
             filter: {
-              tags: filter.tags,
+              tags: filter?.tags,
               published: true
             },
             sort: ArticleSort.PublishedAt,
@@ -54,7 +54,7 @@ export class TeaserSlotsBlockResolver {
         )?.nodes
       }
 
-      return articles.map(
+      const teasers = articles.map(
         article =>
           ({
             articleID: article.id,
@@ -64,12 +64,15 @@ export class TeaserSlotsBlockResolver {
             title: undefined
           } as ArticleTeaser)
       )
+      console.log(teasers)
+
+      return teasers
     }
 
     if (teaserType === TeaserType.Page) {
       const pages = await this.pageService.getPages({
         filter: {
-          tags: filter.tags,
+          tags: filter?.tags,
           published: true
         },
         sort: PageSort.PublishedAt,
@@ -92,7 +95,7 @@ export class TeaserSlotsBlockResolver {
     if (teaserType === TeaserType.Event) {
       const pages = await this.eventService.getEvents({
         filter: {
-          tags: filter.tags
+          tags: filter?.tags
         },
         sort: EventSort.StartsAt,
         order: SortOrder.Descending,

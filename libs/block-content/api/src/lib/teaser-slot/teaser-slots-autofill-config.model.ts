@@ -13,12 +13,12 @@ import {
 export class TeaserSlotsAutofillConfig {
   @Field(() => Boolean)
   enabled!: boolean
-  @Field(() => TeaserType)
-  teaserType!: TeaserType
+  @Field(() => TeaserType, {nullable: true})
+  teaserType?: TeaserType
   @Field(() => TeaserListBlockSort, {nullable: true, defaultValue: TeaserListBlockSort.PublishedAt})
   sort?: TeaserListBlockSort
-  @Field(() => TeaserListBlockFilter)
-  filter!: TeaserListBlockFilter
+  @Field(() => TeaserListBlockFilter, {nullable: true})
+  filter?: TeaserListBlockFilter
 }
 
 @InputType()
@@ -27,6 +27,6 @@ export class TeaserSlotsAutofillConfigInput extends OmitType(
   ['filter'] as const,
   InputType
 ) {
-  @Field(() => TeaserListBlockFilterInput)
-  filter!: TeaserListBlockFilterInput
+  @Field(() => TeaserListBlockFilterInput, {nullable: true})
+  filter?: TeaserListBlockFilterInput
 }

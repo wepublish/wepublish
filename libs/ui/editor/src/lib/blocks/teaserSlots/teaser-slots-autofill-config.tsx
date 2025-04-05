@@ -50,7 +50,7 @@ export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsCo
           name="tags"
           tagType={TagType.Article}
           setSelectedTags={tags => handleChange('filter', {tags} ?? [])}
-          selectedTags={config.filter.tags}
+          selectedTags={config.filter?.tags}
         />
         <HelpText>Enter tags separated by commas. Leave empty for no tag filtering.</HelpText>
       </FormGroup>

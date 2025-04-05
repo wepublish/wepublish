@@ -26,7 +26,7 @@ export class TeaserSlotsBlock extends BaseBlock<BlockType.TeaserSlots> {
     // so they have to be the same
     nullable: 'items'
   })
-  teasers!: Array<typeof Teaser>
+  teasers!: Array<typeof Teaser | null>
 }
 
 @InputType()

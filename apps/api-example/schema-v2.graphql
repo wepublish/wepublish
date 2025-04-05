@@ -1777,7 +1777,7 @@ enum TeaserListBlockSort {
 }
 
 type TeaserSlot {
-  teaser: Teaser!
+  teaser: Teaser
   type: TeaserSlotType!
 }
 
@@ -1795,17 +1795,17 @@ type TeaserSlotsAutofillConfig implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   enabled: Boolean!
-  filter: TeaserListBlockFilter!
+  filter: TeaserListBlockFilter
   sort: TeaserListBlockSort
-  teaserType: TeaserType!
+  teaserType: TeaserType
   type: BlockType!
 }
 
 input TeaserSlotsAutofillConfigInput {
   enabled: Boolean!
-  filter: TeaserListBlockFilterInput!
+  filter: TeaserListBlockFilterInput
   sort: TeaserListBlockSort = PublishedAt
-  teaserType: TeaserType!
+  teaserType: TeaserType
 }
 
 type TeaserSlotsBlock implements BaseBlock {

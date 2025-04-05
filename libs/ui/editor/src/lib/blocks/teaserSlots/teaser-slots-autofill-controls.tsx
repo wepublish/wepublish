@@ -50,11 +50,7 @@ export function TeaserSlotsAutofillControls({
   const [configDialogOpen, setConfigDialogOpen] = useState(false)
 
   const {data: tagsData, refetch} = useTagListQuery({
-    variables: {
-      filter: {
-        tag: config.filter.tags?.join(' ') ?? ''
-      }
-    }
+    skip: !config.filter?.tags?.length
   })
 
   const handleToggleChange = (checked: boolean) => {
@@ -74,7 +70,7 @@ export function TeaserSlotsAutofillControls({
       enabled: true
     })
     setConfigDialogOpen(false)
-    refetch({filter: {tag: newConfig.filter.tags?.join(' ')}})
+    refetch({filter: {tag: newConfig.filter?.tags?.join(' ')}})
   }
 
   const handleConfigCancel = () => {
@@ -107,11 +103,13 @@ export function TeaserSlotsAutofillControls({
             <>
               {tagsData?.tags && tagsData.tags.nodes.length > 0 ? (
                 <TagsContainer>
-                  {tagsData.tags.nodes.map((tag, index) => (
-                    <Tag key={index} color="blue">
-                      {tag.tag}
-                    </Tag>
-                  ))}
+                  {tagsData.tags.nodes
+                    .filter(tag => config.filter?.tags?.includes(tag.id))
+                    .map((tag, index) => (
+                      <Tag key={index} color="blue">
+                        {tag.tag}
+                      </Tag>
+                    ))}
                 </TagsContainer>
               ) : (
                 <Tag color="green">Latest</Tag>

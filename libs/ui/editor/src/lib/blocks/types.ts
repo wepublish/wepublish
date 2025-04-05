@@ -603,13 +603,24 @@ export function mapBlockValueToBlockInput(block: BlockValue): BlockContentInput 
         teaserSlots: {
           title: block.value.title,
           autofillConfig: {
-            ...block.value.autofillConfig,
+            ...(block.value.autofillConfig.enabled
+              ? {
+                  ...block.value.autofillConfig,
+                  filter: {
+                    tags: block.value.autofillConfig.filter?.tags
+                  }
+                }
+              : {
+                  enabled: false
+                }),
             enabled: block.value.autofillConfig.enabled ?? false
           },
-          slots: block.value.slots.map(({teaser, ...slot}) => ({
-            ...slot,
-            teaser: mapTeaserToTeaserInput(teaser)
-          })) ?? [
+          slots: block.value.slots.map(({teaser, ...slot}) => {
+            return {
+              ...slot,
+              teaser: mapTeaserToTeaserInput(teaser)
+            }
+          }) ?? [
             {type: TeaserSlotType.Manual},
             {type: TeaserSlotType.Manual},
             {type: TeaserSlotType.Manual},
@@ -651,7 +662,7 @@ export function mapBlockValueToBlockInput(block: BlockValue): BlockContentInput 
   }
 }
 
-export function mapTeaserToTeaserInput(teaser: Teaser | null | undefined): TeaserInput {
+export function mapTeaserToTeaserInput(teaser: Teaser | null | undefined): TeaserInput | null {
   switch (teaser?.type) {
     case TeaserType.Article:
       return {
@@ -983,17 +994,19 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           blockStyle: block.blockStyle,
           slots: block.slots.map(({teaser, type}) => ({
             type,
-            teaser: {
-              ...teaser,
-              type:
-                teaser?.__typename === 'ArticleTeaser'
-                  ? TeaserType.Article
-                  : teaser?.__typename === 'PageTeaser'
-                  ? TeaserType.Page
-                  : teaser?.__typename === 'EventTeaser'
-                  ? TeaserType.Event
-                  : TeaserType.Custom
-            } as Teaser
+            teaser: !teaser
+              ? null
+              : ({
+                  ...teaser,
+                  type:
+                    teaser?.__typename === 'ArticleTeaser'
+                      ? TeaserType.Article
+                      : teaser?.__typename === 'PageTeaser'
+                      ? TeaserType.Page
+                      : teaser?.__typename === 'EventTeaser'
+                      ? TeaserType.Event
+                      : TeaserType.Custom
+                } as Teaser)
           })),
           autofillConfig: block.autofillConfig,
           teasers: block.teasers.map(mapTeaserToQueryTeaser)

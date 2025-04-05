@@ -3195,7 +3195,7 @@ export enum TeaserListBlockSort {
 
 export type TeaserSlot = {
   __typename?: 'TeaserSlot';
-  teaser: Teaser;
+  teaser?: Maybe<Teaser>;
   type: TeaserSlotType;
 };
 
@@ -3214,17 +3214,17 @@ export type TeaserSlotsAutofillConfig = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   enabled: Scalars['Boolean'];
-  filter: TeaserListBlockFilter;
+  filter?: Maybe<TeaserListBlockFilter>;
   sort?: Maybe<TeaserListBlockSort>;
-  teaserType: TeaserType;
+  teaserType?: Maybe<TeaserType>;
   type: BlockType;
 };
 
 export type TeaserSlotsAutofillConfigInput = {
   enabled: Scalars['Boolean'];
-  filter: TeaserListBlockFilterInput;
+  filter?: InputMaybe<TeaserListBlockFilterInput>;
   sort?: InputMaybe<TeaserListBlockSort>;
-  teaserType: TeaserType;
+  teaserType?: InputMaybe<TeaserType>;
 };
 
 export type TeaserSlotsBlock = BaseBlock & {

@@ -45,6 +45,8 @@ const Teaser = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  border: 2px dashed #ccc;
+  background: #fcfcfc;
 `
 
 const TeaserWrapper = styled('div', {
@@ -142,13 +144,21 @@ const Grid = SortableContainer<GridProps>(({children, numColumns}: GridProps) =>
   return <SortableContainerComponent numColumns={numColumns}>{children}</SortableContainerComponent>
 })
 
-export function TeaserSlotsBlock({value, onChange}: BlockProps<TeaserSlotsBlockValue>) {
+export function TeaserSlotsBlock({
+  value,
+  onChange: onChangeTop
+}: BlockProps<TeaserSlotsBlockValue>) {
+  const onChange = (data: any) => {
+    onChangeTop(data)
+  }
   const numColumns = 3
   const [editIndex, setEditIndex] = useState(0)
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const {autofillConfig, slots, teasers} = value
+
+  console.log({teasers})
 
   function handleTeaserLinkChange(index: number, teaser: TeaserTypeMixed | null) {
     onChange({
@@ -163,7 +173,7 @@ export function TeaserSlotsBlock({value, onChange}: BlockProps<TeaserSlotsBlockV
     onChange({
       ...value,
       slots: Object.assign([], slots, {
-        [index]: {...slots[index], type}
+        [index]: {...slots[index], type, teaser: null}
       })
     })
   }
@@ -261,9 +271,13 @@ export function TeaserSlotsBlock({value, onChange}: BlockProps<TeaserSlotsBlockV
         onSortStart={handleSortStart}
         onSortEnd={handleSortEnd}>
         {slots.map(({type, teaser: manualTeaser}, index) => {
+          const autofillIndex = slots
+            .slice(0, index)
+            .filter(slot => slot.type === TeaserSlotType.Autofill).length
           const teaser = (
-            type === TeaserSlotType.Manual ? manualTeaser : teasers[index]
+            type === TeaserSlotType.Manual ? manualTeaser : teasers[autofillIndex] ?? null
           ) as TeaserTypeMixed | null
+
           return (
             <GridItem
               key={index}

@@ -37,6 +37,7 @@ import {TeaserListBlock, TeaserListBlockInput} from './teaser/teaser-list.model'
 import {mapTeaserUnionMap} from './teaser/teaser.model'
 import {SubscribeBlock, SubscribeBlockInput} from './subscribe/subscribe-block.model'
 import {TeaserSlotsBlock, TeaserSlotsBlockInput} from './teaser-slot/teaser-slots.model'
+import {TeaserSlotInput} from './teaser-slot/teaser-slot.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -235,19 +236,20 @@ export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent 
       }
     }
 
-    // case BlockType.TeaserSlots: {
-    //   const blockValue = value[type]
-    //
-    //   return {
-    //     type,
-    //     ...blockValue,
-    //     slots:
-    //       blockValue?.flexTeasers.map(({teaser, ...value}: FlexTeaserInput) => ({
-    //         ...value,
-    //         teaser: mapTeaserUnionMap(teaser)
-    //       })) ?? []
-    //   }
-    // }
+    case BlockType.TeaserSlots: {
+      const blockValue = value[type]
+
+      return {
+        type,
+        ...blockValue,
+        slots:
+          blockValue?.slots.map(({teaser, ...value}: TeaserSlotInput) => ({
+            ...value,
+            teaser: mapTeaserUnionMap(teaser)
+          })) ?? [],
+        teasers: [null]
+      }
+    }
 
     default: {
       const blockValue = value[type]

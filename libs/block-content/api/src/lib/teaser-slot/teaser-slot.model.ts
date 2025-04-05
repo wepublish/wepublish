@@ -15,12 +15,12 @@ export class TeaserSlot {
   @Field(() => TeaserSlotType, {defaultValue: TeaserSlotType.Autofill})
   type!: TeaserSlotType
 
-  @Field(() => Teaser)
-  teaser?: typeof Teaser
+  @Field(() => Teaser, {nullable: true})
+  teaser?: typeof Teaser | null
 }
 
 @InputType()
 export class TeaserSlotInput extends OmitType(TeaserSlot, ['teaser'] as const, InputType) {
   @Field(() => TeaserInput, {nullable: true})
-  teaser?: TeaserInput
+  teaser?: TeaserInput | null
 }

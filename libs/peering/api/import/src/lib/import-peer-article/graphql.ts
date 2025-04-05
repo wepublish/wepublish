@@ -3140,7 +3140,7 @@ export enum TeaserListBlockSort {
 
 export type TeaserSlot = {
   __typename?: 'TeaserSlot'
-  teaser: Teaser
+  teaser?: Maybe<Teaser>
   type: TeaserSlotType
 }
 
@@ -3159,17 +3159,17 @@ export type TeaserSlotsAutofillConfig = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>
   blockStyleName?: Maybe<Scalars['String']>
   enabled: Scalars['Boolean']
-  filter: TeaserListBlockFilter
+  filter?: Maybe<TeaserListBlockFilter>
   sort?: Maybe<TeaserListBlockSort>
-  teaserType: TeaserType
+  teaserType?: Maybe<TeaserType>
   type: BlockType
 }
 
 export type TeaserSlotsAutofillConfigInput = {
   enabled: Scalars['Boolean']
-  filter: TeaserListBlockFilterInput
+  filter?: InputMaybe<TeaserListBlockFilterInput>
   sort?: InputMaybe<TeaserListBlockSort>
-  teaserType: TeaserType
+  teaserType?: InputMaybe<TeaserType>
 }
 
 export type TeaserSlotsBlock = BaseBlock & {
@@ -4389,17 +4389,17 @@ type FullBlock_TeaserSlotsBlock_Fragment = {
     __typename?: 'TeaserSlotsAutofillConfig'
     enabled: boolean
     sort?: TeaserListBlockSort | null
-    teaserType: TeaserType
-    filter: {
+    teaserType?: TeaserType | null
+    filter?: {
       __typename?: 'TeaserListBlockFilter'
       tags?: Array<string> | null
       tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
-    }
+    } | null
   }
   slots: Array<{
     __typename?: 'TeaserSlot'
     type: TeaserSlotType
-    teaser:
+    teaser?:
       | {
           __typename: 'ArticleTeaser'
           type: string
@@ -4507,6 +4507,7 @@ type FullBlock_TeaserSlotsBlock_Fragment = {
           } | null
           page?: {__typename?: 'Page'; id: string} | null
         }
+      | null
   }>
   teasers: Array<
     | {
@@ -5284,17 +5285,17 @@ type ImportBlock_TeaserSlotsBlock_Fragment = {
     __typename?: 'TeaserSlotsAutofillConfig'
     enabled: boolean
     sort?: TeaserListBlockSort | null
-    teaserType: TeaserType
-    filter: {
+    teaserType?: TeaserType | null
+    filter?: {
       __typename?: 'TeaserListBlockFilter'
       tags?: Array<string> | null
       tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
-    }
+    } | null
   }
   slots: Array<{
     __typename?: 'TeaserSlot'
     type: TeaserSlotType
-    teaser:
+    teaser?:
       | {
           __typename: 'ArticleTeaser'
           type: string
@@ -5402,6 +5403,7 @@ type ImportBlock_TeaserSlotsBlock_Fragment = {
           } | null
           page?: {__typename?: 'Page'; id: string} | null
         }
+      | null
   }>
   teasers: Array<
     | {
@@ -6244,17 +6246,17 @@ export type ArticleQuery = {
               __typename?: 'TeaserSlotsAutofillConfig'
               enabled: boolean
               sort?: TeaserListBlockSort | null
-              teaserType: TeaserType
-              filter: {
+              teaserType?: TeaserType | null
+              filter?: {
                 __typename?: 'TeaserListBlockFilter'
                 tags?: Array<string> | null
                 tagObjects: Array<{__typename?: 'Tag'; id: string; tag?: string | null}>
-              }
+              } | null
             }
             slots: Array<{
               __typename?: 'TeaserSlot'
               type: TeaserSlotType
-              teaser:
+              teaser?:
                 | {
                     __typename: 'ArticleTeaser'
                     type: string
@@ -6362,6 +6364,7 @@ export type ArticleQuery = {
                     } | null
                     page?: {__typename?: 'Page'; id: string} | null
                   }
+                | null
             }>
             teasers: Array<
               | {
