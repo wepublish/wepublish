@@ -1157,6 +1157,8 @@
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
+      "articlePage": "Articles & Pages",
+      "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1174,7 +1176,8 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public."
+        "revenueApiPublic": "Exposes invoices anonymized to the public.",
+        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before."
       }
     },
     "subscriptionFlow": {

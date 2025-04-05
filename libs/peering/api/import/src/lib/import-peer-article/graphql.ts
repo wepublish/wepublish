@@ -2898,7 +2898,8 @@ export enum SettingName {
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED'
 }
 
 export type SettingRestriction = {

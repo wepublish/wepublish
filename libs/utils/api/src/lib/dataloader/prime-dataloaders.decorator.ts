@@ -8,7 +8,10 @@ export interface Primeable<T> {
   loadMany: DataLoader<string, T | null>['loadMany']
 }
 
-export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T>) {
+export function PrimeDataLoader<T extends Primeable<unknown>>(
+  dataloader: Type<T>,
+  primeKey = 'id'
+) {
   const decoratorFactory = (
     target: object,
     propertyKey: unknown,
@@ -36,7 +39,7 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T
         if ('id' in result) {
           const that = this as any
           const loader = that[injectProperty] as T
-          loader.prime(result.id, result)
+          loader.prime(result[primeKey], result)
         }
       }
 

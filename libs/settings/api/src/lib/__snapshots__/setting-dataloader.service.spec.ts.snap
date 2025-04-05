@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SettingDataloaderService load should load many 1`] = `
+[
+  {
+    "where": {
+      "name": {
+        "in": [
+          "123",
+          "321",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`SettingDataloaderService load should load one 1`] = `
+[
+  {
+    "where": {
+      "name": {
+        "in": [
+          "123",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`SettingDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

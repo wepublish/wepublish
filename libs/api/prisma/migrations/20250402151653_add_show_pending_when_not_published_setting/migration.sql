@@ -1,0 +1,1 @@
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'showPendingWhenNotPublished', 'false'::jsonb, '{"allowedValues": {"boolChoice": true}}'::jsonb);

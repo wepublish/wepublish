@@ -4,10 +4,14 @@ import {Permissions} from '@wepublish/permissions/api'
 import {Public} from '@wepublish/authentication/api'
 import {Setting, UpdateSettingInput, SettingFilter} from './settings.model'
 import {SettingsService} from './settings.service'
+import {SettingDataloaderService} from './setting-dataloader.service'
 
 @Resolver()
 export class SettingsResolver {
-  constructor(private settingsService: SettingsService) {}
+  constructor(
+    private settingsService: SettingsService,
+    private settingsDataloader: SettingDataloaderService
+  ) {}
 
   @Public()
   @Query(returns => [Setting], {
@@ -28,7 +32,7 @@ export class SettingsResolver {
     `
   })
   setting(@Args('name') name: string) {
-    return this.settingsService.settingByName(name)
+    return this.settingsDataloader.load(name)
   }
 
   @Permissions(CanGetSettings)
