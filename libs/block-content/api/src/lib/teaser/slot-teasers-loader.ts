@@ -131,17 +131,16 @@ export class SlotTeasersLoader {
   }
 
   getLoadedTeasers(type: TeaserType): string[] {
-    const ids = this.loadedTeasers.reduce((ids: string[], teaser) => {
+    return this.loadedTeasers.reduce((ids: string[], teaser) => {
       if (teaser.type === type) {
         if (teaser.type === TeaserType.Article && teaser.articleID) {
-          return [...ids, teaser.articleID]
+          ids.push(teaser.articleID)
         }
         if (teaser.type === TeaserType.Event && teaser.eventID) {
-          return [...ids, teaser.eventID]
+          ids.push(teaser.eventID)
         }
       }
       return ids
     }, [])
-    return ids
   }
 }
