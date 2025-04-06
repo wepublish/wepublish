@@ -1,5 +1,4 @@
 import {Injectable} from '@nestjs/common'
-import {Article} from '@prisma/client'
 import {ArticleTeaser, EventTeaser, Teaser, TeaserType} from './teaser.model'
 import {isTeaserSlotsBlock, TeaserSlotsBlock} from '../teaser-slot/teaser-slots.model'
 import {ArticleService, ArticleSort} from '@wepublish/article/api'
@@ -69,19 +68,18 @@ export class SlotTeasersLoader {
     const {teaserType, sort, filter} = slotsBlock.autofillConfig
     const take = slotsBlock.slots.filter(({type}) => type === TeaserSlotType.Autofill).length
     if (teaserType === TeaserType.Article) {
-      let articles: Article[] = []
-      articles = (
-        await this.articleService.getArticles({
-          filter: {
-            tags: filter?.tags,
-            published: true,
-            excludeIds: this.getLoadedTeasers(TeaserType.Article)
-          },
-          sort: ArticleSort.PublishedAt,
-          order: SortOrder.Descending,
-          take
-        })
-      )?.nodes
+      const request = {
+        filter: {
+          tags: filter?.tags,
+          published: true,
+          excludeIds: this.getLoadedTeasers(TeaserType.Article)
+        },
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Descending,
+        take
+      }
+      console.log(request)
+      const articles = (await this.articleService.getArticles(request))?.nodes
 
       const teasers = articles.map(
         article =>
