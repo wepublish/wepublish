@@ -4014,8 +4014,8 @@ type FullBlock_SubscribeBlock_Fragment = {
 
 type FullBlock_TeaserGridBlock_Fragment = {
   __typename: 'TeaserGridBlock'
-  type: BlockType
   blockStyle?: string | null
+  type: BlockType
   numColumns: number
   teasers: Array<
     | {
@@ -4131,8 +4131,8 @@ type FullBlock_TeaserGridBlock_Fragment = {
 
 type FullBlock_TeaserGridFlexBlock_Fragment = {
   __typename: 'TeaserGridFlexBlock'
-  type: BlockType
   blockStyle?: string | null
+  type: BlockType
   flexTeasers: Array<{
     __typename?: 'FlexTeaser'
     alignment: {
@@ -6831,7 +6831,6 @@ export const FullBlock = gql`
   fragment FullBlock on BlockContent {
     ...BlockWithoutTeaser
     ... on TeaserGridFlexBlock {
-      type
       blockStyle
       type
       flexTeasers {
@@ -6849,7 +6848,6 @@ export const FullBlock = gql`
       }
     }
     ... on TeaserGridBlock {
-      type
       blockStyle
       type
       teasers {

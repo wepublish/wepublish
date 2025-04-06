@@ -276,7 +276,6 @@ fragment FullBlock on BlockContent {
     ...BlockWithoutTeaser
 
     ... on TeaserGridFlexBlock {
-        type
         blockStyle
         type
         flexTeasers {
@@ -296,7 +295,6 @@ fragment FullBlock on BlockContent {
     }
 
     ... on TeaserGridBlock {
-        type
         blockStyle
         type
         teasers {
