@@ -1,5 +1,6 @@
 import {
   alignmentForTeaserBlock,
+  getSlotsTeasers,
   hasBlockStyle,
   isFilledTeaser,
   isTeaserGridBlock,
@@ -13,7 +14,11 @@ import {
   TeaserListBlock,
   TeaserSlotsBlock
 } from '@wepublish/website/api'
-import {BuilderTeaserGridBlockProps, BuilderTeaserListBlockProps} from '@wepublish/website/builder'
+import {
+  BuilderTeaserGridBlockProps,
+  BuilderTeaserListBlockProps,
+  BuilderTeaserSlotsBlockProps
+} from '@wepublish/website/builder'
 import {allPass, anyPass} from 'ramda'
 
 import {HighlightTeaser} from '../custom-teasers/highlight'
@@ -26,12 +31,13 @@ export const isHighlightTeasers = (
     anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock])
   ])(block)
 
-export const HighlightBlockStyle = ({
-  teasers,
-  blockStyle,
-  className
-}: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps) => {
-  const filledTeasers = teasers.filter(isFilledTeaser)
+export const HighlightBlockStyle = (
+  block: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps | BuilderTeaserSlotsBlockProps
+) => {
+  const {teasers, blockStyle, className} = block
+  const filledTeasers = isTeaserSlotsBlock(block)
+    ? getSlotsTeasers(block)
+    : teasers.filter(isFilledTeaser)
   const numColumns = 1
 
   return (

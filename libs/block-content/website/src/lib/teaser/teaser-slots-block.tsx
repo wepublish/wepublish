@@ -50,22 +50,27 @@ export const TeaserSlotsBlock = ({
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserSlotsBlockTeasers>
-        {slots?.map(({teaser: manualTeaser, type}, index) => {
-          const autofillIndex = slots
-            .slice(0, index)
-            .filter(slot => slot.type === TeaserSlotType.Autofill).length
-          const teaser =
-            type === TeaserSlotType.Manual ? manualTeaser : teasers[autofillIndex] ?? null
-          return (
-            <Teaser
-              key={index}
-              teaser={teaser}
-              alignment={alignmentForTeaserBlock(index, 3)}
-              blockStyle={blockStyle}
-            />
-          )
-        })}
+        {getSlotsTeasers({slots, teasers}).map((teaser, index) => (
+          <Teaser
+            key={index}
+            teaser={teaser}
+            alignment={alignmentForTeaserBlock(index, 3)}
+            blockStyle={blockStyle}
+          />
+        ))}
       </TeaserSlotsBlockTeasers>
     </TeaserSlotsBlockWrapper>
   )
+}
+
+export function getSlotsTeasers({
+  slots,
+  teasers
+}: Pick<BuilderTeaserSlotsBlockProps, 'slots' | 'teasers'>) {
+  return slots?.map(({teaser: manualTeaser, type}, index) => {
+    const autofillIndex = slots
+      .slice(0, index)
+      .filter(slot => slot.type === TeaserSlotType.Autofill).length
+    return type === TeaserSlotType.Manual ? manualTeaser : teasers[autofillIndex] ?? null
+  })
 }
