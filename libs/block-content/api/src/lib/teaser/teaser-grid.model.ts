@@ -11,7 +11,7 @@ export class TeaserGridBlock extends BaseBlock<BlockType.TeaserGrid> {
   numColumns!: number
 
   @Field(() => [Teaser], {nullable: 'items'})
-  teasers!: Array<typeof Teaser | undefined>
+  teasers!: Array<typeof Teaser | null>
 }
 
 @InputType()
@@ -21,5 +21,9 @@ export class TeaserGridBlockInput extends OmitType(
   InputType
 ) {
   @Field(() => [TeaserInput], {nullable: 'items'})
-  teasers!: Array<TeaserInput | undefined>
+  teasers!: Array<TeaserInput | null>
+}
+
+export function isTeaserGridBlock(block: BaseBlock<BlockType>): block is TeaserGridBlock {
+  return block.type === BlockType.TeaserGrid
 }

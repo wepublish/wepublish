@@ -29,13 +29,15 @@ import {YouTubeVideoBlock, YouTubeVideoBlockInput} from './embed/youtube-block.m
 import {ListicleBlock, ListicleBlockInput} from './listicle/listicle-block.model'
 import {TeaserGridBlock, TeaserGridBlockInput} from './teaser/teaser-grid.model'
 import {
-  TeaserGridFlexBlock,
   FlexTeaserInput,
+  TeaserGridFlexBlock,
   TeaserGridFlexBlockInput
 } from './teaser/teaser-flex.model'
 import {TeaserListBlock, TeaserListBlockInput} from './teaser/teaser-list.model'
 import {mapTeaserUnionMap} from './teaser/teaser.model'
 import {SubscribeBlock, SubscribeBlockInput} from './subscribe/subscribe-block.model'
+import {TeaserSlotsBlock, TeaserSlotsBlockInput} from './teaser-slot/teaser-slots.model'
+import {TeaserSlotInput} from './teaser-slot/teaser-slot.model'
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -67,7 +69,8 @@ export const BlockContent = createUnionType({
       SubscribeBlock,
       TeaserGridBlock,
       TeaserGridFlexBlock,
-      TeaserListBlock
+      TeaserListBlock,
+      TeaserSlotsBlock
     ] as const,
   resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
@@ -123,6 +126,8 @@ export const BlockContent = createUnionType({
         return TeaserGridFlexBlock.name
       case BlockType.TeaserList:
         return TeaserListBlock.name
+      case BlockType.TeaserSlots:
+        return TeaserSlotsBlock.name
     }
 
     console.warn(`Block ${value.type} not implemented!`)
@@ -188,7 +193,9 @@ export class BlockContentInput {
   @Field(() => TeaserGridFlexBlockInput, {nullable: true})
   [BlockType.TeaserGridFlex]?: TeaserGridFlexBlockInput;
   @Field(() => TeaserListBlockInput, {nullable: true})
-  [BlockType.TeaserList]?: TeaserListBlockInput
+  [BlockType.TeaserList]?: TeaserListBlockInput;
+  @Field(() => TeaserSlotsBlockInput, {nullable: true})
+  [BlockType.TeaserSlots]?: TeaserSlotsBlockInput
 }
 
 export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent {
@@ -226,6 +233,21 @@ export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent 
             ...value,
             teaser: mapTeaserUnionMap(teaser)
           })) ?? []
+      }
+    }
+
+    case BlockType.TeaserSlots: {
+      const blockValue = value[type]
+
+      return {
+        type,
+        ...blockValue,
+        slots:
+          blockValue?.slots.map(({teaser, ...value}: TeaserSlotInput) => ({
+            ...value,
+            teaser: mapTeaserUnionMap(teaser)
+          })) ?? [],
+        teasers: []
       }
     }
 

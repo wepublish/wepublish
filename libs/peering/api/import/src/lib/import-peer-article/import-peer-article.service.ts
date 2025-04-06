@@ -12,7 +12,8 @@ import {
   ListicleItemInput,
   PollBlockInput,
   TeaserGridBlockInput,
-  TeaserListBlockInput
+  TeaserListBlockInput,
+  TeaserSlotsBlockInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {createSafeHostUrl} from '@wepublish/peering/api'
@@ -22,14 +23,15 @@ import {pipe, replace, toLower} from 'ramda'
 import {ValueOf} from 'type-fest'
 import {
   Article,
+  ArticleFilter as GqlArticleFilter,
   ArticleList,
   ArticleListQuery,
   ArticleListQueryVariables,
   ArticleQuery,
   ArticleQueryVariables,
+  DateFilter as GqlDateFilter,
   FullImageFragment,
-  ArticleFilter as GqlArticleFilter,
-  DateFilter as GqlDateFilter
+  TeaserType
 } from './graphql'
 import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
 
@@ -385,6 +387,32 @@ export class ImportPeerArticleService {
               type: BlockType.TeaserGrid,
               teasers: []
             } as TeaserGridBlockInput
+          }
+
+          case 'TeaserSlotsBlock': {
+            return {
+              ...stripUnwantedProperties(block),
+              type: BlockType.TeaserSlots,
+              autofillConfig: {
+                ...(block.autofillConfig.enabled
+                  ? {
+                      filter: {
+                        tags: []
+                      },
+                      sort: block.autofillConfig.sort ? lower(block.autofillConfig.sort) : null,
+                      teaserType: block.autofillConfig.teaserType
+                        ? lower(block.autofillConfig.teaserType)
+                        : TeaserType.Article
+                    }
+                  : {
+                      enabled: false
+                    })
+              },
+              slots: block.slots.map(slot => ({
+                ...slot,
+                teaser: null
+              }))
+            } as TeaserSlotsBlockInput
           }
 
           case 'TeaserListBlock': {
