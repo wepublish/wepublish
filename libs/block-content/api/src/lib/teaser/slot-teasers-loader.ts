@@ -68,7 +68,6 @@ export class SlotTeasersLoader {
   async getTeasers(slotsBlock: TeaserSlotsBlock): Promise<(typeof Teaser)[]> {
     const {teaserType, sort, filter} = slotsBlock.autofillConfig
     const take = slotsBlock.slots.filter(({type}) => type === TeaserSlotType.Autofill).length
-
     if (teaserType === TeaserType.Article) {
       let articles: Article[] = []
       articles = (
