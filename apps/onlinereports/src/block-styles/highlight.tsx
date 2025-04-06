@@ -4,9 +4,15 @@ import {
   isFilledTeaser,
   isTeaserGridBlock,
   isTeaserListBlock,
+  isTeaserSlotsBlock,
   TeaserGridBlockWrapper
 } from '@wepublish/block-content/website'
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {
+  BlockContent,
+  TeaserGridBlock,
+  TeaserListBlock,
+  TeaserSlotsBlock
+} from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps, BuilderTeaserListBlockProps} from '@wepublish/website/builder'
 import {allPass, anyPass} from 'ramda'
 
@@ -14,8 +20,11 @@ import {HighlightTeaser} from '../custom-teasers/highlight'
 
 export const isHighlightTeasers = (
   block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
-  allPass([hasBlockStyle('Highlight'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
+): block is TeaserGridBlock | TeaserListBlock | TeaserSlotsBlock =>
+  allPass([
+    hasBlockStyle('Highlight'),
+    anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock])
+  ])(block)
 
 export const HighlightBlockStyle = ({
   teasers,
