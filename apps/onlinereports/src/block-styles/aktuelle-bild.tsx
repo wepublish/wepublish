@@ -1,7 +1,9 @@
 import {
+  ArrowButton,
   hasBlockStyle,
   isFilledTeaser,
   isTeaserListBlock,
+  SliderBallContainer,
   SliderInnerContainer,
   SliderTitle,
   TeaserLead,
@@ -10,13 +12,15 @@ import {
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserSlider,
-  TeaserTitle
+  TeaserTitle,
+  TeaserWrapper
 } from '@wepublish/block-content/website'
 import {allPass} from 'ramda'
 
 import styled from '@emotion/styled'
 import {Box, Typography} from '@mui/material'
 import {
+  OnlineReportsBaseTeaser,
   OnlineReportsTeaserPreTitleWrapper,
   OnlineReportsTeaserTitleWrapper
 } from '../onlinereports-base-teaser'
@@ -93,10 +97,36 @@ const AktuelleBildWrapper = styled(Box)`
   ${TeaserPreTitle},
   ${OnlineReportsTeaserTitleWrapper},
   ${OnlineReportsTeaserPreTitleWrapper},
-  ${TeaserTitle},
   ${TeaserLead},
   ${TeaserMetadata} {
     display: none;
+  }
+
+  ${OnlineReportsBaseTeaser} {
+    grid-template-rows: auto auto auto auto auto auto;
+  }
+
+  ${TeaserTitle} {
+    display: block;
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    line-height: 1.2em;
+    transition: opacity 500ms ease;
+
+    background: rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+    font-weight: 300;
+    color: #fff;
+  }
+
+  ${TeaserWrapper}:hover {
+    ${TeaserTitle} {
+      opacity: 1;
+    }
   }
 
   ${SliderInnerContainer} {
@@ -112,5 +142,13 @@ const AktuelleBildWrapper = styled(Box)`
     ${({theme}) => theme.breakpoints.down('md')} {
       grid-column: span 3;
     }
+  }
+
+  ${SliderBallContainer} {
+    margin-top: ${({theme}) => theme.spacing(1)};
+  }
+
+  ${ArrowButton} {
+    display: block;
   }
 `

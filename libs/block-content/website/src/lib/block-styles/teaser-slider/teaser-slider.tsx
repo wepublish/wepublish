@@ -19,6 +19,7 @@ import {
   BuilderTeaserListBlockProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
+import {MdArrowBackIos, MdArrowForwardIos} from 'react-icons/md'
 
 export const SliderWrapper = styled('section')`
   display: grid;
@@ -43,6 +44,7 @@ export const SliderBallContainer = styled('div')`
   flex-flow: row wrap;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(1)};
+  position: relative;
 `
 
 export const SliderBall = styled('button')`
@@ -66,6 +68,27 @@ export const SliderBallFill = styled('span')`
   display: block;
   background-color: currentColor;
   height: 100%;
+`
+
+export const ArrowButton = styled('span')<{side: 'left' | 'right'}>`
+  position: absolute;
+  top: 50%;
+  ${({side}) => (side === 'left' ? 'left: 0;' : 'right: 0;')}
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  z-index: 2;
+  cursor: pointer;
+  display: none;
+
+  &:hover {
+    color: #000;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
 `
 
 export const useSlidesPerViewResponsive = () => {
@@ -188,6 +211,18 @@ export const TeaserSlider = ({
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
+              <ArrowButton
+                side="left"
+                onClick={() => sliderRef.current?.prev()}
+                aria-label="Previous slide">
+                <MdArrowBackIos size={22} />
+              </ArrowButton>
+              <ArrowButton
+                side="right"
+                onClick={() => sliderRef.current?.next()}
+                aria-label="Next slide">
+                <MdArrowForwardIos size={22} />
+              </ArrowButton>
             </SliderBallContainer>
           )}
         </SliderInnerContainer>
