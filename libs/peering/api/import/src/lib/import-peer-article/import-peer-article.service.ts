@@ -30,7 +30,8 @@ import {
   ArticleQuery,
   ArticleQueryVariables,
   DateFilter as GqlDateFilter,
-  FullImageFragment
+  FullImageFragment,
+  TeaserType
 } from './graphql'
 import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
 
@@ -389,7 +390,29 @@ export class ImportPeerArticleService {
           }
 
           case 'TeaserSlotsBlock': {
-            return {} as TeaserSlotsBlockInput
+            return {
+              ...stripUnwantedProperties(block),
+              type: BlockType.TeaserSlots,
+              autofillConfig: {
+                ...(block.autofillConfig.enabled
+                  ? {
+                      filter: {
+                        tags: []
+                      },
+                      sort: block.autofillConfig.sort ? lower(block.autofillConfig.sort) : null,
+                      teaserType: block.autofillConfig.teaserType
+                        ? lower(block.autofillConfig.teaserType)
+                        : TeaserType.Article
+                    }
+                  : {
+                      enabled: false
+                    })
+              },
+              slots: block.slots.map(slot => ({
+                ...slot,
+                teaser: null
+              }))
+            } as TeaserSlotsBlockInput
           }
 
           case 'TeaserListBlock': {
