@@ -234,6 +234,9 @@ export class ArticleFilter {
 
   @Field({nullable: true})
   peerId?: string
+
+  @Field(() => [String], {nullable: true})
+  excludeIds?: string[]
 }
 
 @ArgsType()

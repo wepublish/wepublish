@@ -247,7 +247,7 @@ export function mapBlockUnionMap(value: BlockContentInput): typeof BlockContent 
             ...value,
             teaser: mapTeaserUnionMap(teaser)
           })) ?? [],
-        teasers: [null]
+        teasers: []
       }
     }
 

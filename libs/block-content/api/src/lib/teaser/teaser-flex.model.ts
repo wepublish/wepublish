@@ -64,3 +64,7 @@ export class TeaserGridFlexBlockInput extends OmitType(
   @Field(() => [FlexTeaserInput])
   flexTeasers!: FlexTeaserInput[]
 }
+
+export function isTeaserGridFlexBlock(block: BaseBlock<BlockType>): block is TeaserGridFlexBlock {
+  return block.type === BlockType.TeaserGridFlex
+}

@@ -66,6 +66,7 @@ const TeaserContentWrapper = styled.div`
 const TeaserImage = styled.img`
   min-width: 100%;
   min-height: 100%;
+  object-fit: cover;
 `
 
 export const TeaserToolbar = styled.div`
@@ -158,8 +159,6 @@ export function TeaserSlotsBlock({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const {autofillConfig, slots, teasers} = value
 
-  console.log({teasers})
-
   function handleTeaserLinkChange(index: number, teaser: TeaserTypeMixed | null) {
     onChange({
       ...value,
@@ -246,15 +245,6 @@ export function TeaserSlotsBlock({
     () => slots.filter(slot => slot.type === TeaserSlotType.Autofill).length,
     [slots]
   )
-  //
-  // useEffect(() => {
-  //   const {filter: {tags}} = autofillConfig
-  //   refetch({
-  //     skip: 0,
-  //     take: autofillSlotsCount,
-  //     filter: {tags: tags ?? []}
-  //   })
-  // }, [autofillConfig, autofillSlotsCount, refetch])
 
   return (
     <TeaserSlotsBlockWrapper>

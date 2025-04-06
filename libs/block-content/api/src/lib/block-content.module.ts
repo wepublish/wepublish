@@ -11,7 +11,7 @@ import {ArticleModule} from '@wepublish/article/api'
 import {PageModule} from '@wepublish/page/api'
 import {TeaserListBlockFilterResolver, TeaserListBlockResolver} from './teaser/teaser-list.resolver'
 import {BaseBlockResolver} from './base-block.resolver'
-import {TeaserSlotsBlockResolver} from './teaser-slot/teaser-slots.resolver'
+import {SlotTeasersLoader} from './teaser/slot-teasers-loader'
 
 @Module({
   imports: [
@@ -30,7 +30,8 @@ import {TeaserSlotsBlockResolver} from './teaser-slot/teaser-slots.resolver'
     CommentBlockResolver,
     TeaserListBlockResolver,
     TeaserListBlockFilterResolver,
-    TeaserSlotsBlockResolver
-  ]
+    SlotTeasersLoader
+  ],
+  exports: [SlotTeasersLoader]
 })
 export class BlockContentModule {}

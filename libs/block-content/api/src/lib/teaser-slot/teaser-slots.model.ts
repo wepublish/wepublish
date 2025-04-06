@@ -41,3 +41,7 @@ export class TeaserSlotsBlockInput extends OmitType(
   @Field(() => TeaserSlotsAutofillConfigInput)
   autofillConfig!: TeaserSlotsAutofillConfigInput
 }
+
+export function isTeaserSlotsBlock(block: BaseBlock<BlockType>): block is TeaserSlotsBlock {
+  return block.type === BlockType.TeaserSlots
+}

@@ -22,6 +22,7 @@ export * from './lib/teaser/teaser-flex.model'
 export * from './lib/teaser/teaser-grid.model'
 export * from './lib/teaser/teaser-list.model'
 export * from './lib/teaser/teaser.model'
+export * from './lib/teaser/slot-teasers-loader'
 
 export * from './lib/teaser-slot/teaser-slots-autofill-config.model'
 export * from './lib/teaser-slot/teaser-slot.model'
