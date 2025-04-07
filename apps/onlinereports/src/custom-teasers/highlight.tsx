@@ -1,4 +1,5 @@
 import {
+  selectTeaserTitle,
   TeaserLead,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
@@ -7,9 +8,28 @@ import {
 
 import {OnlineReportsBaseTeaser} from '../onlinereports-base-teaser'
 import styled from '@emotion/styled'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 
-export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
+const teaserTitleIsLongOrHasLongWords = (teaser: BuilderTeaserProps['teaser']) => {
+  if (!teaser) {
+    return false
+  }
+  const title = selectTeaserTitle(teaser)
+  if (!title) {
+    return false
+  }
+  if (title.length > 50) {
+    return true
+  }
+  if (title.split(/\s+/).some(word => word.length >= 10)) {
+    return true
+  }
+  return false
+}
+
+export const HighlightTeaser = styled(OnlineReportsBaseTeaser)<BuilderTeaserProps>`
   grid-column: span 3;
+  grid-template-rows: unset;
 
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-column: span 3;
@@ -17,7 +37,6 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
 
   grid-template-areas:
     'image'
-    '. '
     'pretitle'
     'title'
     'lead'
@@ -38,7 +57,7 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
       'image image tags'
       'image image .';
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 20px auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto;
   }
 
   ${TeaserPreTitleNoContent} {
@@ -47,14 +66,20 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)`
 
   ${TeaserPreTitle} {
     transform: unset;
+    margin-bottom: -10px;
   }
 
   ${TeaserTitle} {
-    font-size: ${({theme}) => theme.typography.h1.fontSize};
     font-family: ${({theme}) => theme.typography.h1.fontFamily};
     font-weight: ${({theme}) => theme.typography.h1.fontWeight};
+    font-size: ${({theme, teaser}) =>
+      teaserTitleIsLongOrHasLongWords(teaser)
+        ? theme.typography.h2.fontSize
+        : theme.typography.h1.fontSize};
+
     ${({theme}) => theme.breakpoints.up('md')} {
-      font-size: 44px;
+      font-size: ${({theme, teaser}) =>
+        teaserTitleIsLongOrHasLongWords(teaser) ? '40px' : '44px'};
     }
   }
 
