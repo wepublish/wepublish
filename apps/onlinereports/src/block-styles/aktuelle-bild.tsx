@@ -53,7 +53,7 @@ export const AktuelleBild = ({
           <Link href={'mailto:redaktion@onlinereports.ch?subject=Das Wort zum Build'}>
             Mailen Sie es uns
           </Link>{' '}
-          (mit Adresse & Datum)!
+          (mit Adresse und Datum)!
         </Typography>
         <Link href={'/a/tag/Das%20Wort%20zum%20Bild'}>
           <b>Zum Archiv {'->'}</b>
