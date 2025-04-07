@@ -65,6 +65,7 @@ import {AdblockOverlay} from '../src/components/adblock-detector'
 import {OnlineReportsFooter} from '../src/components/footer'
 import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
 import {OnlineReportsRenderElement} from '../src/render-element'
+import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
 
 setDefaultOptions({
   locale: de
@@ -231,6 +232,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              <OnlineReportsGlobalStyles />
 
               <Head>
                 <title key="title">{siteTitle}</title>
