@@ -155,7 +155,12 @@ export const selectTeaserTags = (teaser: TeaserType) => {
       return teaser.event?.tags?.filter(({tag, main}) => !!tag && main) ?? []
 
     case 'CustomTeaser':
-      return []
+      return (
+        teaser.properties
+          ?.find(property => property.key === 'tags')
+          ?.value.split(/,\s+/)
+          .map(tag => ({tag, id: tag})) ?? []
+      )
   }
 
   return []

@@ -29,7 +29,6 @@ const teaserTitleIsLongOrHasLongWords = (teaser: BuilderTeaserProps['teaser']) =
 
 export const HighlightTeaser = styled(OnlineReportsBaseTeaser)<BuilderTeaserProps>`
   grid-column: span 3;
-  grid-template-rows: unset;
 
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-column: span 3;

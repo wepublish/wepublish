@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {Box, css, useTheme} from '@mui/material'
 import {
+  selectTeaserTags,
   Teaser,
   TeaserAuthors,
   TeaserImageWrapper,
@@ -14,6 +15,7 @@ import {
   TeaserWrapper
 } from '@wepublish/block-content/website'
 import {useMemo} from 'react'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 
 export const useImageStyles = () => {
   const theme = useTheme()
@@ -39,6 +41,14 @@ export const useImageStyles = () => {
   )
 }
 
+const hasSpecialTags = (teaser: BuilderTeaserProps['teaser']) => {
+  if (!teaser) {
+    return false
+  }
+  const tags = selectTeaserTags(teaser).map(({tag}) => tag)
+  return tags.includes('Anzeige')
+}
+
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
   grid-area: title;
   font-size: 24px !important;
@@ -59,7 +69,7 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
     'lead'
     'tags'
     'authors';
-  grid-template-rows: auto 12px auto auto auto auto;
+  grid-template-rows: min-content 12px min-content min-content min-content min-content;
 
   .MuiChip-root {
     color: inherit;
@@ -111,7 +121,15 @@ export const OnlineReportsBaseTeaser = styled(Teaser)`
   }
 
   ${TeaserTags} {
-    display: none;
+    display: ${({teaser}) => (hasSpecialTags(teaser) ? 'block' : 'none')};
+
+    .MuiChip-root {
+      background-color: #7c7c7c;
+      border-radius: 5px;
+      border: none;
+      color: #fff;
+      padding: 4px 12px;
+    }
   }
 
   ${TeaserAuthors} {
