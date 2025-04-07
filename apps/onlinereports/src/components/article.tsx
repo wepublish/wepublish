@@ -78,8 +78,12 @@ export function OnlineReportsArticle({
 
         <ArticleBottomMeta>
           {article && <ArticleMeta article={article} />}
-          <H3>Ihre Meinung zu diesem Artikel</H3>
-          <Button onClick={scrollToComments}>Kommentare</Button>
+          {!data?.article?.disableComments && (
+            <>
+              <H3>Ihre Meinung zu diesem Artikel</H3>
+              <Button onClick={scrollToComments}>Kommentare</Button>
+            </>
+          )}
         </ArticleBottomMeta>
 
         {children}
