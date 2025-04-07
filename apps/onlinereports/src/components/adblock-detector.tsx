@@ -106,7 +106,12 @@ export const AdblockOverlay = () => {
         </Typography>
 
         <Buttons>
-          <Button color="primary" variant="contained" sx={{mt: 3}} href={'/'} onClick={handleClose}>
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{mt: 3}}
+            href={'/adblocker-deaktivieren'}
+            onClick={handleClose}>
             Wie Sie den Adblocker deaktivieren
           </Button>
           <Button color="secondary" variant="contained" sx={{mt: 3}} onClick={handleClose}>
