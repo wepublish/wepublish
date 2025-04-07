@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable, Logger} from '@nestjs/common'
 import {ArticleTeaser, EventTeaser, Teaser, TeaserType} from './teaser.model'
 import {isTeaserSlotsBlock, TeaserSlotsBlock} from '../teaser-slot/teaser-slots.model'
 import {ArticleService, ArticleSort} from '@wepublish/article/api'
@@ -78,7 +78,7 @@ export class SlotTeasersLoader {
         order: SortOrder.Descending,
         take
       }
-      console.log(request)
+      new Logger('Teaser loader').log(JSON.stringify(request))
       const articles = (await this.articleService.getArticles(request))?.nodes
 
       const teasers = articles.map(

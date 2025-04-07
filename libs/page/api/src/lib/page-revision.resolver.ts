@@ -7,7 +7,7 @@ import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 import {CanGetPage} from '@wepublish/permissions'
 import {hasPermission} from '@wepublish/permissions/api'
 import {BlockContent, isTeaserSlotsBlock, SlotTeasersLoader} from '@wepublish/block-content/api'
-import {forwardRef, Inject} from '@nestjs/common'
+import {forwardRef, Inject, Logger} from '@nestjs/common'
 
 @Resolver(() => PageRevision)
 export class PageRevisionResolver {
@@ -52,7 +52,10 @@ export class PageRevisionResolver {
 
   @ResolveField(() => [BlockContent])
   async blocks(@Parent() revision: PageRevision): Promise<(typeof BlockContent)[]> {
+    new Logger('Page revision').log(JSON.stringify(revision.blocks))
+
     if (revision.blocks.some(isTeaserSlotsBlock)) {
+      new Logger('Page revision inside').log(JSON.stringify(revision.blocks))
       return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks)
     }
     return revision.blocks
