@@ -33,7 +33,7 @@ export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => 
     return block
   }
   const position = props.index + 1
-  const adsDisabledTags = ['Anzeige', 'Publireportage', 'Monatsgespräch']
+  const adsDisabledTags = ['Anzeige', 'Publireportage', 'Monatsgespräch', 'Das Monatsgespräch']
   const adsDisabled = article?.tags.some(({tag}) => tag && adsDisabledTags.includes(tag)) ?? true
 
   return (
