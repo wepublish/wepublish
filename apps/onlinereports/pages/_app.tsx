@@ -69,7 +69,8 @@ import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
 import {OnlineReportsRenderElement} from '../src/render-element'
 import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
 import {GoogleTagManager} from '@next/third-parties/google'
-import {PaymentAmountPicker} from '@wepublish/membership/website'
+import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import {useRouter} from 'next/router'
 
 setDefaultOptions({
   locale: de
@@ -218,6 +219,8 @@ type CustomAppProps = AppProps<{
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
 
+  const router = useRouter()
+
   return (
     <AppCacheProvider emotionCache={emotionCache}>
       <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -230,7 +233,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
             RegistrationForm={OnlineReportsRegistrationForm}
-            PaymentAmount={PaymentAmountPicker}
+            PaymentAmount={OnlineReportsPaymentAmount}
             richtext={{RenderElement: OnlineReportsRenderElement}}
             elements={{Link: NextWepublishLink}}
             blocks={{
@@ -282,14 +285,16 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 />
                 <MainContainer>
                   <MainContent>
-                    <WideboardPlacer>
-                      <Advertisement type={'whiteboard'} />
-                    </WideboardPlacer>
+                    {router.pathname !== '/mitmachen' && (
+                      <WideboardPlacer>
+                        <Advertisement type={'whiteboard'} />
+                      </WideboardPlacer>
+                    )}
                     <Component {...pageProps} />
                   </MainContent>
                 </MainContainer>
                 <AdvertisementPlacer>
-                  <Advertisement type={'half-page'} />
+                  {router.pathname !== '/mitmachen' && <Advertisement type={'half-page'} />}
                 </AdvertisementPlacer>
                 <OnlineReportsFooter />
               </Spacer>

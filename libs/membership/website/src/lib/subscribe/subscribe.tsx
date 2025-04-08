@@ -65,9 +65,10 @@ export const SubscribeWrapper = styled('form')`
     'cta';
 `
 
-export const SubscribeSection = styled('div')<{
+export type SubscribeSectionProps = {
   area?: string
-}>`
+}
+export const SubscribeSection = styled('div')<SubscribeSectionProps>`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   align-content: start;
@@ -332,10 +333,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   useEffect(() => {
     if (selectedMemberPlan) {
-      setValue<'monthlyAmount'>(
-        'monthlyAmount',
-        selectedMemberPlan.amountPerMonthTarget || selectedMemberPlan.amountPerMonthMin
-      )
+      setValue<'monthlyAmount'>('monthlyAmount', selectedMemberPlan.amountPerMonthTarget ?? 0)
     }
   }, [selectedMemberPlan, setValue])
 
