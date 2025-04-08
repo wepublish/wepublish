@@ -6,6 +6,7 @@ import {MdOutlineModeComment} from 'react-icons/md'
 import {ArticleDateWrapper} from '@wepublish/article/website'
 import {CommentListItemShareWrapper} from '@wepublish/comments/website'
 import {Button} from '@mui/material'
+import {useEffect, useState} from 'react'
 
 export const ArticleAuthorsWrapper = styled('div')`
   display: grid;
@@ -73,12 +74,18 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
     elements: {Image, Link}
   } = useWebsiteBuilder()
 
+  const [url, setUrl] = useState(article.url)
+
   const {data} = useCommentListQuery({
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id
     }
   })
+
+  useEffect(() => {
+    setUrl(window.location.origin + article.url)
+  }, [])
 
   const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
   if (!authors.length) {
@@ -128,7 +135,7 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
         )}
         <CommentListItemShare
           title={article.latest.title ?? ''}
-          url={article.url}
+          url={url}
           forceNonSystemShare={true}
         />
       </CommentsShareBox>
