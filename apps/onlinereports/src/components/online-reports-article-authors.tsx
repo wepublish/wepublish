@@ -73,9 +73,7 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
     elements: {Image, Link}
   } = useWebsiteBuilder()
 
-  const {
-    data: {comments}
-  } = useCommentListQuery({
+  const {data} = useCommentListQuery({
     fetchPolicy: 'cache-only',
     variables: {
       itemId: article.id
@@ -124,11 +122,11 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
         {!article?.disableComments && (
           <CommentListItemShareWrapper>
             <ShareButton onClick={scrollToComments} endIcon={<MdOutlineModeComment />}>
-              {comments.length ? comments.length : ''}{' '}
+              {data?.comments?.length ? data.comments.length : ''}{' '}
             </ShareButton>
           </CommentListItemShareWrapper>
         )}
-        <CommentListItemShare title={article.latest.title} url={article.url} />
+        <CommentListItemShare title={article.latest.title ?? ''} url={article.url} />
       </CommentsShareBox>
     </MetaWrapper>
   )
