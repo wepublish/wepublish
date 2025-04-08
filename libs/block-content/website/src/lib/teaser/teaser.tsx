@@ -84,6 +84,13 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
   }
 }
 
+export const selectTeaserTarget = (teaser: TeaserType): string | undefined => {
+  if (teaser.__typename == 'CustomTeaser' && teaser.contentUrl?.startsWith('https://')) {
+    return '_blank'
+  }
+  return undefined
+}
+
 export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
@@ -332,15 +339,16 @@ export const TeaserTags = styled('div')`
 const TeaserContent = ({
   href,
   className,
-  children
-}: PropsWithChildren<{href?: string; className?: string}>) => {
+  children,
+  target
+}: PropsWithChildren<{href?: string; className?: string; target?: string}>) => {
   const {
     elements: {Link}
   } = useWebsiteBuilder()
 
   if (href) {
     return (
-      <Link color="inherit" underline="none" href={href}>
+      <Link color="inherit" underline="none" href={href} target={target}>
         <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
       </Link>
     )
@@ -356,6 +364,7 @@ export const extractTeaserData = (teaser: BuilderTeaserProps['teaser']) => {
     preTitle,
     lead: teaser && selectTeaserLead(teaser),
     href: (teaser && selectTeaserUrl(teaser)) ?? '',
+    target: teaser ? selectTeaserTarget(teaser) : undefined,
     image: teaser && selectTeaserImage(teaser),
     publishDate: teaser && selectTeaserDate(teaser),
     authors: teaser && selectTeaserAuthors(teaser),
@@ -364,7 +373,8 @@ export const extractTeaserData = (teaser: BuilderTeaserProps['teaser']) => {
 }
 
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const {title, preTitle, lead, href, image, publishDate, authors, tags} = extractTeaserData(teaser)
+  const {title, preTitle, lead, href, target, image, publishDate, authors, tags} =
+    extractTeaserData(teaser)
   const {
     date,
     elements: {Image, Paragraph, H4}
@@ -373,7 +383,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const imageStyles = useImageStyles()
   return (
     <TeaserWrapper {...alignment}>
-      <TeaserContent href={href} className={className}>
+      <TeaserContent href={href} className={className} target={target}>
         <TeaserImageWrapper>
           {image && <Image image={image} css={imageStyles} />}
         </TeaserImageWrapper>
