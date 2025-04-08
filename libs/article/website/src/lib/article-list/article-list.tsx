@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Article, ArticleTeaser, TeaserType} from '@wepublish/website/api'
+import {Article, ArticleTeaser, Teaser, TeaserType} from '@wepublish/website/api'
 import {BuilderArticleListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 
@@ -23,7 +23,10 @@ export const ArticleList = ({data, className}: BuilderArticleListProps) => {
   } = useWebsiteBuilder()
 
   const teasers = useMemo(
-    () => data?.articles?.nodes.map(article => articleToTeaser(article as Article)) ?? [],
+    () =>
+      enrichTeaserListWithAds(
+        data?.articles?.nodes.map(article => articleToTeaser(article as Article)) ?? []
+      ),
     [data?.articles?.nodes]
   )
 
@@ -32,4 +35,18 @@ export const ArticleList = ({data, className}: BuilderArticleListProps) => {
       <TeaserGrid numColumns={3} teasers={teasers} />
     </ArticleListWrapper>
   )
+}
+
+function enrichTeaserListWithAds(teasers: Teaser[]) {
+  return teasers.reduce((teasers: Teaser[], teaser: Teaser, index) => {
+    if ((index + 3) % 6 === 0) {
+      teasers.push({
+        __typename: 'CustomTeaser',
+        type: TeaserType.Custom,
+        title: 'ad-small'
+      })
+    }
+    teasers.push(teaser)
+    return teasers
+  }, [])
 }

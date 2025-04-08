@@ -16,6 +16,7 @@ import {
 } from '@wepublish/block-content/website'
 import {useMemo} from 'react'
 import {BuilderTeaserProps} from '@wepublish/website/builder'
+import {Advertisement} from './components/advertisement'
 
 export const useImageStyles = () => {
   const theme = useTheme()
@@ -56,7 +57,34 @@ export const OnlineReportsTeaserTitleWrapper = styled('h2')`
 
 export const OnlineReportsTeaserPreTitleWrapper = styled(Box)``
 
-export const OnlineReportsBaseTeaser = styled(Teaser)`
+export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
+  if (props.teaser?.title === 'ad-small') {
+    return (
+      <TeaserWrapper {...props.alignment}>
+        <Advertisement type={'small'} />
+      </TeaserWrapper>
+    )
+  }
+
+  if (props.teaser?.title === 'ad-halfpage') {
+    return (
+      <TeaserWrapper {...props.alignment}>
+        <Advertisement type={'half-page'} />
+      </TeaserWrapper>
+    )
+  }
+
+  if (props.teaser?.title === 'ad-wideboard') {
+    return (
+      <TeaserWrapper {...props.alignment}>
+        <Advertisement type={'whiteboard'} />
+      </TeaserWrapper>
+    )
+  }
+
+  return <OnlineReportsBaseTeaserStyled {...props} />
+}
+export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   color: inherit;
   text-decoration: none;
   display: grid;

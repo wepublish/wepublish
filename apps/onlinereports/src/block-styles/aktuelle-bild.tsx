@@ -20,7 +20,7 @@ import {allPass} from 'ramda'
 import styled from '@emotion/styled'
 import {Box, Typography} from '@mui/material'
 import {
-  OnlineReportsBaseTeaser,
+  OnlineReportsBaseTeaserStyled,
   OnlineReportsTeaserPreTitleWrapper,
   OnlineReportsTeaserTitleWrapper
 } from '../onlinereports-base-teaser'
@@ -102,7 +102,7 @@ const AktuelleBildWrapper = styled(Box)`
     display: none;
   }
 
-  ${OnlineReportsBaseTeaser} {
+  ${OnlineReportsBaseTeaserStyled} {
     grid-template-rows: auto auto auto auto auto auto;
   }
 
