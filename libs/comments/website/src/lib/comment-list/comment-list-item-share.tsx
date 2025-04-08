@@ -20,11 +20,18 @@ const iconStyle = {
   alignItems: 'center'
 }
 
-export const CommentListItemShare = ({url, title, className}: BuilderCommentListItemShareProps) => {
+export const CommentListItemShare = ({
+  url,
+  title,
+  className,
+  forceNonSystemShare
+}: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    navigator.share ? navigator.share({title, url}) : setAnchorEl(event.currentTarget)
+    !forceNonSystemShare && navigator.share
+      ? navigator.share({title, url})
+      : setAnchorEl(event.currentTarget)
   }
 
   const handleClosePopover = () => {

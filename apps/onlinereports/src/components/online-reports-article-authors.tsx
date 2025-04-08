@@ -126,7 +126,11 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
             </ShareButton>
           </CommentListItemShareWrapper>
         )}
-        <CommentListItemShare title={article.latest.title ?? ''} url={article.url} />
+        <CommentListItemShare
+          title={article.latest.title ?? ''}
+          url={article.url}
+          forceNonSystemShare={true}
+        />
       </CommentsShareBox>
     </MetaWrapper>
   )
