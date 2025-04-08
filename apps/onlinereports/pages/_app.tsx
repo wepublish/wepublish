@@ -68,6 +68,7 @@ import {OnlineReportsFooter} from '../src/components/footer'
 import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
 import {OnlineReportsRenderElement} from '../src/render-element'
 import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
+import {GoogleTagManager} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -292,6 +293,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </Spacer>
 
               <RoutedAdminBar />
+              {publicRuntimeConfig.env.GTM_ID && (
+                <>
+                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+                </>
+              )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
