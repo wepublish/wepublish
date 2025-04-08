@@ -36,7 +36,7 @@ export function OnlineReportsRegistrationForm<T extends Exclude<BuilderUserFormF
     <RegistrationForm {...props} onChange={setFormValues}>
       <SubscribeCheckboxWrapper>
         <Checkbox onClick={handleSubscribe} />
-        <div>I also want to subscribe and support</div>
+        <div>Ich möchte den OnlineReports-Recherchierfonds unterstützen.</div>
       </SubscribeCheckboxWrapper>
     </RegistrationForm>
   )

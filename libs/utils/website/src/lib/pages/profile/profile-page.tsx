@@ -7,24 +7,24 @@ import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
-import {AuthTokenStorageKey} from '@wepublish/authentication/website'
-import {ContentWrapper} from '@wepublish/content/website'
 import {
-  useHasUnpaidInvoices,
-  InvoiceListContainer,
-  SubscriptionListContainer,
-  InvoiceListItemContent
-} from '@wepublish/membership/website'
-import {PersonalDataFormContainer} from '@wepublish/user/website'
-import {
-  useSubscriptionsQuery,
+  addClientCacheToV1Props,
   getV1ApiClient,
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  addClientCacheToV1Props
+  UserSession,
+  useSubscriptionsQuery
 } from '@wepublish/website/api'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {
+  InvoiceListContainer,
+  InvoiceListItemContent,
+  SubscriptionListContainer,
+  useHasUnpaidInvoices
+} from '@wepublish/membership/website'
+import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 const SubscriptionsWrapper = styled('div')`
@@ -104,7 +104,7 @@ function ProfilePage(props: ProfilePageProps) {
         )}
 
         <SubscriptionListWrapper>
-          <H4 component={'h1'}>Aktive Abos</H4>
+          <H4 component={'h1'}>Aktive Zahlungen</H4>
 
           <SubscriptionListContainer
             filter={subscriptions =>
@@ -114,7 +114,7 @@ function ProfilePage(props: ProfilePageProps) {
 
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
+              <Link href="/profile/subscription/deactivated">Frühere Zahlungen anzeigen</Link>
             </DeactivatedSubscriptions>
           )}
         </SubscriptionListWrapper>

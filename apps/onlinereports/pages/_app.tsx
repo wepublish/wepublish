@@ -69,6 +69,7 @@ import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
 import {OnlineReportsRenderElement} from '../src/render-element'
 import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
 import {GoogleTagManager} from '@next/third-parties/google'
+import {PaymentAmountPicker} from '@wepublish/membership/website'
 
 setDefaultOptions({
   locale: de
@@ -229,6 +230,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
             RegistrationForm={OnlineReportsRegistrationForm}
+            PaymentAmount={PaymentAmountPicker}
             richtext={{RenderElement: OnlineReportsRenderElement}}
             elements={{Link: NextWepublishLink}}
             blocks={{

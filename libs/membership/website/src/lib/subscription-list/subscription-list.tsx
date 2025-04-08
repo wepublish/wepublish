@@ -28,7 +28,8 @@ export const SubscriptionList = ({
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
             <strong>
-              Du hast noch kein aktives Abo. <Link href={subscribeUrl}>Jetzt ein Abo lösen.</Link>
+              Sie haben noch keine aktive Zahlung.{' '}
+              <Link href={subscribeUrl}>Jetzt unterstützen.</Link>
             </strong>
           </SubscriptionListItemContent>
         </SubscriptionListItemWrapper>

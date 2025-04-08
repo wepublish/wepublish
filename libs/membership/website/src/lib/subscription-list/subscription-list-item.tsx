@@ -146,7 +146,7 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> Abo ist unbezahlt
+              <MdOutlinePayments /> Rechnung ist unbezahlt
             </SubscriptionListItemMetaItem>
           )}
 
@@ -200,14 +200,14 @@ export function SubscriptionListItem({
           await callAction(cancel)()
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={`Abo kündigen`}>
+        submitText={`Zahlung kündigen`}>
         <H5 id="modal-modal-title" component="h1">
           {name} wirklich kündigen?
         </H5>
 
         <Paragraph gutterBottom={false}>
-          Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
-          Rechnungen des Abos werden storniert.
+          Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle
+          offene Rechnungen werden storniert.
         </Paragraph>
       </MembershipModal>
 
@@ -221,8 +221,8 @@ export function SubscriptionListItem({
         submitText={'Jetzt Verlängern'}>
         <H5 component="h1">Abo frühzeitig verlängern?</H5>
         <Paragraph gutterBottom={false}>
-          Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
-          willst. Weiterfahren?
+          Wir freuen uns, dass Sie Ihren Unterstützungsbeitrag frühzeitig um ein{' '}
+          {subscriptionDuration} verlängern möchten. Weiterfahren?
         </Paragraph>
       </MembershipModal>
     </SubscriptionListItemWrapper>
