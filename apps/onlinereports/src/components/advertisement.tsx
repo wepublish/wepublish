@@ -69,17 +69,24 @@ const Wideboard = styled(AdBox)`
 `
 
 const HalfPage = styled(AdBox)`
+  margin: 0;
   &,
   img {
-    height: 600px;
-    width: 300px;
+    height: 100%;
+    max-height: calc(100vh - 120px);
+    max-width: 300px;
+    width: auto;
+    aspect-ratio: 300/600;
   }
 `
 
 const Small = styled(AdBox)`
   &,
   img {
-    height: 250px;
-    width: 300px;
+    max-height: 250px;
+    height: auto;
+    max-width: 300px;
+    width: 100%;
+    aspect-ratio: 300/250;
   }
 `
