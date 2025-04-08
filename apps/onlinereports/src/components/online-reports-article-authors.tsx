@@ -20,6 +20,7 @@ export const ArticleAuthorsWrapper = styled('div')`
 
   ${ArticleDateWrapper} {
     font-size: 14px;
+    line-height: 1em;
   }
 `
 
@@ -52,6 +53,9 @@ const AuthorNames = styled('div')`
 const MetaWrapper = styled('div')`
   display: flex;
   justify-items: stretch;
+  @media screen and (max-width: 430px) {
+    flex-wrap: wrap;
+  }
 `
 
 const CommentsShareBox = styled('div')`
