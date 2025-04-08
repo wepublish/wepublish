@@ -41,6 +41,8 @@ import {
   EventBlockWrapper,
   HeadingWithImage,
   HeadingWithoutImage,
+  ImageBlockCaption,
+  ImageBlockInnerWrapper,
   ImageBlockWrapper,
   RichTextBlockWrapper,
   SliderWrapper,
@@ -146,6 +148,14 @@ const MainContent = styled('main')`
       font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
       font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
       font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
+    }
+
+    ${ImageBlockInnerWrapper} {
+      gap: ${({theme}) => theme.spacing(1)};
+    }
+    ${ImageBlockCaption} {
+      color: #7c7c7c;
+      font-size: 14px;
     }
   }
 
