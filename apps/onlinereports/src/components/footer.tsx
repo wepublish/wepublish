@@ -34,7 +34,7 @@ export const OnlineReportsFooter = () => {
   return (
     <OnlineReportsFooterContainer slug={''} categorySlugs={[['footer']]}>
       <FooterPaperCategory>
-        <FooterName>Kontakt</FooterName>
+        <FooterName>OnlineReports GmbH</FooterName>
         <FooterPaperSection>
           <H6>Münsterplatz 8, 4051 Basel</H6>
           <H6>redaktion@onlinereports.ch</H6>

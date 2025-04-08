@@ -151,6 +151,11 @@ export const FooterPaperSection = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `
 
 const FooterPaperCategoryLinks = styled(FooterPaperSection)``
