@@ -1,16 +1,12 @@
-import {IconButton, Popover} from '@mui/material'
+import {Popover} from '@mui/material'
 import styled from '@emotion/styled'
-import {BuilderCommentListItemShareProps} from '@wepublish/website/builder'
+import {BuilderCommentListItemShareProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import React, {useState} from 'react'
 import {BsLinkedin} from 'react-icons/bs'
 import {MdContentCopy, MdEmail, MdFacebook, MdShare, MdWhatsapp} from 'react-icons/md'
 import {FaXTwitter} from 'react-icons/fa6'
 
 export const CommentListItemShareWrapper = styled('div')``
-
-export const CommentListItemShareIcon = styled(IconButton)`
-  border-width: 0px;
-`
 
 export const CommentListItemShareOptions = styled('div')`
   display: flex;
@@ -26,6 +22,10 @@ const iconStyle = {
 
 export const CommentListItemShare = ({url, title, className}: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+
+  const {
+    elements: {IconButton}
+  } = useWebsiteBuilder()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     navigator.share ? navigator.share({title, url}) : setAnchorEl(event.currentTarget)
@@ -90,9 +90,9 @@ export const CommentListItemShare = ({url, title, className}: BuilderCommentList
 
   return (
     <CommentListItemShareWrapper className={className}>
-      <CommentListItemShareIcon size="small" onClick={handleClick}>
+      <IconButton size="small" onClick={handleClick}>
         <MdShare />
-      </CommentListItemShareIcon>
+      </IconButton>
 
       <Popover
         open={popoverOpen}
