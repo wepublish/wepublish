@@ -1,4 +1,17 @@
 export const redirectMap = new Map([
+  ['bestellen.10.0.html', 'newsletter'],
+  ['Gelesen-gedacht.21.0.html', 'a/tag/Gelesen%20&%20gedacht'],
+  ['Gast-Kommentar.15.0.html', 'a/tag/Politik'],
+  ['Kommentar.17.0.html', 'a/tag/Politik'],
+  ['Faits-divers.24.0.html', 'a/tag/Kultur%20&%20Gesellschaft'],
+  ['Kreative.25.0.html', 'a/tag/Kultur%20&%20Gesellschaft'],
+  ['Konsum.12.0.html', 'a/tag/Kultur%20&%20Gesellschaft'],
+  ['OEkologie.13.0.html', 'a/tag/Kultur%20&%20Gesellschaft'],
+  ['Gesellschaft.14.0.html', 'a/tag/Kultur%20&%20Gesellschaft'],
+  ['Kultur.16.0.html', 'a/tag/Kultur%20&%20Gesellschaft'],
+  ['Wirtschaft.19.0.html', 'a/tag/Wirtschaft'],
+  ['Politik.18.0.html', 'a/tag/Politik'],
+  ['News.20.0.html', 'a/tag/news'],
   [
     'News.117+M5dafe69e252.0.html',
     'a/komitee-lanciert-abstimmungskampagne-gegen-birsigpark-in-binningen'
