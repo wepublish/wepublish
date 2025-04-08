@@ -159,7 +159,7 @@ export const selectTeaserTags = (teaser: TeaserType) => {
         teaser.properties
           ?.find(property => property.key === 'tags')
           ?.value.split(/,\s+/)
-          .map(tag => ({tag, id: tag})) ?? []
+          .map(tag => ({tag, id: tag, url: '/'})) ?? []
       )
   }
 
