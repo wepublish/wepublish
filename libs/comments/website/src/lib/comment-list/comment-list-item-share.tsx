@@ -27,7 +27,6 @@ export const CommentListItemShare = ({
   forceNonSystemShare
 }: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     !forceNonSystemShare && navigator.share
       ? navigator.share({title, url})

@@ -2,9 +2,9 @@ import {css, GlobalStyles} from '@mui/material'
 
 const globalCSS = css`
   html {
-    hyphenate-limit-chars: auto 10 10;
-    -webkit-hyphenate-limit-before: 10;
-    -webkit-hyphenate-limit-after: 10;
+    hyphenate-limit-chars: auto 8 8;
+    -webkit-hyphenate-limit-before: 8;
+    -webkit-hyphenate-limit-after: 8;
   }
 `
 

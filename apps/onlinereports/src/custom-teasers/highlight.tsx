@@ -78,7 +78,7 @@ export const HighlightTeaser = styled(OnlineReportsBaseTeaser)<BuilderTeaserProp
 
     ${({theme}) => theme.breakpoints.up('md')} {
       font-size: ${({theme, teaser}) =>
-        teaserTitleIsLongOrHasLongWords(teaser) ? '40px' : '44px'};
+        teaserTitleIsLongOrHasLongWords(teaser) ? '36px' : '44px'};
     }
   }
 

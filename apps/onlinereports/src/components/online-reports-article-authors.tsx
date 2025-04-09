@@ -5,7 +5,7 @@ import {useCommentListQuery} from '@wepublish/website/api'
 import {MdOutlineModeComment} from 'react-icons/md'
 import {ArticleDateWrapper} from '@wepublish/article/website'
 import {CommentListItemShareWrapper} from '@wepublish/comments/website'
-import {Button} from '@mui/material'
+import {Button, IconButton} from '@mui/material'
 import {useEffect, useState} from 'react'
 
 export const ArticleAuthorsWrapper = styled('div')`
@@ -132,9 +132,18 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
       <CommentsShareBox>
         {!article?.disableComments && (
           <CommentListItemShareWrapper>
-            <ShareButton onClick={scrollToComments} endIcon={<MdOutlineModeComment />}>
-              {data?.comments?.length ? data.comments.length : ''}{' '}
-            </ShareButton>
+            {data?.comments?.length ? (
+              <ShareButton
+                onClick={scrollToComments}
+                endIcon={<MdOutlineModeComment />}
+                size={'small'}>
+                {data?.comments?.length ? data.comments.length : ''}
+              </ShareButton>
+            ) : (
+              <IconButton onClick={scrollToComments} size={'small'} sx={{marginRight: '8px'}}>
+                <MdOutlineModeComment />
+              </IconButton>
+            )}
           </CommentListItemShareWrapper>
         )}
         <CommentListItemShare
