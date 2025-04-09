@@ -56,11 +56,15 @@ const AdBox = styled(Box)`
   //background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
   //border: 5px solid #eee;
   margin: 0 auto;
+
+  img {
+    height: 100%;
+    width: 100%;
+  }
 `
 
 const Wideboard = styled(AdBox)`
-  &,
-  img {
+  & {
     max-height: 250px;
     height: auto;
     width: 100%;
@@ -70,8 +74,7 @@ const Wideboard = styled(AdBox)`
 
 const HalfPage = styled(AdBox)`
   margin: 0;
-  &,
-  img {
+  & {
     height: 100%;
     max-height: calc(100vh - 120px);
     max-width: 300px;
@@ -81,8 +84,7 @@ const HalfPage = styled(AdBox)`
 `
 
 const Small = styled(AdBox)`
-  &,
-  img {
+  & {
     max-height: 250px;
     height: auto;
     max-width: 300px;
