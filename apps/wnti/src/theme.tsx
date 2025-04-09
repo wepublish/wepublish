@@ -102,6 +102,9 @@ const theme = createTheme(WePTheme, {
         outlined: {
           color: '#F2BDB8',
           borderColor: '#F2BDB8'
+        },
+        textSecondary: {
+          color: '#F2BDB8'
         }
       }
     },
