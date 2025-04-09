@@ -202,7 +202,7 @@ const FooterPaper = ({
               {arrayIndex > 0 && <FooterSeparator />}
               {categoryArray.map(nav => (
                 <FooterPaperCategory key={nav.id}>
-                  <FooterName>{nav.name}</FooterName>
+                  {nav.name && <FooterName>{nav.name}</FooterName>}
 
                   <FooterPaperCategoryLinks>
                     {nav.links?.map((link, index) => {
