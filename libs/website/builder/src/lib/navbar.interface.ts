@@ -1,5 +1,5 @@
 import {QueryResult} from '@apollo/client'
-import {ButtonProps} from '@wepublish/ui'
+import {ButtonProps, ButtonWithLabelProps} from '@wepublish/ui'
 import {FullImageFragment, NavigationListQuery} from '@wepublish/website/api'
 import {PropsWithChildren} from 'react'
 
@@ -13,7 +13,7 @@ export type BuilderNavbarProps = PropsWithChildren<
     logo?: FullImageFragment | null
     loginBtn?: ButtonProps | null
     profileBtn?: ButtonProps | null
-    subscribeBtn?: ButtonProps | null
+    subscribeBtn?: ButtonWithLabelProps | null
     hasUnpaidInvoices: boolean
     hasRunningSubscription: boolean
   }

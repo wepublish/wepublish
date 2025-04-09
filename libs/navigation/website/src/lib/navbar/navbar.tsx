@@ -7,7 +7,7 @@ import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 import {useTranslation} from 'react-i18next'
-import {ButtonProps, TextToIcon} from '@wepublish/ui'
+import {ButtonProps, ButtonWithLabelProps, TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -289,7 +289,7 @@ export function Navbar({
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
               <Button LinkComponent={Link} sx={buttonStyles} {...subscribeBtn}>
-                {t('navbar.subscribe')}
+                {subscribeBtn.label ?? t('navbar.subscribe')}
               </Button>
             )}
 
@@ -444,7 +444,7 @@ const NavPaper = ({
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null
   profileBtn?: ButtonProps | null
-  subscribeBtn?: ButtonProps | null
+  subscribeBtn?: ButtonWithLabelProps | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
@@ -495,7 +495,7 @@ const NavPaper = ({
               color="secondary"
               onClick={closeMenu}
               {...subscribeBtn}>
-              {t('navbar.subscribe')}
+              {subscribeBtn.label ?? t('navbar.subscribe')}
             </Button>
           )}
 
