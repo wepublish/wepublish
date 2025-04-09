@@ -42,6 +42,8 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
+import deOverriden from '../locales/deOverriden.json'
+import {mergeDeepRight} from 'ramda'
 
 setDefaultOptions({
   locale: de
@@ -50,7 +52,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
@@ -176,8 +178,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   headerSlug="header"
                   iconSlug="icons"
                   subscribeBtn={{
-                    href: '/mitmachen',
-                    label: 'Mitglied werden'
+                    href: '/mitmachen'
                   }}
                 />
 
