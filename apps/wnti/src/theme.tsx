@@ -121,6 +121,9 @@ const theme = createTheme(WePTheme, {
           fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
           fontWeight: '400',
           fontStyle: 'italic'
+        },
+        li: {
+          fontSize: '1.25rem'
         }
       }
     },
