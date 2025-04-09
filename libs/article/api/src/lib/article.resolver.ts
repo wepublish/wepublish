@@ -23,6 +23,7 @@ import {
 import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
+import {SettingDataloaderService, SettingName} from '@wepublish/settings/api'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -31,7 +32,8 @@ export class ArticleResolver {
     private articleRevisionsDataloader: ArticleRevisionDataloaderService,
     private articleService: ArticleService,
     private trackingPixelService: TrackingPixelService,
-    private urlAdapter: URLAdapter
+    private urlAdapter: URLAdapter,
+    private settings: SettingDataloaderService
   ) {}
 
   @Public()
@@ -43,7 +45,7 @@ export class ArticleResolver {
     if (id != null) {
       const article = await this.articleDataloader.load(id)
 
-      if (!article?.peerId) {
+      if (article && !article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(id)
       }
 
@@ -51,7 +53,13 @@ export class ArticleResolver {
     }
 
     if (slug != null) {
-      return this.articleService.getArticleBySlug(slug)
+      const article = await this.articleService.getArticleBySlug(slug)
+
+      if (article && !article?.peerId) {
+        await this.trackingPixelService.addMissingArticleTrackingPixels(article.id)
+      }
+
+      return article
     }
 
     throw new BadRequestException('id or slug required.')
@@ -154,7 +162,14 @@ export class ArticleResolver {
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
     if (!isPreview || !hasPermission(CanGetArticle, user?.roles ?? [])) {
-      return published
+      if (published) {
+        return published
+      }
+
+      const showPending = !!(await this.settings.load(SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED))
+        ?.value
+
+      return showPending && pending
     }
 
     return draft ?? pending ?? published
