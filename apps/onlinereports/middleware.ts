@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(newPath, request.url), 301)
   }
 
-  const externalHostname = 'https://onlinereports.ch'
+  const externalHostname = 'https://archiv2.onlinereports.ch'
   const externalUrl = `${externalHostname}${pathname}`
   try {
     const response = await fetch(externalUrl)
