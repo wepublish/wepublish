@@ -177,9 +177,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  subscribeBtn={{
-                    href: '/mitmachen'
-                  }}
                 />
 
                 <main>
