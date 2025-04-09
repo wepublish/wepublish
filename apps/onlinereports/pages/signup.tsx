@@ -42,7 +42,7 @@ export default function SignUp() {
       <H3 component="h1">Registrieren Sie sich noch heute</H3>
 
       <Typography variant="body1" paragraph>
-        (Falls Sie schon einen Account haben, <Link href={'/login'}>klicke Sie hier.</Link>)
+        (Falls Sie schon einen Account haben, <Link href={'/login'}>klicken Sie hier.</Link>)
       </Typography>
 
       <RegistrationFormContainer fields={['firstName']} />

@@ -47,7 +47,7 @@ export default function Login({sessionToken}: LoginProps) {
       <H3 component="h1">Login für Leserinnen und Leser</H3>
 
       <Typography variant="body1" paragraph>
-        (Falls Sie noch keinen Account haben, <Link href={'/signup'}>klicke Sie hier.</Link>)
+        (Falls Sie noch keinen Account haben, <Link href={'/signup'}>klicken Sie hier.</Link>)
       </Typography>
 
       <LoginFormContainer
