@@ -20,7 +20,12 @@ export const BannerImage = styled('div')(
 )
 
 export const BannerContent = styled('div')`
-  padding: ${({theme}) => theme.spacing(9)};
+  padding: ${({theme}) => theme.spacing(4)};
+  padding-top: ${({theme}) => theme.spacing(5)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    padding: ${({theme}) => theme.spacing(9)};
+  }
 `
 
 export const BannerCta = styled('p')`
@@ -30,13 +35,18 @@ export const BannerCta = styled('p')`
 
 export const BannerCloseButton = styled('span')`
   position: absolute;
-  top: ${({theme}) => theme.spacing(9)};
-  right: ${({theme}) => theme.spacing(9)};
+  top: ${({theme}) => theme.spacing(1)};
+  right: ${({theme}) => theme.spacing(1)};
   cursor: pointer;
   font-size: 2rem;
   width: 2rem;
   height: 2rem;
   line-height: 2rem;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    top: ${({theme}) => theme.spacing(4)};
+    right: ${({theme}) => theme.spacing(4)};
+  }
 `
 
 export const BannerTitle = styled('h2')`
