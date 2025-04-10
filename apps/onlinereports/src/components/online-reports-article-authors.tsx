@@ -88,8 +88,10 @@ export function OnlineReportsArticleAuthors({article}: BuilderArticleAuthorsProp
   })
 
   useEffect(() => {
-    setUrl(window.location.origin + article.url)
-  }, [])
+    if (url.startsWith('/')) {
+      setUrl(window.location.origin + article.url)
+    }
+  }, [article.url, url])
 
   const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
   if (!authors.length) {
