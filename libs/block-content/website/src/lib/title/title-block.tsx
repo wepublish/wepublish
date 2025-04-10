@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {BlockContent, TitleBlock as TitleBlockType} from '@wepublish/website/api'
-import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {H3} from '@wepublish/ui'
+import {BuilderTitleBlockProps} from '@wepublish/website/builder'
+import {H3, H6} from '@wepublish/ui'
 
 export const isTitleBlock = (block: Pick<BlockContent, '__typename'>): block is TitleBlockType =>
   block.__typename === 'TitleBlock'
@@ -12,16 +12,13 @@ export const TitleBlockWrapper = styled('div')`
   grid-auto-rows: min-content;
 `
 export const TitleBlockTitle = styled(H3)``
+export const TitleBlockLead = styled(H6)``
 
 export const TitleBlock = ({title, lead, className}: BuilderTitleBlockProps) => {
-  const {
-    elements: {H6}
-  } = useWebsiteBuilder()
-
   return (
     <TitleBlockWrapper className={className}>
       <TitleBlockTitle component="h1">{title}</TitleBlockTitle>
-      {lead && <H6 component="p">{lead}</H6>}
+      {lead && <TitleBlockLead component="p">{lead}</TitleBlockLead>}
     </TitleBlockWrapper>
   )
 }
