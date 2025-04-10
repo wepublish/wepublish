@@ -8,7 +8,7 @@
         "GA_ID": "",
         "SPARKLOOP_ID": "",
         "STRIPE_PUBLIC_KEY": "",
-        "GTM_ID": "GTM-57N6FRF2"
+        "GTM_ID": "GTM-KJHWZPB9"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
@@ -16,7 +16,7 @@
       "deployment": true,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us17",
-        "GTM_ID": "GTM-57N6FRF2"
+        "GTM_ID": "GTM-KJHWZPB9"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
