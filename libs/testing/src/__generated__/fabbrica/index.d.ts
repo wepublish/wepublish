@@ -3004,6 +3004,9 @@ type CrowdfundingFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string;
+    countSubscriptionsFrom?: Date | null;
+    countSubscriptionsUntil?: Date | null;
+    additionalRevenue?: number | null;
     memberPlans?: Prisma.MemberPlanCreateNestedManyWithoutCrowdfundingsInput;
     goals?: Prisma.CrowdfundingGoalCreateNestedManyWithoutCrowdfundingInput;
 };

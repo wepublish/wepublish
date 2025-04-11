@@ -1,5 +1,5 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient} from '@prisma/client'
 import {
   CreateCrowdfundingInput,
   CrowdfundingWithActiveGoal,
@@ -36,15 +36,17 @@ export class CrowdfundingService {
   }): Promise<CrowdfundingGoalWithProgress | undefined> {
     const totalAmount = await this.getTotalAmount({crowdfunding})
 
+    const revenue = totalAmount + (crowdfunding.additionalRevenue || 0)
+
     const activeGoal = crowdfunding.goals
       ?.sort((goalA, goalB) => {
         return goalA.amount - goalB.amount
       })
       ?.find((goal, goalIndex) => {
-        const progress = (totalAmount * 100) / goal.amount
+        const progress = (revenue * 100) / goal.amount
 
         // if total amount is still 0 return first goal
-        if (totalAmount === 0 && goalIndex === 0) {
+        if (revenue === 0 && goalIndex === 0) {
           return true
         }
 
@@ -65,8 +67,8 @@ export class CrowdfundingService {
 
     return {
       ...activeGoal,
-      progress: Math.round((totalAmount * 100) / activeGoal.amount),
-      revenue: totalAmount
+      progress: Math.round((revenue * 100) / activeGoal.amount),
+      revenue
     }
   }
 
@@ -77,20 +79,58 @@ export class CrowdfundingService {
   }): Promise<number> {
     const memberPlanIds: string[] = crowdfunding.memberPlans?.map(memberPlan => memberPlan.id) || []
 
+    const invoiceFilter = {
+      some: {
+        AND: [] as any[]
+      }
+    }
+    if (crowdfunding.countSubscriptionsFrom) {
+      invoiceFilter.some.AND.push({
+        paidAt: {
+          gte: crowdfunding.countSubscriptionsFrom.toISOString()
+        }
+      })
+    }
+    if (crowdfunding.countSubscriptionsUntil) {
+      invoiceFilter.some.AND.push({
+        paidAt: {
+          lte: crowdfunding.countSubscriptionsUntil.toISOString()
+        }
+      })
+    }
+
     const subscriptions = await this.prisma.subscription.findMany({
       where: {
         memberPlanID: {
           in: memberPlanIds
-        }
+        },
+        invoices: invoiceFilter
       },
       select: {
-        monthlyAmount: true
+        monthlyAmount: true,
+        paymentPeriodicity: true
       }
     })
 
-    return subscriptions
-      .map(subscription => subscription.monthlyAmount)
-      .reduce((total, monthlyAmount) => total + monthlyAmount, 0)
+    return subscriptions.reduce((total, subscription) => {
+      const monthFactor = this.calcMonthFactor(subscription.paymentPeriodicity)
+      return total + subscription.monthlyAmount * monthFactor
+    }, 0)
+  }
+
+  calcMonthFactor(paymentPeriodicity: PaymentPeriodicity): number {
+    switch (paymentPeriodicity) {
+      case 'monthly':
+        return 1
+      case 'quarterly':
+        return 3
+      case 'biannual':
+        return 6
+      case 'yearly':
+        return 12
+      default:
+        return 0
+    }
   }
 
   async getCrowdfundings() {

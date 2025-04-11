@@ -410,6 +410,9 @@ input CreateCrowdfundingGoalInput {
 }
 
 input CreateCrowdfundingInput {
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
   goals: [CreateCrowdfundingGoalInput!]
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
@@ -420,6 +423,9 @@ input CreateCrowdfundingMemberPlan {
 }
 
 type Crowdfunding {
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
   id: ID!
@@ -469,6 +475,9 @@ type CrowdfundingMemberPlan {
 
 type CrowdfundingWithActiveGoal {
   activeCrowdfundingGoal: CrowdfundingGoalWithProgress
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
   id: ID!
@@ -1951,6 +1960,9 @@ input UpdateBannerInput {
 }
 
 input UpdateCrowdfundingInput {
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
   goals: [CreateCrowdfundingGoalInput!]
   id: ID!
   memberPlans: [CreateCrowdfundingMemberPlan!]

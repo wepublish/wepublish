@@ -40,6 +40,15 @@ export class Crowdfunding {
   @Field()
   name!: string
 
+  @Field({nullable: true})
+  countSubscriptionsFrom?: Date
+
+  @Field({nullable: true})
+  countSubscriptionsUntil?: Date
+
+  @Field({nullable: true})
+  additionalRevenue?: number
+
   @Field(type => [CrowdfundingGoal])
   goals?: CrowdfundingGoal[]
 
@@ -60,7 +69,11 @@ export class CrowdfundingId {
 }
 
 @InputType()
-export class CreateCrowdfundingInput extends PickType(Crowdfunding, ['name'], InputType) {
+export class CreateCrowdfundingInput extends PickType(
+  Crowdfunding,
+  ['name', 'countSubscriptionsFrom', 'countSubscriptionsUntil', 'additionalRevenue'],
+  InputType
+) {
   @Field(() => [CreateCrowdfundingGoalInput], {nullable: true})
   goals?: CreateCrowdfundingGoalInput[]
 
@@ -69,7 +82,11 @@ export class CreateCrowdfundingInput extends PickType(Crowdfunding, ['name'], In
 }
 
 @InputType()
-export class UpdateCrowdfundingInput extends PickType(Crowdfunding, ['id', 'name'], InputType) {
+export class UpdateCrowdfundingInput extends PickType(
+  Crowdfunding,
+  ['id', 'name', 'countSubscriptionsFrom', 'countSubscriptionsUntil', 'additionalRevenue'],
+  InputType
+) {
   @Field(() => [CreateCrowdfundingGoalInput], {nullable: true})
   goals!: CreateCrowdfundingGoalInput[]
 

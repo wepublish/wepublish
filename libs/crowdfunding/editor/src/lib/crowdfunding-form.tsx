@@ -9,6 +9,7 @@ import {CheckPicker, Form, Panel} from 'rsuite'
 import {MemberPlanRefFragment, useMemberPlanListQuery} from '@wepublish/editor/api'
 import React from 'react'
 import {CrowdfundingGoalList} from './crowdfunding-goal-list'
+import {CurrencyInput, DateTimePicker} from '../../../../ui/editor/src'
 
 type CrowdfundingFormData = (CreateCrowdfundingInput | UpdateCrowdfundingInput) & {
   goals?: CreateCrowdfundingGoalInput[] | null
@@ -67,6 +68,56 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
                 })
               })
             }}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="additionalRevenue">
+          <Form.ControlLabel>{t('crowdfunding.form.additionalRevenue')}</Form.ControlLabel>
+          <CurrencyInput
+            name="additionalRevenue"
+            currency={'CHF'}
+            centAmount={props.crowdfunding.additionalRevenue || 0}
+            onChange={additionalRevenue =>
+              props.onChange({...props.crowdfunding, additionalRevenue})
+            }
+          />
+        </Form.Group>
+
+        <Form.Group controlId="countSubscriptionsFrom">
+          <Form.Control
+            name="countSubscriptionsFrom"
+            label={t('crowdfunding.form.countSubscriptionsFrom')}
+            dateTime={
+              props.crowdfunding?.countSubscriptionsFrom
+                ? new Date(props.crowdfunding?.countSubscriptionsFrom)
+                : undefined
+            }
+            changeDate={(date: Date) =>
+              props.onChange({
+                ...props.crowdfunding,
+                countSubscriptionsFrom: date?.toISOString() || null
+              })
+            }
+            accepter={DateTimePicker}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="countSubscriptionsUntil">
+          <Form.Control
+            name="countSubscriptionsUntil"
+            label={t('crowdfunding.form.countSubscriptionsUntil')}
+            dateTime={
+              props.crowdfunding?.countSubscriptionsUntil
+                ? new Date(props.crowdfunding?.countSubscriptionsUntil)
+                : undefined
+            }
+            changeDate={(date: Date) =>
+              props.onChange({
+                ...props.crowdfunding,
+                countSubscriptionsUntil: date?.toISOString() || null
+              })
+            }
+            accepter={DateTimePicker}
           />
         </Form.Group>
       </Panel>

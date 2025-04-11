@@ -23,7 +23,6 @@ export const EditCrowdfundingForm = () => {
   const [crowdfunding, setCrowdfunding] = useState<UpdateCrowdfundingInput>({
     id: crowdfundingId,
     name: ''
-    //tags: []
   })
 
   const client = useMemo(() => getApiClientV2(), [])
