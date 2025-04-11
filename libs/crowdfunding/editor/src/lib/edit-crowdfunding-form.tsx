@@ -1,6 +1,5 @@
 import {
   CreateCrowdfundingGoalInput,
-  LoginStatus,
   UpdateCrowdfundingInput,
   getApiClientV2,
   useCrowdfundingQuery,
@@ -40,10 +39,9 @@ export const EditCrowdfundingForm = () => {
     }
   })
 
-  const {StringType, BooleanType} = Schema.Types
+  const {StringType} = Schema.Types
   const validationModel = Schema.Model({
-    title: StringType().isRequired(),
-    text: StringType().isRequired()
+    name: StringType().isRequired()
   })
 
   const [shouldClose, setShouldClose] = useState(false)
@@ -100,7 +98,7 @@ export const EditCrowdfundingForm = () => {
       formValue={crowdfunding}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => /*validationPassed &&*/ onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}>
       <SingleViewTitle
         loading={loading}
         title={t('crowdfunding.edit.title')}

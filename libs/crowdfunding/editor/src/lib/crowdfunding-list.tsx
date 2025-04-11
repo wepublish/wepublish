@@ -27,6 +27,7 @@ function CrowdfundingList() {
 
   const {data, loading, error, refetch} = useCrowdfundingsQuery({
     client,
+    fetchPolicy: 'cache-and-network',
     onError: () => {
       console.log(error)
     }

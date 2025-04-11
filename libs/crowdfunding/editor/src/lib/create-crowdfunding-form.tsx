@@ -15,29 +15,28 @@ import {CreateCrowdfundingMutation} from '../../../../editor/api-v2/src'
 export const CreateCrowdfundingForm = () => {
   const navigate = useNavigate()
   const {t} = useTranslation()
+  const client = useMemo(() => getApiClientV2(), [])
 
   const closePath = '/crowdfundings'
 
   const [crowdfunding, setCrowdfunding] = useState({} as CreateCrowdfundingInput)
+  const [shouldClose, setShouldClose] = useState(false)
 
   const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     name: StringType().isRequired()
   })
 
-  const [shouldClose, setShouldClose] = useState(false)
-
-  const client = useMemo(() => getApiClientV2(), [])
   const [createCrowdfunding, {loading}] = useCreateCrowdfundingMutation({
     client,
     onError: error => {
       console.log(error)
     },
     onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
+      console.log('should close', shouldClose)
       if (shouldClose) {
         navigate(closePath)
-      }
-      {
+      } else {
         navigate(`/crowdfundings/edit/${crowdfunding.createCrowdfunding.id}`)
       }
     }
@@ -76,7 +75,7 @@ export const CreateCrowdfundingForm = () => {
       formValue={crowdfunding}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => /*validationPassed &&*/ onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}>
       <SingleViewTitle
         loading={loading}
         title={t('crowdfunding.create.title')}

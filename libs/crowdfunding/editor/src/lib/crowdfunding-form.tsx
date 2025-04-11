@@ -5,7 +5,6 @@ import {
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useNavigate} from 'react-router-dom'
 import {CheckPicker, Form, Panel} from 'rsuite'
 import {MemberPlanRefFragment, useMemberPlanListQuery} from '@wepublish/editor/api'
 import React from 'react'
@@ -24,7 +23,6 @@ interface CrowdfundingFormProps {
 }
 
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
-  const navigate = useNavigate()
   const {t} = useTranslation()
   const [memberPlans, setmemberPlans] = useState<MemberPlanRefFragment[]>([])
 
@@ -33,11 +31,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
     props.onChange({...props.crowdfunding, [name]: value})
   }
 
-  const {
-    data: memberPlanData,
-    loading: isLoadingMemberPlanData,
-    error: memberPlanLoadError
-  } = useMemberPlanListQuery({
+  const {data: memberPlanData} = useMemberPlanListQuery({
     variables: {take: 50},
     fetchPolicy: 'no-cache'
   })
