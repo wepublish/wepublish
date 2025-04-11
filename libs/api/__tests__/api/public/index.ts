@@ -644,6 +644,7 @@ export type CrowdfundingGoalWithProgress = {
   id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   progress?: Maybe<Scalars['Float']>;
+  revenue?: Maybe<Scalars['Float']>;
   title: Scalars['String'];
 };
 

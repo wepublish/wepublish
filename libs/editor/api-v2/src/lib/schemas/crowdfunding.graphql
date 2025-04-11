@@ -83,4 +83,5 @@ fragment FullCrowdfundingGoalWithProgress on CrowdfundingGoalWithProgress {
   description
   amount
   progress
+  revenue
 }

@@ -4,7 +4,7 @@ import {FullCrowdfundingGoalWithProgressFragment} from '@wepublish/editor/api-v2
 import {BlockContent, CrowdfundingBlock as CrowdfundingBlockType} from '@wepublish/website/api'
 import {BuilderCrowdfundingBlockProps} from '@wepublish/website/builder'
 import {useMemo} from 'react'
-import {MdInfo, MdOutlineInfo} from 'react-icons/md'
+import {MdOutlineInfo} from 'react-icons/md'
 
 export const isCrowdfundingBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -41,7 +41,8 @@ export const CfProgressBarInner = styled('div')`
 `
 
 export const CfProgressBarInnerItem = styled('div')`
-  width: 50%;
+  flex: 1 1 auto;
+  max-width: 90%;
 `
 
 export const CfProgressBarInnerAmount = styled('p')`
@@ -68,14 +69,27 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     () => activeCrowdfunding?.progress || 0,
     [activeCrowdfunding?.progress]
   )
+
+  const revenue = useMemo<number>(
+    () => activeCrowdfunding?.revenue || 0,
+    [activeCrowdfunding?.revenue]
+  )
+
   const goalAmount = useMemo<number>(
-    () => Math.round((activeCrowdfunding?.amount || 0) / 100),
+    () => activeCrowdfunding?.amount || 0,
     [activeCrowdfunding?.amount]
   )
   const goalDescription = useMemo(
     () => activeCrowdfunding?.description,
     [activeCrowdfunding?.description]
   )
+
+  function formatMoney(amount: number): string {
+    return Math.round(amount / 100).toLocaleString('de-CH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
 
   // no crowdfunding object is available
   if (!crowdfunding)
@@ -89,7 +103,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     <CrowdfundingContainer>
       <CfInner>
         <CfTitle>
-          Bereits <b>{progress} %</b> finanziert
+          Bereits <b style={{textWrap: 'nowrap'}}>CHF {formatMoney(revenue)}</b> finanziert
         </CfTitle>
 
         <CfProgressBarContainer>
@@ -110,13 +124,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
               )}
             </CfProgressBarInnerItem>
             <CfProgressBarInnerItem>
-              <CfProgressBarInnerAmount>
-                CHF{' '}
-                {goalAmount.toLocaleString('de-CH', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}
-              </CfProgressBarInnerAmount>
+              <CfProgressBarInnerAmount>CHF {formatMoney(goalAmount)}</CfProgressBarInnerAmount>
               <CfProgressBarInnerTitle>
                 {crowdfunding.activeCrowdfundingGoal?.title || ''}
               </CfProgressBarInnerTitle>

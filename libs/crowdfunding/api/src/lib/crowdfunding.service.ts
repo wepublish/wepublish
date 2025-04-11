@@ -65,7 +65,8 @@ export class CrowdfundingService {
 
     return {
       ...activeGoal,
-      progress: Math.round((totalAmount * 100) / activeGoal.amount)
+      progress: Math.round((totalAmount * 100) / activeGoal.amount),
+      revenue: totalAmount
     }
   }
 

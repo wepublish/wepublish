@@ -3,9 +3,10 @@ fragment CrowdfundingWithActiveGoal on CrowdfundingWithActiveGoal {
   name
 
   activeCrowdfundingGoal {
-    progress
     id
     title
     amount
+    progress
+    revenue
   }
 }
