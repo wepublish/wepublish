@@ -28,10 +28,10 @@ export const CrowdfundingGoalList = ({
     <>
       <Grid fluid>
         <Row>
-          <Col xs={5}>Title</Col>
-          <Col xs={5}>Description</Col>
-          <Col xs={5}>Amount</Col>
-          <Col xs={4}>Goals</Col>
+          <Col xs={5}>{t('crowdfunding.goalsForm.title')}</Col>
+          <Col xs={5}>{t('crowdfunding.goalsForm.description')}</Col>
+          <Col xs={5}>{t('crowdfunding.goalsForm.amount')}</Col>
+          <Col xs={4}>{t('crowdfunding.goalsForm.remove')}</Col>
         </Row>
         {goals.map((goal, index) => (
           <Row>
@@ -58,14 +58,16 @@ export const CrowdfundingGoalList = ({
               />
             </Col>
             <Col xs={4}>
-              <Button onClick={() => onRemove(index)}>Remove</Button>
+              <Button onClick={() => onRemove(index)}>{t('crowdfunding.goalsForm.remove')}</Button>
             </Col>
           </Row>
         ))}
 
         <Row>
           <Col xs={24}>
-            <Button onClick={() => onAdd({title: '', description: '', amount: 0})}>Add Goal</Button>
+            <Button onClick={() => onAdd({title: '', description: '', amount: 0})}>
+              {t('crowdfunding.goalsForm.add')}
+            </Button>
           </Col>
         </Row>
       </Grid>

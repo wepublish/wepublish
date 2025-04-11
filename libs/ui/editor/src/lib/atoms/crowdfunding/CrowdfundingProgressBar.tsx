@@ -1,5 +1,6 @@
 import {FullCrowdfundingWithActiveGoalFragment} from '@wepublish/editor/api-v2'
 import {useMemo} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Progress} from 'rsuite'
 
 export function CrowdfundingProgressBar({
@@ -7,6 +8,8 @@ export function CrowdfundingProgressBar({
 }: {
   crowdfunding: Partial<FullCrowdfundingWithActiveGoalFragment>
 }) {
+  const {t} = useTranslation()
+
   const progress = useMemo<number>(
     () => crowdfunding.activeCrowdfundingGoal?.progress || 0,
     [crowdfunding.activeCrowdfundingGoal?.progress]
@@ -21,7 +24,7 @@ export function CrowdfundingProgressBar({
 
   return (
     <>
-      <h3>Bereits CHF {formatMoney(crowdfunding.revenue || 0)} finanziert</h3>
+      <h3>{t('crowdfunding.form.revenue', {revenue: formatMoney(crowdfunding.revenue || 0)})}</h3>
       <Progress.Line style={{marginLeft: 0}} percent={progress} />
     </>
   )

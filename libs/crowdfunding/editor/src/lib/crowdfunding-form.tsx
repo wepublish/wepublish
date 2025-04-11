@@ -12,6 +12,7 @@ import {CrowdfundingGoalList} from './crowdfunding-goal-list'
 import {CurrencyInput, DateTimePicker} from '../../../../ui/editor/src'
 import {CrowdfundingProgressBar} from '../../../../ui/editor/src/lib/atoms/crowdfunding/CrowdfundingProgressBar'
 import {FullCrowdfundingWithActiveGoalFragment} from '../../../../editor/api-v2/src'
+import {MdCalendarToday} from 'react-icons/md'
 
 type CrowdfundingFormData = (CreateCrowdfundingInput | UpdateCrowdfundingInput) & {
   goals?: CreateCrowdfundingGoalInput[] | null
@@ -53,6 +54,18 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           <Form.ControlLabel>{t('crowdfunding.form.name')}</Form.ControlLabel>
           <Form.Control name="name" value={props.crowdfunding.name} onChange={handleChange} />
         </Form.Group>
+
+        <Form.Group controlId="additionalRevenue">
+          <Form.ControlLabel>{t('crowdfunding.form.additionalRevenue')}</Form.ControlLabel>
+          <CurrencyInput
+            name="additionalRevenue"
+            currency={'CHF'}
+            centAmount={props.crowdfunding.additionalRevenue || 0}
+            onChange={additionalRevenue =>
+              props.onChange({...props.crowdfunding, additionalRevenue})
+            }
+          />
+        </Form.Group>
       </Panel>
 
       <Panel bordered style={{overflow: 'initial'}}>
@@ -62,13 +75,13 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
       </Panel>
 
       <Panel bordered style={{overflow: 'initial'}}>
-        <h3>Filter</h3>
+        <h3>{t('crowdfunding.form.filter')}</h3>
         <Form.Group controlId="memberPlans">
           <Form.ControlLabel>{t('crowdfunding.form.memberPlans')}</Form.ControlLabel>
           <CheckPicker
             block
             virtualized
-            placeholder={t('navigation.panels.selectMemberPlan')}
+            placeholder={t('crowdfunding.form.selectMemberPlans')}
             value={props.crowdfunding.memberPlans?.map(p => p.id) || []}
             data={memberPlans.map(memberPlan => ({value: memberPlan.id!, label: memberPlan.name}))}
             onChange={ids => {
@@ -80,18 +93,6 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
                 })
               })
             }}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="additionalRevenue">
-          <Form.ControlLabel>{t('crowdfunding.form.additionalRevenue')}</Form.ControlLabel>
-          <CurrencyInput
-            name="additionalRevenue"
-            currency={'CHF'}
-            centAmount={props.crowdfunding.additionalRevenue || 0}
-            onChange={additionalRevenue =>
-              props.onChange({...props.crowdfunding, additionalRevenue})
-            }
           />
         </Form.Group>
 
