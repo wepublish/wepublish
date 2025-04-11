@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
-import {Alert, AlertTitle, LinearProgress, Typography} from '@mui/material'
+import {Alert, AlertTitle, LinearProgress} from '@mui/material'
+import {FullCrowdfundingGoalWithProgressFragment} from '@wepublish/editor/api-v2'
 import {BlockContent, CrowdfundingBlock as CrowdfundingBlockType} from '@wepublish/website/api'
 import {BuilderCrowdfundingBlockProps} from '@wepublish/website/builder'
+import {useMemo} from 'react'
 
 export const isCrowdfundingBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -9,27 +11,63 @@ export const isCrowdfundingBlock = (
 
 export const CrowdfundingContainer = styled('div')``
 
-export const CrowdfundingInner = styled('div')`
+export const CfInner = styled('div')`
   max-width: 800px;
 `
 
-export const CrowdfundingTitle = styled('h1')`
+export const CfTitle = styled('h1')`
   font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${({theme}) => theme.spacing(2)};
+  margin-left: ${({theme}) => theme.spacing(2)};
 `
 
-export const CrowdfundingProgressBarContainer = styled('div')`
+export const CfProgressBarContainer = styled('div')`
   position: relative;
 `
 
-export const CrowdfundingProgressBarInner = styled('div')`
+export const CfProgressBarInner = styled('div')`
   position: absolute;
   top: 0;
   right: 0;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   padding: ${({theme}) => theme.spacing(1)};
+  text-align: end;
+  line-height: 1.1;
+`
+
+export const CfProgressBarInnerAmount = styled('p')`
+  width: 100%;
+  margin: 0;
+  text-align: end;
+  font-weight: bold;
+`
+
+export const CfProgressBarInnerTitle = styled('p')`
+  width: 100%;
+  margin: 0;
   text-align: end;
 `
 
 export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps) => {
+  const activeCrowdfunding = useMemo<
+    FullCrowdfundingGoalWithProgressFragment | undefined | null
+  >(() => {
+    return crowdfunding?.activeCrowdfundingGoal
+  }, [crowdfunding?.activeCrowdfundingGoal])
+
+  const progress = useMemo<number>(
+    () => activeCrowdfunding?.progress || 0,
+    [activeCrowdfunding?.progress]
+  )
+  const goalAmount = useMemo<number>(
+    () => Math.round((activeCrowdfunding?.amount || 0) / 100),
+    [activeCrowdfunding?.amount]
+  )
+
   // no crowdfunding object is available
   if (!crowdfunding)
     return (
@@ -40,28 +78,32 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
 
   return (
     <CrowdfundingContainer>
-      <CrowdfundingInner>
-        <CrowdfundingTitle>
-          Bereits {crowdfunding.activeCrowdfundingGoal?.progress || 0} % finanziert
-        </CrowdfundingTitle>
+      <CfInner>
+        <CfTitle>
+          Bereits <b>{progress} %</b> finanziert
+        </CfTitle>
 
-        <CrowdfundingProgressBarContainer>
+        <CfProgressBarContainer>
           <LinearProgress
             variant="determinate"
             color="primary"
-            value={crowdfunding.activeCrowdfundingGoal?.progress || 0}
+            value={progress}
             sx={{height: '60px'}}
           />
-          <CrowdfundingProgressBarInner>
-            <b>CHF 300'000</b>
-            <div>{crowdfunding.activeCrowdfundingGoal?.title || ''}</div>
-          </CrowdfundingProgressBarInner>
-        </CrowdfundingProgressBarContainer>
-
-        <Typography variant="subtitle2">
-          {crowdfunding.activeCrowdfundingGoal?.progress || 0} %
-        </Typography>
-      </CrowdfundingInner>
+          <CfProgressBarInner>
+            <CfProgressBarInnerAmount>
+              CHF{' '}
+              {goalAmount.toLocaleString('de-CH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })}
+            </CfProgressBarInnerAmount>
+            <CfProgressBarInnerTitle>
+              {crowdfunding.activeCrowdfundingGoal?.title || ''}
+            </CfProgressBarInnerTitle>
+          </CfProgressBarInner>
+        </CfProgressBarContainer>
+      </CfInner>
     </CrowdfundingContainer>
   )
 }
