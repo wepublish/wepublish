@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
-import {Alert, AlertTitle, LinearProgress} from '@mui/material'
+import {Alert, AlertTitle, IconButton, LinearProgress, Tooltip} from '@mui/material'
 import {FullCrowdfundingGoalWithProgressFragment} from '@wepublish/editor/api-v2'
 import {BlockContent, CrowdfundingBlock as CrowdfundingBlockType} from '@wepublish/website/api'
 import {BuilderCrowdfundingBlockProps} from '@wepublish/website/builder'
 import {useMemo} from 'react'
+import {MdInfo, MdOutlineInfo} from 'react-icons/md'
 
 export const isCrowdfundingBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -31,12 +32,16 @@ export const CfProgressBarInner = styled('div')`
   top: 0;
   right: 0;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   padding: ${({theme}) => theme.spacing(1)};
-  text-align: end;
   line-height: 1.1;
+`
+
+export const CfProgressBarInnerItem = styled('div')`
+  width: 50%;
 `
 
 export const CfProgressBarInnerAmount = styled('p')`
@@ -67,6 +72,10 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     () => Math.round((activeCrowdfunding?.amount || 0) / 100),
     [activeCrowdfunding?.amount]
   )
+  const goalDescription = useMemo(
+    () => activeCrowdfunding?.description,
+    [activeCrowdfunding?.description]
+  )
 
   // no crowdfunding object is available
   if (!crowdfunding)
@@ -91,16 +100,27 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
             sx={{height: '60px'}}
           />
           <CfProgressBarInner>
-            <CfProgressBarInnerAmount>
-              CHF{' '}
-              {goalAmount.toLocaleString('de-CH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}
-            </CfProgressBarInnerAmount>
-            <CfProgressBarInnerTitle>
-              {crowdfunding.activeCrowdfundingGoal?.title || ''}
-            </CfProgressBarInnerTitle>
+            <CfProgressBarInnerItem>
+              {goalDescription && (
+                <Tooltip title={goalDescription}>
+                  <IconButton>
+                    <MdOutlineInfo size={'30px'} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </CfProgressBarInnerItem>
+            <CfProgressBarInnerItem>
+              <CfProgressBarInnerAmount>
+                CHF{' '}
+                {goalAmount.toLocaleString('de-CH', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}
+              </CfProgressBarInnerAmount>
+              <CfProgressBarInnerTitle>
+                {crowdfunding.activeCrowdfundingGoal?.title || ''}
+              </CfProgressBarInnerTitle>
+            </CfProgressBarInnerItem>
           </CfProgressBarInner>
         </CfProgressBarContainer>
       </CfInner>
