@@ -45,8 +45,6 @@ export class CrowdfundingService {
     crowdfunding: Crowdfunding & {goals: CrowdfundingGoal[]}
     revenue: number
   }): CrowdfundingGoalWithProgress | undefined {
-    revenue += crowdfunding.additionalRevenue || 0
-
     const activeGoal = crowdfunding.goals
       ?.sort((goalA, goalB) => {
         return goalA.amount - goalB.amount
@@ -120,10 +118,12 @@ export class CrowdfundingService {
       }
     })
 
-    return subscriptions.reduce((total, subscription) => {
-      const monthFactor = this.calcMonthFactor(subscription.paymentPeriodicity)
-      return total + subscription.monthlyAmount * monthFactor
-    }, 0)
+    return (
+      subscriptions.reduce((total, subscription) => {
+        const monthFactor = this.calcMonthFactor(subscription.paymentPeriodicity)
+        return total + subscription.monthlyAmount * monthFactor
+      }, 0) + (crowdfunding.additionalRevenue || 0)
+    )
   }
 
   calcMonthFactor(paymentPeriodicity: PaymentPeriodicity): number {
@@ -171,7 +171,7 @@ export class CrowdfundingService {
   async updateCrowdfunding(crowdfunding: UpdateCrowdfundingInput) {
     const {id, goals, memberPlans, ...crowdfundingWithoutAssociations} = crowdfunding
 
-    return this.prisma.crowdfunding.update({
+    const updatedCrowdfunding = this.prisma.crowdfunding.update({
       data: {
         ...crowdfundingWithoutAssociations,
         goals: {
@@ -191,6 +191,10 @@ export class CrowdfundingService {
         memberPlans: true
       }
     })
+
+    return {
+      ...updatedCrowdfunding
+    }
   }
 
   async delete(id: string): Promise<undefined> {

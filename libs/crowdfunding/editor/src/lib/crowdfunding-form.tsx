@@ -10,6 +10,8 @@ import {MemberPlanRefFragment, useMemberPlanListQuery} from '@wepublish/editor/a
 import React from 'react'
 import {CrowdfundingGoalList} from './crowdfunding-goal-list'
 import {CurrencyInput, DateTimePicker} from '../../../../ui/editor/src'
+import {CrowdfundingProgressBar} from '../../../../ui/editor/src/lib/atoms/crowdfunding/CrowdfundingProgressBar'
+import {FullCrowdfundingWithActiveGoalFragment} from '../../../../editor/api-v2/src'
 
 type CrowdfundingFormData = (CreateCrowdfundingInput | UpdateCrowdfundingInput) & {
   goals?: CreateCrowdfundingGoalInput[] | null
@@ -51,6 +53,16 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           <Form.ControlLabel>{t('crowdfunding.form.name')}</Form.ControlLabel>
           <Form.Control name="name" value={props.crowdfunding.name} onChange={handleChange} />
         </Form.Group>
+      </Panel>
+
+      <Panel bordered style={{overflow: 'initial'}}>
+        <CrowdfundingProgressBar
+          crowdfunding={props.crowdfunding as Partial<FullCrowdfundingWithActiveGoalFragment>}
+        />
+      </Panel>
+
+      <Panel bordered style={{overflow: 'initial'}}>
+        <h3>Filter</h3>
         <Form.Group controlId="memberPlans">
           <Form.ControlLabel>{t('crowdfunding.form.memberPlans')}</Form.ControlLabel>
           <CheckPicker
@@ -121,6 +133,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           />
         </Form.Group>
       </Panel>
+
       <Panel bordered style={{overflow: 'initial'}}>
         <Form.Group controlId="goals">
           <h3>{t('crowdfunding.form.goals')}</h3>

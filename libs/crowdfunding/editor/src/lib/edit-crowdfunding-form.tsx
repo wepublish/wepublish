@@ -33,7 +33,7 @@ export const EditCrowdfundingForm = () => {
     },
     skip: !id,
     onCompleted: data => {
-      const {__typename, activeCrowdfundingGoal, ...inputWithoutTypename} = data.crowdfunding
+      const {__typename, ...inputWithoutTypename} = data.crowdfunding
       setCrowdfunding(inputWithoutTypename)
     }
   })
@@ -61,7 +61,9 @@ export const EditCrowdfundingForm = () => {
     const processedCrowdfunding = {
       ...crowdfunding,
       goals: crowdfunding.goals?.map(removeIdAndTypename),
-      memberPlans: crowdfunding.memberPlans?.map(removeTypename)
+      memberPlans: crowdfunding.memberPlans?.map(removeTypename),
+      revenue: undefined,
+      activeCrowdfundingGoal: undefined
     }
     updateCrowdfunding({variables: {input: processedCrowdfunding}})
   }
