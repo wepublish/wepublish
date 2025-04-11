@@ -432,6 +432,7 @@ type Crowdfunding {
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
+  revenue: Float
 }
 
 type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
@@ -464,7 +465,6 @@ type CrowdfundingGoalWithProgress {
   id: ID!
   modifiedAt: DateTime!
   progress: Float
-  revenue: Float
   title: String!
 }
 
@@ -484,6 +484,7 @@ type CrowdfundingWithActiveGoal {
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
+  revenue: Float
 }
 
 enum Currency {

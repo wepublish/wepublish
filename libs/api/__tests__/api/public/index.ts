@@ -615,6 +615,7 @@ export type Crowdfunding = {
   memberPlans: Array<CrowdfundingMemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  revenue?: Maybe<Scalars['Float']>;
 };
 
 export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
@@ -650,7 +651,6 @@ export type CrowdfundingGoalWithProgress = {
   id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   progress?: Maybe<Scalars['Float']>;
-  revenue?: Maybe<Scalars['Float']>;
   title: Scalars['String'];
 };
 
@@ -672,6 +672,7 @@ export type CrowdfundingWithActiveGoal = {
   memberPlans: Array<CrowdfundingMemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  revenue?: Maybe<Scalars['Float']>;
 };
 
 export enum Currency {

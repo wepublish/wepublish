@@ -1,5 +1,11 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
-import {PaymentPeriodicity, PrismaClient} from '@prisma/client'
+import {
+  PaymentPeriodicity,
+  PrismaClient,
+  Crowdfunding,
+  MemberPlan,
+  CrowdfundingGoal
+} from '@prisma/client'
 import {
   CreateCrowdfundingInput,
   CrowdfundingWithActiveGoal,
@@ -23,20 +29,23 @@ export class CrowdfundingService {
     })
     if (!crowdfunding) throw new NotFoundException()
 
+    const revenue = await this.getRevenue({crowdfunding})
+
     return {
       ...crowdfunding,
-      activeCrowdfundingGoal: await this.getActiveGoalWithProgress({crowdfunding})
+      revenue,
+      activeCrowdfundingGoal: this.getActiveGoalWithProgress({revenue, crowdfunding})
     }
   }
 
-  public async getActiveGoalWithProgress({
-    crowdfunding
+  public getActiveGoalWithProgress({
+    crowdfunding,
+    revenue
   }: {
-    crowdfunding: CrowdfundingWithActiveGoal
-  }): Promise<CrowdfundingGoalWithProgress | undefined> {
-    const totalAmount = await this.getTotalAmount({crowdfunding})
-
-    const revenue = totalAmount + (crowdfunding.additionalRevenue || 0)
+    crowdfunding: Crowdfunding & {goals: CrowdfundingGoal[]}
+    revenue: number
+  }): CrowdfundingGoalWithProgress | undefined {
+    revenue += crowdfunding.additionalRevenue || 0
 
     const activeGoal = crowdfunding.goals
       ?.sort((goalA, goalB) => {
@@ -67,15 +76,14 @@ export class CrowdfundingService {
 
     return {
       ...activeGoal,
-      progress: Math.round((revenue * 100) / activeGoal.amount),
-      revenue
+      progress: Math.round((revenue * 100) / activeGoal.amount)
     }
   }
 
-  private async getTotalAmount({
+  public async getRevenue({
     crowdfunding
   }: {
-    crowdfunding: CrowdfundingWithActiveGoal
+    crowdfunding: Crowdfunding & {memberPlans: MemberPlan[]}
   }): Promise<number> {
     const memberPlanIds: string[] = crowdfunding.memberPlans?.map(memberPlan => memberPlan.id) || []
 

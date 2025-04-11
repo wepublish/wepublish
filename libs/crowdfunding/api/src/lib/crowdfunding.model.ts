@@ -40,14 +40,17 @@ export class Crowdfunding {
   @Field()
   name!: string
 
-  @Field({nullable: true})
-  countSubscriptionsFrom?: Date
+  @Field(() => Date, {nullable: true})
+  countSubscriptionsFrom!: Date | null
 
-  @Field({nullable: true})
-  countSubscriptionsUntil?: Date
+  @Field(() => Date, {nullable: true})
+  countSubscriptionsUntil!: Date | null
 
-  @Field({nullable: true})
-  additionalRevenue?: number
+  @Field(() => Number, {nullable: true})
+  additionalRevenue!: number | null
+
+  @Field(() => Number, {nullable: true})
+  revenue?: number
 
   @Field(type => [CrowdfundingGoal])
   goals?: CrowdfundingGoal[]

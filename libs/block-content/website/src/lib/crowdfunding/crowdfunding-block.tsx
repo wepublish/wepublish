@@ -12,9 +12,7 @@ export const isCrowdfundingBlock = (
 
 export const CrowdfundingContainer = styled('div')``
 
-export const CfInner = styled('div')`
-  max-width: 800px;
-`
+export const CfInner = styled('div')``
 
 export const CfTitle = styled('h1')`
   font-weight: 400;
@@ -70,10 +68,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     [activeCrowdfunding?.progress]
   )
 
-  const revenue = useMemo<number>(
-    () => activeCrowdfunding?.revenue || 0,
-    [activeCrowdfunding?.revenue]
-  )
+  const revenue = useMemo<number>(() => crowdfunding?.revenue || 0, [crowdfunding?.revenue])
 
   const goalAmount = useMemo<number>(
     () => activeCrowdfunding?.amount || 0,

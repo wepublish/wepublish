@@ -32,9 +32,6 @@ export class CrowdfundingGoal {
 export class CrowdfundingGoalWithProgress extends CrowdfundingGoal {
   @Field(() => Number, {nullable: true})
   progress?: number
-
-  @Field(() => Number, {nullable: true})
-  revenue?: number
 }
 
 @InputType()

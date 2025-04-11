@@ -55,6 +55,7 @@ fragment FullCrowdfundingWithActiveGoal on CrowdfundingWithActiveGoal {
   countSubscriptionsFrom
   countSubscriptionsUntil
   additionalRevenue
+  revenue
   goals {
     ...FullCrowdfundingGoal
   }
@@ -72,6 +73,7 @@ fragment FullCrowdfunding on Crowdfunding {
   countSubscriptionsFrom
   countSubscriptionsUntil
   additionalRevenue
+  revenue
 
   goals {
     ...FullCrowdfundingGoal
@@ -95,5 +97,4 @@ fragment FullCrowdfundingGoalWithProgress on CrowdfundingGoalWithProgress {
   description
   amount
   progress
-  revenue
 }

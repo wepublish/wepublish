@@ -56,13 +56,17 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
     }
 
     const crowdfundingService = new CrowdfundingService(this.prisma)
+    const revenue = await crowdfundingService.getRevenue({crowdfunding})
+
     const activeCrowdfundingGoal = await crowdfundingService.getActiveGoalWithProgress({
-      crowdfunding
+      crowdfunding,
+      revenue
     })
 
     return [
       {
         ...crowdfunding,
+        revenue,
         activeCrowdfundingGoal
       }
     ]
