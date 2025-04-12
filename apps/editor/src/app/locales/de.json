@@ -210,6 +210,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Bearbeiten",
+        "label": "Crowdfunding",
+        "title": "Crowdfunding auswählen",
+        "name": "Name des Crowdfundings",
+        "select": "Auswählen",
+        "open": "öffnen"
+      },
       "comment": {
         "cherryPick": "Spezifische Kommentare auswählen",
         "comments": "{{count}} Kommentar",

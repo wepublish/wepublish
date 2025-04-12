@@ -77,7 +77,7 @@ export const CrowdfundingBlock = ({
                   target="_blank"
                   appearance="ghost"
                   endIcon={<MdOpenInNew />}>
-                  {crowdfunding.name} öffnen
+                  {crowdfunding.name} {t('blocks.crowdfunding.open')}
                 </Button>
               </CrowdfundingRow>
             </Crowdfunding>

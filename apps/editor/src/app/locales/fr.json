@@ -214,6 +214,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Modifier",
+        "label": "Crowdfunding",
+        "title": "Sélectionner le crowdfunding",
+        "name": "Nom du crowdfunding",
+        "select": "Sélectionner",
+        "open": "Ouvrir"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -1364,6 +1372,40 @@
     },
     "selectableItemsActions": {
       "selectedItems": "{{numberOfItems}} éléments sélectionnés"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Nom",
+        "delete": "Supprimer",
+        "createNew": "Créer"
+      },
+      "delete": {
+        "title": "Supprimer définitivement?",
+        "body": "Le crowdfunding doit-il être supprimé définitivement?",
+        "delete": "Supprimer"
+      },
+      "create": {
+        "title": "Créer un nouveau crowdfunding"
+      },
+      "form": {
+        "name": "Nom du crowdfunding (ne sera pas publié)",
+        "memberPlans": "Plans d'abonnement",
+        "filter": "Filtrer les revenus",
+        "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "selectMemberPlans": "Choisir des plans d'abonnement",
+        "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
+        "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
+        "revenue": "Déjà CHF {{revenue}} financé",
+        "goals": "Objectifs"
+      },
+      "goalsForm": {
+        "title": "Titre",
+        "description": "Description",
+        "amount": "Montant cible",
+        "remove": "Supprimer",
+        "add": "Ajouter un objectif"
+      }
     }
   }
 }

@@ -69,7 +69,7 @@ export function SelectCrowdfundingPanel({
             rowData?.id === selectedCrowdfunding?.id ? 'highlighted-row' : ''
           }>
           <Table.Column resizable width={200}>
-            <Table.HeaderCell>{t('crowdfundingList.name')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('blocks.crowdfunding.name')}</Table.HeaderCell>
             <Table.Cell>{(rowData: RowDataType<Crowdfunding>) => rowData.name}</Table.Cell>
           </Table.Column>
 
