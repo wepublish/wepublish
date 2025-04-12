@@ -25,8 +25,20 @@ export class PageModel {
   id!: string
 }
 
+@ObjectType()
+export class TagModel {
+  @Field()
+  id!: string
+}
+
 @InputType()
 export class PageModelInput {
+  @Field()
+  id!: string
+}
+
+@InputType()
+export class TagModelInput {
   @Field()
   id!: string
 }
@@ -44,6 +56,9 @@ export class Banner {
 
   @Field({nullable: true})
   cta?: string
+
+  @Field({nullable: true})
+  html?: string
 
   @Field()
   active!: boolean
@@ -63,6 +78,9 @@ export class Banner {
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]
 
+  @Field(() => [TagModel], {nullable: true})
+  showOnTags?: TagModel[]
+
   @Field(() => LoginStatus)
   showForLoginStatus!: LoginStatus
 
@@ -73,7 +91,7 @@ export class Banner {
 @InputType()
 export class CreateBannerInput extends OmitType(
   Banner,
-  ['id', 'image', 'actions', 'showOnPages'],
+  ['id', 'image', 'actions', 'showOnPages', 'showOnTags'],
   InputType
 ) {
   @Field(() => [CreateBannerActionInput], {nullable: true})
@@ -81,12 +99,15 @@ export class CreateBannerInput extends OmitType(
 
   @Field(() => [PageModelInput], {nullable: true})
   showOnPages?: PageModelInput[]
+
+  @Field(() => [TagModelInput], {nullable: true})
+  showOnTags?: TagModelInput[]
 }
 
 @InputType()
 export class UpdateBannerInput extends OmitType(
   Banner,
-  ['image', 'actions', 'showOnPages'],
+  ['image', 'actions', 'showOnPages', 'showOnTags'],
   InputType
 ) {
   @Field(() => [CreateBannerActionInput], {nullable: true})
@@ -94,11 +115,15 @@ export class UpdateBannerInput extends OmitType(
 
   @Field(() => [PageModelInput], {nullable: true})
   showOnPages?: PageModelInput[]
+
+  @Field(() => [TagModelInput], {nullable: true})
+  showOnTags?: TagModelInput[]
 }
 
 export enum BannerDocumentType {
   PAGE,
-  ARTICLE
+  ARTICLE,
+  TAG
 }
 
 registerEnumType(BannerDocumentType, {

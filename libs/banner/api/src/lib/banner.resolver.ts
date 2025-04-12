@@ -5,6 +5,7 @@ import {
   CreateBannerInput,
   PageModel,
   PrimaryBannerArgs,
+  TagModel,
   UpdateBannerInput
 } from './banner.model'
 import {BannerActionService} from './banner-action.service'
@@ -61,6 +62,13 @@ export class BannerResolver {
     const {id} = banner
 
     return this.bannerService.findPages(id)
+  }
+
+  @ResolveField(() => [TagModel])
+  async showOnTags(@Parent() banner: Banner) {
+    const {id} = banner
+
+    return this.bannerService.findTags(id)
   }
 
   @ResolveField(() => Image, {nullable: true})

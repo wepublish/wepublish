@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {LoginStatus, Page, PrismaClient} from '@prisma/client'
+import {LoginStatus, Page, PrismaClient, Tag} from '@prisma/client'
 import {
   BannerDocumentType,
   CreateBannerInput,
@@ -54,6 +54,21 @@ export class BannerService {
           ]
         }
       })
+    } else if (args.documentType === BannerDocumentType.TAG) {
+      return this.prisma.banner.findFirst({
+        where: {
+          active: true,
+          showOnTags: {
+            some: {
+              id: args.documentId
+            }
+          },
+          OR: [
+            {showForLoginStatus: LoginStatus.ALL},
+            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
+          ]
+        }
+      })
     } else {
       return null
     }
@@ -76,8 +91,25 @@ export class BannerService {
     return banner.showOnPages
   }
 
+  async findTags(id: string): Promise<Tag[]> {
+    const banner = await this.prisma.banner.findUnique({
+      where: {
+        id
+      },
+      select: {
+        showOnTags: true
+      }
+    })
+
+    if (!banner) {
+      return []
+    }
+
+    return banner.showOnTags
+  }
+
   async create(args: CreateBannerInput) {
-    const {actions, showOnPages, ...bannerInputs} = args
+    const {actions, showOnPages, showOnTags, ...bannerInputs} = args
     return this.prisma.banner.create({
       data: {
         ...bannerInputs,
@@ -86,20 +118,23 @@ export class BannerService {
         },
         showOnPages: {
           connect: showOnPages?.map(page => ({id: page.id}))
+        },
+        showOnTags: {
+          connect: showOnTags?.map(tag => ({id: tag.id}))
         }
       }
     })
   }
 
   async update(args: UpdateBannerInput) {
-    const {id, actions, showOnPages, imageId, ...args_without_id} = args
+    const {id, actions, showOnPages, showOnTags, imageId, ...bannerInputs} = args
 
     return this.prisma.banner.update({
       where: {
         id
       },
       data: {
-        ...args_without_id,
+        ...bannerInputs,
         imageId: imageId ?? null,
         actions: {
           deleteMany: {},
@@ -108,6 +143,10 @@ export class BannerService {
         showOnPages: {
           set: [],
           connect: showOnPages?.map(page => ({id: page.id}))
+        },
+        showOnTags: {
+          set: [],
+          connect: showOnTags?.map(tag => ({id: tag.id}))
         }
       }
     })

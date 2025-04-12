@@ -726,6 +726,10 @@ const modelFieldDefinitions = [{
                 name: "pages",
                 type: "TaggedPages",
                 relationName: "TagToTaggedPages"
+            }, {
+                name: "banners",
+                type: "Banner",
+                relationName: "BannerToTag"
             }]
     }, {
         name: "Poll",
@@ -898,6 +902,10 @@ const modelFieldDefinitions = [{
                 name: "showOnPages",
                 type: "Page",
                 relationName: "BannerToPage"
+            }, {
+                name: "showOnTags",
+                type: "Tag",
+                relationName: "BannerToTag"
             }, {
                 name: "actions",
                 type: "BannerAction",

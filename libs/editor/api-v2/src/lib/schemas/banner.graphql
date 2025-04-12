@@ -59,6 +59,10 @@ fragment Page2Ref on PageModel {
   id
 }
 
+fragment Tag2Ref on TagModel {
+  id
+}
+
 fragment FullBanner on Banner {
   id
   title
@@ -68,10 +72,14 @@ fragment FullBanner on Banner {
   active
 
   delay
+  html
 
   showOnArticles
   showOnPages {
     ...Page2Ref
+  }
+  showOnTags {
+    ...Tag2Ref
   }
   showForLoginStatus
 

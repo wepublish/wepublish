@@ -167,12 +167,14 @@ type Banner {
   active: Boolean!
   cta: String
   delay: Int!
+  html: String
   id: String!
   image: Image
   imageId: String
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
+  showOnTags: [TagModel!]
   text: String!
   title: String!
 }
@@ -194,6 +196,7 @@ enum BannerActionRole {
 enum BannerDocumentType {
   ARTICLE
   PAGE
+  TAG
 }
 
 interface BaseAction {
@@ -395,10 +398,12 @@ input CreateBannerInput {
   active: Boolean!
   cta: String
   delay: Int!
+  html: String
   imageId: String
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
+  showOnTags: [TagModelInput!]
   text: String!
   title: String!
 }
@@ -1700,6 +1705,14 @@ type Tag {
   id: String!
 }
 
+type TagModel {
+  id: String!
+}
+
+input TagModelInput {
+  id: String!
+}
+
 union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser
 
 type TeaserGridBlock implements BaseBlock {
@@ -1856,11 +1869,13 @@ input UpdateBannerInput {
   active: Boolean!
   cta: String
   delay: Int!
+  html: String
   id: String!
   imageId: String
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
+  showOnTags: [TagModelInput!]
   text: String!
   title: String!
 }
