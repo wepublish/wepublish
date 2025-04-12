@@ -3,11 +3,15 @@ fragment FullBanner on Banner {
   title
   text
   cta
+  html
   delay
 
   showOnArticles
   showOnPages {
     ...PageRef
+  }
+  showOnTags {
+    ...TagRef
   }
 
   image {
@@ -29,9 +33,10 @@ fragment FullBannerAction on BannerAction {
 
 fragment PageRef on PageModel {
   id
-  #published {
-  #  slug
-  #}
+}
+
+fragment TagRef on TagModel {
+  id
 }
 
 query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!) {

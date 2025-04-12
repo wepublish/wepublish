@@ -21,7 +21,8 @@ describe('BannerService', () => {
     cta: null,
     imageId: null,
     active: true,
-    tags: [],
+    delay: 0,
+    html: null,
     showOnArticles: true,
     showOnPages: pages,
     showForLoginStatus: LoginStatus.ALL
@@ -141,6 +142,7 @@ describe('BannerService', () => {
         text: 'Test Banner Text',
         active: true,
         showOnArticles: true,
+        delay: 0,
         actions: [],
         showOnPages: [],
         showForLoginStatus: LoginStatus.ALL
@@ -160,6 +162,7 @@ describe('BannerService', () => {
         text: 'Updated Banner Text',
         active: true,
         showOnArticles: true,
+        delay: 0,
         actions: [],
         showOnPages: [],
         showForLoginStatus: LoginStatus.ALL

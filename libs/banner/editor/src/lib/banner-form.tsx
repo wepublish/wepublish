@@ -1,4 +1,5 @@
 import React, {SyntheticEvent} from 'react'
+import {useTagListQuery} from '@wepublish/editor/api'
 import {
   CreateBannerActionInput,
   CreateBannerInput,
@@ -24,7 +25,6 @@ import {
 } from 'rsuite'
 import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
-import e from 'express'
 
 type BannerFormData = (CreateBannerInput | UpdateBannerInput) & {
   image?: FullImageFragment | null
@@ -39,9 +39,15 @@ interface BannerFormProps {
   onRemoveAction: (index: number) => void
 }
 
+interface Tag {
+  id: string
+  tag?: string | null | undefined
+}
+
 export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
 
   const handleChange = (value: any, event: React.SyntheticEvent) => {
     const name = (event.target as HTMLInputElement).name
@@ -55,11 +61,19 @@ export const BannerForm = (props: BannerFormProps) => {
     fetchPolicy: 'cache-and-network'
   })
 
+  const {data: tagData} = useTagListQuery({
+    variables: {take: 50},
+    fetchPolicy: 'cache-and-network'
+  })
+
   useEffect(() => {
     if (pageData?.pages?.nodes) {
       setPages(pageData.pages.nodes)
     }
-  }, [pageData?.pages])
+    if (tagData?.tags?.nodes) {
+      setTags(tagData.tags.nodes)
+    }
+  }, [pageData?.pages, tagData?.tags])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -117,6 +131,17 @@ export const BannerForm = (props: BannerFormProps) => {
           />
         </Form.Group>
 
+        <Form.Group controlId="html">
+          <Form.ControlLabel>{t('banner.form.html')}</Form.ControlLabel>
+          <Input
+            name="html"
+            as="textarea"
+            rows={5}
+            value={props.banner.html ?? undefined}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
         <Form.Group controlId="active">
           <Form.ControlLabel>{t('banner.form.active')}</Form.ControlLabel>
           <Form.Control
@@ -160,6 +185,26 @@ export const BannerForm = (props: BannerFormProps) => {
               props.onChange({
                 ...props.banner,
                 showOnPages: ids.map(i => {
+                  return {id: i}
+                })
+              })
+            }}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="showOnTags">
+          <Form.ControlLabel>{t('banner.form.showOnTags')}</Form.ControlLabel>
+          <CheckPicker
+            block
+            virtualized
+            placeholder={t('navigation.panels.selectTag')}
+            value={props.banner.showOnTags?.map(t => t.id) || []}
+            data={tags.map(tag => ({value: tag.id!, label: tag.tag}))}
+            onChange={ids => {
+              if (!ids) return
+              props.onChange({
+                ...props.banner,
+                showOnTags: ids.map(i => {
                   return {id: i}
                 })
               })
