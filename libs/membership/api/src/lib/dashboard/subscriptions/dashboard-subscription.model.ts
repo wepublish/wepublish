@@ -46,6 +46,9 @@ export class DailySubscriptionStatsUser {
 
   @Field(() => String, {nullable: true})
   firstName?: string | null
+
+  @Field()
+  email!: string
 }
 
 @ObjectType()
@@ -54,23 +57,23 @@ export class DailySubscriptionStats {
   date!: Date
 
   @Field()
-  total!: number
+  totalActiveSubscriptionCount!: number
 
   @Field()
-  created!: number
+  createdSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
-  usersCreated!: DailySubscriptionStatsUser[]
+  createdSubscriptionUsers!: DailySubscriptionStatsUser[]
 
   @Field()
-  renewed!: number
+  renewedSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
-  usersRenewed!: DailySubscriptionStatsUser[]
+  renewedSubscriptionUsers!: DailySubscriptionStatsUser[]
 
   @Field()
-  deactivated!: number
+  deactivatedSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
-  usersDeactivated!: DailySubscriptionStatsUser[]
+  deactivatedSubscriptionUsers!: DailySubscriptionStatsUser[]
 }

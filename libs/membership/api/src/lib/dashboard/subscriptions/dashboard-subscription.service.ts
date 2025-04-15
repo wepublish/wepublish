@@ -227,7 +227,8 @@ export class DashboardSubscriptionService {
           select: {
             id: true,
             firstName: true,
-            name: true
+            name: true,
+            email: true
           }
         }
       },
@@ -264,7 +265,8 @@ export class DashboardSubscriptionService {
           select: {
             id: true,
             firstName: true,
-            name: true
+            name: true,
+            email: true
           }
         }
       },
@@ -300,7 +302,8 @@ export class DashboardSubscriptionService {
           select: {
             id: true,
             firstName: true,
-            name: true
+            name: true,
+            email: true
           }
         }
       },
@@ -416,20 +419,32 @@ export class DashboardSubscriptionService {
         continue
       }
 
-      const total = await this.getDailyTotalActiveSubscriptionCount(current, memberPlanIds)
-      const created = await this.getDailyCreatedSubscriptions(current, memberPlanIds)
-      const renewed = await this.getDailyRenewedSubscriptions(current, memberPlanIds)
-      const deactivated = await this.getDailyDeactivatedSubscriptions(current, memberPlanIds)
+      const totalActiveSubscriptionCount = await this.getDailyTotalActiveSubscriptionCount(
+        current,
+        memberPlanIds
+      )
+      const createdSubscriptions = await this.getDailyCreatedSubscriptions(current, memberPlanIds)
+      const renewedSubscriptions = await this.getDailyRenewedSubscriptions(current, memberPlanIds)
+      const deactivatedSubscriptions = await this.getDailyDeactivatedSubscriptions(
+        current,
+        memberPlanIds
+      )
 
       const stats: DailySubscriptionStats = {
         date: new Date(current),
-        total,
-        created: created.length,
-        usersCreated: created.map(obj => obj.user),
-        renewed: renewed.length,
-        usersRenewed: renewed.map(obj => obj.user),
-        deactivated: deactivated.length,
-        usersDeactivated: deactivated.map(obj => obj.user)
+        totalActiveSubscriptionCount,
+        createdSubscriptionCount: createdSubscriptions.length,
+        createdSubscriptionUsers: createdSubscriptions.map(
+          createdSubscription => createdSubscription.user
+        ),
+        renewedSubscriptionCount: renewedSubscriptions.length,
+        renewedSubscriptionUsers: renewedSubscriptions.map(
+          renewedSubscription => renewedSubscription.user
+        ),
+        deactivatedSubscriptionCount: deactivatedSubscriptions.length,
+        deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
+          deactivatedSubscription => deactivatedSubscription.user
+        )
       }
 
       dailyStatsCache.set(cacheKey, stats)
