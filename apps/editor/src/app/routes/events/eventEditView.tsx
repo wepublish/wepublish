@@ -38,9 +38,7 @@ export const EventEditView = () => {
   const {t} = useTranslation()
 
   const closePath = '/events'
-  const [event, setEvent] = useState<MutationUpdateEventArgs & {image?: FullImageFragment | null}>({
-    id: eventId
-  })
+  const [event, setEvent] = useState<MutationUpdateEventArgs & {image?: FullImageFragment | null}>()
 
   const [shouldClose, setShouldClose] = useState(false)
 
@@ -89,7 +87,7 @@ export const EventEditView = () => {
     name: StringType().isRequired(),
     status: StringType().isRequired(),
     startsAt: DateType().isRequired(),
-    endsAt: DateType().min(new Date(event.startsAt ?? new Date()))
+    endsAt: DateType().min(new Date(event?.startsAt ?? new Date()))
   })
 
   return (
@@ -109,10 +107,12 @@ export const EventEditView = () => {
         setCloseFn={setShouldClose}
       />
 
-      <EventForm
-        event={event}
-        onChange={changes => setEvent(oldEvent => ({...oldEvent, ...(changes as any)}))}
-      />
+      {event && (
+        <EventForm
+          event={event}
+          onChange={changes => setEvent(oldEvent => ({...oldEvent, ...(changes as any)}))}
+        />
+      )}
     </Form>
   )
 }
