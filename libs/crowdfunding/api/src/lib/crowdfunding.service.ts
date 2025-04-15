@@ -66,6 +66,8 @@ export class CrowdfundingService {
         if (goalIndex + 1 === crowdfunding.goals?.length) {
           return true
         }
+
+        return true
       })
 
     if (!activeGoal) {
