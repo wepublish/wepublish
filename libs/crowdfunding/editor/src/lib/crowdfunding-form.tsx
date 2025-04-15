@@ -10,8 +10,7 @@ import {CheckPicker, Form, Panel} from 'rsuite'
 import {MemberPlanRefFragment, useMemberPlanListQuery} from '@wepublish/editor/api'
 import React from 'react'
 import {CrowdfundingGoalList} from './crowdfunding-goal-list'
-import {CurrencyInput, DateTimePicker} from '@wepublish/editor'
-import {CrowdfundingProgressBar} from '@wepublish/crowdfunding'
+import {CurrencyInput, DateTimePicker, CrowdfundingProgressBar} from '@wepublish/ui/editor'
 
 type CrowdfundingFormData = (CreateCrowdfundingInput | UpdateCrowdfundingInput) & {
   goals?: CreateCrowdfundingGoalInput[] | null
@@ -60,7 +59,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
             name="additionalRevenue"
             currency={'CHF'}
             centAmount={props.crowdfunding.additionalRevenue || 0}
-            onChange={additionalRevenue =>
+            onChange={(additionalRevenue: number) =>
               props.onChange({...props.crowdfunding, additionalRevenue})
             }
           />
