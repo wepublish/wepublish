@@ -1304,8 +1304,8 @@ model Banner {
 
   active Boolean @default(true)
 
-  showOnArticles Boolean @default(true)
-  showOnPages    Page[]
+  showOnArticles     Boolean     @default(true)
+  showOnPages        Page[]
   showForLoginStatus LoginStatus @default(ALL)
 
   actions BannerAction[]
@@ -1314,9 +1314,9 @@ model Banner {
 }
 
 enum LoginStatus {
-  LOGGED_IN   @map("logged_in")
-  LOGGED_OUT  @map("logged_out")
-  ALL         @map("all")
+  LOGGED_IN  @map("logged_in")
+  LOGGED_OUT @map("logged_out")
+  ALL        @map("all")
 }
 
 model BannerAction {

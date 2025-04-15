@@ -1,7 +1,22 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import {Injectable, NotFoundException} from '@nestjs/common'
+import {Prisma, PrismaClient} from '@prisma/client'
 import {ok} from 'assert'
-import {DashboardSubscription} from './dashboard-subscription.model'
+import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
+import {endOfDay, startOfDay} from 'date-fns'
+import NodeCache from 'node-cache'
+import {createHash} from 'crypto'
+
+/**
+ * Peered article cache configuration and setup
+ */
+const ONE_DAY_IN_SEC = 24 * 60 * 60
+const ONE_MIN_IN_SEC = 60
+const dailyStatsCache = new NodeCache({
+  stdTTL: 2 * ONE_DAY_IN_SEC,
+  checkperiod: 60 * ONE_MIN_IN_SEC,
+  deleteOnExpire: true,
+  useClones: true
+})
 
 @Injectable()
 export class DashboardSubscriptionService {
@@ -193,5 +208,235 @@ export class DashboardSubscriptionService {
         }
       }
     )
+  }
+
+  private async getDailyCreatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+    return this.prisma.subscription.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            name: true
+          }
+        }
+      },
+      where: {
+        createdAt: {
+          gte: start,
+          lte: end
+        },
+        paidUntil: {
+          not: null
+        },
+        ...memberPlanFilter
+      }
+    })
+  }
+
+  private async getDailyDeactivatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    // Since the subscription is running until end of paidUntil; we need to subtract one day to ensure to count the ones who have been deactivated and paid until is yesterday
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+
+    return this.prisma.subscription.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            name: true
+          }
+        }
+      },
+      where: {
+        deactivation: {
+          date: {
+            gte: start,
+            lte: end
+          }
+        },
+        paidUntil: {
+          not: null
+        },
+        ...memberPlanFilter
+      }
+    })
+  }
+
+  private async getDailyRenewedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+    return this.prisma.subscription.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            name: true
+          }
+        }
+      },
+      where: {
+        paidUntil: {
+          not: null
+        },
+        // Ensure that it is not the initial creation
+        createdAt: {
+          not: {
+            gte: start
+          }
+        },
+        // Ensure that the new period starts today
+        periods: {
+          some: {
+            startsAt: {
+              gte: start,
+              lte: end
+            }
+          }
+        },
+        ...memberPlanFilter
+      }
+    })
+  }
+
+  private async getDailyTotalActiveSubscriptionCount(date: Date, memberPlanIds: string[] = []) {
+    const end = endOfDay(date)
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+    return this.prisma.subscription.count({
+      where: {
+        OR: [
+          {
+            createdAt: {
+              lte: end
+            },
+            paidUntil: {
+              not: null
+            },
+            deactivation: {
+              is: null
+            }
+          },
+          {
+            createdAt: {
+              lte: end
+            },
+            paidUntil: {
+              not: null
+            },
+            deactivation: {
+              date: {
+                gte: end
+              }
+            }
+          }
+        ],
+        ...memberPlanFilter
+      }
+    })
+  }
+
+  async dailySubscriptionStats(
+    start: Date,
+    end: Date,
+    memberPlanIds: string[]
+  ): Promise<DailySubscriptionStats[]> {
+    const returnValue: DailySubscriptionStats[] = []
+    let current = new Date(start)
+
+    current = endOfDay(current)
+    end = endOfDay(end)
+
+    const memberPlans = await this.prisma.memberPlan.findMany({
+      where: {
+        id: {
+          in: memberPlanIds
+        }
+      }
+    })
+
+    if (memberPlans.length !== memberPlanIds.length) {
+      throw new NotFoundException(`Selected member plan not found!`)
+    }
+
+    // Ensure start is not after end
+    if (end < start) {
+      end = start
+    }
+
+    // Ensure end is not in the future since data from future is not supported
+    if (end > new Date()) {
+      end = endOfDay(new Date())
+    }
+
+    while (current <= end) {
+      const cacheKey = createHash('sha256')
+        .update(`${current.toISOString()}-${JSON.stringify(memberPlanIds)}`)
+        .digest('hex')
+
+      // Serve all past days from cache but serve today fresh
+      if (current.getTime() !== endOfDay(new Date()).getTime() && dailyStatsCache.has(cacheKey)) {
+        returnValue.push(dailyStatsCache.get(cacheKey) as DailySubscriptionStats)
+        current.setDate(current.getDate() + 1)
+        continue
+      }
+
+      const total = await this.getDailyTotalActiveSubscriptionCount(current, memberPlanIds)
+      const created = await this.getDailyCreatedSubscriptions(current, memberPlanIds)
+      const renewed = await this.getDailyRenewedSubscriptions(current, memberPlanIds)
+      const deactivated = await this.getDailyDeactivatedSubscriptions(current, memberPlanIds)
+
+      const stats: DailySubscriptionStats = {
+        date: new Date(current),
+        total,
+        created: created.length,
+        usersCreated: created.map(obj => obj.user),
+        renewed: renewed.length,
+        usersRenewed: renewed.map(obj => obj.user),
+        deactivated: deactivated.length,
+        usersDeactivated: deactivated.map(obj => obj.user)
+      }
+
+      dailyStatsCache.set(cacheKey, stats)
+      returnValue.push(stats)
+
+      current.setDate(current.getDate() + 1)
+    }
+    return returnValue
   }
 }

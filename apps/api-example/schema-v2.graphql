@@ -136,6 +136,23 @@ enum Currency {
   EUR
 }
 
+type DailySubscriptionStats {
+  created: Float!
+  date: DateTime!
+  deactivated: Float!
+  renewed: Float!
+  total: Float!
+  usersCreated: [DailySubscriptionStatsUser!]!
+  usersDeactivated: [DailySubscriptionStatsUser!]!
+  usersRenewed: [DailySubscriptionStatsUser!]!
+}
+
+type DailySubscriptionStatsUser {
+  firstName: String
+  id: String!
+  name: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -464,6 +481,9 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  "\n      Returns daily stats in a given timeframe.\n    "
+  dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
