@@ -431,7 +431,7 @@ export class DashboardSubscriptionService {
       )
 
       const stats: DailySubscriptionStats = {
-        date: new Date(current),
+        date: new Date(current).toISOString().split('T')[0],
         totalActiveSubscriptionCount,
         createdSubscriptionCount: createdSubscriptions.length,
         createdSubscriptionUsers: createdSubscriptions.map(

@@ -54,7 +54,7 @@ export class DailySubscriptionStatsUser {
 @ObjectType()
 export class DailySubscriptionStats {
   @Field()
-  date!: Date
+  date!: string
 
   @Field()
   totalActiveSubscriptionCount!: number
