@@ -274,7 +274,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                       displayOnly
                       // TODO: remove this
                       onChange={console.log}
-                      value={profile?.callToActionText}
+                      value={profile.callToActionText}
                     />
                   )}
                 </DescriptionListItem>

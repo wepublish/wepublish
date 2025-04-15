@@ -1,3 +1,4 @@
+import {generateFeed} from '@wepublish/feed/website'
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
@@ -5,7 +6,6 @@ import {
   getV1ApiClient,
   SortOrder
 } from '@wepublish/website/api'
-import {generateFeed} from '@wepublish/feed/website'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 import process from 'node:process'

@@ -24,11 +24,29 @@ export class PeerArticleListArgs extends OmitType(
 }
 
 @ObjectType()
+export class PeerImage {
+  @Field()
+  id!: string
+
+  @Field()
+  url!: string
+
+  @Field({nullable: true})
+  license?: string
+
+  @Field({nullable: true})
+  source?: string
+}
+
+@ObjectType()
 export class PeerArticleRevision extends PickType(
   ArticleRevision,
-  ['id', 'preTitle', 'title', 'seoTitle', 'image', 'lead', 'authors'] as const,
+  ['id', 'preTitle', 'title', 'seoTitle', 'lead', 'authors'] as const,
   ObjectType
-) {}
+) {
+  @Field(() => PeerImage, {nullable: true})
+  image?: PeerImage
+}
 
 @ObjectType({
   implements: [HasOptionalPeerLc]

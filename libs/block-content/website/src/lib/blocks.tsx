@@ -37,6 +37,7 @@ import {isFocusTeaserBlockStyle} from './block-styles/focus-teaser/focus-teaser'
 import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
 import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
+import {ImageContext} from '@wepublish/image/website'
 
 export const hasBlockStyle =
   (blockStyle: string) =>
@@ -104,7 +105,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   )
 })
 
-export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
+export const Blocks = memo(({blocks, type}: BuilderBlocksProps) => {
   const {
     blocks: {Renderer}
   } = useWebsiteBuilder()
@@ -112,8 +113,20 @@ export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
   return (
     <>
       {blocks.map((block, index) => (
-        <Renderer key={index} block={block} index={index} count={blocks.length} type={type} />
+        <ImageContext.Provider
+          key={index}
+          value={
+            // Above the fold images should be loaded with a high priority
+            3 > index
+              ? {
+                  fetchPriority: 'high',
+                  loading: 'eager'
+                }
+              : {}
+          }>
+          <Renderer block={block} index={index} count={blocks.length} type={type} />
+        </ImageContext.Provider>
       ))}
     </>
   )
-}
+})

@@ -19,10 +19,7 @@ export class PageService {
   async getPageBySlug(slug: string) {
     return this.prisma.page.findFirst({
       where: {
-        slug,
-        publishedAt: {
-          not: null
-        }
+        slug
       }
     })
   }
@@ -428,11 +425,7 @@ const createPublicationDateToFilter = (filter: Partial<PageFilter>): Prisma.Page
 const createPublishedFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.published != null) {
     return {
-      revisions: {
-        some: {
-          publishedAt: filter.published ? {lte: new Date()} : {not: {lte: new Date()}}
-        }
-      }
+      publishedAt: filter.published ? {lte: new Date()} : {not: {lte: new Date()}}
     }
   }
 

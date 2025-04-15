@@ -28,9 +28,14 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
 import {
   ArticleFilter,
+  ArticleListQueryVariables,
+  ArticleSort,
   EventFilter,
   getApiClientV2,
   PageFilter,
+  PageListQueryVariables,
+  PageSort,
+  SortOrder,
   TeaserType,
   useArticleListQuery,
   useEventListQuery,
@@ -178,8 +183,18 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   /**
    * PAGES & ARTICLES
    */
-  const listVariables = {filter: filter || undefined, take: 20}
-  const pageListVariables = {filter: filter as PageFilter, take: 20}
+  const listVariables = {
+    filter: filter || undefined,
+    take: 20,
+    sort: ArticleSort.PublishedAt,
+    order: SortOrder.Descending
+  } as ArticleListQueryVariables
+  const pageListVariables = {
+    filter: filter as PageFilter,
+    take: 20,
+    sort: PageSort.PublishedAt,
+    order: SortOrder.Descending
+  } as PageListQueryVariables
 
   const {
     data: articleListData,

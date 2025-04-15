@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
+import {BlockFormat, InlineFormat, TextFormat} from '@wepublish/richtext'
 import {RenderElementProps, RenderLeafProps} from 'slate-react'
-
-import {BlockFormat, InlineFormat, TextFormat} from './formats'
 
 const Table = styled.table`
   white-space: pre-wrap;

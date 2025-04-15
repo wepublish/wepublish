@@ -54,7 +54,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {Node} from 'slate'
+import {type Node, Descendant, Element, Text} from 'slate'
 
 import {ClientSettings} from '../../../shared/types'
 
@@ -95,13 +95,15 @@ const InitialArticleBlocks: BlockValue[] = [
 
 function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
   return nodes.reduce((charLength: number, node) => {
-    if (!node.text && !node.children) return charLength
-    // node either has text (leaf node) or children (element node)
-    if (node.text) {
+    if (!Element.isElement(node) && !Text.isText(node)) {
+      return charLength
+    }
+
+    if (Text.isText(node)) {
       return charLength + (node.text as string).length
     }
 
-    return countRichtextChars(charLength, node.children as Node[])
+    return countRichtextChars(charLength, node.children as Descendant[])
   }, blocksCharLength)
 }
 

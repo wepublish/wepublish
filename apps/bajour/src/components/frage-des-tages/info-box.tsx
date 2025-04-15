@@ -4,10 +4,10 @@ import {RichTextBlock} from '@wepublish/block-content/website'
 import {Button} from '@wepublish/ui'
 import {memo, useState} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 interface InfoBoxProps {
-  richText: Node[]
+  richText: Descendant[]
   className?: string
 }
 

@@ -32,10 +32,7 @@ export class ArticleService {
   async getArticleBySlug(slug: string) {
     return this.prisma.article.findFirst({
       where: {
-        slug,
-        publishedAt: {
-          not: null
-        }
+        slug
       }
     })
   }
@@ -618,11 +615,7 @@ const createPublicationDateToFilter = (
 const createPublishedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.published != null) {
     return {
-      revisions: {
-        some: {
-          publishedAt: filter.published ? {lte: new Date()} : {not: {lte: new Date()}}
-        }
-      }
+      publishedAt: filter.published ? {lte: new Date()} : {not: {lte: new Date()}}
     }
   }
 

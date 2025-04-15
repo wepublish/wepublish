@@ -2,7 +2,7 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
+import {GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
@@ -42,6 +42,8 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
+import deOverriden from '../locales/deOverriden.json'
+import {mergeDeepRight} from 'ramda'
 
 setDefaultOptions({
   locale: de
@@ -50,7 +52,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
@@ -175,7 +177,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  subscribeBtn={null}
                 />
 
                 <main>
@@ -193,8 +194,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <RoutedAdminBar />
 
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              {publicRuntimeConfig.env.GTM_ID && (
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
 
               {publicRuntimeConfig.env.SPARKLOOP_ID && (

@@ -12,6 +12,7 @@ import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
+import {Descendant} from 'slate'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -66,7 +67,7 @@ export class MemberPlan {
   image?: Image
 
   @Field(() => GraphQLRichText, {nullable: true})
-  description?: Node[]
+  description?: Descendant[]
 
   @Field(() => [String], {nullable: true})
   tags?: string[]

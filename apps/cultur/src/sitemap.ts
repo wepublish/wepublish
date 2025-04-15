@@ -4,7 +4,6 @@ import {
   ArticleListQueryVariables,
   ArticleSort,
   getV1ApiClient,
-  Page,
   PageListQueryVariables,
   PageSort,
   SitemapPageListDocument,
@@ -46,9 +45,8 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     })
   ])
 
-  return generate(articleData.articles.nodes ?? [], [
+  return generate(articleData.articles.nodes ?? [], pageData.pages.nodes ?? [], [
     `${siteUrl}/author`,
-    `${siteUrl}/event`,
-    ...(pageData.pages.nodes ?? []).map((page: Page) => page.url)
+    `${siteUrl}/event`
   ])
 }

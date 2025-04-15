@@ -18,7 +18,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 const DateLabel = styled(Form.ControlLabel)`
   margin-right: 8px;
@@ -90,16 +90,12 @@ function PollEditView() {
   useEffect(() => {
     if (data?.poll) {
       setPoll(data.poll)
-    } else {
-      setPoll(undefined)
     }
   }, [data])
 
   useEffect(() => {
     if (updateData?.updatePoll) {
       setPoll(updateData.updatePoll)
-    } else {
-      setPoll(undefined)
     }
   }, [updateData])
 
@@ -151,6 +147,8 @@ function PollEditView() {
     }
   }
 
+  console.log(poll)
+
   return (
     <Form
       onSubmit={validationPassed => validationPassed && saveOrUpdate()}
@@ -193,6 +191,7 @@ function PollEditView() {
                 </Form.Group>
               </Panel>
             </Col>
+
             {/* answers */}
             <Col xs={24}>
               <Panel header={t('pollEditView.answerPanelHeader')} bordered>
@@ -204,6 +203,7 @@ function PollEditView() {
                 />
               </Panel>
             </Col>
+
             {/* settings */}
             <Col xs={24}>
               <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
@@ -242,6 +242,7 @@ function PollEditView() {
                 </DatesWrapper>
               </Panel>
             </Col>
+
             {/* poll external votes */}
             <Col xs={24}>
               <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
@@ -253,18 +254,18 @@ function PollEditView() {
                 />
               </Panel>
             </Col>
+
             <Col xs={24}>
               <Panel header={t('pollEditView.infoText')} bordered>
                 <div className="richTextFrame">
-                  <RichTextBlock
-                    value={poll?.infoText ? poll?.infoText : []}
-                    onChange={value => {
-                      if (!poll) {
-                        return
-                      }
-                      setPoll({...poll, infoText: value as Node[]})
-                    }}
-                  />
+                  {poll && (
+                    <RichTextBlock
+                      value={poll?.infoText ? poll?.infoText : []}
+                      onChange={value => {
+                        setPoll({...poll, infoText: value as Descendant[]})
+                      }}
+                    />
+                  )}
                 </div>
               </Panel>
             </Col>

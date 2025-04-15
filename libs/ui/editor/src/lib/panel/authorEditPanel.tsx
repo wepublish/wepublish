@@ -42,6 +42,7 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
 import FormControl from 'rsuite/FormControl'
 import styled from '@emotion/styled'
+import {Descendant} from 'slate'
 
 const {ControlLabel: RControlLabel, Group, Control} = RForm
 
@@ -60,7 +61,7 @@ const Form = styled(RForm)`
 `
 
 const ControlLabel = styled(RControlLabel)`
-  padding-top: ${({theme}) => theme.spacing(2)};
+  padding-top: 16px;
 `
 
 export interface AuthorEditPanelProps {
@@ -76,7 +77,9 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<FullImageFragment>>()
-  const [bio, setBio] = useState<RichTextBlockValue['richText']>(createDefaultValue())
+  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(() =>
+    !id ? createDefaultValue() : undefined
+  )
   const [hideOnArticle, setHideOnArticle] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(undefined)
@@ -270,11 +273,13 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
             <Panel header={t('authors.panels.bioInformation')}>
               <div className="richTextFrame">
-                <RichTextBlock
-                  disabled={isDisabled}
-                  value={bio}
-                  onChange={value => setBio(value)}
-                />
+                {bio && (
+                  <RichTextBlock
+                    disabled={isDisabled}
+                    value={bio}
+                    onChange={value => setBio(value as Descendant[])}
+                  />
+                )}
               </div>
             </Panel>
 

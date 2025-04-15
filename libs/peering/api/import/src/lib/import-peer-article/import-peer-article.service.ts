@@ -57,15 +57,15 @@ export class ImportPeerArticleService {
   ) {}
 
   async getArticles({filter, sort, order, take = 10, skip = 0}: PeerArticleListArgs) {
-    const peers = (
-      await this.prisma.peer.findMany({
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-    )
-      .filter(({id}) => (filter?.peerId ? id === filter?.peerId : true))
-      .filter(({isDisabled}) => !isDisabled)
+    const peers = await this.prisma.peer.findMany({
+      where: {
+        id: filter?.peerId ?? undefined,
+        isDisabled: false
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
 
     const articleToTakeFromEachPeer = Math.ceil(take / peers.length)
     const articleToSkipFromEachPeer = Math.ceil(skip / peers.length)
@@ -229,14 +229,14 @@ export class ImportPeerArticleService {
             create: {
               name: author.name,
               slug: author.slug,
-              bio: author.bio as Prisma.JsonArray,
+              bio: author.bio as any[],
               hideOnTeam: true,
               imageID: imageId,
               peerId
             },
             update: {
               name: author.name,
-              bio: author.bio as Prisma.JsonArray,
+              bio: author.bio as any[],
               imageID: imageId
             }
           })
