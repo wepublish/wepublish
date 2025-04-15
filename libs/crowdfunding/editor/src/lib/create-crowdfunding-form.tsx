@@ -2,7 +2,8 @@ import {
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
   getApiClientV2,
-  useCreateCrowdfundingMutation
+  useCreateCrowdfundingMutation,
+  CreateCrowdfundingMutation
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -10,7 +11,6 @@ import {useNavigate} from 'react-router-dom'
 import {CrowdfundingForm} from './crowdfunding-form'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {Form, Message, Schema, toaster} from 'rsuite'
-import {CreateCrowdfundingMutation} from '../../../../editor/api-v2/src'
 import {ApolloError} from '@apollo/client'
 
 const showError = (error: ApolloError): void => {

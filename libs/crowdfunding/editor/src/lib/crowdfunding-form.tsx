@@ -1,7 +1,8 @@
 import {
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
-  UpdateCrowdfundingInput
+  UpdateCrowdfundingInput,
+  FullCrowdfundingWithActiveGoalFragment
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -9,10 +10,8 @@ import {CheckPicker, Form, Panel} from 'rsuite'
 import {MemberPlanRefFragment, useMemberPlanListQuery} from '@wepublish/editor/api'
 import React from 'react'
 import {CrowdfundingGoalList} from './crowdfunding-goal-list'
-import {CurrencyInput, DateTimePicker} from '../../../../ui/editor/src'
-import {CrowdfundingProgressBar} from '../../../../ui/editor/src/lib/atoms/crowdfunding/CrowdfundingProgressBar'
-import {FullCrowdfundingWithActiveGoalFragment} from '../../../../editor/api-v2/src'
-import {MdCalendarToday} from 'react-icons/md'
+import {CurrencyInput, DateTimePicker} from '@wepublish/editor'
+import {CrowdfundingProgressBar} from '@wepublish/crowdfunding'
 
 type CrowdfundingFormData = (CreateCrowdfundingInput | UpdateCrowdfundingInput) & {
   goals?: CreateCrowdfundingGoalInput[] | null

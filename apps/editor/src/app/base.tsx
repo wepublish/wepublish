@@ -9,7 +9,6 @@ import {
   MdApproval,
   MdAutorenew,
   MdBadge,
-  MdBarChart,
   MdBookOnline,
   MdChat,
   MdChevronLeft,

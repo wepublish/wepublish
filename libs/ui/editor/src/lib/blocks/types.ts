@@ -9,7 +9,6 @@ import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
   CommentBlockCommentFragment,
-  CrowdfundingWithActiveGoal,
   EditorBlockType,
   FullBlockFragment,
   FullCrowdfundingWithActiveGoalFragment,
