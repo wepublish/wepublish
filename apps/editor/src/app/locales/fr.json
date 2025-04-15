@@ -1388,6 +1388,9 @@
       "create": {
         "title": "Créer un nouveau crowdfunding"
       },
+      "edit": {
+        "title": "Modifier {{crowdfundingName}}"
+      },
       "form": {
         "name": "Nom du crowdfunding (ne sera pas publié)",
         "memberPlans": "Plans d'abonnement",

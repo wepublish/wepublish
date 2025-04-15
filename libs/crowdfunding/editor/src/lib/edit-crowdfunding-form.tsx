@@ -110,7 +110,7 @@ export const EditCrowdfundingForm = () => {
       onSubmit={validationPassed => validationPassed && onSubmit()}>
       <SingleViewTitle
         loading={loading}
-        title={t('crowdfunding.edit.title')}
+        title={t('crowdfunding.edit.title', {crowdfundingName: crowdfunding.name})}
         loadingTitle={t('crowdfunding.edit.title')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}

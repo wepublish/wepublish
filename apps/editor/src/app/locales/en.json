@@ -1543,6 +1543,9 @@
       "create": {
         "title": "Create new crowdfunding"
       },
+      "edit": {
+        "title": " edit {{crowdfundingName}}"
+      },
       "form": {
         "name": "Name of the Crowdfundings (Not published)",
         "memberPlans": "Subscription Plans",
