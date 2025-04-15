@@ -10,7 +10,16 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {CrowdfundingForm} from './crowdfunding-form'
 import {SingleViewTitle} from '@wepublish/ui/editor'
-import {Form, Schema} from 'rsuite'
+import {Form, Message, Schema, toaster} from 'rsuite'
+import {ApolloError} from '@apollo/client'
+
+const showError = (error: ApolloError): void => {
+  toaster.push(
+    <Message type="error" showIcon closable duration={3000}>
+      {error.message}
+    </Message>
+  )
+}
 
 export const EditCrowdfundingForm = () => {
   const {id} = useParams()
@@ -32,6 +41,7 @@ export const EditCrowdfundingForm = () => {
       id: id!
     },
     skip: !id,
+    onError: showError,
     onCompleted: data => {
       const {__typename, ...inputWithoutTypename} = data.crowdfunding
       setCrowdfunding(inputWithoutTypename)
@@ -47,9 +57,7 @@ export const EditCrowdfundingForm = () => {
 
   const [updateCrowdfunding, {loading}] = useUpdateCrowdfundingMutation({
     client,
-    onError: (error: any) => {
-      console.log(error)
-    },
+    onError: showError,
     onCompleted: () => {
       if (shouldClose) {
         navigate(closePath)
