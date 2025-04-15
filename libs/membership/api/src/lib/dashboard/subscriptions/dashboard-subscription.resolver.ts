@@ -68,8 +68,7 @@ export class DashboardSubscriptionResolver {
     return this.subscriptions.newDeactivations(start, end ?? new Date())
   }
 
-  @Public()
-  //@Permissions(CanGetSubscriptions)
+  @Permissions(CanGetSubscriptions)
   @Query(returns => [DailySubscriptionStats], {
     name: 'dailySubscriptionStats',
     description: `
