@@ -33,6 +33,8 @@ const showErrors = (error: ApolloError): void => {
   )
 }
 
+console.log('hey')
+
 const closePath = '/memberplans'
 
 function MemberPlanEdit() {
