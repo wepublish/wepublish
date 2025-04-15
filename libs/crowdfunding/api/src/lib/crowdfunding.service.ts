@@ -168,10 +168,12 @@ export class CrowdfundingService {
     })
   }
 
-  async updateCrowdfunding(crowdfunding: UpdateCrowdfundingInput) {
+  async updateCrowdfunding(
+    crowdfunding: UpdateCrowdfundingInput
+  ): Promise<CrowdfundingWithActiveGoal> {
     const {id, goals, memberPlans, ...crowdfundingWithoutAssociations} = crowdfunding
 
-    const updatedCrowdfunding = this.prisma.crowdfunding.update({
+    const updatedCrowdfunding = await this.prisma.crowdfunding.update({
       data: {
         ...crowdfundingWithoutAssociations,
         goals: {
@@ -192,8 +194,15 @@ export class CrowdfundingService {
       }
     })
 
+    const revenue = await this.getRevenue({crowdfunding: updatedCrowdfunding})
+
     return {
-      ...updatedCrowdfunding
+      ...updatedCrowdfunding,
+      revenue,
+      activeCrowdfundingGoal: this.getActiveGoalWithProgress({
+        revenue,
+        crowdfunding: updatedCrowdfunding
+      })
     }
   }
 

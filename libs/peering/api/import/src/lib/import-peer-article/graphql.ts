@@ -1559,8 +1559,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent
-  /** Update a sinle crowdfunding */
-  updateCrowdfunding: Crowdfunding
+  /** Update a single crowdfunding */
+  updateCrowdfunding: CrowdfundingWithActiveGoal
   /** Updates an existing event. */
   updateEvent: Event
   /** Updates an existing navigation. */

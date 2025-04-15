@@ -1513,8 +1513,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /** Update a sinle crowdfunding */
-  updateCrowdfunding: Crowdfunding;
+  /** Update a single crowdfunding */
+  updateCrowdfunding: CrowdfundingWithActiveGoal;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing navigation. */
@@ -3991,7 +3991,7 @@ export type UpdateCrowdfundingMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCrowdfundingMutation = { __typename?: 'Mutation', updateCrowdfunding: { __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, memberPlans: Array<{ __typename?: 'CrowdfundingMemberPlan', id: string }> } };
+export type UpdateCrowdfundingMutation = { __typename?: 'Mutation', updateCrowdfunding: { __typename?: 'CrowdfundingWithActiveGoal', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeCrowdfundingGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'CrowdfundingMemberPlan', id: string }> } };
 
 export type DeleteCrowdfundingMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -6694,10 +6694,10 @@ export type CreateCrowdfundingMutationOptions = Apollo.BaseMutationOptions<Creat
 export const UpdateCrowdfundingDocument = gql`
     mutation UpdateCrowdfunding($input: UpdateCrowdfundingInput!) {
   updateCrowdfunding(input: $input) {
-    ...FullCrowdfunding
+    ...FullCrowdfundingWithActiveGoal
   }
 }
-    ${FullCrowdfundingFragmentDoc}`;
+    ${FullCrowdfundingWithActiveGoalFragmentDoc}`;
 export type UpdateCrowdfundingMutationFn = Apollo.MutationFunction<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>;
 
 /**

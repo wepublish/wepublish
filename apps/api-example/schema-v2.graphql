@@ -1168,8 +1168,8 @@ type Mutation {
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
-  """Update a sinle crowdfunding"""
-  updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
+  """Update a single crowdfunding"""
+  updateCrowdfunding(input: UpdateCrowdfundingInput!): CrowdfundingWithActiveGoal!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!

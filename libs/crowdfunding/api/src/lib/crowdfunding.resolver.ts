@@ -54,7 +54,7 @@ export class CrowdfundingResolver {
   }
 
   @Permissions(CanUpdateCrowdfunding)
-  @Mutation(returns => Crowdfunding, {description: 'Update a sinle crowdfunding'})
+  @Mutation(returns => CrowdfundingWithActiveGoal, {description: 'Update a single crowdfunding'})
   public updateCrowdfunding(@Args('input') crowdfunding: UpdateCrowdfundingInput) {
     return this.crowdfundingService.updateCrowdfunding(crowdfunding)
   }

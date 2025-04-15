@@ -58,7 +58,9 @@ export const EditCrowdfundingForm = () => {
   const [updateCrowdfunding, {loading}] = useUpdateCrowdfundingMutation({
     client,
     onError: showError,
-    onCompleted: () => {
+    onCompleted: data => {
+      const {__typename, ...inputWithoutTypename} = data.updateCrowdfunding
+      setCrowdfunding(inputWithoutTypename)
       if (shouldClose) {
         navigate(closePath)
       }
