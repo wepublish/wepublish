@@ -144,6 +144,8 @@ type DailySubscriptionStats {
   deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
   renewedSubscriptionCount: Float!
   renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  replacedSubscriptionCount: Float!
+  replacedSubscriptionUsers: [DailySubscriptionStatsUser!]!
   totalActiveSubscriptionCount: Float!
 }
 

@@ -66,6 +66,12 @@ export class DailySubscriptionStats {
   createdSubscriptionUsers!: DailySubscriptionStatsUser[]
 
   @Field()
+  replacedSubscriptionCount!: number
+
+  @Field(type => [DailySubscriptionStatsUser])
+  replacedSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field()
   renewedSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])

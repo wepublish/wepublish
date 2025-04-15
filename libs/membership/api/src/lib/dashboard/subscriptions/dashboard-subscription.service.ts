@@ -223,6 +223,7 @@ export class DashboardSubscriptionService {
     }
     return this.prisma.subscription.findMany({
       select: {
+        replacesSubscriptionID: true,
         user: {
           select: {
             id: true,
@@ -430,6 +431,10 @@ export class DashboardSubscriptionService {
         memberPlanIds
       )
 
+      const replacedSubscriptions = createdSubscriptions.filter(
+        createdSubscription => createdSubscription.replacesSubscriptionID
+      )
+
       const stats: DailySubscriptionStats = {
         date: new Date(current).toISOString().split('T')[0],
         totalActiveSubscriptionCount,
@@ -437,10 +442,17 @@ export class DashboardSubscriptionService {
         createdSubscriptionUsers: createdSubscriptions.map(
           createdSubscription => createdSubscription.user
         ),
+
+        replacedSubscriptionCount: replacedSubscriptions.length,
+        replacedSubscriptionUsers: replacedSubscriptions.map(
+          replacedSubscription => replacedSubscription.user
+        ),
+
         renewedSubscriptionCount: renewedSubscriptions.length,
         renewedSubscriptionUsers: renewedSubscriptions.map(
           renewedSubscription => renewedSubscription.user
         ),
+
         deactivatedSubscriptionCount: deactivatedSubscriptions.length,
         deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
           deactivatedSubscription => deactivatedSubscription.user
