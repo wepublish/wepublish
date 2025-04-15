@@ -1,6 +1,6 @@
-import {css, styled} from '@mui/material'
-import {Event} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
+import {BuilderEventListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange} from 'react-icons/md'
 
 export const eventListItemStyles = css`
@@ -54,7 +54,7 @@ export const EventListItem = ({
   startsAt,
   endsAt,
   className
-}: Event & {className?: string}) => {
+}: BuilderEventListItemProps) => {
   const {
     elements: {H4, Link, Image, Paragraph},
     blocks: {RichText},

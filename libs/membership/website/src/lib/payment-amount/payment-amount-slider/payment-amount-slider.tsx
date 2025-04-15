@@ -1,4 +1,5 @@
-import {InputAdornment, Slider, styled} from '@mui/material'
+import {InputAdornment, Slider} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Currency} from '@wepublish/website/api'
 import {formatCurrency} from '../../formatters/format-currency'

@@ -1,7 +1,6 @@
 import {Payment, PaymentState} from '@prisma/client'
 import {
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -34,7 +33,7 @@ export const GraphQLPaymentState = new GraphQLEnumType({
 export const GraphQLPublicPayment = new GraphQLObjectType<Payment, Context>({
   name: 'Payment',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     intentSecret: {type: GraphQLString},
     state: {type: new GraphQLNonNull(GraphQLPaymentState)},
@@ -51,7 +50,7 @@ export const GraphQLPublicPayment = new GraphQLObjectType<Payment, Context>({
 export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
   name: 'Payment',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -103,8 +102,8 @@ export const GraphQLPaymentConnection = new GraphQLObjectType<any, Context>({
 export const GraphQLPaymentFromInvoiceInput = new GraphQLInputObjectType({
   name: 'PaymentFromInvoiceInput',
   fields: {
-    invoiceID: {type: new GraphQLNonNull(GraphQLID)},
-    paymentMethodID: {type: GraphQLID},
+    invoiceID: {type: new GraphQLNonNull(GraphQLString)},
+    paymentMethodID: {type: GraphQLString},
     paymentMethodSlug: {type: GraphQLSlug},
     successURL: {type: GraphQLString},
     failureURL: {type: GraphQLString}

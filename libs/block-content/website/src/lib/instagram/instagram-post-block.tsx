@@ -1,5 +1,5 @@
-import {styled} from '@mui/material'
-import {Block, InstagramPostBlock as InstagramPostBlockType} from '@wepublish/website/api'
+import styled from '@emotion/styled'
+import {BlockContent, InstagramPostBlock as InstagramPostBlockType} from '@wepublish/website/api'
 import {BuilderInstagramPostBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useCallback, useEffect} from 'react'
 
@@ -13,8 +13,9 @@ declare global {
   }
 }
 
-export const isInstagramBlock = (block: Block): block is InstagramPostBlockType =>
-  block.__typename === 'InstagramPostBlock'
+export const isInstagramBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is InstagramPostBlockType => block.__typename === 'InstagramPostBlock'
 
 export const InstagramBlockWrapper = styled('div')`
   display: grid;
@@ -35,6 +36,10 @@ export function InstagramPostBlock({postID, className}: BuilderInstagramPostBloc
   useEffect(() => {
     loadAd()
   }, [loadAd])
+
+  if (!postID) {
+    return null
+  }
 
   return (
     <InstagramBlockWrapper className={className}>

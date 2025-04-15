@@ -1,11 +1,11 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
-  ImageWrapper,
   Teaser,
   TeaserImageWrapper,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {ImageWrapper} from '@wepublish/image/website'
 
 export const FlimmerTeaser = styled(Teaser)`
   &,

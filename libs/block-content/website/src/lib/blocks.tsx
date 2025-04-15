@@ -11,7 +11,7 @@ import {isRichTextBlock} from './richtext/richtext-block'
 import {isTeaserGridFlexBlock} from './teaser/teaser-grid-flex-block'
 import {isTitleBlock} from './title/title-block'
 import {cond} from 'ramda'
-import {isEmbedBlock} from './embed/embed-block'
+import {isIFrameBlock} from './iframe/iframe-block'
 import {isCommentBlock} from './comment/comment-block'
 import {isBildwurfAdBlock} from './bildwurf-ad/bildwurf-ad-block'
 import {isFacebookPostBlock} from './facebook/facebook-post-block'
@@ -36,6 +36,7 @@ import {isImageSliderBlockStyle} from './block-styles/image-slider/image-slider'
 import {isFocusTeaserBlockStyle} from './block-styles/focus-teaser/focus-teaser'
 import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
+import {ImageContext} from '@wepublish/image/website'
 
 export const hasBlockStyle =
   (blockStyle: string) =>
@@ -59,7 +60,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   ])
 
   const embedCond = cond([
-    [isEmbedBlock, block => <blocks.Embed {...block} />],
+    [isIFrameBlock, block => <blocks.IFrame {...block} />],
     [isBildwurfAdBlock, block => <blocks.BildwurfAd {...block} />],
     [isInstagramBlock, block => <blocks.InstagramPost {...block} />],
     [isSoundCloudTrackBlock, block => <blocks.SoundCloudTrack {...block} />],
@@ -102,7 +103,7 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   )
 })
 
-export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
+export const Blocks = memo(({blocks, type}: BuilderBlocksProps) => {
   const {
     blocks: {Renderer}
   } = useWebsiteBuilder()
@@ -110,8 +111,20 @@ export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
   return (
     <>
       {blocks.map((block, index) => (
-        <Renderer key={index} block={block} index={index} count={blocks.length} type={type} />
+        <ImageContext.Provider
+          key={index}
+          value={
+            // Above the fold images should be loaded with a high priority
+            3 > index
+              ? {
+                  fetchPriority: 'high',
+                  loading: 'eager'
+                }
+              : {}
+          }>
+          <Renderer block={block} index={index} count={blocks.length} type={type} />
+        </ImageContext.Provider>
       ))}
     </>
   )
-}
+})

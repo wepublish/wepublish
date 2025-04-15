@@ -1,6 +1,5 @@
 import {Meta} from '@storybook/react'
 import {HtmlBlock} from './html-block'
-import {css} from '@emotion/react'
 
 export default {
   component: HtmlBlock,
@@ -25,21 +24,5 @@ export const WithScript = {
 export const Empty = {
   args: {
     html: ``
-  }
-}
-
-export const WithClassName = {
-  args: {
-    html: '<div style="color: red;">This is a html embed</div>',
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  args: {
-    html: '<div style="color: red;">This is a html embed</div>',
-    css: css`
-      background-color: #eee;
-    `
   }
 }

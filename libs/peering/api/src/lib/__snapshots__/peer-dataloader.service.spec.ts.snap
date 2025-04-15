@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PeerDataloaderService load should load many 1`] = `
+[
+  {
+    "where": {
+      "id": {
+        "in": [
+          "123",
+          "321",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`PeerDataloaderService load should load one 1`] = `
+[
+  {
+    "where": {
+      "id": {
+        "in": [
+          "123",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`PeerDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

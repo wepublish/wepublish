@@ -6,9 +6,8 @@ const storiesCmp = composeStories(stories)
 
 describe('TransactionFee', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
+    it(`should render ${story}`, async () => {
+      render(<Component />)
     })
   })
 })

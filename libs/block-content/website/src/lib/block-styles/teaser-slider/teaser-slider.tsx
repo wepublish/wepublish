@@ -1,11 +1,12 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {styled, useMediaQuery, useTheme} from '@mui/material'
+import {useMediaQuery, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
-import {Block, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
 import {hasBlockStyle} from '../../blocks'
 import {
   alignmentForTeaserBlock,
@@ -39,6 +40,7 @@ export const SliderTitle = styled('div')`
 
 export const SliderBallContainer = styled('div')`
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(1)};
 `
@@ -192,6 +194,6 @@ export const TeaserSlider = ({
 }
 
 export const isTeaserSliderBlockStyle = (
-  block: Block
+  block: BlockContent
 ): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)

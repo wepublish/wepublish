@@ -1,5 +1,5 @@
-import {styled} from '@mui/material'
-import {RichTextBlock} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {RichTextBlock} from '@wepublish/block-content/website'
 
 export const FlimmerRichText = styled(RichTextBlock)`
   .MuiTypography-body1 {

@@ -1,11 +1,11 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
-  ImageWrapper,
   Teaser,
   TeaserImageWrapper,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {ImageWrapper} from '@wepublish/image/website'
 import {cond, T} from 'ramda'
 
 import {DailyBriefingTeaser, isDailyBriefingTeaser} from './daily-briefing/daily-briefing-teaser'

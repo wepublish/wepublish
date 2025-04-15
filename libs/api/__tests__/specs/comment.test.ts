@@ -1,8 +1,6 @@
 import {
   CommentItemType,
   ApproveComment,
-  ArticleInput,
-  CreateArticle,
   CreateUser,
   UpdateComment,
   CreateComment,
@@ -13,6 +11,8 @@ import {ApolloServer} from 'apollo-server-express'
 import {PrismaClient} from '@prisma/client'
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 import {AddComment, CommentInput, Comments} from '../api/public'
+import nanoid from 'nanoid'
+import {Descendant} from 'slate'
 
 let clientPrivateAsAdmin: ApolloServer
 let clientPublicAsUser: ApolloServer
@@ -104,39 +104,11 @@ beforeAll(async () => {
     } as any)
     clientPrivateAsModerator = clientAsModerator.testServerPrivate
     clientPublicAsModerator = clientAsModerator.testServerPublic
-    const articleInput: ArticleInput = {
-      title: 'This is the best test article',
-      slug: generateRandomString(),
-      shared: false,
-      hidden: false,
-      tags: [],
-      breaking: true,
-      lead: 'This article will rock your world. Never has there been a better article',
-      preTitle: 'Testing GraphQL',
-      hideAuthor: false,
-      properties: [
-        {key: 'testingKey', value: 'testingValue', public: true},
-        {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
-      ],
-      authorIDs: [],
-      socialMediaTitle: 'A social media title',
-      socialMediaAuthorIDs: [],
-      socialMediaDescription: 'A social media description',
-      socialMediaImageID: null,
-      blocks: []
-    }
-    const articleRes = await testServerPrivate.executeOperation({
-      query: CreateArticle,
-      variables: {
-        input: articleInput
-      }
-    })
 
-    itemID = articleRes.data?.createArticle.id
+    itemID = nanoid()
 
-    // create Comment and pass created Article ID
     const input: CommentInput = {
-      itemID: articleRes.data?.createArticle.id,
+      itemID,
       itemType: CommentItemType.Article,
       text: richTextNodes
     }
@@ -171,7 +143,7 @@ const richTextNodes = [
       }
     ]
   }
-]
+] as Descendant[]
 
 describe('Comments', () => {
   describe('create', () => {
@@ -348,6 +320,7 @@ describe('Comments', () => {
       itemType: CommentItemType.Article,
       text: richTextNodes
     }
+
     const res = await testServerPublic.executeOperation({
       query: AddComment,
       variables: {

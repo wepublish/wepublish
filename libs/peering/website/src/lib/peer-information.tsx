@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderPeerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const PeerInformationWrapper = styled('aside')`
@@ -37,41 +38,27 @@ const logoStyles = css`
   border-radius: 50%;
 `
 
-export function PeerInformation({data, loading, error, originUrl, className}: BuilderPeerProps) {
+export function PeerInformation({profile, originUrl, className}: BuilderPeerProps) {
   const {
-    elements: {Alert, Image, Button, Link, H5},
+    elements: {Image, Button, Link, H5},
     blocks: {RichText}
   } = useWebsiteBuilder()
-
-  if (error) {
-    return (
-      <PeerInformationWrapper>
-        <Alert severity="error">{error.message}</Alert>
-      </PeerInformationWrapper>
-    )
-  }
-
-  if (!data?.peer) {
-    return null
-  }
 
   return (
     <PeerInformationWrapper className={className}>
       <PeerInformationName>
-        {data.peer.profile?.logo && (
-          <Image image={data.peer.profile.logo} square css={logoStyles} />
-        )}
+        {profile?.logo && <Image image={profile.logo} square css={logoStyles} />}
 
-        <H5 component={'span'}>{data.peer.profile?.name}</H5>
+        <H5 component={'span'}>{profile?.name}</H5>
       </PeerInformationName>
 
       <PeerInformationCTA>
         <Button
           variant="contained"
           color="primary"
-          href={data.peer.profile?.callToActionURL ?? data.peer.profile?.websiteURL}
+          href={profile?.callToActionURL ?? profile?.websiteURL}
           LinkComponent={Link}>
-          <RichText richText={data.peer.profile?.callToActionText ?? []} />
+          <RichText richText={profile?.callToActionText ?? []} />
         </Button>
       </PeerInformationCTA>
 

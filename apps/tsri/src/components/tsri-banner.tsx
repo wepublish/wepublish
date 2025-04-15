@@ -1,10 +1,10 @@
-import {styled} from '@mui/material'
-import {PageBanner} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {Banner, BannerCloseButton, BannerContent, BannerTitle} from '@wepublish/banner/website'
 
-const TsriBanner = styled(PageBanner.Banner)(
+const TsriBanner = styled(Banner)(
   ({theme}) => `
 
-  ${PageBanner.BannerContent} {
+  ${BannerContent} {
     background-color: ${theme.palette.primary.main};
     padding: ${theme.spacing(2)};
 
@@ -13,11 +13,11 @@ const TsriBanner = styled(PageBanner.Banner)(
     }
   }
 
-  ${PageBanner.BannerTitle} {
+  ${BannerTitle} {
     font-size: ${theme.typography.h3.fontSize};
   }
 
-  ${PageBanner.BannerCloseButton} {
+  ${BannerCloseButton} {
     top: ${theme.spacing(2)};
     right: ${theme.spacing(2)};
 

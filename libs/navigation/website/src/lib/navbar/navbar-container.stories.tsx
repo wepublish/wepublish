@@ -1,7 +1,6 @@
 import {Meta} from '@storybook/react'
 import {FullNavigationFragment, Navigation, NavigationListDocument} from '@wepublish/website/api'
 import {NavbarContainer} from './navbar-container'
-import {css} from '@emotion/react'
 
 const navigation = {
   __typename: 'Navigation',
@@ -100,23 +99,5 @@ export const Default = {
         }
       ]
     }
-  }
-}
-
-export const WithClassName = {
-  ...Default,
-  args: {
-    ...Default.args,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  ...Default,
-  args: {
-    ...Default.args,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

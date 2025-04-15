@@ -1,5 +1,6 @@
-import {Link, styled} from '@mui/material'
-import {Button, theme} from '@wepublish/ui'
+import {Link} from '@mui/material'
+import styled from '@emotion/styled'
+import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps} from '@wepublish/website/builder'
 import {differenceInHours} from 'date-fns'
@@ -22,7 +23,7 @@ export const BannerContent = styled('div')`
   padding: ${({theme}) => theme.spacing(4)};
   padding-top: ${({theme}) => theme.spacing(5)};
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     padding: ${({theme}) => theme.spacing(9)};
   }
 `
@@ -42,7 +43,7 @@ export const BannerCloseButton = styled('span')`
   height: 2rem;
   line-height: 2rem;
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     top: ${({theme}) => theme.spacing(4)};
     right: ${({theme}) => theme.spacing(4)};
   }

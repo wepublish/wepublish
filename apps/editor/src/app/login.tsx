@@ -6,12 +6,8 @@ import {
   useCreateSessionWithOAuth2CodeMutation,
   useGetAuthProvidersQuery
 } from '@wepublish/editor/api'
-import {
-  AuthDispatchActionType,
-  AuthDispatchContext,
-  LocalStorageKey,
-  LoginTemplate
-} from '@wepublish/ui/editor'
+import {LocalStorageKey} from '@wepublish/editor/api-v2'
+import {AuthDispatchActionType, AuthDispatchContext, LoginTemplate} from '@wepublish/ui/editor'
 import React, {FormEvent, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {IoIosRocket, IoLogoFacebook, IoLogoGoogle, IoLogoTwitter} from 'react-icons/io'
@@ -99,6 +95,7 @@ export function Login() {
       navigate(next, {replace: true})
       return
     }
+
     navigate('/', {replace: true})
   }
 

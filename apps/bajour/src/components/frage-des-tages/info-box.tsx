@@ -1,12 +1,13 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
+import {RichTextBlock} from '@wepublish/block-content/website'
 import {Button} from '@wepublish/ui'
-import {RichTextBlock} from '@wepublish/website'
 import {memo, useState} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 interface InfoBoxProps {
-  richText: Node[]
+  richText: Descendant[]
   className?: string
 }
 

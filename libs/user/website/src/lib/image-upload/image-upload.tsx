@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderImageUploadProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useId, useRef, forwardRef, useImperativeHandle} from 'react'
 import {MdDelete, MdEdit, MdOutlineUploadFile} from 'react-icons/md'

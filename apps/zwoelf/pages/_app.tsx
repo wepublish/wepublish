@@ -1,14 +1,19 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
+import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
@@ -44,7 +49,6 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
-    partialBundledLanguages: true,
     resources: {
       de: {zod: translation}
     }
@@ -97,7 +101,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
@@ -148,8 +152,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
-                  loginUrl={''}
-                  subscribeUrl="https://shop.zwoelf.ch/produkt-kategorie/abos/"
+                  subscribeBtn={{
+                    href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
+                    target: '_blank'
+                  }}
+                  loginBtn={null}
                 />
 
                 <main>
@@ -164,6 +171,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </LogoLink>
                 </FooterContainer>
               </Spacer>
+
+              <RoutedAdminBar />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
@@ -173,8 +182,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

@@ -1,4 +1,5 @@
-import {css, styled} from '@mui/material'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
 import {PollAnswerWithVoteCount} from '@wepublish/website/api'
 
 export const PollBlockResultWrapper = styled('div')`
@@ -83,7 +84,7 @@ export const PollBlockResult = ({
       </PollBlockResultInfo>
 
       <PollBlockVoteBar>
-        <PollBlockVoteBarFill highlight={highlight} sx={{width: `${percentage}%`}} />
+        <PollBlockVoteBarFill highlight={highlight} css={{width: `${percentage}%`}} />
         <PollBlockVoteBarText highlight={highlight}>{voteCount} Stimmen</PollBlockVoteBarText>
       </PollBlockVoteBar>
     </PollBlockResultWrapper>

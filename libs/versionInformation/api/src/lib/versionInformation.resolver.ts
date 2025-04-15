@@ -1,7 +1,8 @@
 import {Query, Resolver} from '@nestjs/graphql'
 import {VersionInformation} from './versionInformation.model'
 import {promises as fs} from 'fs'
-import {Permissions, CanLoginEditor} from '@wepublish/permissions/api'
+import {Permissions} from '@wepublish/permissions/api'
+import {CanLoginEditor} from '@wepublish/permissions'
 
 @Resolver()
 export class VersionInformationResolver {

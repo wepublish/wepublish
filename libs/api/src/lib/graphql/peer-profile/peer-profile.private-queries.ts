@@ -1,7 +1,7 @@
 import {delegateToSchema} from '@graphql-tools/delegate'
 import {schemaFromExecutor} from '@graphql-tools/wrap'
 import {PrismaClient} from '@prisma/client'
-import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions/api'
+import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions'
 import {SettingName} from '@wepublish/settings/api'
 import {GraphQLResolveInfo} from 'graphql'
 import {Context, createFetcher} from '../../context'
@@ -9,7 +9,7 @@ import {PeerTokenInvalidError} from '../../error'
 import {markResultAsProxied} from '../../utility'
 import {authorise} from '../permissions'
 import {getPeerProfile} from './peer-profile.queries'
-import {createSafeHostUrl} from '../peer/create-safe-host-url'
+import {createSafeHostUrl} from '@wepublish/peering/api'
 
 export const getAdminPeerProfile = async (
   hostURL: string,

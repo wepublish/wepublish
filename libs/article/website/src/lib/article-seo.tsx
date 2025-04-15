@@ -5,11 +5,11 @@ import {BuilderArticleSEOProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {Fragment, useMemo} from 'react'
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.blocks?.find(isTitleBlock)
-  const firstRichText = article.blocks?.find(isRichTextBlock)
-  const firstImageBlock = article.blocks?.find(isImageBlock)
+  const firstTitle = article.latest.blocks?.find(isTitleBlock)
+  const firstRichText = article.latest.blocks?.find(isRichTextBlock)
+  const firstImageBlock = article.latest.blocks?.find(isImageBlock)
 
-  const articleBody = article.blocks
+  const articleBody = article.latest.blocks
     ?.filter(isRichTextBlock)
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText)
@@ -23,21 +23,28 @@ export const getArticleSEO = (article: Article) => {
     .join('\n')
 
   const socialMediaDescription =
-    article.socialMediaDescription ||
-    article.lead ||
+    article.latest.socialMediaDescription ||
+    article.latest.lead ||
     firstParagraphToPlaintext(firstRichText?.richText)
-  const description = article.lead || firstParagraphToPlaintext(firstRichText?.richText)
+  const description = article.latest.lead || firstParagraphToPlaintext(firstRichText?.richText)
 
-  const image = (article.socialMediaImage ?? article.image ?? firstImageBlock?.image) as
-    | FullImageFragment
-    | undefined
-  const title = article.seoTitle || article.title || firstTitle?.title || article.socialMediaTitle
+  const image = (article.latest.socialMediaImage ??
+    article.latest.image ??
+    firstImageBlock?.image) as FullImageFragment | undefined
+  const title =
+    article.latest.seoTitle ||
+    article.latest.title ||
+    firstTitle?.title ||
+    article.latest.socialMediaTitle
   const socialMediaTitle =
-    article.socialMediaTitle || article.seoTitle || article.title || firstTitle?.title
-  const headline = firstTitle?.title || article.title
-  const url = article.canonicalUrl ?? article.url
+    article.latest.socialMediaTitle ||
+    article.latest.seoTitle ||
+    article.latest.title ||
+    firstTitle?.title
+  const headline = firstTitle?.title || article.latest.title
+  const url = article.latest.canonicalUrl ?? article.url
 
-  const firstAuthor = article.authors.at(0)
+  const firstAuthor = article.latest.authors.at(0)
 
   return {
     type: 'article',
@@ -48,14 +55,25 @@ export const getArticleSEO = (article: Article) => {
     url,
     image,
     tags: article.tags,
+    updatedAt: article.latest.publishedAt,
     publishedAt: article.publishedAt,
-    authors: article.authors,
+    authors: article.latest.authors ?? [],
     schema: {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',
       articleBody,
       keywords: article.tags.map(({tag}) => tag).join(','),
-      image,
+      image: image
+        ? {
+            height: image.height,
+            width: image.width,
+            representativeOfPage: true,
+            contentUrl: image.url,
+            thumbnailUrl: image.m,
+            url: image.url,
+            encodingFormat: image.mimeType
+          }
+        : undefined,
       description,
       author: {
         '@context': 'https://schema.org',
@@ -68,7 +86,7 @@ export const getArticleSEO = (article: Article) => {
       datePublished: article.publishedAt,
       name: title,
       headline,
-      identifier: article.id,
+      identifier: article.slug,
       url
     }
   }
@@ -83,13 +101,10 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
   return (
     <Head>
       <title key="title">{title}</title>
-
       <meta key={'og:type'} property="og:type" content={seo.type} />
-
       {seo.socialMediaTitle && (
         <meta key={'og:title'} property="og:title" content={seo.socialMediaTitle} />
       )}
-
       {seo.socialMediaDescription && (
         <meta
           key={'og:description'}
@@ -97,12 +112,9 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
           content={seo.socialMediaDescription}
         />
       )}
-
       {seo.description && <meta key={'description'} name="description" content={seo.description} />}
-
       <meta key={'og:url'} property="og:url" content={seo.url} />
       <link key={'canonical'} rel="canonical" href={seo.url} />
-
       {seo.image && (
         <>
           <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
@@ -124,21 +136,28 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
           <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
         </>
       )}
-
       <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
       <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
 
-      <meta
-        key={`og:article:published_time`}
-        property="og:article:published_time"
-        content={seo.publishedAt}
-      />
+      {seo.publishedAt && (
+        <meta
+          key={`og:article:published_time`}
+          property="og:article:published_time"
+          content={seo.publishedAt}
+        />
+      )}
 
-      <meta
-        key={`og:article:modified_time`}
-        property="og:article:modified_time"
-        content={seo.publishedAt}
-      />
+      {seo.updatedAt && (
+        <>
+          <meta
+            key={`og:article:modified_time`}
+            property="og:article:modified_time"
+            content={seo.updatedAt}
+          />
+
+          <meta key={`og:updated_time`} property="og:updated_time" content={seo.updatedAt} />
+        </>
+      )}
 
       {seo.authors.map(author => (
         <Fragment key={author.id}>
@@ -151,11 +170,9 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
           />
         </Fragment>
       ))}
-
       {seo.tags.map(tag => (
-        <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag.tag ?? ''} />
+        <meta key={`og:article:tag:${tag.id}`} property="og:article:tag" content={tag.tag ?? ''} />
       ))}
-
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{__html: JSON.stringify(seo.schema)}}

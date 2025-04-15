@@ -1,5 +1,9 @@
-import {styled} from '@mui/material'
-import {FocusedTeaserContent, FocusedTeaserTitle, FocusTeaser} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {
+  FocusedTeaserContent,
+  FocusedTeaserTitle,
+  FocusTeaser
+} from '@wepublish/block-content/website'
 
 export const ZwoelfFocusTeaser = styled(FocusTeaser)`
   ${FocusedTeaserContent} {
