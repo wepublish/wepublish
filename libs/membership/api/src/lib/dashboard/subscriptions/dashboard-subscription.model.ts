@@ -74,9 +74,3 @@ export class DailySubscriptionStats {
   @Field(type => [DailySubscriptionStatsUser])
   usersDeactivated!: DailySubscriptionStatsUser[]
 }
-
-@ObjectType()
-export class SubscriptionStats {
-  @Field(type => [DailySubscriptionStats])
-  daily!: DailySubscriptionStats[]
-}

@@ -1,10 +1,6 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
 import {CanGetSubscriptions, Permissions, Public} from '@wepublish/permissions/api'
-import {
-  DailySubscriptionStats,
-  DashboardSubscription,
-  SubscriptionStats
-} from './dashboard-subscription.model'
+import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
 import {SettingName, Settings} from '@wepublish/settings/api'
 
