@@ -1,19 +1,17 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
-import {Prisma, PrismaClient} from '@prisma/client'
+import {PaymentState, Prisma, PrismaClient} from '@prisma/client'
 import {ok} from 'assert'
 import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
-import {endOfDay, startOfDay} from 'date-fns'
+import {differenceInDays, endOfDay, startOfDay} from 'date-fns'
 import NodeCache from 'node-cache'
 import {createHash} from 'crypto'
 
 /**
  * Peered article cache configuration and setup
  */
-const ONE_DAY_IN_SEC = 24 * 60 * 60
 const ONE_MIN_IN_SEC = 60
 const dailyStatsCache = new NodeCache({
-  stdTTL: 2 * ONE_DAY_IN_SEC,
-  checkperiod: 60 * ONE_MIN_IN_SEC,
+  checkperiod: ONE_MIN_IN_SEC,
   deleteOnExpire: true,
   useClones: true
 })
@@ -246,6 +244,41 @@ export class DashboardSubscriptionService {
     })
   }
 
+  private async getDailyRevenue(date: Date, memberPlanIds: string[] = []) {
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    let memberPlanFilter: Prisma.InvoiceWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        subscription: {
+          memberPlanID: {
+            in: memberPlanIds
+          }
+        }
+      }
+    }
+    const invoices = await this.prisma.invoice.findMany({
+      select: {
+        items: {
+          select: {
+            amount: true
+          }
+        }
+      },
+      where: {
+        paidAt: {
+          gte: start,
+          lte: end
+        },
+        ...memberPlanFilter
+      }
+    })
+    return invoices.reduce((invoiceSum, invoice) => {
+      const itemsSum = invoice.items.reduce((itemSum, item) => itemSum + item.amount, 0)
+      return invoiceSum + itemsSum
+    }, 0)
+  }
+
   private async getDailyDeactivatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
     // Since the subscription is running until end of paidUntil; we need to subtract one day to ensure to count the ones who have been deactivated and paid until is yesterday
     const start = startOfDay(date)
@@ -280,6 +313,39 @@ export class DashboardSubscriptionService {
         },
         paidUntil: {
           not: null
+        },
+        ...memberPlanFilter
+      }
+    })
+  }
+
+  private getUnpaidCreatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+    return this.prisma.subscription.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            name: true,
+            email: true
+          }
+        }
+      },
+      where: {
+        paidUntil: null,
+        createdAt: {
+          gte: start,
+          lte: end
         },
         ...memberPlanFilter
       }
@@ -332,7 +398,7 @@ export class DashboardSubscriptionService {
     })
   }
 
-  private async getDailyTotalActiveSubscriptionCount(date: Date, memberPlanIds: string[] = []) {
+  private async getDailyTotalActiveSubscriptions(date: Date, memberPlanIds: string[] = []) {
     const end = endOfDay(date)
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
     if (memberPlanIds.length > 0) {
@@ -342,7 +408,12 @@ export class DashboardSubscriptionService {
         }
       }
     }
-    return this.prisma.subscription.count({
+    return this.prisma.subscription.findMany({
+      select: {
+        monthlyAmount: true,
+        startsAt: true,
+        paidUntil: true
+      },
       where: {
         OR: [
           {
@@ -375,6 +446,39 @@ export class DashboardSubscriptionService {
     })
   }
 
+  private getCacheTTLByDate(date: Date) {
+    const now = new Date()
+    const daysBetween = differenceInDays(now, date)
+    // 14 Tage max cache duration 14 * 60
+    const cappedDays = Math.min(daysBetween, 336)
+    const secondsPerDay = 60 * 60
+    // +1 to ensure its never 0 this means cache for ever
+    return cappedDays * secondsPerDay + 1
+  }
+
+  private calculateDailyActiveSubscriptionStats(
+    activeSubscriptions: {monthlyAmount: number; startsAt: Date; paidUntil: Date | null}[]
+  ) {
+    let subscriptionMonthlyRevenueSum = 0
+    let subscriptionDurationInDaysSum = 0
+    for (const activeSubscription of activeSubscriptions) {
+      subscriptionMonthlyRevenueSum += activeSubscription.monthlyAmount
+      if (activeSubscription.paidUntil) {
+        subscriptionDurationInDaysSum += differenceInDays(
+          activeSubscription.paidUntil,
+          activeSubscription.startsAt
+        )
+      }
+    }
+    return {
+      subscriptionMonthlyRevenueSum,
+      subscriptionMonthlyRevenueAvg: Math.ceil(
+        subscriptionMonthlyRevenueSum / activeSubscriptions.length
+      ),
+      subscriptionDurationAvg: Math.ceil(subscriptionDurationInDaysSum / activeSubscriptions.length)
+    }
+  }
+
   async dailySubscriptionStats(
     start: Date,
     end: Date,
@@ -382,6 +486,7 @@ export class DashboardSubscriptionService {
   ): Promise<DailySubscriptionStats[]> {
     const returnValue: DailySubscriptionStats[] = []
     let current = new Date(start)
+    const sortedPlanIds = memberPlanIds.sort()
 
     current = endOfDay(current)
     end = endOfDay(end)
@@ -389,12 +494,12 @@ export class DashboardSubscriptionService {
     const memberPlans = await this.prisma.memberPlan.findMany({
       where: {
         id: {
-          in: memberPlanIds
+          in: sortedPlanIds
         }
       }
     })
 
-    if (memberPlans.length !== memberPlanIds.length) {
+    if (memberPlans.length !== sortedPlanIds.length) {
       throw new NotFoundException(`Selected member plan not found!`)
     }
 
@@ -410,36 +515,52 @@ export class DashboardSubscriptionService {
 
     while (current <= end) {
       const cacheKey = createHash('sha256')
-        .update(`${current.toISOString()}-${JSON.stringify(memberPlanIds)}`)
+        .update(`${current.toISOString()}-${JSON.stringify(sortedPlanIds)}`)
         .digest('hex')
 
       // Serve all past days from cache but serve today fresh
-      if (current.getTime() !== endOfDay(new Date()).getTime() && dailyStatsCache.has(cacheKey)) {
+      if (dailyStatsCache.has(cacheKey)) {
         returnValue.push(dailyStatsCache.get(cacheKey) as DailySubscriptionStats)
         current.setDate(current.getDate() + 1)
         continue
       }
 
-      const totalActiveSubscriptionCount = await this.getDailyTotalActiveSubscriptionCount(
+      const totalActiveSubscriptions = await this.getDailyTotalActiveSubscriptions(
         current,
-        memberPlanIds
+        sortedPlanIds
       )
-      const createdSubscriptions = await this.getDailyCreatedSubscriptions(current, memberPlanIds)
-      const renewedSubscriptions = await this.getDailyRenewedSubscriptions(current, memberPlanIds)
+      const createdSubscriptions = await this.getDailyCreatedSubscriptions(current, sortedPlanIds)
+      const renewedSubscriptions = await this.getDailyRenewedSubscriptions(current, sortedPlanIds)
       const deactivatedSubscriptions = await this.getDailyDeactivatedSubscriptions(
         current,
-        memberPlanIds
+        sortedPlanIds
+      )
+      const createdUnpaidSubscriptions = await this.getUnpaidCreatedSubscriptions(
+        current,
+        sortedPlanIds
       )
 
       const replacedSubscriptions = createdSubscriptions.filter(
         createdSubscription => createdSubscription.replacesSubscriptionID
       )
 
+      const {
+        subscriptionMonthlyRevenueAvg,
+        subscriptionMonthlyRevenueSum,
+        subscriptionDurationAvg
+      } = this.calculateDailyActiveSubscriptionStats(totalActiveSubscriptions)
+
+      const subscriptionDailyRevenue = await this.getDailyRevenue(current, sortedPlanIds)
+
       const stats: DailySubscriptionStats = {
         date: new Date(current).toISOString().split('T')[0],
-        totalActiveSubscriptionCount,
+        totalActiveSubscriptionCount: totalActiveSubscriptions.length,
         createdSubscriptionCount: createdSubscriptions.length,
         createdSubscriptionUsers: createdSubscriptions.map(
+          createdSubscription => createdSubscription.user
+        ),
+        createdUnpaidSubscriptionCount: createdUnpaidSubscriptions.length,
+        createdUnpaidSubscriptionUsers: createdUnpaidSubscriptions.map(
           createdSubscription => createdSubscription.user
         ),
 
@@ -456,10 +577,14 @@ export class DashboardSubscriptionService {
         deactivatedSubscriptionCount: deactivatedSubscriptions.length,
         deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
           deactivatedSubscription => deactivatedSubscription.user
-        )
+        ),
+        subscriptionMonthlyRevenueAvg,
+        subscriptionMonthlyRevenueSum,
+        subscriptionDailyRevenue,
+        subscriptionDurationAvg
       }
 
-      dailyStatsCache.set(cacheKey, stats)
+      dailyStatsCache.set(cacheKey, stats, this.getCacheTTLByDate(current))
       returnValue.push(stats)
 
       current.setDate(current.getDate() + 1)

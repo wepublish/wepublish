@@ -139,6 +139,8 @@ enum Currency {
 type DailySubscriptionStats {
   createdSubscriptionCount: Float!
   createdSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  createdUnpaidSubscriptionCount: Float!
+  createdUnpaidSubscriptionUsers: [DailySubscriptionStatsUser!]!
   date: String!
   deactivatedSubscriptionCount: Float!
   deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
@@ -146,6 +148,10 @@ type DailySubscriptionStats {
   renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
   replacedSubscriptionCount: Float!
   replacedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  subscriptionDailyRevenue: Float!
+  subscriptionDurationAvg: Float!
+  subscriptionMonthlyRevenueAvg: Float!
+  subscriptionMonthlyRevenueSum: Float!
   totalActiveSubscriptionCount: Float!
 }
 
