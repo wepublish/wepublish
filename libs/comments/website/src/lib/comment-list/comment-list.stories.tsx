@@ -1,7 +1,7 @@
 import {ApolloError} from '@apollo/client'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
-import {userEvent, waitFor, within} from '@storybook/testing-library'
+import {userEvent, waitFor, within} from '@storybook/test'
 import {mockComment, mockImage} from '@wepublish/storybook/mocks'
 import {WithCommentRatingsDecorators, WithUserDecorator} from '@wepublish/storybook'
 import {Challenge, CommentAuthorType} from '@wepublish/website/api'

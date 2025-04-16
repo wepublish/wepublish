@@ -16,7 +16,7 @@ import {
   SubscriptionsDocument
 } from '@wepublish/website/api'
 import {WithCancelError, WithExtendError} from './subscription-list-item.stories'
-import {waitFor, within} from '@storybook/testing-library'
+import {waitFor, within} from '@storybook/test'
 import {InvoiceListContainer} from '../invoice-list/invoice-list-container'
 import {mockImage} from '@wepublish/storybook/mocks'
 

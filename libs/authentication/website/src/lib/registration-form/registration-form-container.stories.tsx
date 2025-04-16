@@ -4,7 +4,7 @@ import {RegistrationFormContainer} from './registration-form-container'
 import * as registrationFormStories from './registration-form.stories'
 import {ApolloError} from '@apollo/client'
 import {useUser} from '../session.context'
-import {waitFor, within} from '@storybook/testing-library'
+import {waitFor, within} from '@storybook/test'
 
 export default {
   title: 'Container/Registration Form',

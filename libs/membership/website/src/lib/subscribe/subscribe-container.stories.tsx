@@ -17,7 +17,7 @@ import {
 import {SubscribeContainer} from './subscribe-container'
 import * as registrationFormStories from './subscribe.stories'
 import {ApolloError} from '@apollo/client'
-import {waitFor, within} from '@storybook/testing-library'
+import {waitFor, within} from '@storybook/test'
 import {useUser} from '@wepublish/authentication/website'
 import {mockImage, mockRichText} from '@wepublish/storybook/mocks'
 import {WithUserDecorator} from '@wepublish/storybook'

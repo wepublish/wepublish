@@ -1,6 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import {Meta, StoryObj} from '@storybook/react'
-import {userEvent, within} from '@storybook/testing-library'
+import {userEvent, within} from '@storybook/test'
 import {mockPoll, mockPollBlock} from '@wepublish/storybook/mocks'
 import {WithPollBlockDecorators, WithUserDecorator} from '@wepublish/storybook'
 import {PollBlock} from './poll-block'
