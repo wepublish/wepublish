@@ -479,6 +479,63 @@ export class DashboardSubscriptionService {
     }
   }
 
+  async generateDailyData(current: Date, sortedPlanIds: string[]): Promise<DailySubscriptionStats> {
+    const [
+      totalActiveSubscriptions,
+      createdSubscriptions,
+      renewedSubscriptions,
+      deactivatedSubscriptions,
+      createdUnpaidSubscriptions,
+      subscriptionDailyRevenue
+    ] = await Promise.all([
+      this.getDailyTotalActiveSubscriptions(current, sortedPlanIds),
+      this.getDailyCreatedSubscriptions(current, sortedPlanIds),
+      this.getDailyRenewedSubscriptions(current, sortedPlanIds),
+      this.getDailyDeactivatedSubscriptions(current, sortedPlanIds),
+      this.getUnpaidCreatedSubscriptions(current, sortedPlanIds),
+      this.getDailyRevenue(current, sortedPlanIds)
+    ])
+
+    const replacedSubscriptions = createdSubscriptions.filter(
+      createdSubscription => createdSubscription.replacesSubscriptionID
+    )
+
+    const {subscriptionMonthlyRevenueAvg, subscriptionMonthlyRevenueSum, subscriptionDurationAvg} =
+      this.calculateDailyActiveSubscriptionStats(totalActiveSubscriptions)
+
+    return {
+      date: new Date(current).toISOString().split('T')[0],
+      totalActiveSubscriptionCount: totalActiveSubscriptions.length,
+      createdSubscriptionCount: createdSubscriptions.length,
+      createdSubscriptionUsers: createdSubscriptions.map(
+        createdSubscription => createdSubscription.user
+      ),
+      createdUnpaidSubscriptionCount: createdUnpaidSubscriptions.length,
+      createdUnpaidSubscriptionUsers: createdUnpaidSubscriptions.map(
+        createdSubscription => createdSubscription.user
+      ),
+
+      replacedSubscriptionCount: replacedSubscriptions.length,
+      replacedSubscriptionUsers: replacedSubscriptions.map(
+        replacedSubscription => replacedSubscription.user
+      ),
+
+      renewedSubscriptionCount: renewedSubscriptions.length,
+      renewedSubscriptionUsers: renewedSubscriptions.map(
+        renewedSubscription => renewedSubscription.user
+      ),
+
+      deactivatedSubscriptionCount: deactivatedSubscriptions.length,
+      deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
+        deactivatedSubscription => deactivatedSubscription.user
+      ),
+      subscriptionMonthlyRevenueAvg,
+      subscriptionMonthlyRevenueSum,
+      subscriptionDailyRevenue,
+      subscriptionDurationAvg
+    }
+  }
+
   async dailySubscriptionStats(
     start: Date,
     end: Date,
@@ -513,82 +570,29 @@ export class DashboardSubscriptionService {
       end = endOfDay(new Date())
     }
 
-    while (current <= end) {
-      const cacheKey = createHash('sha256')
-        .update(`${current.toISOString()}-${JSON.stringify(sortedPlanIds)}`)
-        .digest('hex')
-
-      // Serve all past days from cache but serve today fresh
-      if (dailyStatsCache.has(cacheKey)) {
-        returnValue.push(dailyStatsCache.get(cacheKey) as DailySubscriptionStats)
-        current.setDate(current.getDate() + 1)
-        continue
-      }
-
-      const totalActiveSubscriptions = await this.getDailyTotalActiveSubscriptions(
-        current,
-        sortedPlanIds
-      )
-      const createdSubscriptions = await this.getDailyCreatedSubscriptions(current, sortedPlanIds)
-      const renewedSubscriptions = await this.getDailyRenewedSubscriptions(current, sortedPlanIds)
-      const deactivatedSubscriptions = await this.getDailyDeactivatedSubscriptions(
-        current,
-        sortedPlanIds
-      )
-      const createdUnpaidSubscriptions = await this.getUnpaidCreatedSubscriptions(
-        current,
-        sortedPlanIds
-      )
-
-      const replacedSubscriptions = createdSubscriptions.filter(
-        createdSubscription => createdSubscription.replacesSubscriptionID
-      )
-
-      const {
-        subscriptionMonthlyRevenueAvg,
-        subscriptionMonthlyRevenueSum,
-        subscriptionDurationAvg
-      } = this.calculateDailyActiveSubscriptionStats(totalActiveSubscriptions)
-
-      const subscriptionDailyRevenue = await this.getDailyRevenue(current, sortedPlanIds)
-
-      const stats: DailySubscriptionStats = {
-        date: new Date(current).toISOString().split('T')[0],
-        totalActiveSubscriptionCount: totalActiveSubscriptions.length,
-        createdSubscriptionCount: createdSubscriptions.length,
-        createdSubscriptionUsers: createdSubscriptions.map(
-          createdSubscription => createdSubscription.user
-        ),
-        createdUnpaidSubscriptionCount: createdUnpaidSubscriptions.length,
-        createdUnpaidSubscriptionUsers: createdUnpaidSubscriptions.map(
-          createdSubscription => createdSubscription.user
-        ),
-
-        replacedSubscriptionCount: replacedSubscriptions.length,
-        replacedSubscriptionUsers: replacedSubscriptions.map(
-          replacedSubscription => replacedSubscription.user
-        ),
-
-        renewedSubscriptionCount: renewedSubscriptions.length,
-        renewedSubscriptionUsers: renewedSubscriptions.map(
-          renewedSubscription => renewedSubscription.user
-        ),
-
-        deactivatedSubscriptionCount: deactivatedSubscriptions.length,
-        deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
-          deactivatedSubscription => deactivatedSubscription.user
-        ),
-        subscriptionMonthlyRevenueAvg,
-        subscriptionMonthlyRevenueSum,
-        subscriptionDailyRevenue,
-        subscriptionDurationAvg
-      }
-
-      dailyStatsCache.set(cacheKey, stats, this.getCacheTTLByDate(current))
-      returnValue.push(stats)
-
-      current.setDate(current.getDate() + 1)
+    const dates: Date[] = []
+    let temp = new Date(current)
+    while (temp <= end) {
+      dates.push(new Date(temp)) // clone to avoid mutation
+      temp.setDate(temp.getDate() + 1)
     }
-    return returnValue
+
+    // Parallelize data building
+    const results = await Promise.all(
+      dates.map(async date => {
+        const cacheKey = createHash('sha256')
+          .update(`${date.toISOString()}-${JSON.stringify(sortedPlanIds)}`)
+          .digest('hex')
+
+        if (dailyStatsCache.has(cacheKey)) {
+          return dailyStatsCache.get(cacheKey) as DailySubscriptionStats
+        }
+
+        const stats = await this.generateDailyData(date, sortedPlanIds)
+        dailyStatsCache.set(cacheKey, stats, this.getCacheTTLByDate(date))
+        return stats
+      })
+    )
+    return results
   }
 }
