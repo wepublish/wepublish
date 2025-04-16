@@ -2,12 +2,17 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {},
+      "custom_domain": "https://onlinereports.ch",
+      "env": {
+        "GTM_ID": "GTM-TXZP35R"
+      },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "GTM_ID": "GTM-TXZP35R"
+      },
       "secret_env": []
     },
     "review": {
