@@ -1,7 +1,7 @@
 {
-  "name": "website-example",
+  "name": "hauptstadt",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/website-example",
+  "sourceRoot": "apps/hauptstadt",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -10,11 +10,11 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/website-example"
+        "outputPath": "dist/apps/hauptstadt"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/website-example"
+          "outputPath": "apps/hauptstadt"
         },
         "production": {}
       }
@@ -23,16 +23,16 @@
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "website-example:build",
+        "buildTarget": "hauptstadt:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "website-example:build:development",
+          "buildTarget": "hauptstadt:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "website-example:build:production",
+          "buildTarget": "hauptstadt:build:production",
           "dev": false
         }
       }
@@ -40,14 +40,14 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "website-example:build:production"
+        "buildTarget": "hauptstadt:build:production"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/website-example/jest.config.ts"
+        "jestConfig": "apps/hauptstadt/jest.config.ts"
       }
     },
     "lint": {
