@@ -23,7 +23,7 @@ function CrowdfundingList() {
 
   const [crowdfundingDelete, setCrowdfundingDelete] = useState<Crowdfunding | undefined>(undefined)
 
-  const client = useMemo(() => getApiClientV2(), [])
+  const client = getApiClientV2()
 
   const {data, loading, error, refetch} = useCrowdfundingsQuery({
     client,
