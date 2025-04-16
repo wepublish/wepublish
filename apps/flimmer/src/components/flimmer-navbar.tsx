@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {NavbarInnerWrapper} from '@wepublish/navigation/website'
 import {Navbar} from 'rsuite'
 
-export const TsriNavbar = styled(Navbar)`
+export const FlimmerNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {
     margin-left: auto;
     margin-right: auto;

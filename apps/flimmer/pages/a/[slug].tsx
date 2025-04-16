@@ -22,8 +22,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import TsriAdHeader from '../../src/components/tsri-ad-header'
-
 const AfterArticleTitle = styled(H2)`
   ${({theme}) => theme.breakpoints.down('sm')} {
     font-size: 2rem;
@@ -59,8 +57,6 @@ export default function ArticleBySlugIdOrToken() {
 
   return (
     <>
-      <TsriAdHeader authors={data?.article?.latest.authors} />
-
       <ArticleContainer {...containerProps}>
         {data?.article?.latest.authors.map(author => (
           <AuthorWrapper key={author.id} fullWidth>

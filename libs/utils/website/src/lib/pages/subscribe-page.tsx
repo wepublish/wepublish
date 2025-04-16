@@ -2,7 +2,6 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
 import {UserSession} from '@wepublish/website/api'
@@ -18,6 +17,7 @@ import {
   InvoicesDocument,
   addClientCacheToV1Props
 } from '@wepublish/website/api'
+import {ComponentProps} from 'react'
 
 type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>
 
