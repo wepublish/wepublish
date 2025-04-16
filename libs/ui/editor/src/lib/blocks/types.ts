@@ -229,8 +229,11 @@ export interface BaseTeaser {
 }
 
 export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
+
 export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
+
 export interface CustomTeaser extends CustomTeaserLink, BaseTeaser {}
+
 export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
 export type Teaser = ArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
@@ -733,7 +736,7 @@ export function unionMapForBlock(block: BlockValue): BlockContentInput {
                 }
             }
 
-            return {}
+            return null
           }),
           numColumns: block.value.numColumns,
           blockStyle: block.value.blockStyle
