@@ -34,7 +34,7 @@ export const EditCrowdfundingForm = () => {
     name: ''
   })
 
-  const client = useMemo(() => getApiClientV2(), [])
+  const client = getApiClientV2()
   useCrowdfundingQuery({
     client,
     variables: {
