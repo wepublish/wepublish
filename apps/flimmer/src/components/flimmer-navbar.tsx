@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import {NavbarInnerWrapper} from '@wepublish/navigation/website'
-import {Navbar} from 'rsuite'
+import {Navbar, NavbarInnerWrapper} from '@wepublish/navigation/website'
 
 export const FlimmerNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {
