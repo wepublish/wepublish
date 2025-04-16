@@ -541,7 +541,6 @@ export class DashboardSubscriptionService {
     end: Date,
     memberPlanIds: string[]
   ): Promise<DailySubscriptionStats[]> {
-    const returnValue: DailySubscriptionStats[] = []
     let current = new Date(start)
     const sortedPlanIds = memberPlanIds.sort()
 
