@@ -1,7 +1,12 @@
 import styled from '@emotion/styled'
 import {Alert, AlertTitle, IconButton, LinearProgress, Tooltip} from '@mui/material'
 import {FullCrowdfundingGoalWithProgressFragment} from '@wepublish/editor/api-v2'
-import {BlockContent, CrowdfundingBlock as CrowdfundingBlockType} from '@wepublish/website/api'
+import {formatCurrency} from '@wepublish/membership/website'
+import {
+  BlockContent,
+  CrowdfundingBlock as CrowdfundingBlockType,
+  Currency
+} from '@wepublish/website/api'
 import {BuilderCrowdfundingBlockProps} from '@wepublish/website/builder'
 import {useMemo} from 'react'
 import {MdOutlineInfo} from 'react-icons/md'
@@ -57,36 +62,12 @@ export const CfProgressBarInnerTitle = styled('p')`
 `
 
 export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps) => {
-  const activeCrowdfunding = useMemo<
-    FullCrowdfundingGoalWithProgressFragment | undefined | null
-  >(() => {
-    return crowdfunding?.activeCrowdfundingGoal
-  }, [crowdfunding?.activeCrowdfundingGoal])
+  const activeCrowdfunding = crowdfunding?.activeCrowdfundingGoal
+  const progress = activeCrowdfunding?.progress || 0
+  const revenue = crowdfunding?.revenue || 0
+  const goalAmount = activeCrowdfunding?.amount || 0
+  const goalDescription = activeCrowdfunding?.description
 
-  const progress = useMemo<number>(
-    () => activeCrowdfunding?.progress || 0,
-    [activeCrowdfunding?.progress]
-  )
-
-  const revenue = useMemo<number>(() => crowdfunding?.revenue || 0, [crowdfunding?.revenue])
-
-  const goalAmount = useMemo<number>(
-    () => activeCrowdfunding?.amount || 0,
-    [activeCrowdfunding?.amount]
-  )
-  const goalDescription = useMemo(
-    () => activeCrowdfunding?.description,
-    [activeCrowdfunding?.description]
-  )
-
-  function formatMoney(amount: number): string {
-    return Math.round(amount / 100).toLocaleString('de-CH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })
-  }
-
-  // no crowdfunding object is available
   if (!crowdfunding)
     return (
       <Alert severity="error">
@@ -98,7 +79,8 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     <CrowdfundingContainer>
       <CfInner>
         <CfTitle>
-          Bereits <b style={{textWrap: 'nowrap'}}>CHF {formatMoney(revenue)}</b> finanziert
+          Bereits <b style={{textWrap: 'nowrap'}}>{formatCurrency(revenue, Currency.Chf)}</b>{' '}
+          finanziert
         </CfTitle>
 
         <CfProgressBarContainer>
@@ -119,7 +101,9 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
               )}
             </CfProgressBarInnerItem>
             <CfProgressBarInnerItem>
-              <CfProgressBarInnerAmount>CHF {formatMoney(goalAmount)}</CfProgressBarInnerAmount>
+              <CfProgressBarInnerAmount>
+                {formatCurrency(goalAmount, Currency.Chf)}
+              </CfProgressBarInnerAmount>
               <CfProgressBarInnerTitle>
                 {crowdfunding.activeCrowdfundingGoal?.title || ''}
               </CfProgressBarInnerTitle>
