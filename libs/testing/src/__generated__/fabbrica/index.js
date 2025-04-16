@@ -403,6 +403,10 @@ const modelFieldDefinitions = [{
                 name: "subscriptionFlows",
                 type: "SubscriptionFlow",
                 relationName: "MemberPlanToSubscriptionFlow"
+            }, {
+                name: "crowdfundings",
+                type: "Crowdfunding",
+                relationName: "CrowdfundingToMemberPlan"
             }]
     }, {
         name: "NavigationLink",
@@ -909,6 +913,24 @@ const modelFieldDefinitions = [{
                 name: "banner",
                 type: "Banner",
                 relationName: "BannerToBannerAction"
+            }]
+    }, {
+        name: "Crowdfunding",
+        fields: [{
+                name: "memberPlans",
+                type: "MemberPlan",
+                relationName: "CrowdfundingToMemberPlan"
+            }, {
+                name: "goals",
+                type: "CrowdfundingGoal",
+                relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
+    }, {
+        name: "CrowdfundingGoal",
+        fields: [{
+                name: "Crowdfunding",
+                type: "Crowdfunding",
+                relationName: "CrowdfundingToCrowdfundingGoal"
             }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
@@ -5390,4 +5412,134 @@ function defineBannerActionFactoryInternal({ defaultData: defaultDataResolver, t
  */
 export function defineBannerActionFactory(options) {
     return defineBannerActionFactoryInternal(options);
+}
+function autoGenerateCrowdfundingScalarsOrEnums({ seq }) {
+    return {
+        name: getScalarFieldValueGenerator().String({ modelName: "Crowdfunding", fieldName: "name", isId: false, isUnique: false, seq })
+    };
+}
+function defineCrowdfundingFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Crowdfunding", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCrowdfundingScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().crowdfunding.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "Crowdfunding",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link Crowdfunding} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingFactoryInterface}
+ */
+export function defineCrowdfundingFactory(options) {
+    return defineCrowdfundingFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isCrowdfundingGoalCrowdfundingFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Crowdfunding";
+}
+function autoGenerateCrowdfundingGoalScalarsOrEnums({ seq }) {
+    return {
+        title: getScalarFieldValueGenerator().String({ modelName: "CrowdfundingGoal", fieldName: "title", isId: false, isUnique: false, seq }),
+        amount: getScalarFieldValueGenerator().Int({ modelName: "CrowdfundingGoal", fieldName: "amount", isId: false, isUnique: false, seq })
+    };
+}
+function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CrowdfundingGoal", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCrowdfundingGoalScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                Crowdfunding: isCrowdfundingGoalCrowdfundingFactory(defaultData.Crowdfunding) ? {
+                    create: yield defaultData.Crowdfunding.build()
+                } : defaultData.Crowdfunding
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().crowdfundingGoal.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "CrowdfundingGoal",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link CrowdfundingGoal} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingGoalFactoryInterface}
+ */
+export function defineCrowdfundingGoalFactory(options) {
+    return defineCrowdfundingGoalFactoryInternal(options);
 }

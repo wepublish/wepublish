@@ -32,7 +32,8 @@ import {
   FullTeaserGridBlockFragment,
   CustomTeaser,
   FullTeaserGridFlexBlockFragment,
-  FlexAlignment
+  FlexAlignment,
+  CrowdfundingBlock
 } from '@wepublish/website/api'
 import {mockImage} from './image'
 import {mockRichText} from './richtext'
@@ -42,6 +43,8 @@ import {mockComment} from './comment'
 import {mockArticle, mockArticleRevision} from './article'
 import {mockPage, mockPageRevision} from './page'
 import nanoid from 'nanoid'
+import {partial} from 'ramda'
+import {mockCrowdfunding} from './crowdfunding'
 
 export const mockTitleBlock = ({
   title = 'Title Block',
@@ -192,6 +195,16 @@ export const mockCommentBlock = ({
     comments: comments.map(({id}) => id),
     tags: []
   }
+})
+
+export const mockCrowdfundingBlock = ({
+  crowdfunding = mockCrowdfunding()
+}: Partial<CrowdfundingBlock> = {}) => ({
+  type: BlockType.Crowdfunding,
+  __typename: 'CrowdfundingBlock',
+  blockStyle: null,
+  blockStyleName: null,
+  crowdfunding
 })
 
 export const mockBildwurfBlock = ({

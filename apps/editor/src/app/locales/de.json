@@ -210,6 +210,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Bearbeiten",
+        "label": "Crowdfunding",
+        "title": "Crowdfunding auswählen",
+        "name": "Name des Crowdfundings",
+        "select": "Auswählen",
+        "open": "öffnen"
+      },
       "comment": {
         "cherryPick": "Spezifische Kommentare auswählen",
         "comments": "{{count}} Kommentar",
@@ -730,7 +738,8 @@
       "blocks": {
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
-        "topMenu": "Inhalts-Blöcke"
+        "topMenu": "Inhalts-Blöcke",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
@@ -1411,6 +1420,43 @@
       "noPixelInfoHeader": "Keine Tracking-Integration vorhanden",
       "noPixelInfoDescription": "Dies ist etwa der Fall, wenn kein Tracking konfiguriert ist oder bei alten Artikeln.",
       "errorHeader": "Fehler"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Name",
+        "delete": "Löschen",
+        "createNew": "Erstellen"
+      },
+      "delete": {
+        "title": "Unwiderruflich löschen?",
+        "body": "Soll das Crowdfunding unwiderruflich gelöscht werden?",
+        "delete": "Löschen"
+      },
+      "create": {
+        "title": "Neues Crowdfunding erstellen"
+      },
+      "edit": {
+        "title": "{{crowdfundingName}} bearbeiten"
+      },
+      "form": {
+        "name": "Bezeichnung des Crowdfundings (wird nicht publiziert)",
+        "memberPlans": "Abo Pläne",
+        "filter": "Einnahmen filtern",
+        "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "selectMemberPlans": "Abo Pläne wählen",
+        "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
+        "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
+        "revenue": "Bereits CHF {{revenue}} finanziert",
+        "goals": "Ziele"
+      },
+      "goalsForm": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "amount": "Zielbetrag",
+        "remove": "Entfernen",
+        "add": "Ziel hinzufügen"
+      }
     }
   }
 }

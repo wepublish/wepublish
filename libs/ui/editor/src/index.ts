@@ -21,3 +21,5 @@ export * from './lib/singleView/singleViewContent'
 
 export * from './lib/atoms/peer/peerAvatar'
 export * from './lib/atoms/inlineAvatar'
+
+export * from './lib/atoms/crowdfunding/CrowdfundingProgressBar'

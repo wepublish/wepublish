@@ -236,11 +236,12 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
   comment: CommentBlockInput
+  crowdfunding: CrowdfundingBlockInput
   embed: IFrameBlockInput
   event: EventBlockInput
   facebookPost: FacebookPostBlockInput
@@ -278,6 +279,7 @@ type BlockStyle {
 enum BlockType {
   BildwurfAd
   Comment
+  Crowdfunding
   Embed
   Event
   FacebookPost
@@ -401,6 +403,90 @@ input CreateBannerInput {
   title: String!
 }
 
+input CreateCrowdfundingGoalInput {
+  amount: Float!
+  description: String
+  title: String!
+}
+
+input CreateCrowdfundingInput {
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
+  goals: [CreateCrowdfundingGoalInput!]
+  memberPlans: [CreateCrowdfundingMemberPlan!]
+  name: String!
+}
+
+input CreateCrowdfundingMemberPlan {
+  id: ID!
+}
+
+type Crowdfunding {
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
+  createdAt: DateTime!
+  goals: [CrowdfundingGoal!]!
+  id: ID!
+  memberPlans: [CrowdfundingMemberPlan!]!
+  modifiedAt: DateTime!
+  name: String!
+  revenue: Float
+}
+
+type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
+  blockStyle: String
+  blockStyleName: String
+  crowdfunding: CrowdfundingWithActiveGoal
+  crowdfundingId: String
+  type: BlockType!
+}
+
+input CrowdfundingBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  crowdfundingId: String
+}
+
+type CrowdfundingGoal {
+  amount: Float!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  modifiedAt: DateTime!
+  title: String!
+}
+
+type CrowdfundingGoalWithProgress {
+  amount: Float!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  modifiedAt: DateTime!
+  progress: Float
+  title: String!
+}
+
+type CrowdfundingMemberPlan {
+  id: ID!
+  name: String!
+}
+
+type CrowdfundingWithActiveGoal {
+  activeCrowdfundingGoal: CrowdfundingGoalWithProgress
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
+  createdAt: DateTime!
+  goals: [CrowdfundingGoal!]!
+  id: ID!
+  memberPlans: [CrowdfundingMemberPlan!]!
+  modifiedAt: DateTime!
+  name: String!
+  revenue: Float
+}
+
 enum Currency {
   CHF
   EUR
@@ -468,6 +554,7 @@ type DeletePollVotesResult {
 
 enum EditorBlockType {
   Comment
+  Crowdfunding
   Embed
   Event
   HTML
@@ -725,6 +812,11 @@ interface HasOptionalArticle {
   articleID: String
 }
 
+interface HasOptionalCrowdfunding {
+  crowdfunding: CrowdfundingWithActiveGoal
+  crowdfundingId: String
+}
+
 interface HasOptionalEvent {
   event: Event
   eventID: String
@@ -979,6 +1071,9 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
+  """Create a new Crowdfunding"""
+  createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
+
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
@@ -1006,6 +1101,7 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
+  deleteCrowdfunding(id: ID!): Boolean
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
@@ -1071,6 +1167,9 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """Update a single crowdfunding"""
+  updateCrowdfunding(input: UpdateCrowdfundingInput!): CrowdfundingWithActiveGoal!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
@@ -1439,6 +1538,12 @@ type Query {
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
+
+  """Get a single crowdfunding by id with calculated progress"""
+  crowdfunding(id: ID!): CrowdfundingWithActiveGoal!
+
+  """Returns a paginated list of crowdfundings."""
+  crowdfundings: [Crowdfunding!]!
 
   """Returns a event by id."""
   event(id: String!): Event!
@@ -1861,6 +1966,16 @@ input UpdateBannerInput {
   showOnPages: [PageModelInput!]
   text: String!
   title: String!
+}
+
+input UpdateCrowdfundingInput {
+  additionalRevenue: Float
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
+  goals: [CreateCrowdfundingGoalInput!]
+  id: ID!
+  memberPlans: [CreateCrowdfundingMemberPlan!]
+  name: String!
 }
 
 type User {

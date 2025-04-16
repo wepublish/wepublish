@@ -121,6 +121,13 @@ fragment BlockWithoutTeaser on BlockContent {
     }
   }
 
+  ... on CrowdfundingBlock {
+    blockStyle: blockStyleName
+    crowdfunding {
+      ...CrowdfundingWithActiveGoal
+    }
+  }
+
   ... on ListicleBlock {
     blockStyle: blockStyleName
     items {

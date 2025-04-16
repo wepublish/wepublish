@@ -259,6 +259,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Edit",
+        "label": "Crowdfunding",
+        "title": "Select Crowdfunding",
+        "name": "Name",
+        "select": "Select",
+        "open": "open"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -790,7 +798,8 @@
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
-        "topMenu": "Content Blocks"
+        "topMenu": "Content Blocks",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Rating System",
       "comments": "Comments",
@@ -1521,6 +1530,43 @@
       "noPixelInfoHeader": "No tracking integration available",
       "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
       "errorHeader": "Error"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Name",
+        "delete": "Delete",
+        "createNew": "Create"
+      },
+      "delete": {
+        "title": "Delete Permanently?",
+        "body": "Should the crowdfunding be irrevocably deleted?",
+        "delete": "Delete"
+      },
+      "create": {
+        "title": "Create new crowdfunding"
+      },
+      "edit": {
+        "title": " edit {{crowdfundingName}}"
+      },
+      "form": {
+        "name": "Name of the Crowdfundings (Not published)",
+        "memberPlans": "Subscription Plans",
+        "filter": "Revenue Filter",
+        "additionalRevenue": "External Revenues (e.g.. via direct bank transfer)",
+        "selectMemberPlans": "Select Subscription Plans",
+        "countSubscriptionsFrom": "Include only subscriptions paid from date",
+        "countSubscriptionsUntil": "Include only subscriptions paid until date",
+        "revenue": "Already CHF {{revenue}} financed",
+        "goals": "Goals"
+      },
+      "goalsForm": {
+        "title": "Title",
+        "description": "Description",
+        "amount": "Target amount",
+        "remove": "Remove",
+        "add": "Add Target"
+      }
     }
   }
 }
