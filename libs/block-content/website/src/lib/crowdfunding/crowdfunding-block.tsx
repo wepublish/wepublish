@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import {Alert, AlertTitle, IconButton, LinearProgress, Tooltip} from '@mui/material'
-import {FullCrowdfundingGoalWithProgressFragment} from '@wepublish/editor/api-v2'
 import {formatCurrency} from '@wepublish/membership/website'
 import {
   BlockContent,
@@ -8,7 +7,6 @@ import {
   Currency
 } from '@wepublish/website/api'
 import {BuilderCrowdfundingBlockProps} from '@wepublish/website/builder'
-import {useMemo} from 'react'
 import {MdOutlineInfo} from 'react-icons/md'
 
 export const isCrowdfundingBlock = (
