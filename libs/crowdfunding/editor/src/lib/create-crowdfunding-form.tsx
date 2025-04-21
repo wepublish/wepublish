@@ -5,7 +5,7 @@ import {
   useCreateCrowdfundingMutation,
   CreateCrowdfundingMutation
 } from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
+import {useMemo, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
 import {CrowdfundingForm} from './crowdfunding-form'
@@ -28,7 +28,14 @@ export const CreateCrowdfundingForm = () => {
 
   const closePath = '/crowdfundings'
 
-  const [crowdfunding, setCrowdfunding] = useState({} as CreateCrowdfundingInput)
+  const [crowdfunding, setCrowdfunding] = useReducer(
+    (state: CreateCrowdfundingInput, action: Partial<CreateCrowdfundingInput>) => ({
+      ...state,
+      ...action
+    }),
+    {} as CreateCrowdfundingInput
+  )
+
   const [shouldClose, setShouldClose] = useState(false)
 
   const {StringType} = Schema.Types
@@ -64,14 +71,12 @@ export const CreateCrowdfundingForm = () => {
 
   const handleAddGoal = (goal: CreateCrowdfundingGoalInput) => {
     setCrowdfunding({
-      ...crowdfunding,
       goals: [...(crowdfunding.goals || []), goal]
     })
   }
 
   const handleRemoveGoal = (index: number) => {
     setCrowdfunding({
-      ...crowdfunding,
       goals: crowdfunding.goals?.filter((_, i) => i !== index) || []
     })
   }

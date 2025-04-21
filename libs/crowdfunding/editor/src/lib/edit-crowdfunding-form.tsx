@@ -1,18 +1,19 @@
 import {
   CreateCrowdfundingGoalInput,
+  CrowdfundingGoal,
   UpdateCrowdfundingInput,
   getApiClientV2,
   useCrowdfundingQuery,
   useUpdateCrowdfundingMutation
 } from '@wepublish/editor/api-v2'
-import {useState} from 'react'
+import {useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {CrowdfundingForm} from './crowdfunding-form'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {Form, Message, Schema, toaster} from 'rsuite'
 import {ApolloError} from '@apollo/client'
-import {stripTypename} from '@apollo/client/utilities'
+import {stripTypename} from '@wepublish/editor/api'
 
 const showError = (error: ApolloError): void => {
   toaster.push(
@@ -30,10 +31,16 @@ export const EditCrowdfundingForm = () => {
 
   const closePath = '/crowdfundings'
 
-  const [crowdfunding, setCrowdfunding] = useState<UpdateCrowdfundingInput>({
-    id: crowdfundingId,
-    name: ''
-  })
+  const [crowdfunding, setCrowdfunding] = useReducer(
+    (state: UpdateCrowdfundingInput, action: Partial<UpdateCrowdfundingInput>) => ({
+      ...state,
+      ...action
+    }),
+    {
+      id: crowdfundingId,
+      name: ''
+    }
+  )
 
   const client = getApiClientV2()
   useCrowdfundingQuery({
@@ -68,7 +75,7 @@ export const EditCrowdfundingForm = () => {
     const processedCrowdfunding = {
       ...crowdfunding,
       goals: crowdfunding.goals?.map(removeIdAndTypename),
-      memberPlans: crowdfunding.memberPlans?.map(stripTypename),
+      memberPlans: crowdfunding.memberPlans || [],
       revenue: undefined,
       activeCrowdfundingGoal: undefined
     }
@@ -76,20 +83,18 @@ export const EditCrowdfundingForm = () => {
   }
 
   const removeIdAndTypename = (goal: CreateCrowdfundingGoalInput) => {
-    const {id, __typename, ...goalCleaned} = goal as any
+    const {id, ...goalCleaned} = stripTypename(goal as CrowdfundingGoal)
     return goalCleaned
   }
 
   const handleAddGoal = (goal: CreateCrowdfundingGoalInput) => {
     setCrowdfunding({
-      ...crowdfunding,
       goals: [...(crowdfunding.goals || []), goal]
     })
   }
 
   const handleRemoveGoal = (index: number) => {
     setCrowdfunding({
-      ...crowdfunding,
       goals: crowdfunding.goals?.filter((_, i) => i !== index) || []
     })
   }
