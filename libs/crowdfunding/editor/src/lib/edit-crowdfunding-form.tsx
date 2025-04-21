@@ -5,13 +5,14 @@ import {
   useCrowdfundingQuery,
   useUpdateCrowdfundingMutation
 } from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {CrowdfundingForm} from './crowdfunding-form'
 import {SingleViewTitle} from '@wepublish/ui/editor'
 import {Form, Message, Schema, toaster} from 'rsuite'
 import {ApolloError} from '@apollo/client'
+import {stripTypename} from '@apollo/client/utilities'
 
 const showError = (error: ApolloError): void => {
   toaster.push(
@@ -42,10 +43,7 @@ export const EditCrowdfundingForm = () => {
     },
     skip: !id,
     onError: showError,
-    onCompleted: data => {
-      const {__typename, ...inputWithoutTypename} = data.crowdfunding
-      setCrowdfunding(inputWithoutTypename)
-    }
+    onCompleted: data => setCrowdfunding(stripTypename(data.crowdfunding))
   })
 
   const {StringType} = Schema.Types
@@ -59,8 +57,7 @@ export const EditCrowdfundingForm = () => {
     client,
     onError: showError,
     onCompleted: data => {
-      const {__typename, ...inputWithoutTypename} = data.updateCrowdfunding
-      setCrowdfunding(inputWithoutTypename)
+      setCrowdfunding(stripTypename(data.updateCrowdfunding))
       if (shouldClose) {
         navigate(closePath)
       }
@@ -71,7 +68,7 @@ export const EditCrowdfundingForm = () => {
     const processedCrowdfunding = {
       ...crowdfunding,
       goals: crowdfunding.goals?.map(removeIdAndTypename),
-      memberPlans: crowdfunding.memberPlans?.map(removeTypename),
+      memberPlans: crowdfunding.memberPlans?.map(stripTypename),
       revenue: undefined,
       activeCrowdfundingGoal: undefined
     }
@@ -83,13 +80,7 @@ export const EditCrowdfundingForm = () => {
     return goalCleaned
   }
 
-  const removeTypename = (page: any) => {
-    const {__typename, ...pageCleaned} = page
-    return pageCleaned
-  }
-
   const handleAddGoal = (goal: CreateCrowdfundingGoalInput) => {
-    const {...goalWithoutTypename} = goal
     setCrowdfunding({
       ...crowdfunding,
       goals: [...(crowdfunding.goals || []), goal]
