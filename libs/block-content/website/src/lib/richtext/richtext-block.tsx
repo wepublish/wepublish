@@ -19,7 +19,7 @@ export const RichTextBlock = ({className, richText}: BuilderRichTextBlockProps) 
 
   return (
     <RichTextBlockWrapper className={className}>
-      <RenderRichtext elements={richText} />
+      <RenderRichtext elements={richText ?? []} />
     </RichTextBlockWrapper>
   )
 }
