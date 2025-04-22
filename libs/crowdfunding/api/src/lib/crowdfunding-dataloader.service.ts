@@ -15,7 +15,7 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
     {name: 'CrowdfundingDataLoader'}
   )
 
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient, private crowdfundingService: CrowdfundingService) {}
 
   public prime(
     ...parameters: Parameters<DataLoader<string, CrowdfundingWithActiveGoal | null>['prime']>
@@ -41,7 +41,6 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
     if (!ids.length) {
       return []
     }
-    const crowdfundingService = new CrowdfundingService(this.prisma)
 
     const crowdfundings = await this.prisma.crowdfunding.findMany({
       where: {
@@ -58,8 +57,8 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
     // decorate crowdfundings with active goal
     const crowdfundingsWithActiveGoal = []
     for (const crowdfunding of crowdfundings) {
-      const revenue = await crowdfundingService.getRevenue({crowdfunding})
-      const activeCrowdfundingGoal = await crowdfundingService.getActiveGoalWithProgress({
+      const revenue = await this.crowdfundingService.getRevenue({crowdfunding})
+      const activeCrowdfundingGoal = await this.crowdfundingService.getActiveGoalWithProgress({
         crowdfunding,
         revenue
       })
