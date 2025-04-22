@@ -15,7 +15,6 @@ export const ArticleTrackingPixels = ({trackingPixels}: ArticleTrackingPixelsPro
             width="1"
             height="1"
             alt="tracking pixel"
-            loading="lazy"
           />
         )
       }
