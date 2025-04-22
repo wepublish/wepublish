@@ -1,6 +1,17 @@
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
+  BuilderBreakBlockProps,
+  BuilderCommentBlockProps,
+  BuilderCrowdfundingBlockProps,
+  BuilderEventBlockProps,
+  BuilderHTMLBlockProps,
+  BuilderListicleBlockProps,
+  BuilderPollBlockProps,
+  BuilderQuoteBlockProps,
+  BuilderRichTextBlockProps,
+  BuilderSubscribeBlockProps,
+  BuilderTitleBlockProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {isHtmlBlock} from './html/html-block'
@@ -90,17 +101,20 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
     teaserCond(block) ??
     imageCond(block) ??
     cond([
-      [isTitleBlock, block => <blocks.Title {...block} />],
-      [isQuoteBlock, block => <blocks.Quote {...block} />],
-      [isBreakBlock, block => <blocks.Break {...block} />],
-      [isRichTextBlock, block => <blocks.RichText {...block} />],
-      [isHtmlBlock, block => <blocks.HTML {...block} />],
-      [isSubscribeBlock, block => <blocks.Subscribe {...block} />],
-      [isEventBlock, block => <blocks.Event {...block} />],
-      [isPollBlock, block => <blocks.Poll {...block} />],
-      [isCrowdfundingBlock, block => <blocks.Crowdfunding {...block} />],
-      [isListicleBlock, block => <blocks.Listicle {...block} />],
-      [isCommentBlock, block => <blocks.Comment {...block} />]
+      [
+        isCrowdfundingBlock,
+        block => <blocks.Crowdfunding {...(block as BuilderCrowdfundingBlockProps)} />
+      ],
+      [isTitleBlock, block => <blocks.Title {...(block as BuilderTitleBlockProps)} />],
+      [isQuoteBlock, block => <blocks.Quote {...(block as BuilderQuoteBlockProps)} />],
+      [isBreakBlock, block => <blocks.Break {...(block as BuilderBreakBlockProps)} />],
+      [isRichTextBlock, block => <blocks.RichText {...(block as BuilderRichTextBlockProps)} />],
+      [isHtmlBlock, block => <blocks.HTML {...(block as BuilderHTMLBlockProps)} />],
+      [isSubscribeBlock, block => <blocks.Subscribe {...(block as BuilderSubscribeBlockProps)} />],
+      [isEventBlock, block => <blocks.Event {...(block as BuilderEventBlockProps)} />],
+      [isPollBlock, block => <blocks.Poll {...(block as BuilderPollBlockProps)} />],
+      [isListicleBlock, block => <blocks.Listicle {...(block as BuilderListicleBlockProps)} />],
+      [isCommentBlock, block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />]
     ])(block)
   )
 })

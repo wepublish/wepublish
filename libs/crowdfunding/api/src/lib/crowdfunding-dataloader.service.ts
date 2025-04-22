@@ -41,9 +41,13 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
     if (!ids.length) {
       return []
     }
-    const crowdfunding = await this.prisma.crowdfunding.findFirst({
+    const crowdfundingService = new CrowdfundingService(this.prisma)
+
+    const crowdfundings = await this.prisma.crowdfunding.findMany({
       where: {
-        id: ids[0]
+        id: {
+          in: ids as string[]
+        }
       },
       include: {
         goals: true,
@@ -51,24 +55,21 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
       }
     })
 
-    if (!crowdfunding) {
-      return []
-    }
-
-    const crowdfundingService = new CrowdfundingService(this.prisma)
-    const revenue = await crowdfundingService.getRevenue({crowdfunding})
-
-    const activeCrowdfundingGoal = await crowdfundingService.getActiveGoalWithProgress({
-      crowdfunding,
-      revenue
-    })
-
-    return [
-      {
+    // decorate crowdfundings with active goal
+    const crowdfundingsWithActiveGoal = []
+    for (const crowdfunding of crowdfundings) {
+      const revenue = await crowdfundingService.getRevenue({crowdfunding})
+      const activeCrowdfundingGoal = await crowdfundingService.getActiveGoalWithProgress({
+        crowdfunding,
+        revenue
+      })
+      crowdfundingsWithActiveGoal.push({
         ...crowdfunding,
         revenue,
         activeCrowdfundingGoal
-      }
-    ]
+      })
+    }
+
+    return crowdfundingsWithActiveGoal
   }
 }
