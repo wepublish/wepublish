@@ -320,6 +320,7 @@ export type BlockContent =
   | BildwurfAdBlock
   | BreakBlock
   | CommentBlock
+  | CrowdfundingBlock
   | EventBlock
   | FacebookPostBlock
   | FacebookVideoBlock
@@ -348,6 +349,7 @@ export type BlockContent =
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>
   comment?: InputMaybe<CommentBlockInput>
+  crowdfunding?: InputMaybe<CrowdfundingBlockInput>
   embed?: InputMaybe<IFrameBlockInput>
   event?: InputMaybe<EventBlockInput>
   facebookPost?: InputMaybe<FacebookPostBlockInput>
@@ -386,6 +388,7 @@ export type BlockStyle = {
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   FacebookPost = 'FacebookPost',
@@ -625,6 +628,97 @@ export type CreateBannerInput = {
   title: Scalars['String']
 }
 
+export type CreateCrowdfundingGoalInput = {
+  amount: Scalars['Float']
+  description?: InputMaybe<Scalars['String']>
+  title: Scalars['String']
+}
+
+export type CreateCrowdfundingInput = {
+  additionalRevenue?: InputMaybe<Scalars['Float']>
+  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>
+  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>
+  name: Scalars['String']
+}
+
+export type CreateCrowdfundingMemberPlan = {
+  id: Scalars['ID']
+}
+
+export type Crowdfunding = {
+  __typename?: 'Crowdfunding'
+  additionalRevenue?: Maybe<Scalars['Float']>
+  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>
+  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>
+  createdAt: Scalars['DateTime']
+  goals: Array<CrowdfundingGoal>
+  id: Scalars['ID']
+  memberPlans: Array<CrowdfundingMemberPlan>
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  revenue?: Maybe<Scalars['Float']>
+}
+
+export type CrowdfundingBlock = BaseBlock &
+  HasOptionalCrowdfunding & {
+    __typename?: 'CrowdfundingBlock'
+    blockStyle?: Maybe<Scalars['String']>
+    blockStyleName?: Maybe<Scalars['String']>
+    crowdfunding?: Maybe<CrowdfundingWithActiveGoal>
+    crowdfundingId?: Maybe<Scalars['String']>
+    type: BlockType
+  }
+
+export type CrowdfundingBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>
+  blockStyleName?: InputMaybe<Scalars['String']>
+  crowdfundingId?: InputMaybe<Scalars['String']>
+}
+
+export type CrowdfundingGoal = {
+  __typename?: 'CrowdfundingGoal'
+  amount: Scalars['Float']
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  modifiedAt: Scalars['DateTime']
+  title: Scalars['String']
+}
+
+export type CrowdfundingGoalWithProgress = {
+  __typename?: 'CrowdfundingGoalWithProgress'
+  amount: Scalars['Float']
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  modifiedAt: Scalars['DateTime']
+  progress?: Maybe<Scalars['Float']>
+  title: Scalars['String']
+}
+
+export type CrowdfundingMemberPlan = {
+  __typename?: 'CrowdfundingMemberPlan'
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export type CrowdfundingWithActiveGoal = {
+  __typename?: 'CrowdfundingWithActiveGoal'
+  activeCrowdfundingGoal?: Maybe<CrowdfundingGoalWithProgress>
+  additionalRevenue?: Maybe<Scalars['Float']>
+  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>
+  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>
+  createdAt: Scalars['DateTime']
+  goals: Array<CrowdfundingGoal>
+  id: Scalars['ID']
+  memberPlans: Array<CrowdfundingMemberPlan>
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  revenue?: Maybe<Scalars['Float']>
+}
+
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -692,6 +786,7 @@ export type DeletePollVotesResult = {
 
 export enum EditorBlockType {
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',
@@ -974,6 +1069,11 @@ export type HasImage = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>
   articleID?: Maybe<Scalars['String']>
+}
+
+export type HasOptionalCrowdfunding = {
+  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>
+  crowdfundingId?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalEvent = {
@@ -1345,6 +1445,8 @@ export type Mutation = {
    *
    */
   createConsent: Consent
+  /** Create a new Crowdfunding */
+  createCrowdfunding: Crowdfunding
   /** Creates a new event. */
   createEvent: Event
   /** Creates a new navigation. */
@@ -1384,6 +1486,7 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent
+  deleteCrowdfunding?: Maybe<Scalars['Boolean']>
   /** Deletes an existing event. */
   deleteEvent: Event
   /** Deletes an existing navigation. */
@@ -1456,6 +1559,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent
+  /** Update a single crowdfunding */
+  updateCrowdfunding: CrowdfundingWithActiveGoal
   /** Updates an existing event. */
   updateEvent: Event
   /** Updates an existing navigation. */
@@ -1536,6 +1641,10 @@ export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean']
   name: Scalars['String']
   slug: Scalars['String']
+}
+
+export type MutationCreateCrowdfundingArgs = {
+  input: CreateCrowdfundingInput
 }
 
 export type MutationCreateEventArgs = {
@@ -1654,6 +1763,10 @@ export type MutationDeleteBlockStyleArgs = {
 
 export type MutationDeleteConsentArgs = {
   id: Scalars['String']
+}
+
+export type MutationDeleteCrowdfundingArgs = {
+  id: Scalars['ID']
 }
 
 export type MutationDeleteEventArgs = {
@@ -1823,6 +1936,10 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String']
   name?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['String']>
+}
+
+export type MutationUpdateCrowdfundingArgs = {
+  input: UpdateCrowdfundingInput
 }
 
 export type MutationUpdateEventArgs = {
@@ -2422,6 +2539,10 @@ export type Query = {
    *
    */
   consents: Array<Consent>
+  /** Get a single crowdfunding by id with calculated progress */
+  crowdfunding: CrowdfundingWithActiveGoal
+  /** Returns a paginated list of crowdfundings. */
+  crowdfundings: Array<Crowdfunding>
   /** Returns a event by id. */
   event: Event
   /**
@@ -2633,6 +2754,10 @@ export type QueryConsentArgs = {
 
 export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>
+}
+
+export type QueryCrowdfundingArgs = {
+  id: Scalars['ID']
 }
 
 export type QueryEventArgs = {
@@ -3230,6 +3355,16 @@ export type UpdateBannerInput = {
   title: Scalars['String']
 }
 
+export type UpdateCrowdfundingInput = {
+  additionalRevenue?: InputMaybe<Scalars['Float']>
+  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>
+  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>
+  id: Scalars['ID']
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>
+  name: Scalars['String']
+}
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>
   file: Scalars['Upload']
@@ -3413,6 +3548,25 @@ type BlockWithoutTeaser_CommentBlock_Fragment = {
     comments?: Array<string> | null
   }
   comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type BlockWithoutTeaser_CrowdfundingBlock_Fragment = {
+  __typename: 'CrowdfundingBlock'
+  blockStyle?: string | null
+  type: BlockType
+  crowdfunding?: {
+    __typename?: 'CrowdfundingWithActiveGoal'
+    id: string
+    name: string
+    activeCrowdfundingGoal?: {
+      __typename?: 'CrowdfundingGoalWithProgress'
+      id: string
+      title: string
+      description?: string | null
+      amount: number
+      progress?: number | null
+    } | null
+  } | null
 }
 
 type BlockWithoutTeaser_EventBlock_Fragment = {
@@ -3618,6 +3772,7 @@ export type BlockWithoutTeaserFragment =
   | BlockWithoutTeaser_BildwurfAdBlock_Fragment
   | BlockWithoutTeaser_BreakBlock_Fragment
   | BlockWithoutTeaser_CommentBlock_Fragment
+  | BlockWithoutTeaser_CrowdfundingBlock_Fragment
   | BlockWithoutTeaser_EventBlock_Fragment
   | BlockWithoutTeaser_FacebookPostBlock_Fragment
   | BlockWithoutTeaser_FacebookVideoBlock_Fragment
@@ -3664,6 +3819,7 @@ type FullTeaser_ArticleTeaser_Fragment = {
         | {__typename: 'BildwurfAdBlock'}
         | {__typename: 'BreakBlock'}
         | {__typename: 'CommentBlock'}
+        | {__typename: 'CrowdfundingBlock'}
         | {__typename: 'EventBlock'}
         | {__typename: 'FacebookPostBlock'}
         | {__typename: 'FacebookVideoBlock'}
@@ -3791,6 +3947,25 @@ type FullBlock_CommentBlock_Fragment = {
     comments?: Array<string> | null
   }
   comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type FullBlock_CrowdfundingBlock_Fragment = {
+  __typename: 'CrowdfundingBlock'
+  blockStyle?: string | null
+  type: BlockType
+  crowdfunding?: {
+    __typename?: 'CrowdfundingWithActiveGoal'
+    id: string
+    name: string
+    activeCrowdfundingGoal?: {
+      __typename?: 'CrowdfundingGoalWithProgress'
+      id: string
+      title: string
+      description?: string | null
+      amount: number
+      progress?: number | null
+    } | null
+  } | null
 }
 
 type FullBlock_EventBlock_Fragment = {
@@ -3973,6 +4148,7 @@ type FullBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4095,6 +4271,7 @@ type FullBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'BildwurfAdBlock'}
                 | {__typename: 'BreakBlock'}
                 | {__typename: 'CommentBlock'}
+                | {__typename: 'CrowdfundingBlock'}
                 | {__typename: 'EventBlock'}
                 | {__typename: 'FacebookPostBlock'}
                 | {__typename: 'FacebookVideoBlock'}
@@ -4216,6 +4393,7 @@ type FullBlock_TeaserListBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4345,6 +4523,7 @@ export type FullBlockFragment =
   | FullBlock_BildwurfAdBlock_Fragment
   | FullBlock_BreakBlock_Fragment
   | FullBlock_CommentBlock_Fragment
+  | FullBlock_CrowdfundingBlock_Fragment
   | FullBlock_EventBlock_Fragment
   | FullBlock_FacebookPostBlock_Fragment
   | FullBlock_FacebookVideoBlock_Fragment
@@ -4430,6 +4609,25 @@ type ImportBlock_CommentBlock_Fragment = {
     comments?: Array<string> | null
   }
   comments: Array<{__typename?: 'Comment'; id: string}>
+}
+
+type ImportBlock_CrowdfundingBlock_Fragment = {
+  __typename: 'CrowdfundingBlock'
+  blockStyle?: string | null
+  type: BlockType
+  crowdfunding?: {
+    __typename?: 'CrowdfundingWithActiveGoal'
+    id: string
+    name: string
+    activeCrowdfundingGoal?: {
+      __typename?: 'CrowdfundingGoalWithProgress'
+      id: string
+      title: string
+      description?: string | null
+      amount: number
+      progress?: number | null
+    } | null
+  } | null
 }
 
 type ImportBlock_EventBlock_Fragment = {
@@ -4612,6 +4810,7 @@ type ImportBlock_TeaserGridBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4734,6 +4933,7 @@ type ImportBlock_TeaserGridFlexBlock_Fragment = {
                 | {__typename: 'BildwurfAdBlock'}
                 | {__typename: 'BreakBlock'}
                 | {__typename: 'CommentBlock'}
+                | {__typename: 'CrowdfundingBlock'}
                 | {__typename: 'EventBlock'}
                 | {__typename: 'FacebookPostBlock'}
                 | {__typename: 'FacebookVideoBlock'}
@@ -4855,6 +5055,7 @@ type ImportBlock_TeaserListBlock_Fragment = {
               | {__typename: 'BildwurfAdBlock'}
               | {__typename: 'BreakBlock'}
               | {__typename: 'CommentBlock'}
+              | {__typename: 'CrowdfundingBlock'}
               | {__typename: 'EventBlock'}
               | {__typename: 'FacebookPostBlock'}
               | {__typename: 'FacebookVideoBlock'}
@@ -4984,6 +5185,7 @@ export type ImportBlockFragment =
   | ImportBlock_BildwurfAdBlock_Fragment
   | ImportBlock_BreakBlock_Fragment
   | ImportBlock_CommentBlock_Fragment
+  | ImportBlock_CrowdfundingBlock_Fragment
   | ImportBlock_EventBlock_Fragment
   | ImportBlock_FacebookPostBlock_Fragment
   | ImportBlock_FacebookVideoBlock_Fragment
@@ -5159,6 +5361,24 @@ export type ArticleQuery = {
             comments: Array<{__typename?: 'Comment'; id: string}>
           }
         | {
+            __typename: 'CrowdfundingBlock'
+            blockStyle?: string | null
+            type: BlockType
+            crowdfunding?: {
+              __typename?: 'CrowdfundingWithActiveGoal'
+              id: string
+              name: string
+              activeCrowdfundingGoal?: {
+                __typename?: 'CrowdfundingGoalWithProgress'
+                id: string
+                title: string
+                description?: string | null
+                amount: number
+                progress?: number | null
+              } | null
+            } | null
+          }
+        | {
             __typename: 'EventBlock'
             type: BlockType
             blockStyle?: string | null
@@ -5319,6 +5539,7 @@ export type ArticleQuery = {
                         | {__typename: 'BildwurfAdBlock'}
                         | {__typename: 'BreakBlock'}
                         | {__typename: 'CommentBlock'}
+                        | {__typename: 'CrowdfundingBlock'}
                         | {__typename: 'EventBlock'}
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
@@ -5440,6 +5661,7 @@ export type ArticleQuery = {
                           | {__typename: 'BildwurfAdBlock'}
                           | {__typename: 'BreakBlock'}
                           | {__typename: 'CommentBlock'}
+                          | {__typename: 'CrowdfundingBlock'}
                           | {__typename: 'EventBlock'}
                           | {__typename: 'FacebookPostBlock'}
                           | {__typename: 'FacebookVideoBlock'}
@@ -5560,6 +5782,7 @@ export type ArticleQuery = {
                         | {__typename: 'BildwurfAdBlock'}
                         | {__typename: 'BreakBlock'}
                         | {__typename: 'CommentBlock'}
+                        | {__typename: 'CrowdfundingBlock'}
                         | {__typename: 'EventBlock'}
                         | {__typename: 'FacebookPostBlock'}
                         | {__typename: 'FacebookVideoBlock'}
@@ -5810,6 +6033,21 @@ export const BlockWithoutTeaser = gql`
       type
       poll {
         ...FullPoll
+      }
+    }
+    ... on CrowdfundingBlock {
+      blockStyle
+      type
+      crowdfunding {
+        id
+        name
+        activeCrowdfundingGoal {
+          id
+          title
+          description
+          amount
+          progress
+        }
       }
     }
     ... on ListicleBlock {
@@ -6214,6 +6452,7 @@ const result: PossibleTypesResultData = {
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
+      'CrowdfundingBlock',
       'EventBlock',
       'FacebookPostBlock',
       'FacebookVideoBlock',
@@ -6244,6 +6483,7 @@ const result: PossibleTypesResultData = {
       'BildwurfAdBlock',
       'BreakBlock',
       'CommentBlock',
+      'CrowdfundingBlock',
       'EventBlock',
       'FacebookPostBlock',
       'FacebookVideoBlock',
@@ -6287,6 +6527,7 @@ const result: PossibleTypesResultData = {
       'QuoteBlock'
     ],
     HasOptionalArticle: ['ArticleTeaser'],
+    HasOptionalCrowdfunding: ['CrowdfundingBlock'],
     HasOptionalEvent: ['EventTeaser'],
     HasOptionalPage: ['PageTeaser'],
     HasOptionalPeerLc: ['Article', 'PeerArticle'],
