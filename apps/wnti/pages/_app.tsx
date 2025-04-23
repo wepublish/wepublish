@@ -27,11 +27,13 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import deOverriden from '../locales/deOverriden.json'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
@@ -42,8 +44,6 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
-import deOverriden from '../locales/deOverriden.json'
-import {mergeDeepRight} from 'ramda'
 
 setDefaultOptions({
   locale: de

@@ -32,6 +32,7 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {TsriArticleDate} from '../src/components/tsri-article-date'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
 import {TsriBanner} from '../src/components/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
@@ -43,7 +44,6 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
-import {TsriArticleDate} from '../src/components/tsri-article-date'
 
 setDefaultOptions({
   locale: de
