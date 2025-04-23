@@ -43,7 +43,7 @@ WHERE "publishedAt" IS NULL;
 UPDATE "articles" a
 SET "publishedAt" = ar."publishedAt"
 FROM "articles.revisions" ar
-WHERE ar.id = a."publishedId";
+WHERE ar.id = a."publishedId" AND ar."publishedAt" NOT NULL;
 
 -- Fix duplicate slugs
 WITH DuplicateSlugs AS (
@@ -159,7 +159,7 @@ WHERE "publishedAt" IS NULL;
 UPDATE "pages" p
 SET "publishedAt" = pr."publishedAt"
 FROM "pages.revisions" pr
-WHERE pr.id = p."publishedId";
+WHERE pr.id = p."publishedId" AND pr."publishedAt" NOT NULL;
 
 -- Fix duplicate slugs
 WITH DuplicateSlugs AS (
