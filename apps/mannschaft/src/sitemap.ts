@@ -4,9 +4,9 @@ import {
   ArticleListQueryVariables,
   ArticleSort,
   getV1ApiClient,
+  PageListDocument,
   PageListQueryVariables,
   PageSort,
-  PageListDocument,
   SortOrder
 } from '@wepublish/website/api'
 import {NextApiRequest} from 'next'
