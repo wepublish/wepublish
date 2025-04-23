@@ -5,7 +5,6 @@ import {
   ArticleSort,
   getV1ApiClient,
   PageListDocument,
-  PageListDocument,
   PageListQueryVariables,
   PageSort,
   SortOrder
