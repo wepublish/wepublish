@@ -6,7 +6,7 @@ import {
   getV1ApiClient,
   PageListQueryVariables,
   PageSort,
-  SitemapPageListDocument,
+  PageListDocument,
   SortOrder
 } from '@wepublish/website/api'
 import {NextApiRequest} from 'next'
@@ -36,7 +36,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
       } as ArticleListQueryVariables
     }),
     client.query({
-      query: SitemapPageListDocument,
+      query: PageListDocument,
       variables: {
         take: 100,
         sort: PageSort.PublishedAt,

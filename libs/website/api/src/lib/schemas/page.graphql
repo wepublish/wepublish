@@ -80,27 +80,3 @@ query PageList(
     totalCount
   }
 }
-
-query SitemapPageList(
-  $filter: PageFilter
-  $cursor: String
-  $take: Int
-  $skip: Int
-  $order: SortOrder
-  $sort: PageSort
-) {
-  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
-    nodes {
-      url
-    }
-
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-
-    totalCount
-  }
-}
