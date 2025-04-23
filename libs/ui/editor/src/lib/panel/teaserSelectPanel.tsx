@@ -186,13 +186,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const listVariables = {
     filter: filter || undefined,
     take: 20,
-    sort: ArticleSort.PublishedAt,
+    sort: ArticleSort.ModifiedAt,
     order: SortOrder.Descending
   } as ArticleListQueryVariables
   const pageListVariables = {
     filter: filter as PageFilter,
     take: 20,
-    sort: PageSort.PublishedAt,
+    sort: PageSort.ModifiedAt,
     order: SortOrder.Descending
   } as PageListQueryVariables
 
