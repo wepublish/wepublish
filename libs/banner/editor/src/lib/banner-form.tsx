@@ -1,4 +1,4 @@
-import React, {SyntheticEvent} from 'react'
+import React from 'react'
 import {useTagListQuery} from '@wepublish/editor/api'
 import {
   CreateBannerActionInput,
@@ -49,7 +49,7 @@ export const BannerForm = (props: BannerFormProps) => {
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
   const [tags, setTags] = useState<Tag[]>([])
 
-  const handleChange = (value: any, event: React.SyntheticEvent) => {
+  const handleChange = (value: unknown, event: React.SyntheticEvent) => {
     const name = (event.target as HTMLInputElement).name
     props.onChange({...props.banner, [name]: value})
   }
@@ -179,7 +179,7 @@ export const BannerForm = (props: BannerFormProps) => {
             virtualized
             placeholder={t('navigation.panels.selectPage')}
             value={props.banner.showOnPages?.map(p => p.id) || []}
-            data={pages.map(page => ({value: page.id!, label: page.latest.title}))}
+            data={pages.map(page => ({value: page.id, label: page.latest.title}))}
             onChange={ids => {
               if (!ids) return
               props.onChange({
@@ -199,7 +199,7 @@ export const BannerForm = (props: BannerFormProps) => {
             virtualized
             placeholder={t('navigation.panels.selectTag')}
             value={props.banner.showOnTags?.map(t => t.id) || []}
-            data={tags.map(tag => ({value: tag.id!, label: tag.tag}))}
+            data={tags.map(tag => ({value: tag.id, label: tag.tag}))}
             onChange={ids => {
               if (!ids) return
               props.onChange({
