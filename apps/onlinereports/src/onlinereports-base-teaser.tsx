@@ -47,7 +47,8 @@ const hasSpecialTags = (teaser: BuilderTeaserProps['teaser']) => {
     return false
   }
   const tags = selectTeaserTags(teaser).map(({tag}) => tag)
-  return tags.includes('Anzeige')
+  const specialTags = ['Anzeige', 'Publireportage']
+  return tags.some(tag => tag && specialTags.includes(tag))
 }
 
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
