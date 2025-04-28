@@ -1,10 +1,10 @@
 import {UserSession, User} from '@wepublish/website/api'
-import {createContext, Dispatch, useContext} from 'react'
+import {createContext, useContext} from 'react'
 
 export const AuthTokenStorageKey = 'auth.token'
 
 export const SessionTokenContext = createContext<
-  [User | null, boolean, Dispatch<UserSession | null>] | null
+  [User | null, boolean, (value: UserSession | null) => Promise<void>] | null
 >(null)
 
 const useSessionContext = () => {

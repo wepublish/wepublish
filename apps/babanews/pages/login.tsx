@@ -7,6 +7,7 @@ import {
   useUser
 } from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
+import {getSessionTokenProps} from '@wepublish/utils/website'
 import {getV1ApiClient, LoginWithJwtDocument, UserSession} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
@@ -83,14 +84,8 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       sameSite: 'strict'
     })
 
-    return {
-      props: {
-        sessionToken: data.data.createSessionWithJWT
-      }
-    }
+    return await getSessionTokenProps(ctx)
   }
 
-  return {
-    props: {}
-  }
+  return {}
 }
