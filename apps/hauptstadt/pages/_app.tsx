@@ -4,10 +4,10 @@ import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
+  AsyncSessionProvider,
   authLink,
   NextWepublishLink,
-  RoutedAdminBar,
-  SessionProvider
+  RoutedAdminBar
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -107,7 +107,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+      <AsyncSessionProvider sessionToken={pageProps.sessionToken ?? null}>
         <WebsiteProvider>
           <WebsiteBuilderProvider
             Head={Head}
@@ -166,7 +166,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
-      </SessionProvider>
+      </AsyncSessionProvider>
     </AppCacheProvider>
   )
 }

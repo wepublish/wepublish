@@ -5,6 +5,7 @@ import {
   useUser
 } from '@wepublish/authentication/website'
 import {PageContainer} from '@wepublish/page/website'
+import {getSessionTokenProps} from '@wepublish/utils/website'
 import {addClientCacheToV1Props, PageDocument, UserSession} from '@wepublish/website/api'
 import {getV1ApiClient, LoginWithJwtDocument} from '@wepublish/website/api'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
@@ -65,14 +66,11 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       req: ctx.req,
       res: ctx.res,
       expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
+      sameSite: 'strict',
+      httpOnly: true
     })
 
-    return {
-      props: {
-        sessionToken: data.data.createSessionWithJWT
-      }
-    }
+    return await getSessionTokenProps(ctx)
   }
 
   await Promise.all([
