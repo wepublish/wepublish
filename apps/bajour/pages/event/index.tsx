@@ -14,6 +14,7 @@ import {
   useEventListQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Container} from '../../src/components/layout/container'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -81,7 +82,7 @@ export default function EventList() {
   }, [data?.events?.totalCount])
 
   return (
-    <>
+    <Container>
       <Filter>
         <DateTimePicker
           label="Von"
@@ -149,7 +150,7 @@ export default function EventList() {
           }
         />
       )}
-    </>
+    </Container>
   )
 }
 
