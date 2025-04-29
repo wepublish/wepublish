@@ -54,20 +54,6 @@ export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsCo
         />
         <HelpText>Enter tags separated by commas. Leave empty for no tag filtering.</HelpText>
       </FormGroup>
-
-      {/*<FlexboxGrid>*/}
-      {/*  <FlexboxGrid.Item colspan={12} style={{paddingLeft: 8}}>*/}
-      {/*    <FormGroup>*/}
-      {/*      <Form.ControlLabel>Skip</Form.ControlLabel>*/}
-      {/*      <InputNumber*/}
-      {/*        min={0}*/}
-      {/*        value={config.skip as number}*/}
-      {/*        onChange={value => handleChange('skip', +value)}*/}
-      {/*        style={{width: '100%'}}*/}
-      {/*      />*/}
-      {/*    </FormGroup>*/}
-      {/*  </FlexboxGrid.Item>*/}
-      {/*</FlexboxGrid>*/}
     </ConfigContainer>
   )
 }

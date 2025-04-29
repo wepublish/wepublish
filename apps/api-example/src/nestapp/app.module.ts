@@ -8,6 +8,7 @@ import {
   AuthenticationModule,
   BexioPaymentProvider,
   BannerApiModule,
+  CrowdfundingApiModule,
   ConsentModule,
   DashboardModule,
   EventModule,
@@ -374,6 +375,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
     }),
     BannerApiModule,
     VersionInformationModule,
+    CrowdfundingApiModule,
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
       imports: [ConfigModule],

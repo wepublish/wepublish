@@ -11,6 +11,7 @@ import {
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
+  FullCrowdfundingWithActiveGoalFragment,
   FullEventFragment,
   FullImageFragment,
   FullTeaserFragment,
@@ -68,6 +69,10 @@ export type SubscribeBlockValue = BaseBlockValue
 
 export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined
+}
+
+export interface CrowdfundingBlockValue extends BaseBlockValue {
+  crowdfunding: Partial<FullCrowdfundingWithActiveGoalFragment> | null | undefined
 }
 
 export interface EventBlockValue extends BaseBlockValue {
@@ -331,6 +336,10 @@ export type TeaserSlotsBlockListValue = BlockListValue<
 export type HTMLBlockListValue = BlockListValue<EditorBlockType.Html, HTMLBlockValue>
 
 export type PollBlockListValue = BlockListValue<EditorBlockType.Poll, PollBlockValue>
+export type CrowdfundingBlockListValue = BlockListValue<
+  EditorBlockType.Crowdfunding,
+  CrowdfundingBlockValue
+>
 export type SubscribeBlockListValue = BlockListValue<EditorBlockType.Subscribe, SubscribeBlockValue>
 
 export type CommentBlockListValue = BlockListValue<EditorBlockType.Comment, CommentBlockValue>
@@ -353,6 +362,7 @@ export type BlockValue =
   | HTMLBlockListValue
   | SubscribeBlockListValue
   | PollBlockListValue
+  | CrowdfundingBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
   | TeaserListBlockListValue
@@ -375,6 +385,13 @@ export function mapBlockValueToBlockInput(block: BlockValue): BlockContentInput 
       return {
         poll: {
           pollId: block.value?.poll?.id,
+          blockStyle: block.value.blockStyle
+        }
+      }
+    case EditorBlockType.Crowdfunding:
+      return {
+        crowdfunding: {
+          crowdfundingId: block.value?.crowdfunding?.id,
           blockStyle: block.value.blockStyle
         }
       }
@@ -1036,6 +1053,16 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           blockStyle: block.blockStyle,
           poll: block.poll
+        }
+      }
+
+    case 'CrowdfundingBlock':
+      return {
+        key,
+        type: EditorBlockType.Crowdfunding,
+        value: {
+          blockStyle: block.blockStyle,
+          crowdfunding: block.crowdfunding
         }
       }
 

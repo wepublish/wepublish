@@ -11,6 +11,7 @@ import {
   MdFormatColorText,
   MdFormatQuote,
   MdIntegrationInstructions,
+  MdMoney,
   MdPhoto,
   MdPhotoLibrary,
   MdQueryStats,
@@ -45,6 +46,7 @@ import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
 import {SubscribeBlock} from './subscribeBlock'
 import {TeaserSlotsBlock} from './teaserSlotsBlock'
+import {CrowdfundingBlock} from './CrowdfundingBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
@@ -253,6 +255,13 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {poll: null, blockStyle: undefined},
     label: 'blocks.poll.label',
     icon: <MdQueryStats />
+  },
+
+  [EditorBlockType.Crowdfunding]: {
+    field: props => <CrowdfundingBlock {...props} />,
+    defaultValue: {crowdfunding: null, blockStyle: undefined},
+    label: 'blocks.crowdfunding.label',
+    icon: <MdMoney />
   },
 
   [EditorBlockType.Comment]: {

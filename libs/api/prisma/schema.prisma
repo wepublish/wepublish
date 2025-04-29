@@ -559,6 +559,8 @@ model MemberPlan {
   subscription      Subscription[]
   subscriptionFlows SubscriptionFlow[]
 
+  crowdfundings Crowdfunding[]
+
   @@index([name])
   @@map("member.plans")
 }
@@ -1268,6 +1270,7 @@ enum BlockType {
   TeaserSlots    @map("teaserSlots")
   HTML           @map("html")
   Subscribe      @map("subscribe")
+  Crowdfunding   @map("crowdfunding")
   Poll           @map("poll")
   Comment        @map("comment")
   Event          @map("event")
@@ -1334,4 +1337,31 @@ enum BannerActionRole {
   PRIMARY @map("primary")
   CANCEL  @map("cancel")
   OTHER   @map("other")
+}
+
+model Crowdfunding {
+  id                      String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt               DateTime           @default(now())
+  modifiedAt              DateTime           @updatedAt
+  name                    String
+  countSubscriptionsFrom  DateTime?
+  countSubscriptionsUntil DateTime?
+  additionalRevenue       Int?
+  memberPlans             MemberPlan[]
+  goals                   CrowdfundingGoal[]
+
+  @@map("crowdfundings")
+}
+
+model CrowdfundingGoal {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime     @default(now())
+  modifiedAt     DateTime     @updatedAt
+  title          String
+  description    String?
+  amount         Int
+  Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
+  crowdfundingId String       @db.Uuid
+
+  @@map("crowdfunding_goals")
 }

@@ -57,7 +57,8 @@ import {
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
-  BuilderYouTubeVideoBlockProps
+  BuilderYouTubeVideoBlockProps,
+  BuilderCrowdfundingBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -208,6 +209,7 @@ export type WebsiteBuilderProps = {
     IFrame: ComponentType<BuilderIFrameBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
+    Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
@@ -332,6 +334,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     IFrame: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
+    Crowdfunding: NoComponent,
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,

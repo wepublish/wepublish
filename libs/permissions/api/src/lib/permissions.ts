@@ -116,10 +116,20 @@ import {
   CanDeleteBlockStyle,
   Permission,
   CanGetSharedArticle,
-  CanGetSharedArticles
+  CanGetSharedArticles,
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding
 } from '@wepublish/permissions'
 
 export const AllPermissions: Permission[] = [
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding,
   CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
@@ -238,6 +248,11 @@ export const AllPermissions: Permission[] = [
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding,
   CanGetComments,
   CanUpdateComments,
   CanTakeActionOnComment,

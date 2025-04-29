@@ -1,9 +1,6 @@
-import styled from '@emotion/styled'
-import {AuthTokenStorageKey, UserFormWrapper} from '@wepublish/authentication/website'
-import {SubscribeWrapper} from '@wepublish/membership/website'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {SubscribePage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -20,35 +17,8 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-const MitmachenPage = styled(PageContainer)`
-  ${SubscribeWrapper} {
-    grid-row: 2;
-
-    ${({theme}) => theme.breakpoints.up('md')} {
-      grid-column: 2/12;
-    }
-  }
-
-  ${UserFormWrapper} {
-    ${({theme}) => theme.breakpoints.up('md')} {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-  }
-`
-
-export const MitmachenInner = () => (
-  <SubscribePage
-    fields={['firstName']}
-    filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
-  />
-)
-
 export default function Mitmachen() {
-  return (
-    <MitmachenPage slug={'mitmachen'}>
-      <MitmachenInner />
-    </MitmachenPage>
-  )
+  return <PageContainer slug={'mitmachen'} />
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
