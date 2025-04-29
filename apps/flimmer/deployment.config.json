@@ -2,7 +2,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "custom_domain": "https://flimmer.wepublish.media",
+      "custom_domain": "https://flimmer.media",
       "env": {},
       "secret_env": []
     },

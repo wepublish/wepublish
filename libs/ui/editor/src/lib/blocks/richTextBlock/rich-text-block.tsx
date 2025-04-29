@@ -30,7 +30,7 @@ import {EditorSubMenuButton, FormatButton, FormatIconButton} from './toolbar/but
 import {LinkMenu} from './toolbar/linkMenu'
 import {TableMenu} from './toolbar/tableMenu'
 import {pipe} from 'ramda'
-import {TextFormat, BlockFormat, InlineFormat} from '@wepublish/richtext'
+import {TextFormat, BlockFormat, InlineFormat, toPlaintext} from '@wepublish/richtext'
 import {Hotkeys} from 'slate-dom'
 
 const CharCount = styled.p`
@@ -77,6 +77,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
   const [charCount, setCharCount] = useState(0)
+
+  const editorKey = useMemo(() => toPlaintext(value), [value])
 
   useEffect(() => {
     setCharCount(WepublishEditor.calculateEditorCharCount(editor))
@@ -134,6 +136,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
   return (
     <Slate
+      key={editorKey}
       editor={editor}
       initialValue={value?.length ? value : WepublishEditor.createDefaultValue()}
       onChange={newValue => {

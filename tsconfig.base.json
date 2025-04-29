@@ -30,6 +30,8 @@
       "@wepublish/banner/api": ["libs/banner/api/src/index.ts"],
       "@wepublish/banner/editor": ["libs/banner/editor/src/index.ts"],
       "@wepublish/banner/website": ["libs/banner/website/src/index.ts"],
+      "@wepublish/crowdfunding/api": ["libs/crowdfunding/api/src/index.ts"],
+      "@wepublish/crowdfunding/editor": ["libs/crowdfunding/editor/src/index.ts"],
       "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/comments/api": ["libs/comments/api/src/index.ts"],

@@ -18,6 +18,16 @@ const Faro = localFont({
   ]
 })
 
+const Signifier = localFont({
+  src: [
+    {
+      path: './fonts/SignifierMedium-Italic.woff2',
+      weight: '400',
+      style: 'italic'
+    }
+  ]
+})
+
 const {
   palette: {augmentColor}
 } = WePTheme
@@ -92,6 +102,62 @@ const theme = createTheme(WePTheme, {
         outlined: {
           color: '#F2BDB8',
           borderColor: '#F2BDB8'
+        },
+        textSecondary: {
+          color: '#F2BDB8'
+        }
+      }
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        'em, i': {
+          fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+          fontWeight: '400',
+          fontStyle: 'italic'
+        },
+        'em[style*="font-style: normal"]': {
+          fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+          fontWeight: '400',
+          fontStyle: 'italic !important'
+        },
+        blockquote: {
+          fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+          fontWeight: '400',
+          fontStyle: 'italic'
+        },
+        li: {
+          fontSize: '1.25rem'
+        }
+      }
+    },
+    MuiQuoteBlock: {
+      styleOverrides: {
+        root: {
+          '& p': {
+            fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+            fontWeight: '400',
+            fontStyle: 'italic'
+          }
+        }
+      }
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          '&.MuiTypography-root': {
+            '&:is(blockquote, blockquote *)': {
+              fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+              fontWeight: '400',
+              fontStyle: 'italic'
+            }
+          }
+        },
+        h4: {
+          '&:is(blockquote, blockquote *)': {
+            fontFamily: [Signifier.style.fontFamily, 'serif'].join(',') + ' !important',
+            fontWeight: '400',
+            fontStyle: 'italic'
+          }
         }
       }
     }

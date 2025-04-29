@@ -427,6 +427,9 @@ export class ImportPeerArticleService {
             } as TeaserListBlockInput
           }
 
+          case 'CrowdfundingBlock':
+            return {}
+
           case 'UnknownBlock':
           case 'TitleBlock':
           case 'TeaserGridFlexBlock':

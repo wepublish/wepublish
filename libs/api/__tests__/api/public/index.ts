@@ -304,11 +304,12 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
+  crowdfunding?: InputMaybe<CrowdfundingBlockInput>;
   embed?: InputMaybe<IFrameBlockInput>;
   event?: InputMaybe<EventBlockInput>;
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
@@ -348,6 +349,7 @@ export type BlockStyle = {
 export enum BlockType {
   BildwurfAd = 'BildwurfAd',
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   FacebookPost = 'FacebookPost',
@@ -586,6 +588,96 @@ export type CreateBannerInput = {
   title: Scalars['String'];
 };
 
+export type CreateCrowdfundingGoalInput = {
+  amount: Scalars['Float'];
+  description?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type CreateCrowdfundingInput = {
+  additionalRevenue?: InputMaybe<Scalars['Float']>;
+  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
+  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
+  name: Scalars['String'];
+};
+
+export type CreateCrowdfundingMemberPlan = {
+  id: Scalars['ID'];
+};
+
+export type Crowdfunding = {
+  __typename?: 'Crowdfunding';
+  additionalRevenue?: Maybe<Scalars['Float']>;
+  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
+  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
+  goals: Array<CrowdfundingGoal>;
+  id: Scalars['ID'];
+  memberPlans: Array<CrowdfundingMemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  revenue?: Maybe<Scalars['Float']>;
+};
+
+export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
+  __typename?: 'CrowdfundingBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
+  crowdfundingId?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type CrowdfundingBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  crowdfundingId?: InputMaybe<Scalars['String']>;
+};
+
+export type CrowdfundingGoal = {
+  __typename?: 'CrowdfundingGoal';
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  modifiedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
+export type CrowdfundingGoalWithProgress = {
+  __typename?: 'CrowdfundingGoalWithProgress';
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  modifiedAt: Scalars['DateTime'];
+  progress?: Maybe<Scalars['Float']>;
+  title: Scalars['String'];
+};
+
+export type CrowdfundingMemberPlan = {
+  __typename?: 'CrowdfundingMemberPlan';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export type CrowdfundingWithActiveGoal = {
+  __typename?: 'CrowdfundingWithActiveGoal';
+  activeCrowdfundingGoal?: Maybe<CrowdfundingGoalWithProgress>;
+  additionalRevenue?: Maybe<Scalars['Float']>;
+  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
+  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
+  goals: Array<CrowdfundingGoal>;
+  id: Scalars['ID'];
+  memberPlans: Array<CrowdfundingMemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  revenue?: Maybe<Scalars['Float']>;
+};
+
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -652,6 +744,7 @@ export type DeletePollVotesResult = {
 
 export enum EditorBlockType {
   Comment = 'Comment',
+  Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
   Html = 'HTML',
@@ -932,6 +1025,11 @@ export type HasImage = {
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
   articleID?: Maybe<Scalars['String']>;
+};
+
+export type HasOptionalCrowdfunding = {
+  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
+  crowdfundingId?: Maybe<Scalars['String']>;
 };
 
 export type HasOptionalEvent = {
@@ -1303,6 +1401,8 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
+  /** Create a new Crowdfunding */
+  createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
   /** Creates a new navigation. */
@@ -1342,6 +1442,7 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
+  deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Deletes an existing navigation. */
@@ -1414,6 +1515,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
+  /** Update a single crowdfunding */
+  updateCrowdfunding: CrowdfundingWithActiveGoal;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing navigation. */
@@ -1500,6 +1603,11 @@ export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
   slug: Scalars['String'];
+};
+
+
+export type MutationCreateCrowdfundingArgs = {
+  input: CreateCrowdfundingInput;
 };
 
 
@@ -1635,6 +1743,11 @@ export type MutationDeleteBlockStyleArgs = {
 
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteCrowdfundingArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1832,6 +1945,11 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateCrowdfundingArgs = {
+  input: UpdateCrowdfundingInput;
 };
 
 
@@ -2440,6 +2558,10 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Get a single crowdfunding by id with calculated progress */
+  crowdfunding: CrowdfundingWithActiveGoal;
+  /** Returns a paginated list of crowdfundings. */
+  crowdfundings: Array<Crowdfunding>;
   /** Returns a event by id. */
   event: Event;
   /**
@@ -2663,6 +2785,11 @@ export type QueryConsentArgs = {
 
 export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>;
+};
+
+
+export type QueryCrowdfundingArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2958,7 +3085,8 @@ export enum SettingName {
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
-  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
+  ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED'
 }
 
 export type SettingRestriction = {
@@ -3339,6 +3467,16 @@ export type UpdateBannerInput = {
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
+};
+
+export type UpdateCrowdfundingInput = {
+  additionalRevenue?: InputMaybe<Scalars['Float']>;
+  countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
+  countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
+  id: Scalars['ID'];
+  memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
+  name: Scalars['String'];
 };
 
 export type UploadImageInput = {

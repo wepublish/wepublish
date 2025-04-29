@@ -121,16 +121,23 @@ fragment BlockWithoutTeaser on BlockContent {
         }
     }
 
-    ... on ListicleBlock {
-        blockStyle: blockStyleName
-        items {
-            title
-            richText
-            image {
-                ...FullImage
-            }
-        }
+  ... on CrowdfundingBlock {
+    blockStyle: blockStyleName
+    crowdfunding {
+      ...CrowdfundingWithActiveGoal
     }
+  }
+
+  ... on ListicleBlock {
+    blockStyle: blockStyleName
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
 
     ... on BreakBlock {
         blockStyle: blockStyleName
