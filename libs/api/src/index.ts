@@ -10,7 +10,6 @@ export * from './lib/graphql/permissions'
 
 export * from './lib/db/user'
 export * from './lib/db/userRole'
-export * from './lib/db/author'
 export * from './lib/db/image'
 export * from './lib/db/comment'
 export * from './lib/db/common'

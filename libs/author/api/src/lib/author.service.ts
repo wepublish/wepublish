@@ -7,13 +7,13 @@ import {
 } from '@wepublish/utils/api'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {
+  AuthorFilter,
+  AuthorSort,
   CreateAuthorInput,
   GetAuthorsArgs,
-  UpdateAuthorInput,
-  AuthorFilter,
-  AuthorSort
+  UpdateAuthorInput
 } from './author.model'
-import {AuthorDataloader} from './author.dataloader'
+import {AuthorDataloader} from './author-dataloader'
 
 const createAuthorOrder = (
   field: AuthorSort,
@@ -88,7 +88,7 @@ export class AuthorService {
 
   @PrimeDataLoader(AuthorDataloader)
   async getAuthorBySlug(slug: string) {
-    return this.prisma.author.findUnique({
+    return this.prisma.author.findFirst({
       where: {
         slug
       },
@@ -148,7 +148,7 @@ export class AuthorService {
 
     return this.prisma.author.create({
       data: {
-        ...(input as Prisma.AuthorCreateInput),
+        ...(input as unknown as Prisma.AuthorCreateInput),
         tags: {
           create: tagIds.map(tagId => ({tagId}))
         },
@@ -167,7 +167,7 @@ export class AuthorService {
     return this.prisma.author.update({
       where: {id},
       data: {
-        ...(input as Prisma.AuthorUpdateInput),
+        ...(input as unknown as Prisma.AuthorUpdateInput),
         ...(tagIds && {
           tags: {
             connectOrCreate: tagIds.map(tagId => ({

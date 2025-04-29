@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {AuthorService} from './author.service'
 import {PrismaClient} from '@prisma/client'
-import {AuthorDataloader} from './author.dataloader'
+import {AuthorDataloader} from './author-dataloader'
 import {SortOrder} from '@wepublish/utils/api'
 import {AuthorSort} from './author.model'
 

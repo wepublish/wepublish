@@ -7,7 +7,7 @@ import request from 'supertest'
 import {expect} from '@storybook/jest'
 import {AuthorService} from './author.service'
 import {AuthorResolver} from './author.resolver'
-import {AuthorDataloader} from './author.dataloader'
+import {AuthorDataloader} from './author-dataloader'
 
 const authorQueryById = `
   query GetAuthorById($id: ID!) {

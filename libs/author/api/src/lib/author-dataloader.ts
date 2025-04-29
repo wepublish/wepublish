@@ -1,8 +1,8 @@
-import {createOptionalsArray, DataloaderService} from '@wepublish/utils/api'
+import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
 import {Author} from './author.model'
 import {PrismaClient} from '@prisma/client'
 
-export class AuthorDataloader extends DataloaderService<Author> {
+export class AuthorDataloader extends DataLoaderService<Author> {
   constructor(protected readonly prisma: PrismaClient) {
     super()
   }
@@ -12,7 +12,7 @@ export class AuthorDataloader extends DataloaderService<Author> {
       ids,
       (await this.prisma.author.findMany({
         where: {id: {in: ids}}
-      })) as Author[],
+      })) as unknown as Author[],
       'id'
     )
   }

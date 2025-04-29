@@ -1,4 +1,4 @@
-import {Resolver, Query, Mutation, Args} from '@nestjs/graphql'
+import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {AuthorService} from './author.service'
 import {
   Author,
@@ -9,14 +9,10 @@ import {
   PaginatedAuthors,
   UpdateAuthorArgs
 } from './author.model'
-import {
-  CanCreateAuthor,
-  CanDeleteAuthor,
-  CanGetAuthor,
-  Permissions
-} from '@wepublish/permissions/api'
-import {AuthorDataloader} from './author.dataloader'
+import {Permissions} from '@wepublish/permissions/api'
+import {AuthorDataloader} from './author-dataloader'
 import {UserInputError} from '@nestjs/apollo'
+import {CanCreateAuthor, CanDeleteAuthor, CanGetAuthor} from '@wepublish/permissions'
 
 @Resolver(() => Author)
 export class AuthorResolver {

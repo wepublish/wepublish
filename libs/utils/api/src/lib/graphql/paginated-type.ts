@@ -41,7 +41,7 @@ export function PaginatedType<T>(classRef: Type<T>): Type<PaginatedObjectType<T>
 @ArgsType()
 export class PaginatedArgsType {
   @Field(type => Int, {nullable: true, defaultValue: 10})
-  take?: number
+  take: 10
 
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number

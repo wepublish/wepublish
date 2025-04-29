@@ -146,7 +146,15 @@ input ArticleTeaserInput {
 }
 
 type Author {
+  bio: RichText
+  createdAt: DateTime!
   id: String!
+  imageID: String
+  jobTitle: String
+  links: [AuthorsLink!]
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
 }
 
 type AuthorCreatedAction implements BaseAction & HasAuthor {
@@ -154,6 +162,30 @@ type AuthorCreatedAction implements BaseAction & HasAuthor {
   author: Author!
   authorId: String!
   date: DateTime!
+}
+
+input AuthorFilter {
+  name: String
+  tagIds: [String!]
+}
+
+enum AuthorSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type AuthorsLink {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  title: String!
+  url: String!
+}
+
+input AuthorsLinksInput {
+  title: String!
+  url: String!
 }
 
 type AvailablePaymentMethod {
@@ -384,6 +416,16 @@ input ConsentFilter {
   slug: String
 }
 
+input CreateAuthorInput {
+  bio: RichText
+  imageID: String
+  jobTitle: String
+  links: [AuthorsLinksInput!]!
+  name: String!
+  slug: String!
+  tagIds: [String!]!
+}
+
 input CreateBannerActionInput {
   label: String!
   role: BannerActionRole!
@@ -570,6 +612,7 @@ enum EditorBlockType {
   TeaserGrid6
   TeaserGridFlex
   TeaserList
+  TeaserSlots
   Title
 }
 
@@ -1063,6 +1106,7 @@ type MemberPlan {
 type Mutation {
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createAuthor(author: CreateAuthorInput!): Author!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -1094,6 +1138,7 @@ type Mutation {
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
+  deleteAuthor(id: ID!): Author!
   deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
@@ -1160,6 +1205,7 @@ type Mutation {
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateAuthor(author: UpdateAuthorInput!): Author!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -1326,6 +1372,12 @@ input PageTeaserInput {
 
 type PaginatedArticles {
   nodes: [Article!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedAuthors {
+  nodes: [Author!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -1556,6 +1608,9 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  getAuthorBySlug(slug: String!): Author!
+  getAuthors(cursorId: String, filter: AuthorFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: AuthorSort, take: Int = 10): PaginatedAuthors!
+  getAuthorsById(id: ID!): Author!
 
   """Returns an image by id."""
   getImage(id: String!): ImageV2!
@@ -1953,6 +2008,17 @@ type UnknownBlock {
   blockStyle: String
   blockStyleName: String
   type: BlockType!
+}
+
+input UpdateAuthorInput {
+  bio: RichText
+  id: String!
+  imageID: String
+  jobTitle: String
+  links: [AuthorsLinksInput!]
+  name: String
+  slug: String
+  tagIds: [String!]
 }
 
 input UpdateBannerInput {
