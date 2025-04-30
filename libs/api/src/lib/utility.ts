@@ -8,8 +8,6 @@ import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {format} from 'date-fns'
 
-export const MAX_PAYLOAD_SIZE = '1MB'
-
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
 export const FIFTEEN_MINUTES_IN_MILLISECONDS = 900000
