@@ -8,7 +8,8 @@ import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mail/api'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginLandingPageDisabled
+  ApolloServerPluginLandingPageDisabled,
+  ApolloServerPluginUsageReportingDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {setupMailProvider} from './mails'
@@ -55,6 +56,7 @@ export class WepublishServer {
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
       plugins: [
+        ApolloServerPluginUsageReportingDisabled(),
         this.opts.playground
           ? ApolloServerPluginLandingPageGraphQLPlayground()
           : ApolloServerPluginLandingPageDisabled()
