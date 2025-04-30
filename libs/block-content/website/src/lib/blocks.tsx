@@ -49,6 +49,7 @@ import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
 import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
 import {ImageContext} from '@wepublish/image/website'
+import {isTeaserSlotsBlock} from './teaser/teaser-slots-block'
 
 export const hasBlockStyle =
   (blockStyle: string) =>
@@ -86,7 +87,8 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const teaserCond = cond([
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
     [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
-    [isTeaserListBlock, block => <blocks.TeaserList {...block} />]
+    [isTeaserListBlock, block => <blocks.TeaserList {...block} />],
+    [isTeaserSlotsBlock, block => <blocks.TeaserSlots {...block} />]
   ])
 
   const imageCond = cond([

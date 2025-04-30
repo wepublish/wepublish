@@ -46,7 +46,8 @@ export const CommentList = ({
     elements: {Alert}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
-  const canReply = anonymousCanComment || hasUser
+  // const canReply = anonymousCanComment || hasUser
+  const canReply = true
 
   const showReply = getStateForEditor(openEditorsState)('add', null)
 

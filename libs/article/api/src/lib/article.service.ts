@@ -17,9 +17,9 @@ import {
 } from '@wepublish/utils/api'
 import {
   BlockContent,
+  BlockType,
   mapBlockUnionMap,
-  RichTextBlock,
-  BlockType
+  RichTextBlock
 } from '@wepublish/block-content/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
 import {toPlaintext} from '@wepublish/richtext'
@@ -720,6 +720,18 @@ const createPeerIdFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
   return {}
 }
 
+const createExcludeIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.excludeIds) {
+    return {
+      id: {
+        notIn: filter.excludeIds
+      }
+    }
+  }
+
+  return {}
+}
+
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -733,6 +745,7 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     createAuthorFilter(filter),
     createHiddenFilter(filter),
     createPeerIdFilter(filter),
+    createExcludeIdsFilter(filter),
     {
       OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
     }

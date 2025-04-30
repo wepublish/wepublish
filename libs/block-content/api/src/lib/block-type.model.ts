@@ -22,6 +22,7 @@ export enum BlockType {
   TeaserGrid = 'teaserGrid',
   TeaserGridFlex = 'teaserGridFlex',
   TeaserList = 'teaserList',
+  TeaserSlots = 'teaserSlots',
   HTML = 'html',
   Poll = 'poll',
   Crowdfunding = 'crowdfunding',
