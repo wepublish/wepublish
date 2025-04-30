@@ -5,6 +5,7 @@ import {
   getV1ApiClient,
   NavigationListDocument,
   PageDocument,
+  PageQuery,
   PeerProfileDocument
 } from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
