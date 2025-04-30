@@ -6,6 +6,7 @@ import {
   getV1ApiClient,
   NavigationListDocument,
   PageDocument,
+  PageQuery,
   PeerProfileDocument
 } from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
@@ -15,13 +16,12 @@ import {ComponentProps} from 'react'
 
 export default function PageBySlugOrId() {
   const {
-    query: {slug, id, token}
+    query: {slug, id}
   } = useRouter()
 
   const containerProps = {
     slug,
-    id,
-    token
+    id
   } as ComponentProps<typeof PageContainer>
 
   return (
@@ -38,8 +38,8 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-  await Promise.all([
-    client.query({
+  const [page] = await Promise.all([
+    client.query<PageQuery>({
       query: PageDocument,
       variables: {
         slug
@@ -57,6 +57,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !page.data?.page ? 1 : 60 // every 60 seconds
   }
 }
