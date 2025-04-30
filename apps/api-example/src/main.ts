@@ -39,6 +39,8 @@ async function bootstrap() {
     origin: true,
     credentials: true
   })
+  gatewayApp.use(json({limit: MAX_PAYLOAD_SIZE}))
+  gatewayApp.use(urlencoded({extended: true, limit: MAX_PAYLOAD_SIZE}))
   const publicExpressApp = gatewayApp.getHttpAdapter().getInstance()
 
   await runServer({
