@@ -33,12 +33,11 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderIFrameBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
-  BuilderSubscribeBlockProps,
+  BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
@@ -48,10 +47,12 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTeaserProps,
+  BuilderTeaserSlotsBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
@@ -218,6 +219,7 @@ export type WebsiteBuilderProps = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
+    TeaserSlots: ComponentType<BuilderTeaserSlotsBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -343,6 +345,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     TeaserList: NoComponent,
+    TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },
