@@ -291,7 +291,7 @@ const TagList = memo<TagListProps>(({type}) => {
                 <FlexWrapper>
                   <Form.Control
                     name={tagId}
-                    value={inputValue.tag}
+                    value={inputValue.tag ?? ''}
                     placeholder={t('tags.overview.placeholder')}
                     onChange={(tag: string) => {
                       dispatchFormValue({
