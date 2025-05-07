@@ -5442,7 +5442,7 @@ function defineCrowdfundingFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().crowdfunding.create({ data });
         });
@@ -5511,7 +5511,7 @@ function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().crowdfundingGoal.create({ data });
         });
