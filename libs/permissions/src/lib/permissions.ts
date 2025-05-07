@@ -915,7 +915,8 @@ export const AllPermissions: Permission[] = [
   CanCreateApprovedComment,
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
-  CanDeleteBlockStyle
+  CanDeleteBlockStyle,
+  CanGetAudienceStats
 ]
 
 export const EditorPermissions: Permission[] = [
