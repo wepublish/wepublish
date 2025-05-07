@@ -63,6 +63,8 @@ import type { Banner } from "@prisma/client";
 import type { BannerAction } from "@prisma/client";
 import type { Crowdfunding } from "@prisma/client";
 import type { CrowdfundingGoal } from "@prisma/client";
+import type { Paywall } from "@prisma/client";
+import type { PaywallMemberplan } from "@prisma/client";
 import type { TrackingPixelProviderType } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
@@ -298,6 +300,10 @@ type ArticlepeerFactory = {
     _factoryFor: "Peer";
     build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutArticlesInput["create"]>;
 };
+type ArticlepaywallFactory = {
+    _factoryFor: "Paywall";
+    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutArticlesInput["create"]>;
+};
 type ArticleFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -310,6 +316,7 @@ type ArticleFactoryDefineInput = {
     likes?: number;
     peerArticleId?: string | null;
     peer?: ArticlepeerFactory | Prisma.PeerCreateNestedOneWithoutArticlesInput;
+    paywall?: ArticlepaywallFactory | Prisma.PaywallCreateNestedOneWithoutArticlesInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
     tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
     revisions?: Prisma.ArticleRevisionCreateNestedManyWithoutArticleInput;
@@ -1260,6 +1267,7 @@ type MemberPlanFactoryDefineInput = {
     subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
     crowdfundings?: Prisma.CrowdfundingCreateNestedManyWithoutMemberPlansInput;
+    paywalls?: Prisma.PaywallMemberplanCreateNestedManyWithoutMemberPlanInput;
 };
 type MemberPlanFactoryDefineOptions = {
     defaultData?: Resolver<MemberPlanFactoryDefineInput, BuildDataOptions>;
@@ -1440,12 +1448,17 @@ export interface PageRevisionFactoryInterface<TOptions extends PageRevisionFacto
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options: TOptions): PageRevisionFactoryInterface<TOptions>;
+type PagepaywallFactory = {
+    _factoryFor: "Paywall";
+    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutPagesInput["create"]>;
+};
 type PageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     publishedAt?: Date | null;
     slug?: string | null;
+    paywall?: PagepaywallFactory | Prisma.PaywallCreateNestedOneWithoutPagesInput;
     revisions?: Prisma.PageRevisionCreateNestedManyWithoutPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
@@ -3081,3 +3094,85 @@ export interface CrowdfundingGoalFactoryInterface<TOptions extends CrowdfundingG
  * @returns factory {@link CrowdfundingGoalFactoryInterface}
  */
 export declare function defineCrowdfundingGoalFactory<TOptions extends CrowdfundingGoalFactoryDefineOptions>(options: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;
+type PaywallFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    name?: string | null;
+    description?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
+    memberplans?: Prisma.PaywallMemberplanCreateNestedManyWithoutPaywallInput;
+    articles?: Prisma.ArticleCreateNestedManyWithoutPaywallInput;
+    pages?: Prisma.PageCreateNestedManyWithoutPaywallInput;
+};
+type PaywallFactoryDefineOptions = {
+    defaultData?: Resolver<PaywallFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<PaywallFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type PaywallTraitKeys<TOptions extends PaywallFactoryDefineOptions> = keyof TOptions["traits"];
+export interface PaywallFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "Paywall";
+    build(inputData?: Partial<Prisma.PaywallCreateInput>): PromiseLike<Prisma.PaywallCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.PaywallCreateInput>): PromiseLike<Prisma.PaywallCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.PaywallCreateInput>[]): PromiseLike<Prisma.PaywallCreateInput[]>;
+    pickForConnect(inputData: Paywall): Pick<Paywall, "id">;
+    create(inputData?: Partial<Prisma.PaywallCreateInput>): PromiseLike<Paywall>;
+    createList(inputData: number | readonly Partial<Prisma.PaywallCreateInput>[]): PromiseLike<Paywall[]>;
+    createForConnect(inputData?: Partial<Prisma.PaywallCreateInput>): PromiseLike<Pick<Paywall, "id">>;
+}
+export interface PaywallFactoryInterface<TOptions extends PaywallFactoryDefineOptions = PaywallFactoryDefineOptions> extends PaywallFactoryInterfaceWithoutTraits {
+    use(name: PaywallTraitKeys<TOptions>, ...names: readonly PaywallTraitKeys<TOptions>[]): PaywallFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link Paywall} model.
+ *
+ * @param options
+ * @returns factory {@link PaywallFactoryInterface}
+ */
+export declare function definePaywallFactory<TOptions extends PaywallFactoryDefineOptions>(options?: TOptions): PaywallFactoryInterface<TOptions>;
+type PaywallMemberplanmemberPlanFactory = {
+    _factoryFor: "MemberPlan";
+    build: () => PromiseLike<Prisma.MemberPlanCreateNestedOneWithoutPaywallsInput["create"]>;
+};
+type PaywallMemberplanpaywallFactory = {
+    _factoryFor: "Paywall";
+    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutMemberplansInput["create"]>;
+};
+type PaywallMemberplanFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    memberPlan: PaywallMemberplanmemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutPaywallsInput;
+    paywall: PaywallMemberplanpaywallFactory | Prisma.PaywallCreateNestedOneWithoutMemberplansInput;
+};
+type PaywallMemberplanFactoryDefineOptions = {
+    defaultData: Resolver<PaywallMemberplanFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<PaywallMemberplanFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type PaywallMemberplanTraitKeys<TOptions extends PaywallMemberplanFactoryDefineOptions> = keyof TOptions["traits"];
+export interface PaywallMemberplanFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "PaywallMemberplan";
+    build(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Prisma.PaywallMemberplanCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Prisma.PaywallMemberplanCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.PaywallMemberplanCreateInput>[]): PromiseLike<Prisma.PaywallMemberplanCreateInput[]>;
+    pickForConnect(inputData: PaywallMemberplan): Pick<PaywallMemberplan, "id">;
+    create(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<PaywallMemberplan>;
+    createList(inputData: number | readonly Partial<Prisma.PaywallMemberplanCreateInput>[]): PromiseLike<PaywallMemberplan[]>;
+    createForConnect(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Pick<PaywallMemberplan, "id">>;
+}
+export interface PaywallMemberplanFactoryInterface<TOptions extends PaywallMemberplanFactoryDefineOptions = PaywallMemberplanFactoryDefineOptions> extends PaywallMemberplanFactoryInterfaceWithoutTraits {
+    use(name: PaywallMemberplanTraitKeys<TOptions>, ...names: readonly PaywallMemberplanTraitKeys<TOptions>[]): PaywallMemberplanFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link PaywallMemberplan} model.
+ *
+ * @param options
+ * @returns factory {@link PaywallMemberplanFactoryInterface}
+ */
+export declare function definePaywallMemberplanFactory<TOptions extends PaywallMemberplanFactoryDefineOptions>(options: TOptions): PaywallMemberplanFactoryInterface<TOptions>;

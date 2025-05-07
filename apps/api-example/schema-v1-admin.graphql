@@ -677,6 +677,8 @@ type Setting {
 }
 
 enum SettingName {
+  newArticlePaywall
+  newArticlePeering
   allowGuestCommenting
   allowGuestCommentRating
   allowGuestPollVoting

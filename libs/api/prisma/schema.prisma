@@ -110,6 +110,9 @@ model Article {
   peerId        String?
   peerArticleId String?
 
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?
+
   navigations    NavigationLink[]
   tags           TaggedArticles[]
   revisions      ArticleRevision[]
@@ -560,6 +563,7 @@ model MemberPlan {
   subscriptionFlows SubscriptionFlow[]
 
   crowdfundings Crowdfunding[]
+  paywalls      PaywallMemberplan[]
 
   @@index([name])
   @@map("member.plans")
@@ -637,6 +641,9 @@ model Page {
   publishedAt DateTime?
 
   slug String?
+
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?
 
   revisions               PageRevision[]
   navigations             NavigationLink[]
@@ -1363,4 +1370,33 @@ model CrowdfundingGoal {
   crowdfundingId String       @db.Uuid
 
   @@map("crowdfunding_goals")
+}
+
+model Paywall {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String? @unique
+  description Json?
+
+  memberplans PaywallMemberplan[]
+  articles    Article[]
+  pages       Page[]
+
+  @@map("paywalls")
+}
+
+model PaywallMemberplan {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String
+
+  @@unique([paywallId, memberPlanId])
+  @@map("paywalls.memberPlans")
 }

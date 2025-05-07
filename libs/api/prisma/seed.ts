@@ -168,6 +168,28 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: {allowedValues: {boolChoice: true}}
       }
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.NEW_ARTICLE_PAYWALL
+      },
+      update: {},
+      create: {
+        name: SettingName.NEW_ARTICLE_PAYWALL,
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
+      }
+    }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.NEW_ARTICLE_PEERING
+      },
+      update: {},
+      create: {
+        name: SettingName.NEW_ARTICLE_PEERING,
+        value: true,
+        settingRestriction: {allowedValues: {boolChoice: true}}
+      }
+    }),
 
     // remove non-used settings
     prisma.setting.deleteMany({

@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment} from '@wepublish/editor/api'
+import {AuthorRefFragment, SettingName, useSettingListQuery} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
   getApiClientV2,
-  getSettings,
   useArticleQuery,
   useCreateArticleMutation,
   usePublishArticleMutation,
@@ -55,8 +54,6 @@ import {
   toaster
 } from 'rsuite'
 import {type Node, Descendant, Element, Text} from 'slate'
-
-import {ClientSettings} from '../../../shared/types'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -114,8 +111,6 @@ function ArticleEditor() {
 
   const {t} = useTranslation()
 
-  const {peerByDefault}: ClientSettings = getSettings()
-
   const client = getApiClientV2()
   const [createArticle, {data: createData, loading: isCreating, error: createError}] =
     useCreateArticleMutation({client})
@@ -143,7 +138,7 @@ function ArticleEditor() {
     url: '',
     properties: [],
     canonicalUrl: '',
-    shared: peerByDefault,
+    shared: false,
     hidden: false,
     disableComments: false,
     breaking: false,
@@ -155,6 +150,17 @@ function ArticleEditor() {
     socialMediaImage: undefined,
     likes: 0,
     trackingPixels: undefined
+  })
+
+  useSettingListQuery({
+    client,
+    onCompleted(data) {
+      setMetadata({
+        ...metadata,
+        shared: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
+          ?.value
+      })
+    }
   })
 
   const isNew = id === undefined
@@ -190,18 +196,8 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {
-        latest,
-        shared,
-        hidden,
-        disableComments,
-        pending,
-        tags,
-        url,
-        slug,
-        trackingPixels,
-        likes
-      } = articleData.article
+      const {latest, shared, hidden, disableComments, tags, url, slug, trackingPixels, likes} =
+        articleData.article
       const {
         preTitle,
         title,

@@ -3080,6 +3080,8 @@ export enum SettingName {
   MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
   MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
+  NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',

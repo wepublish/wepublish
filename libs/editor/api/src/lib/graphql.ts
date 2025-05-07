@@ -1409,6 +1409,8 @@ export enum SettingName {
   MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
   MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
   MakeRevenueApiPublic = 'makeRevenueApiPublic',
+  NewArticlePaywall = 'newArticlePaywall',
+  NewArticlePeering = 'newArticlePeering',
   PeeringTimeoutInMs = 'peeringTimeoutInMs',
   ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
   SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'

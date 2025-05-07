@@ -23,6 +23,8 @@ export const GraphQLSettingValueType = new GraphQLScalarType({
 export const GraphQLSettingName = new GraphQLEnumType({
   name: 'SettingName',
   values: {
+    [SettingName.NEW_ARTICLE_PAYWALL]: {value: SettingName.NEW_ARTICLE_PAYWALL},
+    [SettingName.NEW_ARTICLE_PEERING]: {value: SettingName.NEW_ARTICLE_PEERING},
     [SettingName.ALLOW_GUEST_COMMENTING]: {value: SettingName.ALLOW_GUEST_COMMENTING},
     [SettingName.ALLOW_GUEST_COMMENT_RATING]: {value: SettingName.ALLOW_GUEST_COMMENT_RATING},
     [SettingName.ALLOW_GUEST_POLL_VOTING]: {value: SettingName.ALLOW_GUEST_POLL_VOTING},
