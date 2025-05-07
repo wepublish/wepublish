@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   CreateBannerActionInput,
   FullImageFragment,
@@ -27,6 +28,7 @@ export const EditBannerForm = () => {
     title: '',
     text: '',
     active: false,
+    delay: 0,
     showOnArticles: false,
     showForLoginStatus: LoginStatus.All
     //tags: []
@@ -69,7 +71,8 @@ export const EditBannerForm = () => {
     const processedBanner = {
       ...bannerWithoutImage,
       actions: banner.actions?.map(removeIdAndTypename),
-      showOnPages: banner.showOnPages?.map(removeTypename)
+      showOnPages: banner.showOnPages?.map(removeTypename),
+      showOnTags: banner.showOnTags?.map(removeTypename)
     }
     updateBanner({variables: {input: processedBanner}})
   }
@@ -85,7 +88,6 @@ export const EditBannerForm = () => {
   }
 
   const handleAddAction = (action: CreateBannerActionInput) => {
-    const {...actionWithoutTypename} = action
     setBanner({
       ...banner,
       actions: [...(banner.actions || []), action]

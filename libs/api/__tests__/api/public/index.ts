@@ -231,12 +231,15 @@ export type Banner = {
   actions?: Maybe<Array<BannerAction>>;
   active: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
+  delay: Scalars['Int'];
+  html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
+  showOnTags?: Maybe<Array<TagModel>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -258,7 +261,8 @@ export enum BannerActionRole {
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
-  Page = 'PAGE'
+  Page = 'PAGE',
+  Tag = 'TAG'
 }
 
 export type BaseAction = {
@@ -577,10 +581,13 @@ export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
+  delay: Scalars['Int'];
+  html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
+  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -3223,6 +3230,15 @@ export type TagFilter = {
   type?: InputMaybe<TagType>;
 };
 
+export type TagModel = {
+  __typename?: 'TagModel';
+  id: Scalars['String'];
+};
+
+export type TagModelInput = {
+  id: Scalars['String'];
+};
+
 export enum TagSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
@@ -3402,11 +3418,14 @@ export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
+  delay: Scalars['Int'];
+  html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   imageId?: InputMaybe<Scalars['String']>;
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
+  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };

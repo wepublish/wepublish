@@ -1,3 +1,5 @@
+import React from 'react'
+import {useTagListQuery} from '@wepublish/editor/api'
 import {
   CreateBannerActionInput,
   CreateBannerInput,
@@ -10,7 +12,17 @@ import {
 } from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {CheckPicker, Drawer, Form, Input, Panel, RadioGroup, Toggle, Radio} from 'rsuite'
+import {
+  CheckPicker,
+  Drawer,
+  Form,
+  Input,
+  Panel,
+  RadioGroup,
+  Toggle,
+  Radio,
+  InputNumber
+} from 'rsuite'
 import {BannerActionList} from './banner-action-list'
 import {ChooseEditImage, ImageEditPanel, ImageSelectPanel} from '@wepublish/ui/editor'
 
@@ -27,11 +39,17 @@ interface BannerFormProps {
   onRemoveAction: (index: number) => void
 }
 
+interface Tag {
+  id: string
+  tag?: string | null | undefined
+}
+
 export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
 
-  const handleChange = (value: any, event: React.SyntheticEvent) => {
+  const handleChange = (value: unknown, event: React.SyntheticEvent) => {
     const name = (event.target as HTMLInputElement).name
     props.onChange({...props.banner, [name]: value})
   }
@@ -43,11 +61,19 @@ export const BannerForm = (props: BannerFormProps) => {
     fetchPolicy: 'cache-and-network'
   })
 
+  const {data: tagData} = useTagListQuery({
+    variables: {take: 50},
+    fetchPolicy: 'cache-and-network'
+  })
+
   useEffect(() => {
     if (pageData?.pages?.nodes) {
       setPages(pageData.pages.nodes)
     }
-  }, [pageData?.pages])
+    if (tagData?.tags?.nodes) {
+      setTags(tagData.tags.nodes)
+    }
+  }, [pageData?.pages, tagData?.tags])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -72,6 +98,16 @@ export const BannerForm = (props: BannerFormProps) => {
           />
         </Form.Group>
 
+        <Form.Group controlId="delay">
+          <Form.ControlLabel>{t('banner.form.delay')}</Form.ControlLabel>
+          <Form.Control
+            name="delay"
+            accepter={InputNumber}
+            value={props.banner.delay}
+            onChange={(v, e) => handleChange(parseInt(v, 10), e)}
+          />
+        </Form.Group>
+
         <Form.Group controlId="cta">
           <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
           <Form.Control name="cta" value={props.banner.cta} onChange={handleChange} />
@@ -92,6 +128,17 @@ export const BannerForm = (props: BannerFormProps) => {
             onChange={x => console.log(x)}
             accepter={ChooseEditImage}
             minHeight={200}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="html">
+          <Form.ControlLabel>{t('banner.form.html')}</Form.ControlLabel>
+          <Input
+            name="html"
+            as="textarea"
+            rows={5}
+            value={props.banner.html ?? undefined}
+            onChange={handleChange}
           />
         </Form.Group>
 
@@ -132,12 +179,32 @@ export const BannerForm = (props: BannerFormProps) => {
             virtualized
             placeholder={t('navigation.panels.selectPage')}
             value={props.banner.showOnPages?.map(p => p.id) || []}
-            data={pages.map(page => ({value: page.id!, label: page.latest.title}))}
+            data={pages.map(page => ({value: page.id, label: page.latest.title}))}
             onChange={ids => {
               if (!ids) return
               props.onChange({
                 ...props.banner,
                 showOnPages: ids.map(i => {
+                  return {id: i}
+                })
+              })
+            }}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="showOnTags">
+          <Form.ControlLabel>{t('banner.form.showOnTags')}</Form.ControlLabel>
+          <CheckPicker
+            block
+            virtualized
+            placeholder={t('navigation.panels.selectTag')}
+            value={props.banner.showOnTags?.map(t => t.id) || []}
+            data={tags.map(tag => ({value: tag.id, label: tag.tag}))}
+            onChange={ids => {
+              if (!ids) return
+              props.onChange({
+                ...props.banner,
+                showOnTags: ids.map(i => {
                   return {id: i}
                 })
               })
