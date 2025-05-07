@@ -642,9 +642,6 @@ model Page {
 
   slug String?
 
-  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
-  paywallId String?
-
   revisions               PageRevision[]
   navigations             NavigationLink[]
   tags                    TaggedPages[]
@@ -1380,10 +1377,10 @@ model Paywall {
   name          String? @unique
   description   Json?
   anyMemberPlan Boolean @default(false)
+  active        Boolean @default(true)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]
-  pages       Page[]
 
   @@map("paywalls")
 }
