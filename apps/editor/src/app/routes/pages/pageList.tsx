@@ -1,4 +1,4 @@
-import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
+import {CommentItemType, TagType, useCreateCommentMutation} from '@wepublish/editor/api'
 import {
   FullPageFragment,
   getApiClientV2,
@@ -141,6 +141,7 @@ function PageList() {
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
+          tagType={TagType.Page}
         />
       </ListViewContainer>
 
