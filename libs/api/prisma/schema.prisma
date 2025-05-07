@@ -1373,14 +1373,15 @@ model CrowdfundingGoal {
 }
 
 model Paywall {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name        String? @unique
-  description Json?
+  name          String? @unique
+  description   Json?
+  anyMemberPlan Boolean @default(false)
 
-  memberplans PaywallMemberplan[]
+  memberPlans PaywallMemberplan[]
   articles    Article[]
   pages       Page[]
 
@@ -1388,14 +1389,14 @@ model Paywall {
 }
 
 model PaywallMemberplan {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt DateTime @default(now())
 
   memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String
 
   paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
-  paywallId String
+  paywallId String  @db.Uuid
 
   @@unique([paywallId, memberPlanId])
   @@map("paywalls.memberPlans")
