@@ -1,6 +1,7 @@
 import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
 import {
   Article,
+  ArticleAuthors,
   ArticleDate,
   ArticleList,
   ArticleSEO,
@@ -21,8 +22,8 @@ import {
   Blocks,
   BreakBlock,
   CommentBlock,
+  IFrameBlock,
   ContextBox,
-  EmbedBlock,
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
@@ -35,6 +36,7 @@ import {
   ListicleBlock,
   PolisConversationBlock,
   PollBlock,
+  CrowdfundingBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
@@ -71,12 +73,13 @@ import {
   PeriodicityPicker,
   Subscribe,
   SubscriptionList,
-  SubscriptionListItem
+  SubscriptionListItem,
+  TransactionFee
 } from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
-import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
+import {RenderElement, RenderLeaf, RenderRichtext} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
@@ -156,6 +159,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleAuthors={ArticleAuthors}
           ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
           Banner={PageBanner}
@@ -187,6 +191,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           PeriodicityPicker={PeriodicityPicker}
           PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
+          TransactionFee={TransactionFee}
           Subscribe={Subscribe}
           elements={{
             TextField,
@@ -220,6 +225,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             Quote: QuoteBlock,
             HTML: HtmlBlock,
             Poll: PollBlock,
+            Crowdfunding: CrowdfundingBlock,
             RichText: RichTextBlock,
             Event: EventBlock,
             Listicle: ListicleBlock,
@@ -228,7 +234,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserList: TeaserListBlock,
             Teaser,
             BildwurfAd: BildwurfAdBlock,
-            Embed: EmbedBlock,
+            IFrame: IFrameBlock,
             FacebookPost: FacebookPostBlock,
             FacebookVideo: FacebookVideoBlock,
             InstagramPost: InstagramPostBlock,
@@ -246,7 +252,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ImageSlider,
             TeaserSlider
           }}
-          richtext={{RenderElement, RenderLeaf}}
+          richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{
             format: dateFormatter
           }}>

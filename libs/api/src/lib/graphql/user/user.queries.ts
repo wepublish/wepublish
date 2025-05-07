@@ -2,7 +2,7 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {ConnectionResult} from '../../db/common'
 import {UserFilter, UserSort, UserWithRelations} from '../../db/user'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {Validator} from '../../validator'
 import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 

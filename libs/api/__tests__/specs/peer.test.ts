@@ -15,6 +15,7 @@ import {
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+import {BlockFormat} from '@wepublish/richtext'
 ;(fetch as unknown as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
 let testServerPrivate: ApolloServer
@@ -152,7 +153,12 @@ describe('Peers', () => {
         name: 'test peer profile',
         themeColor: '#4287f5',
         themeFontColor: '#d67c15',
-        callToActionText: [{text: 'rich text call to action'}],
+        callToActionText: [
+          {
+            type: BlockFormat.Paragraph,
+            children: [{text: 'rich text call to action'}]
+          }
+        ],
         callToActionURL: 'calltoactionurl.ch/'
       }
 

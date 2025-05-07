@@ -1,7 +1,17 @@
-import {ApiV1, generateSitemap} from '@wepublish/website/server'
+import {generateSitemap} from '@wepublish/feed/website'
+import {
+  ArticleListDocument,
+  ArticleListQueryVariables,
+  ArticleSort,
+  getV1ApiClient,
+  PageListDocument,
+  PageListQueryVariables,
+  PageSort,
+  SortOrder
+} from '@wepublish/website/api'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
-import * as process from 'node:process'
+import process from 'node:process'
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   const siteUrl = process.env.WEBSITE_URL || ''
@@ -12,32 +22,31 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   })
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
     typePolicies: {}
   })
 
   const [{data: articleData}, {data: pageData}] = await Promise.all([
     client.query({
-      query: ApiV1.ArticleListDocument,
+      query: ArticleListDocument,
       variables: {
         take: 50,
-        sort: ApiV1.ArticleSort.PublishedAt,
-        order: ApiV1.SortOrder.Descending
-      } as ApiV1.ArticleListQueryVariables
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Descending
+      } as ArticleListQueryVariables
     }),
     client.query({
-      query: ApiV1.SitemapPageListDocument,
+      query: PageListDocument,
       variables: {
         take: 100,
-        sort: ApiV1.PublishedPageSort.PublishedAt,
-        order: ApiV1.SortOrder.Descending
-      } as ApiV1.PageListQueryVariables
+        sort: PageSort.PublishedAt,
+        order: SortOrder.Descending
+      } as PageListQueryVariables
     })
   ])
 
-  return generate(articleData.articles.nodes ?? [], [
+  return generate(articleData.articles.nodes ?? [], pageData.pages.nodes ?? [], [
     `${siteUrl}/author`,
-    `${siteUrl}/event`,
-    ...(pageData.pages.nodes ?? []).map((page: ApiV1.Page) => page.url)
+    `${siteUrl}/event`
   ])
 }

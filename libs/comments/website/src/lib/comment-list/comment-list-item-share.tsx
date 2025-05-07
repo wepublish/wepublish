@@ -1,4 +1,5 @@
-import {IconButton, Popover, styled} from '@mui/material'
+import {IconButton, Popover} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderCommentListItemShareProps} from '@wepublish/website/builder'
 import React, {useState} from 'react'
 import {BsLinkedin} from 'react-icons/bs'
@@ -48,7 +49,6 @@ export const CommentListItemShare = ({url, title, className}: BuilderCommentList
   }
 
   const popoverOpen = Boolean(anchorEl)
-  const id = popoverOpen ? 'simple-popover' : undefined
 
   const shareOptions = [
     {
@@ -90,12 +90,11 @@ export const CommentListItemShare = ({url, title, className}: BuilderCommentList
 
   return (
     <CommentListItemShareWrapper className={className}>
-      <CommentListItemShareIcon size="small" onClick={handleClick} aria-describedby={id}>
+      <CommentListItemShareIcon size="small" onClick={handleClick}>
         <MdShare />
       </CommentListItemShareIcon>
 
       <Popover
-        id={id}
         open={popoverOpen}
         anchorEl={anchorEl}
         onClose={handleClosePopover}

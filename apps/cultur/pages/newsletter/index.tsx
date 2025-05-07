@@ -1,4 +1,12 @@
-import {ApiV1, ContentWrapper, PageContainer} from '@wepublish/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {PageContainer} from '@wepublish/page/website'
+import {
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  NavigationListDocument,
+  PageDocument,
+  PeerProfileDocument
+} from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -32,23 +40,23 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
   await Promise.all([
     client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         slug: 'newsletter'
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

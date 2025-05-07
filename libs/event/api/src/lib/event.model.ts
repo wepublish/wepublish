@@ -1,8 +1,6 @@
 import {
   ArgsType,
-  Directive,
   Field,
-  ID,
   InputType,
   Int,
   ObjectType,
@@ -14,7 +12,7 @@ import {EventStatus} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -36,8 +34,8 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-export class EventV2 {
-  @Field(() => ID)
+export class Event {
+  @Field()
   id!: string
 
   @Field()
@@ -62,7 +60,7 @@ export class EventV2 {
   location?: string
 
   @Field(type => GraphQLRichText, {nullable: true})
-  description?: Node[]
+  description?: Descendant[]
 
   @Field(type => EventStatus)
   status!: EventStatus
@@ -78,16 +76,13 @@ export class EventV2 {
 
   @Field({nullable: true})
   externalSourceName?: string
+
+  @Field()
+  url!: string
 }
 
 @ObjectType()
-export class PaginatedEvents extends PaginatedType(EventV2) {}
-
-@ArgsType()
-export class EventId {
-  @Field(() => ID)
-  id!: string
-}
+export class PaginatedEvents extends PaginatedType(Event) {}
 
 @InputType()
 export class EventFilter {
@@ -127,31 +122,27 @@ export class EventListArgs {
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   cursorId?: string
 }
 
 @ArgsType()
 export class CreateEventInput extends PickType(
-  EventV2,
+  Event,
   ['name', 'lead', 'description', 'location', 'imageId', 'startsAt', 'endsAt'] as const,
   ArgsType
 ) {
   @Field(type => [String], {nullable: true})
   tagIds?: string[]
+
+  @Field(type => EventStatus, {
+    defaultValue: EventStatus.Scheduled
+  })
+  status?: EventStatus
 }
 
 @ArgsType()
 export class UpdateEventInput extends PartialType(CreateEventInput, ArgsType) {
   @Field()
-  id!: string
-}
-
-@ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
-export class Tag {
-  @Field(() => ID)
-  @Directive('@external')
   id!: string
 }

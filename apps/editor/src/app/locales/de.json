@@ -107,7 +107,6 @@
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
@@ -211,6 +210,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Bearbeiten",
+        "label": "Crowdfunding",
+        "title": "Crowdfunding auswählen",
+        "name": "Name des Crowdfundings",
+        "select": "Auswählen",
+        "open": "öffnen"
+      },
       "comment": {
         "cherryPick": "Spezifische Kommentare auswählen",
         "comments": "{{count}} Kommentar",
@@ -281,6 +288,9 @@
         "label": "HTML",
         "placeholder": "Füge hier deinen HTML Block ein",
         "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
+      },
+      "subscribe": {
+        "label": "Abonnieren"
       },
       "image": {
         "label": "Bild",
@@ -728,7 +738,8 @@
       "blocks": {
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
-        "topMenu": "Inhalts-Blöcke"
+        "topMenu": "Inhalts-Blöcke",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
@@ -896,17 +907,25 @@
     },
     "peerArticles": {
       "articleImage": "Teaserbild",
-      "authors": "Autor:innen",
       "filterByPeer": "Nach Peer filtern",
       "lead": "Lead",
-      "notPublished": "Noch nicht publiziert",
-      "originalArticle": "Original Artikel",
       "peer": "Peer",
       "peerArticles": "Peerbare Artikel",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
       "title": "Titel",
-      "toOriginalArticle": "Zum Original Artikel"
+
+      "import": {
+        "import": "Importieren",
+        "title": "Artikel importieren",
+        "includeAuthors": "Autoren des Artikels importieren",
+        "includeAuthorsHint": "Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den gleichen Namen trägt, werden die unterschieden.",
+        "includeTags": "Tags des Artikels importieren",
+        "includeTagsHint": "Importiert die Tags des Artikels solange sie nicht schon existieren.",
+        "includeImages": "Bilder des Artikels importieren",
+        "includeImagesHint": "Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals importiert.",
+        "confirm": "Ja, Artikel importieren"
+      }
     },
     "peerList": {
       "overview": {
@@ -1405,6 +1424,43 @@
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Name",
+        "delete": "Löschen",
+        "createNew": "Erstellen"
+      },
+      "delete": {
+        "title": "Unwiderruflich löschen?",
+        "body": "Soll das Crowdfunding unwiderruflich gelöscht werden?",
+        "delete": "Löschen"
+      },
+      "create": {
+        "title": "Neues Crowdfunding erstellen"
+      },
+      "edit": {
+        "title": "{{crowdfundingName}} bearbeiten"
+      },
+      "form": {
+        "name": "Bezeichnung des Crowdfundings (wird nicht publiziert)",
+        "memberPlans": "Abo Pläne",
+        "filter": "Einnahmen filtern",
+        "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "selectMemberPlans": "Abo Pläne wählen",
+        "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
+        "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
+        "revenue": "Bereits CHF {{revenue}} finanziert",
+        "goals": "Ziele"
+      },
+      "goalsForm": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "amount": "Zielbetrag",
+        "remove": "Entfernen",
+        "add": "Ziel hinzufügen"
+      }
     }
   }
 }

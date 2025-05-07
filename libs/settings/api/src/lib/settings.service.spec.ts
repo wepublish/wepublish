@@ -4,6 +4,7 @@ import {PrismaModule} from '@wepublish/nest-modules'
 import {PrismaClient, Setting} from '@prisma/client'
 import {SettingName} from './setting'
 import {GraphQLSettingValueType} from './settings.model'
+import {SettingDataloaderService} from './setting-dataloader.service'
 
 describe('SettingsService', () => {
   let service: SettingsService
@@ -12,7 +13,16 @@ describe('SettingsService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
-      providers: [SettingsService, GraphQLSettingValueType]
+      providers: [
+        SettingsService,
+        GraphQLSettingValueType,
+        {
+          provide: SettingDataloaderService,
+          useValue: {
+            prime: jest.fn()
+          }
+        }
+      ]
     }).compile()
 
     prisma = module.get<PrismaClient>(PrismaClient)

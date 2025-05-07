@@ -1,6 +1,20 @@
-import {styled} from '@mui/material'
-import {ContentWidthProvider, SliderWrapper} from '@wepublish/website'
-import {ApiV1, PageContainer} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {SliderWrapper} from '@wepublish/block-content/website'
+import {ContentWidthProvider} from '@wepublish/content/website'
+import {PageContainer} from '@wepublish/page/website'
+import {
+  addClientCacheToV1Props,
+  CommentListDocument,
+  CommentSort,
+  getV1ApiClient,
+  NavigationListDocument,
+  PageDocument,
+  PageQuery,
+  PeerProfileDocument,
+  SettingListDocument,
+  SortOrder,
+  TeaserListBlock
+} from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -57,29 +71,29 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
 
   const [page] = await Promise.all([
-    client.query({
-      query: ApiV1.PageDocument,
+    client.query<PageQuery>({
+      query: PageDocument,
       variables: {
         slug: 'home'
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     }),
     client.query({
-      query: ApiV1.SettingListDocument
+      query: SettingListDocument
     })
   ])
 
-  const fdTTeaser = page.data?.page?.blocks.find((block: ApiV1.Block) => {
+  const fdTTeaser = page.data?.page?.latest.blocks.find(block => {
     return isFrageDesTages(block)
-  }) as ApiV1.TeaserListBlock | undefined
+  }) as TeaserListBlock | undefined
 
   if (fdTTeaser && fdTTeaser.teasers[0]) {
     let id: string | undefined
@@ -97,17 +111,17 @@ export const getStaticProps: GetStaticProps = async () => {
 
     if (id) {
       await client.query({
-        query: ApiV1.CommentListDocument,
+        query: CommentListDocument,
         variables: {
-          sort: ApiV1.CommentSort.Rating,
-          order: ApiV1.SortOrder.Descending,
+          sort: CommentSort.Rating,
+          order: SortOrder.Descending,
           itemId: id
         }
       })
     }
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

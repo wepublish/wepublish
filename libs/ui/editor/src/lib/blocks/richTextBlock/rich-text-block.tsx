@@ -14,7 +14,7 @@ import {
   MdSuperscript,
   MdTableChart
 } from 'react-icons/md'
-import {createEditor, Location, Node as SlateNode, Transforms} from 'slate'
+import {createEditor, Editor, Location, Transforms} from 'slate'
 import {withHistory} from 'slate-history'
 import {Editable, ReactEditor, Slate, withReact} from 'slate-react'
 
@@ -22,14 +22,16 @@ import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
 import {H1Icon, H2Icon, H3Icon, SubMenuButton, Toolbar, ToolbarDivider} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {BlockFormat, InlineFormat, TextFormat} from './editor/formats'
 import {withNormalizeNode} from './editor/normalizing'
-import {withRichText, withTable} from './editor/plugins'
+import {withRichText, withSoftBreak, withTable} from './editor/plugins'
 import {renderElement, renderLeaf} from './editor/render'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {EditorSubMenuButton, FormatButton, FormatIconButton} from './toolbar/buttons'
 import {LinkMenu} from './toolbar/linkMenu'
 import {TableMenu} from './toolbar/tableMenu'
+import {pipe} from 'ramda'
+import {TextFormat, BlockFormat, InlineFormat, toPlaintext} from '@wepublish/richtext'
+import {Hotkeys} from 'slate-dom'
 
 const CharCount = styled.p`
   text-align: right;
@@ -59,12 +61,24 @@ export const RichTextBlock = memo(function RichTextBlock({
   displayOneLine = false
 }: RichTextBlockProps) {
   const editor = useMemo(
-    () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
+    () =>
+      pipe(
+        createEditor,
+        withReact,
+        withHistory,
+        withNormalizeNode,
+        withTable,
+        withRichText,
+        withSoftBreak
+      )(),
     []
   )
+
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
   const [charCount, setCharCount] = useState(0)
+
+  const editorKey = useMemo(() => toPlaintext(value), [value])
 
   useEffect(() => {
     setCharCount(WepublishEditor.calculateEditorCharCount(editor))
@@ -84,37 +98,48 @@ export const RichTextBlock = memo(function RichTextBlock({
   }
 
   const activateHotkey = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    switch (e.key.toLowerCase()) {
-      case 'b': {
-        e.preventDefault()
-        WepublishEditor.toggleFormat(editor, TextFormat.Bold)
-        break
-      }
-      case 'i': {
-        e.preventDefault()
-        WepublishEditor.toggleFormat(editor, TextFormat.Italic)
-        break
-      }
-      case 'u': {
-        e.preventDefault()
-        WepublishEditor.toggleFormat(editor, TextFormat.Underline)
-        break
-      }
-      case 'x': {
-        if (e.getModifierState('Shift')) {
+    if (Hotkeys.isSoftBreak(e.nativeEvent)) {
+      Editor.insertSoftBreak(editor)
+      e.preventDefault()
+      return
+    }
+
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+        case 'b': {
           e.preventDefault()
-          WepublishEditor.toggleFormat(editor, TextFormat.Strikethrough)
+          WepublishEditor.toggleFormat(editor, TextFormat.Bold)
+          break
         }
-        break
+        case 'i': {
+          e.preventDefault()
+          WepublishEditor.toggleFormat(editor, TextFormat.Italic)
+          break
+        }
+        case 'u': {
+          e.preventDefault()
+          WepublishEditor.toggleFormat(editor, TextFormat.Underline)
+          break
+        }
+        case 'x': {
+          if (e.getModifierState('Shift')) {
+            e.preventDefault()
+            WepublishEditor.toggleFormat(editor, TextFormat.Strikethrough)
+          }
+          break
+        }
       }
+
+      return
     }
   }
 
   return (
     <Slate
+      key={editorKey}
       editor={editor}
-      value={value?.length ? value : WepublishEditor.createDefaultValue()}
-      onChange={(newValue: SlateNode[]) => {
+      initialValue={value?.length ? value : WepublishEditor.createDefaultValue()}
+      onChange={newValue => {
         setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) {
           onChange(newValue)
@@ -180,6 +205,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           )}
         </>
       )}
+
       <Editable
         style={
           displayOneLine
@@ -196,9 +222,7 @@ export const RichTextBlock = memo(function RichTextBlock({
         onBlur={() => {
           setLocation(editor.selection)
         }}
-        onKeyDown={e => {
-          if (e.ctrlKey || e.metaKey) activateHotkey(e)
-        }}
+        onKeyDown={activateHotkey}
       />
       {showCharCount && <CharCount>{t('blocks.richText.charCount', {charCount})}</CharCount>}
     </Slate>

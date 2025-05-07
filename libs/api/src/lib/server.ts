@@ -3,28 +3,30 @@ import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
-import {onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mail/api'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
-import {MAX_PAYLOAD_SIZE} from './utility'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginLandingPageDisabled
+  ApolloServerPluginLandingPageDisabled,
+  ApolloServerPluginUsageReportingDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {setupMailProvider} from './mails'
-import {serverLogger, setLogger, logger} from '@wepublish/utils/api'
+import {serverLogger, setLogger, logger, MAX_PAYLOAD_SIZE} from '@wepublish/utils/api'
 import {graphQLJSSchemaToAST} from '@apollo/federation-internals'
 import {buildSubgraphSchema} from '@apollo/subgraph'
 import gql from 'graphql-tag'
-import {GraphQLPublicPageResolver} from './graphql/page'
 import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
-import {GraphQLEventResolver} from './graphql/event/event'
 import * as fs from 'fs'
-import {GraphQLPublicArticleResolver} from './graphql/article'
+import {GraphQLAuthorResolver} from './graphql/author'
+import {GraphQLPollResolver} from './graphql/poll/poll'
+import {GraphQLCommentResolver} from './graphql/comment/comment'
+import {GraphQLPeerResolver} from './graphql/peer'
+import {GraphQLUserResolver} from './graphql/user'
+import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -49,12 +51,12 @@ export class WepublishServer {
     const publicApp = this.publicApp
     const privateApp = this.privateApp
 
-    this.setupPrismaMiddlewares()
     setLogger(this.opts.logger)
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
       plugins: [
+        ApolloServerPluginUsageReportingDisabled(),
         this.opts.playground
           ? ApolloServerPluginLandingPageGraphQLPlayground()
           : ApolloServerPluginLandingPageDisabled()
@@ -74,30 +76,24 @@ export class WepublishServer {
 
     const federatedTypeDefs = gql`
       directive @extends on INTERFACE | OBJECT
-
       directive @external on FIELD_DEFINITION | OBJECT
-
       directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
       directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
-
       directive @override(from: String!) on FIELD_DEFINITION
-
       directive @provides(fields: String!) on FIELD_DEFINITION
-
       directive @requires(fields: String!) on FIELD_DEFINITION
-
       directive @shareable on FIELD_DEFINITION | OBJECT
-
       directive @tag(
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
-      extend type Article @key(fields: "id")
-      extend type Page @key(fields: "id")
+      extend type Author @key(fields: "id")
+      extend type PublicSubscription @key(fields: "id")
+      extend type Comment @key(fields: "id")
+      extend type FullPoll @key(fields: "id")
+      extend type Peer @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
-      extend type Event @key(fields: "id")
       extend type PaymentMethod @key(fields: "id")
       extend type MemberPlan @key(fields: "id")
       extend type User @key(fields: "id")
@@ -109,7 +105,8 @@ export class WepublishServer {
         Object.values(GraphQLWepublishPublicSchema.getTypeMap())
           .filter(type => type instanceof GraphQLObjectType || type instanceof GraphQLUnionType)
           .map(type => {
-            const resolvers = {}
+            const resolvers = {} as any
+
             if (type instanceof GraphQLObjectType) {
               const fields = type.getFields()
               for (const name in fields) {
@@ -117,18 +114,20 @@ export class WepublishServer {
                   resolvers[name] = fields[name].resolve
                 }
               }
+
               if (type.isTypeOf) {
                 resolvers['isTypeOf'] = type.isTypeOf
               }
             }
+
             if (type instanceof GraphQLUnionType) {
               if (type.resolveType) {
                 resolvers['__resolveType'] = type.resolveType
               } else {
-                resolvers['__resolveType'] = (source, context, info) => {
+                resolvers['__resolveType'] = (source: any, context: any, info: any) => {
                   return type
                     .getTypes()
-                    .find(type => type.isTypeOf && type.isTypeOf(source, context, info)).name
+                    .find(type => type.isTypeOf && type.isTypeOf(source, context, info))?.name
                 }
               }
             }
@@ -140,15 +139,21 @@ export class WepublishServer {
     }
 
     const federatedResolvers = {
-      Article: GraphQLPublicArticleResolver,
-      Page: GraphQLPublicPageResolver,
+      Author: GraphQLAuthorResolver,
+      Comment: GraphQLCommentResolver,
+      FullPoll: GraphQLPollResolver,
+      Peer: GraphQLPeerResolver,
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
-      Event: GraphQLEventResolver
+      User: GraphQLUserResolver,
+      PublicSubscription: GraphQLSubscriptionResolver
     }
 
     for (const type in federatedResolvers) {
-      resolvers[type] = {...resolvers[type], ...federatedResolvers[type]}
+      resolvers[type] = {
+        ...resolvers[type],
+        ...federatedResolvers[type as keyof typeof federatedResolvers]
+      }
     }
 
     const publicSchema = buildSubgraphSchema({
@@ -217,10 +222,5 @@ export class WepublishServer {
         res.status(500).end()
       }
     })
-  }
-
-  private async setupPrismaMiddlewares(): Promise<void> {
-    this.opts.prisma.$use(onFindArticle(this.opts.prisma))
-    this.opts.prisma.$use(onFindPage(this.opts.prisma))
   }
 }

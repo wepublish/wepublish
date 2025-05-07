@@ -1,0 +1,20 @@
+{
+  "website": {
+    "production": {
+      "deployment": true,
+      "custom_domain": "https://flimmer.media",
+      "env": {},
+      "secret_env": []
+    },
+    "staging": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {},
+      "secret_env": []
+    }
+  }
+}

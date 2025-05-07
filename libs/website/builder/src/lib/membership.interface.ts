@@ -61,9 +61,9 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
-  'amountPerMonthMin' | 'currency'
+  'amountPerMonthMin' | 'currency' | 'extendable'
 > &
-  RadioProps & {className?: string}
+  RadioProps & {className?: string} & {slug: string}
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined
@@ -81,6 +81,14 @@ export type BuilderPaymentMethodPickerProps = {
   value?: string
 }
 
+export type BuilderTransactionFeeProps = {
+  text?: string
+  className?: string
+  onChange: (value: boolean) => void
+  name?: string
+  value?: boolean
+}
+
 export type BuilderPaymentAmountProps = {
   amountPerMonthMin: number
   amountPerMonthTarget: number | undefined
@@ -91,6 +99,7 @@ export type BuilderPaymentAmountProps = {
   value: number
   error: FieldError | undefined
   className?: string
+  slug?: string
 }
 
 export type BuilderSubscribeProps<
@@ -120,5 +129,7 @@ export type BuilderSubscribeProps<
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
+  transactionFee?: (monthlyAmount: number) => number
+  transactionFeeText?: string
   returningUserId?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

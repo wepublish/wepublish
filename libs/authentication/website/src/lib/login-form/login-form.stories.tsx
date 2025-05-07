@@ -1,7 +1,7 @@
 import {Meta, StoryObj} from '@storybook/react'
 import {LoginForm} from './login-form'
 import {action} from '@storybook/addon-actions'
-import {userEvent, within} from '@storybook/testing-library'
+import {userEvent, within} from '@storybook/test'
 import {useArgs} from '@storybook/preview-api'
 import {ComponentProps} from 'react'
 import {ApolloError} from '@apollo/client'

@@ -1,8 +1,9 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
-import {CanGetSubscriptions, Permissions, Public} from '@wepublish/permissions/api'
+import {Permissions} from '@wepublish/permissions/api'
 import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
 import {SettingName, Settings} from '@wepublish/settings/api'
+import {CanGetSubscriptions} from '@wepublish/permissions'
 
 @Resolver()
 export class DashboardSubscriptionResolver {

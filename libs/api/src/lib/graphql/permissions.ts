@@ -1,5 +1,5 @@
 import {UserRole} from '@prisma/client'
-import {Permission} from '@wepublish/permissions/api'
+import {Permission} from '@wepublish/permissions'
 import {hasPermission} from '@wepublish/permissions/api'
 import {NotAuthorisedError} from '../error'
 

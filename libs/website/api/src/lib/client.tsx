@@ -3,13 +3,14 @@ import {
   ApolloLink,
   ApolloProvider,
   DefaultOptions,
+  from,
   InMemoryCache,
   InMemoryCacheConfig,
   NormalizedCacheObject,
   split
 } from '@apollo/client'
 import {BatchHttpLink} from '@apollo/client/link/batch-http'
-import {mergeDeepLeft} from 'ramda'
+import {mergeDeepRight} from 'ramda'
 import possibleTypes from './graphql'
 
 import {ComponentType, memo, useMemo} from 'react'
@@ -42,10 +43,7 @@ const createV1ApiClient = (
     new BatchHttpLink({uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20})
   )
 
-  const link = [...links, httpLink].reduce(
-    (links: ApolloLink | undefined, link) => (links ? links.concat(link) : link),
-    undefined
-  )
+  const link = from([...links, httpLink])
 
   let defaultOptions: DefaultOptions = {
     query: {
@@ -97,7 +95,7 @@ export const getV1ApiClient = (
 
   if (cache) {
     const existingCache = client.extract()
-    const data = mergeDeepLeft(existingCache, cache) as NormalizedCacheObject
+    const data = mergeDeepRight(existingCache, cache) as NormalizedCacheObject
 
     client.cache.restore(data)
   }

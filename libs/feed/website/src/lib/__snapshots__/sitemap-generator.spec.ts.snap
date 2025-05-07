@@ -26,9 +26,23 @@ exports[`should setup the feed 1`] = `
                 <priority>0.8</priority>
             </url>
 
+          
+              <url>
+                  <loc>https://example.com</loc>
+                  <lastmod>2023-01-01T00:00:00.000Z</lastmod>
+              </url>
+          
+
+              <url>
+                  <loc>https://example.com</loc>
+                  <lastmod>2023-01-01T00:00:00.000Z</lastmod>
+              </url>
+          
+
         
             <url>
                 <loc>https://example.com</loc>
+                <lastmod>2023-01-01T00:00:00.000Z</lastmod>
 
                 <news:news>
                     <news:publication>
@@ -37,13 +51,14 @@ exports[`should setup the feed 1`] = `
                     </news:publication>
 
                     <news:publication_date>2023-01-01T00:00:00.000Z</news:publication_date>
-                    <news:title>socialMediaTitle &amp; socialMediaTitle2</news:title>
+                    <news:title>This is an article social media title</news:title>
                 </news:news>
             </url>
         
 
             <url>
                 <loc>https://example.com</loc>
+                <lastmod>2023-01-01T00:00:00.000Z</lastmod>
 
                 <news:news>
                     <news:publication>
@@ -52,7 +67,7 @@ exports[`should setup the feed 1`] = `
                     </news:publication>
 
                     <news:publication_date>2023-01-01T00:00:00.000Z</news:publication_date>
-                    <news:title>socialMediaTitle &amp; socialMediaTitle2</news:title>
+                    <news:title>This is an article social media title</news:title>
                 </news:news>
             </url>
         

@@ -4,13 +4,9 @@ import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphq
 import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'
 import {ExecutionResult} from '@graphql-tools/utils'
 import {Context} from './context'
-import {Block, BlockType, TeaserStyle} from './db/block'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
 import {format} from 'date-fns'
-import {toPlaintext} from '@wepublish/richtext'
-
-export const MAX_PAYLOAD_SIZE = '1MB'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
@@ -173,22 +169,7 @@ export function mapEnumsBack(result: any) {
       mapEnumsBack(value)
     }
   }
-  if (
-    result.__typename === 'ArticleTeaser' ||
-    result.__typename === 'PeerArticleTeaser' ||
-    result.__typename === 'PageTeaser' ||
-    result.__typename === 'EventTeaser' ||
-    result.__typename === 'CustomTeaser'
-  ) {
-    switch (result.style) {
-      case 'DEFAULT':
-        return Object.assign(result, {style: TeaserStyle.Default})
-      case 'LIGHT':
-        return Object.assign(result, {style: TeaserStyle.Light})
-      case 'TEXT':
-        return Object.assign(result, {style: TeaserStyle.Text})
-    }
-  }
+
   return result
 }
 
@@ -258,28 +239,8 @@ export function isBoolean(unknown: unknown): unknown is boolean {
   return typeof unknown === 'boolean'
 }
 
-export function mapEnumToGraphQLEnumValues(enumObject: unknown) {
+export function mapEnumToGraphQLEnumValues(enumObject: Record<string, unknown>) {
   return Object.fromEntries(
     Object.keys(enumObject).map(key => [enumObject[key], {values: enumObject[key]}])
   )
-}
-
-/**
- * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
- * TODO: write migration for existing articles and pages. Implement function on all page mutations.
- * @param blocks
- * @returns
- */
-export function blocksToSearchText(blocks?: (Block | any)[]): string | undefined {
-  if (!blocks) {
-    return
-  }
-
-  try {
-    const richTextBlocks = blocks.filter(block => block.type === BlockType.RichText)
-
-    return richTextBlocks.map(richTextBlock => toPlaintext(richTextBlock.richText)).join(' ')
-  } catch (error) {
-    console.log(error)
-  }
 }

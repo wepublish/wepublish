@@ -1,33 +1,31 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {
-  CanCreateEvent,
-  CanDeleteEvent,
-  CanUpdateEvent,
-  Permissions,
-  Public
-} from '@wepublish/permissions/api'
+import {CanCreateEvent, CanDeleteEvent, CanUpdateEvent} from '@wepublish/permissions'
+import {Public} from '@wepublish/authentication/api'
 import {
   CreateEventInput,
-  EventV2,
-  EventId,
+  Event,
   EventListArgs,
   PaginatedEvents,
-  Tag,
   UpdateEventInput
 } from './event.model'
 import {EventService} from './event.service'
 import {Image} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
+import {Tag} from '@wepublish/tag/api'
+import {URLAdapter} from '@wepublish/nest-modules'
+import {Event as PEvent} from '@prisma/client'
+import {Permissions} from '@wepublish/permissions/api'
 
-@Resolver(() => EventV2)
+@Resolver(() => Event)
 export class EventResolver {
   constructor(
     private eventService: EventService,
-    private eventDataloader: EventDataloaderService
+    private eventDataloader: EventDataloaderService,
+    private urlAdapter: URLAdapter
   ) {}
 
   @Public()
-  @Query(returns => PaginatedEvents, {
+  @Query(() => PaginatedEvents, {
     description: `Returns a paginated list of events based on the filters given.`
   })
   public events(@Args() filter: EventListArgs) {
@@ -35,31 +33,34 @@ export class EventResolver {
   }
 
   @Public()
-  @Query(returns => EventV2, {description: `Returns a event by id.`})
-  public event(@Args() {id}: EventId) {
+  @Query(() => Event, {description: `Returns a event by id.`})
+  public event(@Args('id') id: string) {
     return this.eventDataloader.load(id)
   }
 
+  @Mutation(() => Event, {description: `Creates a new event.`})
   @Permissions(CanCreateEvent)
-  @Mutation(returns => EventV2, {description: `Creates a new event.`})
+  @Mutation(returns => Event, {description: `Creates a new event.`})
   public createEvent(@Args() event: CreateEventInput) {
     return this.eventService.createEvent(event)
   }
 
+  @Mutation(() => Event, {description: `Updates an existing event.`})
   @Permissions(CanUpdateEvent)
-  @Mutation(returns => EventV2, {description: `Updates an existing event.`})
+  @Mutation(returns => Event, {description: `Updates an existing event.`})
   public updateEvent(@Args() event: UpdateEventInput) {
     return this.eventService.updateEvent(event)
   }
 
+  @Mutation(() => Event, {description: `Deletes an existing event.`})
   @Permissions(CanDeleteEvent)
-  @Mutation(returns => EventV2, {description: `Deletes an existing event.`})
+  @Mutation(returns => Event, {description: `Deletes an existing event.`})
   public deleteEvent(@Args('id') id: string) {
     return this.eventService.deleteEvent(id)
   }
 
-  @ResolveField(returns => Image, {nullable: true})
-  public image(@Parent() event: EventV2) {
+  @ResolveField(() => Image, {nullable: true})
+  public image(@Parent() event: Event) {
     const {imageId} = event
 
     if (!imageId) {
@@ -70,9 +71,14 @@ export class EventResolver {
   }
 
   @ResolveField(() => [Tag], {nullable: true})
-  async tags(@Parent() parent: EventV2) {
+  async tags(@Parent() parent: Event) {
     const {id: eventId} = parent
     const tagIds = await this.eventService.getEventTagIds(eventId)
     return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+  }
+
+  @ResolveField(() => String, {nullable: true})
+  async url(@Parent() parent: PEvent) {
+    return this.urlAdapter.getEventURL(parent)
   }
 }

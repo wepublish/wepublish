@@ -27,10 +27,6 @@ const modelFieldDefinitions = [{
                 type: "MetadataProperty",
                 relationName: "ArticleRevisionToMetadataProperty"
             }, {
-                name: "image",
-                type: "Image",
-                relationName: "articleRevisionImage"
-            }, {
                 name: "authors",
                 type: "ArticleRevisionAuthor",
                 relationName: "ArticleRevisionToArticleRevisionAuthor"
@@ -39,21 +35,21 @@ const modelFieldDefinitions = [{
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionToArticleRevisionSocialMediaAuthor"
             }, {
+                name: "image",
+                type: "Image",
+                relationName: "articleRevisionImage"
+            }, {
                 name: "socialMediaImage",
                 type: "Image",
                 relationName: "articleRevisionSocialMediaImage"
             }, {
-                name: "PublishedArticle",
+                name: "article",
                 type: "Article",
-                relationName: "publishedArticleRevision"
+                relationName: "ArticleToArticleRevision"
             }, {
-                name: "PendingArticle",
-                type: "Article",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "DraftArticle",
-                type: "Article",
-                relationName: "draftArticleRevision"
+                name: "user",
+                type: "User",
+                relationName: "ArticleRevisionToUser"
             }]
     }, {
         name: "ArticleRevisionAuthor",
@@ -80,17 +76,9 @@ const modelFieldDefinitions = [{
     }, {
         name: "Article",
         fields: [{
-                name: "published",
-                type: "ArticleRevision",
-                relationName: "publishedArticleRevision"
-            }, {
-                name: "pending",
-                type: "ArticleRevision",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "draft",
-                type: "ArticleRevision",
-                relationName: "draftArticleRevision"
+                name: "peer",
+                type: "Peer",
+                relationName: "ArticleToPeer"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -99,6 +87,10 @@ const modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedArticles",
                 relationName: "ArticleToTaggedArticles"
+            }, {
+                name: "revisions",
+                type: "ArticleRevision",
+                relationName: "ArticleToArticleRevision"
             }, {
                 name: "trackingPixels",
                 type: "ArticleTrackingPixels",
@@ -158,6 +150,10 @@ const modelFieldDefinitions = [{
                 name: "articlesAsSocialMediaAuthor",
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionSocialMediaAuthorToAuthor"
+            }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "AuthorToPeer"
             }, {
                 name: "tags",
                 type: "TaggedAuthors",
@@ -220,6 +216,10 @@ const modelFieldDefinitions = [{
                 type: "PageRevision",
                 relationName: "pageRevisionImage"
             }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "ImageToPeer"
+            }, {
                 name: "users",
                 type: "User",
                 relationName: "ImageToUser"
@@ -246,10 +246,6 @@ const modelFieldDefinitions = [{
     }, {
         name: "Comment",
         fields: [{
-                name: "peer",
-                type: "Peer",
-                relationName: "CommentToPeer"
-            }, {
                 name: "revisions",
                 type: "CommentsRevisions",
                 relationName: "CommentToCommentsRevisions"
@@ -407,6 +403,10 @@ const modelFieldDefinitions = [{
                 name: "subscriptionFlows",
                 type: "SubscriptionFlow",
                 relationName: "MemberPlanToSubscriptionFlow"
+            }, {
+                name: "crowdfundings",
+                type: "Crowdfunding",
+                relationName: "CrowdfundingToMemberPlan"
             }]
     }, {
         name: "NavigationLink",
@@ -445,32 +445,20 @@ const modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "pageRevisionSocialMediaImage"
             }, {
-                name: "PublishedPage",
+                name: "page",
                 type: "Page",
-                relationName: "publishedPageRevision"
+                relationName: "PageToPageRevision"
             }, {
-                name: "PendingPage",
-                type: "Page",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "DraftPage",
-                type: "Page",
-                relationName: "draftPageRevision"
+                name: "user",
+                type: "User",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "Page",
         fields: [{
-                name: "published",
+                name: "revisions",
                 type: "PageRevision",
-                relationName: "publishedPageRevision"
-            }, {
-                name: "pending",
-                type: "PageRevision",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "draft",
-                type: "PageRevision",
-                relationName: "draftPageRevision"
+                relationName: "PageToPageRevision"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -547,9 +535,21 @@ const modelFieldDefinitions = [{
     }, {
         name: "Peer",
         fields: [{
-                name: "comments",
-                type: "Comment",
-                relationName: "CommentToPeer"
+                name: "articles",
+                type: "Article",
+                relationName: "ArticleToPeer"
+            }, {
+                name: "images",
+                type: "Image",
+                relationName: "ImageToPeer"
+            }, {
+                name: "tags",
+                type: "Tag",
+                relationName: "PeerToTag"
+            }, {
+                name: "authors",
+                type: "Author",
+                relationName: "AuthorToPeer"
             }]
     }, {
         name: "Token",
@@ -662,23 +662,23 @@ const modelFieldDefinitions = [{
                 type: "PaymentProviderCustomer",
                 relationName: "PaymentProviderCustomerToUser"
             }, {
-                name: "Comment",
+                name: "comments",
                 type: "Comment",
                 relationName: "CommentToUser"
             }, {
-                name: "Session",
+                name: "sessions",
                 type: "Session",
                 relationName: "SessionToUser"
             }, {
-                name: "Subscription",
+                name: "subscriptions",
                 type: "Subscription",
                 relationName: "SubscriptionToUser"
             }, {
-                name: "CommentRating",
+                name: "commentRatings",
                 type: "CommentRating",
                 relationName: "CommentRatingToUser"
             }, {
-                name: "PollVote",
+                name: "pollVotes",
                 type: "PollVote",
                 relationName: "PollVoteToUser"
             }, {
@@ -686,9 +686,17 @@ const modelFieldDefinitions = [{
                 type: "MailLog",
                 relationName: "MailLogToUser"
             }, {
-                name: "UserConsent",
+                name: "consents",
                 type: "UserConsent",
                 relationName: "UserToUserConsent"
+            }, {
+                name: "articleRevisions",
+                type: "ArticleRevision",
+                relationName: "ArticleRevisionToUser"
+            }, {
+                name: "pageRevisions",
+                type: "PageRevision",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "UserRole",
@@ -699,6 +707,10 @@ const modelFieldDefinitions = [{
     }, {
         name: "Tag",
         fields: [{
+                name: "peer",
+                type: "Peer",
+                relationName: "PeerToTag"
+            }, {
                 name: "comments",
                 type: "TaggedComments",
                 relationName: "TagToTaggedComments"
@@ -902,6 +914,24 @@ const modelFieldDefinitions = [{
                 type: "Banner",
                 relationName: "BannerToBannerAction"
             }]
+    }, {
+        name: "Crowdfunding",
+        fields: [{
+                name: "memberPlans",
+                type: "MemberPlan",
+                relationName: "CrowdfundingToMemberPlan"
+            }, {
+                name: "goals",
+                type: "CrowdfundingGoal",
+                relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
+    }, {
+        name: "CrowdfundingGoal",
+        fields: [{
+                name: "Crowdfunding",
+                type: "Crowdfunding",
+                relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -959,7 +989,7 @@ function defineMetadataPropertyFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().metadataProperty.create({ data });
         });
@@ -997,6 +1027,12 @@ function isArticleRevisionimageFactory(x) {
 function isArticleRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isArticleRevisionarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function isArticleRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
 function autoGenerateArticleRevisionScalarsOrEnums({ seq }) {
     return {
         breaking: getScalarFieldValueGenerator().Boolean({ modelName: "ArticleRevision", fieldName: "breaking", isId: false, isUnique: false, seq }),
@@ -1026,7 +1062,13 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
                 } : defaultData.image,
                 socialMediaImage: isArticleRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
                     create: yield defaultData.socialMediaImage.build()
-                } : defaultData.socialMediaImage
+                } : defaultData.socialMediaImage,
+                article: isArticleRevisionarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                user: isArticleRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1035,7 +1077,7 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleRevision.create({ data });
         });
@@ -1065,7 +1107,7 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
 export function defineArticleRevisionFactory(options) {
-    return defineArticleRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
+    return defineArticleRevisionFactoryInternal(options);
 }
 function isArticleRevisionAuthorrevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -1108,7 +1150,7 @@ function defineArticleRevisionAuthorFactoryInternal({ defaultData: defaultDataRe
             revisionId: inputData.revisionId,
             authorId: inputData.authorId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleRevisionAuthor.create({ data });
         });
@@ -1181,7 +1223,7 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
             revisionId: inputData.revisionId,
             authorId: inputData.authorId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleRevisionSocialMediaAuthor.create({ data });
         });
@@ -1213,14 +1255,8 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
 export function defineArticleRevisionSocialMediaAuthorFactory(options) {
     return defineArticleRevisionSocialMediaAuthorFactoryInternal(options);
 }
-function isArticlepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticlependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticledraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
+function isArticlepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
 }
 function autoGenerateArticleScalarsOrEnums({ seq }) {
     return {
@@ -1244,15 +1280,9 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
-                published: isArticlepublishedFactory(defaultData.published) ? {
-                    create: yield defaultData.published.build()
-                } : defaultData.published,
-                pending: isArticlependingFactory(defaultData.pending) ? {
-                    create: yield defaultData.pending.build()
-                } : defaultData.pending,
-                draft: isArticledraftFactory(defaultData.draft) ? {
-                    create: yield defaultData.draft.build()
-                } : defaultData.draft
+                peer: isArticlepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1261,7 +1291,7 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().article.create({ data });
         });
@@ -1333,7 +1363,7 @@ function defineArticleTrackingPixelsFactoryInternal({ defaultData: defaultDataRe
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleTrackingPixels.create({ data });
         });
@@ -1395,7 +1425,7 @@ function defineTrackingPixelMethodFactoryInternal({ defaultData: defaultDataReso
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().trackingPixelMethod.create({ data });
         });
@@ -1468,7 +1498,7 @@ function defineTaggedArticlesFactoryInternal({ defaultData: defaultDataResolver,
             articleId: inputData.articleId,
             tagId: inputData.tagId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedArticles.create({ data });
         });
@@ -1537,7 +1567,7 @@ function defineAuthorsLinksFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().authorsLinks.create({ data });
         });
@@ -1572,6 +1602,9 @@ export function defineAuthorsLinksFactory(options) {
 function isAuthorimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isAuthorpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateAuthorScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "Author", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -1597,7 +1630,10 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
             const defaultAssociations = {
                 image: isAuthorimageFactory(defaultData.image) ? {
                     create: yield defaultData.image.build()
-                } : defaultData.image
+                } : defaultData.image,
+                peer: isAuthorpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1606,7 +1642,7 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().author.create({ data });
         });
@@ -1679,7 +1715,7 @@ function defineTaggedAuthorsFactoryInternal({ defaultData: defaultDataResolver, 
             authorId: inputData.authorId,
             tagId: inputData.tagId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedAuthors.create({ data });
         });
@@ -1745,7 +1781,7 @@ function defineFocalPointFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             imageId: inputData.imageId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().focalPoint.create({ data });
         });
@@ -1780,6 +1816,9 @@ export function defineFocalPointFactory(options) {
 function isImagefocalPointFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "FocalPoint";
 }
+function isImagepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateImageScalarsOrEnums({ seq }) {
     return {
         id: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "id", isId: true, isUnique: false, seq }),
@@ -1810,7 +1849,10 @@ function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: 
             const defaultAssociations = {
                 focalPoint: isImagefocalPointFactory(defaultData.focalPoint) ? {
                     create: yield defaultData.focalPoint.build()
-                } : defaultData.focalPoint
+                } : defaultData.focalPoint,
+                peer: isImagepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -1819,7 +1861,7 @@ function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().image.create({ data });
         });
@@ -1885,7 +1927,7 @@ function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolv
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentsRevisions.create({ data });
         });
@@ -1917,9 +1959,6 @@ function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolv
 export function defineCommentsRevisionsFactory(options) {
     return defineCommentsRevisionsFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-function isCommentpeerFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
-}
 function isCommentguestUserImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
@@ -1929,7 +1968,7 @@ function isCommentuserFactory(x) {
 function autoGenerateCommentScalarsOrEnums({ seq }) {
     return {
         itemID: getScalarFieldValueGenerator().String({ modelName: "Comment", fieldName: "itemID", isId: false, isUnique: false, seq }),
-        itemType: "peerArticle",
+        itemType: "article",
         state: "approved",
         authorType: "team"
     };
@@ -1951,9 +1990,6 @@ function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
             const defaultAssociations = {
-                peer: isCommentpeerFactory(defaultData.peer) ? {
-                    create: yield defaultData.peer.build()
-                } : defaultData.peer,
                 guestUserImage: isCommentguestUserImageFactory(defaultData.guestUserImage) ? {
                     create: yield defaultData.guestUserImage.build()
                 } : defaultData.guestUserImage,
@@ -1968,7 +2004,7 @@ function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().comment.create({ data });
         });
@@ -2041,7 +2077,7 @@ function defineTaggedCommentsFactoryInternal({ defaultData: defaultDataResolver,
             commentId: inputData.commentId,
             tagId: inputData.tagId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedComments.create({ data });
         });
@@ -2100,7 +2136,7 @@ function defineCommentRatingSystemFactoryInternal({ defaultData: defaultDataReso
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRatingSystem.create({ data });
         });
@@ -2168,7 +2204,7 @@ function defineCommentRatingSystemAnswerFactoryInternal({ defaultData: defaultDa
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRatingSystemAnswer.create({ data });
         });
@@ -2248,7 +2284,7 @@ function defineCommentRatingFactoryInternal({ defaultData: defaultDataResolver, 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRating.create({ data });
         });
@@ -2321,7 +2357,7 @@ function defineCommentRatingOverrideFactoryInternal({ defaultData: defaultDataRe
             answerId: inputData.answerId,
             commentId: inputData.commentId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRatingOverride.create({ data });
         });
@@ -2391,7 +2427,7 @@ function defineInvoiceItemFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().invoiceItem.create({ data });
         });
@@ -2462,7 +2498,7 @@ function defineInvoiceFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().invoice.create({ data });
         });
@@ -2539,7 +2575,7 @@ function defineMailLogFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().mailLog.create({ data });
         });
@@ -2607,7 +2643,7 @@ function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataR
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().availablePaymentMethod.create({ data });
         });
@@ -2704,7 +2740,7 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().memberPlan.create({ data });
         });
@@ -2785,7 +2821,7 @@ function defineNavigationLinkFactoryInternal({ defaultData: defaultDataResolver,
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().navigationLink.create({ data });
         });
@@ -2847,7 +2883,7 @@ function defineNavigationFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().navigation.create({ data });
         });
@@ -2885,9 +2921,14 @@ function isPageRevisionimageFactory(x) {
 function isPageRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isPageRevisionpageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isPageRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
 function autoGeneratePageRevisionScalarsOrEnums({ seq }) {
     return {
-        title: getScalarFieldValueGenerator().String({ modelName: "PageRevision", fieldName: "title", isId: false, isUnique: false, seq }),
         blocks: getScalarFieldValueGenerator().Json({ modelName: "PageRevision", fieldName: "blocks", isId: false, isUnique: false, seq })
     };
 }
@@ -2913,7 +2954,13 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
                 } : defaultData.image,
                 socialMediaImage: isPageRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
                     create: yield defaultData.socialMediaImage.build()
-                } : defaultData.socialMediaImage
+                } : defaultData.socialMediaImage,
+                page: isPageRevisionpageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page,
+                user: isPageRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -2922,7 +2969,7 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pageRevision.create({ data });
         });
@@ -2952,16 +2999,7 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export function definePageRevisionFactory(options) {
-    return definePageRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
-}
-function isPagepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagedraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
+    return definePageRevisionFactoryInternal(options);
 }
 function autoGeneratePageScalarsOrEnums({ seq }) {
     return {};
@@ -2982,17 +3020,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {
-                published: isPagepublishedFactory(defaultData.published) ? {
-                    create: yield defaultData.published.build()
-                } : defaultData.published,
-                pending: isPagependingFactory(defaultData.pending) ? {
-                    create: yield defaultData.pending.build()
-                } : defaultData.pending,
-                draft: isPagedraftFactory(defaultData.draft) ? {
-                    create: yield defaultData.draft.build()
-                } : defaultData.draft
-            };
+            const defaultAssociations = {};
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });
@@ -3000,7 +3028,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().page.create({ data });
         });
@@ -3073,7 +3101,7 @@ function defineTaggedPagesFactoryInternal({ defaultData: defaultDataResolver, tr
             pageId: inputData.pageId,
             tagId: inputData.tagId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedPages.create({ data });
         });
@@ -3145,7 +3173,7 @@ function definePaymentMethodFactoryInternal({ defaultData: defaultDataResolver, 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().paymentMethod.create({ data });
         });
@@ -3214,7 +3242,7 @@ function definePaymentFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().payment.create({ data });
         });
@@ -3286,7 +3314,7 @@ function definePeerProfileFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().peerProfile.create({ data });
         });
@@ -3350,7 +3378,7 @@ function definePeerFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().peer.create({ data });
         });
@@ -3412,7 +3440,7 @@ function defineTokenFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().token.create({ data });
         });
@@ -3481,7 +3509,7 @@ function defineSessionFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().session.create({ data });
         });
@@ -3558,7 +3586,7 @@ function defineSubscriptionPeriodFactoryInternal({ defaultData: defaultDataResol
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionPeriod.create({ data });
         });
@@ -3627,7 +3655,7 @@ function defineSubscriptionDeactivationFactoryInternal({ defaultData: defaultDat
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionDeactivation.create({ data });
         });
@@ -3723,7 +3751,7 @@ function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscription.create({ data });
         });
@@ -3789,7 +3817,7 @@ function defineUserAddressFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             userId: inputData.userId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userAddress.create({ data });
         });
@@ -3864,7 +3892,7 @@ function defineUserOAuth2AccountFactoryInternal({ defaultData: defaultDataResolv
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userOAuth2Account.create({ data });
         });
@@ -3933,7 +3961,7 @@ function definePaymentProviderCustomerFactoryInternal({ defaultData: defaultData
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().paymentProviderCustomer.create({ data });
         });
@@ -4010,7 +4038,7 @@ function defineUserFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().user.create({ data });
         });
@@ -4072,7 +4100,7 @@ function defineUserRoleFactoryInternal({ defaultData: defaultDataResolver, trait
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userRole.create({ data });
         });
@@ -4135,7 +4163,7 @@ function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().setting.create({ data });
         });
@@ -4167,6 +4195,9 @@ function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits
 export function defineSettingFactory(options) {
     return defineSettingFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
+function isTagpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
 function autoGenerateTagScalarsOrEnums({ seq }) {
     return {
         type: "Comment"
@@ -4188,7 +4219,11 @@ function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: tr
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {};
+            const defaultAssociations = {
+                peer: isTagpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });
@@ -4196,7 +4231,7 @@ function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().tag.create({ data });
         });
@@ -4255,7 +4290,7 @@ function definePollFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().poll.create({ data });
         });
@@ -4321,7 +4356,7 @@ function definePollAnswerFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollAnswer.create({ data });
         });
@@ -4399,7 +4434,7 @@ function definePollVoteFactoryInternal({ defaultData: defaultDataResolver, trait
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollVote.create({ data });
         });
@@ -4465,7 +4500,7 @@ function definePollExternalVoteSourceFactoryInternal({ defaultData: defaultDataR
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollExternalVoteSource.create({ data });
         });
@@ -4537,7 +4572,7 @@ function definePollExternalVoteFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollExternalVote.create({ data });
         });
@@ -4606,7 +4641,7 @@ function defineEventFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().event.create({ data });
         });
@@ -4679,7 +4714,7 @@ function defineTaggedEventsFactoryInternal({ defaultData: defaultDataResolver, t
             eventId: inputData.eventId,
             tagId: inputData.tagId
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedEvents.create({ data });
         });
@@ -4742,7 +4777,7 @@ function defineConsentFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().consent.create({ data });
         });
@@ -4816,7 +4851,7 @@ function defineUserConsentFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userConsent.create({ data });
         });
@@ -4884,7 +4919,7 @@ function defineUserFlowMailFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userFlowMail.create({ data });
         });
@@ -4950,7 +4985,7 @@ function defineSubscriptionFlowFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionFlow.create({ data });
         });
@@ -5024,7 +5059,7 @@ function defineSubscriptionIntervalFactoryInternal({ defaultData: defaultDataRes
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionInterval.create({ data });
         });
@@ -5086,7 +5121,7 @@ function defineMailTemplateFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().mailTemplate.create({ data });
         });
@@ -5147,7 +5182,7 @@ function definePeriodicJobFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().periodicJob.create({ data });
         });
@@ -5208,7 +5243,7 @@ function defineBlockStyleFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().blockStyle.create({ data });
         });
@@ -5277,7 +5312,7 @@ function defineBannerFactoryInternal({ defaultData: defaultDataResolver, traits:
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().banner.create({ data });
         });
@@ -5346,7 +5381,7 @@ function defineBannerActionFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().bannerAction.create({ data });
         });
@@ -5377,4 +5412,134 @@ function defineBannerActionFactoryInternal({ defaultData: defaultDataResolver, t
  */
 export function defineBannerActionFactory(options) {
     return defineBannerActionFactoryInternal(options);
+}
+function autoGenerateCrowdfundingScalarsOrEnums({ seq }) {
+    return {
+        name: getScalarFieldValueGenerator().String({ modelName: "Crowdfunding", fieldName: "name", isId: false, isUnique: false, seq })
+    };
+}
+function defineCrowdfundingFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Crowdfunding", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCrowdfundingScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().crowdfunding.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "Crowdfunding",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link Crowdfunding} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingFactoryInterface}
+ */
+export function defineCrowdfundingFactory(options) {
+    return defineCrowdfundingFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isCrowdfundingGoalCrowdfundingFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Crowdfunding";
+}
+function autoGenerateCrowdfundingGoalScalarsOrEnums({ seq }) {
+    return {
+        title: getScalarFieldValueGenerator().String({ modelName: "CrowdfundingGoal", fieldName: "title", isId: false, isUnique: false, seq }),
+        amount: getScalarFieldValueGenerator().Int({ modelName: "CrowdfundingGoal", fieldName: "amount", isId: false, isUnique: false, seq })
+    };
+}
+function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CrowdfundingGoal", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCrowdfundingGoalScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                Crowdfunding: isCrowdfundingGoalCrowdfundingFactory(defaultData.Crowdfunding) ? {
+                    create: yield defaultData.Crowdfunding.build()
+                } : defaultData.Crowdfunding
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().crowdfundingGoal.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "CrowdfundingGoal",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link CrowdfundingGoal} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingGoalFactoryInterface}
+ */
+export function defineCrowdfundingGoalFactory(options) {
+    return defineCrowdfundingGoalFactoryInternal(options);
 }

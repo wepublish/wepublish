@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps, BuilderImageWidths} from '@wepublish/website/builder'
 import {useImageProps} from './image.context'
@@ -107,6 +107,8 @@ export function Image({image, ...props}: BuilderImageProps) {
       sizes={imageSizes.join(',\n')}
       loading={loading}
       fetchPriority={fetchPriority}
+      width={square ? undefined : image.width}
+      height={square ? undefined : image.height}
     />
   )
 }

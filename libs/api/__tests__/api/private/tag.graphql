@@ -1,6 +1,6 @@
 query TagList(
   $filter: TagFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -30,14 +30,14 @@ mutation CreateTag($tag: String, $type: TagType!) {
   }
 }
 
-mutation UpdateTag($id: ID!, $tag: String) {
+mutation UpdateTag($id: String!, $tag: String) {
   updateTag(id: $id, tag: $tag) {
     id
     tag
   }
 }
 
-mutation DeleteTag($id: ID!) {
+mutation DeleteTag($id: String!) {
   deleteTag(id: $id) {
     id
     tag

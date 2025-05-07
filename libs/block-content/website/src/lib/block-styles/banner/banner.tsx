@@ -1,6 +1,6 @@
 import {css} from '@mui/material'
-import {styled} from '@mui/material'
-import {Block, LinkPageBreakBlock} from '@wepublish/website/api'
+import styled from '@emotion/styled'
+import {BlockContent, BreakBlock} from '@wepublish/website/api'
 import {useWebsiteBuilder, BuilderBlockStyleProps} from '@wepublish/website/builder'
 import {isBreakBlock} from '../../break/break-block'
 import {hasBlockStyle} from '../../blocks'
@@ -31,5 +31,5 @@ export const Banner = ({image, linkURL, linkTarget}: BuilderBlockStyleProps['Ban
   )
 }
 
-export const isBannerBlockStyle = (block: Block): block is LinkPageBreakBlock =>
+export const isBannerBlockStyle = (block: Pick<BlockContent, '__typename'>): block is BreakBlock =>
   allPass([hasBlockStyle('Banner'), isBreakBlock])(block)

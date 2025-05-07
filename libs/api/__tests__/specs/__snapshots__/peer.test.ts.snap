@@ -111,7 +111,12 @@ exports[`Peers can be created/edited/deleted: can update peer profile 1`] = `
       "callToActionImageURL": null,
       "callToActionText": [
         {
-          "text": "rich text call to action",
+          "children": [
+            {
+              "text": "rich text call to action",
+            },
+          ],
+          "type": "paragraph",
         },
       ],
       "callToActionURL": "calltoactionurl.ch/",

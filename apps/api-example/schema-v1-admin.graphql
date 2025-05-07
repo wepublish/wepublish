@@ -3,57 +3,41 @@ type Query {
   createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
   peerProfile: PeerProfile!
   peers: [Peer!]
-  peer(id: ID!): Peer
+  peer(id: String!): Peer
   me: User
   sessions: [Session!]!
   authProviders(redirectUri: String): [AuthProvider!]!
-  user(id: ID): User
-  users(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
-  subscription(id: ID!): Subscription
-  subscriptions(cursor: ID, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
+  user(id: String): User
+  users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
+  subscription(id: String!): Subscription
+  subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  userRole(id: ID): UserRole
-  userRoles(cursor: ID, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
+  userRole(id: String): UserRole
+  userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
   permissions: [Permission!]
   tokens: [Token!]!
-  navigation(id: ID, key: ID): Navigation
-  navigations: [Navigation!]!
-  author(id: ID, slug: Slug): Author
-  authors(cursor: ID, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
-  image(id: ID): Image
-  images(cursor: ID, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
-  comment(id: ID!): Comment
-  comments(cursor: ID, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  article(id: ID!): Article
-  articles(cursor: ID, take: Int = 10, skip: Int = 0, filter: ArticleFilter, sort: ArticleSort = modifiedAt, order: SortOrder = Descending): ArticleConnection!
-  peerArticle(peerID: ID!, id: ID!): Article
-  peerArticles(cursors: String, take: Int = 10, first: Int, skip: Int = 0, sort: ArticleSort = modifiedAt, order: SortOrder = Descending, peerFilter: String, filter: ArticleFilter): PeerArticleConnection!
-  articlePreviewLink(id: ID!, hours: Int!): String
-  page(id: ID): Page
-  pages(cursor: ID, take: Int = 10, skip: Int = 0, filter: PageFilter, sort: PageSort = modifiedAt, order: SortOrder = Descending): PageConnection!
-  pagePreviewLink(id: ID!, hours: Int!): String
-  memberPlan(id: ID, slug: Slug): MemberPlan
-  memberPlans(cursor: ID, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
-  paymentMethod(id: ID): PaymentMethod
+  author(id: String, slug: Slug): Author
+  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
+  image(id: String): Image
+  images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
+  comment(id: String!): Comment
+  comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
+  memberPlan(id: String, slug: Slug): MemberPlan
+  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
+  paymentMethod(id: String): PaymentMethod
   paymentMethods: [PaymentMethod!]!
   paymentProviders: [PaymentProvider!]!
-  invoice(id: ID): Invoice
-  invoices(cursor: ID, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: ID): Payment
-  payments(cursor: ID, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
+  invoice(id: String): Invoice
+  invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
+  payment(id: String): Payment
+  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
   setting(name: String!): Setting
   settings: [Setting!]!
   ratingSystem: FullCommentRatingSystem!
-  tags(cursor: ID, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
-  polls(cursor: ID, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
-  poll(id: ID): FullPoll
-  events(cursor: ID, take: Int = 10, skip: Int = 0, filter: EventFilter, sort: EventSort = StartsAt, order: SortOrder = Descending): EventConnection
-  event(id: ID): Event
-
-  """This query returns a list of original ids of imported events"""
-  importedEventsIds: [String]
+  tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
+  polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
+  poll(id: String): FullPoll
   newSubscribersPerMonth(monthsBack: Int): [SubscribersPerMonth]
-  actions: [Action!]!
 }
 
 type PeerProfile {
@@ -70,7 +54,7 @@ type PeerProfile {
 }
 
 type Image {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   filename: String
@@ -134,7 +118,7 @@ type JWTToken {
 }
 
 type Peer {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -206,7 +190,7 @@ type OAuth2Account {
 }
 
 type UserSubscription {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   paymentPeriodicity: PaymentPeriodicity!
@@ -248,8 +232,8 @@ enum SubscriptionDeactivationReason {
 }
 
 type SubscriptionPeriod {
-  id: ID!
-  invoiceID: ID!
+  id: String!
+  invoiceID: String!
   amount: Int!
   createdAt: DateTime!
   startsAt: DateTime!
@@ -258,7 +242,7 @@ type SubscriptionPeriod {
 }
 
 type MemberPlan {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -273,13 +257,10 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   availablePaymentMethods: [AvailablePaymentMethod!]!
-  migrateToTargetPaymentMethodID: ID
-  successPageId: ID
-  successPage: Page
-  failPageId: ID
-  failPage: Page
-  confirmationPageId: ID
-  confirmationPage: Page
+  migrateToTargetPaymentMethodID: String
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
 }
 
 type AvailablePaymentMethod {
@@ -289,7 +270,7 @@ type AvailablePaymentMethod {
 }
 
 type PaymentMethod {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -304,529 +285,18 @@ type PaymentMethod {
 scalar Slug
 
 type PaymentProvider {
-  id: ID!
+  id: String!
   name: String!
-}
-
-type Page {
-  id: ID!
-  shared: Boolean!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  draft: PageRevision
-  published: PageRevision
-  pending: PageRevision
-  latest: PageRevision!
-  tags: [Tag!]!
-}
-
-type PageRevision {
-  revision: Int!
-  createdAt: DateTime!
-  publishAt: DateTime
-  updatedAt: DateTime
-  publishedAt: DateTime
-  slug: Slug
-  title: String
-  description: String
-  tags: [String!]! @deprecated(reason: "Tags now live on the Page itself")
-  properties: [Properties!]!
-  url: String!
-  image: Image
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaImage: Image
-  blocks: [Block!]!
-}
-
-union Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | TikTokVideoBlock | BildwurfAdBlock | EmbedBlock | HTMLBlock | PollBlock | EventBlock | CommentBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock
-
-type RichTextBlock {
-  blockStyle: String
-  richText: RichText!
-}
-
-type ImageBlock {
-  blockStyle: String
-  image: Image
-  caption: String
-  linkUrl: String
-}
-
-type ImageGalleryBlock {
-  blockStyle: String
-  images: [GalleryImageEdge!]!
-}
-
-type GalleryImageEdge {
-  caption: String
-  image: Image
-}
-
-type ListicleBlock {
-  blockStyle: String
-  items: [ListicleItem!]!
-}
-
-type ListicleItem {
-  title: String!
-  image: Image
-  richText: RichText!
-}
-
-type FacebookPostBlock {
-  blockStyle: String
-  userID: String!
-  postID: String!
-}
-
-type FacebookVideoBlock {
-  blockStyle: String
-  userID: String!
-  videoID: String!
-}
-
-type InstagramPostBlock {
-  blockStyle: String
-  postID: String!
-}
-
-type TwitterTweetBlock {
-  blockStyle: String
-  userID: String!
-  tweetID: String!
-}
-
-type VimeoVideoBlock {
-  blockStyle: String
-  videoID: String!
-}
-
-type YouTubeVideoBlock {
-  blockStyle: String
-  videoID: String!
-}
-
-type SoundCloudTrackBlock {
-  blockStyle: String
-  trackID: String!
-}
-
-type PolisConversationBlock {
-  blockStyle: String
-  conversationID: String!
-}
-
-type TikTokVideoBlock {
-  blockStyle: String
-  videoID: String!
-  userID: String!
-}
-
-type BildwurfAdBlock {
-  blockStyle: String
-  zoneID: String!
-}
-
-type EmbedBlock {
-  blockStyle: String
-  url: String
-  title: String
-  width: Int
-  height: Int
-  styleCustom: String
-  sandbox: String
-}
-
-type HTMLBlock {
-  blockStyle: String
-  html: String
-}
-
-type PollBlock {
-  blockStyle: String
-  poll: FullPoll
-}
-
-type FullPoll {
-  id: ID!
-  question: String
-  opensAt: DateTime!
-  closedAt: DateTime
-  infoText: RichText
-  answers: [PollAnswerWithVoteCount!]!
-  externalVoteSources: [PollExternalVoteSource!]!
-}
-
-type PollAnswerWithVoteCount {
-  id: ID!
-  pollId: ID!
-  answer: String
-  votes: Int!
-}
-
-type PollExternalVoteSource {
-  id: ID!
-  source: String
-  voteAmounts: [PollExternalVote!]!
-}
-
-type PollExternalVote {
-  id: ID!
-  answerId: ID!
-  amount: VoteValue!
-}
-
-"""A valid vote value"""
-scalar VoteValue
-
-type EventBlock {
-  blockStyle: String
-  filter: EventBlockFilter!
-  events: [Event!]!
-}
-
-type EventBlockFilter {
-  tags: [ID!]
-  events: [ID!]
-}
-
-type Event {
-  id: ID!
-  name: String!
-  lead: String
-  status: EventStatus!
-  description: RichText
-  location: String
-  startsAt: DateTime!
-  endsAt: DateTime
-  externalSourceId: String
-  externalSourceName: String
-  tags: [Tag!]!
-  image: Image
-  url: String!
-}
-
-enum EventStatus {
-  Cancelled
-  Rescheduled
-  Postponed
-  Scheduled
-}
-
-type Tag {
-  id: ID!
-  tag: String
-  type: TagType
-  main: Boolean!
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-type CommentBlock {
-  blockStyle: String
-  filter: CommentBlockFilter!
-  comments: [Comment!]!
-}
-
-type CommentBlockFilter {
-  item: ID
-  tags: [ID!]
-  comments: [ID!]
-}
-
-type Comment {
-  id: ID!
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: ID!
-  itemType: CommentItemType!
-  peerId: ID
-  parentComment: Comment
-  revisions: [CommentRevision!]!
-  source: String
-  state: CommentState!
-  rejectionReason: CommentRejectionReason
-  featured: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]
-}
-
-enum CommentAuthorType {
-  author
-  team
-  verifiedUser
-  guestUser
-}
-
-enum CommentItemType {
-  article
-  peerArticle
-  page
-}
-
-type CommentRevision {
-  text: RichText
-  title: String
-  lead: String
-  createdAt: DateTime!
-}
-
-enum CommentState {
-  approved
-  pendingApproval
-  pendingUserChanges
-  rejected
-}
-
-enum CommentRejectionReason {
-  misconduct
-  spam
-}
-
-type overriddenRating {
-  answerId: ID!
-  value: Int
-}
-
-type LinkPageBreakBlock {
-  blockStyle: String
-  text: String
-  richText: RichText!
-  linkURL: String
-  linkText: String
-  linkTarget: String
-  hideButton: Boolean!
-  styleOption: String @deprecated(reason: "Use block styles instead of this")
-  layoutOption: String @deprecated(reason: "Use block styles instead of this")
-  templateOption: String @deprecated(reason: "Use block styles instead of this")
-  image: Image
-}
-
-type TitleBlock {
-  blockStyle: String
-  title: String
-  lead: String
-}
-
-type QuoteBlock {
-  blockStyle: String
-  quote: String
-  author: String
-  image: Image
-}
-
-type TeaserGridBlock {
-  blockStyle: String
-  teasers: [Teaser]!
-  numColumns: Int!
-}
-
-union Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
-
-type ArticleTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  article: Article
-}
-
-enum TeaserStyle {
-  default
-  light
-  text
-}
-
-type Article {
-  id: ID!
-  shared: Boolean!
-  hidden: Boolean
-  disableComments: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  draft: ArticleRevision
-  published: ArticleRevision
-  pending: ArticleRevision
-  latest: ArticleRevision!
-  tags: [Tag!]!
-  trackingPixels: [TrackingPixel]
-}
-
-type ArticleRevision {
-  revision: Int!
-  createdAt: DateTime!
-  publishAt: DateTime
-  updatedAt: DateTime
-  publishedAt: DateTime
-  hideAuthor: Boolean!
-  preTitle: String
-  title: String
-  lead: String
-  seoTitle: String
-  slug: String
-  tags: [String!]! @deprecated(reason: "Tags now live on the Article itself")
-  properties: [Properties!]!
-  canonicalUrl: String
-  url: String!
-  image: Image
-  authors: [Author!]!
-  breaking: Boolean!
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaAuthors: [Author!]!
-  socialMediaImage: Image
-  likes: Int
-  blocks: [Block!]!
-}
-
-type Author {
-  id: ID!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  url: String!
-  links: [AuthorLink!]
-  bio: RichText
-  jobTitle: String
-  image: Image
-  tags: [Tag!]!
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-}
-
-type AuthorLink {
-  title: String!
-  url: String!
-}
-
-type TrackingPixel {
-  id: ID!
-  trackingPixelMethod: TrackingPixelMethod!
-  pixelUid: String
-  uri: String
-  error: String
-}
-
-type TrackingPixelMethod {
-  id: ID!
-  trackingPixelProviderID: String!
-  trackingPixelProviderType: TrackingPixelProviderType!
-}
-
-enum TrackingPixelProviderType {
-  prolitteris
-}
-
-type PeerArticleTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  peer: Peer
-  articleID: ID!
-  article: Article
-}
-
-type PageTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  page: Page
-}
-
-type CustomTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  contentUrl: String
-  properties: [Properties!]
-}
-
-type EventTeaser {
-  style: TeaserStyle! @deprecated(reason: "Use block styles instead of this")
-  image: Image
-  preTitle: String
-  title: String
-  lead: String
-  event: Event
-}
-
-type TeaserGridFlexBlock {
-  blockStyle: String
-  flexTeasers: [FlexTeaser]!
-}
-
-type FlexTeaser {
-  alignment: FlexAlignment!
-  teaser: Teaser
-}
-
-type FlexAlignment {
-  i: String!
-  x: Int!
-  y: Int!
-  w: Int!
-  h: Int!
-  static: Boolean!
-}
-
-type TeaserListBlock {
-  title: String
-  blockStyle: String
-  teaserType: TeaserType
-  filter: TeaserListBlockFilter!
-  take: Int
-  skip: Int
-  sort: TeaserListBlockSort
-  teasers: [Teaser]!
-}
-
-enum TeaserType {
-  article
-  peerArticle
-  event
-  page
-  custom
-}
-
-type TeaserListBlockFilter {
-  tags: [ID!]
-  tagObjects: [Tag!]!
-}
-
-enum TeaserListBlockSort {
-  publishedAt
-  hotAndTrending
 }
 
 type Invoice {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   mail: String!
   description: String
   paidAt: DateTime
-  manuallySetAsPaidByUserId: ID
+  manuallySetAsPaidByUserId: String
   items: [InvoiceItem!]!
   canceledAt: DateTime
   currency: Currency!
@@ -844,7 +314,7 @@ type InvoiceItem {
 }
 
 type Session {
-  id: ID!
+  id: String!
   user: User!
   createdAt: DateTime!
   expiresAt: DateTime!
@@ -887,7 +357,7 @@ enum SortOrder {
 }
 
 type Subscription {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   user: User
@@ -927,7 +397,7 @@ input SubscriptionFilter {
   memberPlanID: String
   paymentPeriodicity: PaymentPeriodicity
   userHasAddress: Boolean
-  userID: ID
+  userID: String
   extendable: Boolean
 }
 
@@ -937,11 +407,11 @@ input DateFilter {
 }
 
 enum DateFilterComparison {
-  gt
-  gte
-  eq
-  lt
-  lte
+  GreaterThan
+  GreaterThanOrEqual
+  Equal
+  LowerThan
+  LowerThanOrEqual
 }
 
 enum SubscriptionSort {
@@ -965,38 +435,49 @@ enum UserRoleSort {
 }
 
 type Token {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
 }
 
-type Navigation {
-  id: ID!
-  key: String!
+type Author {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
   name: String!
-  links: [NavigationLink!]!
-}
-
-union NavigationLink = PageNavigationLink | ArticleNavigationLink | ExternalNavigationLink
-
-type PageNavigationLink implements BaseNavigationLink {
-  label: String!
-  page: Page
-}
-
-interface BaseNavigationLink {
-  label: String!
-}
-
-type ArticleNavigationLink implements BaseNavigationLink {
-  label: String!
-  article: Article
-}
-
-type ExternalNavigationLink implements BaseNavigationLink {
-  label: String!
+  slug: Slug!
   url: String!
+  links: [AuthorLink!]
+  bio: RichText
+  jobTitle: String
+  image: Image
+  tags: [Tag!]!
+  hideOnArticle: Boolean
+  hideOnTeaser: Boolean
+  hideOnTeam: Boolean
+  peer: Peer
+}
+
+type AuthorLink {
+  title: String!
+  url: String!
+}
+
+type Tag {
+  id: String!
+  tag: String
+  type: TagType
+  main: Boolean!
+  url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
 }
 
 type AuthorConnection {
@@ -1007,7 +488,7 @@ type AuthorConnection {
 
 input AuthorFilter {
   name: String
-  tagIds: [ID!]
+  tagIds: [String!]
   hideOnTeam: Boolean
 }
 
@@ -1033,6 +514,62 @@ enum ImageSort {
   modifiedAt
 }
 
+type Comment {
+  id: String!
+  guestUsername: String
+  guestUserImage: Image
+  user: User
+  tags: [Tag!]!
+  authorType: CommentAuthorType!
+  itemID: String!
+  itemType: CommentItemType!
+  parentComment: Comment
+  revisions: [CommentRevision!]!
+  source: String
+  state: CommentState!
+  rejectionReason: CommentRejectionReason
+  featured: Boolean
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  overriddenRatings: [overriddenRating!]
+}
+
+enum CommentAuthorType {
+  author
+  team
+  verifiedUser
+  guestUser
+}
+
+enum CommentItemType {
+  article
+  page
+}
+
+type CommentRevision {
+  text: RichText
+  title: String
+  lead: String
+  createdAt: DateTime!
+}
+
+enum CommentState {
+  approved
+  pendingApproval
+  pendingUserChanges
+  rejected
+}
+
+enum CommentRejectionReason {
+  misconduct
+  spam
+}
+
+type overriddenRating {
+  answerId: String!
+  value: Int
+}
+
 type CommentConnection {
   nodes: [Comment!]!
   pageInfo: PageInfo!
@@ -1040,87 +577,16 @@ type CommentConnection {
 }
 
 input CommentFilter {
-  item: ID
-  tags: [ID!]
+  item: String
+  tags: [String!]
   states: [CommentState!]
   itemType: CommentItemType
-  itemID: ID
+  itemID: String
 }
 
 enum CommentSort {
   modifiedAt
   createdAt
-}
-
-type ArticleConnection {
-  nodes: [Article!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input ArticleFilter {
-  title: String
-  preTitle: String
-  lead: String
-  publicationDateFrom: DateFilter
-  publicationDateTo: DateFilter
-  draft: Boolean
-  published: Boolean
-  pending: Boolean
-  authors: [ID!]
-  tags: [String!]
-  includeHidden: Boolean
-  shared: Boolean
-}
-
-enum ArticleSort {
-  createdAt
-  modifiedAt
-  publishAt
-  publishedAt
-  updatedAt
-}
-
-type PeerArticleConnection {
-  nodes: [PeerArticle!]!
-  pageInfo: UnidirectionalPageInfo!
-  totalCount: Int!
-}
-
-type PeerArticle {
-  peer: Peer!
-  peeredArticleURL: String!
-  article: Article!
-}
-
-type UnidirectionalPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-}
-
-type PageConnection {
-  nodes: [Page!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PageFilter {
-  title: String
-  draft: Boolean
-  description: String
-  publicationDateFrom: DateFilter
-  publicationDateTo: DateFilter
-  published: Boolean
-  pending: Boolean
-  tags: [String!]
-}
-
-enum PageSort {
-  createdAt
-  modifiedAt
-  publishAt
-  publishedAt
-  updatedAt
 }
 
 type MemberPlanConnection {
@@ -1150,8 +616,8 @@ input InvoiceFilter {
   mail: String
   paidAt: Date
   canceledAt: Date
-  userID: ID
-  subscriptionID: ID
+  userID: String
+  subscriptionID: String
 }
 
 """
@@ -1166,7 +632,7 @@ enum InvoiceSort {
 }
 
 type Payment {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   intentID: String
@@ -1204,7 +670,7 @@ enum PaymentSort {
 }
 
 type Setting {
-  id: ID!
+  id: String!
   name: SettingName!
   value: GraphQLSettingValueType!
   settingRestriction: SettingRestriction
@@ -1242,14 +708,14 @@ type AllowedSettingVals {
 }
 
 type FullCommentRatingSystem {
-  id: ID!
+  id: String!
   name: String
   answers: [CommentRatingSystemAnswer!]!
 }
 
 type CommentRatingSystemAnswer {
-  id: ID!
-  ratingSystemId: ID!
+  id: String!
+  ratingSystemId: String!
   answer: String
   type: RatingSystemType!
 }
@@ -1282,7 +748,7 @@ type PollConnection {
 }
 
 type Poll {
-  id: ID!
+  id: String!
   question: String
   opensAt: DateTime!
   closedAt: DateTime
@@ -1298,169 +764,119 @@ enum PollSort {
   ModifiedAt
 }
 
-type EventConnection {
-  nodes: [Event!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
+type FullPoll {
+  id: String!
+  question: String
+  opensAt: DateTime!
+  closedAt: DateTime
+  infoText: RichText
+  answers: [PollAnswerWithVoteCount!]!
+  externalVoteSources: [PollExternalVoteSource!]!
 }
 
-input EventFilter {
-  upcomingOnly: Boolean
-  from: DateTime
-  to: DateTime
-  tags: [ID!]
-  name: String
-  location: String
+type PollAnswerWithVoteCount {
+  id: String!
+  pollId: String!
+  answer: String
+  votes: Int!
 }
 
-enum EventSort {
-  StartsAt
-  EndsAt
-  CreatedAt
-  ModifiedAt
+type PollExternalVoteSource {
+  id: String!
+  source: String
+  voteAmounts: [PollExternalVote!]!
 }
+
+type PollExternalVote {
+  id: String!
+  answerId: String!
+  amount: VoteValue!
+}
+
+"""A valid vote value"""
+scalar VoteValue
 
 type SubscribersPerMonth {
   month: String!
   subscriberCount: Int!
 }
 
-union Action = ArticleCreatedAction | PageCreatedAction | CommentCreatedAction | PollStartedAction | SubscriptionCreatedAction | AuthorCreatedAction | UserCreatedAction | EventCreatedAction
-
-type ArticleCreatedAction {
-  date: DateTime!
-  article: Article!
-}
-
-type PageCreatedAction {
-  date: DateTime!
-  page: Page!
-}
-
-type CommentCreatedAction {
-  date: DateTime!
-  comment: Comment!
-}
-
-type PollStartedAction {
-  date: DateTime!
-  poll: Poll!
-}
-
-type SubscriptionCreatedAction {
-  date: DateTime!
-  subscription: Subscription!
-}
-
-type AuthorCreatedAction {
-  date: DateTime!
-  author: Author!
-}
-
-type UserCreatedAction {
-  date: DateTime!
-  user: User!
-}
-
-type EventCreatedAction {
-  date: DateTime!
-  event: Event!
-}
-
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
   createPeer(input: CreatePeerInput!): Peer!
-  updatePeer(id: ID!, input: UpdatePeerInput!): Peer!
-  deletePeer(id: ID!): Peer
+  updatePeer(id: String!, input: UpdatePeerInput!): Peer!
+  deletePeer(id: String!): Peer
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
   createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
-  revokeSession(id: ID!): Boolean!
+  revokeSession(id: String!): Boolean!
   revokeActiveSession: Boolean!
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
   createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: ID!): CreatedToken
+  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
-  updateUser(id: ID!, input: UserInput!): User
-  resetUserPassword(id: ID!, password: String!, sendMail: Boolean): User
-  deleteUser(id: ID!): User
+  updateUser(id: String!, input: UserInput!): User
+  resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
+  deleteUser(id: String!): User
   createSubscription(input: SubscriptionInput!): Subscription
   importSubscription(input: SubscriptionInput!): Subscription
-  renewSubscription(id: ID!): Invoice
-  updateSubscription(id: ID!, input: SubscriptionInput!): Subscription
-  deleteSubscription(id: ID!): Subscription
-  cancelSubscription(id: ID!, reason: SubscriptionDeactivationReason!): Subscription
+  renewSubscription(id: String!): Invoice
+  updateSubscription(id: String!, input: SubscriptionInput!): Subscription
+  deleteSubscription(id: String!): Subscription
+  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
   createUserRole(input: UserRoleInput!): UserRole
-  updateUserRole(id: ID!, input: UserRoleInput!): UserRole
-  deleteUserRole(id: ID!): UserRole
-  createNavigation(input: NavigationInput!): Navigation
-  updateNavigation(id: ID!, input: NavigationInput!): Navigation
-  deleteNavigation(id: ID!): Navigation
+  updateUserRole(id: String!, input: UserRoleInput!): UserRole
+  deleteUserRole(id: String!): UserRole
   createAuthor(input: AuthorInput!): Author
-  updateAuthor(id: ID!, input: AuthorInput!): Author
-  deleteAuthor(id: ID!): Author
+  updateAuthor(id: String!, input: AuthorInput!): Author
+  deleteAuthor(id: String!): Author
   uploadImage(input: UploadImageInput!): Image
-  updateImage(id: ID!, input: UpdateImageInput!): Image
-  deleteImage(id: ID!): Image
-  createArticle(input: ArticleInput!): Article!
-  updateArticle(id: ID!, input: ArticleInput!): Article
-  deleteArticle(id: ID!): Article
-  publishArticle(id: ID!, publishAt: DateTime, updatedAt: DateTime, publishedAt: DateTime): Article
-  unpublishArticle(id: ID!): Article
-  duplicateArticle(id: ID!): Article!
-  createPage(input: PageInput!): Page!
-  updatePage(id: ID!, input: PageInput!): Page
-  deletePage(id: ID!): Page
-  publishPage(id: ID!, publishAt: DateTime, updatedAt: DateTime, publishedAt: DateTime): Page
-  unpublishPage(id: ID!): Page
-  duplicatePage(id: ID!): Page!
+  updateImage(id: String!, input: UpdateImageInput!): Image
+  deleteImage(id: String!): Image
   createMemberPlan(input: MemberPlanInput!): MemberPlan
-  updateMemberPlan(id: ID!, input: MemberPlanInput!): MemberPlan
-  deleteMemberPlan(id: ID!): MemberPlan
+  updateMemberPlan(id: String!, input: MemberPlanInput!): MemberPlan
+  deleteMemberPlan(id: String!): MemberPlan
   createPaymentMethod(input: PaymentMethodInput!): PaymentMethod
-  updatePaymentMethod(id: ID!, input: PaymentMethodInput!): PaymentMethod
-  deletePaymentMethod(id: ID!): PaymentMethod
+  updatePaymentMethod(id: String!, input: PaymentMethodInput!): PaymentMethod
+  deletePaymentMethod(id: String!): PaymentMethod
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
-  updateInvoice(id: ID!, input: InvoiceInput!): Invoice
-  deleteInvoice(id: ID!): Invoice
-  markInvoiceAsPaid(id: ID!): Invoice
-  updateComment(id: ID!, revision: CommentRevisionUpdateInput, userID: ID, guestUsername: String, guestUserImageID: ID, featured: Boolean, source: String, tagIds: [ID!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
-  createComment(text: RichText, tagIds: [ID!], itemID: ID!, parentID: ID, itemType: CommentItemType!): Comment!
-  approveComment(id: ID!): Comment!
-  rejectComment(id: ID!, rejectionReason: CommentRejectionReason): Comment!
-  requestChangesOnComment(id: ID!, rejectionReason: CommentRejectionReason!): Comment!
-  deleteComment(id: ID!): Comment!
+  updateInvoice(id: String!, input: InvoiceInput!): Invoice
+  deleteInvoice(id: String!): Invoice
+  markInvoiceAsPaid(id: String!): Invoice
+  updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
+  createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
+  approveComment(id: String!): Comment!
+  rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
+  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+  deleteComment(id: String!): Comment!
   updateSettingList(value: [UpdateSettingArgs]): [Setting]
-  createRatingSystemAnswer(ratingSystemId: ID!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
-  updateRatingSystem(ratingSystemId: ID!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
-  deleteRatingSystemAnswer(id: ID!): CommentRatingSystemAnswer!
+  createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
+  updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
+  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
-  createPollAnswer(pollId: ID!, answer: String): PollAnswer
-  createPollExternalVoteSource(pollId: ID!, source: String): PollExternalVoteSource
-  updatePoll(pollId: ID!, opensAt: DateTime, closedAt: DateTime, question: String, infoText: RichText, answers: [UpdatePollAnswer!], externalVoteSources: [UpdatePollExternalVoteSources!]): FullPoll
-  deletePoll(id: ID!): FullPoll
-  deletePollAnswer(id: ID!): PollAnswerWithVoteCount
-  deletePollExternalVoteSource(id: ID!): PollExternalVoteSource
+  createPollAnswer(pollId: String!, answer: String): PollAnswer
+  createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
+  updatePoll(pollId: String!, opensAt: DateTime, closedAt: DateTime, question: String, infoText: RichText, answers: [UpdatePollAnswer!], externalVoteSources: [UpdatePollExternalVoteSources!]): FullPoll
+  deletePoll(id: String!): FullPoll
+  deletePollAnswer(id: String!): PollAnswerWithVoteCount
+  deletePollExternalVoteSource(id: String!): PollExternalVoteSource
   createTag(tag: String, type: TagType!, main: Boolean): Tag
-  updateTag(id: ID!, tag: String, main: Boolean): Tag
-  deleteTag(id: ID!): Tag
-  createEvent(name: String!, lead: String, description: RichText, location: String, startsAt: DateTime!, endsAt: DateTime, imageId: ID, externalSourceId: String, externalSourceName: String, tagIds: [ID!]): Event
-  updateEvent(id: ID!, name: String, lead: String, description: RichText, status: EventStatus, location: String, startsAt: DateTime, endsAt: DateTime, imageId: ID, externalSourceId: String, externalSourceName: String, tagIds: [ID!]): Event
-  deleteEvent(id: ID!): Event
+  updateTag(id: String!, tag: String, main: Boolean): Tag
+  deleteTag(id: String!): Tag
 }
 
 input PeerProfileInput {
   name: String!
-  logoID: ID
+  logoID: String
   themeColor: Color!
   themeFontColor: Color!
   callToActionText: RichText!
   callToActionURL: String!
   callToActionImageURL: String
-  callToActionImageID: ID
+  callToActionImageID: String
 }
 
 input CreatePeerInput {
@@ -1479,7 +895,7 @@ input UpdatePeerInput {
 }
 
 type SessionWithToken {
-  id: ID!
+  id: String!
   user: User!
   token: String!
   createdAt: DateTime!
@@ -1487,7 +903,7 @@ type SessionWithToken {
 }
 
 type CreatedToken {
-  id: ID!
+  id: String!
   createdAt: DateTime!
   modifiedAt: DateTime!
   name: String!
@@ -1506,7 +922,7 @@ input UserInput {
   birthday: DateTime
   address: UserAddressInput
   flair: String
-  userImageID: ID
+  userImageID: String
   active: Boolean!
   properties: [PropertiesInput!]!
   roleIDs: [String!]
@@ -1528,7 +944,7 @@ input PropertiesInput {
 }
 
 input SubscriptionInput {
-  userID: ID!
+  userID: String!
   memberPlanID: String!
   paymentPeriodicity: PaymentPeriodicity!
   monthlyAmount: Int!
@@ -1552,41 +968,14 @@ input UserRoleInput {
   permissionIDs: [String!]
 }
 
-input NavigationInput {
-  key: String!
-  name: String!
-  links: [NavigationLinkInput!]!
-}
-
-input NavigationLinkInput {
-  page: PageNavigationLinkInput
-  article: ArticleNavigationLinkInput
-  external: ExternalNavigationLinkInput
-}
-
-input PageNavigationLinkInput {
-  label: String!
-  pageID: ID!
-}
-
-input ArticleNavigationLinkInput {
-  label: String!
-  articleID: ID!
-}
-
-input ExternalNavigationLinkInput {
-  label: String!
-  url: String!
-}
-
 input AuthorInput {
   name: String!
   slug: Slug!
   links: [AuthorLinkInput!]
   bio: RichText
   jobTitle: String
-  imageID: ID
-  tagIds: [ID!]
+  imageID: String
+  tagIds: [String!]
   hideOnArticle: Boolean
   hideOnTeaser: Boolean
   hideOnTeam: Boolean
@@ -1628,325 +1017,10 @@ input UpdateImageInput {
   focalPoint: InputPoint
 }
 
-input ArticleInput {
-  slug: Slug
-  preTitle: String
-  title: String!
-  lead: String
-  seoTitle: String
-  tags: [String!]!
-  properties: [PropertiesInput!]!
-  canonicalUrl: String
-  imageID: ID
-  authorIDs: [ID!]!
-  shared: Boolean!
-  hidden: Boolean
-  disableComments: Boolean
-  breaking: Boolean!
-  hideAuthor: Boolean!
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaAuthorIDs: [ID!]!
-  socialMediaImageID: ID
-  blocks: [BlockInput!]!
-  likes: Int
-}
-
-input BlockInput {
-  richText: RichTextBlockInput
-  image: ImageBlockInput
-  imageGallery: ImageGalleryBlockInput
-  listicle: ListicleBlockInput
-  title: TitleBlockInput
-  quote: QuoteBlockInput
-  facebookPost: FacebookPostBlockInput
-  facebookVideo: FacebookVideoBlockInput
-  instagramPost: InstagramPostBlockInput
-  twitterTweet: TwitterTweetBlockInput
-  vimeoVideo: VimeoVideoBlockInput
-  youTubeVideo: YouTubeVideoBlockInput
-  soundCloudTrack: SoundCloudTrackBlockInput
-  polisConversation: PolisConversationBlockInput
-  tikTokVideo: TikTokVideoBlockInput
-  bildwurfAd: BildwurfAdBlockInput
-  embed: EmbedBlockInput
-  html: HTMLBlockInput
-  poll: PollBlockInput
-  event: EventBlockInput
-  comment: CommentBlockInput
-  linkPageBreak: LinkPageBreakBlockInput
-  teaserGrid: TeaserGridBlockInput
-  teaserGridFlex: TeaserGridFlexBlockInput
-  teaserList: TeaserListBlockInput
-}
-
-input RichTextBlockInput {
-  blockStyle: String
-  richText: RichText!
-}
-
-input ImageBlockInput {
-  blockStyle: String
-  caption: String
-  linkUrl: String
-  imageID: ID
-}
-
-input ImageGalleryBlockInput {
-  blockStyle: String
-  images: [GalleryImageEdgeInput]
-}
-
-input GalleryImageEdgeInput {
-  caption: String
-  imageID: ID
-}
-
-input ListicleBlockInput {
-  blockStyle: String
-  items: [ListicleItemInput]
-}
-
-input ListicleItemInput {
-  title: String!
-  imageID: ID
-  richText: RichText!
-}
-
-input TitleBlockInput {
-  blockStyle: String
-  title: String
-  lead: String
-}
-
-input QuoteBlockInput {
-  blockStyle: String
-  quote: String
-  author: String
-  imageID: ID
-}
-
-input FacebookPostBlockInput {
-  blockStyle: String
-  userID: String!
-  postID: String!
-}
-
-input FacebookVideoBlockInput {
-  blockStyle: String
-  userID: String!
-  videoID: String!
-}
-
-input InstagramPostBlockInput {
-  blockStyle: String
-  postID: String!
-}
-
-input TwitterTweetBlockInput {
-  blockStyle: String
-  userID: String!
-  tweetID: String!
-}
-
-input VimeoVideoBlockInput {
-  blockStyle: String
-  videoID: String!
-}
-
-input YouTubeVideoBlockInput {
-  blockStyle: String
-  videoID: String!
-}
-
-input SoundCloudTrackBlockInput {
-  blockStyle: String
-  trackID: String!
-}
-
-input PolisConversationBlockInput {
-  blockStyle: String
-  conversationID: String!
-}
-
-input TikTokVideoBlockInput {
-  blockStyle: String
-  videoID: String!
-  userID: String!
-}
-
-input BildwurfAdBlockInput {
-  blockStyle: String
-  zoneID: String!
-}
-
-input EmbedBlockInput {
-  blockStyle: String
-  url: String
-  title: String
-  width: Int
-  height: Int
-  styleCustom: String
-  sandbox: String
-}
-
-input HTMLBlockInput {
-  blockStyle: String
-  html: String
-}
-
-input PollBlockInput {
-  blockStyle: String
-  pollId: ID
-}
-
-input EventBlockInput {
-  blockStyle: String
-  filter: EventBlockInputFilter!
-}
-
-input EventBlockInputFilter {
-  tags: [ID!]
-  events: [ID!]
-}
-
-input CommentBlockInput {
-  blockStyle: String
-  filter: CommentBlockInputFilter!
-}
-
-input CommentBlockInputFilter {
-  item: ID
-  tags: [ID!]
-  comments: [ID!]
-}
-
-input LinkPageBreakBlockInput {
-  blockStyle: String
-  text: String
-  richText: RichText!
-  linkURL: String
-  linkText: String
-  linkTarget: String
-  hideButton: Boolean!
-  styleOption: String
-  templateOption: String
-  layoutOption: String
-  imageID: ID
-}
-
-input TeaserGridBlockInput {
-  blockStyle: String
-  teasers: [TeaserInput]!
-  numColumns: Int!
-}
-
-input TeaserInput {
-  article: ArticleTeaserInput
-  peerArticle: PeerArticleTeaserInput
-  page: PageTeaserInput
-  event: EventTeaserInput
-  custom: CustomTeaserInput
-}
-
-input ArticleTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  articleID: ID!
-}
-
-input PeerArticleTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  peerID: ID!
-  articleID: ID!
-}
-
-input PageTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  pageID: ID!
-}
-
-input EventTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  eventID: ID!
-}
-
-input CustomTeaserInput {
-  style: TeaserStyle
-  imageID: ID
-  preTitle: String
-  title: String
-  lead: String
-  contentUrl: String
-  properties: [PropertiesInput!]!
-}
-
-input TeaserGridFlexBlockInput {
-  blockStyle: String
-  flexTeasers: [FlexTeaserInput!]!
-}
-
-input FlexTeaserInput {
-  blockStyle: String
-  teaser: TeaserInput
-  alignment: FlexAlignmentInput!
-}
-
-input FlexAlignmentInput {
-  i: String!
-  x: Int!
-  y: Int!
-  w: Int!
-  h: Int!
-  static: Boolean!
-}
-
-input TeaserListBlockInput {
-  title: String
-  blockStyle: String
-  teaserType: TeaserType
-  filter: TeaserListBlockFilterInput!
-  take: Int
-  skip: Int
-  sort: TeaserListBlockSort
-}
-
-input TeaserListBlockFilterInput {
-  tags: [ID!]
-}
-
-input PageInput {
-  slug: Slug!
-  title: String!
-  description: String
-  tags: [String!]!
-  properties: [PropertiesInput!]!
-  imageID: ID
-  socialMediaTitle: String
-  socialMediaDescription: String
-  socialMediaImageID: ID
-  blocks: [BlockInput!]!
-}
-
 input MemberPlanInput {
   name: String!
   slug: String!
-  imageID: ID
+  imageID: String
   description: RichText
   tags: [String!]
   active: Boolean!
@@ -1956,10 +1030,10 @@ input MemberPlanInput {
   extendable: Boolean!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
-  migrateToTargetPaymentMethodID: ID
-  successPageId: ID
-  failPageId: ID
-  confirmationPageId: ID
+  migrateToTargetPaymentMethodID: String
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
 }
 
 input AvailablePaymentMethodInput {
@@ -1980,8 +1054,8 @@ input PaymentMethodInput {
 input InvoiceInput {
   mail: String!
   description: String
-  subscriptionID: ID
-  manuallySetAsPaidByUserId: ID
+  subscriptionID: String
+  manuallySetAsPaidByUserId: String
   items: [InvoiceItemInput!]!
 }
 
@@ -1995,8 +1069,8 @@ input InvoiceItemInput {
 }
 
 input PaymentFromInvoiceInput {
-  invoiceID: ID!
-  paymentMethodID: ID
+  invoiceID: String!
+  paymentMethodID: String
   paymentMethodSlug: Slug
   successURL: String
   failureURL: String
@@ -2009,7 +1083,7 @@ input CommentRevisionUpdateInput {
 }
 
 input CommentRatingOverrideUpdateInput {
-  answerId: ID!
+  answerId: String!
   value: Int
 }
 
@@ -2019,13 +1093,13 @@ input UpdateSettingArgs {
 }
 
 input UpdateCommentRatingSystemAnswer {
-  id: ID!
+  id: String!
   type: RatingSystemType
   answer: String
 }
 
 type PollWithAnswers {
-  id: ID!
+  id: String!
   question: String
   opensAt: DateTime!
   closedAt: DateTime
@@ -2033,23 +1107,23 @@ type PollWithAnswers {
 }
 
 type PollAnswer {
-  id: ID!
-  pollId: ID!
+  id: String!
+  pollId: String!
   answer: String
 }
 
 input UpdatePollAnswer {
-  id: ID!
+  id: String!
   answer: String
 }
 
 input UpdatePollExternalVoteSources {
-  id: ID!
+  id: String!
   source: String
   voteAmounts: [UpdatePollExternalVote!]
 }
 
 input UpdatePollExternalVote {
-  id: ID!
+  id: String!
   amount: VoteValue
 }

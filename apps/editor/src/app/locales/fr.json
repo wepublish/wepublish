@@ -112,7 +112,6 @@
         "statePublished": "Statut : Publié",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titre",
         "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo",
         "totalCharCount": "Le nombre total de caractères est de {{totalCharCount}}",
@@ -215,6 +214,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Modifier",
+        "label": "Crowdfunding",
+        "title": "Sélectionner le crowdfunding",
+        "name": "Nom du crowdfunding",
+        "select": "Sélectionner",
+        "open": "Ouvrir"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -285,6 +292,9 @@
         "label": "HTML",
         "placeholder": "Copiez votre bloc HTML ici..",
         "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+      },
+      "subscribe": {
+        "label": "S'abonner"
       },
       "image": {
         "label": "Image",
@@ -890,17 +900,13 @@
     },
     "peerArticles": {
       "articleImage": "Image de l'article",
-      "authors": "Auteurs·trices",
       "filterByPeer": "Filtrer par peer",
       "lead": "Lead",
-      "notPublished": "Pas encore publié",
-      "originalArticle": "Article original",
       "peer": "Peer",
       "peerArticles": "Articles pairables",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Date de publication",
-      "title": "Titre",
-      "toOriginalArticle": "Vers l'article original"
+      "title": "Titre"
     },
     "peerList": {
       "overview": {
@@ -1370,6 +1376,43 @@
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Nom",
+        "delete": "Supprimer",
+        "createNew": "Créer"
+      },
+      "delete": {
+        "title": "Supprimer définitivement?",
+        "body": "Le crowdfunding doit-il être supprimé définitivement?",
+        "delete": "Supprimer"
+      },
+      "create": {
+        "title": "Créer un nouveau crowdfunding"
+      },
+      "edit": {
+        "title": "Modifier {{crowdfundingName}}"
+      },
+      "form": {
+        "name": "Nom du crowdfunding (ne sera pas publié)",
+        "memberPlans": "Plans d'abonnement",
+        "filter": "Filtrer les revenus",
+        "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "selectMemberPlans": "Choisir des plans d'abonnement",
+        "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
+        "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
+        "revenue": "Déjà CHF {{revenue}} financé",
+        "goals": "Objectifs"
+      },
+      "goalsForm": {
+        "title": "Titre",
+        "description": "Description",
+        "amount": "Montant cible",
+        "remove": "Supprimer",
+        "add": "Ajouter un objectif"
+      }
     }
   }
 }

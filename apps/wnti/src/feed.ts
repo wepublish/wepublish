@@ -1,4 +1,11 @@
-import {ApiV1, generateFeed} from '@wepublish/website/server'
+import {generateFeed} from '@wepublish/feed/website'
+import {SortOrder} from '@wepublish/website/api'
+import {
+  ArticleListDocument,
+  ArticleListQueryVariables,
+  ArticleSort,
+  getV1ApiClient
+} from '@wepublish/website/api'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 import process from 'node:process'
@@ -9,9 +16,9 @@ export const getFeed = async (req: NextApiRequest) => {
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
     link: siteUrl,
-    title: 'Wnti',
+    title: 'WNTI',
     ttl: 10, // in minutes
-    copyright: 'Wnti',
+    copyright: 'WNTI',
     categories: ['Winterthur', 'Journalism'],
     updated: new Date(),
     feedLinks: {
@@ -22,17 +29,17 @@ export const getFeed = async (req: NextApiRequest) => {
   })
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
     typePolicies: {}
   })
 
   const {data} = await client.query({
-    query: ApiV1.ArticleListDocument,
+    query: ArticleListDocument,
     variables: {
       take: 50,
-      sort: ApiV1.ArticleSort.PublishedAt,
-      order: ApiV1.SortOrder.Descending
-    } as ApiV1.ArticleListQueryVariables
+      sort: ArticleSort.PublishedAt,
+      order: SortOrder.Descending
+    } as ArticleListQueryVariables
   })
 
   return generate(data.articles.nodes ?? [])

@@ -1,21 +1,20 @@
 import {
   alignmentForTeaserBlock,
-  ApiV1,
-  BuilderTeaserGridBlockProps,
-  BuilderTeaserListBlockProps,
   hasBlockStyle,
   isFilledTeaser,
   isTeaserGridBlock,
   isTeaserListBlock,
   TeaserGridBlockWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BuilderTeaserGridBlockProps, BuilderTeaserListBlockProps} from '@wepublish/website/builder'
 import {allPass, anyPass} from 'ramda'
 
 import {HighlightTeaser} from '../custom-teasers/highlight'
 
 export const isHighlightTeasers = (
-  block: ApiV1.Block
-): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
+  block: BlockContent
+): block is TeaserGridBlock | TeaserListBlock =>
   allPass([hasBlockStyle('Highlight'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
 
 export const HighlightBlockStyle = ({

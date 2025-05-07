@@ -1,20 +1,41 @@
-import {css, styled} from '@mui/material'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {
-  ApiV1,
   Article,
-  ArticleAuthor,
   ArticleContainer,
   ArticleList,
   ArticleListContainer,
-  ArticleWrapper,
+  ArticleWrapper
+} from '@wepublish/article/website'
+import {ArticleAuthor} from '@wepublish/author/website'
+import {PollBlock} from '@wepublish/block-content/website'
+import {Comment} from '@wepublish/comments/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
+import {
+  addClientCacheToV1Props,
+  Article as ArticleType,
+  ArticleDocument,
+  ArticleListDocument,
+  BannerDocumentType,
+  CommentItemType,
+  CommentListDocument,
+  CommentSort,
+  getV1ApiClient,
+  HotAndTrendingDocument,
+  NavigationListDocument,
+  PeerProfileDocument,
+  PrimaryBannerDocument,
+  SettingListDocument,
+  SortOrder,
+  Tag,
+  useArticleQuery
+} from '@wepublish/website/api'
+import {
   BuilderArticleListProps,
-  Comment,
-  ContentWrapper,
-  PollBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
-} from '@wepublish/website'
+} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -24,7 +45,7 @@ import {BriefingNewsletter} from '../../src/components/briefing-newsletter/brief
 import {FdTArticle} from '../../src/components/frage-des-tages/fdt-article'
 import {FdtPollBlock} from '../../src/components/frage-des-tages/fdt-poll-block'
 import {Container} from '../../src/components/layout/container'
-import {SEARCH_SLIDER_TAG, SliderArticle} from '../../src/components/search-slider/search-slider'
+import {SEARCH_SLIDER_TAG} from '../../src/components/search-slider/search-slider'
 import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
@@ -50,27 +71,25 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlugIdOrToken() {
+export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id, token}
+    query: {slug, id}
   } = useRouter()
   const {
     elements: {H5}
   } = useWebsiteBuilder()
 
-  const {data} = ApiV1.useArticleQuery({
+  const {data} = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
-      id: id as string,
-      token: token as string
+      id: id as string
     }
   })
 
   const containerProps = {
     slug,
-    id,
-    token
+    id
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
@@ -86,7 +105,7 @@ export default function ArticleBySlugIdOrToken() {
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         {isSearchSlider && data?.article ? (
-          <SearchSlider key={data.article.id} article={data.article as SliderArticle} />
+          <SearchSlider key={data.article.id} article={data.article as ArticleType} includeSEO />
         ) : (
           <>
             <ArticleContainer {...containerProps} />
@@ -117,7 +136,7 @@ export default function ArticleBySlugIdOrToken() {
                 </ArticleWrapper>
 
                 {!isFDT &&
-                  data.article.authors.map(a => (
+                  data.article.latest.authors.map(a => (
                     <AuthorWrapper key={a.id}>
                       <ArticleAuthor author={a} />
                     </AuthorWrapper>
@@ -132,10 +151,10 @@ export default function ArticleBySlugIdOrToken() {
                     {!data.article.disableComments && (
                       <CommentListContainer
                         id={data.article.id}
-                        type={ApiV1.CommentItemType.Article}
+                        type={CommentItemType.Article}
                         variables={{
-                          sort: ApiV1.CommentSort.Rating,
-                          order: ApiV1.SortOrder.Descending
+                          sort: CommentSort.Rating,
+                          order: SortOrder.Descending
                         }}
                         maxCommentDepth={1}
                       />
@@ -154,62 +173,63 @@ export default function ArticleBySlugIdOrToken() {
 export const getStaticPaths = getArticlePathsBasedOnPage('home')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {id, slug} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
   const [article] = await Promise.all([
     client.query({
-      query: ApiV1.ArticleDocument,
+      query: ArticleDocument,
       variables: {
+        id,
         slug
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     }),
     client.query({
-      query: ApiV1.SettingListDocument
+      query: SettingListDocument
     }),
     client.query({
-      query: ApiV1.HotAndTrendingDocument,
+      query: HotAndTrendingDocument,
       variables: {
         take: 4
       }
     })
   ])
 
-  if (article.data.article) {
+  if (article.data?.article) {
     await Promise.all([
       client.query({
-        query: ApiV1.ArticleListDocument,
+        query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
+            tags: article.data.article.tags.map((tag: Tag) => tag.id)
           },
           take: 4
         }
       }),
       client.query({
-        query: ApiV1.CommentListDocument,
+        query: CommentListDocument,
         variables: {
-          sort: ApiV1.CommentSort.Rating,
-          order: ApiV1.SortOrder.Descending,
+          sort: CommentSort.Rating,
+          order: SortOrder.Descending,
           itemId: article.data.article.id
         }
       }),
       client.query({
-        query: ApiV1.PeerProfileDocument
+        query: PeerProfileDocument
       }),
       client.query({
-        query: ApiV1.PrimaryBannerDocument,
+        query: PrimaryBannerDocument,
         variables: {
           document: {
-            type: ApiV1.BannerDocumentType.Article,
+            type: BannerDocumentType.Article,
             id: article.data.article.id
           }
         }
@@ -217,10 +237,10 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     ])
   }
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

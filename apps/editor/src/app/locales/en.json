@@ -107,15 +107,12 @@
         "statePublished": "Status: Published",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "likeCount": "Likes",
         "type": "Type",
         "untitled": "Untitled",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
         "url": "URL",
         "urlPlaceholder": "https://canonical-url.com",
@@ -262,6 +259,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Edit",
+        "label": "Crowdfunding",
+        "title": "Select Crowdfunding",
+        "name": "Name",
+        "select": "Select",
+        "open": "open"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -332,6 +337,9 @@
         "label": "HTML",
         "placeholder": "Paste your HTML block here..",
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+      },
+      "subscribe": {
+        "label": "Subscribe"
       },
       "image": {
         "label": "Image",
@@ -790,7 +798,8 @@
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
-        "topMenu": "Content Blocks"
+        "topMenu": "Content Blocks",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Rating System",
       "comments": "Comments",
@@ -903,8 +912,6 @@
         "tags": "Tags",
         "title": "SEO Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "url": "URL",
         "value": "Value"
       }
@@ -959,17 +966,25 @@
     },
     "peerArticles": {
       "articleImage": "Article image",
-      "authors": "Authors",
       "filterByPeer": "Filter by peer",
       "lead": "Lead",
-      "notPublished": "Not yet published",
-      "originalArticle": "Original article",
       "peer": "Peer",
       "peerArticles": "Peerable Articles",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-      "toOriginalArticle": "To original article"
+
+      "import": {
+        "import": "Import",
+        "title": "Import article",
+        "includeAuthors": "Import authors of the article",
+        "includeAuthorsHint": "Imported or updated authors of the article. If another person has the same name, they will be distinguished.",
+        "includeTags": "Import tags of the article",
+        "includeTagsHint": "Imports the tags of the article as long as they do not already exist.",
+        "includeImages": "Import images of the article",
+        "includeImagesHint": "Images that appear in the metadata or blocks of the article are also imported. If the same image exists several times, it will also be imported several times.",
+        "confirm": "Yes, import article"
+      }
     },
     "peerList": {
       "overview": {
@@ -1152,6 +1167,8 @@
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
+      "articlePage": "Articles & Pages",
+      "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1169,7 +1186,8 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public."
+        "revenueApiPublic": "Exposes invoices anonymized to the public.",
+        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before."
       }
     },
     "subscriptionFlow": {
@@ -1516,6 +1534,43 @@
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Name",
+        "delete": "Delete",
+        "createNew": "Create"
+      },
+      "delete": {
+        "title": "Delete Permanently?",
+        "body": "Should the crowdfunding be irrevocably deleted?",
+        "delete": "Delete"
+      },
+      "create": {
+        "title": "Create new crowdfunding"
+      },
+      "edit": {
+        "title": " edit {{crowdfundingName}}"
+      },
+      "form": {
+        "name": "Name of the Crowdfundings (Not published)",
+        "memberPlans": "Subscription Plans",
+        "filter": "Revenue Filter",
+        "additionalRevenue": "External Revenues (e.g.. via direct bank transfer)",
+        "selectMemberPlans": "Select Subscription Plans",
+        "countSubscriptionsFrom": "Include only subscriptions paid from date",
+        "countSubscriptionsUntil": "Include only subscriptions paid until date",
+        "revenue": "Already CHF {{revenue}} financed",
+        "goals": "Goals"
+      },
+      "goalsForm": {
+        "title": "Title",
+        "description": "Description",
+        "amount": "Target amount",
+        "remove": "Remove",
+        "add": "Add Target"
+      }
     }
   }
 }
