@@ -77,7 +77,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     <CrowdfundingContainer>
       <CfInner>
         <CfTitle>
-          Bereits <b style={{textWrap: 'nowrap'}}>{formatCurrency(revenue, Currency.Chf)}</b>{' '}
+          Bereits <b style={{textWrap: 'nowrap'}}>{formatCurrency(revenue / 100, Currency.Chf)}</b>{' '}
           finanziert
         </CfTitle>
 
@@ -100,7 +100,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
             </CfProgressBarInnerItem>
             <CfProgressBarInnerItem>
               <CfProgressBarInnerAmount>
-                {formatCurrency(goalAmount, Currency.Chf)}
+                {formatCurrency(goalAmount / 100, Currency.Chf)}
               </CfProgressBarInnerAmount>
               <CfProgressBarInnerTitle>
                 {crowdfunding.activeCrowdfundingGoal?.title || ''}
