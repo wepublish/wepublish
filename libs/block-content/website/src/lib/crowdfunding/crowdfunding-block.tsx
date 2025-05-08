@@ -19,7 +19,7 @@ export const CfInner = styled('div')``
 
 const titleStyles = (theme: Theme) => css`
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.1;
   margin: ${theme.spacing(2)};
 `
 
