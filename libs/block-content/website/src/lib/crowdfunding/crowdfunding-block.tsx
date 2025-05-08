@@ -59,6 +59,10 @@ export const CfProgressBarInnerTitle = styled('p')`
   text-align: end;
 `
 
+const noWrap = css`
+  text-wrap: nowrap;
+`
+
 export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps) => {
   const {
     elements: {H5}
@@ -82,10 +86,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
     <CrowdfundingContainer>
       <CfInner>
         <H5 component="div" css={titleStyles}>
-          Bereits{' '}
-          <strong style={{textWrap: 'nowrap'}}>
-            {formatCurrency(revenue / 100, Currency.Chf)}
-          </strong>{' '}
+          Bereits <strong css={noWrap}>{formatCurrency(revenue / 100, Currency.Chf)}</strong>{' '}
           finanziert
         </H5>
 
