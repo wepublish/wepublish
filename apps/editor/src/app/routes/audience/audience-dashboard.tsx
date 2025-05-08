@@ -1,4 +1,9 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {
+  getApiClientV2,
+  useDailySubscriptionStatsLazyQuery,
+  useDailySubscriptionStatsQuery
+} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -6,15 +11,13 @@ import {
   ListViewHeader,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {useState} from 'react'
+import {useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCalendarMonth, MdCalendarToday, MdCalendarViewWeek} from 'react-icons/md'
 import {DateRangePicker, Divider, RadioTile, RadioTileGroup} from 'rsuite'
 import {DateRange} from 'rsuite/esm/DateRangePicker'
-
+import {AudienceFilter} from './audience-filter'
 import {AudienceChart} from './audience-chart'
-import {AudienceStat, getAudienceStats} from './audience-data-mocker'
-import {AudienceTable} from './audience-table'
 
 export type DateResolution = 'week' | 'month' | 'day'
 
@@ -34,21 +37,29 @@ const TableWrapperStyled = styled(TableWrapper)`
 
 function AudienceDashboard() {
   const {t} = useTranslation()
+  const client = getApiClientV2()
 
-  const [dateResolution, setDateResolution] = useState<DateResolution>('month')
-  const [dateRange, setDateRange] = useState<DateRange | null | undefined>(undefined)
-  const [audienceStats, setAudienceStats] = useState<AudienceStat[]>([])
+  const [fetchStats, {data: audienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
+    client
+  })
 
-  function loadAudienceStats(): void {
-    const audienceStats = getAudienceStats({groupBy: dateResolution})
-    setAudienceStats(audienceStats)
-  }
+  const [dateRange, setDateRange] = useReducer(
+    (_state: DateRange | null | undefined, action: DateRange | null | undefined) => {
+      if (!action || action.length < 2) {
+        return action
+      }
 
-  function onChangeResolution(dateResolution: DateResolution) {
-    setDateRange(null)
-    setDateResolution(dateResolution)
-    loadAudienceStats()
-  }
+      fetchStats({
+        variables: {
+          start: action[0].toISOString(),
+          end: action[1].toISOString()
+        },
+        fetchPolicy: 'cache-first'
+      })
+      return action
+    },
+    undefined
+  )
 
   return (
     <>
@@ -58,7 +69,8 @@ function AudienceDashboard() {
         </ListViewHeader>
 
         <ListViewFilterArea style={{alignItems: 'center'}}>
-          <RadioTileGroup
+          <AudienceFilter dateRange={dateRange} setDateRange={setDateRange} />
+          {/* <RadioTileGroup
             inline
             defaultValue={dateResolution}
             aria-label="Create new project"
@@ -66,14 +78,14 @@ function AudienceDashboard() {
             <RadioTile icon={<MdCalendarToday />} label="Tägliche Auflösung" value="day" />
             <RadioTile icon={<MdCalendarViewWeek />} label="Wöchentliche Auflösung" value="week" />
             <RadioTile icon={<MdCalendarMonth />} label="Monatliche Auflösung" value="month" />
-          </RadioTileGroup>
+          </RadioTileGroup> */}
 
-          <DateRangePicker
+          {/* <DateRangePicker
             size="lg"
             value={dateRange}
             hoverRange={dateResolution === 'day' ? undefined : dateResolution}
             onChange={newDateRange => setDateRange(newDateRange as DateRange | undefined | null)}
-          />
+          /> */}
         </ListViewFilterArea>
       </ListViewContainer>
 
@@ -81,9 +93,9 @@ function AudienceDashboard() {
         <AudienceChart audienceStats={audienceStats} />
       </AudienceChartWrapper>
 
-      <TableWrapperStyled>
+      {/* <TableWrapperStyled>
         <AudienceTable audienceStats={audienceStats} />
-      </TableWrapperStyled>
+      </TableWrapperStyled> */}
     </>
   )
 }

@@ -1,11 +1,9 @@
 import Table, {RowDataType} from 'rsuite/esm/Table'
 
-import {AudienceStat} from './audience-data-mocker'
-
 const {Column, HeaderCell, Cell} = Table
 
 interface AudienceTableProps {
-  audienceStats: AudienceStat[]
+  audienceStats: any[]
 }
 
 export function AudienceTable({audienceStats}: AudienceTableProps) {
@@ -34,19 +32,19 @@ export function AudienceTable({audienceStats}: AudienceTableProps) {
       <Column resizable width={150}>
         <HeaderCell>{'Total aktive Abos'}</HeaderCell>
         <Cell dataKey="totalActiveSubscriptions">
-          {(rowData: RowDataType<AudienceStat>) => <b>{rowData.totalActiveSubscriptions}</b>}
+          {(rowData: RowDataType<any>) => <b>{rowData.totalActiveSubscriptions}</b>}
         </Cell>
       </Column>
       <Column resizable width={150}>
         <HeaderCell>{'Erneuerungsrate'}</HeaderCell>
         <Cell dataKey="renewalRate">
-          {(rowData: RowDataType<AudienceStat>) => <>{rowData.renewalRate}%</>}
+          {(rowData: RowDataType<any>) => <>{rowData.renewalRate}%</>}
         </Cell>
       </Column>
       <Column resizable width={150}>
         <HeaderCell>{'Kündigungsrate'}</HeaderCell>
         <Cell dataKey="cancellationRate">
-          {(rowData: RowDataType<AudienceStat>) => <>{rowData.cancellationRate}%</>}
+          {(rowData: RowDataType<any>) => <>{rowData.cancellationRate}%</>}
         </Cell>
       </Column>
     </Table>
