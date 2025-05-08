@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import {Alert, AlertTitle, IconButton, LinearProgress, Tooltip} from '@mui/material'
+import {Alert, AlertTitle, css, IconButton, LinearProgress, Theme, Tooltip} from '@mui/material'
 import {formatCurrency} from '@wepublish/membership/website'
 import {
   BlockContent,
   CrowdfundingBlock as CrowdfundingBlockType,
   Currency
 } from '@wepublish/website/api'
-import {BuilderCrowdfundingBlockProps} from '@wepublish/website/builder'
+import {BuilderCrowdfundingBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdOutlineInfo} from 'react-icons/md'
 
 export const isCrowdfundingBlock = (
@@ -17,15 +17,15 @@ export const CrowdfundingContainer = styled('div')``
 
 export const CfInner = styled('div')``
 
-export const CfTitle = styled('h1')`
+const titleStyles = (theme: Theme) => css`
   font-weight: 400;
   line-height: 1;
-  margin-bottom: ${({theme}) => theme.spacing(2)};
-  margin-left: ${({theme}) => theme.spacing(2)};
+  margin: ${theme.spacing(2)};
 `
 
 export const CfProgressBarContainer = styled('div')`
   position: relative;
+  color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
 export const CfProgressBarInner = styled('div')`
@@ -60,26 +60,34 @@ export const CfProgressBarInnerTitle = styled('p')`
 `
 
 export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps) => {
+  const {
+    elements: {H5}
+  } = useWebsiteBuilder()
+
   const activeCrowdfunding = crowdfunding?.activeCrowdfundingGoal
-  const progress = activeCrowdfunding?.progress || 0
-  const revenue = crowdfunding?.revenue || 0
-  const goalAmount = activeCrowdfunding?.amount || 0
+  const progress = activeCrowdfunding?.progress ?? 0
+  const revenue = crowdfunding?.revenue ?? 0
+  const goalAmount = activeCrowdfunding?.amount ?? 0
   const goalDescription = activeCrowdfunding?.description
 
-  if (!crowdfunding)
+  if (!crowdfunding) {
     return (
       <Alert severity="error">
         <AlertTitle>Crowdfunding nicht verfügbar.</AlertTitle>
       </Alert>
     )
+  }
 
   return (
     <CrowdfundingContainer>
       <CfInner>
-        <CfTitle>
-          Bereits <b style={{textWrap: 'nowrap'}}>{formatCurrency(revenue / 100, Currency.Chf)}</b>{' '}
+        <H5 component="div" css={titleStyles}>
+          Bereits{' '}
+          <strong style={{textWrap: 'nowrap'}}>
+            {formatCurrency(revenue / 100, Currency.Chf)}
+          </strong>{' '}
           finanziert
-        </CfTitle>
+        </H5>
 
         <CfProgressBarContainer>
           <LinearProgress
@@ -88,6 +96,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
             value={progress}
             sx={{height: '60px'}}
           />
+
           <CfProgressBarInner>
             <CfProgressBarInnerItem>
               {goalDescription && (
@@ -98,10 +107,12 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
                 </Tooltip>
               )}
             </CfProgressBarInnerItem>
+
             <CfProgressBarInnerItem>
               <CfProgressBarInnerAmount>
                 {formatCurrency(goalAmount / 100, Currency.Chf)}
               </CfProgressBarInnerAmount>
+
               <CfProgressBarInnerTitle>
                 {crowdfunding.activeCrowdfundingGoal?.title || ''}
               </CfProgressBarInnerTitle>
