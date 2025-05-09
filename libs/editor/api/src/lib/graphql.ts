@@ -6284,3 +6284,14 @@ export function useDeleteUserRoleMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteUserRoleMutationHookResult = ReturnType<typeof useDeleteUserRoleMutation>;
 export type DeleteUserRoleMutationResult = Apollo.MutationResult<DeleteUserRoleMutation>;
 export type DeleteUserRoleMutationOptions = Apollo.BaseMutationOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
+
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
+      }
+      const result: PossibleTypesResultData = {
+  "possibleTypes": {}
+};
+      export default result;
+    
