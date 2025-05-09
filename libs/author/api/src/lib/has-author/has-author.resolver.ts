@@ -1,19 +1,19 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasAuthor, HasOptionalAuthor} from './has-author.model'
 import {Author} from '../author.model'
+import {AuthorDataloader} from '../author-dataloader'
 
 @Resolver(() => HasAuthor)
 export class HasAuthorResolver {
+  constructor(private dataloader: AuthorDataloader) {}
+
   @ResolveField(() => Author, {nullable: true})
   public author(@Parent() {authorId}: HasOptionalAuthor | HasAuthor) {
     if (!authorId) {
       return null
     }
 
-    return {
-      __typename: 'Author',
-      id: authorId
-    }
+    return this.dataloader.load(authorId)
   }
 }
 
