@@ -400,8 +400,6 @@ export class ImportPeerArticleService {
           }
 
           case 'CrowdfundingBlock':
-            return {}
-
           case 'UnknownBlock':
           case 'TitleBlock':
           case 'TeaserGridFlexBlock':

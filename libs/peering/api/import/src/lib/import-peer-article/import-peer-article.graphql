@@ -5,44 +5,111 @@ fragment FullImage on Image {
   source
 }
 
-fragment FullArticle on Article {
-  id
-}
+fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    image {
+      ...FullImage
+    }
 
-fragment FullPage on Page {
-  id
-}
+    preTitle
+    title
+    lead
 
-fragment FullEvent on Event {
-  id
-}
+    article {
+      id
+    }
+  }
 
-fragment FullPoll on FullPoll {
-  id
-}
+  ... on PageTeaser {
+    image {
+      ...FullImage
+    }
 
-fragment CommentBlockComment on Comment {
-  id
-}
+    preTitle
+    title
+    lead
 
-fragment PeerWithProfile on Peer {
-  id
-}
+    page {
+      id
+    }
+  }
 
-fragment ArticleWithoutBlocks on Article {
-  id
-}
+  ... on EventTeaser {
+    image {
+      ...FullImage
+    }
 
-fragment PageWithoutBlocks on Page {
-  id
+    preTitle
+    title
+    lead
+
+    event {
+      id
+    }
+  }
+
+  ... on CustomTeaser {
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+      public
+    }
+  }
 }
 
 fragment ImportBlock on BlockContent {
-  ...FullBlock
+  __typename
 
-  ... on PollBlock {
-    __typename
+  ... on TitleBlock {
+    blockStyle
     type
+    title
+    lead
+  }
+
+  ... on ImageBlock {
+    blockStyle
+    type
+    caption
+    linkUrl
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on ImageGalleryBlock {
+    blockStyle
+    type
+    images {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on QuoteBlock {
+    blockStyle
+    type
+    quote
+    author
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on RichTextBlock {
+    blockStyle
+    type
+    richText
   }
 
   ... on HTMLBlock {
@@ -60,6 +127,133 @@ fragment ImportBlock on BlockContent {
     type
   }
 
+  ... on PollBlock {
+    __typename
+    type
+  }
+
+  ... on CrowdfundingBlock {
+    blockStyle
+    type
+    crowdfunding {
+      id
+      name
+      activeCrowdfundingGoal {
+        id
+        title
+        description
+        amount
+        progress
+      }
+    }
+  }
+
+  ... on ListicleBlock {
+    blockStyle
+    type
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on BreakBlock {
+    blockStyle
+    type
+    text
+    richText
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on FacebookPostBlock {
+    blockStyle
+    type
+    userID
+    postID
+  }
+
+  ... on FacebookVideoBlock {
+    blockStyle
+    type
+    userID
+    videoID
+  }
+
+  ... on InstagramPostBlock {
+    blockStyle
+    type
+    postID
+  }
+
+  ... on TwitterTweetBlock {
+    blockStyle
+    type
+    userID
+    tweetID
+  }
+
+  ... on VimeoVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on YouTubeVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on SoundCloudTrackBlock {
+    blockStyle
+    type
+    trackID
+  }
+
+  ... on PolisConversationBlock {
+    blockStyle
+    type
+    conversationID
+  }
+
+  ... on TikTokVideoBlock {
+    blockStyle
+    type
+    userID
+    videoID
+  }
+
+  ... on BildwurfAdBlock {
+    blockStyle
+    type
+    zoneID
+  }
+
+  ... on IFrameBlock {
+    blockStyle
+    type
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
+
+  ... on SubscribeBlock {
+    blockStyle
+    type
+  }
+
   ... on TeaserListBlock {
     __typename
     type
@@ -72,6 +266,7 @@ fragment ImportBlock on BlockContent {
   ... on TeaserGridBlock {
     __typename
     type
+    numColumns
   }
 
   ... on TeaserGridFlexBlock {
