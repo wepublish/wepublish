@@ -505,11 +505,11 @@ export class MemberContext implements MemberContextInterface {
         deactivation: {
           upsert: {
             create: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
+              date: deactivationDate ?? subscription.paidUntil ?? subscription.startsAt,
               reason: deactivationReason ?? SubscriptionDeactivationReason.none
             },
             update: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
+              date: deactivationDate ?? subscription.paidUntil ?? subscription.startsAt,
               reason: deactivationReason ?? SubscriptionDeactivationReason.none
             }
           }

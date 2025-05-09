@@ -125,7 +125,7 @@ export class PeriodicJobService {
         data: {
           deactivation: {
             create: {
-              date: new Date(),
+              date: subscription.paidUntil ?? subscription.startsAt,
               reason: SubscriptionDeactivationReason.userSelfDeactivated
             }
           },
