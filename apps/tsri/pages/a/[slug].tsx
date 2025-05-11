@@ -147,6 +147,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

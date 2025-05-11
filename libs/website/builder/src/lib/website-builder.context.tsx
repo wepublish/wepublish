@@ -96,7 +96,11 @@ import {
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPeerProps} from './peer.interface'
-import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
+import {
+  BuilderRenderElementProps,
+  BuilderRenderLeafProps,
+  BuilderRenderRichtextProps
+} from './richText.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {
   BuilderAlertProps,
@@ -182,6 +186,7 @@ export type WebsiteBuilderProps = {
   richtext: {
     RenderLeaf: ComponentType<BuilderRenderLeafProps>
     RenderElement: ComponentType<BuilderRenderElementProps>
+    RenderRichtext: ComponentType<BuilderRenderRichtextProps>
   }
 
   blocks: {
@@ -305,7 +310,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   richtext: {
     RenderLeaf: NoComponent,
-    RenderElement: NoComponent
+    RenderElement: NoComponent,
+    RenderRichtext: NoComponent
   },
 
   blocks: {
