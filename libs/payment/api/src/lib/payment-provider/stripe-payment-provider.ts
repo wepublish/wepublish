@@ -15,6 +15,7 @@ import {PaymentState} from '@prisma/client'
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
   webhookEndpointSecret: string
+  methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 interface CreateStripeCustomerProps {
@@ -41,9 +42,11 @@ function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
 export class StripePaymentProvider extends BasePaymentProvider {
   readonly stripe: Stripe
   readonly webhookEndpointSecret: string
+  readonly methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
 
   constructor(props: StripePaymentProviderProps) {
     super(props)
+    this.methods = props.methods
     this.stripe = new Stripe(props.secretKey, {
       apiVersion: '2020-08-27'
     })
@@ -52,7 +55,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
   async createStripeCustomer({intent}: CreateStripeCustomerProps): Promise<string> {
     const customer = await this.stripe.customers.create({
-      email: intent.metadata.mail ?? '',
+      email: intent.metadata['mail'] ?? '',
       payment_method: intent.payment_method as string,
       invoice_settings: {
         default_payment_method: intent.payment_method as string
@@ -79,7 +82,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     const intent = event.data.object as Stripe.PaymentIntent
     const intentStates: IntentState[] = []
     const state = mapStripeEventToPaymentStatus(intent.status)
-    if (state !== null && intent.metadata.paymentID !== undefined) {
+    if (state !== null && intent.metadata['paymentID'] !== undefined) {
       let customerID
 
       if (
@@ -93,7 +96,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       }
 
       intentStates.push({
-        paymentID: intent.metadata.paymentID,
+        paymentID: intent.metadata['paymentID'],
         paymentData: JSON.stringify(intent),
         state,
         customerID
@@ -155,9 +158,11 @@ export class StripePaymentProvider extends BasePaymentProvider {
               customer: customerID,
               off_session: true,
               payment_method: paymentMethodID,
-              payment_method_types: ['card']
+              payment_method_types: this.methods
             }
-          : {}),
+          : {
+              payment_method_types: this.methods
+            }),
         currency: currency.toLowerCase(),
         // description: props.invoice.description, TODO: convert to text
         ...(saveCustomer ? {setup_future_usage: 'off_session'} : {}),
@@ -218,7 +223,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       throw new Error('unknown intent state')
     }
 
-    if (!intent.metadata.paymentID) {
+    if (!intent.metadata['paymentID']) {
       logger('stripePaymentProvider').error(
         'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
         intent.id,
@@ -240,7 +245,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
     return {
       state,
-      paymentID: intent.metadata.paymentID,
+      paymentID: intent.metadata['paymentID'],
       paymentData: JSON.stringify(intent),
       customerID
     }

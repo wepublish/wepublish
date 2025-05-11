@@ -14,7 +14,7 @@ fragment FullUserRole on UserRole {
   }
 }
 
-query UserRoleList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullUserRole
@@ -37,7 +37,7 @@ query PermissionList {
   }
 }
 
-query UserRole($id: ID!) {
+query UserRole($id: String!) {
   userRole(id: $id) {
     ...FullUserRole
   }
@@ -49,13 +49,13 @@ mutation CreateUserRole($input: UserRoleInput!) {
   }
 }
 
-mutation UpdateUserRole($id: ID!, $input: UserRoleInput!) {
+mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
   updateUserRole(id: $id, input: $input) {
     ...FullUserRole
   }
 }
 
-mutation DeleteUserRole($id: ID!) {
+mutation DeleteUserRole($id: String!) {
   deleteUserRole(id: $id) {
     ...FullUserRole
   }

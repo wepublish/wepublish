@@ -153,7 +153,7 @@ const TagList = memo<TagListProps>(({type}) => {
         type
       }
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
       dispatchApiValue({
@@ -291,7 +291,7 @@ const TagList = memo<TagListProps>(({type}) => {
                 <FlexWrapper>
                   <Form.Control
                     name={tagId}
-                    value={inputValue.tag}
+                    value={inputValue.tag ?? ''}
                     placeholder={t('tags.overview.placeholder')}
                     onChange={(tag: string) => {
                       dispatchFormValue({
@@ -383,7 +383,9 @@ const TagList = memo<TagListProps>(({type}) => {
 
       <Modal open={!!tagToDelete} backdrop="static" size="xs" onClose={() => setTagToDelete(null)}>
         <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
-        <Modal.Body>{t('tags.overview.areYouSureBody', {tag: formValue[tagToDelete!]})}</Modal.Body>
+        <Modal.Body>
+          {tagToDelete && t('tags.overview.areYouSureBody', {tag: formValue[tagToDelete].tag})}
+        </Modal.Body>
         <Modal.Footer>
           <Button
             color="red"

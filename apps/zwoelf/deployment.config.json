@@ -1,6 +1,7 @@
 {
   "website": {
     "production": {
+      "custom_domain": "https://www.zwoelf.ch",
       "deployment": true,
       "env": {},
       "secret_env": []

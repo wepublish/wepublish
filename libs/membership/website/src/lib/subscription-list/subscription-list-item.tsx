@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {SubscriptionDeactivationReason} from '@wepublish/website/api'
 import {
   BuilderSubscriptionListItemProps,
@@ -11,7 +11,6 @@ import {
   MdAutorenew,
   MdCalendarMonth,
   MdCancel,
-  MdEventRepeat,
   MdHistory,
   MdOutlinePayments,
   MdTimelapse
@@ -182,14 +181,11 @@ export function SubscriptionListItem({
               disabled={loading}
               variant="text"
               color="secondary">
-              Abo Künden
+              Abo kündigen
             </Button>
 
             {canExtend && (
-              <Button
-                onClick={() => setConfirmExtend(true)}
-                disabled={loading}
-                startIcon={<MdEventRepeat />}>
+              <Button onClick={() => setConfirmExtend(true)} disabled={loading}>
                 Jetzt Verlängern
               </Button>
             )}
@@ -197,7 +193,6 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
-      {/* confirm cancel */}
       <MembershipModal
         open={!!confirmCancel}
         onSubmit={async () => {
@@ -205,9 +200,9 @@ export function SubscriptionListItem({
           await callAction(cancel)()
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={`Abo Künden`}>
+        submitText={`Abo kündigen`}>
         <H5 id="modal-modal-title" component="h1">
-          {name} wirklich künden?
+          {name} wirklich kündigen?
         </H5>
 
         <Paragraph gutterBottom={false}>
@@ -216,7 +211,6 @@ export function SubscriptionListItem({
         </Paragraph>
       </MembershipModal>
 
-      {/* confirm extend */}
       <MembershipModal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}

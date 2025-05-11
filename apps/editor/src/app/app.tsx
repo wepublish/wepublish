@@ -2,6 +2,7 @@ import 'rsuite/styles/index.less'
 
 import {gql, useMutation} from '@apollo/client'
 import {css, Global} from '@emotion/react'
+import {BannerList, CreateBannerForm, EditBannerForm} from '@wepublish/banner/editor'
 import {
   ConsentCreateView,
   ConsentEditView,
@@ -10,7 +11,13 @@ import {
   UserConsentEditView,
   UserConsentList
 } from '@wepublish/consent/editor'
+import {
+  CreateCrowdfundingForm,
+  CrowdfundingList,
+  EditCrowdfundingForm
+} from '@wepublish/crowdfunding/editor'
 import {TagType} from '@wepublish/editor/api'
+import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
   MailTemplateList,
@@ -60,7 +67,6 @@ import {TokenList} from './routes/tokens/tokenList'
 import {UserRoleList} from './routes/userRoles/userRoleList'
 import {UserEditView} from './routes/users/userEditView'
 import {UserList} from './routes/users/userList'
-import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -79,7 +85,7 @@ const Logout = () => {
       localStorage.removeItem(LocalStorageKey.SessionToken)
       authDispatch({type: AuthDispatchActionType.Logout})
     }
-  }, [session])
+  }, [authDispatch, logout, session])
 
   return <Navigate to="/login" replace />
 }
@@ -294,6 +300,32 @@ export function App() {
               }
             />
 
+            {/* Crowdfunding Routes */}
+            <Route
+              path="crowdfundings"
+              element={
+                <Base>
+                  <CrowdfundingList />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/create"
+              element={
+                <Base>
+                  <CreateCrowdfundingForm />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/edit/:id"
+              element={
+                <Base>
+                  <EditCrowdfundingForm />
+                </Base>
+              }
+            />
+
             {/* Poll Routes */}
             <Route
               path="polls"
@@ -450,6 +482,30 @@ export function App() {
               element={
                 <Base>
                   <NavigationList />
+                </Base>
+              }
+            />
+            <Route
+              path="banners"
+              element={
+                <Base>
+                  <BannerList />
+                </Base>
+              }
+            />
+            <Route
+              path="banners/create"
+              element={
+                <Base>
+                  <CreateBannerForm />
+                </Base>
+              }
+            />
+            <Route
+              path="banners/edit/:id"
+              element={
+                <Base>
+                  <EditBannerForm />
                 </Base>
               }
             />

@@ -1,5 +1,4 @@
 import {
-  GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
@@ -10,14 +9,14 @@ import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {PaymentProvider} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
-import {GraphQLSlug} from './slug'
+import {GraphQLSlug} from '@wepublish/utils/api'
 import {PaymentMethod} from '@prisma/client'
 import {GraphQLImage} from './image'
 
 export const GraphQLPaymentProvider = new GraphQLObjectType<PaymentProvider, Context>({
   name: 'PaymentProvider',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
@@ -25,7 +24,7 @@ export const GraphQLPaymentProvider = new GraphQLObjectType<PaymentProvider, Con
 export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context>({
   name: 'PaymentMethod',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -55,7 +54,7 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
 export const GraphQLPublicPaymentMethod = new GraphQLObjectType<PaymentMethod, Context>({
   name: 'PaymentMethod',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLSlug)},

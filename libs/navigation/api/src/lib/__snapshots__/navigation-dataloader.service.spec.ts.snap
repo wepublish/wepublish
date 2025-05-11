@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationDataloaderService load should load many 1`] = `
+[
+  {
+    "where": {
+      "id": {
+        "in": [
+          "123",
+          "321",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`NavigationDataloaderService load should load one 1`] = `
+[
+  {
+    "where": {
+      "id": {
+        "in": [
+          "123",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`NavigationDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

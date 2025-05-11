@@ -1,4 +1,5 @@
-import {FormControlLabel, RadioGroup, styled} from '@mui/material'
+import {FormControlLabel, RadioGroup} from '@mui/material'
+import styled from '@emotion/styled'
 import {toPlaintext} from '@wepublish/richtext'
 import {BuilderMemberPlanPickerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef, useEffect} from 'react'
@@ -63,11 +64,13 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
                   value={memberPlan.id}
                   control={
                     <MemberPlanItem
+                      slug={memberPlan.slug}
                       key={memberPlan.id}
                       checked={memberPlan.id === value}
                       name={memberPlan.name}
                       currency={memberPlan.currency}
                       amountPerMonthMin={memberPlan.amountPerMonthMin}
+                      extendable={memberPlan.extendable}
                     />
                   }
                   label={memberPlan.name}

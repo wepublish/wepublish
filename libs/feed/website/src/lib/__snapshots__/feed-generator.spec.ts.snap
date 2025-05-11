@@ -15,26 +15,26 @@ exports[`should generate the RSS feed 1`] = `
         <category>foo</category>
         <category>bar</category>
         <item>
-            <title><![CDATA[Title]]></title>
+            <title><![CDATA[Title Block]]></title>
             <link>https://example.com</link>
-            <guid>clgp1hfio50331801rejmrk6sj3</guid>
+            <guid>1</guid>
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
-            <description><![CDATA[lead]]></description>
-            <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
-            <category>foo</category>
-            <category>bar</category>
-            <enclosure length="0" type="image//500/281" __typename="Image" id="ljh9FHAvHAs0AxC" mimeType="image/jpg" format="jpg" createdAt="2023-04-18T12:38:56.369Z" modifiedAt="2023-04-18T12:38:56.371Z" filename="DSC07717" extension=".JPG" width="4000" height="6000" fileSize="8667448" tags="" focalPoint="[object Object]" url="https://unsplash.it/500/281" xl="https://unsplash.it/1200/400" l="https://unsplash.it/1000/400" m="https://unsplash.it/800/400" s="https://unsplash.it/500/300" xs="https://unsplash.it/300/200" xxs="https://unsplash.it/200/100" xlSquare="https://unsplash.it/1200/1200" lSquare="https://unsplash.it/1000/1000" mSquare="https://unsplash.it/800/800" sSquare="https://unsplash.it/500/500" xsSquare="https://unsplash.it/300/300" xxsSquare="https://unsplash.it/200/200"/>
+            <description><![CDATA[This is an article lead]]></description>
+            <content:encoded><![CDATA[This is an article lead]]></content:encoded>
+            <category>Concert</category>
+            <category>Concert</category>
+            <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
         </item>
         <item>
-            <title><![CDATA[Title]]></title>
+            <title><![CDATA[Title Block]]></title>
             <link>https://example.com</link>
-            <guid>clgp1hfio50331801rejmrk6sj3</guid>
+            <guid>2</guid>
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
-            <description><![CDATA[lead]]></description>
-            <content:encoded><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content:encoded>
-            <category>foo</category>
-            <category>bar</category>
-            <enclosure length="0" type="image//500/281" __typename="Image" id="ljh9FHAvHAs0AxC" mimeType="image/jpg" format="jpg" createdAt="2023-04-18T12:38:56.369Z" modifiedAt="2023-04-18T12:38:56.371Z" filename="DSC07717" extension=".JPG" width="4000" height="6000" fileSize="8667448" tags="" focalPoint="[object Object]" url="https://unsplash.it/500/281" xl="https://unsplash.it/1200/400" l="https://unsplash.it/1000/400" m="https://unsplash.it/800/400" s="https://unsplash.it/500/300" xs="https://unsplash.it/300/200" xxs="https://unsplash.it/200/100" xlSquare="https://unsplash.it/1200/1200" lSquare="https://unsplash.it/1000/1000" mSquare="https://unsplash.it/800/800" sSquare="https://unsplash.it/500/500" xsSquare="https://unsplash.it/300/300" xxsSquare="https://unsplash.it/200/200"/>
+            <description><![CDATA[This is an article lead]]></description>
+            <content:encoded><![CDATA[This is an article lead]]></content:encoded>
+            <category>Concert</category>
+            <category>Concert</category>
+            <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
         </item>
     </channel>
 </rss>"
@@ -55,12 +55,12 @@ exports[`should generate the atom feed 1`] = `
     <category term="foo"/>
     <category term="bar"/>
     <entry>
-        <title type="html"><![CDATA[Title]]></title>
+        <title type="html"><![CDATA[Title Block]]></title>
         <id>https://example.com</id>
         <link href="https://example.com"/>
         <updated>2023-01-01T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[lead]]></summary>
-        <content type="html"><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content>
+        <summary type="html"><![CDATA[This is an article lead]]></summary>
+        <content type="html"><![CDATA[This is an article lead]]></content>
         <author>
             <name>Foobar</name>
             <uri>https://example.com</uri>
@@ -69,16 +69,16 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="foo" term="foo"/>
-        <category label="bar" term="bar"/>
+        <category label="Concert" term="Concert"/>
+        <category label="Concert" term="Concert"/>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Title]]></title>
+        <title type="html"><![CDATA[Title Block]]></title>
         <id>https://example.com</id>
         <link href="https://example.com"/>
         <updated>2023-01-01T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[lead]]></summary>
-        <content type="html"><![CDATA[<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>]]></content>
+        <summary type="html"><![CDATA[This is an article lead]]></summary>
+        <content type="html"><![CDATA[This is an article lead]]></content>
         <author>
             <name>Foobar</name>
             <uri>https://example.com</uri>
@@ -87,8 +87,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="foo" term="foo"/>
-        <category label="bar" term="bar"/>
+        <category label="Concert" term="Concert"/>
+        <category label="Concert" term="Concert"/>
     </entry>
 </feed>"
 `;
@@ -103,105 +103,35 @@ exports[`should generate the json feed 1`] = `
     },
     "items": [
         {
-            "content_html": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href=\\"https://google.com\\">Link</a>, &#x1f600;</p>",
+            "content_html": "This is an article lead",
             "url": "https://example.com",
-            "title": "Title",
-            "summary": "lead",
-            "image": {
-                "__typename": "Image",
-                "id": "ljh9FHAvHAs0AxC",
-                "mimeType": "image/jpg",
-                "format": "jpg",
-                "createdAt": "2023-04-18T12:38:56.369Z",
-                "modifiedAt": "2023-04-18T12:38:56.371Z",
-                "filename": "DSC07717",
-                "extension": ".JPG",
-                "width": 4000,
-                "height": 6000,
-                "fileSize": 8667448,
-                "description": null,
-                "tags": [],
-                "source": null,
-                "link": null,
-                "license": null,
-                "focalPoint": {
-                    "x": 0.5,
-                    "y": 0.5
-                },
-                "title": null,
-                "url": "https://unsplash.it/500/281",
-                "xl": "https://unsplash.it/1200/400",
-                "l": "https://unsplash.it/1000/400",
-                "m": "https://unsplash.it/800/400",
-                "s": "https://unsplash.it/500/300",
-                "xs": "https://unsplash.it/300/200",
-                "xxs": "https://unsplash.it/200/100",
-                "xlSquare": "https://unsplash.it/1200/1200",
-                "lSquare": "https://unsplash.it/1000/1000",
-                "mSquare": "https://unsplash.it/800/800",
-                "sSquare": "https://unsplash.it/500/500",
-                "xsSquare": "https://unsplash.it/300/300",
-                "xxsSquare": "https://unsplash.it/200/200"
-            },
+            "title": "Title Block",
+            "summary": "This is an article lead",
+            "image": "https://unsplash.it/500/281",
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
                 "name": "Foobar",
                 "url": "https://example.com"
             },
             "tags": [
-                "foo",
-                "bar"
+                "Concert",
+                "Concert"
             ]
         },
         {
-            "content_html": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href=\\"https://google.com\\">Link</a>, &#x1f600;</p>",
+            "content_html": "This is an article lead",
             "url": "https://example.com",
-            "title": "Title",
-            "summary": "lead",
-            "image": {
-                "__typename": "Image",
-                "id": "ljh9FHAvHAs0AxC",
-                "mimeType": "image/jpg",
-                "format": "jpg",
-                "createdAt": "2023-04-18T12:38:56.369Z",
-                "modifiedAt": "2023-04-18T12:38:56.371Z",
-                "filename": "DSC07717",
-                "extension": ".JPG",
-                "width": 4000,
-                "height": 6000,
-                "fileSize": 8667448,
-                "description": null,
-                "tags": [],
-                "source": null,
-                "link": null,
-                "license": null,
-                "focalPoint": {
-                    "x": 0.5,
-                    "y": 0.5
-                },
-                "title": null,
-                "url": "https://unsplash.it/500/281",
-                "xl": "https://unsplash.it/1200/400",
-                "l": "https://unsplash.it/1000/400",
-                "m": "https://unsplash.it/800/400",
-                "s": "https://unsplash.it/500/300",
-                "xs": "https://unsplash.it/300/200",
-                "xxs": "https://unsplash.it/200/100",
-                "xlSquare": "https://unsplash.it/1200/1200",
-                "lSquare": "https://unsplash.it/1000/1000",
-                "mSquare": "https://unsplash.it/800/800",
-                "sSquare": "https://unsplash.it/500/500",
-                "xsSquare": "https://unsplash.it/300/300",
-                "xxsSquare": "https://unsplash.it/200/200"
-            },
+            "title": "Title Block",
+            "summary": "This is an article lead",
+            "image": "https://unsplash.it/500/281",
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
                 "name": "Foobar",
                 "url": "https://example.com"
             },
             "tags": [
-                "foo",
-                "bar"
+                "Concert",
+                "Concert"
             ]
         }
     ]
@@ -235,56 +165,21 @@ Feed {
       ],
       "category": [
         {
-          "name": "foo",
-          "term": "foo",
+          "name": "Concert",
+          "term": "Concert",
         },
         {
-          "name": "bar",
-          "term": "bar",
+          "name": "Concert",
+          "term": "Concert",
         },
       ],
-      "content": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>",
+      "content": "This is an article lead",
       "date": 2023-01-01T00:00:00.000Z,
-      "description": "lead",
-      "guid": "clgp1hfio50331801rejmrk6sj3",
-      "image": {
-        "__typename": "Image",
-        "createdAt": "2023-04-18T12:38:56.369Z",
-        "description": null,
-        "extension": ".JPG",
-        "fileSize": 8667448,
-        "filename": "DSC07717",
-        "focalPoint": {
-          "x": 0.5,
-          "y": 0.5,
-        },
-        "format": "jpg",
-        "height": 6000,
-        "id": "ljh9FHAvHAs0AxC",
-        "l": "https://unsplash.it/1000/400",
-        "lSquare": "https://unsplash.it/1000/1000",
-        "license": null,
-        "link": null,
-        "m": "https://unsplash.it/800/400",
-        "mSquare": "https://unsplash.it/800/800",
-        "mimeType": "image/jpg",
-        "modifiedAt": "2023-04-18T12:38:56.371Z",
-        "s": "https://unsplash.it/500/300",
-        "sSquare": "https://unsplash.it/500/500",
-        "source": null,
-        "tags": [],
-        "title": null,
-        "url": "https://unsplash.it/500/281",
-        "width": 4000,
-        "xl": "https://unsplash.it/1200/400",
-        "xlSquare": "https://unsplash.it/1200/1200",
-        "xs": "https://unsplash.it/300/200",
-        "xsSquare": "https://unsplash.it/300/300",
-        "xxs": "https://unsplash.it/200/100",
-        "xxsSquare": "https://unsplash.it/200/200",
-      },
+      "description": "This is an article lead",
+      "guid": "1",
+      "image": "https://unsplash.it/500/281",
       "link": "https://example.com",
-      "title": "Title",
+      "title": "Title Block",
     },
     {
       "author": [
@@ -299,56 +194,21 @@ Feed {
       ],
       "category": [
         {
-          "name": "foo",
-          "term": "foo",
+          "name": "Concert",
+          "term": "Concert",
         },
         {
-          "name": "bar",
-          "term": "bar",
+          "name": "Concert",
+          "term": "Concert",
         },
       ],
-      "content": "<h1>Title</h1><h2>Title 2</h2><h3>Title 3</h3><ul><li>Unordered List</li></ul><ol><li>Ordered List</li></ol><p></p><tr><td><p>Table Cell 1</p></td><td><p>Table Cell 2</p></td></tr><tr><td><p>Table Cell 3</p></td><td><p>Table Cell 4</p></td></tr><p>Normal text,<strong> Bold</strong>, <em>Italic</em>, <u>Underline</u>, <del>Strikethrough</del>, <sup>Sup</sup>, <sub>Sub</sub>, <a href="https://google.com">Link</a>, &#x1f600;</p>",
+      "content": "This is an article lead",
       "date": 2023-01-01T00:00:00.000Z,
-      "description": "lead",
-      "guid": "clgp1hfio50331801rejmrk6sj3",
-      "image": {
-        "__typename": "Image",
-        "createdAt": "2023-04-18T12:38:56.369Z",
-        "description": null,
-        "extension": ".JPG",
-        "fileSize": 8667448,
-        "filename": "DSC07717",
-        "focalPoint": {
-          "x": 0.5,
-          "y": 0.5,
-        },
-        "format": "jpg",
-        "height": 6000,
-        "id": "ljh9FHAvHAs0AxC",
-        "l": "https://unsplash.it/1000/400",
-        "lSquare": "https://unsplash.it/1000/1000",
-        "license": null,
-        "link": null,
-        "m": "https://unsplash.it/800/400",
-        "mSquare": "https://unsplash.it/800/800",
-        "mimeType": "image/jpg",
-        "modifiedAt": "2023-04-18T12:38:56.371Z",
-        "s": "https://unsplash.it/500/300",
-        "sSquare": "https://unsplash.it/500/500",
-        "source": null,
-        "tags": [],
-        "title": null,
-        "url": "https://unsplash.it/500/281",
-        "width": 4000,
-        "xl": "https://unsplash.it/1200/400",
-        "xlSquare": "https://unsplash.it/1200/1200",
-        "xs": "https://unsplash.it/300/200",
-        "xsSquare": "https://unsplash.it/300/300",
-        "xxs": "https://unsplash.it/200/100",
-        "xxsSquare": "https://unsplash.it/200/200",
-      },
+      "description": "This is an article lead",
+      "guid": "2",
+      "image": "https://unsplash.it/500/281",
       "link": "https://example.com",
-      "title": "Title",
+      "title": "Title Block",
     },
   ],
   "json1": [Function],

@@ -13,7 +13,6 @@ import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
-  Textarea,
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
@@ -183,15 +182,10 @@ function SettingList() {
       name: SettingName.AllowCommentEditing,
       label: 'settingList.allowCommentEditing'
     },
-    [SettingName.HeadScript]: {
-      value: '',
-      name: SettingName.HeadScript,
-      label: 'settingList.headScript'
-    },
-    [SettingName.BodyScript]: {
-      value: '',
-      name: SettingName.BodyScript,
-      label: 'settingList.bodyScript'
+    [SettingName.ShowPendingWhenNotPublished]: {
+      value: false,
+      name: SettingName.ShowPendingWhenNotPublished,
+      label: 'settingList.showPendingWhenNotPublished'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -208,7 +202,6 @@ function SettingList() {
     settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
       []
   )
-
   useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {
@@ -678,54 +671,32 @@ function SettingList() {
                     </Form.Group>
                   </Panel>
                 </Col>
-
-                {/* scripts */}
-                <Col xs={24}>
-                  <Panel bordered header={t('settingList.scripts')}>
-                    <Form.Group controlId={SettingName.HeadScript}>
-                      <Form.ControlLabel>
-                        {t(settings[SettingName.HeadScript].label)}{' '}
-                        <SettingInfo text={t('settingList.warnings.scripts')} />
-                      </Form.ControlLabel>
-                      <WideInputGroup>
-                        <Form.Control
-                          name={SettingName.HeadScript}
-                          accepter={Textarea}
-                          rows={3}
-                          value={settings[SettingName.HeadScript].value}
-                          onChange={(value: string) => {
-                            setSetting({
-                              ...settings[SettingName.HeadScript],
-                              value
-                            })
-                          }}
-                        />
-                      </WideInputGroup>
-                    </Form.Group>
-
-                    <Form.Group controlId={SettingName.BodyScript}>
-                      <Form.ControlLabel>
-                        {t(settings[SettingName.BodyScript].label)}{' '}
-                        <SettingInfo text={t('settingList.warnings.scripts')} />
-                      </Form.ControlLabel>
-                      <WideInputGroup>
-                        <Form.Control
-                          name={SettingName.BodyScript}
-                          accepter={Textarea}
-                          rows={3}
-                          value={settings[SettingName.BodyScript].value}
-                          onChange={(value: string) => {
-                            setSetting({
-                              ...settings[SettingName.BodyScript],
-                              value
-                            })
-                          }}
-                        />
-                      </WideInputGroup>
-                    </Form.Group>
-                  </Panel>
-                </Col>
               </Row>
+
+              {/* articlePage */}
+              <Col xs={24}>
+                <Panel bordered header={t('settingList.articlePage')}>
+                  <Form.Group controlId={SettingName.ShowPendingWhenNotPublished}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.ShowPendingWhenNotPublished].label)}
+                        <SettingInfo text={t('settingList.warnings.showPendingWhenNotPublished')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.ShowPendingWhenNotPublished].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.ShowPendingWhenNotPublished],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+                </Panel>
+              </Col>
             </Col>
           </Row>
         </Grid>
@@ -741,7 +712,9 @@ function SettingList() {
         <Modal.Body>
           <DescriptionList>
             {changedSetting.map(setting => (
-              <DescriptionListItemWrapper label={t(settings[setting.name].label)}>
+              <DescriptionListItemWrapper
+                label={t(settings[setting.name].label)}
+                key={setting.name}>
                 <s>{valueText(setting.value)}</s> {valueText(settings[setting.name].value)}
               </DescriptionListItemWrapper>
             ))}

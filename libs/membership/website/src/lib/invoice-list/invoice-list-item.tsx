@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   BuilderInvoiceListItemProps,
   useAsyncAction,
@@ -56,6 +56,7 @@ export function InvoiceListItem({
   canceledAt,
   dueAt,
   subscription,
+  isSepa,
   canPay,
   pay,
   className
@@ -109,15 +110,17 @@ export function InvoiceListItem({
             </span>
           </InvoiceListItemMetaItem>
 
-          <InvoiceListItemMetaItem>
-            <MdOutlineWarning />
-            <span>
-              Fällig am{' '}
-              <time suppressHydrationWarning dateTime={dueAt}>
-                {date.format(new Date(dueAt))}
-              </time>
-            </span>
-          </InvoiceListItemMetaItem>
+          {!isSepa && (
+            <InvoiceListItemMetaItem>
+              <MdOutlineWarning />
+              <span>
+                Fällig am{' '}
+                <time suppressHydrationWarning dateTime={dueAt}>
+                  {date.format(new Date(dueAt))}
+                </time>
+              </span>
+            </InvoiceListItemMetaItem>
+          )}
 
           <InvoiceListItemMetaItem>
             <MdAttachMoney /> Betrag von{' '}
@@ -151,6 +154,13 @@ export function InvoiceListItem({
               Jetzt Bezahlen
             </Button>
           </InvoiceListItemActions>
+        )}
+
+        {isSepa && (
+          <Alert severity="warning">
+            Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage
+            in Anspruch nehmen.
+          </Alert>
         )}
 
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}

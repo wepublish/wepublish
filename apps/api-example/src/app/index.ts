@@ -8,7 +8,6 @@ import {
   MediaAdapter,
   Oauth2Provider,
   PaymentProvider,
-  URLAdapter,
   WepublishServer
 } from '@wepublish/api'
 import pinoMultiStream from 'pino-multi-stream'
@@ -16,9 +15,8 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
-import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
-import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
@@ -36,8 +34,7 @@ export async function runServer({
   publicExpressApp,
   mediaAdapter,
   mailProvider,
-  paymentProviders,
-  hotAndTrendingDataSource
+  paymentProviders
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -115,18 +112,14 @@ export async function runServer({
     level: 'debug'
   })
 
-  let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
-
-  if (config.general.urlAdapter === 'mannschaft') {
-    urlAdapter = new MannschaftURLAdapter({websiteURL, prisma})
-  }
+  const urlAdapter = new URLAdapter(websiteURL)
 
   /**
    * Challenge
    */
   let challenge: ChallengeProvider
   if (config.challenge.type === 'turnstile') {
-    challenge = new CfTurnstile(config.challenge.secret)
+    challenge = new CfTurnstile(config.challenge.secret, config.challenge.siteKey)
   } else {
     challenge = new AlgebraicCaptchaChallenge(config.challenge.secret, config.challenge.validTime, {
       width: config.challenge.width,
@@ -168,8 +161,7 @@ export async function runServer({
         ? config.general.apolloIntrospection
         : false,
       logger,
-      challenge,
-      hotAndTrendingDataSource
+      challenge
     },
     privateExpressApp,
     publicExpressApp

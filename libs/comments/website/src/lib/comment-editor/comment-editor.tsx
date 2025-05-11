@@ -1,12 +1,14 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, Modal, Theme, css, styled, useTheme} from '@mui/material'
+import {IconButton, Modal, Theme, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled'
 import {
+  Challenge,
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {toPlaintext} from '@wepublish/richtext'
+import {BlockFormat, toPlaintext} from '@wepublish/richtext'
 import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
 import {add} from 'date-fns'
@@ -27,23 +29,6 @@ export const CommentEditorActions = styled('div')`
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};
-`
-
-export const CommentEditorChallengeWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(max-content, 200px) 200px;
-  align-items: center;
-  gap: ${({theme}) => theme.spacing(3)};
-  justify-content: flex-start;
-`
-
-export const CommentEditorChallenge = styled('div')`
-  height: 100%;
-  display: grid;
-
-  svg {
-    height: 100%;
-  }
 `
 
 export const LoginWrapper = styled('div')`
@@ -245,7 +230,7 @@ export const CommentEditor = ({
       ...data,
       text: [
         {
-          type: 'paragraph',
+          type: BlockFormat.Paragraph,
           children: [
             {
               text: comment
@@ -327,31 +312,21 @@ export const CommentEditor = ({
           )}
         />
 
-        {!hasUser && challenge?.data && (
-          <CommentEditorChallengeWrapper>
-            <CommentEditorChallenge
-              dangerouslySetInnerHTML={{
-                __html:
-                  challenge.data.challenge.challenge
-                    ?.replace('#ffffff', 'transparent')
-                    .replace('width="200"', '')
-                    .replace('height="200"', '') ?? ''
-              }}
-            />
-
-            <Controller
-              name={'challenge.challengeSolution'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  label={'Captcha'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-          </CommentEditorChallengeWrapper>
+        {challenge?.data?.challenge && (
+          <Controller
+            name={'challenge.challengeSolution'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <Challenge
+                {...field}
+                onChange={field.onChange}
+                challenge={challenge.data!.challenge}
+                label={'Captcha'}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
+          />
         )}
 
         {challenge?.error && <Alert severity="error">{challenge.error.message}</Alert>}

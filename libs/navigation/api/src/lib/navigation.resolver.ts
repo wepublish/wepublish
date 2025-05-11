@@ -1,41 +1,30 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {CanCreateNavigation, CanDeleteNavigation, Permissions} from '@wepublish/permissions/api'
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
+import {CanCreateNavigation, CanDeleteNavigation} from '@wepublish/permissions'
+import {Permissions} from '@wepublish/permissions/api'
 import {
-  CreateNavigationArgs,
+  BaseNavigationLink,
+  CreateNavigationInput,
   Navigation,
-  NavigationIdArgs,
-  NavigationKeyArgs,
-  UpdateNavigationArgs
+  UpdateNavigationInput
 } from './navigation.model'
 import {NavigationService} from './navigation.service'
-import {UserInputError} from '@nestjs/apollo'
-import {NavigationDataloader} from './navigation.dataloader'
+import {NavigationDataloaderService} from './navigation-dataloader.service'
+import {Public} from '@wepublish/authentication/api'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
   constructor(
     private readonly navigationService: NavigationService,
-    private readonly navigationDataLoader: NavigationDataloader
+    private readonly navigationDataLoader: NavigationDataloaderService
   ) {}
 
-  @Query(() => Navigation, {description: `Returns a navigation by key.`})
-  async getNavigationByKey(@Args() {key}: NavigationKeyArgs) {
-    const navigation = await this.navigationService.getNavigationByKey(key)
-    if (navigation === null) {
-      throw new UserInputError('Navigation not found')
-    }
-    return navigation
-  }
-
+  @Public()
   @Query(() => Navigation, {description: `Returns a navigation by id.`})
-  async getNavigationById(@Args() {id}: NavigationIdArgs) {
-    const navigation = await this.navigationDataLoader.load(id)
-    if (navigation === null) {
-      throw new UserInputError('Navigation not found')
-    }
-    return navigation
+  navigation(@Args('id') id: string) {
+    return this.navigationDataLoader.load(id)
   }
 
+  @Public()
   @Query(() => [Navigation], {description: `Returns a list of navigations.`})
   navigations() {
     return this.navigationService.getNavigations()
@@ -43,19 +32,24 @@ export class NavigationResolver {
 
   @Mutation(() => Navigation, {description: `Creates a new navigation.`})
   @Permissions(CanCreateNavigation)
-  createNavigation(@Args() {navigation}: CreateNavigationArgs) {
+  createNavigation(@Args() navigation: CreateNavigationInput) {
     return this.navigationService.createNavigation(navigation)
   }
 
   @Mutation(() => Navigation, {description: `Updates an existing navigation.`})
   @Permissions(CanCreateNavigation)
-  updateNavigation(@Args() {navigation}: UpdateNavigationArgs) {
+  updateNavigation(@Args() navigation: UpdateNavigationInput) {
     return this.navigationService.updateNavigation(navigation)
   }
 
   @Mutation(() => Navigation, {description: `Deletes an existing navigation.`})
   @Permissions(CanDeleteNavigation)
-  deleteNavigation(@Args() {id}: NavigationIdArgs) {
+  deleteNavigation(@Args('id') id: string) {
     return this.navigationService.deleteNavigationById(id)
+  }
+
+  @ResolveField(() => [BaseNavigationLink], {nullable: true})
+  public links(@Parent() navigation: Navigation) {
+    return this.navigationService.getNavigationLinks(navigation.id)
   }
 }

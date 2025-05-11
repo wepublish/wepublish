@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {
-  ImageRefFragment,
+  FullImageFragment,
   Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
@@ -56,11 +56,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
   const [themeFontColor, setThemeFontColor] = useState('')
-  const [callToActionText, setCallToActionText] = useState<RichTextBlockValue['richText']>(
-    createDefaultValue()
-  )
+  const [callToActionText, setCallToActionText] = useState<RichTextBlockValue['richText']>()
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
-  const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
+  const [callToActionImage, setCallToActionImage] = useState<Maybe<FullImageFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
   const [isLogoChange, setIsLogoChange] = useState(false)
 
@@ -114,7 +112,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           logoID: logoImage?.id,
           themeColor,
           themeFontColor,
-          callToActionText,
+          callToActionText: callToActionText!,
           callToActionURL: callToActionTextURL,
           callToActionImageID: callToActionImage?.id,
           callToActionImageURL
@@ -226,13 +224,15 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           <BoxWrapper>
             <Group controlId="peerListCallToAction">
               <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
-              <Control
-                name="callToActionText"
-                value={callToActionText}
-                onChange={setCallToActionText}
-                accepter={RichTextBlock}
-                disabled={isDisabled}
-              />
+              {callToActionText && (
+                <Control
+                  name="callToActionText"
+                  value={callToActionText}
+                  onChange={setCallToActionText}
+                  accepter={RichTextBlock}
+                  disabled={isDisabled}
+                />
+              )}
             </Group>
             <Group>
               <Control

@@ -2,9 +2,10 @@ import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   CanCreateBlockStyle,
   CanDeleteBlockStyle,
-  CanUpdateBlockStyle,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanUpdateBlockStyle
+} from '../../../../../permissions/src/lib/permissions'
+import {Permissions} from '@wepublish/permissions/api'
+import {Public} from '@wepublish/authentication/api'
 import {BlockStyle, CreateBlockStyleInput, UpdateBlockStyleInput} from './block-styles.model'
 import {BlockStylesService} from './block-styles.service'
 
@@ -12,6 +13,7 @@ import {BlockStylesService} from './block-styles.service'
 export class BlockStylesResolver {
   constructor(private blockstylesService: BlockStylesService) {}
 
+  @Public()
   @Query(returns => [BlockStyle], {
     description: `Returns a list of block styles.`
   })
@@ -19,20 +21,20 @@ export class BlockStylesResolver {
     return this.blockstylesService.getBlockStyles()
   }
 
-  @Mutation(returns => BlockStyle, {description: `Creates a new block style.`})
   @Permissions(CanCreateBlockStyle)
+  @Mutation(returns => BlockStyle, {description: `Creates a new block style.`})
   public createBlockStyle(@Args() blockstyles: CreateBlockStyleInput) {
     return this.blockstylesService.createBlockStyle(blockstyles)
   }
 
-  @Mutation(returns => BlockStyle, {description: `Updates an existing block style.`})
   @Permissions(CanUpdateBlockStyle)
+  @Mutation(returns => BlockStyle, {description: `Updates an existing block style.`})
   public updateBlockStyle(@Args() blockstyles: UpdateBlockStyleInput) {
     return this.blockstylesService.updateBlockStyle(blockstyles)
   }
 
-  @Mutation(returns => BlockStyle, {description: `Deletes an existing block style.`})
   @Permissions(CanDeleteBlockStyle)
+  @Mutation(returns => BlockStyle, {description: `Deletes an existing block style.`})
   public deleteBlockStyle(@Args('id') id: string) {
     return this.blockstylesService.deleteBlockStyle(id)
   }

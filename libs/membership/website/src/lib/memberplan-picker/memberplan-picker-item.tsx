@@ -1,4 +1,5 @@
-import {Radio, css, lighten, styled, useRadioGroup} from '@mui/material'
+import {Radio, css, lighten, useRadioGroup} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderMemberPlanItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef} from 'react'
 import {formatCurrency} from '../formatters/format-currency'
@@ -34,7 +35,7 @@ export const MemberPlanItemPrice = styled('small')`
 `
 
 export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanItemProps>(
-  ({className, id, name, amountPerMonthMin, currency, ...props}, ref) => {
+  ({className, id, name, slug, amountPerMonthMin, currency, extendable, ...props}, ref) => {
     const {
       meta: {locale}
     } = useWebsiteBuilder()
@@ -48,7 +49,8 @@ export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanIte
 
           {!!amountPerMonthMin && (
             <MemberPlanItemPrice>
-              Ab {formatCurrency(amountPerMonthMin / 100, currency, locale)} pro Monat
+              Ab {formatCurrency(amountPerMonthMin / 100, currency, locale)}
+              {extendable && ' pro Monat'}
             </MemberPlanItemPrice>
           )}
         </MemberPlanItemContent>

@@ -46,12 +46,16 @@ paymentProviders:
     name: Stripe
     offSessionPayments: true
     secretKey: ${STRIPE_SECRET_KEY}
+    methods:
+      - 'card'
     webhookEndpointSecret: ${STRIPE_WEBHOOK_SECRET}
   - type: stripe-checkout
     id: stripe-checkout
     name: Stripe Checkout
     offSessionPayments: false
     secretKey: ${STRIPE_SECRET_KEY}
+    methods:
+      - 'card'
     webhookEndpointSecret: ${STRIPE_CHECKOUT_WEBHOOK_SECRET}
   - type: mollie
     id: mollie
@@ -91,6 +95,15 @@ paymentProviders:
 challenge:
   type: 'turnstile'
   secret: ${TURNSTILE_SECRET}
+  siteKey: ${TURNSTILE_SITE_KEY}
+trackingPixelProviders:
+  - type: prolitteris
+    id: prolitteris
+    name: "Pro Litteris"
+    memberNr: '892761'
+    onlyPaidContentAccess: false
+    publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
+    usePublisherInternalKey: true
 mediaServer:
   type: 'nova'
 ga:

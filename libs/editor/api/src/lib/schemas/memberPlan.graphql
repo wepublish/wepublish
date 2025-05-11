@@ -6,13 +6,29 @@ fragment MemberPlanRef on MemberPlan {
   active
   tags
   image {
-    ...ImageRef
+    ...FullImage
   }
+
+  successPageId
+  # successPage {
+  #   ...PageRef
+  # }
+
+  failPageId
+  # failPage {
+  #   ...PageRef
+  # }
+
+  confirmationPageId
+  # confirmationPage {
+  #   ...PageRef
+  # }
 }
 
 fragment FullMemberPlan on MemberPlan {
   tags
   amountPerMonthMin
+  amountPerMonthTarget
   currency
   availablePaymentMethods {
     paymentMethods {
@@ -27,7 +43,7 @@ fragment FullMemberPlan on MemberPlan {
   migrateToTargetPaymentMethodID
 }
 
-query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
+query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullMemberPlan
@@ -44,7 +60,7 @@ query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
   }
 }
 
-query MemberPlan($id: ID!) {
+query MemberPlan($id: String!) {
   memberPlan(id: $id) {
     ...FullMemberPlan
   }
@@ -56,13 +72,13 @@ mutation CreateMemberPlan($input: MemberPlanInput!) {
   }
 }
 
-mutation UpdateMemberPlan($id: ID!, $input: MemberPlanInput!) {
+mutation UpdateMemberPlan($id: String!, $input: MemberPlanInput!) {
   updateMemberPlan(id: $id, input: $input) {
     ...FullMemberPlan
   }
 }
 
-mutation DeleteMemberPlan($id: ID!) {
+mutation DeleteMemberPlan($id: String!) {
   deleteMemberPlan(id: $id) {
     ...FullMemberPlan
   }

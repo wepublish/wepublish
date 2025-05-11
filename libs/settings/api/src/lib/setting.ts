@@ -25,8 +25,7 @@ export enum SettingName {
 
   ALLOW_COMMENT_EDITING = 'allowCommentEditing',
 
-  HEAD_SCRIPT = 'headScript',
-  BODY_SCRIPT = 'bodyScript'
+  SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished'
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>

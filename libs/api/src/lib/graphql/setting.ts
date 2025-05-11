@@ -5,7 +5,6 @@ import {
   GraphQLInt,
   GraphQLScalarType,
   GraphQLInputObjectType,
-  GraphQLID,
   GraphQLList,
   GraphQLEnumType,
   GraphQLBoolean
@@ -49,9 +48,7 @@ export const GraphQLSettingName = new GraphQLEnumType({
     },
     [SettingName.MAKE_REVENUE_API_PUBLIC]: {value: SettingName.MAKE_REVENUE_API_PUBLIC},
     [SettingName.COMMENT_CHAR_LIMIT]: {value: SettingName.COMMENT_CHAR_LIMIT},
-    [SettingName.ALLOW_COMMENT_EDITING]: {value: SettingName.ALLOW_COMMENT_EDITING},
-    [SettingName.HEAD_SCRIPT]: {value: SettingName.HEAD_SCRIPT},
-    [SettingName.BODY_SCRIPT]: {value: SettingName.BODY_SCRIPT}
+    [SettingName.ALLOW_COMMENT_EDITING]: {value: SettingName.ALLOW_COMMENT_EDITING}
   }
 })
 
@@ -116,7 +113,7 @@ export const GraphQLSettingsInput = new GraphQLInputObjectType({
 export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   name: 'Setting',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLSettingName)},
     value: {type: new GraphQLNonNull(GraphQLSettingValueType)},
     settingRestriction: {type: GraphQLSettingRestriction}

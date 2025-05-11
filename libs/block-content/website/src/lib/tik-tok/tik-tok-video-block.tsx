@@ -1,9 +1,10 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderTikTokVideoBlockProps} from '@wepublish/website/builder'
-import {Block, TikTokVideoBlock as TikTokVideoBlockType} from '@wepublish/website/api'
+import {BlockContent, TikTokVideoBlock as TikTokVideoBlockType} from '@wepublish/website/api'
 
-export const isTikTokVideoBlock = (block: Block): block is TikTokVideoBlockType =>
-  block.__typename === 'TikTokVideoBlock'
+export const isTikTokVideoBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is TikTokVideoBlockType => block.__typename === 'TikTokVideoBlock'
 
 export const TikTokVideoBlockWrapper = styled('div')`
   display: grid;

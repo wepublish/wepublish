@@ -41,12 +41,21 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
-    const apiKey = props.req.query?.apiKey as string
+    const apiKey = props.req.query?.['apiKey'] as string
 
     if (!this.timeConstantCompare(apiKey, this.webhookApiKey)) {
       return {
         status: 403,
         message: 'Invalid Api Key'
+      }
+    }
+
+    const contentType = props.req.headers['content-type']
+    if (contentType !== 'application/json' || typeof props.req.body === 'string') {
+      return {
+        status: 415,
+        message:
+          'Request does not contain valid json. Is Payrexx wrongly configured to send a PHP-Post?'
       }
     }
 

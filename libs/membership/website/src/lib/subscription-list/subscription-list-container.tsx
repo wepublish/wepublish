@@ -2,30 +2,35 @@ import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {
   InvoicesDocument,
   InvoicesQuery,
-  Subscription,
   useCancelSubscriptionMutation,
   useExtendSubscriptionMutation,
   useInvoicesQuery,
   useSubscriptionsQuery,
-  ExtendSubscriptionMutation
+  ExtendSubscriptionMutation,
+  FullMemberPlanFragment,
+  FullSubscriptionFragment,
+  usePageLazyQuery
 } from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderContainerProps,
+  BuilderSubscriptionListProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {useMemo, useState} from 'react'
 
 export type SubscriptionListContainerProps = {
-  successURL: string
-  failureURL: string
-  filter?: (subscriptions: Subscription[]) => Subscription[]
-} & BuilderContainerProps
+  filter?: (subscriptions: FullSubscriptionFragment[]) => FullSubscriptionFragment[]
+} & BuilderContainerProps &
+  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>
 
 export function SubscriptionListContainer({
   filter,
-  successURL,
-  failureURL,
+  subscribeUrl = '/mitmachen',
   className
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
   const {SubscriptionList} = useWebsiteBuilder()
   const {data, loading, error} = useSubscriptionsQuery()
   const invoices = useInvoicesQuery()
@@ -48,6 +53,10 @@ export function SubscriptionListContainer({
     }
   })
 
+  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
+  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
+  const [fetchPage] = usePageLazyQuery()
+
   const filteredSubscriptions = useMemo(
     () =>
       produce(data, draftData => {
@@ -63,8 +72,20 @@ export function SubscriptionListContainer({
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
-            onClose={success => {
-              window.location.href = success ? successURL : failureURL
+            onClose={async success => {
+              if (stripeMemberPlan) {
+                const page = await fetchPage({
+                  variables: {
+                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
+                  }
+                })
+
+                window.location.href = page.data?.page.url ?? ''
+
+                // window.location.href = success
+                //   ? stripeMemberPlan.successPage?.url ?? ''
+                //   : stripeMemberPlan.failPage?.url ?? ''
+              }
             }}
           />
         </StripeElement>
@@ -75,6 +96,7 @@ export function SubscriptionListContainer({
         loading={loading}
         error={error}
         invoices={invoices}
+        subscribeUrl={subscribeUrl}
         className={className}
         onCancel={async subscriptionId => {
           await cancel({
@@ -84,11 +106,31 @@ export function SubscriptionListContainer({
           })
         }}
         onExtend={async subscriptionId => {
+          const memberPlan = filteredSubscriptions?.subscriptions?.find(
+            subscription => subscription.id === subscriptionId
+          )?.memberPlan
+          setStripeMemberPlan(memberPlan)
+
+          const [successPage, failPage] = await Promise.all([
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            }),
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            })
+          ])
+
           await extend({
             variables: {
               subscriptionId,
-              failureURL,
-              successURL
+              successURL: successPage.data?.page.url,
+              failureURL: failPage.data?.page.url
+              // failureURL: memberPlan?.failPage?.url,
+              // successURL: memberPlan?.successPage?.url
             }
           })
         }}

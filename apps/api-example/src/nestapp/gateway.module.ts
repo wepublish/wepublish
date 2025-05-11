@@ -5,7 +5,6 @@ import {GraphQLModule} from '@nestjs/graphql'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {readConfig} from '../readConfig'
 import {HealthModule} from '@wepublish/health'
-import {ScriptsModule} from '@wepublish/scripts/api'
 import {HttpModule} from '@nestjs/axios'
 
 @Module({
@@ -53,8 +52,7 @@ import {HttpModule} from '@nestjs/axios'
       }
     }),
     HttpModule,
-    HealthModule,
-    ScriptsModule
+    HealthModule
   ]
 })
 export class GatewayModule {}

@@ -15,10 +15,12 @@ export async function middleware(request: NextRequest) {
   const redirect = redirects.get(pathname) as Redirect
 
   if (redirect) {
-    const statusCode = redirect.permanent ? 301 : 307
+    const statusCode = 301
     const destination = request.nextUrl.clone()
     destination.href = destination.origin + redirect.destination
+
     return NextResponse.redirect(destination, statusCode)
   }
+
   return NextResponse.next()
 }

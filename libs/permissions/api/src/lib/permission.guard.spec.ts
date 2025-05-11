@@ -3,7 +3,7 @@ import {TestingModule, Test} from '@nestjs/testing'
 import {Reflector} from '@nestjs/core'
 import {PERMISSIONS_METADATA_KEY} from './permission.decorator'
 import {GqlExecutionContext} from '@nestjs/graphql'
-import {Permission} from './permissions'
+import {Permission} from '@wepublish/permissions'
 
 jest.mock('@nestjs/graphql', () => {
   const original = jest.requireActual('@nestjs/graphql')
@@ -48,7 +48,7 @@ describe('PermissionsGuard', () => {
     GqlExecutionContext.create = mockedCreate
   })
 
-  it('should return true if no permissions are set', () => {
+  it('should return false if no permissions are set', () => {
     const spy = jest.spyOn(reflector, 'getAllAndMerge').mockReturnValue([])
     const mockContext = {
       getHandler: () => ({}),
@@ -56,7 +56,7 @@ describe('PermissionsGuard', () => {
     } as any
 
     const result = guard.canActivate(mockContext)
-    expect(result).toBeTruthy()
+    expect(result).toBeFalsy()
     expect(spy).toHaveBeenCalledWith(PERMISSIONS_METADATA_KEY, [{}, {}])
   })
 

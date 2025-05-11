@@ -1,5 +1,12 @@
-import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleList, ArticleSEO, ArticleDate} from '@wepublish/article/website'
+import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
+import {
+  Article,
+  ArticleAuthors,
+  ArticleDate,
+  ArticleList,
+  ArticleSEO,
+  ArticleTags
+} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {
   Author,
@@ -9,39 +16,40 @@ import {
   AuthorListItem
 } from '@wepublish/author/website'
 import {
+  Banner,
   BildwurfAdBlock,
   BlockRenderer,
   Blocks,
   BreakBlock,
   CommentBlock,
-  EmbedBlock,
+  IFrameBlock,
+  ContextBox,
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
+  FocusTeaser,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
+  ImageSlider,
   InstagramPostBlock,
   ListicleBlock,
   PolisConversationBlock,
   PollBlock,
+  CrowdfundingBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
   Teaser,
   TeaserGridBlock,
-  TeaserListBlock,
   TeaserGridFlexBlock,
+  TeaserListBlock,
+  TeaserSlider,
   TikTokVideoBlock,
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock,
-  TeaserSlider,
-  ImageSlider,
-  ContextBox,
-  FocusTeaser,
-  Banner
+  YouTubeVideoBlock
 } from '@wepublish/block-content/website'
 import {
   Comment,
@@ -53,26 +61,28 @@ import {
   CommentRatings
 } from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {Banner as PageBanner} from '@wepublish/banner/website'
 import {Image} from '@wepublish/image/website'
 import {
   InvoiceList,
   InvoiceListItem,
   MemberPlanItem,
   MemberPlanPicker,
+  PaymentAmountSlider,
   PaymentMethodPicker,
   PeriodicityPicker,
   Subscribe,
   SubscriptionList,
-  SubscriptionListItem
+  SubscriptionListItem,
+  TransactionFee
 } from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
-import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
+import {RenderElement, RenderLeaf, RenderRichtext} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
-  Pagination,
   H1,
   H2,
   H3,
@@ -83,15 +93,16 @@ import {
   Link,
   ListItem,
   OrderedList,
+  Pagination,
   Paragraph,
   Rating,
-  UnorderedList,
-  theme
+  theme,
+  UnorderedList
 } from '@wepublish/ui'
 import {ImageUpload, PersonalDataForm} from '@wepublish/user/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format, getDefaultOptions} from 'date-fns'
-import {PropsWithChildren, memo} from 'react'
+import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
@@ -148,7 +159,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
+          ArticleAuthors={ArticleAuthors}
+          ArticleMeta={ArticleTags}
           ArticleSEO={ArticleSEO}
+          Banner={PageBanner}
           PeerInformation={PeerInformation}
           Navbar={Navbar}
           Footer={Footer}
@@ -175,7 +189,9 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           MemberPlanPicker={MemberPlanPicker}
           MemberPlanItem={MemberPlanItem}
           PeriodicityPicker={PeriodicityPicker}
+          PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
+          TransactionFee={TransactionFee}
           Subscribe={Subscribe}
           elements={{
             TextField,
@@ -209,6 +225,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             Quote: QuoteBlock,
             HTML: HtmlBlock,
             Poll: PollBlock,
+            Crowdfunding: CrowdfundingBlock,
             RichText: RichTextBlock,
             Event: EventBlock,
             Listicle: ListicleBlock,
@@ -217,7 +234,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserList: TeaserListBlock,
             Teaser,
             BildwurfAd: BildwurfAdBlock,
-            Embed: EmbedBlock,
+            IFrame: IFrameBlock,
             FacebookPost: FacebookPostBlock,
             FacebookVideo: FacebookVideoBlock,
             InstagramPost: InstagramPostBlock,
@@ -235,7 +252,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ImageSlider,
             TeaserSlider
           }}
-          richtext={{RenderElement, RenderLeaf}}
+          richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{
             format: dateFormatter
           }}>

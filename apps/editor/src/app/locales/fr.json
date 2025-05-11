@@ -112,7 +112,6 @@
         "statePublished": "Statut : Publié",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titre",
         "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo",
         "totalCharCount": "Le nombre total de caractères est de {{totalCharCount}}",
@@ -215,6 +214,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Modifier",
+        "label": "Crowdfunding",
+        "title": "Sélectionner le crowdfunding",
+        "name": "Nom du crowdfunding",
+        "select": "Sélectionner",
+        "open": "Ouvrir"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -285,6 +292,9 @@
         "label": "HTML",
         "placeholder": "Copiez votre bloc HTML ici..",
         "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+      },
+      "subscribe": {
+        "label": "S'abonner"
       },
       "image": {
         "label": "Image",
@@ -679,6 +689,33 @@
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
     },
+    "memberPlanEdit": {
+      "active": "Actif",
+      "activeDescription": "Rend le plan disponible",
+      "currency": "Devise",
+      "currencyRequired": "Devise requise",
+      "amountPerMonthMin": "Montant minimal / mois",
+      "amountPerMonthMinRequired": "Montant minimal requis",
+      "amountPerMonthMinZero": "Le montant minimal ne peut pas être inférieur à 0",
+      "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
+      "createMemberPlanHeader": "Créer un plan membre",
+      "description": "Description",
+      "editPaymentSetting": "Modifier les paramètres de paiement",
+      "forceAutoRenewal": "Forcer le renouvellement automatique",
+      "loadingTitle": "Chargement",
+      "name": "Nom",
+      "nameRequired": "Nom requis",
+      "noMemberPlanName": "Aucun nom de plan membre",
+      "paymentConfigs": "Paramètres de paiement",
+      "saveAndCloseBtnTitle": "Enregistrer et fermer",
+      "saveBtnTitle": "Enregistrer",
+      "slug": "Slug",
+      "slugRequired": "Slug requis",
+      "tags": "Tags",
+      "savedChanges": "Enregistré",
+      "successPage": "Redirection vers la page en cas de succès du paiement",
+      "failPage": "Redirection vers la page en cas d'erreur de paiement"
+    },
     "memberPlanList": {
       "action": "Actions",
       "createNew": "Nouveau plan membre",
@@ -862,17 +899,13 @@
     },
     "peerArticles": {
       "articleImage": "Image de l'article",
-      "authors": "Auteurs·trices",
       "filterByPeer": "Filtrer par peer",
       "lead": "Lead",
-      "notPublished": "Pas encore publié",
-      "originalArticle": "Article original",
       "peer": "Peer",
       "peerArticles": "Articles pairables",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Date de publication",
-      "title": "Titre",
-      "toOriginalArticle": "Vers l'article original"
+      "title": "Titre"
     },
     "peerList": {
       "overview": {
@@ -1007,13 +1040,11 @@
     "saveAndClose": "Sauvegarder & fermer",
     "settingList": {
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
-      "bodyScript": "Scripts à exécuter après le chargement du contenu",
       "comments": "Commentaires",
       "days": "jours",
       "errorTitle": "Erreur",
       "guestCommenting": "Autoriser les commentaires de personnes non connectées",
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
-      "headScript": "Scripts à exécuter avant le chargement du contenu",
       "login": "Login",
       "loginMinutes": "Durée de validité du token de l'email d'authentification",
       "minutes": "minutes",
@@ -1023,7 +1054,6 @@
       "peering": "Peering",
       "peerToken": "Peering timeout",
       "polls": "Sondages",
-      "scripts": "Propre code JavaScript",
       "settings": "Paramètres",
       "successMessage": "Paramètres mis à jour avec succès !",
       "successTitle": "Enregistré",
@@ -1035,14 +1065,51 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
-        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
-        "scripts": "Les scripts provenant de sources peu fiables peuvent causer de graves problèmes de sécurité et affecter considérablement la mise en page et la conception du site."
+        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
       }
+    },
+    "subscriptionFlow": {
+      "subscribe": "S'abonner",
+      "renewal_success": "Renouvellement réussi",
+      "renewal_failed": "Échec du renouvellement",
+      "deactivation_by_user": "Désactivé par l'utilisateur",
+      "reactivation": "Réactivé",
+      "invoice_creation": "Création de facture",
+      "deactivation_unpaid": "Désactivation pour facture impayée",
+      "custom": "Événement personnalisé",
+      "settings": "Paramètres du flux d'abonnement",
+      "edit": "Modifier le flux d'abonnement",
+      "titleDefaultSettings": "Paramètres d'abonnement par défaut",
+      "settingsDescription": "Vous pouvez remplacer ces paramètres pour chaque plan d'abonnement.",
+      "addNew": "Créer un nouveau flux",
+      "dayWithNumber": "jour {{day}}",
+      "days": "jours",
+      "savedChange": "Modification enregistrée avec succès",
+      "add": "Ajouter",
+      "memberplan": "Plan d'adhésion",
+      "paymentMethod": "Mode de paiement",
+      "periodicity": "Périodicité",
+      "autoRenewal": "Renouvellement automatique ?",
+      "booleanFilter": {
+        "true": "Oui",
+        "false": "Non"
+      },
+      "deleteFlowQuestion": "La suppression de ce flux est permanente et ne peut pas être annulée. Voulez-vous quand même continuer ?",
+      "deletePermanently": "Supprimer définitivement",
+      "dropHere": "Déposer ici",
+      "filters": "Filtres",
+      "subscriptionEvents": "Événements d'abonnement statiques",
+      "timeline": "Chronologie",
+      "actions": "Actions",
+      "dayOfRenewal": "Jour de renouvellement / fin d'abonnement",
+      "subscriptionsAffected": "Le filtre s'applique à {{numberOfSubscriptions}} abonnements",
+      "confirm_subscription": "Confirmation d'abonnement"
     },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
+        "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Par l'utilisateur·trice",
         "reset": "Réinitialiser le filtre",
@@ -1196,7 +1263,7 @@
         "date": "Date de désactivation",
         "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée. Une fois désactivé, l'abonnement ne peut pas être réactivé.",
         "cancellation": "Date d'annulation",
-        "isDeactivated": "L'abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Le cas échéant, un nouvel abonnement peut être souscrit.",
+        "isDeactivated": "L'abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Raison: {{reason}}. Le cas échéant, un nouvel abonnement peut être souscrit.",
         "modalMessage": {
           "activated": "Voulez-vous désactiver l'abonnement de \"{{userName}}\" avec l'adresse email \"{{userEmail}}\" ?"
         },
@@ -1205,6 +1272,7 @@
         },
         "reason": "Motif de désactivation",
         "reasonInvoiceNotPaid": "Facture impayée",
+        "reasonUserReplacedSubscription": "Remplacé par un autre abonnement",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
         "title": {
@@ -1236,6 +1304,8 @@
       "invoiceNr": "N° de facture {{invoiceId}}",
       "invoicePaid": "payée",
       "invoiceUnpaid": "non payée",
+      "confirmed": "confirmé",
+      "unconfirmed": "non confirmé",
       "monthlyAmount": "Montant mensuel : {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "L'abonnement expire, pas de renouvellement automatique",
       "noDeactivation": "Pas de désactivation.",
@@ -1264,7 +1334,9 @@
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
-      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée."
+      "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
+      "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
+      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
@@ -1300,6 +1372,43 @@
     },
     "selectableItemsActions": {
       "selectedItems": "{{numberOfItems}} éléments sélectionnés"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Nom",
+        "delete": "Supprimer",
+        "createNew": "Créer"
+      },
+      "delete": {
+        "title": "Supprimer définitivement?",
+        "body": "Le crowdfunding doit-il être supprimé définitivement?",
+        "delete": "Supprimer"
+      },
+      "create": {
+        "title": "Créer un nouveau crowdfunding"
+      },
+      "edit": {
+        "title": "Modifier {{crowdfundingName}}"
+      },
+      "form": {
+        "name": "Nom du crowdfunding (ne sera pas publié)",
+        "memberPlans": "Plans d'abonnement",
+        "filter": "Filtrer les revenus",
+        "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "selectMemberPlans": "Choisir des plans d'abonnement",
+        "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
+        "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
+        "revenue": "Déjà CHF {{revenue}} financé",
+        "goals": "Objectifs"
+      },
+      "goalsForm": {
+        "title": "Titre",
+        "description": "Description",
+        "amount": "Montant cible",
+        "remove": "Supprimer",
+        "add": "Ajouter un objectif"
+      }
     }
   }
 }

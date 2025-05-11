@@ -1,12 +1,13 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
+import {RichTextBlock} from '@wepublish/block-content/website'
 import {Button} from '@wepublish/ui'
-import {RichTextBlock} from '@wepublish/website'
 import {memo, useState} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 interface InfoBoxProps {
-  richText: Node[]
+  richText: Descendant[]
   className?: string
 }
 
@@ -15,6 +16,7 @@ export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
   grid-template-columns: 1fr 1fr;
   gap: ${({theme}) => theme.spacing(1)};
   height: ${({theme}) => theme.spacing(28)};
+  interpolate-size: allow-keywords;
   transition: height 0.3s ease;
   background-color: ${({theme}) => theme.palette.common.white};
   padding: ${({theme}) => theme.spacing(1.5)};
@@ -48,9 +50,9 @@ const AllAbout = styled('div')`
 
 const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
   height: ${({theme}) => theme.spacing(14)};
-  max-height: ${({theme}) => theme.spacing(14)};
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  interpolate-size: allow-keywords;
+  transition: height 0.3s ease-in-out;
   span {
     font-weight: 300;
   }
@@ -59,7 +61,6 @@ const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
     expanded &&
     css`
       height: auto;
-      max-height: ${theme.spacing(100)};
     `}
 `
 

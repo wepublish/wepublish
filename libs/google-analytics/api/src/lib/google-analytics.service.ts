@@ -34,6 +34,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       console.warn(
         'GoogleAnalyticsService.getMostViewedArticles: No Google Analytics credentials set, returning empty array'
       )
+
       return []
     }
 
@@ -81,40 +82,48 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       return object
     }, {} as Record<string, number>)
 
+    // Adding a number (even as string) to an object key ignores sorting
+    // So we have to re-sort the array
+    const sortedArticleViewMap = Object.entries(articleViewMap).sort(([, a], [, b]) => {
+      if (a > b) {
+        return -1
+      }
+
+      if (b > a) {
+        return 1
+      }
+
+      return 0
+    })
+
     const slicedArticleViewMap = Object.fromEntries(
-      Object.entries(articleViewMap).slice(skip ?? 0, (skip ?? 0) + getMaxTake(take ?? 10))
+      sortedArticleViewMap.slice(skip ?? 0, (skip ?? 0) + getMaxTake(take ?? 10))
     )
 
     const articles = await this.prisma.article.findMany({
       where: {
-        published: {
-          slug: {
-            in: Object.keys(slicedArticleViewMap),
-            mode: 'insensitive'
-          }
-        }
-      },
-      include: {
-        published: {
-          select: {
-            slug: true
-          }
+        slug: {
+          in: Object.keys(slicedArticleViewMap),
+          mode: 'insensitive'
+        },
+        publishedAt: {
+          not: null
         }
       }
     })
 
     return articles.sort((a, b) => {
-      if (!a.published?.slug || !articleViewMap[a.published.slug]) {
-        return -1
-      }
-
-      if (!b.published?.slug || !articleViewMap[b.published.slug]) {
+      if (!a.slug || !articleViewMap[a.slug]) {
         return 1
       }
 
-      return articleViewMap[a.published.slug] > articleViewMap[b.published.slug]
+      if (!b.slug || !articleViewMap[b.slug]) {
+        return -1
+      }
+
+      return articleViewMap[a.slug] > articleViewMap[b.slug]
         ? -1
-        : articleViewMap[b.published.slug] > articleViewMap[a.published.slug]
+        : articleViewMap[b.slug] > articleViewMap[a.slug]
         ? 1
         : 0
     })

@@ -1,7 +1,8 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps, BuilderImageWidths} from '@wepublish/website/builder'
 import {useImageProps} from './image.context'
+import {useMemo} from 'react'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,10 +39,11 @@ export const imageToSquareImageItems = (image: FullImageFragment): ImageItems =>
   {url: image.xxsSquare, size: 200}
 ]
 
-export const ImageWrapper = styled('img')<{aspectRatio: number}>`
+export const ImageWrapper = styled('img')<{aspectRatio: number; objectPosition: string}>`
   max-width: 100%;
   height: auto;
   aspect-ratio: auto ${({aspectRatio}) => aspectRatio};
+  object-position: ${({objectPosition}) => objectPosition};
   // Sets a max height for images so that they will not be too tall
   // and makes them not distorted
   max-height: 80lvh;
@@ -50,29 +52,49 @@ export const ImageWrapper = styled('img')<{aspectRatio: number}>`
 
 export function Image({image, ...props}: BuilderImageProps) {
   const {maxWidth, square, fetchPriority, loading} = useImageProps(props)
-  const images = square ? imageToSquareImageItems(image) : imageToImageItems(image)
 
-  const imageArray = images.reduce((array, img) => {
-    if (maxWidth && img.size > maxWidth) {
-      return array
-    }
+  const images = useMemo(
+    () => (square ? imageToSquareImageItems(image) : imageToImageItems(image)),
+    [image, square]
+  )
 
-    if (img.url) {
-      array.push(`${img.url} ${img.size}w`)
-    }
+  const objectPosition = useMemo(
+    () =>
+      square
+        ? 'center center'
+        : `${(image.focalPoint?.x ?? 0.5) * 100}% ${(image.focalPoint?.y ?? 0.5) * 100}%`,
+    [image.focalPoint?.x, image.focalPoint?.y, square]
+  )
 
-    return array
-  }, [] as string[])
+  const imageArray = useMemo(
+    () =>
+      images.reduce((array, img) => {
+        if (maxWidth && img.size > maxWidth) {
+          return array
+        }
 
-  const imageSizes = [...images].reverse().reduce((array, img, index) => {
-    if (index === images.length - 1) {
-      array.push(`${img.size}w`)
-    } else {
-      array.push(`(max-width: ${img.size * 2}px) ${img.size}w`)
-    }
+        if (img.url) {
+          array.push(`${img.url} ${img.size}w`)
+        }
 
-    return array
-  }, [] as string[])
+        return array
+      }, [] as string[]),
+    [images, maxWidth]
+  )
+
+  const imageSizes = useMemo(
+    () =>
+      [...images].reverse().reduce((array, img, index) => {
+        if (index === images.length - 1) {
+          array.push(`${img.size}w`)
+        } else {
+          array.push(`(max-width: ${img.size * 2}px) ${img.size}w`)
+        }
+
+        return array
+      }, [] as string[]),
+    [images]
+  )
 
   return (
     <ImageWrapper
@@ -80,10 +102,13 @@ export function Image({image, ...props}: BuilderImageProps) {
       alt={image.description ?? image.title ?? image.filename ?? ''}
       title={image.title ?? ''}
       aspectRatio={image.width / image.height}
+      objectPosition={objectPosition}
       srcSet={imageArray.join(',\n')}
       sizes={imageSizes.join(',\n')}
       loading={loading}
       fetchPriority={fetchPriority}
+      width={square ? undefined : image.width}
+      height={square ? undefined : image.height}
     />
   )
 }

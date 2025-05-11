@@ -3,16 +3,16 @@ import {
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  styled,
-  tableCellClasses
+  Typography
 } from '@mui/material'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {
   FullMailTemplateFragment,
+  getApiClientV2,
   SubscriptionEvent,
   SubscriptionInterval,
   useCreateSubscriptionFlowMutation,
@@ -26,11 +26,10 @@ import {
   useUpdateSubscriptionIntervalMutation
 } from '@wepublish/editor/api-v2'
 import {
+  createCheckedPermissionComponent,
   ListViewContainer,
   ListViewHeader,
-  PermissionControl,
-  createCheckedPermissionComponent,
-  getApiClientV2
+  PermissionControl
 } from '@wepublish/ui/editor'
 import {createContext, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -48,11 +47,13 @@ import {SubscriptionClientContext} from './graphql-client-context'
 import {SubscriptionFlowHeadline} from './subscription-flow-headline'
 import {TimelineBody} from './timeline/timeline-body'
 import {TimelineHead} from './timeline/timeline-head'
+import styled from '@emotion/styled'
 
 export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([])
 
 export const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
+  SubscriptionEvent.ConfirmSubscription,
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
   SubscriptionEvent.DeactivationByUser

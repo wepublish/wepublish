@@ -1,0 +1,40 @@
+fragment FullBanner on Banner {
+  id
+  title
+  text
+  cta
+
+  showOnArticles
+  showOnPages {
+    ...PageRef
+  }
+
+  image {
+    ...FullImage
+  }
+
+  actions {
+    ...FullBannerAction
+  }
+}
+
+fragment FullBannerAction on BannerAction {
+  id
+  label
+  url
+  style
+  role
+}
+
+fragment PageRef on PageModel {
+  id
+  #published {
+  #  slug
+  #}
+}
+
+query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!) {
+  primaryBanner(documentType: $documentType, documentId: $documentId, loggedIn: $loggedIn) {
+    ...FullBanner
+  }
+}

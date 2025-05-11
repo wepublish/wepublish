@@ -1,70 +1,7 @@
-"use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.definePollAnswerFactory = exports.definePollFactory = exports.defineTagFactory = exports.defineSettingFactory = exports.defineUserRoleFactory = exports.defineUserFactory = exports.definePaymentProviderCustomerFactory = exports.defineUserOAuth2AccountFactory = exports.defineUserAddressFactory = exports.defineSubscriptionFactory = exports.defineSubscriptionDeactivationFactory = exports.defineSubscriptionPeriodFactory = exports.defineSessionFactory = exports.defineTokenFactory = exports.definePeerFactory = exports.definePeerProfileFactory = exports.definePaymentFactory = exports.definePaymentMethodFactory = exports.defineTaggedPagesFactory = exports.definePageFactory = exports.definePageRevisionFactory = exports.defineNavigationFactory = exports.defineNavigationLinkFactory = exports.defineMemberPlanFactory = exports.defineAvailablePaymentMethodFactory = exports.defineMailLogFactory = exports.defineInvoiceFactory = exports.defineInvoiceItemFactory = exports.defineCommentRatingOverrideFactory = exports.defineCommentRatingFactory = exports.defineCommentRatingSystemAnswerFactory = exports.defineCommentRatingSystemFactory = exports.defineTaggedCommentsFactory = exports.defineCommentFactory = exports.defineCommentsRevisionsFactory = exports.defineImageFactory = exports.defineFocalPointFactory = exports.defineTaggedAuthorsFactory = exports.defineAuthorFactory = exports.defineAuthorsLinksFactory = exports.defineTaggedArticlesFactory = exports.defineArticleFactory = exports.defineArticleRevisionSocialMediaAuthorFactory = exports.defineArticleRevisionAuthorFactory = exports.defineArticleRevisionFactory = exports.defineMetadataPropertyFactory = exports.resetScalarFieldValueGenerator = exports.registerScalarFieldValueGenerator = exports.resetSequence = exports.initialize = void 0;
-exports.defineBlockStyleFactory = exports.definePeriodicJobFactory = exports.defineMailTemplateFactory = exports.defineSubscriptionIntervalFactory = exports.defineSubscriptionFlowFactory = exports.defineUserFlowMailFactory = exports.defineUserConsentFactory = exports.defineConsentFactory = exports.defineTaggedEventsFactory = exports.defineEventFactory = exports.definePollExternalVoteFactory = exports.definePollExternalVoteSourceFactory = exports.definePollVoteFactory = void 0;
-var internal_1 = require("@quramy/prisma-fabbrica/lib/internal");
-var internal_2 = require("@quramy/prisma-fabbrica/lib/internal");
-Object.defineProperty(exports, "initialize", { enumerable: true, get: function () { return internal_2.initialize; } });
-Object.defineProperty(exports, "resetSequence", { enumerable: true, get: function () { return internal_2.resetSequence; } });
-Object.defineProperty(exports, "registerScalarFieldValueGenerator", { enumerable: true, get: function () { return internal_2.registerScalarFieldValueGenerator; } });
-Object.defineProperty(exports, "resetScalarFieldValueGenerator", { enumerable: true, get: function () { return internal_2.resetScalarFieldValueGenerator; } });
-var modelFieldDefinitions = [{
+import { __awaiter } from "tslib";
+import { getClient, createScreener, getScalarFieldValueGenerator, normalizeResolver, normalizeList, getSequenceCounter, } from "@quramy/prisma-fabbrica/lib/internal";
+export { initialize, resetSequence, registerScalarFieldValueGenerator, resetScalarFieldValueGenerator } from "@quramy/prisma-fabbrica/lib/internal";
+const modelFieldDefinitions = [{
         name: "MetadataProperty",
         fields: [{
                 name: "ArticleRevision",
@@ -90,10 +27,6 @@ var modelFieldDefinitions = [{
                 type: "MetadataProperty",
                 relationName: "ArticleRevisionToMetadataProperty"
             }, {
-                name: "image",
-                type: "Image",
-                relationName: "articleRevisionImage"
-            }, {
                 name: "authors",
                 type: "ArticleRevisionAuthor",
                 relationName: "ArticleRevisionToArticleRevisionAuthor"
@@ -102,21 +35,21 @@ var modelFieldDefinitions = [{
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionToArticleRevisionSocialMediaAuthor"
             }, {
+                name: "image",
+                type: "Image",
+                relationName: "articleRevisionImage"
+            }, {
                 name: "socialMediaImage",
                 type: "Image",
                 relationName: "articleRevisionSocialMediaImage"
             }, {
-                name: "PublishedArticle",
+                name: "article",
                 type: "Article",
-                relationName: "publishedArticleRevision"
+                relationName: "ArticleToArticleRevision"
             }, {
-                name: "PendingArticle",
-                type: "Article",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "DraftArticle",
-                type: "Article",
-                relationName: "draftArticleRevision"
+                name: "user",
+                type: "User",
+                relationName: "ArticleRevisionToUser"
             }]
     }, {
         name: "ArticleRevisionAuthor",
@@ -143,17 +76,9 @@ var modelFieldDefinitions = [{
     }, {
         name: "Article",
         fields: [{
-                name: "published",
-                type: "ArticleRevision",
-                relationName: "publishedArticleRevision"
-            }, {
-                name: "pending",
-                type: "ArticleRevision",
-                relationName: "pendingArticleRevision"
-            }, {
-                name: "draft",
-                type: "ArticleRevision",
-                relationName: "draftArticleRevision"
+                name: "peer",
+                type: "Peer",
+                relationName: "ArticleToPeer"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -162,6 +87,32 @@ var modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedArticles",
                 relationName: "ArticleToTaggedArticles"
+            }, {
+                name: "revisions",
+                type: "ArticleRevision",
+                relationName: "ArticleToArticleRevision"
+            }, {
+                name: "trackingPixels",
+                type: "ArticleTrackingPixels",
+                relationName: "ArticleToArticleTrackingPixels"
+            }]
+    }, {
+        name: "ArticleTrackingPixels",
+        fields: [{
+                name: "article",
+                type: "Article",
+                relationName: "ArticleToArticleTrackingPixels"
+            }, {
+                name: "trackingPixelMethod",
+                type: "TrackingPixelMethod",
+                relationName: "ArticleTrackingPixelsToTrackingPixelMethod"
+            }]
+    }, {
+        name: "TrackingPixelMethod",
+        fields: [{
+                name: "ArticleTrackingPixels",
+                type: "ArticleTrackingPixels",
+                relationName: "ArticleTrackingPixelsToTrackingPixelMethod"
             }]
     }, {
         name: "TaggedArticles",
@@ -199,6 +150,10 @@ var modelFieldDefinitions = [{
                 name: "articlesAsSocialMediaAuthor",
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionSocialMediaAuthorToAuthor"
+            }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "AuthorToPeer"
             }, {
                 name: "tags",
                 type: "TaggedAuthors",
@@ -261,6 +216,10 @@ var modelFieldDefinitions = [{
                 type: "PageRevision",
                 relationName: "pageRevisionImage"
             }, {
+                name: "peer",
+                type: "Peer",
+                relationName: "ImageToPeer"
+            }, {
                 name: "users",
                 type: "User",
                 relationName: "ImageToUser"
@@ -272,6 +231,10 @@ var modelFieldDefinitions = [{
                 name: "paymentMethods",
                 type: "PaymentMethod",
                 relationName: "ImageToPaymentMethod"
+            }, {
+                name: "banners",
+                type: "Banner",
+                relationName: "BannerToImage"
             }]
     }, {
         name: "CommentsRevisions",
@@ -283,10 +246,6 @@ var modelFieldDefinitions = [{
     }, {
         name: "Comment",
         fields: [{
-                name: "peer",
-                type: "Peer",
-                relationName: "CommentToPeer"
-            }, {
                 name: "revisions",
                 type: "CommentsRevisions",
                 relationName: "CommentToCommentsRevisions"
@@ -425,13 +384,29 @@ var modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "ImageToMemberPlan"
             }, {
-                name: "Subscription",
+                name: "successPage",
+                type: "Page",
+                relationName: "successPage"
+            }, {
+                name: "failPage",
+                type: "Page",
+                relationName: "failPage"
+            }, {
+                name: "confirmationPage",
+                type: "Page",
+                relationName: "confirmationPage"
+            }, {
+                name: "subscription",
                 type: "Subscription",
                 relationName: "MemberPlanToSubscription"
             }, {
                 name: "subscriptionFlows",
                 type: "SubscriptionFlow",
                 relationName: "MemberPlanToSubscriptionFlow"
+            }, {
+                name: "crowdfundings",
+                type: "Crowdfunding",
+                relationName: "CrowdfundingToMemberPlan"
             }]
     }, {
         name: "NavigationLink",
@@ -470,32 +445,20 @@ var modelFieldDefinitions = [{
                 type: "Image",
                 relationName: "pageRevisionSocialMediaImage"
             }, {
-                name: "PublishedPage",
+                name: "page",
                 type: "Page",
-                relationName: "publishedPageRevision"
+                relationName: "PageToPageRevision"
             }, {
-                name: "PendingPage",
-                type: "Page",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "DraftPage",
-                type: "Page",
-                relationName: "draftPageRevision"
+                name: "user",
+                type: "User",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "Page",
         fields: [{
-                name: "published",
+                name: "revisions",
                 type: "PageRevision",
-                relationName: "publishedPageRevision"
-            }, {
-                name: "pending",
-                type: "PageRevision",
-                relationName: "pendingPageRevision"
-            }, {
-                name: "draft",
-                type: "PageRevision",
-                relationName: "draftPageRevision"
+                relationName: "PageToPageRevision"
             }, {
                 name: "navigations",
                 type: "NavigationLink",
@@ -504,6 +467,22 @@ var modelFieldDefinitions = [{
                 name: "tags",
                 type: "TaggedPages",
                 relationName: "PageToTaggedPages"
+            }, {
+                name: "memberPlansSuccess",
+                type: "MemberPlan",
+                relationName: "successPage"
+            }, {
+                name: "memberPlansFail",
+                type: "MemberPlan",
+                relationName: "failPage"
+            }, {
+                name: "memberPlansConfirmation",
+                type: "MemberPlan",
+                relationName: "confirmationPage"
+            }, {
+                name: "banners",
+                type: "Banner",
+                relationName: "BannerToPage"
             }]
     }, {
         name: "TaggedPages",
@@ -556,9 +535,21 @@ var modelFieldDefinitions = [{
     }, {
         name: "Peer",
         fields: [{
-                name: "comments",
-                type: "Comment",
-                relationName: "CommentToPeer"
+                name: "articles",
+                type: "Article",
+                relationName: "ArticleToPeer"
+            }, {
+                name: "images",
+                type: "Image",
+                relationName: "ImageToPeer"
+            }, {
+                name: "tags",
+                type: "Tag",
+                relationName: "PeerToTag"
+            }, {
+                name: "authors",
+                type: "Author",
+                relationName: "AuthorToPeer"
             }]
     }, {
         name: "Token",
@@ -615,6 +606,14 @@ var modelFieldDefinitions = [{
                 type: "User",
                 relationName: "SubscriptionToUser"
             }, {
+                name: "replacesSubscription",
+                type: "Subscription",
+                relationName: "ReplacementHistory"
+            }, {
+                name: "replacedBy",
+                type: "Subscription",
+                relationName: "ReplacementHistory"
+            }, {
                 name: "invoices",
                 type: "Invoice",
                 relationName: "InvoiceToSubscription"
@@ -663,23 +662,23 @@ var modelFieldDefinitions = [{
                 type: "PaymentProviderCustomer",
                 relationName: "PaymentProviderCustomerToUser"
             }, {
-                name: "Comment",
+                name: "comments",
                 type: "Comment",
                 relationName: "CommentToUser"
             }, {
-                name: "Session",
+                name: "sessions",
                 type: "Session",
                 relationName: "SessionToUser"
             }, {
-                name: "Subscription",
+                name: "subscriptions",
                 type: "Subscription",
                 relationName: "SubscriptionToUser"
             }, {
-                name: "CommentRating",
+                name: "commentRatings",
                 type: "CommentRating",
                 relationName: "CommentRatingToUser"
             }, {
-                name: "PollVote",
+                name: "pollVotes",
                 type: "PollVote",
                 relationName: "PollVoteToUser"
             }, {
@@ -687,9 +686,17 @@ var modelFieldDefinitions = [{
                 type: "MailLog",
                 relationName: "MailLogToUser"
             }, {
-                name: "UserConsent",
+                name: "consents",
                 type: "UserConsent",
                 relationName: "UserToUserConsent"
+            }, {
+                name: "articleRevisions",
+                type: "ArticleRevision",
+                relationName: "ArticleRevisionToUser"
+            }, {
+                name: "pageRevisions",
+                type: "PageRevision",
+                relationName: "PageRevisionToUser"
             }]
     }, {
         name: "UserRole",
@@ -700,6 +707,10 @@ var modelFieldDefinitions = [{
     }, {
         name: "Tag",
         fields: [{
+                name: "peer",
+                type: "Peer",
+                relationName: "PeerToTag"
+            }, {
                 name: "comments",
                 type: "TaggedComments",
                 relationName: "TagToTaggedComments"
@@ -881,6 +892,46 @@ var modelFieldDefinitions = [{
     }, {
         name: "BlockStyle",
         fields: []
+    }, {
+        name: "Banner",
+        fields: [{
+                name: "image",
+                type: "Image",
+                relationName: "BannerToImage"
+            }, {
+                name: "showOnPages",
+                type: "Page",
+                relationName: "BannerToPage"
+            }, {
+                name: "actions",
+                type: "BannerAction",
+                relationName: "BannerToBannerAction"
+            }]
+    }, {
+        name: "BannerAction",
+        fields: [{
+                name: "banner",
+                type: "Banner",
+                relationName: "BannerToBannerAction"
+            }]
+    }, {
+        name: "Crowdfunding",
+        fields: [{
+                name: "memberPlans",
+                type: "MemberPlan",
+                relationName: "CrowdfundingToMemberPlan"
+            }, {
+                name: "goals",
+                type: "CrowdfundingGoal",
+                relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
+    }, {
+        name: "CrowdfundingGoal",
+        fields: [{
+                name: "Crowdfunding",
+                type: "Crowdfunding",
+                relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -894,160 +945,72 @@ function isMetadataPropertySubscriptionFactory(x) {
 function isMetadataPropertyUserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateMetadataPropertyScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateMetadataPropertyScalarsOrEnums({ seq }) {
     return {
-        key: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MetadataProperty", fieldName: "key", isId: false, isUnique: false, seq: seq }),
-        value: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MetadataProperty", fieldName: "value", isId: false, isUnique: false, seq: seq }),
-        public: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "MetadataProperty", fieldName: "public", isId: false, isUnique: false, seq: seq })
+        key: getScalarFieldValueGenerator().String({ modelName: "MetadataProperty", fieldName: "key", isId: false, isUnique: false, seq }),
+        value: getScalarFieldValueGenerator().String({ modelName: "MetadataProperty", fieldName: "value", isId: false, isUnique: false, seq }),
+        public: getScalarFieldValueGenerator().Boolean({ modelName: "MetadataProperty", fieldName: "public", isId: false, isUnique: false, seq })
     };
 }
-function defineMetadataPropertyFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("MetadataProperty", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, _d, data;
-                var _e, _f, _g, _h, _j;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_k) {
-                    switch (_k.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateMetadataPropertyScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _k.sent();
-                            _e = {};
-                            if (!isMetadataPropertyArticleRevisionFactory(defaultData.ArticleRevision)) return [3 /*break*/, 3];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.ArticleRevision.build()];
-                        case 2:
-                            _a = (_f.create = _k.sent(),
-                                _f);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.ArticleRevision;
-                            _k.label = 4;
-                        case 4:
-                            _e.ArticleRevision = _a;
-                            if (!isMetadataPropertyPageRevisionFactory(defaultData.PageRevision)) return [3 /*break*/, 6];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.PageRevision.build()];
-                        case 5:
-                            _b = (_g.create = _k.sent(),
-                                _g);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.PageRevision;
-                            _k.label = 7;
-                        case 7:
-                            _e.PageRevision = _b;
-                            if (!isMetadataPropertySubscriptionFactory(defaultData.Subscription)) return [3 /*break*/, 9];
-                            _h = {};
-                            return [4 /*yield*/, defaultData.Subscription.build()];
-                        case 8:
-                            _c = (_h.create = _k.sent(),
-                                _h);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.Subscription;
-                            _k.label = 10;
-                        case 10:
-                            _e.Subscription = _c;
-                            if (!isMetadataPropertyUserFactory(defaultData.User)) return [3 /*break*/, 12];
-                            _j = {};
-                            return [4 /*yield*/, defaultData.User.build()];
-                        case 11:
-                            _d = (_j.create = _k.sent(),
-                                _j);
-                            return [3 /*break*/, 13];
-                        case 12:
-                            _d = defaultData.User;
-                            _k.label = 13;
-                        case 13:
-                            defaultAssociations = (_e.User = _d,
-                                _e);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineMetadataPropertyFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("MetadataProperty", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateMetadataPropertyScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                ArticleRevision: isMetadataPropertyArticleRevisionFactory(defaultData.ArticleRevision) ? {
+                    create: yield defaultData.ArticleRevision.build()
+                } : defaultData.ArticleRevision,
+                PageRevision: isMetadataPropertyPageRevisionFactory(defaultData.PageRevision) ? {
+                    create: yield defaultData.PageRevision.build()
+                } : defaultData.PageRevision,
+                Subscription: isMetadataPropertySubscriptionFactory(defaultData.Subscription) ? {
+                    create: yield defaultData.Subscription.build()
+                } : defaultData.Subscription,
+                User: isMetadataPropertyUserFactory(defaultData.User) ? {
+                    create: yield defaultData.User.build()
+                } : defaultData.User
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().metadataProperty.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().metadataProperty.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "MetadataProperty",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link MetadataProperty} model.
@@ -1055,146 +1018,87 @@ function defineMetadataPropertyFactoryInternal(_a) {
  * @param options
  * @returns factory {@link MetadataPropertyFactoryInterface}
  */
-function defineMetadataPropertyFactory(options) {
+export function defineMetadataPropertyFactory(options) {
     return defineMetadataPropertyFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineMetadataPropertyFactory = defineMetadataPropertyFactory;
 function isArticleRevisionimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
 function isArticleRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGenerateArticleRevisionScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isArticleRevisionarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function isArticleRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
+function autoGenerateArticleRevisionScalarsOrEnums({ seq }) {
     return {
-        breaking: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "ArticleRevision", fieldName: "breaking", isId: false, isUnique: false, seq: seq }),
-        blocks: (0, internal_1.getScalarFieldValueGenerator)().Json({ modelName: "ArticleRevision", fieldName: "blocks", isId: false, isUnique: false, seq: seq }),
-        hideAuthor: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "ArticleRevision", fieldName: "hideAuthor", isId: false, isUnique: false, seq: seq })
+        breaking: getScalarFieldValueGenerator().Boolean({ modelName: "ArticleRevision", fieldName: "breaking", isId: false, isUnique: false, seq }),
+        blocks: getScalarFieldValueGenerator().Json({ modelName: "ArticleRevision", fieldName: "blocks", isId: false, isUnique: false, seq }),
+        hideAuthor: getScalarFieldValueGenerator().Boolean({ modelName: "ArticleRevision", fieldName: "hideAuthor", isId: false, isUnique: false, seq })
     };
 }
-function defineArticleRevisionFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("ArticleRevision", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateArticleRevisionScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isArticleRevisionimageFactory(defaultData.image)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.image;
-                            _f.label = 4;
-                        case 4:
-                            _c.image = _a;
-                            if (!isArticleRevisionsocialMediaImageFactory(defaultData.socialMediaImage)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.socialMediaImage.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.socialMediaImage;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.socialMediaImage = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("ArticleRevision", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateArticleRevisionScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isArticleRevisionimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image,
+                socialMediaImage: isArticleRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
+                    create: yield defaultData.socialMediaImage.build()
+                } : defaultData.socialMediaImage,
+                article: isArticleRevisionarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                user: isArticleRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().articleRevision.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().articleRevision.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "ArticleRevision",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link ArticleRevision} model.
@@ -1202,143 +1106,72 @@ function defineArticleRevisionFactoryInternal(_a) {
  * @param options
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
-function defineArticleRevisionFactory(options) {
-    return defineArticleRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
+export function defineArticleRevisionFactory(options) {
+    return defineArticleRevisionFactoryInternal(options);
 }
-exports.defineArticleRevisionFactory = defineArticleRevisionFactory;
 function isArticleRevisionAuthorrevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
 }
 function isArticleRevisionAuthorauthorFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
 }
-function autoGenerateArticleRevisionAuthorScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateArticleRevisionAuthorScalarsOrEnums({ seq }) {
     return {};
 }
-function defineArticleRevisionAuthorFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("ArticleRevisionAuthor", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateArticleRevisionAuthorScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isArticleRevisionAuthorrevisionFactory(defaultData.revision)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.revision.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.revision;
-                            _f.label = 4;
-                        case 4:
-                            _c.revision = _a;
-                            if (!isArticleRevisionAuthorauthorFactory(defaultData.author)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.author.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.author;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.author = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineArticleRevisionAuthorFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("ArticleRevisionAuthor", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateArticleRevisionAuthorScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                revision: isArticleRevisionAuthorrevisionFactory(defaultData.revision) ? {
+                    create: yield defaultData.revision.build()
+                } : defaultData.revision,
+                author: isArticleRevisionAuthorauthorFactory(defaultData.author) ? {
+                    create: yield defaultData.author.build()
+                } : defaultData.author
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             revisionId: inputData.revisionId,
             authorId: inputData.authorId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().articleRevisionAuthor.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().articleRevisionAuthor.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "ArticleRevisionAuthor",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link ArticleRevisionAuthor} model.
@@ -1346,143 +1179,72 @@ function defineArticleRevisionAuthorFactoryInternal(_a) {
  * @param options
  * @returns factory {@link ArticleRevisionAuthorFactoryInterface}
  */
-function defineArticleRevisionAuthorFactory(options) {
+export function defineArticleRevisionAuthorFactory(options) {
     return defineArticleRevisionAuthorFactoryInternal(options);
 }
-exports.defineArticleRevisionAuthorFactory = defineArticleRevisionAuthorFactory;
 function isArticleRevisionSocialMediaAuthorrevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
 }
 function isArticleRevisionSocialMediaAuthorauthorFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
 }
-function autoGenerateArticleRevisionSocialMediaAuthorScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateArticleRevisionSocialMediaAuthorScalarsOrEnums({ seq }) {
     return {};
 }
-function defineArticleRevisionSocialMediaAuthorFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("ArticleRevisionSocialMediaAuthor", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateArticleRevisionSocialMediaAuthorScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isArticleRevisionSocialMediaAuthorrevisionFactory(defaultData.revision)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.revision.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.revision;
-                            _f.label = 4;
-                        case 4:
-                            _c.revision = _a;
-                            if (!isArticleRevisionSocialMediaAuthorauthorFactory(defaultData.author)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.author.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.author;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.author = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("ArticleRevisionSocialMediaAuthor", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateArticleRevisionSocialMediaAuthorScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                revision: isArticleRevisionSocialMediaAuthorrevisionFactory(defaultData.revision) ? {
+                    create: yield defaultData.revision.build()
+                } : defaultData.revision,
+                author: isArticleRevisionSocialMediaAuthorauthorFactory(defaultData.author) ? {
+                    create: yield defaultData.author.build()
+                } : defaultData.author
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             revisionId: inputData.revisionId,
             authorId: inputData.authorId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().articleRevisionSocialMediaAuthor.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().articleRevisionSocialMediaAuthor.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "ArticleRevisionSocialMediaAuthor",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link ArticleRevisionSocialMediaAuthor} model.
@@ -1490,159 +1252,67 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal(_a) {
  * @param options
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
-function defineArticleRevisionSocialMediaAuthorFactory(options) {
+export function defineArticleRevisionSocialMediaAuthorFactory(options) {
     return defineArticleRevisionSocialMediaAuthorFactoryInternal(options);
 }
-exports.defineArticleRevisionSocialMediaAuthorFactory = defineArticleRevisionSocialMediaAuthorFactory;
-function isArticlepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
+function isArticlepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
 }
-function isArticlependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function isArticledraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
-}
-function autoGenerateArticleScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateArticleScalarsOrEnums({ seq }) {
     return {
-        shared: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "Article", fieldName: "shared", isId: false, isUnique: false, seq: seq })
+        shared: getScalarFieldValueGenerator().Boolean({ modelName: "Article", fieldName: "shared", isId: false, isUnique: false, seq })
     };
 }
-function defineArticleFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Article", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, data;
-                var _d, _e, _f, _g;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_h) {
-                    switch (_h.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateArticleScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _h.sent();
-                            _d = {};
-                            if (!isArticlepublishedFactory(defaultData.published)) return [3 /*break*/, 3];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.published.build()];
-                        case 2:
-                            _a = (_e.create = _h.sent(),
-                                _e);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.published;
-                            _h.label = 4;
-                        case 4:
-                            _d.published = _a;
-                            if (!isArticlependingFactory(defaultData.pending)) return [3 /*break*/, 6];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.pending.build()];
-                        case 5:
-                            _b = (_f.create = _h.sent(),
-                                _f);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.pending;
-                            _h.label = 7;
-                        case 7:
-                            _d.pending = _b;
-                            if (!isArticledraftFactory(defaultData.draft)) return [3 /*break*/, 9];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.draft.build()];
-                        case 8:
-                            _c = (_g.create = _h.sent(),
-                                _g);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.draft;
-                            _h.label = 10;
-                        case 10:
-                            defaultAssociations = (_d.draft = _c,
-                                _d);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Article", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateArticleScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                peer: isArticlepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().article.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().article.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Article",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Article} model.
@@ -1650,143 +1320,206 @@ function defineArticleFactoryInternal(_a) {
  * @param options
  * @returns factory {@link ArticleFactoryInterface}
  */
-function defineArticleFactory(options) {
+export function defineArticleFactory(options) {
     return defineArticleFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineArticleFactory = defineArticleFactory;
+function isArticleTrackingPixelsarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function isArticleTrackingPixelstrackingPixelMethodFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "TrackingPixelMethod";
+}
+function autoGenerateArticleTrackingPixelsScalarsOrEnums({ seq }) {
+    return {};
+}
+function defineArticleTrackingPixelsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("ArticleTrackingPixels", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateArticleTrackingPixelsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                article: isArticleTrackingPixelsarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                trackingPixelMethod: isArticleTrackingPixelstrackingPixelMethodFactory(defaultData.trackingPixelMethod) ? {
+                    create: yield defaultData.trackingPixelMethod.build()
+                } : defaultData.trackingPixelMethod
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().articleTrackingPixels.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "ArticleTrackingPixels",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link ArticleTrackingPixels} model.
+ *
+ * @param options
+ * @returns factory {@link ArticleTrackingPixelsFactoryInterface}
+ */
+export function defineArticleTrackingPixelsFactory(options) {
+    return defineArticleTrackingPixelsFactoryInternal(options);
+}
+function autoGenerateTrackingPixelMethodScalarsOrEnums({ seq }) {
+    return {
+        trackingPixelProviderID: getScalarFieldValueGenerator().String({ modelName: "TrackingPixelMethod", fieldName: "trackingPixelProviderID", isId: false, isUnique: true, seq }),
+        trackingPixelProviderType: "prolitteris"
+    };
+}
+function defineTrackingPixelMethodFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TrackingPixelMethod", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTrackingPixelMethodScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().trackingPixelMethod.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "TrackingPixelMethod",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link TrackingPixelMethod} model.
+ *
+ * @param options
+ * @returns factory {@link TrackingPixelMethodFactoryInterface}
+ */
+export function defineTrackingPixelMethodFactory(options) {
+    return defineTrackingPixelMethodFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
 function isTaggedArticlesarticleFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
 }
 function isTaggedArticlestagFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
 }
-function autoGenerateTaggedArticlesScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateTaggedArticlesScalarsOrEnums({ seq }) {
     return {};
 }
-function defineTaggedArticlesFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("TaggedArticles", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTaggedArticlesScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isTaggedArticlesarticleFactory(defaultData.article)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.article.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.article;
-                            _f.label = 4;
-                        case 4:
-                            _c.article = _a;
-                            if (!isTaggedArticlestagFactory(defaultData.tag)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.tag.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.tag;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.tag = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTaggedArticlesFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedArticles", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedArticlesScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                article: isTaggedArticlesarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                tag: isTaggedArticlestagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             articleId: inputData.articleId,
             tagId: inputData.tagId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().taggedArticles.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedArticles.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "TaggedArticles",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link TaggedArticles} model.
@@ -1794,130 +1527,68 @@ function defineTaggedArticlesFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TaggedArticlesFactoryInterface}
  */
-function defineTaggedArticlesFactory(options) {
+export function defineTaggedArticlesFactory(options) {
     return defineTaggedArticlesFactoryInternal(options);
 }
-exports.defineTaggedArticlesFactory = defineTaggedArticlesFactory;
 function isAuthorsLinksAuthorFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
 }
-function autoGenerateAuthorsLinksScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateAuthorsLinksScalarsOrEnums({ seq }) {
     return {
-        title: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "AuthorsLinks", fieldName: "title", isId: false, isUnique: false, seq: seq }),
-        url: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "AuthorsLinks", fieldName: "url", isId: false, isUnique: false, seq: seq })
+        title: getScalarFieldValueGenerator().String({ modelName: "AuthorsLinks", fieldName: "title", isId: false, isUnique: false, seq }),
+        url: getScalarFieldValueGenerator().String({ modelName: "AuthorsLinks", fieldName: "url", isId: false, isUnique: false, seq })
     };
 }
-function defineAuthorsLinksFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("AuthorsLinks", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateAuthorsLinksScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isAuthorsLinksAuthorFactory(defaultData.Author)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.Author.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.Author;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.Author = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineAuthorsLinksFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("AuthorsLinks", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateAuthorsLinksScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                Author: isAuthorsLinksAuthorFactory(defaultData.Author) ? {
+                    create: yield defaultData.Author.build()
+                } : defaultData.Author
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().authorsLinks.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().authorsLinks.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "AuthorsLinks",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link AuthorsLinks} model.
@@ -1925,130 +1596,74 @@ function defineAuthorsLinksFactoryInternal(_a) {
  * @param options
  * @returns factory {@link AuthorsLinksFactoryInterface}
  */
-function defineAuthorsLinksFactory(options) {
+export function defineAuthorsLinksFactory(options) {
     return defineAuthorsLinksFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineAuthorsLinksFactory = defineAuthorsLinksFactory;
 function isAuthorimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGenerateAuthorScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isAuthorpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
+function autoGenerateAuthorScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Author", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        slug: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Author", fieldName: "slug", isId: false, isUnique: true, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "Author", fieldName: "name", isId: false, isUnique: false, seq }),
+        slug: getScalarFieldValueGenerator().String({ modelName: "Author", fieldName: "slug", isId: false, isUnique: true, seq })
     };
 }
-function defineAuthorFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Author", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateAuthorScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isAuthorimageFactory(defaultData.image)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.image;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.image = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Author", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateAuthorScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isAuthorimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image,
+                peer: isAuthorpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().author.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().author.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Author",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Author} model.
@@ -2056,143 +1671,72 @@ function defineAuthorFactoryInternal(_a) {
  * @param options
  * @returns factory {@link AuthorFactoryInterface}
  */
-function defineAuthorFactory(options) {
+export function defineAuthorFactory(options) {
     return defineAuthorFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineAuthorFactory = defineAuthorFactory;
 function isTaggedAuthorsauthorFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
 }
 function isTaggedAuthorstagFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
 }
-function autoGenerateTaggedAuthorsScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateTaggedAuthorsScalarsOrEnums({ seq }) {
     return {};
 }
-function defineTaggedAuthorsFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("TaggedAuthors", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTaggedAuthorsScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isTaggedAuthorsauthorFactory(defaultData.author)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.author.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.author;
-                            _f.label = 4;
-                        case 4:
-                            _c.author = _a;
-                            if (!isTaggedAuthorstagFactory(defaultData.tag)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.tag.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.tag;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.tag = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTaggedAuthorsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedAuthors", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedAuthorsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                author: isTaggedAuthorsauthorFactory(defaultData.author) ? {
+                    create: yield defaultData.author.build()
+                } : defaultData.author,
+                tag: isTaggedAuthorstagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             authorId: inputData.authorId,
             tagId: inputData.tagId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().taggedAuthors.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedAuthors.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "TaggedAuthors",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link TaggedAuthors} model.
@@ -2200,127 +1744,65 @@ function defineTaggedAuthorsFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TaggedAuthorsFactoryInterface}
  */
-function defineTaggedAuthorsFactory(options) {
+export function defineTaggedAuthorsFactory(options) {
     return defineTaggedAuthorsFactoryInternal(options);
 }
-exports.defineTaggedAuthorsFactory = defineTaggedAuthorsFactory;
 function isFocalPointimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGenerateFocalPointScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateFocalPointScalarsOrEnums({ seq }) {
     return {};
 }
-function defineFocalPointFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("FocalPoint", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateFocalPointScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isFocalPointimageFactory(defaultData.image)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.image;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.image = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineFocalPointFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("FocalPoint", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateFocalPointScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isFocalPointimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             imageId: inputData.imageId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().focalPoint.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().focalPoint.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "FocalPoint",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link FocalPoint} model.
@@ -2328,135 +1810,79 @@ function defineFocalPointFactoryInternal(_a) {
  * @param options
  * @returns factory {@link FocalPointFactoryInterface}
  */
-function defineFocalPointFactory(options) {
+export function defineFocalPointFactory(options) {
     return defineFocalPointFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineFocalPointFactory = defineFocalPointFactory;
 function isImagefocalPointFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "FocalPoint";
 }
-function autoGenerateImageScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isImagepeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
+function autoGenerateImageScalarsOrEnums({ seq }) {
     return {
-        id: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Image", fieldName: "id", isId: true, isUnique: false, seq: seq }),
-        extension: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Image", fieldName: "extension", isId: false, isUnique: false, seq: seq }),
-        fileSize: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "Image", fieldName: "fileSize", isId: false, isUnique: false, seq: seq }),
-        format: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Image", fieldName: "format", isId: false, isUnique: false, seq: seq }),
-        mimeType: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Image", fieldName: "mimeType", isId: false, isUnique: false, seq: seq }),
-        height: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "Image", fieldName: "height", isId: false, isUnique: false, seq: seq }),
-        width: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "Image", fieldName: "width", isId: false, isUnique: false, seq: seq })
+        id: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "id", isId: true, isUnique: false, seq }),
+        extension: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "extension", isId: false, isUnique: false, seq }),
+        fileSize: getScalarFieldValueGenerator().Int({ modelName: "Image", fieldName: "fileSize", isId: false, isUnique: false, seq }),
+        format: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "format", isId: false, isUnique: false, seq }),
+        mimeType: getScalarFieldValueGenerator().String({ modelName: "Image", fieldName: "mimeType", isId: false, isUnique: false, seq }),
+        height: getScalarFieldValueGenerator().Int({ modelName: "Image", fieldName: "height", isId: false, isUnique: false, seq }),
+        width: getScalarFieldValueGenerator().Int({ modelName: "Image", fieldName: "width", isId: false, isUnique: false, seq })
     };
 }
-function defineImageFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Image", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateImageScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isImagefocalPointFactory(defaultData.focalPoint)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.focalPoint.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.focalPoint;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.focalPoint = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Image", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateImageScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                focalPoint: isImagefocalPointFactory(defaultData.focalPoint) ? {
+                    create: yield defaultData.focalPoint.build()
+                } : defaultData.focalPoint,
+                peer: isImagepeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().image.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().image.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Image",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Image} model.
@@ -2464,127 +1890,65 @@ function defineImageFactoryInternal(_a) {
  * @param options
  * @returns factory {@link ImageFactoryInterface}
  */
-function defineImageFactory(options) {
+export function defineImageFactory(options) {
     return defineImageFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineImageFactory = defineImageFactory;
 function isCommentsRevisionsCommentFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Comment";
 }
-function autoGenerateCommentsRevisionsScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateCommentsRevisionsScalarsOrEnums({ seq }) {
     return {};
 }
-function defineCommentsRevisionsFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("CommentsRevisions", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateCommentsRevisionsScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isCommentsRevisionsCommentFactory(defaultData.Comment)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.Comment.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.Comment;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.Comment = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CommentsRevisions", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCommentsRevisionsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                Comment: isCommentsRevisionsCommentFactory(defaultData.Comment) ? {
+                    create: yield defaultData.Comment.build()
+                } : defaultData.Comment
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().commentsRevisions.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().commentsRevisions.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "CommentsRevisions",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link CommentsRevisions} model.
@@ -2592,12 +1956,8 @@ function defineCommentsRevisionsFactoryInternal(_a) {
  * @param options
  * @returns factory {@link CommentsRevisionsFactoryInterface}
  */
-function defineCommentsRevisionsFactory(options) {
+export function defineCommentsRevisionsFactory(options) {
     return defineCommentsRevisionsFactoryInternal(options !== null && options !== void 0 ? options : {});
-}
-exports.defineCommentsRevisionsFactory = defineCommentsRevisionsFactory;
-function isCommentpeerFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
 }
 function isCommentguestUserImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
@@ -2605,149 +1965,67 @@ function isCommentguestUserImageFactory(x) {
 function isCommentuserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateCommentScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateCommentScalarsOrEnums({ seq }) {
     return {
-        itemID: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Comment", fieldName: "itemID", isId: false, isUnique: false, seq: seq }),
-        itemType: "peerArticle",
+        itemID: getScalarFieldValueGenerator().String({ modelName: "Comment", fieldName: "itemID", isId: false, isUnique: false, seq }),
+        itemType: "article",
         state: "approved",
         authorType: "team"
     };
 }
-function defineCommentFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Comment", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, data;
-                var _d, _e, _f, _g;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_h) {
-                    switch (_h.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateCommentScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _h.sent();
-                            _d = {};
-                            if (!isCommentpeerFactory(defaultData.peer)) return [3 /*break*/, 3];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.peer.build()];
-                        case 2:
-                            _a = (_e.create = _h.sent(),
-                                _e);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.peer;
-                            _h.label = 4;
-                        case 4:
-                            _d.peer = _a;
-                            if (!isCommentguestUserImageFactory(defaultData.guestUserImage)) return [3 /*break*/, 6];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.guestUserImage.build()];
-                        case 5:
-                            _b = (_f.create = _h.sent(),
-                                _f);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.guestUserImage;
-                            _h.label = 7;
-                        case 7:
-                            _d.guestUserImage = _b;
-                            if (!isCommentuserFactory(defaultData.user)) return [3 /*break*/, 9];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.user.build()];
-                        case 8:
-                            _c = (_g.create = _h.sent(),
-                                _g);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.user;
-                            _h.label = 10;
-                        case 10:
-                            defaultAssociations = (_d.user = _c,
-                                _d);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Comment", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCommentScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                guestUserImage: isCommentguestUserImageFactory(defaultData.guestUserImage) ? {
+                    create: yield defaultData.guestUserImage.build()
+                } : defaultData.guestUserImage,
+                user: isCommentuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().comment.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().comment.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Comment",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Comment} model.
@@ -2755,143 +2033,72 @@ function defineCommentFactoryInternal(_a) {
  * @param options
  * @returns factory {@link CommentFactoryInterface}
  */
-function defineCommentFactory(options) {
+export function defineCommentFactory(options) {
     return defineCommentFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineCommentFactory = defineCommentFactory;
 function isTaggedCommentscommentFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Comment";
 }
 function isTaggedCommentstagFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
 }
-function autoGenerateTaggedCommentsScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateTaggedCommentsScalarsOrEnums({ seq }) {
     return {};
 }
-function defineTaggedCommentsFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("TaggedComments", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTaggedCommentsScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isTaggedCommentscommentFactory(defaultData.comment)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.comment.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.comment;
-                            _f.label = 4;
-                        case 4:
-                            _c.comment = _a;
-                            if (!isTaggedCommentstagFactory(defaultData.tag)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.tag.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.tag;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.tag = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTaggedCommentsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedComments", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedCommentsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                comment: isTaggedCommentscommentFactory(defaultData.comment) ? {
+                    create: yield defaultData.comment.build()
+                } : defaultData.comment,
+                tag: isTaggedCommentstagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             commentId: inputData.commentId,
             tagId: inputData.tagId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().taggedComments.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedComments.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "TaggedComments",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link TaggedComments} model.
@@ -2899,110 +2106,58 @@ function defineTaggedCommentsFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TaggedCommentsFactoryInterface}
  */
-function defineTaggedCommentsFactory(options) {
+export function defineTaggedCommentsFactory(options) {
     return defineTaggedCommentsFactoryInternal(options);
 }
-exports.defineTaggedCommentsFactory = defineTaggedCommentsFactory;
-function autoGenerateCommentRatingSystemScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateCommentRatingSystemScalarsOrEnums({ seq }) {
     return {};
 }
-function defineCommentRatingSystemFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("CommentRatingSystem", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateCommentRatingSystemScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineCommentRatingSystemFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CommentRatingSystem", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCommentRatingSystemScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().commentRatingSystem.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().commentRatingSystem.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "CommentRatingSystem",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link CommentRatingSystem} model.
@@ -3010,129 +2165,67 @@ function defineCommentRatingSystemFactoryInternal(_a) {
  * @param options
  * @returns factory {@link CommentRatingSystemFactoryInterface}
  */
-function defineCommentRatingSystemFactory(options) {
+export function defineCommentRatingSystemFactory(options) {
     return defineCommentRatingSystemFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineCommentRatingSystemFactory = defineCommentRatingSystemFactory;
 function isCommentRatingSystemAnswerratingSystemFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "CommentRatingSystem";
 }
-function autoGenerateCommentRatingSystemAnswerScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateCommentRatingSystemAnswerScalarsOrEnums({ seq }) {
     return {
         type: "star"
     };
 }
-function defineCommentRatingSystemAnswerFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("CommentRatingSystemAnswer", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateCommentRatingSystemAnswerScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isCommentRatingSystemAnswerratingSystemFactory(defaultData.ratingSystem)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.ratingSystem.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.ratingSystem;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.ratingSystem = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineCommentRatingSystemAnswerFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CommentRatingSystemAnswer", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCommentRatingSystemAnswerScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                ratingSystem: isCommentRatingSystemAnswerratingSystemFactory(defaultData.ratingSystem) ? {
+                    create: yield defaultData.ratingSystem.build()
+                } : defaultData.ratingSystem
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().commentRatingSystemAnswer.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().commentRatingSystemAnswer.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "CommentRatingSystemAnswer",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link CommentRatingSystemAnswer} model.
@@ -3140,10 +2233,9 @@ function defineCommentRatingSystemAnswerFactoryInternal(_a) {
  * @param options
  * @returns factory {@link CommentRatingSystemAnswerFactoryInterface}
  */
-function defineCommentRatingSystemAnswerFactory(options) {
+export function defineCommentRatingSystemAnswerFactory(options) {
     return defineCommentRatingSystemAnswerFactoryInternal(options);
 }
-exports.defineCommentRatingSystemAnswerFactory = defineCommentRatingSystemAnswerFactory;
 function isCommentRatinguserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
@@ -3153,146 +2245,67 @@ function isCommentRatinganswerFactory(x) {
 function isCommentRatingcommentFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Comment";
 }
-function autoGenerateCommentRatingScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateCommentRatingScalarsOrEnums({ seq }) {
     return {
-        value: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "CommentRating", fieldName: "value", isId: false, isUnique: false, seq: seq })
+        value: getScalarFieldValueGenerator().Int({ modelName: "CommentRating", fieldName: "value", isId: false, isUnique: false, seq })
     };
 }
-function defineCommentRatingFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("CommentRating", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, data;
-                var _d, _e, _f, _g;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_h) {
-                    switch (_h.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateCommentRatingScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _h.sent();
-                            _d = {};
-                            if (!isCommentRatinguserFactory(defaultData.user)) return [3 /*break*/, 3];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.user.build()];
-                        case 2:
-                            _a = (_e.create = _h.sent(),
-                                _e);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.user;
-                            _h.label = 4;
-                        case 4:
-                            _d.user = _a;
-                            if (!isCommentRatinganswerFactory(defaultData.answer)) return [3 /*break*/, 6];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.answer.build()];
-                        case 5:
-                            _b = (_f.create = _h.sent(),
-                                _f);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.answer;
-                            _h.label = 7;
-                        case 7:
-                            _d.answer = _b;
-                            if (!isCommentRatingcommentFactory(defaultData.comment)) return [3 /*break*/, 9];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.comment.build()];
-                        case 8:
-                            _c = (_g.create = _h.sent(),
-                                _g);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.comment;
-                            _h.label = 10;
-                        case 10:
-                            defaultAssociations = (_d.comment = _c,
-                                _d);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineCommentRatingFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CommentRating", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCommentRatingScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                user: isCommentRatinguserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user,
+                answer: isCommentRatinganswerFactory(defaultData.answer) ? {
+                    create: yield defaultData.answer.build()
+                } : defaultData.answer,
+                comment: isCommentRatingcommentFactory(defaultData.comment) ? {
+                    create: yield defaultData.comment.build()
+                } : defaultData.comment
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().commentRating.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().commentRating.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "CommentRating",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link CommentRating} model.
@@ -3300,143 +2313,72 @@ function defineCommentRatingFactoryInternal(_a) {
  * @param options
  * @returns factory {@link CommentRatingFactoryInterface}
  */
-function defineCommentRatingFactory(options) {
+export function defineCommentRatingFactory(options) {
     return defineCommentRatingFactoryInternal(options);
 }
-exports.defineCommentRatingFactory = defineCommentRatingFactory;
 function isCommentRatingOverrideanswerFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "CommentRatingSystemAnswer";
 }
 function isCommentRatingOverridecommentFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Comment";
 }
-function autoGenerateCommentRatingOverrideScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateCommentRatingOverrideScalarsOrEnums({ seq }) {
     return {};
 }
-function defineCommentRatingOverrideFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("CommentRatingOverride", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateCommentRatingOverrideScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isCommentRatingOverrideanswerFactory(defaultData.answer)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.answer.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.answer;
-                            _f.label = 4;
-                        case 4:
-                            _c.answer = _a;
-                            if (!isCommentRatingOverridecommentFactory(defaultData.comment)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.comment.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.comment;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.comment = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineCommentRatingOverrideFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CommentRatingOverride", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCommentRatingOverrideScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                answer: isCommentRatingOverrideanswerFactory(defaultData.answer) ? {
+                    create: yield defaultData.answer.build()
+                } : defaultData.answer,
+                comment: isCommentRatingOverridecommentFactory(defaultData.comment) ? {
+                    create: yield defaultData.comment.build()
+                } : defaultData.comment
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             answerId: inputData.answerId,
             commentId: inputData.commentId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().commentRatingOverride.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().commentRatingOverride.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "CommentRatingOverride",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link CommentRatingOverride} model.
@@ -3444,131 +2386,69 @@ function defineCommentRatingOverrideFactoryInternal(_a) {
  * @param options
  * @returns factory {@link CommentRatingOverrideFactoryInterface}
  */
-function defineCommentRatingOverrideFactory(options) {
+export function defineCommentRatingOverrideFactory(options) {
     return defineCommentRatingOverrideFactoryInternal(options);
 }
-exports.defineCommentRatingOverrideFactory = defineCommentRatingOverrideFactory;
 function isInvoiceIteminvoicesFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Invoice";
 }
-function autoGenerateInvoiceItemScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateInvoiceItemScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "InvoiceItem", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        quantity: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "InvoiceItem", fieldName: "quantity", isId: false, isUnique: false, seq: seq }),
-        amount: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "InvoiceItem", fieldName: "amount", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "InvoiceItem", fieldName: "name", isId: false, isUnique: false, seq }),
+        quantity: getScalarFieldValueGenerator().Int({ modelName: "InvoiceItem", fieldName: "quantity", isId: false, isUnique: false, seq }),
+        amount: getScalarFieldValueGenerator().Int({ modelName: "InvoiceItem", fieldName: "amount", isId: false, isUnique: false, seq })
     };
 }
-function defineInvoiceItemFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("InvoiceItem", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateInvoiceItemScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isInvoiceIteminvoicesFactory(defaultData.invoices)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.invoices.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.invoices;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.invoices = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineInvoiceItemFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("InvoiceItem", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateInvoiceItemScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                invoices: isInvoiceIteminvoicesFactory(defaultData.invoices) ? {
+                    create: yield defaultData.invoices.build()
+                } : defaultData.invoices
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().invoiceItem.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().invoiceItem.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "InvoiceItem",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link InvoiceItem} model.
@@ -3576,132 +2456,70 @@ function defineInvoiceItemFactoryInternal(_a) {
  * @param options
  * @returns factory {@link InvoiceItemFactoryInterface}
  */
-function defineInvoiceItemFactory(options) {
+export function defineInvoiceItemFactory(options) {
     return defineInvoiceItemFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineInvoiceItemFactory = defineInvoiceItemFactory;
 function isInvoicesubscriptionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Subscription";
 }
-function autoGenerateInvoiceScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateInvoiceScalarsOrEnums({ seq }) {
     return {
-        mail: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Invoice", fieldName: "mail", isId: false, isUnique: false, seq: seq }),
-        dueAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "Invoice", fieldName: "dueAt", isId: false, isUnique: false, seq: seq }),
-        scheduledDeactivationAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "Invoice", fieldName: "scheduledDeactivationAt", isId: false, isUnique: false, seq: seq }),
+        mail: getScalarFieldValueGenerator().String({ modelName: "Invoice", fieldName: "mail", isId: false, isUnique: false, seq }),
+        dueAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "dueAt", isId: false, isUnique: false, seq }),
+        scheduledDeactivationAt: getScalarFieldValueGenerator().DateTime({ modelName: "Invoice", fieldName: "scheduledDeactivationAt", isId: false, isUnique: false, seq }),
         currency: "CHF"
     };
 }
-function defineInvoiceFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Invoice", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateInvoiceScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isInvoicesubscriptionFactory(defaultData.subscription)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.subscription.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.subscription;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.subscription = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineInvoiceFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Invoice", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateInvoiceScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                subscription: isInvoicesubscriptionFactory(defaultData.subscription) ? {
+                    create: yield defaultData.subscription.build()
+                } : defaultData.subscription
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().invoice.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().invoice.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Invoice",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Invoice} model.
@@ -3709,147 +2527,76 @@ function defineInvoiceFactoryInternal(_a) {
  * @param options
  * @returns factory {@link InvoiceFactoryInterface}
  */
-function defineInvoiceFactory(options) {
+export function defineInvoiceFactory(options) {
     return defineInvoiceFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineInvoiceFactory = defineInvoiceFactory;
 function isMailLogrecipientFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
 function isMailLogmailTemplateFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "MailTemplate";
 }
-function autoGenerateMailLogScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateMailLogScalarsOrEnums({ seq }) {
     return {
         state: "submitted",
-        sentDate: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "MailLog", fieldName: "sentDate", isId: false, isUnique: false, seq: seq }),
-        mailProviderID: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MailLog", fieldName: "mailProviderID", isId: false, isUnique: false, seq: seq }),
-        mailIdentifier: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MailLog", fieldName: "mailIdentifier", isId: false, isUnique: false, seq: seq })
+        sentDate: getScalarFieldValueGenerator().DateTime({ modelName: "MailLog", fieldName: "sentDate", isId: false, isUnique: false, seq }),
+        mailProviderID: getScalarFieldValueGenerator().String({ modelName: "MailLog", fieldName: "mailProviderID", isId: false, isUnique: false, seq }),
+        mailIdentifier: getScalarFieldValueGenerator().String({ modelName: "MailLog", fieldName: "mailIdentifier", isId: false, isUnique: false, seq })
     };
 }
-function defineMailLogFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("MailLog", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateMailLogScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isMailLogrecipientFactory(defaultData.recipient)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.recipient.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.recipient;
-                            _f.label = 4;
-                        case 4:
-                            _c.recipient = _a;
-                            if (!isMailLogmailTemplateFactory(defaultData.mailTemplate)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.mailTemplate.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.mailTemplate;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.mailTemplate = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineMailLogFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("MailLog", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateMailLogScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                recipient: isMailLogrecipientFactory(defaultData.recipient) ? {
+                    create: yield defaultData.recipient.build()
+                } : defaultData.recipient,
+                mailTemplate: isMailLogmailTemplateFactory(defaultData.mailTemplate) ? {
+                    create: yield defaultData.mailTemplate.build()
+                } : defaultData.mailTemplate
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().mailLog.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().mailLog.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "MailLog",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link MailLog} model.
@@ -3857,129 +2604,67 @@ function defineMailLogFactoryInternal(_a) {
  * @param options
  * @returns factory {@link MailLogFactoryInterface}
  */
-function defineMailLogFactory(options) {
+export function defineMailLogFactory(options) {
     return defineMailLogFactoryInternal(options);
 }
-exports.defineMailLogFactory = defineMailLogFactory;
 function isAvailablePaymentMethodMemberPlanFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "MemberPlan";
 }
-function autoGenerateAvailablePaymentMethodScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateAvailablePaymentMethodScalarsOrEnums({ seq }) {
     return {
-        forceAutoRenewal: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "AvailablePaymentMethod", fieldName: "forceAutoRenewal", isId: false, isUnique: false, seq: seq })
+        forceAutoRenewal: getScalarFieldValueGenerator().Boolean({ modelName: "AvailablePaymentMethod", fieldName: "forceAutoRenewal", isId: false, isUnique: false, seq })
     };
 }
-function defineAvailablePaymentMethodFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("AvailablePaymentMethod", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateAvailablePaymentMethodScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isAvailablePaymentMethodMemberPlanFactory(defaultData.MemberPlan)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.MemberPlan.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.MemberPlan;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.MemberPlan = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("AvailablePaymentMethod", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateAvailablePaymentMethodScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                MemberPlan: isAvailablePaymentMethodMemberPlanFactory(defaultData.MemberPlan) ? {
+                    create: yield defaultData.MemberPlan.build()
+                } : defaultData.MemberPlan
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().availablePaymentMethod.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().availablePaymentMethod.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "AvailablePaymentMethod",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link AvailablePaymentMethod} model.
@@ -3987,149 +2672,96 @@ function defineAvailablePaymentMethodFactoryInternal(_a) {
  * @param options
  * @returns factory {@link AvailablePaymentMethodFactoryInterface}
  */
-function defineAvailablePaymentMethodFactory(options) {
+export function defineAvailablePaymentMethodFactory(options) {
     return defineAvailablePaymentMethodFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineAvailablePaymentMethodFactory = defineAvailablePaymentMethodFactory;
 function isMemberPlanmigrateToTargetPaymentMethodFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PaymentMethod";
 }
 function isMemberPlanimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGenerateMemberPlanScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isMemberPlansuccessPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isMemberPlanfailPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isMemberPlanconfirmationPageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function autoGenerateMemberPlanScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MemberPlan", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        slug: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MemberPlan", fieldName: "slug", isId: false, isUnique: true, seq: seq }),
-        description: (0, internal_1.getScalarFieldValueGenerator)().Json({ modelName: "MemberPlan", fieldName: "description", isId: false, isUnique: false, seq: seq }),
-        active: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "MemberPlan", fieldName: "active", isId: false, isUnique: false, seq: seq }),
+        name: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "name", isId: false, isUnique: false, seq }),
+        slug: getScalarFieldValueGenerator().String({ modelName: "MemberPlan", fieldName: "slug", isId: false, isUnique: true, seq }),
+        description: getScalarFieldValueGenerator().Json({ modelName: "MemberPlan", fieldName: "description", isId: false, isUnique: false, seq }),
+        active: getScalarFieldValueGenerator().Boolean({ modelName: "MemberPlan", fieldName: "active", isId: false, isUnique: false, seq }),
         currency: "CHF",
-        amountPerMonthMin: (0, internal_1.getScalarFieldValueGenerator)().Float({ modelName: "MemberPlan", fieldName: "amountPerMonthMin", isId: false, isUnique: false, seq: seq })
+        amountPerMonthMin: getScalarFieldValueGenerator().Float({ modelName: "MemberPlan", fieldName: "amountPerMonthMin", isId: false, isUnique: false, seq })
     };
 }
-function defineMemberPlanFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("MemberPlan", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateMemberPlanScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isMemberPlanmigrateToTargetPaymentMethodFactory(defaultData.migrateToTargetPaymentMethod)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.migrateToTargetPaymentMethod.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.migrateToTargetPaymentMethod;
-                            _f.label = 4;
-                        case 4:
-                            _c.migrateToTargetPaymentMethod = _a;
-                            if (!isMemberPlanimageFactory(defaultData.image)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.image;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.image = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("MemberPlan", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateMemberPlanScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                migrateToTargetPaymentMethod: isMemberPlanmigrateToTargetPaymentMethodFactory(defaultData.migrateToTargetPaymentMethod) ? {
+                    create: yield defaultData.migrateToTargetPaymentMethod.build()
+                } : defaultData.migrateToTargetPaymentMethod,
+                image: isMemberPlanimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image,
+                successPage: isMemberPlansuccessPageFactory(defaultData.successPage) ? {
+                    create: yield defaultData.successPage.build()
+                } : defaultData.successPage,
+                failPage: isMemberPlanfailPageFactory(defaultData.failPage) ? {
+                    create: yield defaultData.failPage.build()
+                } : defaultData.failPage,
+                confirmationPage: isMemberPlanconfirmationPageFactory(defaultData.confirmationPage) ? {
+                    create: yield defaultData.confirmationPage.build()
+                } : defaultData.confirmationPage
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().memberPlan.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().memberPlan.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "MemberPlan",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link MemberPlan} model.
@@ -4137,10 +2769,9 @@ function defineMemberPlanFactoryInternal(_a) {
  * @param options
  * @returns factory {@link MemberPlanFactoryInterface}
  */
-function defineMemberPlanFactory(options) {
+export function defineMemberPlanFactory(options) {
     return defineMemberPlanFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineMemberPlanFactory = defineMemberPlanFactory;
 function isNavigationLinkpageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
 }
@@ -4150,147 +2781,68 @@ function isNavigationLinkarticleFactory(x) {
 function isNavigationLinknavigationFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Navigation";
 }
-function autoGenerateNavigationLinkScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateNavigationLinkScalarsOrEnums({ seq }) {
     return {
-        label: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "NavigationLink", fieldName: "label", isId: false, isUnique: false, seq: seq }),
-        type: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "NavigationLink", fieldName: "type", isId: false, isUnique: false, seq: seq })
+        label: getScalarFieldValueGenerator().String({ modelName: "NavigationLink", fieldName: "label", isId: false, isUnique: false, seq }),
+        type: getScalarFieldValueGenerator().String({ modelName: "NavigationLink", fieldName: "type", isId: false, isUnique: false, seq })
     };
 }
-function defineNavigationLinkFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("NavigationLink", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, data;
-                var _d, _e, _f, _g;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_h) {
-                    switch (_h.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateNavigationLinkScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _h.sent();
-                            _d = {};
-                            if (!isNavigationLinkpageFactory(defaultData.page)) return [3 /*break*/, 3];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.page.build()];
-                        case 2:
-                            _a = (_e.create = _h.sent(),
-                                _e);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.page;
-                            _h.label = 4;
-                        case 4:
-                            _d.page = _a;
-                            if (!isNavigationLinkarticleFactory(defaultData.article)) return [3 /*break*/, 6];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.article.build()];
-                        case 5:
-                            _b = (_f.create = _h.sent(),
-                                _f);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.article;
-                            _h.label = 7;
-                        case 7:
-                            _d.article = _b;
-                            if (!isNavigationLinknavigationFactory(defaultData.navigation)) return [3 /*break*/, 9];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.navigation.build()];
-                        case 8:
-                            _c = (_g.create = _h.sent(),
-                                _g);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.navigation;
-                            _h.label = 10;
-                        case 10:
-                            defaultAssociations = (_d.navigation = _c,
-                                _d);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineNavigationLinkFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("NavigationLink", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateNavigationLinkScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                page: isNavigationLinkpageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page,
+                article: isNavigationLinkarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                navigation: isNavigationLinknavigationFactory(defaultData.navigation) ? {
+                    create: yield defaultData.navigation.build()
+                } : defaultData.navigation
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().navigationLink.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().navigationLink.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "NavigationLink",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link NavigationLink} model.
@@ -4298,113 +2850,61 @@ function defineNavigationLinkFactoryInternal(_a) {
  * @param options
  * @returns factory {@link NavigationLinkFactoryInterface}
  */
-function defineNavigationLinkFactory(options) {
+export function defineNavigationLinkFactory(options) {
     return defineNavigationLinkFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineNavigationLinkFactory = defineNavigationLinkFactory;
-function autoGenerateNavigationScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateNavigationScalarsOrEnums({ seq }) {
     return {
-        key: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Navigation", fieldName: "key", isId: false, isUnique: true, seq: seq }),
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Navigation", fieldName: "name", isId: false, isUnique: false, seq: seq })
+        key: getScalarFieldValueGenerator().String({ modelName: "Navigation", fieldName: "key", isId: false, isUnique: true, seq }),
+        name: getScalarFieldValueGenerator().String({ modelName: "Navigation", fieldName: "name", isId: false, isUnique: false, seq })
     };
 }
-function defineNavigationFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Navigation", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateNavigationScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineNavigationFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Navigation", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateNavigationScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().navigation.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().navigation.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Navigation",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Navigation} model.
@@ -4412,145 +2912,85 @@ function defineNavigationFactoryInternal(_a) {
  * @param options
  * @returns factory {@link NavigationFactoryInterface}
  */
-function defineNavigationFactory(options) {
+export function defineNavigationFactory(options) {
     return defineNavigationFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineNavigationFactory = defineNavigationFactory;
 function isPageRevisionimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
 function isPageRevisionsocialMediaImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGeneratePageRevisionScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isPageRevisionpageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isPageRevisionuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
+function autoGeneratePageRevisionScalarsOrEnums({ seq }) {
     return {
-        title: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PageRevision", fieldName: "title", isId: false, isUnique: false, seq: seq }),
-        blocks: (0, internal_1.getScalarFieldValueGenerator)().Json({ modelName: "PageRevision", fieldName: "blocks", isId: false, isUnique: false, seq: seq })
+        blocks: getScalarFieldValueGenerator().Json({ modelName: "PageRevision", fieldName: "blocks", isId: false, isUnique: false, seq })
     };
 }
-function definePageRevisionFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PageRevision", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePageRevisionScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isPageRevisionimageFactory(defaultData.image)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.image;
-                            _f.label = 4;
-                        case 4:
-                            _c.image = _a;
-                            if (!isPageRevisionsocialMediaImageFactory(defaultData.socialMediaImage)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.socialMediaImage.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.socialMediaImage;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.socialMediaImage = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PageRevision", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePageRevisionScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isPageRevisionimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image,
+                socialMediaImage: isPageRevisionsocialMediaImageFactory(defaultData.socialMediaImage) ? {
+                    create: yield defaultData.socialMediaImage.build()
+                } : defaultData.socialMediaImage,
+                page: isPageRevisionpageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page,
+                user: isPageRevisionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().pageRevision.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().pageRevision.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PageRevision",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PageRevision} model.
@@ -4558,157 +2998,58 @@ function definePageRevisionFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PageRevisionFactoryInterface}
  */
-function definePageRevisionFactory(options) {
-    return definePageRevisionFactoryInternal(options !== null && options !== void 0 ? options : {});
+export function definePageRevisionFactory(options) {
+    return definePageRevisionFactoryInternal(options);
 }
-exports.definePageRevisionFactory = definePageRevisionFactory;
-function isPagepublishedFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagependingFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function isPagedraftFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PageRevision";
-}
-function autoGeneratePageScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePageScalarsOrEnums({ seq }) {
     return {};
 }
-function definePageFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Page", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, data;
-                var _d, _e, _f, _g;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_h) {
-                    switch (_h.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePageScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _h.sent();
-                            _d = {};
-                            if (!isPagepublishedFactory(defaultData.published)) return [3 /*break*/, 3];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.published.build()];
-                        case 2:
-                            _a = (_e.create = _h.sent(),
-                                _e);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.published;
-                            _h.label = 4;
-                        case 4:
-                            _d.published = _a;
-                            if (!isPagependingFactory(defaultData.pending)) return [3 /*break*/, 6];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.pending.build()];
-                        case 5:
-                            _b = (_f.create = _h.sent(),
-                                _f);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.pending;
-                            _h.label = 7;
-                        case 7:
-                            _d.pending = _b;
-                            if (!isPagedraftFactory(defaultData.draft)) return [3 /*break*/, 9];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.draft.build()];
-                        case 8:
-                            _c = (_g.create = _h.sent(),
-                                _g);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.draft;
-                            _h.label = 10;
-                        case 10:
-                            defaultAssociations = (_d.draft = _c,
-                                _d);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Page", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePageScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().page.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().page.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Page",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Page} model.
@@ -4716,143 +3057,72 @@ function definePageFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PageFactoryInterface}
  */
-function definePageFactory(options) {
+export function definePageFactory(options) {
     return definePageFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePageFactory = definePageFactory;
 function isTaggedPagespageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
 }
 function isTaggedPagestagFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
 }
-function autoGenerateTaggedPagesScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateTaggedPagesScalarsOrEnums({ seq }) {
     return {};
 }
-function defineTaggedPagesFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("TaggedPages", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTaggedPagesScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isTaggedPagespageFactory(defaultData.page)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.page.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.page;
-                            _f.label = 4;
-                        case 4:
-                            _c.page = _a;
-                            if (!isTaggedPagestagFactory(defaultData.tag)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.tag.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.tag;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.tag = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTaggedPagesFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedPages", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedPagesScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                page: isTaggedPagespageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page,
+                tag: isTaggedPagestagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             pageId: inputData.pageId,
             tagId: inputData.tagId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().taggedPages.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedPages.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "TaggedPages",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link TaggedPages} model.
@@ -4860,133 +3130,71 @@ function defineTaggedPagesFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TaggedPagesFactoryInterface}
  */
-function defineTaggedPagesFactory(options) {
+export function defineTaggedPagesFactory(options) {
     return defineTaggedPagesFactoryInternal(options);
 }
-exports.defineTaggedPagesFactory = defineTaggedPagesFactory;
 function isPaymentMethodimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGeneratePaymentMethodScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePaymentMethodScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PaymentMethod", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        slug: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PaymentMethod", fieldName: "slug", isId: false, isUnique: false, seq: seq }),
-        description: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PaymentMethod", fieldName: "description", isId: false, isUnique: false, seq: seq }),
-        paymentProviderID: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PaymentMethod", fieldName: "paymentProviderID", isId: false, isUnique: false, seq: seq }),
-        active: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "PaymentMethod", fieldName: "active", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "PaymentMethod", fieldName: "name", isId: false, isUnique: false, seq }),
+        slug: getScalarFieldValueGenerator().String({ modelName: "PaymentMethod", fieldName: "slug", isId: false, isUnique: false, seq }),
+        description: getScalarFieldValueGenerator().String({ modelName: "PaymentMethod", fieldName: "description", isId: false, isUnique: false, seq }),
+        paymentProviderID: getScalarFieldValueGenerator().String({ modelName: "PaymentMethod", fieldName: "paymentProviderID", isId: false, isUnique: false, seq }),
+        active: getScalarFieldValueGenerator().Boolean({ modelName: "PaymentMethod", fieldName: "active", isId: false, isUnique: false, seq })
     };
 }
-function definePaymentMethodFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PaymentMethod", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePaymentMethodScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isPaymentMethodimageFactory(defaultData.image)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.image;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.image = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePaymentMethodFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PaymentMethod", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePaymentMethodScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isPaymentMethodimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().paymentMethod.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().paymentMethod.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PaymentMethod",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PaymentMethod} model.
@@ -4994,130 +3202,68 @@ function definePaymentMethodFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PaymentMethodFactoryInterface}
  */
-function definePaymentMethodFactory(options) {
+export function definePaymentMethodFactory(options) {
     return definePaymentMethodFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePaymentMethodFactory = definePaymentMethodFactory;
 function isPaymentpaymentMethodFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PaymentMethod";
 }
-function autoGeneratePaymentScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePaymentScalarsOrEnums({ seq }) {
     return {
-        invoiceID: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Payment", fieldName: "invoiceID", isId: false, isUnique: false, seq: seq }),
+        invoiceID: getScalarFieldValueGenerator().String({ modelName: "Payment", fieldName: "invoiceID", isId: false, isUnique: false, seq }),
         state: "created"
     };
 }
-function definePaymentFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Payment", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePaymentScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isPaymentpaymentMethodFactory(defaultData.paymentMethod)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.paymentMethod.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.paymentMethod;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.paymentMethod = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePaymentFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Payment", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePaymentScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                paymentMethod: isPaymentpaymentMethodFactory(defaultData.paymentMethod) ? {
+                    create: yield defaultData.paymentMethod.build()
+                } : defaultData.paymentMethod
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().payment.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().payment.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Payment",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Payment} model.
@@ -5125,133 +3271,71 @@ function definePaymentFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PaymentFactoryInterface}
  */
-function definePaymentFactory(options) {
+export function definePaymentFactory(options) {
     return definePaymentFactoryInternal(options);
 }
-exports.definePaymentFactory = definePaymentFactory;
 function isPeerProfilelogoFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGeneratePeerProfileScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePeerProfileScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PeerProfile", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        themeColor: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PeerProfile", fieldName: "themeColor", isId: false, isUnique: false, seq: seq }),
-        themeFontColor: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PeerProfile", fieldName: "themeFontColor", isId: false, isUnique: false, seq: seq }),
-        callToActionURL: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PeerProfile", fieldName: "callToActionURL", isId: false, isUnique: false, seq: seq }),
-        callToActionText: (0, internal_1.getScalarFieldValueGenerator)().Json({ modelName: "PeerProfile", fieldName: "callToActionText", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "PeerProfile", fieldName: "name", isId: false, isUnique: false, seq }),
+        themeColor: getScalarFieldValueGenerator().String({ modelName: "PeerProfile", fieldName: "themeColor", isId: false, isUnique: false, seq }),
+        themeFontColor: getScalarFieldValueGenerator().String({ modelName: "PeerProfile", fieldName: "themeFontColor", isId: false, isUnique: false, seq }),
+        callToActionURL: getScalarFieldValueGenerator().String({ modelName: "PeerProfile", fieldName: "callToActionURL", isId: false, isUnique: false, seq }),
+        callToActionText: getScalarFieldValueGenerator().Json({ modelName: "PeerProfile", fieldName: "callToActionText", isId: false, isUnique: false, seq })
     };
 }
-function definePeerProfileFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PeerProfile", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePeerProfileScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isPeerProfilelogoFactory(defaultData.logo)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.logo.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.logo;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.logo = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePeerProfileFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PeerProfile", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePeerProfileScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                logo: isPeerProfilelogoFactory(defaultData.logo) ? {
+                    create: yield defaultData.logo.build()
+                } : defaultData.logo
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().peerProfile.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().peerProfile.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PeerProfile",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PeerProfile} model.
@@ -5259,115 +3343,63 @@ function definePeerProfileFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PeerProfileFactoryInterface}
  */
-function definePeerProfileFactory(options) {
+export function definePeerProfileFactory(options) {
     return definePeerProfileFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePeerProfileFactory = definePeerProfileFactory;
-function autoGeneratePeerScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePeerScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Peer", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        slug: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Peer", fieldName: "slug", isId: false, isUnique: true, seq: seq }),
-        hostURL: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Peer", fieldName: "hostURL", isId: false, isUnique: false, seq: seq }),
-        token: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Peer", fieldName: "token", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "Peer", fieldName: "name", isId: false, isUnique: false, seq }),
+        slug: getScalarFieldValueGenerator().String({ modelName: "Peer", fieldName: "slug", isId: false, isUnique: true, seq }),
+        hostURL: getScalarFieldValueGenerator().String({ modelName: "Peer", fieldName: "hostURL", isId: false, isUnique: false, seq }),
+        token: getScalarFieldValueGenerator().String({ modelName: "Peer", fieldName: "token", isId: false, isUnique: false, seq })
     };
 }
-function definePeerFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Peer", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePeerScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePeerFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Peer", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePeerScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().peer.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().peer.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Peer",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Peer} model.
@@ -5375,113 +3407,61 @@ function definePeerFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PeerFactoryInterface}
  */
-function definePeerFactory(options) {
+export function definePeerFactory(options) {
     return definePeerFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePeerFactory = definePeerFactory;
-function autoGenerateTokenScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateTokenScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Token", fieldName: "name", isId: false, isUnique: true, seq: seq }),
-        token: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Token", fieldName: "token", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "Token", fieldName: "name", isId: false, isUnique: true, seq }),
+        token: getScalarFieldValueGenerator().String({ modelName: "Token", fieldName: "token", isId: false, isUnique: false, seq })
     };
 }
-function defineTokenFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Token", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTokenScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTokenFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Token", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTokenScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().token.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().token.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Token",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Token} model.
@@ -5489,130 +3469,68 @@ function defineTokenFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TokenFactoryInterface}
  */
-function defineTokenFactory(options) {
+export function defineTokenFactory(options) {
     return defineTokenFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineTokenFactory = defineTokenFactory;
 function isSessionuserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateSessionScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateSessionScalarsOrEnums({ seq }) {
     return {
-        expiresAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "Session", fieldName: "expiresAt", isId: false, isUnique: false, seq: seq }),
-        token: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Session", fieldName: "token", isId: false, isUnique: true, seq: seq })
+        expiresAt: getScalarFieldValueGenerator().DateTime({ modelName: "Session", fieldName: "expiresAt", isId: false, isUnique: false, seq }),
+        token: getScalarFieldValueGenerator().String({ modelName: "Session", fieldName: "token", isId: false, isUnique: true, seq })
     };
 }
-function defineSessionFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Session", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSessionScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isSessionuserFactory(defaultData.user)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.user.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.user;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.user = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSessionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Session", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSessionScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                user: isSessionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().session.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().session.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Session",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Session} model.
@@ -5620,147 +3538,76 @@ function defineSessionFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SessionFactoryInterface}
  */
-function defineSessionFactory(options) {
+export function defineSessionFactory(options) {
     return defineSessionFactoryInternal(options);
 }
-exports.defineSessionFactory = defineSessionFactory;
 function isSubscriptionPeriodinvoiceFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Invoice";
 }
 function isSubscriptionPeriodsubscriptionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Subscription";
 }
-function autoGenerateSubscriptionPeriodScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateSubscriptionPeriodScalarsOrEnums({ seq }) {
     return {
-        startsAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "SubscriptionPeriod", fieldName: "startsAt", isId: false, isUnique: false, seq: seq }),
-        endsAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "SubscriptionPeriod", fieldName: "endsAt", isId: false, isUnique: false, seq: seq }),
+        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "SubscriptionPeriod", fieldName: "startsAt", isId: false, isUnique: false, seq }),
+        endsAt: getScalarFieldValueGenerator().DateTime({ modelName: "SubscriptionPeriod", fieldName: "endsAt", isId: false, isUnique: false, seq }),
         paymentPeriodicity: "monthly",
-        amount: (0, internal_1.getScalarFieldValueGenerator)().Float({ modelName: "SubscriptionPeriod", fieldName: "amount", isId: false, isUnique: false, seq: seq })
+        amount: getScalarFieldValueGenerator().Float({ modelName: "SubscriptionPeriod", fieldName: "amount", isId: false, isUnique: false, seq })
     };
 }
-function defineSubscriptionPeriodFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("SubscriptionPeriod", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSubscriptionPeriodScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isSubscriptionPeriodinvoiceFactory(defaultData.invoice)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.invoice.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.invoice;
-                            _f.label = 4;
-                        case 4:
-                            _c.invoice = _a;
-                            if (!isSubscriptionPeriodsubscriptionFactory(defaultData.subscription)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.subscription.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.subscription;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.subscription = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSubscriptionPeriodFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("SubscriptionPeriod", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSubscriptionPeriodScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                invoice: isSubscriptionPeriodinvoiceFactory(defaultData.invoice) ? {
+                    create: yield defaultData.invoice.build()
+                } : defaultData.invoice,
+                subscription: isSubscriptionPeriodsubscriptionFactory(defaultData.subscription) ? {
+                    create: yield defaultData.subscription.build()
+                } : defaultData.subscription
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().subscriptionPeriod.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().subscriptionPeriod.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "SubscriptionPeriod",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link SubscriptionPeriod} model.
@@ -5768,130 +3615,68 @@ function defineSubscriptionPeriodFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SubscriptionPeriodFactoryInterface}
  */
-function defineSubscriptionPeriodFactory(options) {
+export function defineSubscriptionPeriodFactory(options) {
     return defineSubscriptionPeriodFactoryInternal(options);
 }
-exports.defineSubscriptionPeriodFactory = defineSubscriptionPeriodFactory;
 function isSubscriptionDeactivationsubscriptionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Subscription";
 }
-function autoGenerateSubscriptionDeactivationScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateSubscriptionDeactivationScalarsOrEnums({ seq }) {
     return {
-        date: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "SubscriptionDeactivation", fieldName: "date", isId: false, isUnique: false, seq: seq }),
+        date: getScalarFieldValueGenerator().DateTime({ modelName: "SubscriptionDeactivation", fieldName: "date", isId: false, isUnique: false, seq }),
         reason: "none"
     };
 }
-function defineSubscriptionDeactivationFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("SubscriptionDeactivation", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSubscriptionDeactivationScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isSubscriptionDeactivationsubscriptionFactory(defaultData.subscription)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.subscription.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.subscription;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.subscription = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSubscriptionDeactivationFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("SubscriptionDeactivation", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSubscriptionDeactivationScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                subscription: isSubscriptionDeactivationsubscriptionFactory(defaultData.subscription) ? {
+                    create: yield defaultData.subscription.build()
+                } : defaultData.subscription
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().subscriptionDeactivation.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().subscriptionDeactivation.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "SubscriptionDeactivation",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link SubscriptionDeactivation} model.
@@ -5899,10 +3684,9 @@ function defineSubscriptionDeactivationFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SubscriptionDeactivationFactoryInterface}
  */
-function defineSubscriptionDeactivationFactory(options) {
+export function defineSubscriptionDeactivationFactory(options) {
     return defineSubscriptionDeactivationFactoryInternal(options);
 }
-exports.defineSubscriptionDeactivationFactory = defineSubscriptionDeactivationFactory;
 function isSubscriptiondeactivationFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "SubscriptionDeactivation";
 }
@@ -5915,162 +3699,80 @@ function isSubscriptionmemberPlanFactory(x) {
 function isSubscriptionuserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateSubscriptionScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isSubscriptionreplacesSubscriptionFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Subscription";
+}
+function autoGenerateSubscriptionScalarsOrEnums({ seq }) {
     return {
         paymentPeriodicity: "monthly",
-        monthlyAmount: (0, internal_1.getScalarFieldValueGenerator)().Float({ modelName: "Subscription", fieldName: "monthlyAmount", isId: false, isUnique: false, seq: seq }),
-        autoRenew: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "Subscription", fieldName: "autoRenew", isId: false, isUnique: false, seq: seq }),
-        startsAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "Subscription", fieldName: "startsAt", isId: false, isUnique: false, seq: seq }),
+        monthlyAmount: getScalarFieldValueGenerator().Float({ modelName: "Subscription", fieldName: "monthlyAmount", isId: false, isUnique: false, seq }),
+        autoRenew: getScalarFieldValueGenerator().Boolean({ modelName: "Subscription", fieldName: "autoRenew", isId: false, isUnique: false, seq }),
+        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "Subscription", fieldName: "startsAt", isId: false, isUnique: false, seq }),
         currency: "CHF"
     };
 }
-function defineSubscriptionFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Subscription", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, _d, data;
-                var _e, _f, _g, _h, _j;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_k) {
-                    switch (_k.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSubscriptionScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _k.sent();
-                            _e = {};
-                            if (!isSubscriptiondeactivationFactory(defaultData.deactivation)) return [3 /*break*/, 3];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.deactivation.build()];
-                        case 2:
-                            _a = (_f.create = _k.sent(),
-                                _f);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.deactivation;
-                            _k.label = 4;
-                        case 4:
-                            _e.deactivation = _a;
-                            if (!isSubscriptionpaymentMethodFactory(defaultData.paymentMethod)) return [3 /*break*/, 6];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.paymentMethod.build()];
-                        case 5:
-                            _b = (_g.create = _k.sent(),
-                                _g);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.paymentMethod;
-                            _k.label = 7;
-                        case 7:
-                            _e.paymentMethod = _b;
-                            if (!isSubscriptionmemberPlanFactory(defaultData.memberPlan)) return [3 /*break*/, 9];
-                            _h = {};
-                            return [4 /*yield*/, defaultData.memberPlan.build()];
-                        case 8:
-                            _c = (_h.create = _k.sent(),
-                                _h);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.memberPlan;
-                            _k.label = 10;
-                        case 10:
-                            _e.memberPlan = _c;
-                            if (!isSubscriptionuserFactory(defaultData.user)) return [3 /*break*/, 12];
-                            _j = {};
-                            return [4 /*yield*/, defaultData.user.build()];
-                        case 11:
-                            _d = (_j.create = _k.sent(),
-                                _j);
-                            return [3 /*break*/, 13];
-                        case 12:
-                            _d = defaultData.user;
-                            _k.label = 13;
-                        case 13:
-                            defaultAssociations = (_e.user = _d,
-                                _e);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Subscription", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSubscriptionScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                deactivation: isSubscriptiondeactivationFactory(defaultData.deactivation) ? {
+                    create: yield defaultData.deactivation.build()
+                } : defaultData.deactivation,
+                paymentMethod: isSubscriptionpaymentMethodFactory(defaultData.paymentMethod) ? {
+                    create: yield defaultData.paymentMethod.build()
+                } : defaultData.paymentMethod,
+                memberPlan: isSubscriptionmemberPlanFactory(defaultData.memberPlan) ? {
+                    create: yield defaultData.memberPlan.build()
+                } : defaultData.memberPlan,
+                user: isSubscriptionuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user,
+                replacesSubscription: isSubscriptionreplacesSubscriptionFactory(defaultData.replacesSubscription) ? {
+                    create: yield defaultData.replacesSubscription.build()
+                } : defaultData.replacesSubscription
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().subscription.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().subscription.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Subscription",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Subscription} model.
@@ -6078,127 +3780,65 @@ function defineSubscriptionFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SubscriptionFactoryInterface}
  */
-function defineSubscriptionFactory(options) {
+export function defineSubscriptionFactory(options) {
     return defineSubscriptionFactoryInternal(options);
 }
-exports.defineSubscriptionFactory = defineSubscriptionFactory;
 function isUserAddressUserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateUserAddressScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateUserAddressScalarsOrEnums({ seq }) {
     return {};
 }
-function defineUserAddressFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("UserAddress", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateUserAddressScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isUserAddressUserFactory(defaultData.User)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.User.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.User;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.User = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineUserAddressFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("UserAddress", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateUserAddressScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                User: isUserAddressUserFactory(defaultData.User) ? {
+                    create: yield defaultData.User.build()
+                } : defaultData.User
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             userId: inputData.userId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().userAddress.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().userAddress.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "UserAddress",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link UserAddress} model.
@@ -6206,136 +3846,74 @@ function defineUserAddressFactoryInternal(_a) {
  * @param options
  * @returns factory {@link UserAddressFactoryInterface}
  */
-function defineUserAddressFactory(options) {
+export function defineUserAddressFactory(options) {
     return defineUserAddressFactoryInternal(options);
 }
-exports.defineUserAddressFactory = defineUserAddressFactory;
 function isUserOAuth2AccountUserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateUserOAuth2AccountScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateUserOAuth2AccountScalarsOrEnums({ seq }) {
     return {
-        type: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "type", isId: false, isUnique: false, seq: seq }),
-        provider: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "provider", isId: false, isUnique: false, seq: seq }),
-        providerAccountId: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "providerAccountId", isId: false, isUnique: false, seq: seq }),
-        accessToken: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "accessToken", isId: false, isUnique: false, seq: seq }),
-        expiresAt: (0, internal_1.getScalarFieldValueGenerator)().Int({ modelName: "UserOAuth2Account", fieldName: "expiresAt", isId: false, isUnique: false, seq: seq }),
-        tokenType: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "tokenType", isId: false, isUnique: false, seq: seq }),
-        scope: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "scope", isId: false, isUnique: false, seq: seq }),
-        idToken: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserOAuth2Account", fieldName: "idToken", isId: false, isUnique: false, seq: seq })
+        type: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "type", isId: false, isUnique: false, seq }),
+        provider: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "provider", isId: false, isUnique: false, seq }),
+        providerAccountId: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "providerAccountId", isId: false, isUnique: false, seq }),
+        accessToken: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "accessToken", isId: false, isUnique: false, seq }),
+        expiresAt: getScalarFieldValueGenerator().Int({ modelName: "UserOAuth2Account", fieldName: "expiresAt", isId: false, isUnique: false, seq }),
+        tokenType: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "tokenType", isId: false, isUnique: false, seq }),
+        scope: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "scope", isId: false, isUnique: false, seq }),
+        idToken: getScalarFieldValueGenerator().String({ modelName: "UserOAuth2Account", fieldName: "idToken", isId: false, isUnique: false, seq })
     };
 }
-function defineUserOAuth2AccountFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("UserOAuth2Account", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateUserOAuth2AccountScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isUserOAuth2AccountUserFactory(defaultData.User)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.User.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.User;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.User = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineUserOAuth2AccountFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("UserOAuth2Account", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateUserOAuth2AccountScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                User: isUserOAuth2AccountUserFactory(defaultData.User) ? {
+                    create: yield defaultData.User.build()
+                } : defaultData.User
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().userOAuth2Account.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().userOAuth2Account.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "UserOAuth2Account",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link UserOAuth2Account} model.
@@ -6343,130 +3921,68 @@ function defineUserOAuth2AccountFactoryInternal(_a) {
  * @param options
  * @returns factory {@link UserOAuth2AccountFactoryInterface}
  */
-function defineUserOAuth2AccountFactory(options) {
+export function defineUserOAuth2AccountFactory(options) {
     return defineUserOAuth2AccountFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineUserOAuth2AccountFactory = defineUserOAuth2AccountFactory;
 function isPaymentProviderCustomerUserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGeneratePaymentProviderCustomerScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePaymentProviderCustomerScalarsOrEnums({ seq }) {
     return {
-        paymentProviderID: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PaymentProviderCustomer", fieldName: "paymentProviderID", isId: false, isUnique: false, seq: seq }),
-        customerID: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "PaymentProviderCustomer", fieldName: "customerID", isId: false, isUnique: false, seq: seq })
+        paymentProviderID: getScalarFieldValueGenerator().String({ modelName: "PaymentProviderCustomer", fieldName: "paymentProviderID", isId: false, isUnique: false, seq }),
+        customerID: getScalarFieldValueGenerator().String({ modelName: "PaymentProviderCustomer", fieldName: "customerID", isId: false, isUnique: false, seq })
     };
 }
-function definePaymentProviderCustomerFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PaymentProviderCustomer", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePaymentProviderCustomerScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isPaymentProviderCustomerUserFactory(defaultData.User)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.User.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.User;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.User = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePaymentProviderCustomerFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PaymentProviderCustomer", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePaymentProviderCustomerScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                User: isPaymentProviderCustomerUserFactory(defaultData.User) ? {
+                    create: yield defaultData.User.build()
+                } : defaultData.User
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().paymentProviderCustomer.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().paymentProviderCustomer.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PaymentProviderCustomer",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PaymentProviderCustomer} model.
@@ -6474,147 +3990,76 @@ function definePaymentProviderCustomerFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PaymentProviderCustomerFactoryInterface}
  */
-function definePaymentProviderCustomerFactory(options) {
+export function definePaymentProviderCustomerFactory(options) {
     return definePaymentProviderCustomerFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePaymentProviderCustomerFactory = definePaymentProviderCustomerFactory;
 function isUseruserImageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
 function isUseraddressFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "UserAddress";
 }
-function autoGenerateUserScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateUserScalarsOrEnums({ seq }) {
     return {
-        email: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "User", fieldName: "email", isId: false, isUnique: true, seq: seq }),
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "User", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        password: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "User", fieldName: "password", isId: false, isUnique: false, seq: seq }),
-        active: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "User", fieldName: "active", isId: false, isUnique: false, seq: seq })
+        email: getScalarFieldValueGenerator().String({ modelName: "User", fieldName: "email", isId: false, isUnique: true, seq }),
+        name: getScalarFieldValueGenerator().String({ modelName: "User", fieldName: "name", isId: false, isUnique: false, seq }),
+        password: getScalarFieldValueGenerator().String({ modelName: "User", fieldName: "password", isId: false, isUnique: false, seq }),
+        active: getScalarFieldValueGenerator().Boolean({ modelName: "User", fieldName: "active", isId: false, isUnique: false, seq })
     };
 }
-function defineUserFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("User", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateUserScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isUseruserImageFactory(defaultData.userImage)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.userImage.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.userImage;
-                            _f.label = 4;
-                        case 4:
-                            _c.userImage = _a;
-                            if (!isUseraddressFactory(defaultData.address)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.address.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.address;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.address = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineUserFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("User", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateUserScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                userImage: isUseruserImageFactory(defaultData.userImage) ? {
+                    create: yield defaultData.userImage.build()
+                } : defaultData.userImage,
+                address: isUseraddressFactory(defaultData.address) ? {
+                    create: yield defaultData.address.build()
+                } : defaultData.address
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().user.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().user.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "User",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link User} model.
@@ -6622,113 +4067,61 @@ function defineUserFactoryInternal(_a) {
  * @param options
  * @returns factory {@link UserFactoryInterface}
  */
-function defineUserFactory(options) {
+export function defineUserFactory(options) {
     return defineUserFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineUserFactory = defineUserFactory;
-function autoGenerateUserRoleScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateUserRoleScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "UserRole", fieldName: "name", isId: false, isUnique: true, seq: seq }),
-        systemRole: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "UserRole", fieldName: "systemRole", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "UserRole", fieldName: "name", isId: false, isUnique: true, seq }),
+        systemRole: getScalarFieldValueGenerator().Boolean({ modelName: "UserRole", fieldName: "systemRole", isId: false, isUnique: false, seq })
     };
 }
-function defineUserRoleFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("UserRole", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateUserRoleScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineUserRoleFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("UserRole", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateUserRoleScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().userRole.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().userRole.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "UserRole",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link UserRole} model.
@@ -6736,114 +4129,62 @@ function defineUserRoleFactoryInternal(_a) {
  * @param options
  * @returns factory {@link UserRoleFactoryInterface}
  */
-function defineUserRoleFactory(options) {
+export function defineUserRoleFactory(options) {
     return defineUserRoleFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineUserRoleFactory = defineUserRoleFactory;
-function autoGenerateSettingScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateSettingScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Setting", fieldName: "name", isId: false, isUnique: true, seq: seq }),
-        value: (0, internal_1.getScalarFieldValueGenerator)().Json({ modelName: "Setting", fieldName: "value", isId: false, isUnique: false, seq: seq }),
-        settingRestriction: (0, internal_1.getScalarFieldValueGenerator)().Json({ modelName: "Setting", fieldName: "settingRestriction", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "Setting", fieldName: "name", isId: false, isUnique: true, seq }),
+        value: getScalarFieldValueGenerator().Json({ modelName: "Setting", fieldName: "value", isId: false, isUnique: false, seq }),
+        settingRestriction: getScalarFieldValueGenerator().Json({ modelName: "Setting", fieldName: "settingRestriction", isId: false, isUnique: false, seq })
     };
 }
-function defineSettingFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Setting", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSettingScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Setting", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSettingScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().setting.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().setting.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Setting",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Setting} model.
@@ -6851,112 +4192,67 @@ function defineSettingFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SettingFactoryInterface}
  */
-function defineSettingFactory(options) {
+export function defineSettingFactory(options) {
     return defineSettingFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineSettingFactory = defineSettingFactory;
-function autoGenerateTagScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function isTagpeerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
+}
+function autoGenerateTagScalarsOrEnums({ seq }) {
     return {
         type: "Comment"
     };
 }
-function defineTagFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Tag", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTagScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Tag", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTagScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                peer: isTagpeerFactory(defaultData.peer) ? {
+                    create: yield defaultData.peer.build()
+                } : defaultData.peer
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().tag.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().tag.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Tag",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Tag} model.
@@ -6964,110 +4260,58 @@ function defineTagFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TagFactoryInterface}
  */
-function defineTagFactory(options) {
+export function defineTagFactory(options) {
     return defineTagFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineTagFactory = defineTagFactory;
-function autoGeneratePollScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePollScalarsOrEnums({ seq }) {
     return {};
 }
-function definePollFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Poll", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePollScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePollFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Poll", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePollScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().poll.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().poll.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Poll",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Poll} model.
@@ -7075,127 +4319,65 @@ function definePollFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PollFactoryInterface}
  */
-function definePollFactory(options) {
+export function definePollFactory(options) {
     return definePollFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePollFactory = definePollFactory;
 function isPollAnswerpollFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Poll";
 }
-function autoGeneratePollAnswerScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePollAnswerScalarsOrEnums({ seq }) {
     return {};
 }
-function definePollAnswerFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PollAnswer", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePollAnswerScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isPollAnswerpollFactory(defaultData.poll)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.poll.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.poll;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.poll = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePollAnswerFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PollAnswer", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePollAnswerScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                poll: isPollAnswerpollFactory(defaultData.poll) ? {
+                    create: yield defaultData.poll.build()
+                } : defaultData.poll
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().pollAnswer.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().pollAnswer.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PollAnswer",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PollAnswer} model.
@@ -7203,10 +4385,9 @@ function definePollAnswerFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PollAnswerFactoryInterface}
  */
-function definePollAnswerFactory(options) {
+export function definePollAnswerFactory(options) {
     return definePollAnswerFactoryInternal(options);
 }
-exports.definePollAnswerFactory = definePollAnswerFactory;
 function isPollVoteuserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
@@ -7216,144 +4397,65 @@ function isPollVoteanswerFactory(x) {
 function isPollVotepollFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Poll";
 }
-function autoGeneratePollVoteScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePollVoteScalarsOrEnums({ seq }) {
     return {};
 }
-function definePollVoteFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PollVote", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, _c, data;
-                var _d, _e, _f, _g;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_h) {
-                    switch (_h.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePollVoteScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _h.sent();
-                            _d = {};
-                            if (!isPollVoteuserFactory(defaultData.user)) return [3 /*break*/, 3];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.user.build()];
-                        case 2:
-                            _a = (_e.create = _h.sent(),
-                                _e);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.user;
-                            _h.label = 4;
-                        case 4:
-                            _d.user = _a;
-                            if (!isPollVoteanswerFactory(defaultData.answer)) return [3 /*break*/, 6];
-                            _f = {};
-                            return [4 /*yield*/, defaultData.answer.build()];
-                        case 5:
-                            _b = (_f.create = _h.sent(),
-                                _f);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.answer;
-                            _h.label = 7;
-                        case 7:
-                            _d.answer = _b;
-                            if (!isPollVotepollFactory(defaultData.poll)) return [3 /*break*/, 9];
-                            _g = {};
-                            return [4 /*yield*/, defaultData.poll.build()];
-                        case 8:
-                            _c = (_g.create = _h.sent(),
-                                _g);
-                            return [3 /*break*/, 10];
-                        case 9:
-                            _c = defaultData.poll;
-                            _h.label = 10;
-                        case 10:
-                            defaultAssociations = (_d.poll = _c,
-                                _d);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePollVoteFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PollVote", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePollVoteScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                user: isPollVoteuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user,
+                answer: isPollVoteanswerFactory(defaultData.answer) ? {
+                    create: yield defaultData.answer.build()
+                } : defaultData.answer,
+                poll: isPollVotepollFactory(defaultData.poll) ? {
+                    create: yield defaultData.poll.build()
+                } : defaultData.poll
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().pollVote.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().pollVote.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PollVote",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PollVote} model.
@@ -7361,127 +4463,65 @@ function definePollVoteFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PollVoteFactoryInterface}
  */
-function definePollVoteFactory(options) {
+export function definePollVoteFactory(options) {
     return definePollVoteFactoryInternal(options);
 }
-exports.definePollVoteFactory = definePollVoteFactory;
 function isPollExternalVoteSourcepollFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Poll";
 }
-function autoGeneratePollExternalVoteSourceScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePollExternalVoteSourceScalarsOrEnums({ seq }) {
     return {};
 }
-function definePollExternalVoteSourceFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PollExternalVoteSource", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePollExternalVoteSourceScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isPollExternalVoteSourcepollFactory(defaultData.poll)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.poll.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.poll;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.poll = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePollExternalVoteSourceFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PollExternalVoteSource", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePollExternalVoteSourceScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                poll: isPollExternalVoteSourcepollFactory(defaultData.poll) ? {
+                    create: yield defaultData.poll.build()
+                } : defaultData.poll
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().pollExternalVoteSource.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().pollExternalVoteSource.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PollExternalVoteSource",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PollExternalVoteSource} model.
@@ -7489,142 +4529,71 @@ function definePollExternalVoteSourceFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PollExternalVoteSourceFactoryInterface}
  */
-function definePollExternalVoteSourceFactory(options) {
+export function definePollExternalVoteSourceFactory(options) {
     return definePollExternalVoteSourceFactoryInternal(options);
 }
-exports.definePollExternalVoteSourceFactory = definePollExternalVoteSourceFactory;
 function isPollExternalVoteanswerFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PollAnswer";
 }
 function isPollExternalVotesourceFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "PollExternalVoteSource";
 }
-function autoGeneratePollExternalVoteScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePollExternalVoteScalarsOrEnums({ seq }) {
     return {};
 }
-function definePollExternalVoteFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PollExternalVote", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePollExternalVoteScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isPollExternalVoteanswerFactory(defaultData.answer)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.answer.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.answer;
-                            _f.label = 4;
-                        case 4:
-                            _c.answer = _a;
-                            if (!isPollExternalVotesourceFactory(defaultData.source)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.source.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.source;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.source = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePollExternalVoteFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PollExternalVote", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePollExternalVoteScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                answer: isPollExternalVoteanswerFactory(defaultData.answer) ? {
+                    create: yield defaultData.answer.build()
+                } : defaultData.answer,
+                source: isPollExternalVotesourceFactory(defaultData.source) ? {
+                    create: yield defaultData.source.build()
+                } : defaultData.source
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().pollExternalVote.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().pollExternalVote.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PollExternalVote",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PollExternalVote} model.
@@ -7632,130 +4601,68 @@ function definePollExternalVoteFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PollExternalVoteFactoryInterface}
  */
-function definePollExternalVoteFactory(options) {
+export function definePollExternalVoteFactory(options) {
     return definePollExternalVoteFactoryInternal(options);
 }
-exports.definePollExternalVoteFactory = definePollExternalVoteFactory;
 function isEventimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
-function autoGenerateEventScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateEventScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Event", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        startsAt: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "Event", fieldName: "startsAt", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "Event", fieldName: "name", isId: false, isUnique: false, seq }),
+        startsAt: getScalarFieldValueGenerator().DateTime({ modelName: "Event", fieldName: "startsAt", isId: false, isUnique: false, seq })
     };
 }
-function defineEventFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Event", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateEventScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isEventimageFactory(defaultData.image)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.image.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.image;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.image = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineEventFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Event", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateEventScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isEventimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().event.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().event.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Event",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Event} model.
@@ -7763,143 +4670,72 @@ function defineEventFactoryInternal(_a) {
  * @param options
  * @returns factory {@link EventFactoryInterface}
  */
-function defineEventFactory(options) {
+export function defineEventFactory(options) {
     return defineEventFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineEventFactory = defineEventFactory;
 function isTaggedEventseventFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Event";
 }
 function isTaggedEventstagFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
 }
-function autoGenerateTaggedEventsScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateTaggedEventsScalarsOrEnums({ seq }) {
     return {};
 }
-function defineTaggedEventsFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("TaggedEvents", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateTaggedEventsScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isTaggedEventseventFactory(defaultData.event)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.event.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.event;
-                            _f.label = 4;
-                        case 4:
-                            _c.event = _a;
-                            if (!isTaggedEventstagFactory(defaultData.tag)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.tag.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.tag;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.tag = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineTaggedEventsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedEvents", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedEventsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                event: isTaggedEventseventFactory(defaultData.event) ? {
+                    create: yield defaultData.event.build()
+                } : defaultData.event,
+                tag: isTaggedEventstagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             eventId: inputData.eventId,
             tagId: inputData.tagId
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().taggedEvents.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedEvents.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "TaggedEvents",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link TaggedEvents} model.
@@ -7907,114 +4743,62 @@ function defineTaggedEventsFactoryInternal(_a) {
  * @param options
  * @returns factory {@link TaggedEventsFactoryInterface}
  */
-function defineTaggedEventsFactory(options) {
+export function defineTaggedEventsFactory(options) {
     return defineTaggedEventsFactoryInternal(options);
 }
-exports.defineTaggedEventsFactory = defineTaggedEventsFactory;
-function autoGenerateConsentScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateConsentScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Consent", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        slug: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "Consent", fieldName: "slug", isId: false, isUnique: true, seq: seq }),
-        defaultValue: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "Consent", fieldName: "defaultValue", isId: false, isUnique: false, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "Consent", fieldName: "name", isId: false, isUnique: false, seq }),
+        slug: getScalarFieldValueGenerator().String({ modelName: "Consent", fieldName: "slug", isId: false, isUnique: true, seq }),
+        defaultValue: getScalarFieldValueGenerator().Boolean({ modelName: "Consent", fieldName: "defaultValue", isId: false, isUnique: false, seq })
     };
 }
-function defineConsentFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("Consent", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateConsentScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineConsentFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Consent", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateConsentScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().consent.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().consent.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "Consent",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link Consent} model.
@@ -8022,144 +4806,73 @@ function defineConsentFactoryInternal(_a) {
  * @param options
  * @returns factory {@link ConsentFactoryInterface}
  */
-function defineConsentFactory(options) {
+export function defineConsentFactory(options) {
     return defineConsentFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineConsentFactory = defineConsentFactory;
 function isUserConsentconsentFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Consent";
 }
 function isUserConsentuserFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
 }
-function autoGenerateUserConsentScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateUserConsentScalarsOrEnums({ seq }) {
     return {
-        value: (0, internal_1.getScalarFieldValueGenerator)().Boolean({ modelName: "UserConsent", fieldName: "value", isId: false, isUnique: false, seq: seq })
+        value: getScalarFieldValueGenerator().Boolean({ modelName: "UserConsent", fieldName: "value", isId: false, isUnique: false, seq })
     };
 }
-function defineUserConsentFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("UserConsent", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateUserConsentScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isUserConsentconsentFactory(defaultData.consent)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.consent.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.consent;
-                            _f.label = 4;
-                        case 4:
-                            _c.consent = _a;
-                            if (!isUserConsentuserFactory(defaultData.user)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.user.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.user;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.user = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineUserConsentFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("UserConsent", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateUserConsentScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                consent: isUserConsentconsentFactory(defaultData.consent) ? {
+                    create: yield defaultData.consent.build()
+                } : defaultData.consent,
+                user: isUserConsentuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().userConsent.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().userConsent.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "UserConsent",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link UserConsent} model.
@@ -8167,129 +4880,67 @@ function defineUserConsentFactoryInternal(_a) {
  * @param options
  * @returns factory {@link UserConsentFactoryInterface}
  */
-function defineUserConsentFactory(options) {
+export function defineUserConsentFactory(options) {
     return defineUserConsentFactoryInternal(options);
 }
-exports.defineUserConsentFactory = defineUserConsentFactory;
 function isUserFlowMailmailTemplateFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "MailTemplate";
 }
-function autoGenerateUserFlowMailScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateUserFlowMailScalarsOrEnums({ seq }) {
     return {
         event: "ACCOUNT_CREATION"
     };
 }
-function defineUserFlowMailFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("UserFlowMail", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateUserFlowMailScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isUserFlowMailmailTemplateFactory(defaultData.mailTemplate)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.mailTemplate.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.mailTemplate;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.mailTemplate = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineUserFlowMailFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("UserFlowMail", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateUserFlowMailScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                mailTemplate: isUserFlowMailmailTemplateFactory(defaultData.mailTemplate) ? {
+                    create: yield defaultData.mailTemplate.build()
+                } : defaultData.mailTemplate
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().userFlowMail.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().userFlowMail.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "UserFlowMail",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link UserFlowMail} model.
@@ -8297,127 +4948,65 @@ function defineUserFlowMailFactoryInternal(_a) {
  * @param options
  * @returns factory {@link UserFlowMailFactoryInterface}
  */
-function defineUserFlowMailFactory(options) {
+export function defineUserFlowMailFactory(options) {
     return defineUserFlowMailFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineUserFlowMailFactory = defineUserFlowMailFactory;
 function isSubscriptionFlowmemberPlanFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "MemberPlan";
 }
-function autoGenerateSubscriptionFlowScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateSubscriptionFlowScalarsOrEnums({ seq }) {
     return {};
 }
-function defineSubscriptionFlowFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("SubscriptionFlow", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, data;
-                var _b, _c;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSubscriptionFlowScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _d.sent();
-                            _b = {};
-                            if (!isSubscriptionFlowmemberPlanFactory(defaultData.memberPlan)) return [3 /*break*/, 3];
-                            _c = {};
-                            return [4 /*yield*/, defaultData.memberPlan.build()];
-                        case 2:
-                            _a = (_c.create = _d.sent(),
-                                _c);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.memberPlan;
-                            _d.label = 4;
-                        case 4:
-                            defaultAssociations = (_b.memberPlan = _a,
-                                _b);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSubscriptionFlowFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("SubscriptionFlow", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSubscriptionFlowScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                memberPlan: isSubscriptionFlowmemberPlanFactory(defaultData.memberPlan) ? {
+                    create: yield defaultData.memberPlan.build()
+                } : defaultData.memberPlan
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().subscriptionFlow.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().subscriptionFlow.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "SubscriptionFlow",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link SubscriptionFlow} model.
@@ -8425,144 +5014,73 @@ function defineSubscriptionFlowFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SubscriptionFlowFactoryInterface}
  */
-function defineSubscriptionFlowFactory(options) {
+export function defineSubscriptionFlowFactory(options) {
     return defineSubscriptionFlowFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineSubscriptionFlowFactory = defineSubscriptionFlowFactory;
 function isSubscriptionIntervalmailTemplateFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "MailTemplate";
 }
 function isSubscriptionIntervalsubscriptionFlowFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "SubscriptionFlow";
 }
-function autoGenerateSubscriptionIntervalScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateSubscriptionIntervalScalarsOrEnums({ seq }) {
     return {
         event: "SUBSCRIBE"
     };
 }
-function defineSubscriptionIntervalFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("SubscriptionInterval", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, _a, _b, data;
-                var _c, _d, _e;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_f) {
-                    switch (_f.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateSubscriptionIntervalScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _f.sent();
-                            _c = {};
-                            if (!isSubscriptionIntervalmailTemplateFactory(defaultData.mailTemplate)) return [3 /*break*/, 3];
-                            _d = {};
-                            return [4 /*yield*/, defaultData.mailTemplate.build()];
-                        case 2:
-                            _a = (_d.create = _f.sent(),
-                                _d);
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _a = defaultData.mailTemplate;
-                            _f.label = 4;
-                        case 4:
-                            _c.mailTemplate = _a;
-                            if (!isSubscriptionIntervalsubscriptionFlowFactory(defaultData.subscriptionFlow)) return [3 /*break*/, 6];
-                            _e = {};
-                            return [4 /*yield*/, defaultData.subscriptionFlow.build()];
-                        case 5:
-                            _b = (_e.create = _f.sent(),
-                                _e);
-                            return [3 /*break*/, 7];
-                        case 6:
-                            _b = defaultData.subscriptionFlow;
-                            _f.label = 7;
-                        case 7:
-                            defaultAssociations = (_c.subscriptionFlow = _b,
-                                _c);
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineSubscriptionIntervalFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("SubscriptionInterval", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateSubscriptionIntervalScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                mailTemplate: isSubscriptionIntervalmailTemplateFactory(defaultData.mailTemplate) ? {
+                    create: yield defaultData.mailTemplate.build()
+                } : defaultData.mailTemplate,
+                subscriptionFlow: isSubscriptionIntervalsubscriptionFlowFactory(defaultData.subscriptionFlow) ? {
+                    create: yield defaultData.subscriptionFlow.build()
+                } : defaultData.subscriptionFlow
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().subscriptionInterval.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().subscriptionInterval.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "SubscriptionInterval",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link SubscriptionInterval} model.
@@ -8570,113 +5088,61 @@ function defineSubscriptionIntervalFactoryInternal(_a) {
  * @param options
  * @returns factory {@link SubscriptionIntervalFactoryInterface}
  */
-function defineSubscriptionIntervalFactory(options) {
+export function defineSubscriptionIntervalFactory(options) {
     return defineSubscriptionIntervalFactoryInternal(options);
 }
-exports.defineSubscriptionIntervalFactory = defineSubscriptionIntervalFactory;
-function autoGenerateMailTemplateScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateMailTemplateScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MailTemplate", fieldName: "name", isId: false, isUnique: false, seq: seq }),
-        externalMailTemplateId: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "MailTemplate", fieldName: "externalMailTemplateId", isId: false, isUnique: true, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "MailTemplate", fieldName: "name", isId: false, isUnique: false, seq }),
+        externalMailTemplateId: getScalarFieldValueGenerator().String({ modelName: "MailTemplate", fieldName: "externalMailTemplateId", isId: false, isUnique: true, seq })
     };
 }
-function defineMailTemplateFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("MailTemplate", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateMailTemplateScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineMailTemplateFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("MailTemplate", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateMailTemplateScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().mailTemplate.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().mailTemplate.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "MailTemplate",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link MailTemplate} model.
@@ -8684,112 +5150,60 @@ function defineMailTemplateFactoryInternal(_a) {
  * @param options
  * @returns factory {@link MailTemplateFactoryInterface}
  */
-function defineMailTemplateFactory(options) {
+export function defineMailTemplateFactory(options) {
     return defineMailTemplateFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineMailTemplateFactory = defineMailTemplateFactory;
-function autoGeneratePeriodicJobScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGeneratePeriodicJobScalarsOrEnums({ seq }) {
     return {
-        date: (0, internal_1.getScalarFieldValueGenerator)().DateTime({ modelName: "PeriodicJob", fieldName: "date", isId: false, isUnique: true, seq: seq })
+        date: getScalarFieldValueGenerator().DateTime({ modelName: "PeriodicJob", fieldName: "date", isId: false, isUnique: true, seq })
     };
 }
-function definePeriodicJobFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("PeriodicJob", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGeneratePeriodicJobScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function definePeriodicJobFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PeriodicJob", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePeriodicJobScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().periodicJob.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().periodicJob.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "PeriodicJob",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link PeriodicJob} model.
@@ -8797,112 +5211,60 @@ function definePeriodicJobFactoryInternal(_a) {
  * @param options
  * @returns factory {@link PeriodicJobFactoryInterface}
  */
-function definePeriodicJobFactory(options) {
+export function definePeriodicJobFactory(options) {
     return definePeriodicJobFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.definePeriodicJobFactory = definePeriodicJobFactory;
-function autoGenerateBlockStyleScalarsOrEnums(_a) {
-    var seq = _a.seq;
+function autoGenerateBlockStyleScalarsOrEnums({ seq }) {
     return {
-        name: (0, internal_1.getScalarFieldValueGenerator)().String({ modelName: "BlockStyle", fieldName: "name", isId: false, isUnique: true, seq: seq })
+        name: getScalarFieldValueGenerator().String({ modelName: "BlockStyle", fieldName: "name", isId: false, isUnique: true, seq })
     };
 }
-function defineBlockStyleFactoryInternal(_a) {
-    var _this = this;
-    var defaultDataResolver = _a.defaultData, _b = _a.traits, traitsDefs = _b === void 0 ? {} : _b;
-    var getFactoryWithTraits = function (traitKeys) {
-        if (traitKeys === void 0) { traitKeys = []; }
-        var seqKey = {};
-        var getSeq = function () { return (0, internal_1.getSequenceCounter)(seqKey); };
-        var screen = (0, internal_1.createScreener)("BlockStyle", modelFieldDefinitions);
-        var build = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var seq, requiredScalarData, resolveValue, defaultData, defaultAssociations, data;
-                var _this = this;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            seq = getSeq();
-                            requiredScalarData = autoGenerateBlockStyleScalarsOrEnums({ seq: seq });
-                            resolveValue = (0, internal_1.normalizeResolver)(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
-                            return [4 /*yield*/, traitKeys.reduce(function (queue, traitKey) { return __awaiter(_this, void 0, void 0, function () {
-                                    var acc, resolveTraitValue, traitData;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0: return [4 /*yield*/, queue];
-                                            case 1:
-                                                acc = _c.sent();
-                                                resolveTraitValue = (0, internal_1.normalizeResolver)((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
-                                                return [4 /*yield*/, resolveTraitValue({ seq: seq })];
-                                            case 2:
-                                                traitData = _c.sent();
-                                                return [2 /*return*/, __assign(__assign({}, acc), traitData)];
-                                        }
-                                    });
-                                }); }, resolveValue({ seq: seq }))];
-                        case 1:
-                            defaultData = _a.sent();
-                            defaultAssociations = {};
-                            data = __assign(__assign(__assign(__assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
-                            return [2 /*return*/, data];
-                    }
-                });
-            });
-        };
-        var buildList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return build(data); })); };
-        var pickForConnect = function (inputData) { return ({
+function defineBlockStyleFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("BlockStyle", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBlockStyleScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
             id: inputData.id
-        }); };
-        var create = function () {
-            var args_1 = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args_1[_i] = arguments[_i];
-            }
-            return __awaiter(_this, __spreadArray([], args_1, true), void 0, function (inputData) {
-                var data;
-                if (inputData === void 0) { inputData = {}; }
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, build(inputData).then(screen)];
-                        case 1:
-                            data = _a.sent();
-                            return [4 /*yield*/, (0, internal_1.getClient)().blockStyle.create({ data: data })];
-                        case 2: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            });
-        };
-        var createList = function (inputData) { return Promise.all((0, internal_1.normalizeList)(inputData).map(function (data) { return create(data); })); };
-        var createForConnect = function (inputData) {
-            if (inputData === void 0) { inputData = {}; }
-            return create(inputData).then(pickForConnect);
-        };
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().blockStyle.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
         return {
             _factoryFor: "BlockStyle",
-            build: build,
-            buildList: buildList,
+            build,
+            buildList,
             buildCreateInput: build,
-            pickForConnect: pickForConnect,
-            create: create,
-            createList: createList,
-            createForConnect: createForConnect,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
         };
     };
-    var factory = getFactoryWithTraits();
-    var useTraits = function (name) {
-        var names = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            names[_i - 1] = arguments[_i];
-        }
-        return getFactoryWithTraits(__spreadArray([name], names, true));
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
     };
-    return __assign(__assign({}, factory), { use: useTraits });
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
 }
 /**
  * Define factory for {@link BlockStyle} model.
@@ -8910,7 +5272,274 @@ function defineBlockStyleFactoryInternal(_a) {
  * @param options
  * @returns factory {@link BlockStyleFactoryInterface}
  */
-function defineBlockStyleFactory(options) {
+export function defineBlockStyleFactory(options) {
     return defineBlockStyleFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
-exports.defineBlockStyleFactory = defineBlockStyleFactory;
+function isBannerimageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
+}
+function autoGenerateBannerScalarsOrEnums({ seq }) {
+    return {
+        title: getScalarFieldValueGenerator().String({ modelName: "Banner", fieldName: "title", isId: false, isUnique: false, seq }),
+        text: getScalarFieldValueGenerator().String({ modelName: "Banner", fieldName: "text", isId: false, isUnique: false, seq })
+    };
+}
+function defineBannerFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Banner", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBannerScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                image: isBannerimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().banner.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "Banner",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link Banner} model.
+ *
+ * @param options
+ * @returns factory {@link BannerFactoryInterface}
+ */
+export function defineBannerFactory(options) {
+    return defineBannerFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isBannerActionbannerFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Banner";
+}
+function autoGenerateBannerActionScalarsOrEnums({ seq }) {
+    return {
+        label: getScalarFieldValueGenerator().String({ modelName: "BannerAction", fieldName: "label", isId: false, isUnique: false, seq }),
+        url: getScalarFieldValueGenerator().String({ modelName: "BannerAction", fieldName: "url", isId: false, isUnique: false, seq })
+    };
+}
+function defineBannerActionFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("BannerAction", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBannerActionScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                banner: isBannerActionbannerFactory(defaultData.banner) ? {
+                    create: yield defaultData.banner.build()
+                } : defaultData.banner
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().bannerAction.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "BannerAction",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link BannerAction} model.
+ *
+ * @param options
+ * @returns factory {@link BannerActionFactoryInterface}
+ */
+export function defineBannerActionFactory(options) {
+    return defineBannerActionFactoryInternal(options);
+}
+function autoGenerateCrowdfundingScalarsOrEnums({ seq }) {
+    return {
+        name: getScalarFieldValueGenerator().String({ modelName: "Crowdfunding", fieldName: "name", isId: false, isUnique: false, seq })
+    };
+}
+function defineCrowdfundingFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Crowdfunding", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCrowdfundingScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().crowdfunding.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "Crowdfunding",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link Crowdfunding} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingFactoryInterface}
+ */
+export function defineCrowdfundingFactory(options) {
+    return defineCrowdfundingFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isCrowdfundingGoalCrowdfundingFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Crowdfunding";
+}
+function autoGenerateCrowdfundingGoalScalarsOrEnums({ seq }) {
+    return {
+        title: getScalarFieldValueGenerator().String({ modelName: "CrowdfundingGoal", fieldName: "title", isId: false, isUnique: false, seq }),
+        amount: getScalarFieldValueGenerator().Int({ modelName: "CrowdfundingGoal", fieldName: "amount", isId: false, isUnique: false, seq })
+    };
+}
+function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("CrowdfundingGoal", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateCrowdfundingGoalScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                Crowdfunding: isCrowdfundingGoalCrowdfundingFactory(defaultData.Crowdfunding) ? {
+                    create: yield defaultData.Crowdfunding.build()
+                } : defaultData.Crowdfunding
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().crowdfundingGoal.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "CrowdfundingGoal",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link CrowdfundingGoal} model.
+ *
+ * @param options
+ * @returns factory {@link CrowdfundingGoalFactoryInterface}
+ */
+export function defineCrowdfundingGoalFactory(options) {
+    return defineCrowdfundingGoalFactoryInternal(options);
+}

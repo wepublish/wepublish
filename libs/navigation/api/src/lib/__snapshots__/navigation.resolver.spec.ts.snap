@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NavigationResolver Mutation: createNavigation 1`] = `
+exports[`NavigationResolver createNavigation 1`] = `
 {
   "data": {
     "createNavigation": {
@@ -12,7 +12,7 @@ exports[`NavigationResolver Mutation: createNavigation 1`] = `
 }
 `;
 
-exports[`NavigationResolver Mutation: deleteNavigation 1`] = `
+exports[`NavigationResolver deleteNavigation 1`] = `
 {
   "data": {
     "deleteNavigation": {
@@ -22,7 +22,41 @@ exports[`NavigationResolver Mutation: deleteNavigation 1`] = `
 }
 `;
 
-exports[`NavigationResolver Mutation: updateNavigation 1`] = `
+exports[`NavigationResolver navigation 1`] = `
+{
+  "data": {
+    "navigation": {
+      "id": "1",
+      "key": "main",
+      "links": [],
+      "name": "Main Navigation",
+    },
+  },
+}
+`;
+
+exports[`NavigationResolver navigations 1`] = `
+{
+  "data": {
+    "navigations": [
+      {
+        "id": "1",
+        "key": "main",
+        "links": [
+          {
+            "id": "1",
+            "label": "Foobar",
+            "type": "External",
+          },
+        ],
+        "name": "Main Navigation",
+      },
+    ],
+  },
+}
+`;
+
+exports[`NavigationResolver updateNavigation 1`] = `
 {
   "data": {
     "updateNavigation": {
@@ -30,93 +64,6 @@ exports[`NavigationResolver Mutation: updateNavigation 1`] = `
       "key": "updated",
       "name": "Updated Navigation",
     },
-  },
-}
-`;
-
-exports[`NavigationResolver Query: getNavigation by id 1`] = `
-{
-  "data": {
-    "getNavigationById": {
-      "id": "1",
-      "key": "main",
-      "links": [],
-      "name": "Main Navigation",
-    },
-  },
-}
-`;
-
-exports[`NavigationResolver Query: getNavigation by id: Not found 1`] = `
-{
-  "data": null,
-  "errors": [
-    {
-      "extensions": {
-        "code": "BAD_USER_INPUT",
-      },
-      "locations": [
-        {
-          "column": 5,
-          "line": 3,
-        },
-      ],
-      "message": "Navigation not found",
-      "path": [
-        "getNavigationById",
-      ],
-    },
-  ],
-}
-`;
-
-exports[`NavigationResolver Query: getNavigation by key 1`] = `
-{
-  "data": {
-    "getNavigationByKey": {
-      "id": "1",
-      "key": "main",
-      "links": [],
-      "name": "Main Navigation",
-    },
-  },
-}
-`;
-
-exports[`NavigationResolver Query: getNavigation by key: Not found 1`] = `
-{
-  "data": null,
-  "errors": [
-    {
-      "extensions": {
-        "code": "BAD_USER_INPUT",
-      },
-      "locations": [
-        {
-          "column": 5,
-          "line": 3,
-        },
-      ],
-      "message": "Navigation not found",
-      "path": [
-        "getNavigationByKey",
-      ],
-    },
-  ],
-}
-`;
-
-exports[`NavigationResolver Query: getNavigations list 1`] = `
-{
-  "data": {
-    "getNavigations": [
-      {
-        "id": "1",
-        "key": "main",
-        "links": [],
-        "name": "Main Navigation",
-      },
-    ],
   },
 }
 `;

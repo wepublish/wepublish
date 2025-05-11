@@ -1,17 +1,26 @@
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import styled from '@emotion/styled'
+import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {
-  ApiV1,
   FooterContainer,
   NavbarContainer,
-  NavbarIconButtonWrapper,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  NavbarIconButtonWrapper
+} from '@wepublish/navigation/website'
+import {
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -21,6 +30,7 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {CulturBreakBlock} from '../src/components/cultur-break'
 import {CulturTeaser} from '../src/components/cultur-teaser'
 import {Footer} from '../src/components/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
@@ -33,7 +43,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -93,7 +105,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
@@ -108,7 +120,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Footer={Footer}
           elements={{Link: NextWepublishLink}}
           blocks={{
-            Teaser: CulturTeaser
+            Teaser: CulturTeaser,
+            Break: CulturBreakBlock
           }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
@@ -128,13 +141,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+              <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+              <link rel="shortcut icon" href="/favicon.ico" />
               <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+              <meta name="apple-mobile-web-app-title" content="Cültür" />
               <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
             </Head>
 
             <Spacer>
@@ -143,7 +155,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                loginUrl={''}
+                loginBtn={null}
+                subscribeBtn={null}
               />
 
               <main>
@@ -159,15 +172,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </FooterContainer>
             </Spacer>
 
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
+            <RoutedAdminBar />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
@@ -176,8 +181,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(CustomApp)
 
 export {ConnectedApp as default}

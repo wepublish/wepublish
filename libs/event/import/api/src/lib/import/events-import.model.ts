@@ -19,7 +19,7 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-export class EventFromSource extends OmitType(Event, ['imageId', 'image'] as const) {
+export class EventFromSource extends OmitType(Event, ['imageId', 'image', 'url'] as const) {
   @Field({nullable: true})
   imageUrl?: string
 }

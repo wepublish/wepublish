@@ -1,4 +1,4 @@
-import {SortOrder} from '@wepublish/utils/api'
+import {DateFilterComparison, SortOrder} from '@wepublish/utils/api'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
@@ -8,7 +8,6 @@ import {
   GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
-import {DateFilterComparison} from '../db/common'
 
 export const GraphQLSortOrder = new GraphQLEnumType({
   name: 'SortOrder',

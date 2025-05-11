@@ -4,9 +4,8 @@ import {
   CanDeleteSubscriptionFlow,
   CanGetPaymentMethods,
   CanGetSubscriptionFlows,
-  CanUpdateSubscriptionFlow,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanUpdateSubscriptionFlow
+} from '@wepublish/permissions'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {
   PaymentMethod,
@@ -18,6 +17,7 @@ import {
 } from './subscription-flow.model'
 import {PrismaClient} from '@prisma/client'
 import {PaymentMethod} from '@wepublish/payment-method/api'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {
@@ -80,7 +80,11 @@ export class SubscriptionFlowResolver {
   @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentMethod], {description: `Returns all payment methods`})
   async paymentMethods() {
-    return await this.prismaService.paymentMethod.findMany({})
+    return this.prismaService.paymentMethod.findMany({
+      include: {
+        image: true
+      }
+    })
   }
 
   @ResolveField('numberOfSubscriptions', () => Int, {

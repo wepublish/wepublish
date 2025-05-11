@@ -1,5 +1,6 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, css, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, css} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderLoginFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
@@ -40,6 +41,8 @@ export function LoginForm({
   onSubmitLoginWithCredentials,
   loginWithEmail,
   onSubmitLoginWithEmail,
+  defaults,
+  disablePasswordLogin,
   className
 }: BuilderLoginFormProps) {
   const {
@@ -50,9 +53,9 @@ export function LoginForm({
   const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
+      email: defaults?.email || '',
       password: '',
-      requirePassword: false
+      requirePassword: defaults?.requirePassword || false
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
@@ -78,15 +81,17 @@ export function LoginForm({
 
   return (
     <LoginFormWrapper className={className}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={loginWithPassword}
-            onChange={event => setValue('requirePassword', event.target.checked)}
-          />
-        }
-        label="Login mit Passwort"
-      />
+      {!disablePasswordLogin && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={loginWithPassword}
+              onChange={event => setValue('requirePassword', event.target.checked)}
+            />
+          }
+          label="Login mit Passwort"
+        />
+      )}
 
       <LoginFormForm onSubmit={onSubmit}>
         <Controller

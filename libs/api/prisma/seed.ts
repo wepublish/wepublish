@@ -159,24 +159,13 @@ const seedSettings = (prisma: PrismaClient) =>
     }),
     prisma.setting.upsert({
       where: {
-        name: SettingName.HEAD_SCRIPT
+        name: SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED
       },
       update: {},
       create: {
-        name: SettingName.HEAD_SCRIPT,
-        value: '',
-        settingRestriction: {inputLength: 10000}
-      }
-    }),
-    prisma.setting.upsert({
-      where: {
-        name: SettingName.BODY_SCRIPT
-      },
-      update: {},
-      create: {
-        name: SettingName.BODY_SCRIPT,
-        value: '',
-        settingRestriction: {inputLength: 10000}
+        name: SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED,
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
       }
     }),
 
@@ -189,6 +178,16 @@ const seedSettings = (prisma: PrismaClient) =>
     prisma.setting.deleteMany({
       where: {
         name: 'invoiceFreqReminder'
+      }
+    }),
+    prisma.setting.deleteMany({
+      where: {
+        name: 'headScript'
+      }
+    }),
+    prisma.setting.deleteMany({
+      where: {
+        name: 'bodyScript'
       }
     })
   ] as const

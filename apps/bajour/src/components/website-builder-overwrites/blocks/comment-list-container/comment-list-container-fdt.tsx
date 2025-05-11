@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   CommentContent,
   CommentEditorWrapper,
@@ -7,7 +7,7 @@ import {
   CommentListItemActions,
   CommentListItemChildren,
   CommentWrapper
-} from '@wepublish/website'
+} from '@wepublish/comments/website'
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
   > ${CommentWrapper}:nth-of-type(-n + 2) {

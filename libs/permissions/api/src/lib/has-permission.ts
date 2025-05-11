@@ -1,11 +1,7 @@
-import {Permission, AllPermissions, EditorPermissions, PeerPermissions} from './permissions'
+import {UserRole} from '@prisma/client'
+import {Permission} from '@wepublish/permissions'
 
-export type PermissionsUserRole = {
-  id: string
-  permissionIDs: string[]
-}
-
-export function hasPermission(
+export function hasPermission<PermissionsUserRole extends Pick<UserRole, 'id' | 'permissionIDs'>>(
   neededPermissions: Permission | Permission[],
   userRoles: PermissionsUserRole[]
 ): boolean {
@@ -16,18 +12,9 @@ export function hasPermission(
       console.warn('Permission is deprecated', perm)
     }
 
-    const userPermissions = userRoles.reduce<string[]>((permissions, role) => {
-      switch (role.id) {
-        case 'admin':
-          return [...permissions, ...AllPermissions.map(permission => permission.id)]
-        case 'editor':
-          return [...permissions, ...EditorPermissions.map(permission => permission.id)]
-        case 'peer':
-          return [...permissions, ...PeerPermissions.map(permission => permission.id)]
-      }
-
-      return [...permissions, ...role.permissionIDs]
-    }, [])
+    const userPermissions = userRoles.flatMap(role => {
+      return role.permissionIDs
+    })
 
     return userPermissions.some(permission => permission === perm.id)
   })

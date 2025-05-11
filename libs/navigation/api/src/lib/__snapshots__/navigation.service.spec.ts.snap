@@ -12,9 +12,6 @@ exports[`NavigationService should create a navigation 1`] = `
       },
       "name": "testName",
     },
-    "include": {
-      "links": true,
-    },
   },
 ]
 `;
@@ -22,37 +19,8 @@ exports[`NavigationService should create a navigation 1`] = `
 exports[`NavigationService should delete a navigation by id 1`] = `
 [
   {
-    "include": {
-      "links": true,
-    },
     "where": {
       "id": "123",
-    },
-  },
-]
-`;
-
-exports[`NavigationService should get a navigation by id 1`] = `
-[
-  {
-    "include": {
-      "links": true,
-    },
-    "where": {
-      "id": "123",
-    },
-  },
-]
-`;
-
-exports[`NavigationService should get a navigation by key 1`] = `
-[
-  {
-    "include": {
-      "links": true,
-    },
-    "where": {
-      "key": "key123",
     },
   },
 ]
@@ -61,9 +29,6 @@ exports[`NavigationService should get a navigation by key 1`] = `
 exports[`NavigationService should get all navigations 1`] = `
 [
   {
-    "include": {
-      "links": true,
-    },
     "orderBy": {
       "createdAt": "desc",
     },
@@ -82,9 +47,6 @@ exports[`NavigationService should update a navigation 1`] = `
         },
       },
       "name": "testName",
-    },
-    "include": {
-      "links": true,
     },
     "where": {
       "id": "123",

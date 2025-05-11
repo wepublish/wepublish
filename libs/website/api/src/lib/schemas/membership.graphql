@@ -29,11 +29,27 @@ fragment FullMemberPlan on MemberPlan {
   }
 
   amountPerMonthMin
+  amountPerMonthTarget
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
   extendable
+
+  successPageId
+  # successPage {
+  #   url
+  # }
+
+  failPageId
+  # failPage {
+  #   url
+  # }
+
+  confirmationPageId
+  # confirmationPage {
+  #   url
+  # }
 }
 
 fragment FullPayment on Payment {
@@ -52,7 +68,7 @@ fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
   reason
 }
 
-fragment FullSubscription on Subscription {
+fragment FullSubscription on PublicSubscription {
   id
   url
 
@@ -76,8 +92,10 @@ fragment FullSubscription on Subscription {
   }
 
   properties {
-    ...FullProperty
+    ...FullPublicProperty
   }
+
+  canExtend
 }
 
 fragment FullInvoiceItem on InvoiceItem {
@@ -115,17 +133,17 @@ fragment FullInvoice on Invoice {
 }
 
 mutation Subscribe(
-  $memberPlanId: ID
+  $memberPlanId: String
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
   $monthlyAmount: Int!
-  $paymentMethodId: ID
+  $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PublicPropertiesInput!]
   $successURL: String
   $failureURL: String
-  $deactivateSubscriptionId: ID
+  $deactivateSubscriptionId: String
 ) {
   createSubscription(
     memberPlanID: $memberPlanId
@@ -144,9 +162,33 @@ mutation Subscribe(
   }
 }
 
+mutation Resubscribe(
+  $userId: String
+  $memberPlanId: String
+  $memberPlanSlug: Slug
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $subscriptionProperties: [PublicPropertiesInput!]
+) {
+  createSubscriptionWithConfirmation(
+    userId: $userId
+    memberPlanID: $memberPlanId
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+  )
+}
+
 mutation PayInvoice(
-  $invoiceId: ID!
-  $paymentMethodId: ID
+  $invoiceId: String!
+  $paymentMethodId: String
   $paymentMethodSlug: Slug
   $successURL: String
   $failureURL: String
@@ -164,7 +206,7 @@ mutation PayInvoice(
   }
 }
 
-mutation PaySubscription($subscriptionId: ID!, $successURL: String, $failureURL: String) {
+mutation PaySubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
   createPaymentFromSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
@@ -174,13 +216,13 @@ mutation PaySubscription($subscriptionId: ID!, $successURL: String, $failureURL:
   }
 }
 
-mutation CancelSubscription($subscriptionId: ID!) {
+mutation CancelSubscription($subscriptionId: String!) {
   cancelUserSubscription(id: $subscriptionId) {
     ...FullSubscription
   }
 }
 
-mutation ExtendSubscription($subscriptionId: ID!, $successURL: String, $failureURL: String) {
+mutation ExtendSubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
   extendSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
@@ -202,7 +244,7 @@ query Subscriptions {
   }
 }
 
-query CheckInvoiceStatus($id: ID!) {
+query CheckInvoiceStatus($id: String!) {
   checkInvoiceStatus(id: $id) {
     ...FullInvoice
   }
@@ -210,7 +252,7 @@ query CheckInvoiceStatus($id: ID!) {
 
 query MemberPlanList(
   $filter: MemberPlanFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder

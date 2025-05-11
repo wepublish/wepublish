@@ -1,7 +1,12 @@
-import {Field, ObjectType, registerEnumType, createUnionType} from '@nestjs/graphql'
-import {ID} from '@nestjs/graphql'
-import {AuthorV2 as Author} from '@wepublish/author/api'
-import {Event} from '@wepublish/event/api'
+import {Field, ObjectType, registerEnumType, createUnionType, InterfaceType} from '@nestjs/graphql'
+import {HasSubscription, PublicSubscription} from '@wepublish/membership/api'
+import {Article, HasArticleLc} from '@wepublish/article/api'
+import {Author, HasAuthor} from '@wepublish/author/api'
+import {Comment, HasComment} from '@wepublish/comments/api'
+import {Event, HasEventLc} from '@wepublish/event/api'
+import {HasPageLc, Page} from '@wepublish/page/api'
+import {FullPoll, HasPoll} from '@wepublish/poll/api'
+import {HasUserLc, User} from '@wepublish/user/api'
 
 export enum ActionType {
   ArticleCreated = 'articleCreated',
@@ -16,79 +21,86 @@ export enum ActionType {
 
 registerEnumType(ActionType, {name: 'ActionType'})
 
-@ObjectType()
-export class AbstractAction {
-  @Field(() => ID)
-  id!: string
-
+@InterfaceType()
+export class BaseAction<AT extends ActionType> {
   @Field(() => ActionType)
-  actionType!: ActionType
+  actionType!: AT
 
   @Field(() => Date)
   date!: Date
 }
 
-@ObjectType()
-export class ArticleCreatedAction extends AbstractAction {
-  // @Field(() => Article)
-  // article!: Article;
+@ObjectType({implements: [BaseAction, HasArticleLc]})
+export class ArticleCreatedAction
+  extends BaseAction<ActionType.ArticleCreated>
+  implements HasArticleLc
+{
+  articleId!: string
+  article!: Article
 }
 
-@ObjectType()
-export class PageCreatedAction extends AbstractAction {
-  // @Field(() => Page)
-  // page!: Page;
+@ObjectType({implements: [BaseAction, HasPageLc]})
+export class PageCreatedAction extends BaseAction<ActionType.PageCreated> implements HasPageLc {
+  pageId!: string
+  page!: Page
 }
 
-@ObjectType()
-export class CommentCreatedAction extends AbstractAction {
-  // @Field(() => Comment)
-  // comment!: Comment;
+@ObjectType({implements: [BaseAction, HasComment]})
+export class CommentCreatedAction
+  extends BaseAction<ActionType.CommentCreated>
+  implements HasComment
+{
+  commentId!: string
+  comment!: Comment
 }
 
-@ObjectType()
-export class PollStartedAction extends AbstractAction {
-  // @Field(() => Poll)
-  // poll!: Poll;
+@ObjectType({implements: [BaseAction, HasPoll]})
+export class PollStartedAction extends BaseAction<ActionType.PollStarted> implements HasPoll {
+  pollId!: string
+  poll!: FullPoll
 }
 
-@ObjectType()
-export class SubscriptionCreatedAction extends AbstractAction {
-  // @Field(() => Subscription)
-  // subscription!: Subscription;
+@ObjectType({implements: [BaseAction, HasSubscription]})
+export class SubscriptionCreatedAction
+  extends BaseAction<ActionType.SubscriptionCreated>
+  implements HasSubscription
+{
+  subscriptionId!: string
+  subscription!: PublicSubscription
 }
 
-@ObjectType()
-export class AuthorCreatedAction extends AbstractAction {
-  @Field(() => Author)
+@ObjectType({implements: [BaseAction, HasAuthor]})
+export class AuthorCreatedAction extends BaseAction<ActionType.AuthorCreated> implements HasAuthor {
+  authorId!: string
   author!: Author
 }
 
-@ObjectType()
-export class UserCreatedAction extends AbstractAction {
-  // @Field(() => User)
-  // user!: User;
+@ObjectType({implements: [BaseAction, HasUserLc]})
+export class UserCreatedAction extends BaseAction<ActionType.UserCreated> implements HasUserLc {
+  userId!: string
+  user!: User
 }
 
-@ObjectType()
-export class EventCreatedAction extends AbstractAction {
-  @Field(() => Event)
+@ObjectType({implements: [BaseAction, HasEventLc]})
+export class EventCreatedAction extends BaseAction<ActionType.EventCreated> implements HasEventLc {
+  eventId!: string
   event!: Event
 }
 
 export const Action = createUnionType({
   name: 'Action',
-  types: () => [
-    ArticleCreatedAction,
-    PageCreatedAction,
-    CommentCreatedAction,
-    PollStartedAction,
-    SubscriptionCreatedAction,
-    AuthorCreatedAction,
-    UserCreatedAction,
-    EventCreatedAction
-  ],
-  resolveType: (value: AbstractAction) => {
+  types: () =>
+    [
+      ArticleCreatedAction,
+      PageCreatedAction,
+      CommentCreatedAction,
+      PollStartedAction,
+      SubscriptionCreatedAction,
+      AuthorCreatedAction,
+      UserCreatedAction,
+      EventCreatedAction
+    ] as const,
+  resolveType: (value: BaseAction<ActionType>) => {
     switch (value.actionType) {
       case ActionType.ArticleCreated:
         return ArticleCreatedAction.name
@@ -107,6 +119,7 @@ export const Action = createUnionType({
       case ActionType.EventCreated:
         return EventCreatedAction.name
     }
-    throw new Error('Invalid data')
+
+    throw new Error(`Action ${value.actionType} not implemented!`)
   }
 })

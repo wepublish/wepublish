@@ -3,7 +3,6 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import request from 'supertest'
-import {expect} from '@storybook/jest'
 import {ActionService} from './action.service'
 import {ActionResolver} from './action.resolver'
 import {UserSession} from '@wepublish/authentication/api'
@@ -36,8 +35,8 @@ const actionsQuery = `
   query Actions {
     actions {
       __typename
-  
-  
+
+
       ... on EventCreatedAction {
           date
           event {

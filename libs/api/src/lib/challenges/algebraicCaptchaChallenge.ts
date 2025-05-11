@@ -31,7 +31,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
 
   // FOR TESTING PURPOSES ONLY
   // saves one pair of full text challengeID and answer
-  private testingChallengeAnswer: TestingChallengeAnswer
+  private testingChallengeAnswer?: TestingChallengeAnswer
 
   constructor(
     challengeSecret: string,
@@ -86,7 +86,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
 
   async validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn> {
     // Decode challengeID
-    const decoded = Buffer.from(props.challengeID, 'base64').toString('utf-8')
+    const decoded = Buffer.from(props.challengeID ?? '', 'base64').toString('utf-8')
     const secret = decoded.split(';')
     const time = parseInt(secret[0])
     const hash = secret[1]
@@ -130,7 +130,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
    * FOR TESTING PURPOSES ONLY
    * Getting one pair of id and answer in clear text.
    */
-  public getTestingChallengeAnswer(): TestingChallengeAnswer {
+  public getTestingChallengeAnswer(): TestingChallengeAnswer | undefined {
     return this.testingChallengeAnswer
   }
 }

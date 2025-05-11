@@ -1,13 +1,5 @@
-import {
-  ObjectType,
-  Field,
-  InputType,
-  ArgsType,
-  registerEnumType,
-  ID,
-  Directive
-} from '@nestjs/graphql'
-import {GraphQLSlug, PaginatedArgsType, PaginatedType, SortOrder} from '@wepublish/utils/api'
+import {ArgsType, Field, ID, InputType, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {PaginatedArgsType, PaginatedType, SortOrder} from '@wepublish/utils/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Node} from 'slate'
 
@@ -22,9 +14,8 @@ registerEnumType(AuthorSort, {
 })
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Author {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -36,7 +27,7 @@ export class Author {
   @Field()
   name!: string
 
-  @Field(() => GraphQLSlug)
+  @Field()
   slug!: string
 
   @Field({nullable: true})
@@ -48,12 +39,12 @@ export class Author {
   @Field({nullable: true})
   imageID?: string
 
-  @Field(() => [AuthorLink], {nullable: true})
-  links?: AuthorLink[]
+  @Field(() => [AuthorsLink], {nullable: true})
+  links?: AuthorsLink[]
 }
 
 @ObjectType()
-export class AuthorLink {
+export class AuthorsLink {
   @Field()
   id!: string
 
@@ -105,7 +96,7 @@ export class AuthorFilter {
   @Field({nullable: true})
   name?: string
 
-  @Field(() => [ID], {nullable: true})
+  @Field(() => [String], {nullable: true})
   tagIds?: string[]
 }
 
@@ -126,7 +117,7 @@ export class CreateAuthorInput {
   @Field()
   name!: string
 
-  @Field(() => GraphQLSlug)
+  @Field()
   slug!: string
 
   @Field({nullable: true})
@@ -159,7 +150,7 @@ export class UpdateAuthorInput {
   @Field({nullable: true})
   name?: string
 
-  @Field(() => GraphQLSlug, {nullable: true})
+  @Field({nullable: true})
   slug?: string
 
   @Field({nullable: true})

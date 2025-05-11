@@ -82,6 +82,22 @@ const theme = createTheme(WePTheme, {
           borderRadius: 4
         }
       }
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: '#383A4D',
+          textDecorationColor: 'currentColor'
+        }
+      }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          color: '#383A4D',
+          borderColor: 'currentColor'
+        }
+      }
     }
   }
 } as PartialDeep<Theme> | ThemeOptions)

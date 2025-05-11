@@ -2,6 +2,8 @@ import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
 import {GoogleAnalyticsConfig} from '@wepublish/api'
+import StipeType from 'stripe'
+import {ProLitterisCountPixelProps, TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
 
 type General = {
   apolloPlayground: boolean
@@ -61,6 +63,7 @@ type Stripe = {
   offSessionPayments: boolean
   secretKey: string
   webhookEndpointSecret: string
+  methods: StipeType.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 type StripeCheckout = {
@@ -70,6 +73,7 @@ type StripeCheckout = {
   offSessionPayments: boolean
   secretKey: string
   webhookEndpointSecret: string
+  methods: StipeType.Checkout.SessionCreateParams.PaymentMethodType[]
 }
 
 type Bexio = {
@@ -147,7 +151,14 @@ type AlgebraicCaptcha = {
 type Turnstile = {
   type: 'turnstile'
   secret: string
+  siteKey: string
 }
+
+type ProLitteris = ProLitterisCountPixelProps & {
+  type: 'prolitteris'
+}
+
+type TrackingPixels = ProLitteris & Omit<TrackingPixelProvider, 'createPixelUri'>
 
 type Config = {
   general: General
@@ -156,6 +167,7 @@ type Config = {
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
   challenge: AlgebraicCaptcha | Turnstile
+  trackingPixelProviders: TrackingPixels[]
   ga?: GoogleAnalyticsConfig
 }
 

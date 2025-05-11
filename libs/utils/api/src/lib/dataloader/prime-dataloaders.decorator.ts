@@ -8,15 +8,19 @@ export interface Primeable<T> {
   loadMany: DataLoader<string, T | null>['loadMany']
 }
 
-export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T>) {
+export function PrimeDataLoader<T extends Primeable<unknown>>(
+  dataloader: Type<T>,
+  primeKey = 'id'
+) {
   const decoratorFactory = (
     target: object,
     propertyKey: unknown,
     descriptor: PropertyDescriptor
   ) => {
     const origin = descriptor.value
+    const injectProperty = `__DATALOADER__${dataloader.name}`
     const injectDataloader = Inject(dataloader)
-    injectDataloader(target, `__DATALOADER__${dataloader.name}`)
+    injectDataloader(target, injectProperty)
 
     descriptor.value = async function (...args: unknown[]) {
       const resultItem = await origin.apply(this, args)
@@ -31,13 +35,11 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T
         ? resultItem.nodes
         : [resultItem]
 
-      console.log({results})
       for (const result of results) {
         if ('id' in result) {
           const that = this as any
-          const loader = that[`__DATALOADER__${dataloader.name}`] as T
-          console.log({loader})
-          loader.prime(result.id, result)
+          const loader = that[injectProperty] as T
+          loader.prime(result[primeKey], result)
         }
       }
 

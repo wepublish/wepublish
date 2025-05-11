@@ -1,8 +1,10 @@
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {
-  Invoice,
+  FullInvoiceFragment,
+  FullMemberPlanFragment,
   useCheckInvoiceStatusLazyQuery,
   useInvoicesQuery,
+  usePageLazyQuery,
   usePayInvoiceMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -10,18 +12,12 @@ import {produce} from 'immer'
 import {useMemo, useState} from 'react'
 
 export type InvoiceListContainerProps = {
-  successURL: string
-  failureURL: string
-  filter?: (invoices: Invoice[]) => Invoice[]
+  filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[]
 } & BuilderContainerProps
 
-export function InvoiceListContainer({
-  filter,
-  successURL,
-  failureURL,
-  className
-}: InvoiceListContainerProps) {
+export function InvoiceListContainer({filter, className}: InvoiceListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
   const {InvoiceList} = useWebsiteBuilder()
   const [checkInvoice, {loading: loadingCheckInvoice}] = useCheckInvoiceStatusLazyQuery()
   const {
@@ -30,8 +26,8 @@ export function InvoiceListContainer({
     error
   } = useInvoicesQuery({
     onCompleted(data) {
-      for (const {id, paidAt} of data.invoices) {
-        if (paidAt) {
+      for (const {id, paidAt, canceledAt} of data.invoices) {
+        if (paidAt || canceledAt) {
           continue
         }
 
@@ -60,6 +56,10 @@ export function InvoiceListContainer({
     }
   })
 
+  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
+  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
+  const [fetchPage] = usePageLazyQuery()
+
   const filteredInvoices = useMemo(
     () =>
       produce(data, draftData => {
@@ -80,8 +80,20 @@ export function InvoiceListContainer({
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
-            onClose={success => {
-              window.location.href = success ? successURL : failureURL
+            onClose={async success => {
+              if (stripeMemberPlan) {
+                const page = await fetchPage({
+                  variables: {
+                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
+                  }
+                })
+
+                window.location.href = page.data?.page.url ?? ''
+
+                // window.location.href = success
+                //   ? stripeMemberPlan.successPage?.url ?? ''
+                //   : stripeMemberPlan.failPage?.url ?? ''
+              }
             }}
           />
         </StripeElement>
@@ -93,12 +105,31 @@ export function InvoiceListContainer({
         error={error}
         className={className}
         onPay={async (invoiceId, paymentMethodId) => {
+          const memberPlan = filteredInvoices?.invoices?.find(invoice => invoice.id === invoiceId)
+            ?.subscription?.memberPlan
+          setStripeMemberPlan(memberPlan)
+
+          const [successPage, failPage] = await Promise.all([
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            }),
+            fetchPage({
+              variables: {
+                id: memberPlan?.successPageId
+              }
+            })
+          ])
+
           await pay({
             variables: {
               invoiceId,
               paymentMethodId,
-              failureURL,
-              successURL
+              successURL: successPage.data?.page.url,
+              failureURL: failPage.data?.page.url
+              // failureURL: memberPlan?.failPage?.url,
+              // successURL: memberPlan?.successPage?.url
             }
           })
         }}

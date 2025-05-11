@@ -3,22 +3,16 @@
 exports[`GoogleAnalyticsService should filter pages out 1`] = `
 [
   {
-    "include": {
-      "published": {
-        "select": {
-          "slug": true,
-        },
-      },
-    },
     "where": {
-      "published": {
-        "slug": {
-          "in": [
-            "barfoo",
-            "bazfoo",
-          ],
-          "mode": "insensitive",
-        },
+      "publishedAt": {
+        "not": null,
+      },
+      "slug": {
+        "in": [
+          "bazfoo",
+          "barfoo",
+        ],
+        "mode": "insensitive",
       },
     },
   },
@@ -29,12 +23,7 @@ exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
 [
   {
     "published": {
-      "slug": "bazfoo",
-    },
-  },
-  {
-    "published": {
-      "slug": "foobaz",
+      "slug": "foobar",
     },
   },
   {
@@ -44,7 +33,12 @@ exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
   },
   {
     "published": {
-      "slug": "foobar",
+      "slug": "bazfoo",
+    },
+  },
+  {
+    "published": {
+      "slug": "foobaz",
     },
   },
 ]
@@ -53,24 +47,18 @@ exports[`GoogleAnalyticsService should get articles by popularity 1`] = `
 exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
 [
   {
-    "include": {
-      "published": {
-        "select": {
-          "slug": true,
-        },
-      },
-    },
     "where": {
-      "published": {
-        "slug": {
-          "in": [
-            "foobar",
-            "barfoo",
-            "bazfoo",
-            "foobaz",
-          ],
-          "mode": "insensitive",
-        },
+      "publishedAt": {
+        "not": null,
+      },
+      "slug": {
+        "in": [
+          "bazfoo",
+          "foobaz",
+          "barfoo",
+          "foobar",
+        ],
+        "mode": "insensitive",
       },
     },
   },
@@ -80,22 +68,16 @@ exports[`GoogleAnalyticsService should get articles by popularity 2`] = `
 exports[`GoogleAnalyticsService should have a working pagination 1`] = `
 [
   {
-    "include": {
-      "published": {
-        "select": {
-          "slug": true,
-        },
-      },
-    },
     "where": {
-      "published": {
-        "slug": {
-          "in": [
-            "barfoo",
-            "bazfoo",
-          ],
-          "mode": "insensitive",
-        },
+      "publishedAt": {
+        "not": null,
+      },
+      "slug": {
+        "in": [
+          "foobaz",
+          "barfoo",
+        ],
+        "mode": "insensitive",
       },
     },
   },

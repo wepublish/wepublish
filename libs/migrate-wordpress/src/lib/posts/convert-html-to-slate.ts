@@ -3,49 +3,36 @@ import {jsx} from 'slate-hyperscript'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {Element, Mark} from '@graphcms/rich-text-types'
 import * as jsdom from 'jsdom'
-
-enum TAG {
-  'heading-one' = 'heading-one',
-  'heading-two' = 'heading-two',
-  'heading-three' = 'heading-three',
-  'paragraph' = 'paragraph',
-  'unordered-list' = 'unordered-list',
-  'ordered-list' = 'ordered-list',
-  'list-item' = 'list-item',
-  'link' = 'link',
-  'table' = 'table',
-  'table-row' = 'table-row',
-  'table-cell' = 'table-cell'
-}
+import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 
 type AttributesType = Omit<Element, 'children'>
 
 const ELEMENT_TAGS: Record<HTMLElement['nodeName'], (el: HTMLElement) => AttributesType> = {
-  LI: () => ({type: TAG['list-item']}),
-  OL: () => ({type: TAG['ordered-list']}),
-  UL: () => ({type: TAG['unordered-list']}),
-  P: () => ({type: TAG['paragraph']}),
+  LI: () => ({type: BlockFormat.ListItem}),
+  OL: () => ({type: BlockFormat.OrderedList}),
+  UL: () => ({type: BlockFormat.UnorderedList}),
+  P: () => ({type: BlockFormat.Paragraph}),
   A: el => {
     return {
-      type: TAG['link'],
+      type: InlineFormat.Link,
       url: sanitizeUrl(el.getAttribute('href') ?? ''),
       ...(el.hasAttribute('title') && {title: el.getAttribute('title')}),
       ...(el.hasAttribute('name') && {id: el.getAttribute('name')})
     }
   },
 
-  BLOCKQUOTE: () => ({type: TAG.paragraph}),
-  H1: () => ({type: TAG['heading-one']}),
-  H2: () => ({type: TAG['heading-two']}),
-  H3: () => ({type: TAG['heading-three']}),
-  H4: () => ({type: TAG['heading-three']}),
-  H5: () => ({type: TAG['heading-three']}),
-  H6: () => ({type: TAG['heading-three']}),
-  TABLE: () => ({type: TAG['table']}),
+  BLOCKQUOTE: () => ({type: BlockFormat.Paragraph}),
+  H1: () => ({type: BlockFormat.H1}),
+  H2: () => ({type: BlockFormat.H2}),
+  H3: () => ({type: BlockFormat.H3}),
+  H4: () => ({type: BlockFormat.H3}),
+  H5: () => ({type: BlockFormat.H3}),
+  H6: () => ({type: BlockFormat.H3}),
+  TABLE: () => ({type: BlockFormat.Table}),
   // THEAD: () => ({ type: 'table_head' }),
   // TBODY: () => ({ type: 'table_body' }),
-  TR: () => ({type: TAG['table-row']}),
-  TD: () => ({type: TAG['table-cell']}),
+  TR: () => ({type: BlockFormat.TableRow}),
+  TD: () => ({type: BlockFormat.TableCell}),
   // TH: () => ({ type: 'table_header_cell' }),
   IMG: el => {
     const title = el.getAttribute('alt')
@@ -57,7 +44,7 @@ const ELEMENT_TAGS: Record<HTMLElement['nodeName'], (el: HTMLElement) => Attribu
       text: title
     }
   },
-  PRE: () => ({type: TAG['paragraph']}),
+  PRE: () => ({type: BlockFormat.Paragraph}),
   IFRAME: el => {
     const src = el.getAttribute('src')
     if (!src) return {}
@@ -115,7 +102,7 @@ function deserialize<
   } else if (el.nodeName === 'BR') {
     // wrap parentless breaks in a paragraph
     if (el.parentElement?.nodeName === 'BODY') {
-      return jsx('element', {type: TAG['paragraph']}, [{text: ''}])
+      return jsx('element', {type: BlockFormat.Paragraph}, [{text: ''}])
     } else {
       return '\n'
     }
@@ -148,22 +135,22 @@ function deserialize<
     const level = el.attributes.getNamedItem('aria-level')?.value
     switch (level) {
       case '1': {
-        return jsx('element', {type: TAG['heading-one']}, children)
+        return jsx('element', {type: BlockFormat.H1}, children)
       }
       case '2': {
-        return jsx('element', {type: TAG['heading-two']}, children)
+        return jsx('element', {type: BlockFormat.H2}, children)
       }
       case '3': {
-        return jsx('element', {type: TAG['heading-three']}, children)
+        return jsx('element', {type: BlockFormat.H3}, children)
       }
       case '4': {
-        return jsx('element', {type: TAG['heading-three']}, children)
+        return jsx('element', {type: BlockFormat.H3}, children)
       }
       case '5': {
-        return jsx('element', {type: TAG['heading-three']}, children)
+        return jsx('element', {type: BlockFormat.H3}, children)
       }
       case '6': {
-        return jsx('element', {type: TAG['heading-three']}, children)
+        return jsx('element', {type: BlockFormat.H3}, children)
       }
 
       default:
@@ -180,14 +167,16 @@ function deserialize<
           SlateElement.isElement(item) &&
           // if element has a nested list as a child, all children must be wrapped in individual list-item-child nodes
           // TODO: sync with GCMS types for Slate elements
-          (item['type'] === TAG['ordered-list'] || item['type'] === TAG['unordered-list'])
+          (item['type'] === BlockFormat.OrderedList || item['type'] === BlockFormat.UnorderedList)
       )
       if (hasNestedListChild) {
-        const wrappedChildren = children.map(item => jsx('element', {type: TAG['list-item']}, item))
+        const wrappedChildren = children.map(item =>
+          jsx('element', {type: BlockFormat.ListItem}, item)
+        )
         return jsx('element', attrs, wrappedChildren)
       }
       // in any case we add a single list-item-child containing the children
-      const child = jsx('element', {type: TAG['list-item']}, children)
+      const child = jsx('element', {type: BlockFormat.ListItem}, children)
       return jsx('element', attrs, [child])
     } else if (nodeName === 'TR') {
       if (
@@ -196,10 +185,10 @@ function deserialize<
       ) {
         return [
           {
-            type: TAG['table-cell'],
+            type: BlockFormat.TableCell,
             children: [
               {
-                type: TAG['paragraph'],
+                type: BlockFormat.Paragraph,
                 children: [{text: el.textContent ? el.textContent : ''}]
               }
             ]
@@ -211,10 +200,10 @@ function deserialize<
         (el as HTMLTableRowElement).cells.length === 0
           ? [
               {
-                type: TAG['table-cell'],
+                type: BlockFormat.TableCell,
                 children: [
                   {
-                    type: TAG['paragraph'],
+                    type: BlockFormat.Paragraph,
                     children: [{text: el.textContent ? el.textContent : ''}]
                   }
                 ]
@@ -228,7 +217,7 @@ function deserialize<
       if (childNodes.length === 0) {
         return jsx('element', attrs, [
           {
-            type: TAG['paragraph'],
+            type: BlockFormat.Paragraph,
             children: [{text: ''}]
           }
         ])
@@ -248,7 +237,7 @@ function deserialize<
       child => (isElementNode(child) && isInlineElement(child)) || isTextNode(child)
     )
     if (isParagraph) {
-      return jsx('element', {type: TAG['paragraph']}, children)
+      return jsx('element', {type: BlockFormat.Paragraph}, children)
     }
   }
 
@@ -257,7 +246,7 @@ function deserialize<
     // Handle users copying parts of paragraphs
     // When they copy multiple paragraphs we don't need to do anything, because all spans have block parents in that case
     if (!parentElement || parentElement.nodeName === 'BODY') {
-      return jsx('element', {type: TAG['paragraph']}, children)
+      return jsx('element', {type: BlockFormat.Paragraph}, children)
     }
     const element = el as HTMLElement
 
@@ -293,7 +282,7 @@ function deserialize<
       if (isChildNode(child, global)) return child
 
       if (SlateElement.isElement(child) && !SlateText.isText(child)) {
-        child.children = child.children.map(c => ({...c, ...attrs}))
+        child.children = child.children.map(c => ({...c, ...attrs} as any))
         return child
       }
 

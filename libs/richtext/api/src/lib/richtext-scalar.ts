@@ -1,29 +1,7 @@
+import {BlockFormat, InlineFormat, TextFormat} from '@wepublish/richtext'
 import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
 import {is} from 'ramda'
-
-export enum ElementNodeType {
-  H1 = 'heading-one',
-  H2 = 'heading-two',
-  H3 = 'heading-three',
-  Paragraph = 'paragraph',
-  UnorderedList = 'unordered-list',
-  OrderedList = 'ordered-list',
-  ListItem = 'list-item',
-  Link = 'link',
-  Table = 'table',
-  TableRow = 'table-row',
-  TableCell = 'table-cell'
-}
-
-export enum TextNodeFields {
-  Text = 'text',
-  Bold = 'bold',
-  Italic = 'italic',
-  Underline = 'underline',
-  Strikethrough = 'strikethrough',
-  Superscript = 'superscript',
-  Subscript = 'subscript'
-}
+import {Element, Text} from 'slate'
 
 export enum ElementNodeFields {
   Type = 'type',
@@ -42,27 +20,27 @@ export enum TableCellNodeFields {
 
 export interface RichTextBlockNode {
   readonly type:
-    | ElementNodeType.H1
-    | ElementNodeType.H2
-    | ElementNodeType.H3
-    | ElementNodeType.Paragraph
-    | ElementNodeType.UnorderedList
-    | ElementNodeType.OrderedList
-    | ElementNodeType.ListItem
-    | ElementNodeType.Table
-    | ElementNodeType.TableRow
+    | BlockFormat.H1
+    | BlockFormat.H2
+    | BlockFormat.H3
+    | BlockFormat.Paragraph
+    | BlockFormat.UnorderedList
+    | BlockFormat.OrderedList
+    | BlockFormat.ListItem
+    | BlockFormat.Table
+    | BlockFormat.TableRow
 
   readonly children: RichTextNode[]
 }
 
 export interface RichTextTableCellNode {
-  readonly type: ElementNodeType.TableCell
+  readonly type: BlockFormat.TableCell
   readonly borderColor: string
   readonly children: RichTextNode[]
 }
 
 export interface RichTextLinkNode {
-  readonly type: ElementNodeType.Link
+  readonly type: InlineFormat.Link
   readonly url: string
   readonly title?: string
   readonly children: RichTextNode[]
@@ -103,7 +81,7 @@ export function createRichTextError(message: string, path: string[]) {
   return new Error(path.length > 0 ? `Error at path "${path.join('.')}": ${message}` : message)
 }
 
-const TextNodeFieldsArr: string[] = Object.values(TextNodeFields)
+const TextNodeFieldsArr: string[] = [...Object.values(TextFormat), 'text']
 const ElmentNodeFieldsArr: string[] = Object.values(ElementNodeFields)
 
 const LinkNodeFieldsArr: string[] = [
@@ -116,15 +94,15 @@ const TableCellNodeFieldsArr: string[] = [
   ...Object.values(TableCellNodeFields)
 ]
 
-const ElementNodeTypeArr: string[] = Object.values(ElementNodeType)
+const BlockFormatArr: string[] = [...Object.values(BlockFormat), ...Object.values(InlineFormat)]
 
 export function parseRichTextNode(value: unknown, path: string[] = []): RichTextNode {
   if (!is(Object, value)) {
     throw createRichTextError(`Expected object, found ${value}.`, path)
   }
 
-  const isTextNode = value.text != undefined
-  const isElementNode = value.children != undefined
+  const isTextNode = Text.isText(value)
+  const isElementNode = Element.isElement(value)
 
   if (isTextNode && isElementNode) {
     throw createRichTextError(`Field "text" and "children" are mutually exclusive.`, path)
@@ -181,8 +159,8 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       value.subscript != undefined ? {subscript: value.subscript as boolean} : {}
     )
   } else {
-    const isLinkNode = value.type === ElementNodeType.Link
-    const isTableCellNode = value.type === ElementNodeType.TableCell
+    const isLinkNode = value.type === InlineFormat.Link
+    const isTableCellNode = value.type === BlockFormat.TableCell
 
     for (const field of Object.keys(value)) {
       if (isLinkNode) {
@@ -204,17 +182,17 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       throw createRichTextError(`Expected array found ${value.children}`, [...path, 'children'])
     }
 
-    if (!is(String, value.type) || !ElementNodeTypeArr.includes(value.type)) {
+    if (!is(String, value.type) || !BlockFormatArr.includes(value.type)) {
       throw createRichTextError(
-        `Expected one of ${JSON.stringify(ElementNodeTypeArr)} found ${value.type}`,
+        `Expected one of ${JSON.stringify(BlockFormatArr)} found ${value.type}`,
         [...path, 'type']
       )
     }
 
-    const type = value.type as ElementNodeType
+    const type = value.type as BlockFormat | InlineFormat
 
     switch (type) {
-      case ElementNodeType.Link: {
+      case InlineFormat.Link: {
         if (!is(String, value.url)) {
           // TODO: Check URL for malicious content.
           throw createRichTextError(`Expected string found ${value.url}`, [...path, 'url'])
@@ -237,7 +215,7 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
         )
       }
 
-      case ElementNodeType.TableCell: {
+      case BlockFormat.TableCell: {
         if (!is(String, value.borderColor)) {
           // TODO: Check URL for malicious content.
           throw createRichTextError(`Expected string found ${value.borderColor}`, [

@@ -6,12 +6,12 @@ import {NavigationService} from './navigation.service'
 import {NavigationResolver} from './navigation.resolver'
 import {PrismaClient} from '@prisma/client'
 import request from 'supertest'
-import {expect} from '@storybook/jest'
-import {NavigationDataloader} from './navigation.dataloader'
+import {NavigationDataloaderService} from './navigation-dataloader.service'
+import {BaseNavigationLink, NavigationLinkType} from './navigation.model'
 
 const navigationQueryById = `
-  query GetNavigationById($id: ID!) {
-    getNavigationById(id: $id) {
+  query Navigation($id: String!) {
+    navigation(id: $id) {
       id
       key
       name
@@ -22,37 +22,11 @@ const navigationQueryById = `
         ... on ArticleNavigationLink{
           articleID
         }
-        
-        ... on PageNavigationLink{
-          pageID
-        }
-        
-        ... on ExternalNavigationLink{
-          url
-        }
-      }
-    }
-  }
-`
 
-const navigationQueryByKey = `
-  query GetNavigationByKey($key: String!) {
-    getNavigationByKey(key: $key) {
-      id
-      key
-      name
-      links {
-        id
-        label
-        type
-        ... on ArticleNavigationLink{
-          articleID
-        }
-        
         ... on PageNavigationLink{
           pageID
         }
-        
+
         ... on ExternalNavigationLink{
           url
         }
@@ -62,8 +36,8 @@ const navigationQueryByKey = `
 `
 
 const navigationListQuery = `
-  query GetNavigations {
-    getNavigations {
+  query Navigations {
+    navigations {
       id
       key
       name
@@ -77,8 +51,8 @@ const navigationListQuery = `
 `
 
 const createNavigationMutation = `
-  mutation CreateNavigation($navigation: CreateNavigationInput!) {
-    createNavigation(navigation: $navigation) {
+  mutation CreateNavigation($key: String!, $name: String!, $links: [NavigationLinkInput!]!) {
+    createNavigation(key: $key, name: $name, links: $links) {
       id
       key
       name
@@ -87,17 +61,22 @@ const createNavigationMutation = `
 `
 
 const updateNavigationMutation = `
-  mutation UpdateNavigation($navigation: UpdateNavigationInput!) {
-    updateNavigation(navigation: $navigation) {
-        id
-        key
-        name
+  mutation UpdateNavigation(
+    $id: String!
+    $key: String!
+    $name: String!
+    $links: [NavigationLinkInput!]!
+  ) {
+    updateNavigation(id: $id, key: $key, name: $name, links: $links) {
+      id
+      key
+      name
     }
   }
 `
 
 const deleteNavigationMutation = `
-  mutation DeleteNavigation($id: ID!) {
+  mutation DeleteNavigation($id: String!) {
     deleteNavigation(id: $id) {
       id
     }
@@ -107,18 +86,18 @@ const deleteNavigationMutation = `
 describe('NavigationResolver', () => {
   let app: INestApplication
   let navigationServiceMock: {[method in keyof NavigationService]?: jest.Mock}
-  let navigationDataloader: {[method in keyof NavigationDataloader]?: jest.Mock}
+  let navigationDataloaderService: {[method in keyof NavigationDataloaderService]?: jest.Mock}
 
   beforeEach(async () => {
     navigationServiceMock = {
-      getNavigationByKey: jest.fn(),
       getNavigations: jest.fn(),
       createNavigation: jest.fn(),
       deleteNavigationById: jest.fn(),
-      updateNavigation: jest.fn()
+      updateNavigation: jest.fn(),
+      getNavigationLinks: jest.fn()
     }
 
-    navigationDataloader = {
+    navigationDataloaderService = {
       load: jest.fn()
     }
 
@@ -132,7 +111,7 @@ describe('NavigationResolver', () => {
       ],
       providers: [
         NavigationResolver,
-        {provide: NavigationDataloader, useValue: navigationDataloader},
+        {provide: NavigationDataloaderService, useValue: navigationDataloaderService},
         {provide: NavigationService, useValue: navigationServiceMock},
         {provide: PrismaClient, useValue: jest.fn()}
       ]
@@ -146,40 +125,10 @@ describe('NavigationResolver', () => {
     await app.close()
   })
 
-  test('Query: getNavigation by key', async () => {
+  test('navigation', async () => {
     const mockResponse = {id: '1', key: 'main', name: 'Main Navigation', links: []}
-    navigationServiceMock.getNavigationByKey?.mockResolvedValue(mockResponse)
-
-    await request(app.getHttpServer())
-      .post('/')
-      .send({
-        query: navigationQueryByKey,
-        variables: {key: 'main'}
-      })
-      .expect(res => {
-        expect(res.body).toMatchSnapshot()
-      })
-      .expect(200)
-  })
-
-  test('Query: getNavigation by key: Not found', async () => {
-    navigationServiceMock.getNavigationByKey?.mockResolvedValue(null)
-
-    await request(app.getHttpServer())
-      .post('/')
-      .send({
-        query: navigationQueryByKey,
-        variables: {key: 'not-found'}
-      })
-      .expect(res => {
-        expect(res.body).toMatchSnapshot()
-      })
-      .expect(200)
-  })
-
-  test('Query: getNavigation by id', async () => {
-    const mockResponse = {id: '1', key: 'main', name: 'Main Navigation', links: []}
-    navigationDataloader.load?.mockResolvedValue(mockResponse)
+    navigationDataloaderService.load?.mockResolvedValue(mockResponse)
+    navigationServiceMock.getNavigationLinks?.mockResolvedValue([])
 
     await request(app.getHttpServer())
       .post('/')
@@ -193,27 +142,23 @@ describe('NavigationResolver', () => {
       .expect(200)
   })
 
-  test('Query: getNavigation by id: Not found', async () => {
-    navigationDataloader.load?.mockResolvedValue(null)
-
-    await request(app.getHttpServer())
-      .post('/')
-      .send({
-        query: navigationQueryById,
-        variables: {id: 'not-found'}
-      })
-      .expect(res => {
-        expect(res.body).toMatchSnapshot()
-      })
-      .expect(200)
-  })
-
-  test('Query: getNavigations list', async () => {
+  test('navigations', async () => {
     const mockResponse = [{id: '1', key: 'main', name: 'Main Navigation', links: []}]
+    const mockNavigationLinksResponse = [
+      {
+        id: '1',
+        label: 'Foobar',
+        createdAt: new Date('2023-01-01'),
+        modifiedAt: new Date('2023-01-01'),
+        type: NavigationLinkType.External,
+        url: 'https://example.com'
+      } as BaseNavigationLink
+    ]
     navigationServiceMock.getNavigations?.mockResolvedValue(mockResponse)
+    navigationServiceMock.getNavigationLinks?.mockResolvedValue(mockNavigationLinksResponse)
 
     await request(app.getHttpServer())
-      .post('/')
+      .post('')
       .send({query: navigationListQuery})
       .expect(res => {
         expect(navigationServiceMock.getNavigations).toHaveBeenCalled()
@@ -222,16 +167,16 @@ describe('NavigationResolver', () => {
       .expect(200)
   })
 
-  test('Mutation: createNavigation', async () => {
+  test('createNavigation', async () => {
     const navigation = {key: 'new', name: 'New Navigation', links: []}
     const mockResponse = {id: '2', key: 'new', name: 'New Navigation'}
     navigationServiceMock.createNavigation?.mockResolvedValue(mockResponse)
 
     await request(app.getHttpServer())
-      .post('/')
+      .post('')
       .send({
         query: createNavigationMutation,
-        variables: {navigation}
+        variables: navigation
       })
       .expect(res => {
         expect(res.body).toMatchSnapshot()
@@ -240,16 +185,16 @@ describe('NavigationResolver', () => {
       .expect(200)
   })
 
-  test('Mutation: updateNavigation', async () => {
+  test('updateNavigation', async () => {
     const navigation = {id: 'hello', key: 'updated', name: 'Updated Navigation', links: []}
     const mockResponse = {id: '1', key: 'updated', name: 'Updated Navigation'}
     navigationServiceMock.updateNavigation?.mockResolvedValue(mockResponse)
 
     await request(app.getHttpServer())
-      .post('/')
+      .post('')
       .send({
         query: updateNavigationMutation,
-        variables: {navigation}
+        variables: navigation
       })
       .expect(res => {
         expect(res.body).toMatchSnapshot()
@@ -258,13 +203,13 @@ describe('NavigationResolver', () => {
       .expect(200)
   })
 
-  test('Mutation: deleteNavigation', async () => {
+  test('deleteNavigation', async () => {
     const mockId = '1'
     const mockResponse = {id: '1'}
     navigationServiceMock.deleteNavigationById?.mockResolvedValue(mockResponse)
 
     await request(app.getHttpServer())
-      .post('/')
+      .post('')
       .send({
         query: deleteNavigationMutation,
         variables: {id: mockId}

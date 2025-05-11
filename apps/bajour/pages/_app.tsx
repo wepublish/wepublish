@@ -1,20 +1,25 @@
 import {EmotionCache} from '@emotion/cache'
-import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
+import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  FooterContainer,
-  FooterPaperWrapper,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  SessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -26,18 +31,19 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourBanner} from '../src/components/website-builder-overwrites/banner/bajour-banner'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserSlider} from '../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
 import {BajourBreakBlock} from '../src/components/website-builder-overwrites/break/bajour-break'
 import {BajourContextBox} from '../src/components/website-builder-overwrites/context-box/context-box'
-import {BajourPaymentMethodPicker} from '../src/components/website-builder-overwrites/payment-method-picker/payment-method-picker'
 import {BajourQuoteBlock} from '../src/components/website-builder-overwrites/quote/bajour-quote'
 import {
   BajourTeaserGrid,
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -46,7 +52,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -62,12 +70,12 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
-  z-index: 11;
+  z-index: 12;
 `
 
 const Footer = styled(FooterContainer)`
@@ -124,7 +132,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               TeaserGrid: BajourTeaserGrid,
               TeaserList: BajourTeaserList,
               Break: BajourBreakBlock,
-              Quote: BajourQuoteBlock
+              Quote: BajourQuoteBlock,
+              Subscribe: Mitmachen
             }}
             blockStyles={{
               ContextBox: BajourContextBox,
@@ -133,7 +142,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
-            PaymentMethodPicker={BajourPaymentMethodPicker}>
+            Banner={BajourBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
@@ -152,19 +161,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
               </MainGrid>
 
+              <RoutedAdminBar />
+
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
 
               {popup && (
                 <Script
@@ -180,7 +181,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   )
 }
 
-const withApollo = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
 const ConnectedApp = withApollo(CustomApp)
 
 export {ConnectedApp as default}
