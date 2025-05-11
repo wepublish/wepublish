@@ -1448,17 +1448,12 @@ export interface PageRevisionFactoryInterface<TOptions extends PageRevisionFacto
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options: TOptions): PageRevisionFactoryInterface<TOptions>;
-type PagepaywallFactory = {
-    _factoryFor: "Paywall";
-    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutPagesInput["create"]>;
-};
 type PageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     publishedAt?: Date | null;
     slug?: string | null;
-    paywall?: PagepaywallFactory | Prisma.PaywallCreateNestedOneWithoutPagesInput;
     revisions?: Prisma.PageRevisionCreateNestedManyWithoutPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
     tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
@@ -3100,9 +3095,10 @@ type PaywallFactoryDefineInput = {
     modifiedAt?: Date;
     name?: string | null;
     description?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
-    memberplans?: Prisma.PaywallMemberplanCreateNestedManyWithoutPaywallInput;
+    anyMemberPlan?: boolean;
+    active?: boolean;
+    memberPlans?: Prisma.PaywallMemberplanCreateNestedManyWithoutPaywallInput;
     articles?: Prisma.ArticleCreateNestedManyWithoutPaywallInput;
-    pages?: Prisma.PageCreateNestedManyWithoutPaywallInput;
 };
 type PaywallFactoryDefineOptions = {
     defaultData?: Resolver<PaywallFactoryDefineInput, BuildDataOptions>;
@@ -3139,13 +3135,13 @@ type PaywallMemberplanmemberPlanFactory = {
 };
 type PaywallMemberplanpaywallFactory = {
     _factoryFor: "Paywall";
-    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutMemberplansInput["create"]>;
+    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutMemberPlansInput["create"]>;
 };
 type PaywallMemberplanFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     memberPlan: PaywallMemberplanmemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutPaywallsInput;
-    paywall: PaywallMemberplanpaywallFactory | Prisma.PaywallCreateNestedOneWithoutMemberplansInput;
+    paywall: PaywallMemberplanpaywallFactory | Prisma.PaywallCreateNestedOneWithoutMemberPlansInput;
 };
 type PaywallMemberplanFactoryDefineOptions = {
     defaultData: Resolver<PaywallMemberplanFactoryDefineInput, BuildDataOptions>;

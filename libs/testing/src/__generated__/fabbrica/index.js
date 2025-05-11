@@ -464,10 +464,6 @@ const modelFieldDefinitions = [{
     }, {
         name: "Page",
         fields: [{
-                name: "paywall",
-                type: "Paywall",
-                relationName: "PageToPaywall"
-            }, {
                 name: "revisions",
                 type: "PageRevision",
                 relationName: "PageToPageRevision"
@@ -947,17 +943,13 @@ const modelFieldDefinitions = [{
     }, {
         name: "Paywall",
         fields: [{
-                name: "memberplans",
+                name: "memberPlans",
                 type: "PaywallMemberplan",
                 relationName: "PaywallToPaywallMemberplan"
             }, {
                 name: "articles",
                 type: "Article",
                 relationName: "ArticleToPaywall"
-            }, {
-                name: "pages",
-                type: "Page",
-                relationName: "PageToPaywall"
             }]
     }, {
         name: "PaywallMemberplan",
@@ -3045,9 +3037,6 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
 export function definePageRevisionFactory(options) {
     return definePageRevisionFactoryInternal(options);
 }
-function isPagepaywallFactory(x) {
-    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Paywall";
-}
 function autoGeneratePageScalarsOrEnums({ seq }) {
     return {};
 }
@@ -3067,11 +3056,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {
-                paywall: isPagepaywallFactory(defaultData.paywall) ? {
-                    create: yield defaultData.paywall.build()
-                } : defaultData.paywall
-            };
+            const defaultAssociations = {};
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });
