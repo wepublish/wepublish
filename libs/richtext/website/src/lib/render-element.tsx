@@ -3,7 +3,7 @@ import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link, Theme, useTheme} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 import {css} from '@emotion/react'
-import {Fragment} from 'react'
+import {ReactNode} from 'react'
 
 const tableStyles = css`
   border-collapse: collapse;
@@ -21,61 +21,76 @@ const lastChildNoGutter = css`
   }
 `
 
-export function RenderElement({
-  attributes,
-  children,
-  element
-}: BuilderRenderElementProps): JSX.Element {
+export function RenderElement({element}: BuilderRenderElementProps): ReactNode {
   const {
-    elements: {H3, H4, H5, Paragraph, UnorderedList, OrderedList, ListItem}
+    elements: {H3, H4, H5, Paragraph, UnorderedList, OrderedList, ListItem},
+    richtext: {RenderRichtext}
   } = useWebsiteBuilder()
   const theme = useTheme()
 
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <H3 component="h2" {...attributes} gutterBottom css={lastChildNoGutter}>
-          {children}
+        <H3 component="h2" gutterBottom css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </H3>
       )
 
     case BlockFormat.H2:
       return (
-        <H4 component="h3" {...attributes} gutterBottom css={lastChildNoGutter}>
-          {children}
+        <H4 component="h3" gutterBottom css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </H4>
       )
 
     case BlockFormat.H3:
       return (
-        <H5 component="h4" {...attributes} gutterBottom css={lastChildNoGutter}>
-          {children}
+        <H5 component="h4" gutterBottom css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </H5>
       )
 
     case BlockFormat.UnorderedList:
-      return <UnorderedList {...attributes}>{children}</UnorderedList>
+      return (
+        <UnorderedList>
+          <RenderRichtext elements={element.children} />
+        </UnorderedList>
+      )
 
     case BlockFormat.OrderedList:
-      return <OrderedList {...attributes}>{children}</OrderedList>
+      return (
+        <OrderedList>
+          <RenderRichtext elements={element.children} />
+        </OrderedList>
+      )
 
     case BlockFormat.ListItem:
-      return <ListItem {...attributes}>{children}</ListItem>
+      return (
+        <ListItem>
+          <RenderRichtext elements={element.children} />
+        </ListItem>
+      )
 
     case BlockFormat.Table:
       return (
         <table css={tableStyles}>
-          <tbody {...attributes}>{children}</tbody>
+          <tbody>
+            <RenderRichtext elements={element.children} />
+          </tbody>
         </table>
       )
 
     case BlockFormat.TableRow:
-      return <tr {...attributes}>{children}</tr>
+      return (
+        <tr>
+          <RenderRichtext elements={element.children} />
+        </tr>
+      )
 
     case BlockFormat.TableCell:
       return (
-        <td {...attributes} css={tableCellStyles(theme, element.borderColor as string)}>
-          {children}
+        <td css={tableCellStyles(theme, element.borderColor as string)}>
+          <RenderRichtext elements={element.children} />
         </td>
       )
 
@@ -86,9 +101,8 @@ export function RenderElement({
           rel="noreferrer"
           id={element.id as string}
           href={element.url as string}
-          title={element.title as string}
-          {...attributes}>
-          {children}
+          title={element.title as string}>
+          <RenderRichtext elements={element.children} />
         </Link>
       )
 
@@ -98,12 +112,12 @@ export function RenderElement({
         'text' in element.children[0] &&
         !element.children[0].text
       ) {
-        return <Fragment />
+        return undefined
       }
 
       return (
-        <Paragraph {...attributes} css={lastChildNoGutter}>
-          {children}
+        <Paragraph css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </Paragraph>
       )
     }

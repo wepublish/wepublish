@@ -150,9 +150,9 @@ export class TeaserInput {
   [TeaserType.Custom]?: CustomTeaserInput
 }
 
-export function mapTeaserUnionMap(value: TeaserInput | undefined): typeof Teaser | undefined {
+export function mapTeaserUnionMap(value: TeaserInput | undefined | null): typeof Teaser | null {
   if (!value) {
-    return undefined
+    return null
   }
 
   const valueKeys = Object.keys(value) as TeaserType[]

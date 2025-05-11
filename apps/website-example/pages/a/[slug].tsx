@@ -55,7 +55,7 @@ export default function ArticleBySlugOrId() {
         </ArticleWrapper>
       )}
 
-      {!data?.article?.disableComments && (
+      {data?.article && !data?.article?.disableComments && (
         <ArticleWrapper>
           <H3 component={'h2'}>Kommentare</H3>
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
@@ -89,7 +89,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  if (article.data.article) {
+  if (article.data?.article) {
     await Promise.all([
       client.query({
         query: ArticleListDocument,
@@ -113,6 +113,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

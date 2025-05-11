@@ -78,6 +78,11 @@ const nextConfig = {
         source: '/tipp',
         destination: '/a/crowdfunding-tsueritipp',
         permanent: false
+      },
+      {
+        source: '/wohnen2025',
+        destination: '/a/save-the-date-fokus-wohnen-2025',
+        permanent: false
       }
     ]
   }
