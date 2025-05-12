@@ -1,11 +1,16 @@
 import {DailySubscriptionStatsQuery} from '@wepublish/editor/api-v2'
 import {ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 
+import {ActiveAudienceFilters} from './audience-dashboard'
+
 interface AudienceChartProps {
   audienceStats: DailySubscriptionStatsQuery | undefined
+  activeFilters: ActiveAudienceFilters
 }
 
-export function AudienceChart({audienceStats}: AudienceChartProps) {
+export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps) {
+  const {totalActiveSubscriptionCount} = activeFilters
+
   return (
     <ResponsiveContainer>
       <ComposedChart data={audienceStats?.dailySubscriptionStats || []}>
@@ -13,14 +18,17 @@ export function AudienceChart({audienceStats}: AudienceChartProps) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type={'monotone'} dataKey={'ongoingSubscriptions'} strokeWidth={2} stroke="#f3cf02" />
-        <Line type={'monotone'} dataKey={'renewedSubscriptions'} strokeWidth={2} stroke="#00f365" />
-        <Line
-          type={'monotone'}
-          dataKey={'createdSubscriptionCount'}
-          stroke="#ce1515"
-          strokeWidth={2}
-        />
+
+        {totalActiveSubscriptionCount && (
+          <Line
+            type={'monotone'}
+            dataKey={'totalActiveSubscriptionCount'}
+            stroke="#ce1515"
+            strokeWidth={2}
+            fill="#ce1515"
+          />
+        )}
+
         <Line
           type={'monotone'}
           dataKey={'renewedSubscriptionCount'}

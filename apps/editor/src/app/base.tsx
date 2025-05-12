@@ -555,7 +555,7 @@ export function Base({children}: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/audience/dashboard"
-                        active={path.includes('/stats')}
+                        active={path.includes('audience/dashboard')}
                         icon={<MdMultilineChart />}>
                         {t('navbar.audienceDashboard')}
                       </Nav.Item>

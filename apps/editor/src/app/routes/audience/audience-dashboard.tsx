@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import {
+  DailySubscriptionStats,
   getApiClientV2,
-  useDailySubscriptionStatsLazyQuery,
-  useDailySubscriptionStatsQuery
+  useDailySubscriptionStatsLazyQuery
 } from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
@@ -13,11 +13,22 @@ import {
 } from '@wepublish/ui/editor'
 import {useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdCalendarMonth, MdCalendarToday, MdCalendarViewWeek} from 'react-icons/md'
-import {DateRangePicker, Divider, RadioTile, RadioTileGroup} from 'rsuite'
 import {DateRange} from 'rsuite/esm/DateRangePicker'
-import {AudienceFilter} from './audience-filter'
+
 import {AudienceChart} from './audience-chart'
+import {AudienceFilter} from './audience-filter'
+
+export type ActiveAudienceFilters = Pick<
+  {
+    [K in keyof DailySubscriptionStats]: boolean
+  },
+  | 'totalActiveSubscriptionCount'
+  | 'createdSubscriptionCount'
+  | 'createdUnpaidSubscriptionCount'
+  | 'deactivatedSubscriptionCount'
+  | 'renewedSubscriptionCount'
+  | 'replacedSubscriptionCount'
+>
 
 export type DateResolution = 'week' | 'month' | 'day'
 
@@ -61,6 +72,15 @@ function AudienceDashboard() {
     undefined
   )
 
+  const [activeFilters, setActiveFilters] = useState<ActiveAudienceFilters>({
+    totalActiveSubscriptionCount: true,
+    createdSubscriptionCount: true,
+    createdUnpaidSubscriptionCount: true,
+    deactivatedSubscriptionCount: true,
+    renewedSubscriptionCount: true,
+    replacedSubscriptionCount: true
+  })
+
   return (
     <>
       <ListViewContainer>
@@ -69,7 +89,12 @@ function AudienceDashboard() {
         </ListViewHeader>
 
         <ListViewFilterArea style={{alignItems: 'center'}}>
-          <AudienceFilter dateRange={dateRange} setDateRange={setDateRange} />
+          <AudienceFilter
+            activeFilters={activeFilters}
+            setActiveFilters={setActiveFilters}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+          />
           {/* <RadioTileGroup
             inline
             defaultValue={dateResolution}
@@ -90,7 +115,7 @@ function AudienceDashboard() {
       </ListViewContainer>
 
       <AudienceChartWrapper>
-        <AudienceChart audienceStats={audienceStats} />
+        <AudienceChart activeFilters={activeFilters} audienceStats={audienceStats} />
       </AudienceChartWrapper>
 
       {/* <TableWrapperStyled>
