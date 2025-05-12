@@ -39,7 +39,7 @@ export class ImageCacheService {
     return [this.cache.get<Buffer>(key), meta?.httpStatusCode]
   }
 
-  public set(key: string, value: Buffer, httpStatusCode: number = 200, overrideTTL?: number) {
+  public set(key: string, value: Buffer, httpStatusCode = 200, overrideTTL?: number) {
     const sizeBytes = value.length
 
     if (this.currentCacheSizeBytes + sizeBytes > this.maxCacheSizeMB * 1024 * 1024) {
