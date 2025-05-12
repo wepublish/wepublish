@@ -1,6 +1,11 @@
 import NodeCache from 'node-cache'
 import {Injectable} from '@nestjs/common'
 
+type KeyMap = {
+  size: number
+  httpStatusCode: number
+}
+
 @Injectable()
 export class ImageCacheService {
   private cache = new NodeCache({
@@ -14,7 +19,7 @@ export class ImageCacheService {
   public maxCacheItems = parseInt(process.env['MAX_MEM_CACHE_ITEMS']) || 10000
 
   private currentCacheSizeBytes = 0
-  private keySizes = new Map<string, number>() // Track individual sizes
+  private keySizes = new Map<string, KeyMap>() // Track individual sizes
 
   constructor() {
     this.cache.on('del', key => this.removeKeySize(key))
@@ -22,18 +27,19 @@ export class ImageCacheService {
   }
 
   private removeKeySize(key: string) {
-    const size = this.keySizes.get(key)
+    const size = this.keySizes.get(key).size
     if (size) {
       this.currentCacheSizeBytes -= size
       this.keySizes.delete(key)
     }
   }
 
-  public get(key: string): Buffer | undefined {
-    return this.cache.get<Buffer>(key)
+  public get(key: string): [Buffer | undefined, number] {
+    const meta = this.keySizes.get(key)
+    return [this.cache.get<Buffer>(key), meta?.httpStatusCode]
   }
 
-  public set(key: string, value: Buffer) {
+  public set(key: string, value: Buffer, httpStatusCode: number = 200, overrideTTL?: number) {
     const sizeBytes = value.length
 
     if (this.currentCacheSizeBytes + sizeBytes > this.maxCacheSizeMB * 1024 * 1024) {
@@ -51,12 +57,17 @@ export class ImageCacheService {
     }
 
     // Adjust memory if key already exists
-    const oldSize = this.keySizes.get(key) ?? 0
+    const meta = this.keySizes.get(key)
+    const oldSize = meta?.size ?? 0
     this.currentCacheSizeBytes += sizeBytes - oldSize
-    this.keySizes.set(key, sizeBytes)
+
+    this.keySizes.set(key, {size: sizeBytes, httpStatusCode: httpStatusCode})
 
     const sizeKB = sizeBytes / 1024
-    const ttl = sizeKB > 200 ? 300 : 3600
+    let ttl = sizeKB > 200 ? 300 : 3600
+    if (overrideTTL) {
+      ttl = overrideTTL
+    }
 
     this.cache.set(key, value, ttl)
   }

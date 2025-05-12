@@ -88,11 +88,11 @@ export class AppController {
     // Check if image is cached
     const cachedBuffer = this.imageCacheService.get(cacheKey)
 
-    if (cachedBuffer) {
-      const etag = this.media.generateETag(cachedBuffer)
+    if (cachedBuffer[0]) {
+      const etag = this.media.generateETag(cachedBuffer[0])
 
       // Handle ETag
-      if (req.headers['if-none-match'] === `"${etag}"`) {
+      if (cachedBuffer[1] === 200 && req.headers['if-none-match'] === `"${etag}"`) {
         res.status(304).end()
         return
       }
@@ -100,7 +100,8 @@ export class AppController {
       res.setHeader('Content-Type', 'image/webp')
       res.setHeader('ETag', etag)
       res.setHeader('Cache-Control', `public, max-age=172800`)
-      res.end(cachedBuffer)
+      res.status(cachedBuffer[1])
+      res.end(cachedBuffer[0])
       return
     }
 
@@ -117,11 +118,8 @@ export class AppController {
     if (!imageExists) {
       res.status(404)
       res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
-      this.imageCacheService.set(cacheKey, buffer)
+      this.imageCacheService.set(cacheKey, buffer, 404, 60)
     } else {
-      // Buffer the file to store in cache
-      const sizeKB = buffer.length / 1024
-      const ttl = sizeKB > 200 ? 300 : 3600 // >200KB → 5 min, else 60 min
       this.imageCacheService.set(cacheKey, buffer)
     }
 
