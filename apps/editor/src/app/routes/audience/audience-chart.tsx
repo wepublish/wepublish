@@ -1,5 +1,15 @@
 import {DailySubscriptionStatsQuery} from '@wepublish/editor/api-v2'
-import {ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+import {useMemo} from 'react'
+import {
+  Bar,
+  ComposedChart,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts'
 
 import {ActiveAudienceFilters} from './audience-dashboard'
 
@@ -9,38 +19,90 @@ interface AudienceChartProps {
 }
 
 export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps) {
-  const {totalActiveSubscriptionCount} = activeFilters
+  const {
+    totalActiveSubscriptionCount,
+    createdSubscriptionCount,
+    renewedSubscriptionCount,
+    createdUnpaidSubscriptionCount,
+    replacedSubscriptionCount,
+    deactivatedSubscriptionCount
+  } = activeFilters
+
+  const chartColors = ['#ce1515', '#7b15ce', '#0d42f0', '#15ce7b', '#f0a30d', '#15a3ce']
+
+  const dataWithNegativeDeactivated = useMemo(() => {
+    return (
+      audienceStats?.dailySubscriptionStats.map(stats => {
+        return {
+          ...stats,
+          deactivatedSubscriptionCount: -stats.deactivatedSubscriptionCount
+        }
+      }) || []
+    )
+  }, [audienceStats?.dailySubscriptionStats])
 
   return (
     <ResponsiveContainer>
-      <ComposedChart data={audienceStats?.dailySubscriptionStats || []}>
+      <ComposedChart data={dataWithNegativeDeactivated}>
         <XAxis dataKey={'date'} />
-        <YAxis />
+        <YAxis yAxisId="left" orientation="left" stroke={chartColors[2]} />
+        <YAxis yAxisId="right" orientation="right" stroke={chartColors[0]} />
         <Tooltip />
         <Legend />
+        {/* <ReferenceLine y={0} stroke="#000" /> */}
 
         {totalActiveSubscriptionCount && (
           <Line
+            yAxisId="right"
             type={'monotone'}
             dataKey={'totalActiveSubscriptionCount'}
-            stroke="#ce1515"
+            stroke={chartColors[0]}
             strokeWidth={2}
-            fill="#ce1515"
+            fill={chartColors[0]}
           />
         )}
 
-        <Line
-          type={'monotone'}
-          dataKey={'renewedSubscriptionCount'}
-          stroke="#7b15ce"
-          strokeWidth={2}
-        />
-        <Line
-          type={'monotone'}
-          dataKey={'deactivatedSubscriptionCount'}
-          stroke="#0d42f0"
-          strokeWidth={2}
-        />
+        {deactivatedSubscriptionCount && (
+          <Bar
+            yAxisId="left"
+            stackId="created"
+            dataKey={'deactivatedSubscriptionCount'}
+            fill={chartColors[5]}
+          />
+        )}
+
+        {createdSubscriptionCount && (
+          <Bar
+            yAxisId="left"
+            stackId="created"
+            dataKey={'createdSubscriptionCount'}
+            fill={chartColors[1]}
+          />
+        )}
+        {renewedSubscriptionCount && (
+          <Bar
+            yAxisId="left"
+            stackId="created"
+            dataKey={'renewedSubscriptionCount'}
+            fill={chartColors[2]}
+          />
+        )}
+        {createdUnpaidSubscriptionCount && (
+          <Bar
+            yAxisId="left"
+            stackId="created"
+            dataKey={'createdUnpaidSubscriptionCount'}
+            fill={chartColors[3]}
+          />
+        )}
+        {replacedSubscriptionCount && (
+          <Bar
+            yAxisId="left"
+            stackId="created"
+            dataKey={'replacedSubscriptionCount'}
+            fill={chartColors[4]}
+          />
+        )}
       </ComposedChart>
     </ResponsiveContainer>
   )

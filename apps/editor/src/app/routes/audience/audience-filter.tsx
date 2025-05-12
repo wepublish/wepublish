@@ -1,31 +1,9 @@
-import styled from '@emotion/styled'
 import {Dispatch, SetStateAction, useEffect} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdInfo} from 'react-icons/md'
-import {Col, DateRangePicker, Form as RForm, Grid, Row, Toggle, Tooltip, Whisper} from 'rsuite'
+import {Col, DateRangePicker, Grid, Row} from 'rsuite'
 import {DateRange} from 'rsuite/esm/DateRangePicker'
 
 import {ActiveAudienceFilters} from './audience-dashboard'
-
-const {ControlLabel} = RForm
-
-const Label = styled(ControlLabel)`
-  padding-left: ${({theme}) => theme.spacing(1)};
-`
-
-const Info = styled.div`
-  margin-left: ${({theme}) => theme.spacing(1)};
-  position: relative;
-  display: inline-block;
-`
-
-const FilterInfo = ({text}: {text: string}) => (
-  <Whisper trigger="hover" speaker={<Tooltip>{text}</Tooltip>} placement="top">
-    <Info>
-      <MdInfo size={24} />
-    </Info>
-  </Whisper>
-)
+import {AudienceFilterToggle} from './audience-filter-toggle'
 
 export interface AudienceFilterProps {
   activeFilters: ActiveAudienceFilters
@@ -40,8 +18,6 @@ export function AudienceFilter({
   dateRange,
   setDateRange
 }: AudienceFilterProps) {
-  const {t} = useTranslation()
-
   useEffect(() => {
     const currentDate = new Date()
     const endDateOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
@@ -70,31 +46,15 @@ export function AudienceFilter({
         {/* select data */}
         <Col xs={20}>
           <Row>
-            <Col xs={8}>
-              <Toggle
-                checked={activeFilters.totalActiveSubscriptionCount}
-                onChange={(totalActiveSubscriptionCount: boolean) =>
-                  setActiveFilters({
-                    ...activeFilters,
-                    totalActiveSubscriptionCount
-                  })
-                }
-              />
-              <Label>{t('audienceFilter.totalSubscriptions')}</Label>
-              <FilterInfo text={'Test'} />
-            </Col>
-            <Col xs={8}>
-              <Toggle />
-              <Label>{t('audienceFilter.totalSubscriptions')}</Label>
-            </Col>
-            <Col xs={8}>
-              <Toggle />
-              <Label>{t('audienceFilter.totalSubscriptions')}</Label>
-            </Col>
-            <Col xs={8}>
-              <Toggle />
-              <Label>{t('audienceFilter.totalSubscriptions')}</Label>
-            </Col>
+            {Object.keys(activeFilters).map(filterKey => (
+              <Col xs={8}>
+                <AudienceFilterToggle
+                  filterKey={filterKey as keyof ActiveAudienceFilters}
+                  activeFilters={activeFilters}
+                  setActiveFilters={setActiveFilters}
+                />
+              </Col>
+            ))}
           </Row>
         </Col>
       </Row>

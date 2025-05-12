@@ -73,12 +73,12 @@ function AudienceDashboard() {
   )
 
   const [activeFilters, setActiveFilters] = useState<ActiveAudienceFilters>({
-    totalActiveSubscriptionCount: true,
+    totalActiveSubscriptionCount: false,
     createdSubscriptionCount: true,
-    createdUnpaidSubscriptionCount: true,
+    createdUnpaidSubscriptionCount: false,
     deactivatedSubscriptionCount: true,
     renewedSubscriptionCount: true,
-    replacedSubscriptionCount: true
+    replacedSubscriptionCount: false
   })
 
   return (
