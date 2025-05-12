@@ -12,11 +12,11 @@ import {
   YAxis
 } from 'recharts'
 
-import {ActiveAudienceFilters} from './audience-dashboard'
+import {AudienceClientFilter} from './audience-dashboard'
 
 interface AudienceChartProps {
   audienceStats: DailySubscriptionStatsQuery | undefined
-  activeFilters: ActiveAudienceFilters
+  activeFilters: AudienceClientFilter
 }
 
 export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps) {

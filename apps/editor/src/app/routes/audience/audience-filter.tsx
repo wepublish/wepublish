@@ -2,23 +2,22 @@ import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, DateRangePicker, Grid, Panel, Row, TagPicker} from 'rsuite'
-import {DateRange} from 'rsuite/esm/DateRangePicker'
 
-import {ActiveAudienceFilters} from './audience-dashboard'
+import {AudienceApiFilter, AudienceClientFilter} from './audience-dashboard'
 import {AudienceFilterToggle} from './audience-filter-toggle'
 
 export interface AudienceFilterProps {
-  activeFilters: ActiveAudienceFilters
-  setActiveFilters: Dispatch<SetStateAction<ActiveAudienceFilters>>
-  dateRange: DateRange | null | undefined
-  setDateRange: (dateRange: DateRange | undefined | null) => void
+  clientFilter: AudienceClientFilter
+  setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>
+  apiFilter: AudienceApiFilter
+  setApiFilter: (data: AudienceApiFilter) => void
 }
 
 export function AudienceFilter({
-  activeFilters,
-  setActiveFilters,
-  dateRange,
-  setDateRange
+  clientFilter,
+  setClientFilter,
+  apiFilter,
+  setApiFilter
 }: AudienceFilterProps) {
   const {t} = useTranslation()
 
@@ -31,7 +30,7 @@ export function AudienceFilter({
       currentDate.getMonth() - 2,
       1
     )
-    setDateRange([startDateOfTwoMonthsBefore, endDateOfCurrentMonth])
+    setApiFilter({dateRange: [startDateOfTwoMonthsBefore, endDateOfCurrentMonth]})
   }, [])
 
   // load available subscription plans
@@ -53,8 +52,8 @@ export function AudienceFilter({
         <Col xs={4}>
           <DateRangePicker
             size="lg"
-            value={dateRange}
-            onChange={setDateRange}
+            value={apiFilter.dateRange}
+            onChange={newDateRange => setApiFilter({dateRange: newDateRange})}
             format="dd.MM.yyyy"
             placeholder={t('audienceFilter.rangePickerPlaceholder')}
             style={{width: '100%'}}
@@ -67,19 +66,20 @@ export function AudienceFilter({
             data={memberPlansForPicker}
             style={{width: '100%'}}
             placeholder={t('audienceFilter.filterSubscriptionPlans')}
+            onChange={newMemberPlanIds => setApiFilter({memberPlanIds: newMemberPlanIds})}
           />
         </Col>
 
         {/* filter data */}
         <Col xs={16}>
-          <Panel header="Daten filtern" bordered>
+          <Panel header={t('audienceFilter.panelHeader')} bordered>
             <Row>
-              {Object.keys(activeFilters).map(filterKey => (
+              {Object.keys(clientFilter).map(filterKey => (
                 <Col xs={12}>
                   <AudienceFilterToggle
-                    filterKey={filterKey as keyof ActiveAudienceFilters}
-                    activeFilters={activeFilters}
-                    setActiveFilters={setActiveFilters}
+                    filterKey={filterKey as keyof AudienceClientFilter}
+                    clientFilter={clientFilter}
+                    setClientFilter={setClientFilter}
                   />
                 </Col>
               ))}

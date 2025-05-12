@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next'
 import {MdInfo} from 'react-icons/md'
 import {Form as RForm, Toggle, Tooltip, Whisper} from 'rsuite'
 
-import {ActiveAudienceFilters} from './audience-dashboard'
+import {AudienceClientFilter} from './audience-dashboard'
 
 const {ControlLabel} = RForm
 
@@ -27,25 +27,25 @@ const FilterInfo = ({text}: {text: string}) => (
 )
 
 interface AudienceFilterToggleProps {
-  filterKey: keyof ActiveAudienceFilters
-  activeFilters: ActiveAudienceFilters
-  setActiveFilters: Dispatch<SetStateAction<ActiveAudienceFilters>>
+  filterKey: keyof AudienceClientFilter
+  clientFilter: AudienceClientFilter
+  setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>
 }
 
 export function AudienceFilterToggle({
   filterKey,
-  activeFilters,
-  setActiveFilters
+  clientFilter,
+  setClientFilter
 }: AudienceFilterToggleProps) {
   const {t} = useTranslation()
 
   return (
     <>
       <Toggle
-        checked={activeFilters[filterKey as keyof ActiveAudienceFilters]}
+        checked={clientFilter[filterKey as keyof AudienceClientFilter]}
         onChange={(checked: boolean) =>
-          setActiveFilters({
-            ...activeFilters,
+          setClientFilter({
+            ...clientFilter,
             [filterKey]: checked
           })
         }

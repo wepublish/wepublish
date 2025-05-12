@@ -18,7 +18,7 @@ import {DateRange} from 'rsuite/esm/DateRangePicker'
 import {AudienceChart} from './audience-chart'
 import {AudienceFilter} from './audience-filter'
 
-export type ActiveAudienceFilters = Pick<
+export type AudienceClientFilter = Pick<
   {
     [K in keyof DailySubscriptionStats]: boolean
   },
@@ -31,6 +31,10 @@ export type ActiveAudienceFilters = Pick<
 >
 
 export type DateResolution = 'week' | 'month' | 'day'
+export interface AudienceApiFilter {
+  dateRange?: DateRange | null
+  memberPlanIds?: string[]
+}
 
 const AudienceChartWrapper = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
@@ -54,25 +58,32 @@ function AudienceDashboard() {
     client
   })
 
-  const [dateRange, setDateRange] = useReducer(
-    (_state: DateRange | null | undefined, action: DateRange | null | undefined) => {
-      if (!action || action.length < 2) {
+  const [audienceApiFilter, setAudienceApiFilter] = useReducer(
+    (state: AudienceApiFilter, action: AudienceApiFilter) => {
+      const dateRange = action.dateRange || state.dateRange
+      const memberPlanIds = action.memberPlanIds || state.memberPlanIds
+
+      if (!dateRange || dateRange.length < 2) {
         return action
       }
 
       fetchStats({
         variables: {
-          start: action[0].toISOString(),
-          end: action[1].toISOString()
+          start: dateRange[0].toISOString(),
+          end: dateRange[1].toISOString(),
+          memberPlanIds
         },
         fetchPolicy: 'cache-first'
       })
-      return action
+      return {
+        dateRange,
+        memberPlanIds
+      }
     },
-    undefined
+    {}
   )
 
-  const [activeFilters, setActiveFilters] = useState<ActiveAudienceFilters>({
+  const [audienceClientFilter, setAudienceClientFilter] = useState<AudienceClientFilter>({
     totalActiveSubscriptionCount: false,
     createdSubscriptionCount: true,
     createdUnpaidSubscriptionCount: false,
@@ -90,10 +101,10 @@ function AudienceDashboard() {
 
         <ListViewFilterArea style={{alignItems: 'center'}}>
           <AudienceFilter
-            activeFilters={activeFilters}
-            setActiveFilters={setActiveFilters}
-            dateRange={dateRange}
-            setDateRange={setDateRange}
+            clientFilter={audienceClientFilter}
+            setClientFilter={setAudienceClientFilter}
+            apiFilter={audienceApiFilter}
+            setApiFilter={setAudienceApiFilter}
           />
           {/* <RadioTileGroup
             inline
@@ -115,7 +126,7 @@ function AudienceDashboard() {
       </ListViewContainer>
 
       <AudienceChartWrapper>
-        <AudienceChart activeFilters={activeFilters} audienceStats={audienceStats} />
+        <AudienceChart activeFilters={audienceClientFilter} audienceStats={audienceStats} />
       </AudienceChartWrapper>
 
       {/* <TableWrapperStyled>
