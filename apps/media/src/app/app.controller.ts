@@ -23,24 +23,26 @@ import {
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'
-import NodeCache from 'node-cache'
-
-const imageMemoryCache = new NodeCache({
-  stdTTL: 60 * 60,
-  checkperiod: 60,
-  deleteOnExpire: true,
-  useClones: true
-})
+import {ImageCacheService} from './imageCache.service'
 
 @Controller({
   version: '1'
 })
 export class AppController {
-  constructor(private readonly media: MediaService) {}
+  constructor(
+    private readonly media: MediaService,
+    private readonly imageCacheService: ImageCacheService
+  ) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
     res.status(200).send({status: 'ok'})
+  }
+
+  @Get('/cacheState')
+  async cacheState(@Res() res: Response) {
+    const state = this.imageCacheService.state()
+    res.status(state.healty ? 200 : 500).send(state.stats)
   }
 
   @UseGuards(TokenAuthGuard)
@@ -84,7 +86,7 @@ export class AppController {
     const cacheKey = `${imageId}-${getTransformationKey(transformations)}`
 
     // Check if image is cached
-    const cachedBuffer = imageMemoryCache.get<Buffer>(cacheKey)
+    const cachedBuffer = this.imageCacheService.get(cacheKey)
 
     if (cachedBuffer) {
       const etag = this.media.generateETag(cachedBuffer)
@@ -115,10 +117,12 @@ export class AppController {
     if (!imageExists) {
       res.status(404)
       res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
-      imageMemoryCache.set(cacheKey, buffer, 60)
+      this.imageCacheService.set(cacheKey, buffer)
     } else {
       // Buffer the file to store in cache
-      imageMemoryCache.set(cacheKey, buffer)
+      const sizeKB = buffer.length / 1024
+      const ttl = sizeKB > 200 ? 300 : 3600 // >200KB → 5 min, else 60 min
+      this.imageCacheService.set(cacheKey, buffer)
     }
 
     res.end(buffer)
