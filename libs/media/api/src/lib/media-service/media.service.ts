@@ -10,6 +10,8 @@ import * as path from 'path'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
+const fallbackImageCache = new Map<string, Buffer>()
+
 export type MediaServiceConfig = {
   uploadBucket: string
   transformationBucket: string
@@ -78,13 +80,20 @@ export class MediaService {
   private async transformImage(imageId: string, transformations: TransformationsDto) {
     let imageStream: Readable
     let imageExists = true
+    let baseTransformationsKey = '{}'
     try {
       imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
+        imageExists = false
+        baseTransformationsKey = getTransformationKey(transformations)
+        const cachedBuffer = fallbackImageCache.get(baseTransformationsKey)
+        if (cachedBuffer) {
+          const image = sharp(cachedBuffer)
+          return Promise.all([image, 'none', imageExists])
+        }
         const defaultImagePath = path.join(__dirname, 'assets', 'fallback-image.webp')
         imageStream = fs.createReadStream(defaultImagePath)
-        imageExists = false
       } else {
         throw e
       }
@@ -159,6 +168,8 @@ export class MediaService {
         metadata.size,
         {ContentType: `image/${metadata.format}`}
       )
+    } else {
+      fallbackImageCache.set(baseTransformationsKey, await transformedImage.clone().toBuffer())
     }
     const etag = this.generateETag(await this.bufferStream(transformedImage.clone()))
 

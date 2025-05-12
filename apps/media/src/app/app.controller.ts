@@ -95,6 +95,7 @@ export class AppController {
 
     if (!imageExists) {
       res.status(404)
+      res.setHeader('Cache-Control', `public, max-age=60`)
     }
 
     return file.pipe(res)
