@@ -13,6 +13,7 @@ import {
   ListicleItemInput,
   PollBlockInput,
   TeaserGridBlockInput,
+  TeaserGridFlexBlockInput,
   TeaserListBlockInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
@@ -384,8 +385,16 @@ export class ImportPeerArticleService {
             return {
               ...stripUnwantedProperties(block),
               type: BlockType.TeaserGrid,
-              teasers: []
+              teasers: [new Array(block.numColumns === 1 ? 1 : 6).map(() => null)]
             } as TeaserGridBlockInput
+          }
+
+          case 'TeaserGridFlexBlock': {
+            return {
+              ...stripUnwantedProperties(block),
+              type: BlockType.TeaserGridFlex,
+              flexTeasers: []
+            } as TeaserGridFlexBlockInput
           }
 
           case 'TeaserListBlock': {
@@ -403,14 +412,13 @@ export class ImportPeerArticleService {
           case 'HTMLBlock': {
             return {
               ...stripUnwantedProperties(block),
-              type: block.type.toLowerCase()
+              type: BlockType.HTML
             } as HTMLBlockInput
           }
 
           case 'CrowdfundingBlock':
           case 'UnknownBlock':
           case 'TitleBlock':
-          case 'TeaserGridFlexBlock':
           case 'BildwurfAdBlock':
           case 'IFrameBlock':
           case 'PolisConversationBlock':
