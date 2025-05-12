@@ -5,6 +5,7 @@ import {
   ComposedChart,
   Legend,
   Line,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -45,15 +46,14 @@ export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps
     <ResponsiveContainer>
       <ComposedChart data={dataWithNegativeDeactivated}>
         <XAxis dataKey={'date'} />
-        <YAxis yAxisId="left" orientation="left" stroke={chartColors[2]} />
-        <YAxis yAxisId="right" orientation="right" stroke={chartColors[0]} />
+        <YAxis stroke={chartColors[2]} />
         <Tooltip />
         <Legend />
-        {/* <ReferenceLine y={0} stroke="#000" /> */}
+
+        <ReferenceLine y={0} stroke="#000" />
 
         {totalActiveSubscriptionCount && (
           <Line
-            yAxisId="right"
             type={'monotone'}
             dataKey={'totalActiveSubscriptionCount'}
             stroke={chartColors[0]}
@@ -63,45 +63,20 @@ export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps
         )}
 
         {deactivatedSubscriptionCount && (
-          <Bar
-            yAxisId="left"
-            stackId="created"
-            dataKey={'deactivatedSubscriptionCount'}
-            fill={chartColors[5]}
-          />
+          <Bar stackId="created" dataKey={'deactivatedSubscriptionCount'} fill={chartColors[5]} />
         )}
 
         {createdSubscriptionCount && (
-          <Bar
-            yAxisId="left"
-            stackId="created"
-            dataKey={'createdSubscriptionCount'}
-            fill={chartColors[1]}
-          />
+          <Bar stackId="created" dataKey={'createdSubscriptionCount'} fill={chartColors[1]} />
         )}
         {renewedSubscriptionCount && (
-          <Bar
-            yAxisId="left"
-            stackId="created"
-            dataKey={'renewedSubscriptionCount'}
-            fill={chartColors[2]}
-          />
+          <Bar stackId="created" dataKey={'renewedSubscriptionCount'} fill={chartColors[2]} />
         )}
         {createdUnpaidSubscriptionCount && (
-          <Bar
-            yAxisId="left"
-            stackId="created"
-            dataKey={'createdUnpaidSubscriptionCount'}
-            fill={chartColors[3]}
-          />
+          <Bar stackId="created" dataKey={'createdUnpaidSubscriptionCount'} fill={chartColors[3]} />
         )}
         {replacedSubscriptionCount && (
-          <Bar
-            yAxisId="left"
-            stackId="created"
-            dataKey={'replacedSubscriptionCount'}
-            fill={chartColors[4]}
-          />
+          <Bar stackId="created" dataKey={'replacedSubscriptionCount'} fill={chartColors[4]} />
         )}
       </ComposedChart>
     </ResponsiveContainer>
