@@ -53,7 +53,7 @@ jobs:
       - name: Wait for api version to be deployed
         id: wait-for-version
         run: |
-          MAX_RETRIES=60
+          MAX_RETRIES=120
           RETRY_DELAY=10
           SHA_HASH=${{ github.sha }}
           API_BASE_URL=${{ inputs.api_url }}
@@ -91,7 +91,7 @@ jobs:
         id: wait-for-frontend-deployment
         if: ${{ inputs.environment != 'review' }}
         run: |
-          MAX_RETRIES=60
+          MAX_RETRIES=120
           RETRY_DELAY=10
           SHA_HASH=${{ github.sha }}
           ENVIRONMENT=${{ inputs.environment }}
