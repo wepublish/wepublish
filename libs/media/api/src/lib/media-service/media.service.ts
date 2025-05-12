@@ -1,4 +1,4 @@
-import {Inject, Injectable, NotFoundException} from '@nestjs/common'
+import {Inject, Injectable} from '@nestjs/common'
 import sharp from 'sharp'
 import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
@@ -77,7 +77,7 @@ export class MediaService {
 
   private async transformImage(imageId: string, transformations: TransformationsDto) {
     let imageStream: Readable
-    let imageExists: boolean = true
+    let imageExists = true
     try {
       imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
     } catch (e: any) {
