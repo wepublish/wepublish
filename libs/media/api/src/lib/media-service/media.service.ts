@@ -5,6 +5,8 @@ import {StorageClient} from '../storage-client/storage-client.service'
 import {TransformGuard} from './transform.guard'
 import {createHash} from 'crypto'
 import {Readable} from 'stream'
+import * as fs from 'fs'
+import * as path from 'path'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
@@ -75,14 +77,17 @@ export class MediaService {
 
   private async transformImage(imageId: string, transformations: TransformationsDto) {
     let imageStream: Readable
+    let imageExists: boolean = true
     try {
       imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
-        throw new NotFoundException()
+        const defaultImagePath = path.join(__dirname, 'assets', 'fallback-image.webp')
+        imageStream = fs.createReadStream(defaultImagePath)
+        imageExists = false
+      } else {
+        throw e
       }
-
-      throw e
     }
 
     const sharpInstance = imageStream.pipe(
@@ -146,16 +151,18 @@ export class MediaService {
     metadata = await sharp(await transformedImage.clone().toBuffer()).metadata()
     transformGuard.checkImageSize(metadata)
 
-    await this.storage.saveFile(
-      this.config.transformationBucket,
-      `images/${imageId}/${transformationsKey}`,
-      transformedImage.clone(),
-      metadata.size,
-      {ContentType: `image/${metadata.format}`}
-    )
+    if (imageExists) {
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        `images/${imageId}/${transformationsKey}`,
+        transformedImage.clone(),
+        metadata.size,
+        {ContentType: `image/${metadata.format}`}
+      )
+    }
     const etag = this.generateETag(await this.bufferStream(transformedImage.clone()))
 
-    return Promise.all([transformedImage, etag])
+    return Promise.all([transformedImage, etag, imageExists])
   }
 
   public async saveImage(imageId: string, image: Buffer) {

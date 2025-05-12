@@ -85,12 +85,16 @@ export class AppController {
       }
     }
 
-    const [file, etag] = await this.media.getImage(imageId, transformations)
+    const [file, etag, imageExists] = await this.media.getImage(imageId, transformations)
     res.setHeader('Content-Type', 'image/webp')
 
     if (process.env['NODE_ENV'] === 'production') {
       res.setHeader('ETag', etag)
       res.setHeader('Cache-Control', `public, max-age=172800`) // cache for 48 hours and then re-checks the ETag
+    }
+
+    if (!imageExists) {
+      res.status(404)
     }
 
     return file.pipe(res)
