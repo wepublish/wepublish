@@ -37,13 +37,13 @@ export class MediaService {
     private storage: StorageClient
   ) {}
 
-  private generateETag(buffer: Buffer): string {
+  public generateETag(buffer: Buffer): string {
     const hash = createHash('md5')
     hash.update(buffer)
     return `"${hash.digest('hex')}"`
   }
 
-  private bufferStream(stream: Readable): Promise<Buffer> {
+  public bufferStream(stream: Readable): Promise<Buffer> {
     return new Promise<Buffer>((resolve, reject) => {
       const chunks: Buffer[] = []
       stream.on('data', chunk => chunks.push(chunk))
@@ -74,7 +74,7 @@ export class MediaService {
     const fileBuffer = await this.bufferStream(file)
     const etag = this.generateETag(fileBuffer)
 
-    return await Promise.all([Readable.from(fileBuffer), etag])
+    return await Promise.all([Readable.from(fileBuffer), etag, true])
   }
 
   private async transformImage(imageId: string, transformations: TransformationsDto) {
