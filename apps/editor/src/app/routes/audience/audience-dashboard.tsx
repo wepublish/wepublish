@@ -34,7 +34,7 @@ export type AudienceClientFilter = Pick<
   | 'replacedSubscriptionCount'
 >
 
-type SumUpCount = keyof Pick<
+type SumUpCount = Pick<
   AudienceStatsComputed,
   | 'createdSubscriptionCount'
   | 'createdUnpaidSubscriptionCount'
@@ -42,6 +42,8 @@ type SumUpCount = keyof Pick<
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
 >
+
+type SumUpCountKeys = keyof SumUpCount
 
 type AggregatedUsers = keyof Pick<
   AudienceStatsComputed,
@@ -129,19 +131,19 @@ function AudienceDashboard() {
   })
 
   const getTotalNewSubscriptionsByDay = useCallback(
-    (dailyStat: DailySubscriptionStats): number => {
+    (dailyStat: Partial<DailySubscriptionStats>): number => {
       let totalNew = 0
       if (audienceClientFilter.createdSubscriptionCount) {
-        totalNew += dailyStat.createdSubscriptionCount
+        totalNew += dailyStat?.createdSubscriptionCount || 0
       }
       if (audienceClientFilter.createdUnpaidSubscriptionCount) {
-        totalNew += dailyStat.createdUnpaidSubscriptionCount
+        totalNew += dailyStat?.createdUnpaidSubscriptionCount || 0
       }
       if (audienceClientFilter.renewedSubscriptionCount) {
-        totalNew += dailyStat.renewedSubscriptionCount
+        totalNew += dailyStat?.renewedSubscriptionCount || 0
       }
       if (audienceClientFilter.replacedSubscriptionCount) {
-        totalNew += dailyStat.replacedSubscriptionCount
+        totalNew += dailyStat?.replacedSubscriptionCount || 0
       }
       return totalNew
     },
@@ -149,24 +151,24 @@ function AudienceDashboard() {
   )
 
   const getRenewalFigures = useCallback(
-    (dailyStat: DailySubscriptionStats): RenewalFigures => {
+    (dailyStat: Partial<DailySubscriptionStats>): RenewalFigures => {
       let totalToBeRenewed = 0
       let renewedAndReplaced = 0
       if (audienceClientFilter.renewedSubscriptionCount) {
-        totalToBeRenewed += dailyStat.renewedSubscriptionCount
-        renewedAndReplaced += dailyStat.renewedSubscriptionCount
+        totalToBeRenewed += dailyStat?.renewedSubscriptionCount || 0
+        renewedAndReplaced += dailyStat?.renewedSubscriptionCount || 0
       }
       if (audienceClientFilter.replacedSubscriptionCount) {
-        totalToBeRenewed += dailyStat.replacedSubscriptionCount
-        renewedAndReplaced += dailyStat.replacedSubscriptionCount
+        totalToBeRenewed += dailyStat?.replacedSubscriptionCount || 0
+        renewedAndReplaced += dailyStat?.replacedSubscriptionCount || 0
       }
       if (audienceClientFilter.deactivatedSubscriptionCount) {
-        totalToBeRenewed += dailyStat.deactivatedSubscriptionCount
+        totalToBeRenewed += dailyStat?.deactivatedSubscriptionCount || 0
       }
 
-      const cancellationRate =
-        Math.round(((dailyStat.deactivatedSubscriptionCount * 100) / totalToBeRenewed) * 100) /
-          100 || 0
+      const cancellationRate = Math.round(
+        ((dailyStat?.deactivatedSubscriptionCount || 0) * 100) / totalToBeRenewed || 0
+      )
       const renewalRate = totalToBeRenewed === 0 ? 0 : 100 - cancellationRate
 
       return {
@@ -195,9 +197,12 @@ function AudienceDashboard() {
     )
   }, [rawAudienceStats, getTotalNewSubscriptionsByDay, getRenewalFigures])
 
-  const sumUpCounts = useCallback((monthStats: AudienceStatsComputed[], sumUpCount: SumUpCount) => {
-    return monthStats.reduce((sum, stat) => sum + stat[sumUpCount], 0)
-  }, [])
+  const sumUpCounts = useCallback(
+    (monthStats: AudienceStatsComputed[], sumUpCountKey: SumUpCountKeys) => {
+      return monthStats.reduce((sum, stat) => sum + stat[sumUpCountKey], 0)
+    },
+    []
+  )
 
   const mergeUsers = useCallback(
     (monthStats: AudienceStatsComputed[], userProperty: AggregatedUsers) => {
@@ -237,7 +242,7 @@ function AudienceDashboard() {
           'deactivatedSubscriptionCount',
           'renewedSubscriptionCount',
           'replacedSubscriptionCount'
-        ] as SumUpCount[]
+        ] as SumUpCountKeys[]
       ).reduce((acc, key) => ({...acc, [key]: sumUpCounts(monthStats, key)}), {})
 
       // merge the user
@@ -251,11 +256,20 @@ function AudienceDashboard() {
         ] as AggregatedUsers[]
       ).reduce((acc, key) => ({...acc, [key]: mergeUsers(monthStats, key)}), {})
 
+      const totalNewSubscriptions = getTotalNewSubscriptionsByDay(summedUpCounts)
+      const renewalFigures = getRenewalFigures({
+        ...summedUpCounts,
+        deactivatedSubscriptionCount:
+          (summedUpCounts as SumUpCount).deactivatedSubscriptionCount * -1
+      })
+
       aggregatedStats.push({
-        ...lastDayOfMonth, // TODO
+        ...lastDayOfMonth,
         date: lastDayOfMonth.date,
         ...summedUpCounts,
-        ...mergedUsers
+        ...mergedUsers,
+        totalNewSubscriptions,
+        ...renewalFigures
       })
     }
 

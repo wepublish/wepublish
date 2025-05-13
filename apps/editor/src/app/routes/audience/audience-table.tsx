@@ -101,7 +101,7 @@ export function AudienceTable({audienceStats, clientFilter}: AudienceTableProps)
           {(rowData: RowDataType<any>) => (
             <>
               <span>
-                ({rowData.deactivatedSubscriptionCount * -1} / {rowData.renewedAndReplaced})
+                ({rowData.deactivatedSubscriptionCount * -1} / {rowData.totalToBeRenewed})
               </span>{' '}
               <b>{rowData.cancellationRate}%</b>
             </>
