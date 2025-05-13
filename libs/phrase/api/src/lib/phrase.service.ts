@@ -22,19 +22,28 @@ export class PhraseService {
 
     const [foundArticleIds, foundPageIds] = await Promise.all([
       this.prisma.$queryRaw<{id: string}[]>`
-      SELECT a.id FROM articles a
-      JOIN public."articles.revisions" ar on a."publishedId" = ar.id
-      WHERE to_tsvector('german', ar.title) ||  to_tsvector('german', ar.lead)@@ to_tsquery('german', ${query});
-    `,
+          SELECT a.id
+          FROM articles a
+            JOIN public."articles.revisions" ar
+              ON a."id" = ar."articleId"
+              AND ar."publishedAt" IS NOT NULL
+              AND ar."publishedAt" < NOW()
+          WHERE to_tsvector('german', ar.title)
+            || to_tsvector('german', ar.lead)@@ to_tsquery('german', ${query});
+      `,
       this.prisma.$queryRaw<{id: string}[]>`
-      SELECT p.id FROM pages p
-      JOIN public."pages.revisions" pr on p."publishedId" = pr.id
-      WHERE to_tsvector('german', pr.title) ||  jsonb_to_tsvector(
-         'german',
-         jsonb_path_query_array(blocks, 'strict $.**.text'),
-         '["string"]'
-         )@@ to_tsquery('german', ${query});
-    `
+          SELECT p.id
+          FROM pages p
+            JOIN public."pages.revisions" pr
+              ON p."id" = pr."pageId"
+              AND pr."publishedAt" IS NOT NULL
+              AND pr."publishedAt" < NOW()
+          WHERE to_tsvector('german', pr.title) || jsonb_to_tsvector(
+            'german',
+            jsonb_path_query_array(blocks, 'strict $.**.text'),
+            '["string"]'
+          ) @@ to_tsquery('german', ${query});
+        `
     ])
 
     const articleIds = foundArticleIds.map(({id}) => id)

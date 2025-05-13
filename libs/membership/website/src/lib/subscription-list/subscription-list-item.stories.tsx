@@ -8,7 +8,7 @@ import {
 import {SubscriptionListItem} from './subscription-list-item'
 import {Meta, StoryObj} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
-import {userEvent, within} from '@storybook/testing-library'
+import {userEvent, within} from '@storybook/test'
 import {ApolloError} from '@apollo/client'
 import {mockImage} from '@wepublish/storybook/mocks'
 

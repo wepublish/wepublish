@@ -13,3 +13,4 @@ libs/testing/src/__generated__/fabbrica/index.d.ts
 libs/testing/src/__generated__/fabbrica/index.js
 
 /.nx/cache
+/.nx/workspace-data

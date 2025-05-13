@@ -285,12 +285,15 @@ export class ArticleService {
       }
     })
 
+    const articlePublishedAt =
+      !article.publishedAt || article.publishedAt > publishedAt ? publishedAt : article.publishedAt
+
     return this.prisma.article.update({
       where: {
         id
       },
       data: {
-        publishedAt: article.publishedAt ?? publishedAt,
+        publishedAt: articlePublishedAt,
         modifiedAt: new Date(),
         revisions: {
           update: {
