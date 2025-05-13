@@ -11,7 +11,7 @@ import {
   ListViewHeader,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {useReducer, useState} from 'react'
+import {useCallback, useMemo, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {DateRange} from 'rsuite/esm/DateRangePicker'
 
@@ -30,6 +30,12 @@ export type AudienceClientFilter = Pick<
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
 >
+
+export interface AudienceStatsComputed extends DailySubscriptionStats {
+  totalNewSubscriptions: number
+  renewalRate: number
+  cancellationRate: number
+}
 
 export type DateResolution = 'week' | 'month' | 'day'
 export interface AudienceApiFilter {
@@ -93,6 +99,42 @@ function AudienceDashboard() {
     replacedSubscriptionCount: false
   })
 
+  const getTotalNewSubscriptionsByDay = useCallback(
+    (dailyStat: DailySubscriptionStats): number => {
+      let totalNew = 0
+      if (audienceClientFilter.createdSubscriptionCount) {
+        totalNew += dailyStat.createdSubscriptionCount
+      }
+      if (audienceClientFilter.createdUnpaidSubscriptionCount) {
+        totalNew += dailyStat.createdUnpaidSubscriptionCount
+      }
+      if (audienceClientFilter.renewedSubscriptionCount) {
+        totalNew += dailyStat.renewedSubscriptionCount
+      }
+      if (audienceClientFilter.replacedSubscriptionCount) {
+        totalNew += dailyStat.replacedSubscriptionCount
+      }
+      return totalNew
+    },
+    [audienceClientFilter]
+  )
+
+  const audienceStatsComputed = useMemo<AudienceStatsComputed[]>(() => {
+    return (
+      audienceStats?.dailySubscriptionStats.map(dailyStat => {
+        const totalNewSubscriptions = getTotalNewSubscriptionsByDay(dailyStat)
+
+        return {
+          ...dailyStat,
+          deactivatedSubscriptionCount: -dailyStat.deactivatedSubscriptionCount,
+          totalNewSubscriptions,
+          cancellationRate: 10, // TODO
+          renewalRate: 20 // TODO
+        }
+      }) || []
+    )
+  }, [audienceStats, getTotalNewSubscriptionsByDay])
+
   return (
     <>
       <ListViewContainer>
@@ -111,11 +153,11 @@ function AudienceDashboard() {
       </ListViewContainer>
 
       <AudienceChartWrapper>
-        <AudienceChart activeFilters={audienceClientFilter} audienceStats={audienceStats} />
+        <AudienceChart audienceStats={audienceStatsComputed} clientFilter={audienceClientFilter} />
       </AudienceChartWrapper>
 
       <TableWrapperStyled>
-        <AudienceTable audienceStats={audienceStats} />
+        <AudienceTable audienceStats={audienceStatsComputed} clientFilter={audienceClientFilter} />
       </TableWrapperStyled>
     </>
   )

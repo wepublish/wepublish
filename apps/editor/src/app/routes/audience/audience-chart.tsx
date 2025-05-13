@@ -1,5 +1,3 @@
-import {DailySubscriptionStatsQuery} from '@wepublish/editor/api-v2'
-import {useMemo} from 'react'
 import {
   Bar,
   ComposedChart,
@@ -12,14 +10,14 @@ import {
   YAxis
 } from 'recharts'
 
-import {AudienceClientFilter} from './audience-dashboard'
+import {AudienceClientFilter, AudienceStatsComputed} from './audience-dashboard'
 
 interface AudienceChartProps {
-  audienceStats: DailySubscriptionStatsQuery | undefined
-  activeFilters: AudienceClientFilter
+  audienceStats: AudienceStatsComputed[]
+  clientFilter: AudienceClientFilter
 }
 
-export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps) {
+export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps) {
   const {
     totalActiveSubscriptionCount,
     createdSubscriptionCount,
@@ -27,24 +25,13 @@ export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps
     createdUnpaidSubscriptionCount,
     replacedSubscriptionCount,
     deactivatedSubscriptionCount
-  } = activeFilters
+  } = clientFilter
 
   const chartColors = ['#ed4a8e', '#bf54b6', '#FF5A5F', '#7364cd', '#006dca', '#006db0']
 
-  const dataWithNegativeDeactivated = useMemo(() => {
-    return (
-      audienceStats?.dailySubscriptionStats.map(stats => {
-        return {
-          ...stats,
-          deactivatedSubscriptionCount: -stats.deactivatedSubscriptionCount
-        }
-      }) || []
-    )
-  }, [audienceStats?.dailySubscriptionStats])
-
   return (
     <ResponsiveContainer>
-      <ComposedChart data={dataWithNegativeDeactivated}>
+      <ComposedChart data={audienceStats}>
         <XAxis dataKey={'date'} />
         <YAxis stroke="#000" />
         <Tooltip />
