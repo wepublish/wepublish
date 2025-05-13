@@ -1,12 +1,19 @@
+import styled from '@emotion/styled'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Col, DateRangePicker, Grid, Panel, Row, TagPicker} from 'rsuite'
+import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker} from 'rsuite'
 
-import {AudienceApiFilter, AudienceClientFilter} from './audience-dashboard'
+import {AudienceApiFilter, AudienceClientFilter, Resolution} from './audience-dashboard'
 import {AudienceFilterToggle} from './audience-filter-toggle'
 
+const TagPickerStyled = styled(TagPicker)`
+  margin-top: ${({theme}) => theme.spacing(2)};
+`
+
 export interface AudienceFilterProps {
+  resolution: Resolution
+  setResolution: Dispatch<SetStateAction<Resolution>>
   clientFilter: AudienceClientFilter
   setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>
   apiFilter: AudienceApiFilter
@@ -14,6 +21,8 @@ export interface AudienceFilterProps {
 }
 
 export function AudienceFilter({
+  resolution,
+  setResolution,
   clientFilter,
   setClientFilter,
   apiFilter,
@@ -49,7 +58,19 @@ export function AudienceFilter({
     <Grid style={{width: '100%'}}>
       <Row>
         {/* select date range */}
-        <Col xs={4}>
+        <Col xs={3}>
+          <RadioGroup
+            name="aggregation-picker"
+            inline
+            appearance="picker"
+            defaultValue={resolution}
+            onChange={newResolution => setResolution(newResolution as Resolution)}>
+            <Radio value="daily">Täglich</Radio>
+            <Radio value="monthly">Monatlich</Radio>
+          </RadioGroup>
+        </Col>
+
+        <Col xs={5}>
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
@@ -58,10 +79,8 @@ export function AudienceFilter({
             placeholder={t('audienceFilter.rangePickerPlaceholder')}
             style={{width: '100%'}}
           />
-        </Col>
 
-        <Col xs={4}>
-          <TagPicker
+          <TagPickerStyled
             size="lg"
             data={memberPlansForPicker}
             style={{width: '100%'}}

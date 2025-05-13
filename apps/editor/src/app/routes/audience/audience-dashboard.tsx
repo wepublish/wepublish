@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {
   DailySubscriptionStats,
+  DailySubscriptionStatsUser,
   getApiClientV2,
   useDailySubscriptionStatsLazyQuery
 } from '@wepublish/editor/api-v2'
@@ -19,6 +20,8 @@ import {AudienceChart} from './audience-chart'
 import {AudienceFilter} from './audience-filter'
 import {AudienceTable} from './audience-table'
 
+export type Resolution = 'daily' | 'monthly'
+
 export type AudienceClientFilter = Pick<
   {
     [K in keyof DailySubscriptionStats]: boolean
@@ -29,6 +32,24 @@ export type AudienceClientFilter = Pick<
   | 'deactivatedSubscriptionCount'
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
+>
+
+type SumUpCount = keyof Pick<
+  AudienceStatsComputed,
+  | 'createdSubscriptionCount'
+  | 'createdUnpaidSubscriptionCount'
+  | 'deactivatedSubscriptionCount'
+  | 'renewedSubscriptionCount'
+  | 'replacedSubscriptionCount'
+>
+
+type AggregatedUsers = keyof Pick<
+  AudienceStatsComputed,
+  | 'createdSubscriptionUsers'
+  | 'createdUnpaidSubscriptionUsers'
+  | 'deactivatedSubscriptionUsers'
+  | 'renewedSubscriptionUsers'
+  | 'replacedSubscriptionUsers'
 >
 
 interface RenewalFigures {
@@ -68,7 +89,8 @@ function AudienceDashboard() {
   const {t} = useTranslation()
   const client = getApiClientV2()
 
-  const [fetchStats, {data: audienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
+  const [resolution, setResolution] = useState<Resolution>('daily')
+  const [fetchStats, {data: rawAudienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
     client
   })
 
@@ -159,7 +181,7 @@ function AudienceDashboard() {
 
   const audienceStatsComputed = useMemo<AudienceStatsComputed[]>(() => {
     return (
-      audienceStats?.dailySubscriptionStats.map(dailyStat => {
+      rawAudienceStats?.dailySubscriptionStats.map(dailyStat => {
         const totalNewSubscriptions = getTotalNewSubscriptionsByDay(dailyStat)
         const renewalFigures = getRenewalFigures(dailyStat)
 
@@ -171,7 +193,79 @@ function AudienceDashboard() {
         }
       }) || []
     )
-  }, [audienceStats, getTotalNewSubscriptionsByDay, getRenewalFigures])
+  }, [rawAudienceStats, getTotalNewSubscriptionsByDay, getRenewalFigures])
+
+  const sumUpCounts = useCallback((monthStats: AudienceStatsComputed[], sumUpCount: SumUpCount) => {
+    return monthStats.reduce((sum, stat) => sum + stat[sumUpCount], 0)
+  }, [])
+
+  const mergeUsers = useCallback(
+    (monthStats: AudienceStatsComputed[], userProperty: AggregatedUsers) => {
+      let mergedUsers: DailySubscriptionStatsUser[] = []
+
+      for (const stat of monthStats) {
+        mergedUsers = [...mergedUsers, ...(stat[userProperty] as DailySubscriptionStatsUser[])]
+      }
+    },
+    []
+  )
+
+  const audienceStatsAggregatedByMonth = useMemo<AudienceStatsComputed[]>(() => {
+    const aggregatedStats: AudienceStatsComputed[] = []
+
+    // get unique month out of all the dates
+    const months = new Set<number>()
+
+    for (const stat of audienceStatsComputed) {
+      const date = new Date(stat.date)
+      months.add(date.getMonth())
+    }
+
+    // aggregate data per month
+    for (const month of months) {
+      const monthStats = audienceStatsComputed
+        .filter(stat => new Date(stat.date).getMonth() === month)
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+      const lastDayOfMonth = monthStats[monthStats.length - 1]
+
+      // sum up the count figures
+      const summedUpCounts = (
+        [
+          'createdSubscriptionCount',
+          'createdUnpaidSubscriptionCount',
+          'deactivatedSubscriptionCount',
+          'renewedSubscriptionCount',
+          'replacedSubscriptionCount'
+        ] as SumUpCount[]
+      ).reduce((acc, key) => ({...acc, [key]: sumUpCounts(monthStats, key)}), {})
+
+      // merge the user
+      const mergedUsers = (
+        [
+          'createdSubscriptionUsers',
+          'createdUnpaidSubscriptionUsers',
+          'deactivatedSubscriptionUsers',
+          'renewedSubscriptionUsers',
+          'replacedSubscriptionUsers'
+        ] as AggregatedUsers[]
+      ).reduce((acc, key) => ({...acc, [key]: mergeUsers(monthStats, key)}), {})
+
+      aggregatedStats.push({
+        ...lastDayOfMonth, // TODO
+        date: lastDayOfMonth.date,
+        ...summedUpCounts,
+        ...mergedUsers
+      })
+    }
+
+    return aggregatedStats
+  }, [audienceStatsComputed, sumUpCounts, mergeUsers])
+
+  const audienceStats = useMemo(
+    () => (resolution === 'daily' ? audienceStatsComputed : audienceStatsAggregatedByMonth),
+    [resolution, audienceStatsComputed, audienceStatsAggregatedByMonth]
+  )
 
   return (
     <>
@@ -182,6 +276,8 @@ function AudienceDashboard() {
 
         <ListViewFilterArea style={{alignItems: 'center'}}>
           <AudienceFilter
+            resolution={resolution}
+            setResolution={setResolution}
             clientFilter={audienceClientFilter}
             setClientFilter={setAudienceClientFilter}
             apiFilter={audienceApiFilter}
@@ -191,11 +287,11 @@ function AudienceDashboard() {
       </ListViewContainer>
 
       <AudienceChartWrapper>
-        <AudienceChart audienceStats={audienceStatsComputed} clientFilter={audienceClientFilter} />
+        <AudienceChart audienceStats={audienceStats} clientFilter={audienceClientFilter} />
       </AudienceChartWrapper>
 
       <TableWrapperStyled>
-        <AudienceTable audienceStats={audienceStatsComputed} clientFilter={audienceClientFilter} />
+        <AudienceTable audienceStats={audienceStats} clientFilter={audienceClientFilter} />
       </TableWrapperStyled>
     </>
   )
