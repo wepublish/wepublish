@@ -19,19 +19,12 @@ export type Scalars = {
   Date: string;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
-  GraphQLSettingValueType: any;
   RichText: Descendant[];
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
   /** A valid vote value */
   VoteValue: number;
-};
-
-export type AllowedSettingVals = {
-  __typename?: 'AllowedSettingVals';
-  boolChoice?: Maybe<Scalars['Boolean']>;
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type AuthProvider = {
@@ -527,7 +520,6 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
-  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
   updateSubscription?: Maybe<Subscription>;
   updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
@@ -860,11 +852,6 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
-export type MutationUpdateSettingListArgs = {
-  value?: InputMaybe<Array<InputMaybe<UpdateSettingArgs>>>;
-};
-
-
 export type MutationUpdateSubscriptionArgs = {
   id: Scalars['String'];
   input: SubscriptionInput;
@@ -1149,8 +1136,6 @@ export type Query = {
   ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
-  setting?: Maybe<Setting>;
-  settings: Array<Setting>;
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
@@ -1302,11 +1287,6 @@ export type QueryRemotePeerProfileArgs = {
 };
 
 
-export type QuerySettingArgs = {
-  name: Scalars['String'];
-};
-
-
 export type QuerySubscriptionArgs = {
   id: Scalars['String'];
 };
@@ -1385,41 +1365,6 @@ export type SessionWithToken = {
   id: Scalars['String'];
   token: Scalars['String'];
   user: User;
-};
-
-export type Setting = {
-  __typename?: 'Setting';
-  id: Scalars['String'];
-  name: SettingName;
-  settingRestriction?: Maybe<SettingRestriction>;
-  value: Scalars['GraphQLSettingValueType'];
-};
-
-export enum SettingName {
-  AllowCommentEditing = 'allowCommentEditing',
-  AllowGuestCommentRating = 'allowGuestCommentRating',
-  AllowGuestCommenting = 'allowGuestCommenting',
-  AllowGuestPollVoting = 'allowGuestPollVoting',
-  CommentCharLimit = 'commentCharLimit',
-  MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
-  MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
-  MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
-  MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
-  MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
-  MakeRevenueApiPublic = 'makeRevenueApiPublic',
-  NewArticlePaywall = 'newArticlePaywall',
-  NewArticlePeering = 'newArticlePeering',
-  PeeringTimeoutInMs = 'peeringTimeoutInMs',
-  ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
-  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
-}
-
-export type SettingRestriction = {
-  __typename?: 'SettingRestriction';
-  allowedValues?: Maybe<AllowedSettingVals>;
-  inputLength?: Maybe<Scalars['Int']>;
-  maxValue?: Maybe<Scalars['Int']>;
-  minValue?: Maybe<Scalars['Int']>;
 };
 
 export enum SortOrder {
@@ -1614,11 +1559,6 @@ export type UpdatePollExternalVoteSources = {
   id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
-};
-
-export type UpdateSettingArgs = {
-  name: SettingName;
-  value: Scalars['GraphQLSettingValueType'];
 };
 
 export type UploadImageInput = {

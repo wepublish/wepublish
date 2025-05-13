@@ -1,0 +1,69 @@
+fragment FullPaywall on Paywall {
+  id
+  createdAt
+  modifiedAt
+  name
+  description
+  active
+  anyMemberPlan
+  memberPlans {
+    id
+    name
+  }
+}
+
+query PaywallList {
+  paywalls {
+    ...FullPaywall
+  }
+}
+
+query Paywall($id: String!) {
+  paywall(id: $id) {
+    ...FullPaywall
+  }
+}
+
+mutation CreatePaywall(
+  $name: String
+  $description: RichText
+  $active: Boolean!
+  $anyMemberPlan: Boolean!
+  $memberPlanIds: [String!]!
+) {
+  createPaywall(
+    name: $name
+    description: $description
+    anyMemberPlan: $anyMemberPlan
+    active: $active
+    memberPlanIds: $memberPlanIds
+  ) {
+    ...FullPaywall
+  }
+}
+
+mutation UpdatePaywall(
+  $id: String!
+  $name: String
+  $description: RichText
+  $active: Boolean
+  $anyMemberPlan: Boolean
+  $memberPlanIds: [String!]
+) {
+  updatePaywall(
+    id: $id
+    name: $name
+    description: $description
+    anyMemberPlan: $anyMemberPlan
+    active: $active
+    memberPlanIds: $memberPlanIds
+  ) {
+    ...FullPaywall
+  }
+}
+
+mutation DeletePaywall($id: String!) {
+  deletePaywall(id: $id) {
+    ...FullPaywall
+  }
+}

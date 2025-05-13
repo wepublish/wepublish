@@ -51,7 +51,7 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
-export type Article = HasOptionalPeerLc & {
+export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
   disableComments: Scalars['Boolean'];
@@ -61,6 +61,8 @@ export type Article = HasOptionalPeerLc & {
   latest: ArticleRevision;
   likes: Scalars['Int'];
   modifiedAt: Scalars['DateTime'];
+  paywall?: Maybe<Paywall>;
+  paywallId?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
   peerArticleId?: Maybe<Scalars['String']>;
   peerId?: Maybe<Scalars['String']>;
@@ -1038,6 +1040,11 @@ export type HasOptionalPage = {
   pageID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalPaywall = {
+  paywall?: Maybe<Paywall>;
+  paywallId?: Maybe<Scalars['String']>;
+};
+
 export type HasOptionalPeerLc = {
   peer?: Maybe<Peer>;
   peerId?: Maybe<Scalars['String']>;
@@ -1409,6 +1416,8 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
   createPaymentFromSubscription?: Maybe<Payment>;
+  /** Creates a paywall. */
+  createPaywall: Paywall;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -1445,6 +1454,8 @@ export type Mutation = {
   deleteNavigation: Navigation;
   /** Deletes an page. */
   deletePage: Scalars['String'];
+  /** Deletes a paywall. */
+  deletePaywall: Paywall;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -1523,6 +1534,8 @@ export type Mutation = {
   updatePassword?: Maybe<User>;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
+  /** Updates a paywall. */
+  updatePaywall: Paywall;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1570,6 +1583,7 @@ export type MutationCreateArticleArgs = {
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<Scalars['Int']>;
+  paywallId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   seoTitle?: InputMaybe<Scalars['String']>;
@@ -1650,6 +1664,15 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   subscriptionId?: InputMaybe<Scalars['String']>;
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePaywallArgs = {
+  active: Scalars['Boolean'];
+  anyMemberPlan: Scalars['Boolean'];
+  description?: InputMaybe<Scalars['RichText']>;
+  memberPlanIds?: Array<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1758,6 +1781,11 @@ export type MutationDeleteNavigationArgs = {
 
 
 export type MutationDeletePageArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePaywallArgs = {
   id: Scalars['String'];
 };
 
@@ -1905,6 +1933,7 @@ export type MutationUpdateArticleArgs = {
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<Scalars['Int']>;
+  paywallId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   seoTitle?: InputMaybe<Scalars['String']>;
@@ -1994,6 +2023,16 @@ export type MutationUpdatePasswordArgs = {
 
 export type MutationUpdatePaymentProviderCustomersArgs = {
   input: Array<PaymentProviderCustomerInput>;
+};
+
+
+export type MutationUpdatePaywallArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2283,6 +2322,18 @@ export enum PaymentState {
   RequiresUserAction = 'requiresUserAction',
   Submitted = 'submitted'
 }
+
+export type Paywall = {
+  __typename?: 'Paywall';
+  active: Scalars['Boolean'];
+  anyMemberPlan: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+};
 
 export type Peer = {
   __typename?: 'Peer';
@@ -2634,6 +2685,10 @@ export type Query = {
   pages: PaginatedPages;
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>;
+  /** Returns an paywall by id. */
+  paywall: Paywall;
+  /** Returns a list of paywalls based on the filters given. */
+  paywalls: Array<Paywall>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -2880,6 +2935,11 @@ export type QueryPagesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PageSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPaywallArgs = {
+  id: Scalars['String'];
 };
 
 

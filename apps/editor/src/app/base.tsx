@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {CanPreview} from '@wepublish/permissions'
+import {CanCreatePaywall, CanPreview, CanUpdatePaywall} from '@wepublish/permissions'
 import {PermissionControl, Version} from '@wepublish/ui/editor'
 import {de, enUS, fr} from 'date-fns/locale'
 import {forwardRef, ReactNode, useEffect, useState} from 'react'
@@ -181,7 +181,9 @@ export function Base({children}: BaseProps) {
                     CanPreview.id,
                     'CAN_GET_PEER_ARTICLES',
                     'CAN_GET_PEER_ARTICLE',
-                    'CAN_GET_TAGS'
+                    'CAN_GET_TAGS',
+                    CanCreatePaywall.id,
+                    CanUpdatePaywall.id
                   ]}>
                   <Nav.Menu
                     eventKey={'articles'}
@@ -229,6 +231,17 @@ export function Base({children}: BaseProps) {
                         icon={<MdSell />}
                         active={path === 'articles/tags'}>
                         {t('navbar.articleTags')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[CanCreatePaywall.id, CanUpdatePaywall.id]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/paywall"
+                        icon={<MdFileCopy />}
+                        active={path === 'articles/paywall'}>
+                        {t('navbar.paywall')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

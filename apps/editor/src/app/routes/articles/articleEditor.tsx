@@ -1,12 +1,15 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment, SettingName, useSettingListQuery} from '@wepublish/editor/api'
+import {AuthorRefFragment} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
   getApiClientV2,
+  SettingName,
   useArticleQuery,
   useCreateArticleMutation,
+  usePaywallListQuery,
   usePublishArticleMutation,
+  useSettingsListQuery,
   useUpdateArticleMutation
 } from '@wepublish/editor/api-v2'
 import {CanPreview} from '@wepublish/permissions'
@@ -139,6 +142,7 @@ function ArticleEditor() {
     properties: [],
     canonicalUrl: '',
     shared: false,
+    paywall: false,
     hidden: false,
     disableComments: false,
     breaking: false,
@@ -152,15 +156,20 @@ function ArticleEditor() {
     trackingPixels: undefined
   })
 
-  useSettingListQuery({
+  useSettingsListQuery({
     client,
     onCompleted(data) {
       setMetadata({
         ...metadata,
         shared: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
+          ?.value,
+        paywall: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
           ?.value
       })
     }
+  })
+  const {data: paywallData} = usePaywallListQuery({
+    client
   })
 
   const isNew = id === undefined
@@ -176,7 +185,8 @@ function ArticleEditor() {
     client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: {id: articleID!}
+    variables: {id: articleID!},
+    skip: !articleID
   })
 
   const isNotFound = articleData && !articleData.article
@@ -196,8 +206,18 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, shared, hidden, disableComments, tags, url, slug, trackingPixels, likes} =
-        articleData.article
+      const {
+        latest,
+        shared,
+        hidden,
+        disableComments,
+        tags,
+        url,
+        slug,
+        trackingPixels,
+        likes,
+        paywallId
+      } = articleData.article
       const {
         preTitle,
         title,
@@ -232,6 +252,7 @@ function ArticleEditor() {
         properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
+        paywall: !!paywallId,
         hidden,
         disableComments,
         breaking,
@@ -345,6 +366,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
+      paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,

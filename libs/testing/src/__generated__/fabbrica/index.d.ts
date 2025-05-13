@@ -3138,8 +3138,8 @@ type PaywallMemberplanpaywallFactory = {
     build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutMemberPlansInput["create"]>;
 };
 type PaywallMemberplanFactoryDefineInput = {
-    id?: string;
     createdAt?: Date;
+    modifiedAt?: Date;
     memberPlan: PaywallMemberplanmemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutPaywallsInput;
     paywall: PaywallMemberplanpaywallFactory | Prisma.PaywallCreateNestedOneWithoutMemberPlansInput;
 };
@@ -3157,10 +3157,10 @@ export interface PaywallMemberplanFactoryInterfaceWithoutTraits {
     build(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Prisma.PaywallMemberplanCreateInput>;
     buildCreateInput(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Prisma.PaywallMemberplanCreateInput>;
     buildList(inputData: number | readonly Partial<Prisma.PaywallMemberplanCreateInput>[]): PromiseLike<Prisma.PaywallMemberplanCreateInput[]>;
-    pickForConnect(inputData: PaywallMemberplan): Pick<PaywallMemberplan, "id">;
+    pickForConnect(inputData: PaywallMemberplan): Pick<PaywallMemberplan, "paywallId" | "memberPlanId">;
     create(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<PaywallMemberplan>;
     createList(inputData: number | readonly Partial<Prisma.PaywallMemberplanCreateInput>[]): PromiseLike<PaywallMemberplan[]>;
-    createForConnect(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Pick<PaywallMemberplan, "id">>;
+    createForConnect(inputData?: Partial<Prisma.PaywallMemberplanCreateInput>): PromiseLike<Pick<PaywallMemberplan, "paywallId" | "memberPlanId">>;
 }
 export interface PaywallMemberplanFactoryInterface<TOptions extends PaywallMemberplanFactoryDefineOptions = PaywallMemberplanFactoryDefineOptions> extends PaywallMemberplanFactoryInterfaceWithoutTraits {
     use(name: PaywallMemberplanTraitKeys<TOptions>, ...names: readonly PaywallMemberplanTraitKeys<TOptions>[]): PaywallMemberplanFactoryInterfaceWithoutTraits;

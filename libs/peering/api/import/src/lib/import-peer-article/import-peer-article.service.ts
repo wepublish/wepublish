@@ -177,6 +177,7 @@ export class ImportPeerArticleService {
         peerArticleId: articleId,
         slug: article.slug,
 
+        paywallId: null,
         shared: false,
         hidden: false,
         disableComments: false,

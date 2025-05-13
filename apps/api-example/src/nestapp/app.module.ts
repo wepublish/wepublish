@@ -3,44 +3,7 @@ import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ScheduleModule} from '@nestjs/schedule'
-import {
-  AgendaBaselService,
-  AuthenticationModule,
-  BexioPaymentProvider,
-  BannerApiModule,
-  CrowdfundingApiModule,
-  ConsentModule,
-  DashboardModule,
-  EventModule,
-  EventsImportModule,
-  GoogleAnalyticsModule,
-  GoogleAnalyticsService,
-  GraphQLRichText,
-  HealthModule,
-  HotAndTrendingModule,
-  KarmaMediaAdapter,
-  KulturZueriService,
-  MailchimpMailProvider,
-  MailgunMailProvider,
-  MailsModule,
-  MembershipModule,
-  MolliePaymentProvider,
-  NeverChargePaymentProvider,
-  NovaMediaAdapter,
-  PaymentProvider,
-  PaymentsModule,
-  PayrexxFactory,
-  PayrexxPaymentProvider,
-  PayrexxSubscriptionPaymentProvider,
-  PermissionModule,
-  SettingModule,
-  StatsModule,
-  StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  SystemInfoModule,
-  SubscriptionModule,
-  VersionInformationModule
-} from '@wepublish/api'
+
 import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
@@ -55,7 +18,7 @@ import {PageModule} from '@wepublish/page/api'
 import {PeerModule} from '@wepublish/peering/api'
 import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
 import {CommentModule} from '@wepublish/comments/api'
-import {ArticleModule} from '@wepublish/article/api'
+import {ArticleModule, HotAndTrendingModule} from '@wepublish/article/api'
 import {PhraseModule} from '@wepublish/phrase/api'
 import {ActionModule} from '@wepublish/action/api'
 import {NavigationModule} from '@wepublish/navigation/api'
@@ -67,6 +30,40 @@ import {
 } from '@wepublish/tracking-pixel/api'
 import {HttpModule, HttpService} from '@nestjs/axios'
 import {MediaAdapterModule} from '@wepublish/image/api'
+import {PaywallModule} from '@wepublish/paywall/api'
+import {NovaMediaAdapter, KarmaMediaAdapter} from '@wepublish/api'
+import {AuthenticationModule} from '@wepublish/authentication/api'
+import {CrowdfundingApiModule} from '@wepublish/crowdfunding/api'
+import {EventModule} from '@wepublish/event/api'
+import {HealthModule} from '@wepublish/health'
+import {MailsModule, MailgunMailProvider, MailchimpMailProvider} from '@wepublish/mail/api'
+import {MembershipModule, DashboardModule, SubscriptionModule} from '@wepublish/membership/api'
+import {
+  PaymentsModule,
+  PaymentProvider,
+  StripeCheckoutPaymentProvider,
+  StripePaymentProvider,
+  PayrexxFactory,
+  PayrexxPaymentProvider,
+  PayrexxSubscriptionPaymentProvider,
+  BexioPaymentProvider,
+  MolliePaymentProvider,
+  NeverChargePaymentProvider
+} from '@wepublish/payment/api'
+import {PermissionModule} from '@wepublish/permissions/api'
+import {GraphQLRichText} from '@wepublish/richtext/api'
+import {SettingModule} from '@wepublish/settings/api'
+import {ConsentModule} from '@wepublish/consent/api'
+import {StatsModule} from '@wepublish/stats/api'
+import {SystemInfoModule} from '@wepublish/system-info'
+import {
+  EventsImportModule,
+  AgendaBaselService,
+  KulturZueriService
+} from '@wepublish/event/import/api'
+import {BannerApiModule} from '@wepublish/banner/api'
+import {VersionInformationModule} from '@wepublish/versionInformation/api'
+import {GoogleAnalyticsModule, GoogleAnalyticsService} from '@wepublish/google-analytics/api'
 
 @Global()
 @Module({
@@ -407,7 +404,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
         )
       },
       inject: [ConfigService]
-    })
+    }),
+    PaywallModule
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [

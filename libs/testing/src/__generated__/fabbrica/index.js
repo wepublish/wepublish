@@ -5676,7 +5676,8 @@ function definePaywallMemberplanFactoryInternal({ defaultData: defaultDataResolv
         });
         const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
         const pickForConnect = (inputData) => ({
-            id: inputData.id
+            paywallId: inputData.paywallId,
+            memberPlanId: inputData.memberPlanId
         });
         const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
