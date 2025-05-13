@@ -118,7 +118,7 @@ export class AppController {
     if (!imageExists) {
       res.status(404)
       res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
-      this.imageCacheService.set(cacheKey, buffer, 404, 60)
+      this.imageCacheService.set(cacheKey, buffer, 404, 120)
     } else {
       this.imageCacheService.set(cacheKey, buffer)
     }

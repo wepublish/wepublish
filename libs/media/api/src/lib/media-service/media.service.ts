@@ -10,12 +10,42 @@ import * as path from 'path'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
-const fallbackImageCache = new Map<string, Buffer>()
-
 export type MediaServiceConfig = {
   uploadBucket: string
   transformationBucket: string
 }
+
+export type FallbackImageRatio = {
+  widthRatio: number
+  heightRatio: number
+}
+
+const fallbackImageRatios: FallbackImageRatio[] = [
+  {
+    widthRatio: 4,
+    heightRatio: 3
+  },
+  {
+    widthRatio: 16,
+    heightRatio: 9
+  },
+  {
+    widthRatio: 1,
+    heightRatio: 1
+  },
+  {
+    widthRatio: 3,
+    heightRatio: 2
+  },
+  {
+    widthRatio: 5,
+    heightRatio: 4
+  },
+  {
+    widthRatio: 9,
+    heightRatio: 16
+  }
+]
 
 export const getTransformationKey = (transformations: TransformationsDto) => {
   return JSON.stringify(transformations, (_key, value) =>
@@ -77,23 +107,39 @@ export class MediaService {
     return await Promise.all([Readable.from(fileBuffer), etag, true])
   }
 
+  private getFallbackImage(transformations: TransformationsDto): Readable {
+    // Modify transformations based on resize properties
+    if (transformations.resize) {
+      const hasWidth = 'width' in transformations.resize
+      const hasHeight = 'height' in transformations.resize
+
+      if (hasWidth && !hasHeight) {
+        // Add height based on a random valid ratio
+        const ratio = fallbackImageRatios[Math.floor(Math.random() * fallbackImageRatios.length)]
+        transformations.resize.height = Math.round(
+          transformations.resize.width! * (ratio.heightRatio / ratio.widthRatio)
+        )
+      } else if (!hasWidth && hasHeight) {
+        // Add width based on a random valid ratio
+        const ratio = fallbackImageRatios[Math.floor(Math.random() * fallbackImageRatios.length)]
+        transformations.resize.width = Math.round(
+          transformations.resize.height! * (ratio.widthRatio / ratio.heightRatio)
+        )
+      }
+    }
+    const defaultImagePath = path.join(__dirname, 'assets', 'fallback-image.webp')
+    return fs.createReadStream(defaultImagePath)
+  }
+
   private async transformImage(imageId: string, transformations: TransformationsDto) {
     let imageStream: Readable
     let imageExists = true
-    let baseTransformationsKey = '{}'
     try {
       imageStream = await this.storage.getFile(this.config.uploadBucket, `images/${imageId}`)
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
         imageExists = false
-        baseTransformationsKey = getTransformationKey(transformations)
-        const cachedBuffer = fallbackImageCache.get(baseTransformationsKey)
-        if (cachedBuffer) {
-          const image = sharp(cachedBuffer)
-          return Promise.all([image, 'none', imageExists])
-        }
-        const defaultImagePath = path.join(__dirname, 'assets', 'fallback-image.webp')
-        imageStream = fs.createReadStream(defaultImagePath)
+        imageStream = this.getFallbackImage(transformations)
       } else {
         throw e
       }
@@ -168,8 +214,6 @@ export class MediaService {
         metadata.size,
         {ContentType: `image/${metadata.format}`}
       )
-    } else {
-      fallbackImageCache.set(baseTransformationsKey, await transformedImage.clone().toBuffer())
     }
     const etag = this.generateETag(await this.bufferStream(transformedImage.clone()))
 
