@@ -6,12 +6,14 @@ import {
   BlockType,
   CommentBlockInput,
   EventBlockInput,
+  HTMLBlockInput,
   ImageGalleryBlockInput,
   ImageGalleryImageInput,
   ListicleBlockInput,
   ListicleItemInput,
   PollBlockInput,
   TeaserGridBlockInput,
+  TeaserGridFlexBlockInput,
   TeaserListBlockInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
@@ -383,8 +385,16 @@ export class ImportPeerArticleService {
             return {
               ...stripUnwantedProperties(block),
               type: BlockType.TeaserGrid,
-              teasers: []
+              teasers: [new Array(block.numColumns === 1 ? 1 : 6).map(() => null)]
             } as TeaserGridBlockInput
+          }
+
+          case 'TeaserGridFlexBlock': {
+            return {
+              ...stripUnwantedProperties(block),
+              type: BlockType.TeaserGridFlex,
+              flexTeasers: []
+            } as TeaserGridFlexBlockInput
           }
 
           case 'TeaserListBlock': {
@@ -399,10 +409,16 @@ export class ImportPeerArticleService {
             } as TeaserListBlockInput
           }
 
+          case 'HTMLBlock': {
+            return {
+              ...stripUnwantedProperties(block),
+              type: BlockType.HTML
+            } as HTMLBlockInput
+          }
+
           case 'CrowdfundingBlock':
           case 'UnknownBlock':
           case 'TitleBlock':
-          case 'TeaserGridFlexBlock':
           case 'BildwurfAdBlock':
           case 'IFrameBlock':
           case 'PolisConversationBlock':
@@ -414,7 +430,6 @@ export class ImportPeerArticleService {
           case 'SoundCloudTrackBlock':
           case 'TikTokVideoBlock':
           case 'TwitterTweetBlock':
-          case 'HTMLBlock':
           case 'RichTextBlock':
           case 'SubscribeBlock': {
             return {
@@ -471,7 +486,17 @@ const stripBlockStyle = <T extends {[key: string]: unknown}>({
 const stripType = <T extends {[key: string]: unknown}>({type, ...rest}: T): Omit<T, 'type'> => rest
 const stripImage = <T extends {[key: string]: unknown}>({image, ...rest}: T): Omit<T, 'image'> =>
   rest
+const stripCrowdfunding = <T extends {[key: string]: unknown}>({
+  crowdfunding,
+  ...rest
+}: T): Omit<T, 'crowdfunding'> => rest
 
-const stripUnwantedProperties = pipe(stripType, stripTypename, stripBlockStyle, stripImage)
+const stripUnwantedProperties = pipe(
+  stripType,
+  stripTypename,
+  stripBlockStyle,
+  stripImage,
+  stripCrowdfunding
+)
 
 const lower = replace(/^./, toLower)

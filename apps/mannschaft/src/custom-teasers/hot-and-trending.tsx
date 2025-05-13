@@ -6,7 +6,7 @@ import {allPass} from 'ramda'
 import {useMemo} from 'react'
 
 export const isHotAndTrendingTeaser = allPass([
-  ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
+  ({teaser}: BuilderTeaserProps) => teaser?.type === 'Custom',
   ({teaser}: BuilderTeaserProps) => teaser?.preTitle === 'hot-and-trending'
 ])
 
