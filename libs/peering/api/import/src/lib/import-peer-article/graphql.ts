@@ -3520,84 +3520,7 @@ export type FullImageFragment = {
   source?: string | null
 }
 
-type FullTeaser_ArticleTeaser_Fragment = {
-  __typename?: 'ArticleTeaser'
-  preTitle?: string | null
-  title?: string | null
-  lead?: string | null
-  image?: {
-    __typename?: 'Image'
-    id: string
-    url?: string | null
-    license?: string | null
-    source?: string | null
-  } | null
-  article?: {__typename?: 'Article'; id: string} | null
-}
-
-type FullTeaser_CustomTeaser_Fragment = {
-  __typename?: 'CustomTeaser'
-  preTitle?: string | null
-  title?: string | null
-  lead?: string | null
-  contentUrl?: string | null
-  image?: {
-    __typename?: 'Image'
-    id: string
-    url?: string | null
-    license?: string | null
-    source?: string | null
-  } | null
-  properties?: Array<{
-    __typename?: 'NonDbProperty'
-    key: string
-    value: string
-    public: boolean
-  }> | null
-}
-
-type FullTeaser_EventTeaser_Fragment = {
-  __typename?: 'EventTeaser'
-  preTitle?: string | null
-  title?: string | null
-  lead?: string | null
-  image?: {
-    __typename?: 'Image'
-    id: string
-    url?: string | null
-    license?: string | null
-    source?: string | null
-  } | null
-  event?: {__typename?: 'Event'; id: string} | null
-}
-
-type FullTeaser_PageTeaser_Fragment = {
-  __typename?: 'PageTeaser'
-  preTitle?: string | null
-  title?: string | null
-  lead?: string | null
-  image?: {
-    __typename?: 'Image'
-    id: string
-    url?: string | null
-    license?: string | null
-    source?: string | null
-  } | null
-  page?: {__typename?: 'Page'; id: string} | null
-}
-
-export type FullTeaserFragment =
-  | FullTeaser_ArticleTeaser_Fragment
-  | FullTeaser_CustomTeaser_Fragment
-  | FullTeaser_EventTeaser_Fragment
-  | FullTeaser_PageTeaser_Fragment
-
-type ImportBlock_BildwurfAdBlock_Fragment = {
-  __typename: 'BildwurfAdBlock'
-  blockStyle?: string | null
-  type: BlockType
-  zoneID?: string | null
-}
+type ImportBlock_BildwurfAdBlock_Fragment = {__typename: 'BildwurfAdBlock'}
 
 type ImportBlock_BreakBlock_Fragment = {
   __typename: 'BreakBlock'
@@ -3618,28 +3541,11 @@ type ImportBlock_BreakBlock_Fragment = {
   } | null
 }
 
-type ImportBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'; type: BlockType}
+type ImportBlock_CommentBlock_Fragment = {__typename: 'CommentBlock'}
 
-type ImportBlock_CrowdfundingBlock_Fragment = {
-  __typename: 'CrowdfundingBlock'
-  blockStyle?: string | null
-  type: BlockType
-  crowdfunding?: {
-    __typename?: 'CrowdfundingWithActiveGoal'
-    id: string
-    name: string
-    activeCrowdfundingGoal?: {
-      __typename?: 'CrowdfundingGoalWithProgress'
-      id: string
-      title: string
-      description?: string | null
-      amount: number
-      progress?: number | null
-    } | null
-  } | null
-}
+type ImportBlock_CrowdfundingBlock_Fragment = {__typename: 'CrowdfundingBlock'}
 
-type ImportBlock_EventBlock_Fragment = {__typename: 'EventBlock'; type: BlockType}
+type ImportBlock_EventBlock_Fragment = {__typename: 'EventBlock'}
 
 type ImportBlock_FacebookPostBlock_Fragment = {
   __typename: 'FacebookPostBlock'
@@ -3657,7 +3563,7 @@ type ImportBlock_FacebookVideoBlock_Fragment = {
   videoID?: string | null
 }
 
-type ImportBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'; type: BlockType}
+type ImportBlock_HtmlBlock_Fragment = {__typename: 'HTMLBlock'}
 
 type ImportBlock_IFrameBlock_Fragment = {
   __typename: 'IFrameBlock'
@@ -3735,7 +3641,7 @@ type ImportBlock_PolisConversationBlock_Fragment = {
   conversationID?: string | null
 }
 
-type ImportBlock_PollBlock_Fragment = {__typename: 'PollBlock'; type: BlockType}
+type ImportBlock_PollBlock_Fragment = {__typename: 'PollBlock'}
 
 type ImportBlock_QuoteBlock_Fragment = {
   __typename: 'QuoteBlock'
@@ -3766,43 +3672,13 @@ type ImportBlock_SoundCloudTrackBlock_Fragment = {
   trackID?: string | null
 }
 
-type ImportBlock_SubscribeBlock_Fragment = {
-  __typename: 'SubscribeBlock'
-  blockStyle?: string | null
-  type: BlockType
-}
+type ImportBlock_SubscribeBlock_Fragment = {__typename: 'SubscribeBlock'}
 
-type ImportBlock_TeaserGridBlock_Fragment = {
-  __typename: 'TeaserGridBlock'
-  type: BlockType
-  numColumns: number
-}
+type ImportBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'}
 
-type ImportBlock_TeaserGridFlexBlock_Fragment = {
-  __typename: 'TeaserGridFlexBlock'
-  type: BlockType
-  flexTeasers: Array<{
-    __typename?: 'FlexTeaser'
-    alignment: {
-      __typename?: 'FlexAlignment'
-      i: string
-      x: number
-      y: number
-      w: number
-      h: number
-      static: boolean
-    }
-  }>
-}
+type ImportBlock_TeaserGridFlexBlock_Fragment = {__typename: 'TeaserGridFlexBlock'}
 
-type ImportBlock_TeaserListBlock_Fragment = {
-  __typename: 'TeaserListBlock'
-  type: BlockType
-  teaserType: TeaserType
-  take?: number | null
-  skip?: number | null
-  sort?: TeaserListBlockSort | null
-}
+type ImportBlock_TeaserListBlock_Fragment = {__typename: 'TeaserListBlock'}
 
 type ImportBlock_TikTokVideoBlock_Fragment = {
   __typename: 'TikTokVideoBlock'
@@ -3828,7 +3704,7 @@ type ImportBlock_TwitterTweetBlock_Fragment = {
   tweetID?: string | null
 }
 
-type ImportBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'; type: BlockType}
+type ImportBlock_UnknownBlock_Fragment = {__typename: 'UnknownBlock'}
 
 type ImportBlock_VimeoVideoBlock_Fragment = {
   __typename: 'VimeoVideoBlock'
@@ -3988,12 +3864,7 @@ export type ArticleQuery = {
         source?: string | null
       } | null
       blocks: Array<
-        | {
-            __typename: 'BildwurfAdBlock'
-            blockStyle?: string | null
-            type: BlockType
-            zoneID?: string | null
-          }
+        | {__typename: 'BildwurfAdBlock'}
         | {
             __typename: 'BreakBlock'
             blockStyle?: string | null
@@ -4012,26 +3883,9 @@ export type ArticleQuery = {
               source?: string | null
             } | null
           }
-        | {__typename: 'CommentBlock'; type: BlockType}
-        | {
-            __typename: 'CrowdfundingBlock'
-            blockStyle?: string | null
-            type: BlockType
-            crowdfunding?: {
-              __typename?: 'CrowdfundingWithActiveGoal'
-              id: string
-              name: string
-              activeCrowdfundingGoal?: {
-                __typename?: 'CrowdfundingGoalWithProgress'
-                id: string
-                title: string
-                description?: string | null
-                amount: number
-                progress?: number | null
-              } | null
-            } | null
-          }
-        | {__typename: 'EventBlock'; type: BlockType}
+        | {__typename: 'CommentBlock'}
+        | {__typename: 'CrowdfundingBlock'}
+        | {__typename: 'EventBlock'}
         | {
             __typename: 'FacebookPostBlock'
             blockStyle?: string | null
@@ -4046,7 +3900,7 @@ export type ArticleQuery = {
             userID?: string | null
             videoID?: string | null
           }
-        | {__typename: 'HTMLBlock'; type: BlockType}
+        | {__typename: 'HTMLBlock'}
         | {
             __typename: 'IFrameBlock'
             blockStyle?: string | null
@@ -4117,7 +3971,7 @@ export type ArticleQuery = {
             type: BlockType
             conversationID?: string | null
           }
-        | {__typename: 'PollBlock'; type: BlockType}
+        | {__typename: 'PollBlock'}
         | {
             __typename: 'QuoteBlock'
             blockStyle?: string | null
@@ -4144,32 +3998,10 @@ export type ArticleQuery = {
             type: BlockType
             trackID?: string | null
           }
-        | {__typename: 'SubscribeBlock'; blockStyle?: string | null; type: BlockType}
-        | {__typename: 'TeaserGridBlock'; type: BlockType; numColumns: number}
-        | {
-            __typename: 'TeaserGridFlexBlock'
-            type: BlockType
-            flexTeasers: Array<{
-              __typename?: 'FlexTeaser'
-              alignment: {
-                __typename?: 'FlexAlignment'
-                i: string
-                x: number
-                y: number
-                w: number
-                h: number
-                static: boolean
-              }
-            }>
-          }
-        | {
-            __typename: 'TeaserListBlock'
-            type: BlockType
-            teaserType: TeaserType
-            take?: number | null
-            skip?: number | null
-            sort?: TeaserListBlockSort | null
-          }
+        | {__typename: 'SubscribeBlock'}
+        | {__typename: 'TeaserGridBlock'}
+        | {__typename: 'TeaserGridFlexBlock'}
+        | {__typename: 'TeaserListBlock'}
         | {
             __typename: 'TikTokVideoBlock'
             blockStyle?: string | null
@@ -4191,7 +4023,7 @@ export type ArticleQuery = {
             userID?: string | null
             tweetID?: string | null
           }
-        | {__typename: 'UnknownBlock'; type: BlockType}
+        | {__typename: 'UnknownBlock'}
         | {
             __typename: 'VimeoVideoBlock'
             blockStyle?: string | null
@@ -4231,58 +4063,6 @@ export const FullImage = gql`
     license
     source
   }
-`
-export const FullTeaser = gql`
-  fragment FullTeaser on Teaser {
-    ... on ArticleTeaser {
-      image {
-        ...FullImage
-      }
-      preTitle
-      title
-      lead
-      article {
-        id
-      }
-    }
-    ... on PageTeaser {
-      image {
-        ...FullImage
-      }
-      preTitle
-      title
-      lead
-      page {
-        id
-      }
-    }
-    ... on EventTeaser {
-      image {
-        ...FullImage
-      }
-      preTitle
-      title
-      lead
-      event {
-        id
-      }
-    }
-    ... on CustomTeaser {
-      image {
-        ...FullImage
-      }
-      preTitle
-      title
-      lead
-      contentUrl
-      properties {
-        key
-        value
-        public
-      }
-    }
-  }
-  ${FullImage}
 `
 export const ImportBlock = gql`
   fragment ImportBlock on BlockContent {
@@ -4325,37 +4105,6 @@ export const ImportBlock = gql`
       blockStyle
       type
       richText
-    }
-    ... on HTMLBlock {
-      __typename
-      type
-    }
-    ... on EventBlock {
-      __typename
-      type
-    }
-    ... on CommentBlock {
-      __typename
-      type
-    }
-    ... on PollBlock {
-      __typename
-      type
-    }
-    ... on CrowdfundingBlock {
-      blockStyle
-      type
-      crowdfunding {
-        id
-        name
-        activeCrowdfundingGoal {
-          id
-          title
-          description
-          amount
-          progress
-        }
-      }
     }
     ... on ListicleBlock {
       blockStyle
@@ -4430,11 +4179,6 @@ export const ImportBlock = gql`
       userID
       videoID
     }
-    ... on BildwurfAdBlock {
-      blockStyle
-      type
-      zoneID
-    }
     ... on IFrameBlock {
       blockStyle
       type
@@ -4444,41 +4188,6 @@ export const ImportBlock = gql`
       height
       styleCustom
       sandbox
-    }
-    ... on SubscribeBlock {
-      blockStyle
-      type
-    }
-    ... on TeaserListBlock {
-      __typename
-      type
-      teaserType
-      take
-      skip
-      sort
-    }
-    ... on TeaserGridBlock {
-      __typename
-      type
-      numColumns
-    }
-    ... on TeaserGridFlexBlock {
-      __typename
-      type
-      flexTeasers {
-        alignment {
-          i
-          x
-          y
-          w
-          h
-          static
-        }
-      }
-    }
-    ... on UnknownBlock {
-      __typename
-      type
     }
   }
   ${FullImage}

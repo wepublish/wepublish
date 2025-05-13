@@ -5,66 +5,6 @@ fragment FullImage on Image {
   source
 }
 
-fragment FullTeaser on Teaser {
-  ... on ArticleTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    article {
-      id
-    }
-  }
-
-  ... on PageTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    page {
-      id
-    }
-  }
-
-  ... on EventTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-
-    event {
-      id
-    }
-  }
-
-  ... on CustomTeaser {
-    image {
-      ...FullImage
-    }
-
-    preTitle
-    title
-    lead
-    contentUrl
-    properties {
-      key
-      value
-      public
-    }
-  }
-}
-
 fragment ImportBlock on BlockContent {
   __typename
 
@@ -110,42 +50,6 @@ fragment ImportBlock on BlockContent {
     blockStyle
     type
     richText
-  }
-
-  ... on HTMLBlock {
-    __typename
-    type
-  }
-
-  ... on EventBlock {
-    __typename
-    type
-  }
-
-  ... on CommentBlock {
-    __typename
-    type
-  }
-
-  ... on PollBlock {
-    __typename
-    type
-  }
-
-  ... on CrowdfundingBlock {
-    blockStyle
-    type
-    crowdfunding {
-      id
-      name
-      activeCrowdfundingGoal {
-        id
-        title
-        description
-        amount
-        progress
-      }
-    }
   }
 
   ... on ListicleBlock {
@@ -232,12 +136,6 @@ fragment ImportBlock on BlockContent {
     videoID
   }
 
-  ... on BildwurfAdBlock {
-    blockStyle
-    type
-    zoneID
-  }
-
   ... on IFrameBlock {
     blockStyle
     type
@@ -247,47 +145,6 @@ fragment ImportBlock on BlockContent {
     height
     styleCustom
     sandbox
-  }
-
-  ... on SubscribeBlock {
-    blockStyle
-    type
-  }
-
-  ... on TeaserListBlock {
-    __typename
-    type
-    teaserType
-    take
-    skip
-    sort
-  }
-
-  ... on TeaserGridBlock {
-    __typename
-    type
-    numColumns
-  }
-
-  ... on TeaserGridFlexBlock {
-    __typename
-    type
-
-    flexTeasers {
-      alignment {
-        i
-        x
-        y
-        w
-        h
-        static
-      }
-    }
-  }
-
-  ... on UnknownBlock {
-    __typename
-    type
   }
 }
 
