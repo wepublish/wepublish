@@ -1,9 +1,10 @@
 import NodeCache from 'node-cache'
 import {Injectable} from '@nestjs/common'
 
-type KeyMap = {
+type KeyCacheMeta = {
   size: number
   httpStatusCode: number
+  lastAccessed: number
 }
 
 @Injectable()
@@ -19,7 +20,7 @@ export class ImageCacheService {
   public maxCacheItems = parseInt(process.env['MAX_MEM_CACHE_ITEMS']) || 10000
 
   private currentCacheSizeBytes = 0
-  private keySizes = new Map<string, KeyMap>() // Track individual sizes
+  private keyMeta = new Map<string, KeyCacheMeta>() // Track individual sizes
 
   constructor() {
     this.cache.on('del', key => this.removeKeySize(key))
@@ -27,16 +28,30 @@ export class ImageCacheService {
   }
 
   private removeKeySize(key: string) {
-    const size = this.keySizes.get(key).size
+    const meta = this.keyMeta.get(key)
+    const size = meta?.size
     if (size) {
       this.currentCacheSizeBytes -= size
-      this.keySizes.delete(key)
+      this.keyMeta.delete(key)
     }
   }
 
-  public get(key: string): [Buffer | undefined, number] {
-    const meta = this.keySizes.get(key)
-    return [this.cache.get<Buffer>(key), meta?.httpStatusCode]
+  public get(key: string): [Buffer | undefined, number | undefined] {
+    const meta = this.keyMeta.get(key)
+
+    if (!meta) return [undefined, undefined]
+
+    const now = Date.now()
+    meta.lastAccessed = now
+
+    const sizeKB = meta.size / 1024
+    const newTTL = sizeKB > 200 ? 300 : 3600
+
+    if (meta.httpStatusCode === 200 && newTTL * 0.2 > (this.cache.getTtl(key) - now) / 1000) {
+      // If 80% of TTL is passed, refresh TTL
+      this.cache.ttl(key, newTTL)
+    }
+    return [this.cache.get<Buffer>(key), meta.httpStatusCode]
   }
 
   public set(key: string, value: Buffer, httpStatusCode = 200, overrideTTL?: number) {
@@ -56,12 +71,14 @@ export class ImageCacheService {
       return
     }
 
+    const now = Date.now()
+
     // Adjust memory if key already exists
-    const meta = this.keySizes.get(key)
+    const meta = this.keyMeta.get(key)
     const oldSize = meta?.size ?? 0
     this.currentCacheSizeBytes += sizeBytes - oldSize
 
-    this.keySizes.set(key, {size: sizeBytes, httpStatusCode: httpStatusCode})
+    this.keyMeta.set(key, {size: sizeBytes, httpStatusCode: httpStatusCode, lastAccessed: now})
 
     const sizeKB = sizeBytes / 1024
     let ttl = sizeKB > 200 ? 300 : 3600
