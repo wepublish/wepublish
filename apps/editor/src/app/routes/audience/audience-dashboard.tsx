@@ -218,21 +218,26 @@ function AudienceDashboard() {
   const audienceStatsAggregatedByMonth = useMemo<AudienceStatsComputed[]>(() => {
     const aggregatedStats: AudienceStatsComputed[] = []
 
-    // get unique month out of all the dates
-    const months = new Set<number>()
-
-    for (const stat of audienceStatsComputed) {
-      const date = new Date(stat.date)
-      months.add(date.getMonth())
-    }
+    // unique last days of every month
+    const lastDaysOfMonths = new Set(
+      audienceStatsComputed.map(stat => {
+        const date = new Date(stat.date)
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString()
+      })
+    )
 
     // aggregate data per month
-    for (const month of months) {
-      const monthStats = audienceStatsComputed
-        .filter(stat => new Date(stat.date).getMonth() === month)
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    for (const lastDayOfMonthIso of lastDaysOfMonths) {
+      const lastDayOfMonthDate = new Date(lastDayOfMonthIso)
+      const monthStats: AudienceStatsComputed[] = audienceStatsComputed.filter(stat => {
+        const statDate = new Date(stat.date)
+        return (
+          statDate.getMonth() === lastDayOfMonthDate.getMonth() &&
+          statDate.getFullYear() === lastDayOfMonthDate.getFullYear()
+        )
+      })
 
-      const lastDayOfMonth = monthStats[monthStats.length - 1]
+      const lastDayOfMonthWithStats = monthStats[monthStats.length - 1]
 
       // sum up the count figures
       const summedUpCounts = (
@@ -264,8 +269,8 @@ function AudienceDashboard() {
       })
 
       aggregatedStats.push({
-        ...lastDayOfMonth,
-        date: lastDayOfMonth.date,
+        ...lastDayOfMonthWithStats,
+        date: lastDayOfMonthWithStats.date,
         ...summedUpCounts,
         ...mergedUsers,
         totalNewSubscriptions,
@@ -274,7 +279,13 @@ function AudienceDashboard() {
     }
 
     return aggregatedStats
-  }, [audienceStatsComputed, sumUpCounts, mergeUsers])
+  }, [
+    audienceStatsComputed,
+    sumUpCounts,
+    mergeUsers,
+    getTotalNewSubscriptionsByDay,
+    getRenewalFigures
+  ])
 
   const audienceStats = useMemo(
     () => (resolution === 'daily' ? audienceStatsComputed : audienceStatsAggregatedByMonth),
