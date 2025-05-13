@@ -29,7 +29,7 @@ export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps
     deactivatedSubscriptionCount
   } = activeFilters
 
-  const chartColors = ['#ce1515', '#7b15ce', '#0d42f0', '#15ce7b', '#f0a30d', '#15a3ce']
+  const chartColors = ['#ed4a8e', '#bf54b6', '#FF5A5F', '#7364cd', '#006dca', '#006db0']
 
   const dataWithNegativeDeactivated = useMemo(() => {
     return (
@@ -46,7 +46,7 @@ export function AudienceChart({activeFilters, audienceStats}: AudienceChartProps
     <ResponsiveContainer>
       <ComposedChart data={dataWithNegativeDeactivated}>
         <XAxis dataKey={'date'} />
-        <YAxis stroke={chartColors[2]} />
+        <YAxis stroke="#000" />
         <Tooltip />
         <Legend />
 

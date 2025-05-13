@@ -17,6 +17,7 @@ import {DateRange} from 'rsuite/esm/DateRangePicker'
 
 import {AudienceChart} from './audience-chart'
 import {AudienceFilter} from './audience-filter'
+import {AudienceTable} from './audience-table'
 
 export type AudienceClientFilter = Pick<
   {
@@ -106,22 +107,6 @@ function AudienceDashboard() {
             apiFilter={audienceApiFilter}
             setApiFilter={setAudienceApiFilter}
           />
-          {/* <RadioTileGroup
-            inline
-            defaultValue={dateResolution}
-            aria-label="Create new project"
-            onChange={dateResolution => onChangeResolution(dateResolution as DateResolution)}>
-            <RadioTile icon={<MdCalendarToday />} label="Tägliche Auflösung" value="day" />
-            <RadioTile icon={<MdCalendarViewWeek />} label="Wöchentliche Auflösung" value="week" />
-            <RadioTile icon={<MdCalendarMonth />} label="Monatliche Auflösung" value="month" />
-          </RadioTileGroup> */}
-
-          {/* <DateRangePicker
-            size="lg"
-            value={dateRange}
-            hoverRange={dateResolution === 'day' ? undefined : dateResolution}
-            onChange={newDateRange => setDateRange(newDateRange as DateRange | undefined | null)}
-          /> */}
         </ListViewFilterArea>
       </ListViewContainer>
 
@@ -129,9 +114,9 @@ function AudienceDashboard() {
         <AudienceChart activeFilters={audienceClientFilter} audienceStats={audienceStats} />
       </AudienceChartWrapper>
 
-      {/* <TableWrapperStyled>
+      <TableWrapperStyled>
         <AudienceTable audienceStats={audienceStats} />
-      </TableWrapperStyled> */}
+      </TableWrapperStyled>
     </>
   )
 }
