@@ -31,7 +31,14 @@ export type AudienceClientFilter = Pick<
   | 'replacedSubscriptionCount'
 >
 
-export interface AudienceStatsComputed extends DailySubscriptionStats {
+interface RenewalFigures {
+  totalToBeRenewed: number
+  renewedAndReplaced: number
+  cancellationRate: number
+  renewalRate: number
+}
+
+export interface AudienceStatsComputed extends DailySubscriptionStats, RenewalFigures {
   totalNewSubscriptions: number
   renewalRate: number
   cancellationRate: number
@@ -96,7 +103,7 @@ function AudienceDashboard() {
     createdUnpaidSubscriptionCount: false,
     deactivatedSubscriptionCount: true,
     renewedSubscriptionCount: true,
-    replacedSubscriptionCount: false
+    replacedSubscriptionCount: true
   })
 
   const getTotalNewSubscriptionsByDay = useCallback(
@@ -119,21 +126,52 @@ function AudienceDashboard() {
     [audienceClientFilter]
   )
 
+  const getRenewalFigures = useCallback(
+    (dailyStat: DailySubscriptionStats): RenewalFigures => {
+      let totalToBeRenewed = 0
+      let renewedAndReplaced = 0
+      if (audienceClientFilter.renewedSubscriptionCount) {
+        totalToBeRenewed += dailyStat.renewedSubscriptionCount
+        renewedAndReplaced += dailyStat.renewedSubscriptionCount
+      }
+      if (audienceClientFilter.replacedSubscriptionCount) {
+        totalToBeRenewed += dailyStat.replacedSubscriptionCount
+        renewedAndReplaced += dailyStat.replacedSubscriptionCount
+      }
+      if (audienceClientFilter.deactivatedSubscriptionCount) {
+        totalToBeRenewed += dailyStat.deactivatedSubscriptionCount
+      }
+
+      const cancellationRate =
+        Math.round(((dailyStat.deactivatedSubscriptionCount * 100) / totalToBeRenewed) * 100) /
+          100 || 0
+      const renewalRate = totalToBeRenewed === 0 ? 0 : 100 - cancellationRate
+
+      return {
+        totalToBeRenewed,
+        renewedAndReplaced,
+        cancellationRate,
+        renewalRate
+      }
+    },
+    [audienceClientFilter]
+  )
+
   const audienceStatsComputed = useMemo<AudienceStatsComputed[]>(() => {
     return (
       audienceStats?.dailySubscriptionStats.map(dailyStat => {
         const totalNewSubscriptions = getTotalNewSubscriptionsByDay(dailyStat)
+        const renewalFigures = getRenewalFigures(dailyStat)
 
         return {
           ...dailyStat,
           deactivatedSubscriptionCount: -dailyStat.deactivatedSubscriptionCount,
           totalNewSubscriptions,
-          cancellationRate: 10, // TODO
-          renewalRate: 20 // TODO
+          ...renewalFigures
         }
       }) || []
     )
-  }, [audienceStats, getTotalNewSubscriptionsByDay])
+  }, [audienceStats, getTotalNewSubscriptionsByDay, getRenewalFigures])
 
   return (
     <>

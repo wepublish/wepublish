@@ -85,13 +85,27 @@ export function AudienceTable({audienceStats, clientFilter}: AudienceTableProps)
       <Column resizable width={150}>
         <HeaderCell>{t('audienceTable.header.totalActiveSubscriptionCount')}</HeaderCell>
         <Cell dataKey="renewalRate">
-          {(rowData: RowDataType<any>) => <>{rowData.renewalRate}%</>}
+          {(rowData: RowDataType<AudienceStatsComputed>) => (
+            <>
+              <span>
+                ({rowData.renewedAndReplaced} / {rowData.totalToBeRenewed})
+              </span>{' '}
+              <b>{rowData.renewalRate}%</b>
+            </>
+          )}
         </Cell>
       </Column>
       <Column resizable width={150}>
         <HeaderCell>{'Kündigungsrate'}</HeaderCell>
         <Cell dataKey="cancellationRate">
-          {(rowData: RowDataType<any>) => <>{rowData.cancellationRate}%</>}
+          {(rowData: RowDataType<any>) => (
+            <>
+              <span>
+                ({rowData.deactivatedSubscriptionCount * -1} / {rowData.renewedAndReplaced})
+              </span>{' '}
+              <b>{rowData.cancellationRate}%</b>
+            </>
+          )}
         </Cell>
       </Column>
     </Table>
