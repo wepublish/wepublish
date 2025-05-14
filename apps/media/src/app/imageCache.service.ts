@@ -20,11 +20,37 @@ export class ImageCacheService {
   public maxCacheItems = parseInt(process.env['MAX_MEM_CACHE_ITEMS']) || 10000
 
   private currentCacheSizeBytes = 0
+  private totalHits = 0
+  private totalMisses = 0
+  private ttlResets = 0
+  private evictions = 0
   private keyMeta = new Map<string, KeyCacheMeta>() // Track individual sizes
 
   constructor() {
     this.cache.on('del', key => this.removeKeySize(key))
-    this.cache.on('expired', key => this.removeKeySize(key))
+    this.cache.on('expired', key => {
+      this.evictions++
+      this.removeKeySize(key)
+    })
+  }
+
+  private resetHitMissStat() {
+    if (this.totalHits > 1000000 || this.totalMisses > 1000000) {
+      this.totalMisses = this.totalMisses / 2
+      this.totalHits = this.totalHits / 2
+      this.ttlResets = this.ttlResets / 2
+      this.evictions = this.evictions / 2
+    }
+  }
+
+  private addMissStat() {
+    this.totalMisses++
+    this.resetHitMissStat()
+  }
+
+  private addHitStat() {
+    this.totalHits++
+    this.resetHitMissStat()
   }
 
   private removeKeySize(key: string) {
@@ -39,7 +65,12 @@ export class ImageCacheService {
   public get(key: string): [Buffer | undefined, number | undefined] {
     const meta = this.keyMeta.get(key)
 
-    if (!meta) return [undefined, undefined]
+    if (!meta) {
+      this.addMissStat()
+      return [undefined, undefined]
+    } else {
+      this.addHitStat()
+    }
 
     const now = Date.now()
     meta.lastAccessed = now
@@ -49,6 +80,7 @@ export class ImageCacheService {
 
     if (meta.httpStatusCode === 200 && newTTL * 0.2 > (this.cache.getTtl(key) - now) / 1000) {
       // If 80% of TTL is passed, refresh TTL
+      this.ttlResets++
       this.cache.ttl(key, newTTL)
     }
     return [this.cache.get<Buffer>(key), meta.httpStatusCode]
@@ -114,7 +146,13 @@ export class ImageCacheService {
         percentageFreeCacheItems: Math.ceil(this.cache.keys().length / this.maxCacheItems),
         percentageFreeSizeMb: Math.ceil(
           this.currentCacheSizeBytes / 1024 / 1024 / this.maxCacheSizeMB
-        )
+        ),
+        averageItemSizeKb: this.currentCacheSizeBytes / 1024 / this.cache.keys().length,
+        totalHits: this.totalHits,
+        totalMisses: this.totalMisses,
+        hitRate: this.totalMisses / this.totalHits,
+        ttlResets: this.ttlResets,
+        evictions: this.evictions
       }
     }
   }

@@ -10,7 +10,8 @@ import {
   Req,
   UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  NotFoundException
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
 import {
@@ -43,6 +44,11 @@ export class AppController {
   async cacheState(@Res() res: Response) {
     const state = this.imageCacheService.state()
     res.status(state.healty ? 200 : 500).send(state.stats)
+  }
+
+  @Get('/favicon.ico')
+  async favicon(@Res() res: Response) {
+    throw new NotFoundException()
   }
 
   @UseGuards(TokenAuthGuard)
