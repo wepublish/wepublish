@@ -24,6 +24,12 @@ export class ImageCacheService {
   private totalMisses = 0
   private ttlResets = 0
   private evictions = 0
+  private ema = 0
+  private startDate = new Date()
+  private mediaNotFound = 0
+  private mediaFound = 0
+  private resetCounterTime = new Date()
+  private maxCounter = 1000000
   private keyMeta = new Map<string, KeyCacheMeta>() // Track individual sizes
 
   constructor() {
@@ -35,12 +41,20 @@ export class ImageCacheService {
   }
 
   private resetHitMissStat() {
-    if (this.totalHits > 1000000 || this.totalMisses > 1000000) {
+    if (this.totalHits > this.maxCounter || this.totalMisses > this.maxCounter) {
       this.totalMisses = this.totalMisses / 2
       this.totalHits = this.totalHits / 2
       this.ttlResets = this.ttlResets / 2
       this.evictions = this.evictions / 2
+      this.mediaFound = this.mediaFound / 2
+      this.mediaNotFound = this.mediaNotFound / 2
+      this.resetCounterTime = new Date()
     }
+  }
+
+  private updateEMA(wasHit: boolean) {
+    const currentHit = wasHit ? 1 : 0
+    this.ema = this.ema * (1 - 0.05) + currentHit * 0.05
   }
 
   private addMissStat() {
@@ -65,6 +79,8 @@ export class ImageCacheService {
   public get(key: string): [Buffer | undefined, number | undefined] {
     const meta = this.keyMeta.get(key)
 
+    this.updateEMA(!!meta)
+
     if (!meta) {
       this.addMissStat()
       return [undefined, undefined]
@@ -88,6 +104,12 @@ export class ImageCacheService {
 
   public set(key: string, value: Buffer, httpStatusCode = 200, overrideTTL?: number) {
     const sizeBytes = value.length
+
+    if (httpStatusCode === 200) {
+      this.mediaFound++
+    } else {
+      this.mediaNotFound++
+    }
 
     if (this.currentCacheSizeBytes + sizeBytes > this.maxCacheSizeMB * 1024 * 1024) {
       console.warn(
@@ -137,6 +159,9 @@ export class ImageCacheService {
     return {
       healty,
       stats: {
+        uptime: this.startDate,
+        resetCounterTime: this.resetCounterTime,
+        uptimeMin: Math.ceil((new Date().getTime() - this.startDate.getTime()) / 1000 / 60),
         maxCacheItems: this.maxCacheItems,
         maxCacheSizeMb: this.maxCacheSizeMB,
         usedCacheItems: this.cache.keys().length,
@@ -150,9 +175,12 @@ export class ImageCacheService {
         averageItemSizeKb: this.currentCacheSizeBytes / 1024 / this.cache.keys().length,
         totalHits: this.totalHits,
         totalMisses: this.totalMisses,
-        hitRate: this.totalMisses / this.totalHits,
+        hitRate: this.totalHits / (this.totalHits + this.totalMisses),
+        ema: this.ema,
         ttlResets: this.ttlResets,
-        evictions: this.evictions
+        evictions: this.evictions,
+        notFound: this.mediaNotFound,
+        found: this.mediaFound
       }
     }
   }
