@@ -64,13 +64,6 @@ export class BannerResolver {
     return this.bannerService.findPages(id)
   }
 
-  @ResolveField(() => [TagModel])
-  async showOnTags(@Parent() banner: Banner) {
-    const {id} = banner
-
-    return this.bannerService.findTags(id)
-  }
-
   @ResolveField(() => Image, {nullable: true})
   public image(@Parent() banner: Banner) {
     const {imageId} = banner

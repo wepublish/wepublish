@@ -174,7 +174,6 @@ type Banner {
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
-  showOnTags: [TagModel!]
   text: String!
   title: String!
 }
@@ -405,7 +404,6 @@ input CreateBannerInput {
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
-  showOnTags: [TagModelInput!]
   text: String!
   title: String!
 }
@@ -1811,14 +1809,6 @@ type Tag {
   id: String!
 }
 
-type TagModel {
-  id: String!
-}
-
-input TagModelInput {
-  id: String!
-}
-
 union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser
 
 type TeaserGridBlock implements BaseBlock {
@@ -1981,7 +1971,6 @@ input UpdateBannerInput {
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
   showOnPages: [PageModelInput!]
-  showOnTags: [TagModelInput!]
   text: String!
   title: String!
 }

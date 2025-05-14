@@ -10,9 +10,6 @@ fragment FullBanner on Banner {
   showOnPages {
     ...PageRef
   }
-  showOnTags {
-    ...TagRef
-  }
 
   image {
     ...FullImage

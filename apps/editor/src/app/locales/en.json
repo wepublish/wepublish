@@ -228,6 +228,7 @@
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
         "showForLoginStatus": "Display for",
+        "html": "HTML-Code",
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
@@ -239,7 +240,8 @@
           "add": "Add new action",
           "label": "Label",
           "url": "URL",
-          "style": "Style"
+          "style": "Style",
+          "role": "Role"
         }
       },
       "list": {

@@ -2237,7 +2237,6 @@ type TagFactoryDefineInput = {
     authors?: Prisma.TaggedAuthorsCreateNestedManyWithoutTagInput;
     articles?: Prisma.TaggedArticlesCreateNestedManyWithoutTagInput;
     pages?: Prisma.TaggedPagesCreateNestedManyWithoutTagInput;
-    banners?: Prisma.BannerCreateNestedManyWithoutShowOnTagsInput;
 };
 type TagFactoryDefineOptions = {
     defaultData?: Resolver<TagFactoryDefineInput, BuildDataOptions>;
@@ -2928,7 +2927,6 @@ type BannerFactoryDefineInput = {
     showForLoginStatus?: LoginStatus;
     image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;
     showOnPages?: Prisma.PageCreateNestedManyWithoutBannersInput;
-    showOnTags?: Prisma.TagCreateNestedManyWithoutBannersInput;
     actions?: Prisma.BannerActionCreateNestedManyWithoutBannerInput;
 };
 type BannerFactoryDefineOptions = {

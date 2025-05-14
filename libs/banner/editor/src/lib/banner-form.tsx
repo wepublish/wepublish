@@ -191,26 +191,6 @@ export const BannerForm = (props: BannerFormProps) => {
             }}
           />
         </Form.Group>
-
-        <Form.Group controlId="showOnTags">
-          <Form.ControlLabel>{t('banner.form.showOnTags')}</Form.ControlLabel>
-          <CheckPicker
-            block
-            virtualized
-            placeholder={t('navigation.panels.selectTag')}
-            value={props.banner.showOnTags?.map(t => t.id) || []}
-            data={tags.map(tag => ({value: tag.id, label: tag.tag}))}
-            onChange={ids => {
-              if (!ids) return
-              props.onChange({
-                ...props.banner,
-                showOnTags: ids.map(i => {
-                  return {id: i}
-                })
-              })
-            }}
-          />
-        </Form.Group>
       </Panel>
 
       <Panel bordered style={{overflow: 'initial'}}>

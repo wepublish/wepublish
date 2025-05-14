@@ -78,9 +78,6 @@ export class Banner {
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]
 
-  @Field(() => [TagModel], {nullable: true})
-  showOnTags?: TagModel[]
-
   @Field(() => LoginStatus)
   showForLoginStatus!: LoginStatus
 
@@ -91,7 +88,7 @@ export class Banner {
 @InputType()
 export class CreateBannerInput extends OmitType(
   Banner,
-  ['id', 'image', 'actions', 'showOnPages', 'showOnTags'],
+  ['id', 'image', 'actions', 'showOnPages'],
   InputType
 ) {
   @Field(() => [CreateBannerActionInput], {nullable: true})
@@ -99,15 +96,12 @@ export class CreateBannerInput extends OmitType(
 
   @Field(() => [PageModelInput], {nullable: true})
   showOnPages?: PageModelInput[]
-
-  @Field(() => [TagModelInput], {nullable: true})
-  showOnTags?: TagModelInput[]
 }
 
 @InputType()
 export class UpdateBannerInput extends OmitType(
   Banner,
-  ['image', 'actions', 'showOnPages', 'showOnTags'],
+  ['image', 'actions', 'showOnPages'],
   InputType
 ) {
   @Field(() => [CreateBannerActionInput], {nullable: true})
@@ -115,9 +109,6 @@ export class UpdateBannerInput extends OmitType(
 
   @Field(() => [PageModelInput], {nullable: true})
   showOnPages?: PageModelInput[]
-
-  @Field(() => [TagModelInput], {nullable: true})
-  showOnTags?: TagModelInput[]
 }
 
 export enum BannerDocumentType {

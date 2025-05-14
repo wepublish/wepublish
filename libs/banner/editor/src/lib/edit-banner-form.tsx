@@ -71,8 +71,7 @@ export const EditBannerForm = () => {
     const processedBanner = {
       ...bannerWithoutImage,
       actions: banner.actions?.map(removeIdAndTypename),
-      showOnPages: banner.showOnPages?.map(removeTypename),
-      showOnTags: banner.showOnTags?.map(removeTypename)
+      showOnPages: banner.showOnPages?.map(removeTypename)
     }
     updateBanner({variables: {input: processedBanner}})
   }

@@ -78,9 +78,6 @@ fragment FullBanner on Banner {
   showOnPages {
     ...Page2Ref
   }
-  showOnTags {
-    ...Tag2Ref
-  }
   showForLoginStatus
 
   image {
