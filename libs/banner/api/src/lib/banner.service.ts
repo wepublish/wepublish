@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {LoginStatus, Page, PrismaClient, Tag} from '@prisma/client'
+import {LoginStatus, Page, PrismaClient} from '@prisma/client'
 import {
   BannerDocumentType,
   CreateBannerInput,
