@@ -25,20 +25,8 @@ export class PageModel {
   id!: string
 }
 
-@ObjectType()
-export class TagModel {
-  @Field()
-  id!: string
-}
-
 @InputType()
 export class PageModelInput {
-  @Field()
-  id!: string
-}
-
-@InputType()
-export class TagModelInput {
   @Field()
   id!: string
 }
