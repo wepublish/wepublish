@@ -113,8 +113,7 @@ export class UpdateBannerInput extends OmitType(
 
 export enum BannerDocumentType {
   PAGE,
-  ARTICLE,
-  TAG
+  ARTICLE
 }
 
 registerEnumType(BannerDocumentType, {

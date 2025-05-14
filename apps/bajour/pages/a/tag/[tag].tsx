@@ -70,8 +70,6 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
 
   return (
     <Container>
-      <BannerContainer documentId={tagId} documentType={BannerDocumentType.Tag} />
-
       <H5 component={'h1'} css={uppercase}>
         {capitalize(tag)}
       </H5>
