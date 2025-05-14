@@ -3,7 +3,6 @@ import {ArticleListContainer} from '@wepublish/article/website'
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
-  BannerDocumentType,
   getV1ApiClient,
   NavigationListDocument,
   PeerProfileDocument,
@@ -19,7 +18,6 @@ import {useMemo} from 'react'
 import {z} from 'zod'
 
 import {Container} from '../../../src/components/layout/container'
-import {BannerContainer} from '@wepublish/banner/website'
 
 const take = 25
 
