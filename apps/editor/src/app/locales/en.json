@@ -220,6 +220,7 @@
         "delete": "Delete banner"
       },
       "form": {
+        "displayOptions": "Display Options",
         "title": "Title (maximized only)",
         "text": "Text (maximized only)",
         "cta": "Call to action (minimized only)",

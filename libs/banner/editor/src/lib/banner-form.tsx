@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from '@emotion/styled'
 import {useTagListQuery} from '@wepublish/editor/api'
 import {
   CreateBannerActionInput,
@@ -44,6 +45,15 @@ interface Tag {
   tag?: string | null | undefined
 }
 
+const BannerFormContainer = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  grid-template-areas:
+    'displayoptions content'
+    'actions        actions';
+`
+
 export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
@@ -79,22 +89,17 @@ export const BannerForm = (props: BannerFormProps) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   return (
-    <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px'}}>
-      <Panel bordered style={{overflow: 'initial'}}>
-        <Form.Group controlId="title">
-          <h3>Banner</h3>
-          <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
-          <Form.Control name="title" value={props.banner.title} onChange={handleChange} />
-        </Form.Group>
+    <BannerFormContainer>
+      <Panel bordered style={{overflow: 'initial', gridArea: 'displayoptions'}}>
+        <h3>{t('banner.form.displayOptions')}</h3>
 
-        <Form.Group controlId="text">
-          <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
-          <Input
-            name="text"
-            as="textarea"
-            rows={5}
-            value={props.banner.text}
+        <Form.Group controlId="active">
+          <Form.ControlLabel>{t('banner.form.active')}</Form.ControlLabel>
+          <Form.Control
+            name="active"
+            value={props.banner.active}
             onChange={handleChange}
+            accepter={Toggle}
           />
         </Form.Group>
 
@@ -108,49 +113,6 @@ export const BannerForm = (props: BannerFormProps) => {
           />
         </Form.Group>
 
-        <Form.Group controlId="cta">
-          <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
-          <Form.Control name="cta" value={props.banner.cta} onChange={handleChange} />
-        </Form.Group>
-
-        <Form.Group controlId="images">
-          <Form.ControlLabel>{t('banner.form.image')}</Form.ControlLabel>
-          <Form.Control
-            name="image"
-            header={''}
-            image={props.banner.image}
-            disabled={false}
-            openChooseModalOpen={() => setChooseModalOpen(true)}
-            openEditModalOpen={() => setEditModalOpen(true)}
-            removeImage={() => {
-              props.onChange({...props.banner, imageId: undefined, image: undefined})
-            }}
-            onChange={x => console.log(x)}
-            accepter={ChooseEditImage}
-            minHeight={200}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="html">
-          <Form.ControlLabel>{t('banner.form.html')}</Form.ControlLabel>
-          <Input
-            name="html"
-            as="textarea"
-            rows={5}
-            value={props.banner.html ?? undefined}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="active">
-          <Form.ControlLabel>{t('banner.form.active')}</Form.ControlLabel>
-          <Form.Control
-            name="active"
-            value={props.banner.active}
-            onChange={handleChange}
-            accepter={Toggle}
-          />
-        </Form.Group>
         <Form.Group controlId="showForLoginStatus">
           <Form.ControlLabel>{t('banner.form.showForLoginStatus')}</Form.ControlLabel>
           <RadioGroup
@@ -193,7 +155,61 @@ export const BannerForm = (props: BannerFormProps) => {
         </Form.Group>
       </Panel>
 
-      <Panel bordered style={{overflow: 'initial'}}>
+      <Panel bordered style={{overflow: 'initial', gridArea: 'content'}}>
+        <h3>Inhalt</h3>
+
+        <Form.Group controlId="title">
+          <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
+          <Form.Control name="title" value={props.banner.title} onChange={handleChange} />
+        </Form.Group>
+
+        <Form.Group controlId="text">
+          <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
+          <Input
+            name="text"
+            as="textarea"
+            rows={5}
+            value={props.banner.text}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="cta">
+          <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
+          <Form.Control name="cta" value={props.banner.cta} onChange={handleChange} />
+        </Form.Group>
+
+        <Form.Group controlId="images">
+          <Form.ControlLabel>{t('banner.form.image')}</Form.ControlLabel>
+          <Form.Control
+            name="image"
+            header={''}
+            image={props.banner.image}
+            disabled={false}
+            openChooseModalOpen={() => setChooseModalOpen(true)}
+            openEditModalOpen={() => setEditModalOpen(true)}
+            removeImage={() => {
+              props.onChange({...props.banner, imageId: undefined, image: undefined})
+            }}
+            onChange={x => console.log(x)}
+            accepter={ChooseEditImage}
+            minHeight={200}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="html">
+          <Form.ControlLabel>{t('banner.form.html')}</Form.ControlLabel>
+          <Input
+            name="html"
+            as="textarea"
+            rows={5}
+            value={props.banner.html ?? undefined}
+            onChange={handleChange}
+          />
+        </Form.Group>
+      </Panel>
+
+      <Panel bordered style={{overflow: 'initial', gridArea: 'actions'}}>
         <Form.Group controlId="actions">
           <h3>{t('banner.form.actions')}</h3>
           <BannerActionList
@@ -240,6 +256,6 @@ export const BannerForm = (props: BannerFormProps) => {
           <ImageEditPanel id={props.banner.imageId} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
-    </div>
+    </BannerFormContainer>
   )
 }

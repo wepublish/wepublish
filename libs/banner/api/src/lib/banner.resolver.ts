@@ -5,7 +5,6 @@ import {
   CreateBannerInput,
   PageModel,
   PrimaryBannerArgs,
-  TagModel,
   UpdateBannerInput
 } from './banner.model'
 import {BannerActionService} from './banner-action.service'
