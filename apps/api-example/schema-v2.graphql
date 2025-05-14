@@ -195,7 +195,6 @@ enum BannerActionRole {
 enum BannerDocumentType {
   ARTICLE
   PAGE
-  TAG
 }
 
 interface BaseAction {
