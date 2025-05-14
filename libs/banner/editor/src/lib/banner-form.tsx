@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import {useTagListQuery} from '@wepublish/editor/api'
 import {
   CreateBannerActionInput,
   CreateBannerInput,
@@ -40,11 +39,6 @@ interface BannerFormProps {
   onRemoveAction: (index: number) => void
 }
 
-interface Tag {
-  id: string
-  tag?: string | null | undefined
-}
-
 const BannerFormContainer = styled('div')`
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -57,7 +51,6 @@ const BannerFormContainer = styled('div')`
 export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
-  const [tags, setTags] = useState<Tag[]>([])
 
   const handleChange = (value: unknown, event: React.SyntheticEvent) => {
     const name = (event.target as HTMLInputElement).name
@@ -71,19 +64,11 @@ export const BannerForm = (props: BannerFormProps) => {
     fetchPolicy: 'cache-and-network'
   })
 
-  const {data: tagData} = useTagListQuery({
-    variables: {take: 50},
-    fetchPolicy: 'cache-and-network'
-  })
-
   useEffect(() => {
     if (pageData?.pages?.nodes) {
       setPages(pageData.pages.nodes)
     }
-    if (tagData?.tags?.nodes) {
-      setTags(tagData.tags.nodes)
-    }
-  }, [pageData?.pages, tagData?.tags])
+  }, [pageData?.pages])
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
