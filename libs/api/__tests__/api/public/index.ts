@@ -239,7 +239,6 @@ export type Banner = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
-  showOnTags?: Maybe<Array<TagModel>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -261,8 +260,7 @@ export enum BannerActionRole {
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
-  Page = 'PAGE',
-  Tag = 'TAG'
+  Page = 'PAGE'
 }
 
 export type BaseAction = {
@@ -587,7 +585,6 @@ export type CreateBannerInput = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -3230,15 +3227,6 @@ export type TagFilter = {
   type?: InputMaybe<TagType>;
 };
 
-export type TagModel = {
-  __typename?: 'TagModel';
-  id: Scalars['String'];
-};
-
-export type TagModelInput = {
-  id: Scalars['String'];
-};
-
 export enum TagSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
@@ -3425,7 +3413,6 @@ export type UpdateBannerInput = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };

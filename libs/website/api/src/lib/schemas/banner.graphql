@@ -32,10 +32,6 @@ fragment PageRef on PageModel {
   id
 }
 
-fragment TagRef on TagModel {
-  id
-}
-
 query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!) {
   primaryBanner(documentType: $documentType, documentId: $documentId, loggedIn: $loggedIn) {
     ...FullBanner

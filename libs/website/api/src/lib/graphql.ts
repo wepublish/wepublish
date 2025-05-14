@@ -241,7 +241,6 @@ export type Banner = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
-  showOnTags?: Maybe<Array<TagModel>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -263,8 +262,7 @@ export enum BannerActionRole {
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
-  Page = 'PAGE',
-  Tag = 'TAG'
+  Page = 'PAGE'
 }
 
 export type BaseAction = {
@@ -589,7 +587,6 @@ export type CreateBannerInput = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -3232,15 +3229,6 @@ export type TagFilter = {
   type?: InputMaybe<TagType>;
 };
 
-export type TagModel = {
-  __typename?: 'TagModel';
-  id: Scalars['String'];
-};
-
-export type TagModelInput = {
-  id: Scalars['String'];
-};
-
 export enum TagSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
@@ -3427,7 +3415,6 @@ export type UpdateBannerInput = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -3666,8 +3653,6 @@ export type FullBannerFragment = { __typename?: 'Banner', id: string, title: str
 export type FullBannerActionFragment = { __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole };
 
 export type PageRefFragment = { __typename?: 'PageModel', id: string };
-
-export type TagRefFragment = { __typename?: 'TagModel', id: string };
 
 export type PrimaryBannerQueryVariables = Exact<{
   documentType: BannerDocumentType;
@@ -4844,11 +4829,6 @@ export const FullBannerFragmentDoc = gql`
     ${PageRefFragmentDoc}
 ${FullImageFragmentDoc}
 ${FullBannerActionFragmentDoc}`;
-export const TagRefFragmentDoc = gql`
-    fragment TagRef on TagModel {
-  id
-}
-    `;
 export const FullAddressFragmentDoc = gql`
     fragment FullAddress on UserAddress {
   company

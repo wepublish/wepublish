@@ -241,7 +241,6 @@ export type Banner = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: Maybe<Array<PageModel>>;
-  showOnTags?: Maybe<Array<TagModel>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -263,8 +262,7 @@ export enum BannerActionRole {
 
 export enum BannerDocumentType {
   Article = 'ARTICLE',
-  Page = 'PAGE',
-  Tag = 'TAG'
+  Page = 'PAGE'
 }
 
 export type BaseAction = {
@@ -589,7 +587,6 @@ export type CreateBannerInput = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -3232,15 +3229,6 @@ export type TagFilter = {
   type?: InputMaybe<TagType>;
 };
 
-export type TagModel = {
-  __typename?: 'TagModel';
-  id: Scalars['String'];
-};
-
-export type TagModelInput = {
-  id: Scalars['String'];
-};
-
 export enum TagSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
@@ -3427,7 +3415,6 @@ export type UpdateBannerInput = {
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
   showOnPages?: InputMaybe<Array<PageModelInput>>;
-  showOnTags?: InputMaybe<Array<TagModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
 };
@@ -3753,8 +3740,6 @@ export type DeleteBannerMutationVariables = Exact<{
 export type DeleteBannerMutation = { __typename?: 'Mutation', deleteBanner?: boolean | null };
 
 export type Page2RefFragment = { __typename?: 'PageModel', id: string };
-
-export type Tag2RefFragment = { __typename?: 'TagModel', id: string };
 
 export type FullBannerFragment = { __typename?: 'Banner', id: string, title: string, text: string, cta?: string | null, active: boolean, delay: number, html?: string | null, showOnArticles: boolean, showForLoginStatus: LoginStatus, showOnPages?: Array<{ __typename?: 'PageModel', id: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, actions?: Array<{ __typename?: 'BannerAction', id: string, label: string, url: string, style: string, role: BannerActionRole }> | null };
 
@@ -5227,11 +5212,6 @@ export const FullArticleFragmentDoc = gql`
 }
     ${ArticleWithoutBlocksFragmentDoc}
 ${FullArticleRevisionFragmentDoc}`;
-export const Tag2RefFragmentDoc = gql`
-    fragment Tag2Ref on TagModel {
-  id
-}
-    `;
 export const Page2RefFragmentDoc = gql`
     fragment Page2Ref on PageModel {
   id
