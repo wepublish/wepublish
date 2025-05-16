@@ -56,8 +56,8 @@ export function useAudienceFilter({fetchStats}: UseAudienceFilterProps) {
     replacedSubscriptionCount: true
   })
   const [audienceComponentFilter, setAudienceComponentFilter] = useState<AudienceComponentFilter>({
-    chart: true,
-    table: false,
+    chart: false,
+    table: true,
     filter: true
   })
 

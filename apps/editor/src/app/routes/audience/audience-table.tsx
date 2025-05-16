@@ -36,7 +36,7 @@ export function AudienceTable({audienceStats, clientFilter, timeResolution}: Aud
   return (
     <>
       <Table data={audienceStats} style={{width: '100%'}} virtualized height={800}>
-        <Column resizable width={160}>
+        <Column resizable width={140}>
           <HeaderCell>{t('audienceTable.header.date')}</HeaderCell>
           <Cell dataKey="date">
             {(rowData: RowDataType<DailySubscriptionStats>) => (
@@ -50,34 +50,34 @@ export function AudienceTable({audienceStats, clientFilter, timeResolution}: Aud
 
         {replacedSubscriptionCount && (
           <Column resizable>
-            <HeaderCell>{t('audienceTable.header.replacedSubscriptionCount')}</HeaderCell>
+            <HeaderCell>{t('audience.legend.replacedSubscriptionCount')}</HeaderCell>
             <Cell dataKey="replacedSubscriptionCount" />
           </Column>
         )}
 
         {createdSubscriptionCount && (
-          <Column resizable>
-            <HeaderCell>{t('audienceTable.header.createdSubscriptionCount')}</HeaderCell>
+          <Column resizable width={100}>
+            <HeaderCell>{t('audience.legend.createdSubscriptionCount')}</HeaderCell>
             <Cell dataKey="createdSubscriptionCount" />
           </Column>
         )}
 
         {createdUnpaidSubscriptionCount && (
-          <Column resizable width={100}>
-            <HeaderCell>{t('audienceTable.header.createdUnpaidSubscriptionCount')}</HeaderCell>
+          <Column resizable width={150}>
+            <HeaderCell>{t('audience.legend.createdUnpaidSubscriptionCount')}</HeaderCell>
             <Cell dataKey="createdUnpaidSubscriptionCount" />
           </Column>
         )}
 
         {renewedSubscriptionCount && (
-          <Column resizable>
-            <HeaderCell>{t('audienceTable.header.renewedSubscriptionCount')}</HeaderCell>
+          <Column resizable width={120}>
+            <HeaderCell>{t('audience.legend.renewedSubscriptionCount')}</HeaderCell>
             <Cell dataKey="renewedSubscriptionCount" />
           </Column>
         )}
 
-        <Column resizable>
-          <HeaderCell>{t('audienceTable.header.totalNewSubscriptions')}</HeaderCell>
+        <Column resizable width={120}>
+          <HeaderCell>{t('audience.legend.totalNewSubscriptions')}</HeaderCell>
           <Cell dataKey="totalNewSubscriptions">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <b>{rowData.totalNewSubscriptions}</b>
@@ -86,20 +86,20 @@ export function AudienceTable({audienceStats, clientFilter, timeResolution}: Aud
         </Column>
 
         {deactivatedSubscriptionCount && (
-          <Column resizable>
-            <HeaderCell>{t('audienceTable.header.deactivatedSubscriptionCount')}</HeaderCell>
+          <Column resizable width={120}>
+            <HeaderCell>{t('audience.legend.deactivatedSubscriptionCount')}</HeaderCell>
             <Cell dataKey="deactivatedSubscriptionCount" />
           </Column>
         )}
 
         {totalActiveSubscriptionCount && (
           <Column resizable>
-            <HeaderCell>{t('audienceTable.header.totalActiveSubscriptionCount')}</HeaderCell>
+            <HeaderCell>{t('audience.legend.totalActiveSubscriptionCount')}</HeaderCell>
             <Cell dataKey="totalActiveSubscriptionCount" />
           </Column>
         )}
-        <Column resizable width={150}>
-          <HeaderCell>{t('audienceTable.header.totalActiveSubscriptionCount')}</HeaderCell>
+        <Column resizable width={120}>
+          <HeaderCell>{t('audience.legend.renewalRate')}</HeaderCell>
           <Cell dataKey="renewalRate">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <>
@@ -112,7 +112,7 @@ export function AudienceTable({audienceStats, clientFilter, timeResolution}: Aud
           </Cell>
         </Column>
         <Column resizable width={150}>
-          <HeaderCell>{t('audienceTable.header.cancellationRate')}</HeaderCell>
+          <HeaderCell>{t('audience.legend.cancellationRate')}</HeaderCell>
           <Cell dataKey="cancellationRate">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <>
@@ -125,7 +125,7 @@ export function AudienceTable({audienceStats, clientFilter, timeResolution}: Aud
           </Cell>
         </Column>
         <Column width={180}>
-          <HeaderCell>{t('audienceTable.header.details')}</HeaderCell>
+          <HeaderCell>{t('audienceTable.header.actions')}</HeaderCell>
           <Cell dataKey="action">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <Button

@@ -1461,6 +1461,59 @@
         "remove": "Entfernen",
         "add": "Ziel hinzufügen"
       }
+    },
+    "audienceFilter": {
+      "daily": "Täglich",
+      "monthly": "Monatlich",
+      "rangePickerPlaceholder": "von - bis",
+      "filterSubscriptionPlans": "Nach Abo Pläne filtern",
+      "chart": "Diagramm",
+      "table": "Tabelle",
+      "panelHeader": "Auswahl der Daten"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",
+          "createdUnpaidSubscriptionCount": "Neu gelöste aber bis dato unbezahlte Abos.",
+          "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert wurden.",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode.",
+          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+        },
+        "totalActiveSubscriptionCount": "Total aktive Abos",
+        "createdUnpaidSubscriptionCount": "Neue unbezahlte Abos",
+        "renewedSubscriptionCount": "Erneuerte Abos",
+        "createdSubscriptionCount": "Neue Abos",
+        "deactivatedSubscriptionCount": "Deaktivierte Abos",
+        "replacedSubscriptionCount": "Ersetzte Abos",
+        "totalNewSubscriptions": "Total neue Abos",
+        "renewalRate": "Erneuerungsrate",
+        "cancellationRate": "Kündigungsrate",
+        "createdSubscriptionUsers": "Neue Abos",
+        "createdUnpaidSubscriptionUsers": "Neue unbezahlte Abos",
+        "deactivatedSubscriptionUsers": "Deaktivierte Abos",
+        "renewedSubscriptionUsers": "Erneuerte Abos",
+        "replacedSubscriptionUsers": "Ersetzte Abos"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Benutzer filtern nach",
+      "id": "ID",
+      "firstName": "Vorname",
+      "name": "Nachname",
+      "email": "E-Mail",
+      "goToUser": "Link zum Benutzer",
+      "close": "Schliessen",
+      "userBtn": "Link zum Benutzer"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Datum",
+        "actions": "Aktionen"
+      },
+      "showUsers": "Details anzeigen",
+      "byDate": "Per"
     }
   }
 }

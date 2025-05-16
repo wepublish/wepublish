@@ -1572,7 +1572,57 @@
         "add": "Add Target"
       }
     },
+    "audienceFilter": {
+      "daily": "Daily",
+      "monthly": "Monthly",
+      "rangePickerPlaceholder": "from - to",
+      "filterSubscriptionPlans": "Filter by subscription plans",
+      "chart": "Chart",
+      "table": "Table",
+      "panelHeader": "Select data"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
+          "createdUnpaidSubscriptionCount": "Newly created but unpaid subscriptions up to now.",
+          "renewedSubscriptionCount": "Subscriptions that have been renewed for another period.",
+          "createdSubscriptionCount": "Completely new subscriptions with only one period so far.",
+          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
+        },
+        "totalActiveSubscriptionCount": "Total active subscriptions",
+        "createdUnpaidSubscriptionCount": "New unpaid subscriptions",
+        "renewedSubscriptionCount": "Renewed subscriptions",
+        "createdSubscriptionCount": "New subscriptions",
+        "deactivatedSubscriptionCount": "Deactivated subscriptions",
+        "replacedSubscriptionCount": "Replaced subscriptions",
+        "totalNewSubscriptions": "Total new subscriptions",
+        "renewalRate": "Renewal rate",
+        "cancellationRate": "Cancellation rate",
+        "createdSubscriptionUsers": "New subscriptions",
+        "createdUnpaidSubscriptionUsers": "New unpaid subscriptions",
+        "deactivatedSubscriptionUsers": "Deactivated subscriptions",
+        "renewedSubscriptionUsers": "Renewed subscriptions",
+        "replacedSubscriptionUsers": "Replaced subscriptions"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Filter users by",
+      "id": "ID",
+      "firstName": "First name",
+      "name": "Last name",
+      "email": "Email",
+      "goToUser": "Link to user",
+      "close": "Close",
+      "userBtn": "Link to user"
+    },
     "audienceTable": {
+      "header": {
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "showUsers": "Show details",
       "byDate": "By"
     }
   }

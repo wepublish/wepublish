@@ -47,18 +47,6 @@ export function AudienceFilter({
 }: AudienceFilterProps) {
   const {t} = useTranslation()
 
-  // set initial date range
-  useEffect(() => {
-    const currentDate = new Date()
-    const endDateOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
-    const startDateOfTwoMonthsBefore = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() - 2,
-      1
-    )
-    setApiFilter({dateRange: [startDateOfTwoMonthsBefore, endDateOfCurrentMonth]})
-  }, [setApiFilter])
-
   // load available subscription plans
   const {data: memberPlans} = useMemberPlanListQuery()
 
@@ -97,6 +85,11 @@ export function AudienceFilter({
       }
     ]
   }, [t])
+
+  // triggers initial data load
+  useEffect(() => {
+    setApiFilter({dateRange: oneClickDateRanges[2].value})
+  }, [])
 
   return (
     <Grid style={{width: '100%'}}>
