@@ -20,7 +20,7 @@ import {AudienceChart} from './audience-chart'
 import {AudienceFilter} from './audience-filter'
 import {AudienceTable} from './audience-table'
 
-export type Resolution = 'daily' | 'monthly'
+export type TimeResolution = 'daily' | 'monthly'
 
 export type AudienceClientFilter = Pick<
   {
@@ -45,7 +45,7 @@ type SumUpCount = Pick<
 
 type SumUpCountKeys = keyof SumUpCount
 
-type AggregatedUsers = keyof Pick<
+export type AggregatedUsers = keyof Pick<
   AudienceStatsComputed,
   | 'createdSubscriptionUsers'
   | 'createdUnpaidSubscriptionUsers'
@@ -67,7 +67,6 @@ export interface AudienceStatsComputed extends DailySubscriptionStats, RenewalFi
   cancellationRate: number
 }
 
-export type DateResolution = 'week' | 'month' | 'day'
 export interface AudienceApiFilter {
   dateRange?: DateRange | null
   memberPlanIds?: string[]
@@ -91,7 +90,7 @@ function AudienceDashboard() {
   const {t} = useTranslation()
   const client = getApiClientV2()
 
-  const [resolution, setResolution] = useState<Resolution>('daily')
+  const [resolution, setResolution] = useState<TimeResolution>('daily')
   const [fetchStats, {data: rawAudienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
     client
   })
@@ -211,6 +210,7 @@ function AudienceDashboard() {
       for (const stat of monthStats) {
         mergedUsers = [...mergedUsers, ...(stat[userProperty] as DailySubscriptionStatsUser[])]
       }
+      return mergedUsers
     },
     []
   )
@@ -316,7 +316,11 @@ function AudienceDashboard() {
       </AudienceChartWrapper>
 
       <TableWrapperStyled>
-        <AudienceTable audienceStats={audienceStats} clientFilter={audienceClientFilter} />
+        <AudienceTable
+          audienceStats={audienceStats}
+          clientFilter={audienceClientFilter}
+          timeResolution={resolution}
+        />
       </TableWrapperStyled>
     </>
   )

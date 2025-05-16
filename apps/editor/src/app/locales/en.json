@@ -1571,6 +1571,9 @@
         "remove": "Remove",
         "add": "Add Target"
       }
+    },
+    "audienceTable": {
+      "byDate": "By"
     }
   }
 }

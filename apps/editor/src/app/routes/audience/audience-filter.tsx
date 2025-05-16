@@ -4,7 +4,7 @@ import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker} from 'rsuite'
 
-import {AudienceApiFilter, AudienceClientFilter, Resolution} from './audience-dashboard'
+import {AudienceApiFilter, AudienceClientFilter, TimeResolution} from './audience-dashboard'
 import {AudienceFilterToggle} from './audience-filter-toggle'
 
 const TagPickerStyled = styled(TagPicker)`
@@ -12,8 +12,8 @@ const TagPickerStyled = styled(TagPicker)`
 `
 
 export interface AudienceFilterProps {
-  resolution: Resolution
-  setResolution: Dispatch<SetStateAction<Resolution>>
+  resolution: TimeResolution
+  setResolution: Dispatch<SetStateAction<TimeResolution>>
   clientFilter: AudienceClientFilter
   setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>
   apiFilter: AudienceApiFilter
@@ -64,7 +64,7 @@ export function AudienceFilter({
             inline
             appearance="picker"
             defaultValue={resolution}
-            onChange={newResolution => setResolution(newResolution as Resolution)}>
+            onChange={newResolution => setResolution(newResolution as TimeResolution)}>
             <Radio value="daily">Täglich</Radio>
             <Radio value="monthly">Monatlich</Radio>
           </RadioGroup>
