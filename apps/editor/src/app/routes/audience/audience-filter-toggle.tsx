@@ -50,8 +50,8 @@ export function AudienceFilterToggle({
           })
         }
       />
-      <ToggleLable>{t(`audienceFilter.${filterKey}`)}</ToggleLable>
-      <FilterInfo text={t(`audienceFilter.${filterKey}Info`)} />
+      <ToggleLable>{t(`audience.legend.${filterKey}`)}</ToggleLable>
+      <FilterInfo text={t(`audience.legend.info.${filterKey}`)} />
     </>
   )
 }

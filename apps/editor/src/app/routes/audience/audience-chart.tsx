@@ -1,3 +1,4 @@
+import {useTranslation} from 'react-i18next'
 import {
   Bar,
   ComposedChart,
@@ -18,6 +19,8 @@ interface AudienceChartProps {
 }
 
 export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps) {
+  const {t} = useTranslation()
+
   const {
     totalActiveSubscriptionCount,
     createdSubscriptionCount,
@@ -32,12 +35,29 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
   return (
     <ResponsiveContainer>
       <ComposedChart data={audienceStats}>
-        <XAxis dataKey={'date'} />
-        <YAxis domain={['auto', 'auto']} stroke="#000" />
-        <Tooltip />
-        <Legend />
+        <XAxis
+          dataKey={'date'}
+          tick={({x, y, payload}) => (
+            <text x={x} y={y + 15} textAnchor="middle">
+              {new Date(payload.value).toLocaleDateString('de-CH', {dateStyle: 'short'})}
+            </text>
+          )}
+        />
+        <YAxis domain={['auto', 'auto']} />
+        <Tooltip
+          formatter={(value, name, item) => [value, t(`audience.legend.${name}`)]}
+          labelFormatter={label =>
+            new Date(label).toLocaleDateString('de-CH', {dateStyle: 'medium'})
+          }
+        />
+        <Legend
+          formatter={value => t(`audience.legend.${value}`)}
+          verticalAlign={'bottom'}
+          align="center"
+          layout="horizontal"
+        />
 
-        <ReferenceLine y={0} stroke="#000" />
+        <ReferenceLine y={0} />
 
         {totalActiveSubscriptionCount && (
           <Line

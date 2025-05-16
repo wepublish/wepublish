@@ -85,7 +85,6 @@ const AudienceChartWrapper = styled('div')`
   height: 100%;
   width: 100%;
   min-height: 40vh;
-  border: 1px solid ${({theme}) => theme.palette.grey[500]};
 `
 
 const TableWrapperStyled = styled(TableWrapper)`
