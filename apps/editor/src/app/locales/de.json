@@ -1469,7 +1469,11 @@
       "filterSubscriptionPlans": "Nach Abo Pläne filtern",
       "chart": "Diagramm",
       "table": "Tabelle",
-      "panelHeader": "Auswahl der Daten"
+      "panelHeader": "Auswahl der Daten",
+      "rangeLastWeek": "Letzte Woche",
+      "rangeLastMonth": "Letzter Monat",
+      "rangeLastQuarter": "Letztes Quartal",
+      "rangeLastYear": "Letztes Jahr"
     },
     "audience": {
       "legend": {

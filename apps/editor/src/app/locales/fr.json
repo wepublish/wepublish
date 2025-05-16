@@ -1421,7 +1421,11 @@
       "filterSubscriptionPlans": "Filtrer par plans d'abonnement",
       "chart": "Graphique",
       "table": "Tableau",
-      "panelHeader": "Sélection des données"
+      "panelHeader": "Sélection des données",
+      "rangeLastWeek": "Semaine dernière",
+      "rangeLastMonth": "Mois dernier",
+      "rangeLastQuarter": "Dernier trimestre",
+      "rangeLastYear": "Année dernière"
     },
     "audience": {
       "legend": {

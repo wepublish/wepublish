@@ -1579,7 +1579,11 @@
       "filterSubscriptionPlans": "Filter by subscription plans",
       "chart": "Chart",
       "table": "Table",
-      "panelHeader": "Select data"
+      "panelHeader": "Select data",
+      "rangeLastWeek": "Last Week",
+      "rangeLastMonth": "Last Month",
+      "rangeLastQuarter": "Last Quarter",
+      "rangeLastYear": "Last Year"
     },
     "audience": {
       "legend": {

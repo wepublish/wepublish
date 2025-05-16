@@ -80,7 +80,7 @@ export function AudienceFilter({
         value: [lastQuarter, today]
       },
       {
-        label: t('audienceFilter.lastYear'),
+        label: t('audienceFilter.rangeLastYear'),
         value: [lastYear, today]
       }
     ]
