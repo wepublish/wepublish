@@ -2,13 +2,26 @@ import styled from '@emotion/styled'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
 import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker} from 'rsuite'
+import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker, Toggle} from 'rsuite'
 
-import {AudienceApiFilter, AudienceClientFilter, TimeResolution} from './audience-dashboard'
-import {AudienceFilterToggle} from './audience-filter-toggle'
+import {
+  AudienceApiFilter,
+  AudienceClientFilter,
+  AudienceComponentFilter,
+  TimeResolution
+} from './audience-dashboard'
+import {AudienceFilterToggle, ToggleLable} from './audience-filter-toggle'
 
 const TagPickerStyled = styled(TagPicker)`
   margin-top: ${({theme}) => theme.spacing(2)};
+`
+
+const ComponentFilterContainer = styled.div`
+  margin-top: ${({theme}) => theme.spacing(2)};
+`
+
+const ToggleWithLeftMargin = styled(Toggle)`
+  margin-left: ${({theme}) => theme.spacing(2)};
 `
 
 export interface AudienceFilterProps {
@@ -18,6 +31,8 @@ export interface AudienceFilterProps {
   setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>
   apiFilter: AudienceApiFilter
   setApiFilter: (data: AudienceApiFilter) => void
+  componentFilter: AudienceComponentFilter
+  setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>
 }
 
 export function AudienceFilter({
@@ -26,7 +41,9 @@ export function AudienceFilter({
   clientFilter,
   setClientFilter,
   apiFilter,
-  setApiFilter
+  setApiFilter,
+  componentFilter,
+  setComponentFilter
 }: AudienceFilterProps) {
   const {t} = useTranslation()
 
@@ -79,7 +96,6 @@ export function AudienceFilter({
             placeholder={t('audienceFilter.rangePickerPlaceholder')}
             style={{width: '100%'}}
           />
-
           <TagPickerStyled
             size="lg"
             data={memberPlansForPicker}
@@ -87,6 +103,19 @@ export function AudienceFilter({
             placeholder={t('audienceFilter.filterSubscriptionPlans')}
             onChange={newMemberPlanIds => setApiFilter({memberPlanIds: newMemberPlanIds})}
           />
+
+          <ComponentFilterContainer>
+            <Toggle
+              checked={componentFilter.chart}
+              onChange={chart => setComponentFilter({...componentFilter, chart})}
+            />{' '}
+            <ToggleLable>{t('audienceFilter.chart')}</ToggleLable>
+            <ToggleWithLeftMargin
+              checked={componentFilter.table}
+              onChange={table => setComponentFilter({...componentFilter, table})}
+            />{' '}
+            <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
+          </ComponentFilterContainer>
         </Col>
 
         {/* filter data */}

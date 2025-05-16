@@ -8,7 +8,7 @@ import {AudienceClientFilter} from './audience-dashboard'
 
 const {ControlLabel} = RForm
 
-const Label = styled(ControlLabel)`
+export const ToggleLable = styled(ControlLabel)`
   padding-left: ${({theme}) => theme.spacing(1)};
 `
 
@@ -50,7 +50,7 @@ export function AudienceFilterToggle({
           })
         }
       />
-      <Label>{t(`audienceFilter.${filterKey}`)}</Label>
+      <ToggleLable>{t(`audienceFilter.${filterKey}`)}</ToggleLable>
       <FilterInfo text={t(`audienceFilter.${filterKey}Info`)} />
     </>
   )

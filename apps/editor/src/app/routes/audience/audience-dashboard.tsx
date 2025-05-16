@@ -34,6 +34,17 @@ export type AudienceClientFilter = Pick<
   | 'replacedSubscriptionCount'
 >
 
+export interface AudienceApiFilter {
+  dateRange?: DateRange | null
+  memberPlanIds?: string[]
+}
+
+export interface AudienceComponentFilter {
+  filter: boolean
+  chart: boolean
+  table: boolean
+}
+
 type SumUpCount = Pick<
   AudienceStatsComputed,
   | 'createdSubscriptionCount'
@@ -67,11 +78,6 @@ export interface AudienceStatsComputed extends DailySubscriptionStats, RenewalFi
   cancellationRate: number
 }
 
-export interface AudienceApiFilter {
-  dateRange?: DateRange | null
-  memberPlanIds?: string[]
-}
-
 const AudienceChartWrapper = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
   padding-top: ${({theme}) => theme.spacing(2)};
@@ -91,6 +97,19 @@ function AudienceDashboard() {
   const client = getApiClientV2()
 
   const [resolution, setResolution] = useState<TimeResolution>('daily')
+  const [audienceClientFilter, setAudienceClientFilter] = useState<AudienceClientFilter>({
+    totalActiveSubscriptionCount: false,
+    createdSubscriptionCount: true,
+    createdUnpaidSubscriptionCount: false,
+    deactivatedSubscriptionCount: true,
+    renewedSubscriptionCount: true,
+    replacedSubscriptionCount: true
+  })
+  const [audienceComponentFilter, setAudienceComponentFilter] = useState<AudienceComponentFilter>({
+    chart: true,
+    table: false,
+    filter: true
+  })
   const [fetchStats, {data: rawAudienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
     client
   })
@@ -119,15 +138,6 @@ function AudienceDashboard() {
     },
     {}
   )
-
-  const [audienceClientFilter, setAudienceClientFilter] = useState<AudienceClientFilter>({
-    totalActiveSubscriptionCount: false,
-    createdSubscriptionCount: true,
-    createdUnpaidSubscriptionCount: false,
-    deactivatedSubscriptionCount: true,
-    renewedSubscriptionCount: true,
-    replacedSubscriptionCount: true
-  })
 
   const getTotalNewSubscriptionsByDay = useCallback(
     (dailyStat: Partial<DailySubscriptionStats>): number => {
@@ -299,29 +309,37 @@ function AudienceDashboard() {
           <h2>{t('audienceDashboard.title')}</h2>
         </ListViewHeader>
 
-        <ListViewFilterArea style={{alignItems: 'center'}}>
-          <AudienceFilter
-            resolution={resolution}
-            setResolution={setResolution}
-            clientFilter={audienceClientFilter}
-            setClientFilter={setAudienceClientFilter}
-            apiFilter={audienceApiFilter}
-            setApiFilter={setAudienceApiFilter}
-          />
-        </ListViewFilterArea>
+        {audienceComponentFilter.filter && (
+          <ListViewFilterArea style={{alignItems: 'center'}}>
+            <AudienceFilter
+              resolution={resolution}
+              setResolution={setResolution}
+              clientFilter={audienceClientFilter}
+              setClientFilter={setAudienceClientFilter}
+              apiFilter={audienceApiFilter}
+              setApiFilter={setAudienceApiFilter}
+              componentFilter={audienceComponentFilter}
+              setComponentFilter={setAudienceComponentFilter}
+            />
+          </ListViewFilterArea>
+        )}
       </ListViewContainer>
 
-      <AudienceChartWrapper>
-        <AudienceChart audienceStats={audienceStats} clientFilter={audienceClientFilter} />
-      </AudienceChartWrapper>
+      {audienceComponentFilter.chart && (
+        <AudienceChartWrapper>
+          <AudienceChart audienceStats={audienceStats} clientFilter={audienceClientFilter} />
+        </AudienceChartWrapper>
+      )}
 
-      <TableWrapperStyled>
-        <AudienceTable
-          audienceStats={audienceStats}
-          clientFilter={audienceClientFilter}
-          timeResolution={resolution}
-        />
-      </TableWrapperStyled>
+      {audienceComponentFilter.table && (
+        <TableWrapperStyled>
+          <AudienceTable
+            audienceStats={audienceStats}
+            clientFilter={audienceClientFilter}
+            timeResolution={resolution}
+          />
+        </TableWrapperStyled>
+      )}
     </>
   )
 }

@@ -33,7 +33,7 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
     <ResponsiveContainer>
       <ComposedChart data={audienceStats}>
         <XAxis dataKey={'date'} />
-        <YAxis stroke="#000" />
+        <YAxis domain={['auto', 'auto']} stroke="#000" />
         <Tooltip />
         <Legend />
 
