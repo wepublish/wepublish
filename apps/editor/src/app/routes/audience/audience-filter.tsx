@@ -4,13 +4,13 @@ import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker, Toggle} from 'rsuite'
 
+import {AudienceFilterToggle, ToggleLable} from './audience-filter-toggle'
 import {
   AudienceApiFilter,
   AudienceClientFilter,
   AudienceComponentFilter,
   TimeResolution
-} from './audience-dashboard'
-import {AudienceFilterToggle, ToggleLable} from './audience-filter-toggle'
+} from './useAudienceFilter'
 
 const TagPickerStyled = styled(TagPicker)`
   margin-top: ${({theme}) => theme.spacing(2)};

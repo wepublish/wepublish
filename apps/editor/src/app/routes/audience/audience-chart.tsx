@@ -11,8 +11,8 @@ import {
   YAxis
 } from 'recharts'
 
-import {AudienceClientFilter} from './audience-dashboard'
 import {AudienceStatsComputed} from './useAudience'
+import {AudienceClientFilter} from './useAudienceFilter'
 
 interface AudienceChartProps {
   audienceStats: AudienceStatsComputed[]

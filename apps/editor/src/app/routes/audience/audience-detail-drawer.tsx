@@ -10,8 +10,8 @@ import {
 } from 'react-icons/md'
 import {Button, Col, Drawer, Nav, Row, Sidenav, Table} from 'rsuite'
 
-import {TimeResolution} from './audience-dashboard'
 import {AggregatedUsers, AudienceStatsComputed} from './useAudience'
+import {TimeResolution} from './useAudienceFilter'
 
 const {Cell, Column, HeaderCell} = Table
 const {Body, Header} = Sidenav

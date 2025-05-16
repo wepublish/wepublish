@@ -3,8 +3,7 @@ import {Dispatch, SetStateAction} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdInfo} from 'react-icons/md'
 import {Form as RForm, Toggle, Tooltip, Whisper} from 'rsuite'
-
-import {AudienceClientFilter} from './audience-dashboard'
+import {AudienceClientFilter} from './useAudienceFilter'
 
 const {ControlLabel} = RForm
 

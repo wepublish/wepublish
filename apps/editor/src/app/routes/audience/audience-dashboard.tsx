@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  DailySubscriptionStats,
-  getApiClientV2,
-  useDailySubscriptionStatsLazyQuery
-} from '@wepublish/editor/api-v2'
+import {getApiClientV2, useDailySubscriptionStatsLazyQuery} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -11,39 +7,14 @@ import {
   ListViewHeader,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {useMemo, useReducer, useState} from 'react'
+import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {DateRange} from 'rsuite/esm/DateRangePicker'
 
 import {AudienceChart} from './audience-chart'
 import {AudienceFilter} from './audience-filter'
 import {AudienceTable} from './audience-table'
 import {useAudience} from './useAudience'
-
-export type TimeResolution = 'daily' | 'monthly'
-
-export type AudienceClientFilter = Pick<
-  {
-    [K in keyof DailySubscriptionStats]: boolean
-  },
-  | 'totalActiveSubscriptionCount'
-  | 'createdSubscriptionCount'
-  | 'createdUnpaidSubscriptionCount'
-  | 'deactivatedSubscriptionCount'
-  | 'renewedSubscriptionCount'
-  | 'replacedSubscriptionCount'
->
-
-export interface AudienceApiFilter {
-  dateRange?: DateRange | null
-  memberPlanIds?: string[]
-}
-
-export interface AudienceComponentFilter {
-  filter: boolean
-  chart: boolean
-  table: boolean
-}
+import {useAudienceFilter} from './useAudienceFilter'
 
 const AudienceChartWrapper = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
@@ -61,49 +32,22 @@ const TableWrapperStyled = styled(TableWrapper)`
 function AudienceDashboard() {
   const {t} = useTranslation()
   const client = getApiClientV2()
-
-  const [resolution, setResolution] = useState<TimeResolution>('daily')
-  const [audienceClientFilter, setAudienceClientFilter] = useState<AudienceClientFilter>({
-    totalActiveSubscriptionCount: false,
-    createdSubscriptionCount: true,
-    createdUnpaidSubscriptionCount: false,
-    deactivatedSubscriptionCount: true,
-    renewedSubscriptionCount: true,
-    replacedSubscriptionCount: true
-  })
-  const [audienceComponentFilter, setAudienceComponentFilter] = useState<AudienceComponentFilter>({
-    chart: true,
-    table: false,
-    filter: true
-  })
   const [fetchStats, {data: rawAudienceStats}] = useDailySubscriptionStatsLazyQuery({
     client
   })
 
-  const [audienceApiFilter, setAudienceApiFilter] = useReducer(
-    (state: AudienceApiFilter, action: AudienceApiFilter) => {
-      const dateRange = action.dateRange || state.dateRange
-      const memberPlanIds = action.memberPlanIds || state.memberPlanIds
-
-      if (!dateRange || dateRange.length < 2) {
-        return action
-      }
-
-      fetchStats({
-        variables: {
-          start: dateRange[0].toISOString(),
-          end: dateRange[1].toISOString(),
-          memberPlanIds
-        },
-        fetchPolicy: 'cache-first'
-      })
-      return {
-        dateRange,
-        memberPlanIds
-      }
-    },
-    {}
-  )
+  const {
+    audienceApiFilter,
+    setAudienceApiFilter,
+    audienceClientFilter,
+    setAudienceClientFilter,
+    resolution,
+    setResolution,
+    audienceComponentFilter,
+    setAudienceComponentFilter
+  } = useAudienceFilter({
+    fetchStats
+  })
 
   const {audienceStatsComputed, audienceStatsAggregatedByMonth} = useAudience({
     audienceClientFilter,

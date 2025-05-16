@@ -4,8 +4,7 @@ import {
   DailySubscriptionStatsUser
 } from '@wepublish/editor/api-v2'
 import {useCallback, useMemo} from 'react'
-
-import {AudienceClientFilter} from './audience-dashboard'
+import {AudienceClientFilter} from './useAudienceFilter'
 
 export interface RenewalFigures {
   totalToBeRenewed: number

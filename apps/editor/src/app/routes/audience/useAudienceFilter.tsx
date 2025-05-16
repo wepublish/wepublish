@@ -1,0 +1,99 @@
+import {LazyQueryExecFunction} from '@apollo/client'
+import {
+  DailySubscriptionStats,
+  DailySubscriptionStatsQuery,
+  Exact,
+  InputMaybe,
+  Scalars
+} from '@wepublish/editor/api-v2'
+import {useReducer, useState} from 'react'
+import {DateRange} from 'rsuite/esm/DateRangePicker'
+
+export interface AudienceApiFilter {
+  dateRange?: DateRange | null
+  memberPlanIds?: string[]
+}
+
+export type TimeResolution = 'daily' | 'monthly'
+
+export type AudienceClientFilter = Pick<
+  {
+    [K in keyof DailySubscriptionStats]: boolean
+  },
+  | 'totalActiveSubscriptionCount'
+  | 'createdSubscriptionCount'
+  | 'createdUnpaidSubscriptionCount'
+  | 'deactivatedSubscriptionCount'
+  | 'renewedSubscriptionCount'
+  | 'replacedSubscriptionCount'
+>
+
+export interface AudienceComponentFilter {
+  filter: boolean
+  chart: boolean
+  table: boolean
+}
+
+interface UseAudienceFilterProps {
+  fetchStats: LazyQueryExecFunction<
+    DailySubscriptionStatsQuery,
+    Exact<{
+      start: Scalars['DateTime']
+      end?: InputMaybe<Scalars['DateTime']>
+      memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
+    }>
+  >
+}
+
+export function useAudienceFilter({fetchStats}: UseAudienceFilterProps) {
+  const [resolution, setResolution] = useState<TimeResolution>('daily')
+  const [audienceClientFilter, setAudienceClientFilter] = useState<AudienceClientFilter>({
+    totalActiveSubscriptionCount: false,
+    createdSubscriptionCount: true,
+    createdUnpaidSubscriptionCount: false,
+    deactivatedSubscriptionCount: true,
+    renewedSubscriptionCount: true,
+    replacedSubscriptionCount: true
+  })
+  const [audienceComponentFilter, setAudienceComponentFilter] = useState<AudienceComponentFilter>({
+    chart: true,
+    table: false,
+    filter: true
+  })
+
+  const [audienceApiFilter, setAudienceApiFilter] = useReducer(
+    (state: AudienceApiFilter, action: AudienceApiFilter) => {
+      const dateRange = action.dateRange || state.dateRange
+      const memberPlanIds = action.memberPlanIds || state.memberPlanIds
+
+      if (!dateRange || dateRange.length < 2) {
+        return action
+      }
+
+      fetchStats({
+        variables: {
+          start: dateRange[0].toISOString(),
+          end: dateRange[1].toISOString(),
+          memberPlanIds
+        },
+        fetchPolicy: 'cache-first'
+      })
+      return {
+        dateRange,
+        memberPlanIds
+      }
+    },
+    {}
+  )
+
+  return {
+    audienceApiFilter,
+    setAudienceApiFilter,
+    resolution,
+    setResolution,
+    audienceClientFilter,
+    setAudienceClientFilter,
+    audienceComponentFilter,
+    setAudienceComponentFilter
+  }
+}

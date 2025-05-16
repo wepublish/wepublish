@@ -5,9 +5,9 @@ import {useTranslation} from 'react-i18next'
 import {Button} from 'rsuite'
 import Table, {RowDataType} from 'rsuite/esm/Table'
 
-import {AudienceClientFilter, TimeResolution} from './audience-dashboard'
 import {AudienceDetailDrawer} from './audience-detail-drawer'
 import {AudienceStatsComputed} from './useAudience'
+import {AudienceClientFilter, TimeResolution} from './useAudienceFilter'
 
 const {Column, HeaderCell, Cell} = Table
 
