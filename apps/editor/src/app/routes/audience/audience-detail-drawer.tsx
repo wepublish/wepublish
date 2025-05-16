@@ -1,10 +1,17 @@
 import {Dispatch, SetStateAction, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdOpenInNew} from 'react-icons/md'
+import {
+  MdCancel,
+  MdCreditCardOff,
+  MdLibraryAdd,
+  MdOpenInNew,
+  MdRefresh,
+  MdSpaceBar
+} from 'react-icons/md'
 import {Button, Col, Drawer, Nav, Row, Sidenav, Table} from 'rsuite'
 
-import {AggregatedUsers, AudienceStatsComputed, TimeResolution} from './audience-dashboard'
-import {useAudience} from './useAudience'
+import {TimeResolution} from './audience-dashboard'
+import {AggregatedUsers, AudienceStatsComputed} from './useAudience'
 
 const {Cell, Column, HeaderCell} = Table
 const {Body, Header} = Sidenav
@@ -29,7 +36,23 @@ export function AudienceDetailDrawer({
   timeResolution
 }: AudienceDetailDrawerProps) {
   const {t} = useTranslation()
-  const {getIconByUserFilter} = useAudience()
+
+  function getIconByUserFilter(filterProp: AggregatedUsers) {
+    switch (filterProp) {
+      case 'createdSubscriptionUsers':
+        return <MdLibraryAdd />
+      case 'createdUnpaidSubscriptionUsers':
+        return <MdCreditCardOff />
+      case 'deactivatedSubscriptionUsers':
+        return <MdCancel />
+      case 'renewedSubscriptionUsers':
+        return <MdRefresh />
+      case 'replacedSubscriptionUsers':
+        return <MdSpaceBar />
+      default:
+        break
+    }
+  }
 
   const [selectedStat, setSelectedStat] = useState<AggregatedUsers>('deactivatedSubscriptionUsers')
 
