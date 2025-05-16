@@ -11,6 +11,8 @@ import {
   AudienceComponentFilter,
   TimeResolution
 } from './useAudienceFilter'
+import {RangeType} from 'rsuite/esm/DatePicker'
+import {DateRange} from 'react-aria'
 
 const TagPickerStyled = styled(TagPicker)`
   margin-top: ${({theme}) => theme.spacing(2)};
@@ -57,10 +59,10 @@ export function AudienceFilter({
       1
     )
     setApiFilter({dateRange: [startDateOfTwoMonthsBefore, endDateOfCurrentMonth]})
-  }, [])
+  }, [setApiFilter])
 
   // load available subscription plans
-  const {data: memberPlans, loading: loadingMemberPlans} = useMemberPlanListQuery()
+  const {data: memberPlans} = useMemberPlanListQuery()
 
   const memberPlansForPicker = useMemo<{label: string; value: string}[]>(() => {
     return (
@@ -70,6 +72,33 @@ export function AudienceFilter({
       })) || []
     )
   }, [memberPlans])
+
+  const oneClickDateRanges = useMemo<any[]>(() => {
+    const today = new Date(new Date().setHours(0, 0, 0, 0))
+    const lastWeek = new Date(new Date().setDate(today.getDate() - 7))
+    const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1))
+    const lastQuarter = new Date(new Date().setMonth(today.getMonth() - 3))
+    const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1))
+
+    return [
+      {
+        label: t('audienceFilter.rangeLastWeek'),
+        value: [lastWeek, today]
+      },
+      {
+        label: t('audienceFilter.rangeLastMonth'),
+        value: [lastMonth, today]
+      },
+      {
+        label: t('audienceFilter.rangeLastQuarter'),
+        value: [lastQuarter, today]
+      },
+      {
+        label: t('audienceFilter.lastYear'),
+        value: [lastYear, today]
+      }
+    ]
+  }, [t])
 
   return (
     <Grid style={{width: '100%'}}>
@@ -82,8 +111,8 @@ export function AudienceFilter({
             appearance="picker"
             defaultValue={resolution}
             onChange={newResolution => setResolution(newResolution as TimeResolution)}>
-            <Radio value="daily">Täglich</Radio>
-            <Radio value="monthly">Monatlich</Radio>
+            <Radio value="daily">{t('audienceFilter.daily')}</Radio>
+            <Radio value="monthly">{t('audienceFilter.monthly')}</Radio>
           </RadioGroup>
         </Col>
 
@@ -95,6 +124,7 @@ export function AudienceFilter({
             format="dd.MM.yyyy"
             placeholder={t('audienceFilter.rangePickerPlaceholder')}
             style={{width: '100%'}}
+            ranges={oneClickDateRanges}
           />
           <TagPickerStyled
             size="lg"
