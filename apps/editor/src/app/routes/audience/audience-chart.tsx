@@ -14,6 +14,15 @@ import {
 import {AudienceStatsComputed} from './useAudience'
 import {AudienceClientFilter} from './useAudienceFilter'
 
+export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
+  createdSubscriptionCount: 'var(--rs-green-900)',
+  createdUnpaidSubscriptionCount: 'var(--rs-violet-900)',
+  deactivatedSubscriptionCount: 'var(--rs-orange-900)',
+  renewedSubscriptionCount: 'var(--rs-blue-900)',
+  replacedSubscriptionCount: 'var(--rs-cyan-900)',
+  totalActiveSubscriptionCount: 'var(--rs-red-900)'
+}
+
 interface AudienceChartProps {
   audienceStats: AudienceStatsComputed[]
   clientFilter: AudienceClientFilter
@@ -30,8 +39,6 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
     replacedSubscriptionCount,
     deactivatedSubscriptionCount
   } = clientFilter
-
-  const chartColors = ['#ed4a8e', '#bf54b6', '#FF5A5F', '#7364cd', '#006dca', '#006db0']
 
   return (
     <ResponsiveContainer>
@@ -64,27 +71,47 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
           <Line
             type={'monotone'}
             dataKey={'totalActiveSubscriptionCount'}
-            stroke={chartColors[0]}
+            stroke={chartColors.totalActiveSubscriptionCount}
             strokeWidth={2}
-            fill={chartColors[0]}
+            fill={chartColors.totalActiveSubscriptionCount}
           />
         )}
 
         {deactivatedSubscriptionCount && (
-          <Bar stackId="created" dataKey={'deactivatedSubscriptionCount'} fill={chartColors[5]} />
+          <Bar
+            stackId="created"
+            dataKey={'deactivatedSubscriptionCount'}
+            fill={chartColors.deactivatedSubscriptionCount}
+          />
         )}
 
         {createdSubscriptionCount && (
-          <Bar stackId="created" dataKey={'createdSubscriptionCount'} fill={chartColors[1]} />
+          <Bar
+            stackId="created"
+            dataKey={'createdSubscriptionCount'}
+            fill={chartColors.createdSubscriptionCount}
+          />
         )}
         {renewedSubscriptionCount && (
-          <Bar stackId="created" dataKey={'renewedSubscriptionCount'} fill={chartColors[2]} />
+          <Bar
+            stackId="created"
+            dataKey={'renewedSubscriptionCount'}
+            fill={chartColors.renewedSubscriptionCount}
+          />
         )}
         {createdUnpaidSubscriptionCount && (
-          <Bar stackId="created" dataKey={'createdUnpaidSubscriptionCount'} fill={chartColors[3]} />
+          <Bar
+            stackId="created"
+            dataKey={'createdUnpaidSubscriptionCount'}
+            fill={chartColors.createdUnpaidSubscriptionCount}
+          />
         )}
         {replacedSubscriptionCount && (
-          <Bar stackId="created" dataKey={'replacedSubscriptionCount'} fill={chartColors[4]} />
+          <Bar
+            stackId="created"
+            dataKey={'replacedSubscriptionCount'}
+            fill={chartColors.replacedSubscriptionCount}
+          />
         )}
       </ComposedChart>
     </ResponsiveContainer>
