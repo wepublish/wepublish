@@ -132,32 +132,32 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
     []
   )
 
-  const audienceStatsAggregatedByMonth = useMemo<AudienceStatsComputed[]>(() => {
-    const aggregatedStats: AudienceStatsComputed[] = []
-
-    // unique last days of every month
-    const lastDaysOfMonths = new Set(
+  const getLastDaysOfMonths = useCallback(() => {
+    return new Set(
       audienceStatsComputed.map(stat => {
         const date = new Date(stat.date)
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString()
       })
     )
+  }, [audienceStatsComputed])
 
-    // aggregate data per month
-    for (const lastDayOfMonthIso of lastDaysOfMonths) {
+  const getStatsByMonth = useCallback(
+    (lastDayOfMonthIso: string) => {
       const lastDayOfMonthDate = new Date(lastDayOfMonthIso)
-      const monthStats: AudienceStatsComputed[] = audienceStatsComputed.filter(stat => {
+      return audienceStatsComputed.filter(stat => {
         const statDate = new Date(stat.date)
         return (
           statDate.getMonth() === lastDayOfMonthDate.getMonth() &&
           statDate.getFullYear() === lastDayOfMonthDate.getFullYear()
         )
       })
+    },
+    [audienceStatsComputed]
+  )
 
-      const lastDayOfMonthWithStats = monthStats[monthStats.length - 1]
-
-      // sum up the count figures
-      const summedUpCounts = (
+  const getSummedUpCounts = useCallback(
+    (statsByMonth: AudienceStatsComputed[]) => {
+      return (
         [
           'createdSubscriptionCount',
           'createdUnpaidSubscriptionCount',
@@ -165,10 +165,14 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
           'renewedSubscriptionCount',
           'replacedSubscriptionCount'
         ] as SumUpCountKeys[]
-      ).reduce((acc, key) => ({...acc, [key]: sumUpCounts(monthStats, key)}), {})
+      ).reduce((acc, key) => ({...acc, [key]: sumUpCounts(statsByMonth, key)}), {})
+    },
+    [sumUpCounts]
+  )
 
-      // merge the user
-      const mergedUsers = (
+  const getMergedUsers = useCallback(
+    (statsByMonth: AudienceStatsComputed[]) => {
+      return (
         [
           'createdSubscriptionUsers',
           'createdUnpaidSubscriptionUsers',
@@ -176,7 +180,28 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
           'renewedSubscriptionUsers',
           'replacedSubscriptionUsers'
         ] as AggregatedUsers[]
-      ).reduce((acc, key) => ({...acc, [key]: mergeUsers(monthStats, key)}), {})
+      ).reduce((acc, key) => ({...acc, [key]: mergeUsers(statsByMonth, key)}), {})
+    },
+    [mergeUsers]
+  )
+
+  const audienceStatsAggregatedByMonth = useMemo<AudienceStatsComputed[]>(() => {
+    const aggregatedStats: AudienceStatsComputed[] = []
+
+    // unique last days of every month
+    const lastDaysOfMonths = getLastDaysOfMonths()
+
+    // aggregate data per month
+    for (const lastDayOfMonthIso of lastDaysOfMonths) {
+      const statsByMonth: AudienceStatsComputed[] = getStatsByMonth(lastDayOfMonthIso)
+
+      const lastDayOfMonthWithStats = statsByMonth[statsByMonth.length - 1]
+
+      // sum up the count figures
+      const summedUpCounts = getSummedUpCounts(statsByMonth)
+
+      // merge the user
+      const mergedUsers = getMergedUsers(statsByMonth)
 
       const totalNewSubscriptions = getTotalNewSubscriptionsByDay(summedUpCounts)
       const renewalFigures = getRenewalFigures({
@@ -197,9 +222,10 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
 
     return aggregatedStats
   }, [
-    audienceStatsComputed,
-    sumUpCounts,
-    mergeUsers,
+    getLastDaysOfMonths,
+    getStatsByMonth,
+    getSummedUpCounts,
+    getMergedUsers,
     getTotalNewSubscriptionsByDay,
     getRenewalFigures
   ])
