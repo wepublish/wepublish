@@ -3,6 +3,7 @@ import {
   AuthorRefFragment,
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
+  TagType,
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
@@ -118,6 +119,7 @@ export interface ListViewFiltersProps {
   isLoading: boolean
   onSetFilter(filter: Filter): void
   className?: string
+  tagType?: TagType
 }
 
 export function ListViewFilters({fields, filter, onSetFilter, className}: ListViewFiltersProps) {

@@ -110,6 +110,9 @@ model Article {
   peerId        String?
   peerArticleId String?
 
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?  @db.Uuid
+
   navigations    NavigationLink[]
   tags           TaggedArticles[]
   revisions      ArticleRevision[]
@@ -425,7 +428,7 @@ model CommentRatingOverride {
 
   value Int?
 
-  @@unique([answerId, commentId])
+  @@id([answerId, commentId])
   @@map("comments.rating-override")
 }
 
@@ -560,6 +563,7 @@ model MemberPlan {
   subscriptionFlows SubscriptionFlow[]
 
   crowdfundings Crowdfunding[]
+  paywalls      PaywallMemberplan[]
 
   @@index([name])
   @@map("member.plans")
@@ -1363,4 +1367,34 @@ model CrowdfundingGoal {
   crowdfundingId String       @db.Uuid
 
   @@map("crowdfunding_goals")
+}
+
+model Paywall {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name          String? @unique
+  description   Json?
+  anyMemberPlan Boolean @default(false)
+  active        Boolean @default(true)
+
+  memberPlans PaywallMemberplan[]
+  articles    Article[]
+
+  @@map("paywalls")
+}
+
+model PaywallMemberplan {
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@id([paywallId, memberPlanId])
+  @@map("paywalls.memberPlans")
 }

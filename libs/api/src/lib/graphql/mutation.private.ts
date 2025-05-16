@@ -100,8 +100,6 @@ import {
 } from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
-import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
-import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
   cancelSubscriptionById,
@@ -764,18 +762,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
         deleteComment(id, authenticate, comment)
-    },
-
-    // Settings
-    // ==========
-
-    updateSettingList: {
-      type: new GraphQLList(GraphQLSetting),
-      args: {
-        value: {type: new GraphQLList(GraphQLUpdateSettingArgs)}
-      },
-      resolve: (root, {value}, {authenticate, prisma}) =>
-        updateSettings(value, authenticate, prisma)
     },
 
     // Rating System

@@ -1,5 +1,4 @@
-import {BaseMailProvider, MailProviderProps, SendMailProps} from '@wepublish/api'
-
+import {MailProviderProps, BaseMailProvider, SendMailProps} from '@wepublish/mail/api'
 import fetch from 'cross-fetch'
 
 export interface SlackMailProviderProps extends MailProviderProps {

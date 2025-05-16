@@ -4,10 +4,12 @@ import {
   CreateArticleMutationVariables,
   EditorBlockType,
   getApiClientV2,
-  getSettings,
+  SettingName,
   useArticleQuery,
   useCreateArticleMutation,
+  usePaywallListQuery,
   usePublishArticleMutation,
+  useSettingsListQuery,
   useUpdateArticleMutation
 } from '@wepublish/editor/api-v2'
 import {CanPreview} from '@wepublish/permissions'
@@ -55,8 +57,6 @@ import {
   toaster
 } from 'rsuite'
 import {type Node, Descendant, Element, Text} from 'slate'
-
-import {ClientSettings} from '../../../shared/types'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -114,8 +114,6 @@ function ArticleEditor() {
 
   const {t} = useTranslation()
 
-  const {peerByDefault}: ClientSettings = getSettings()
-
   const client = getApiClientV2()
   const [createArticle, {data: createData, loading: isCreating, error: createError}] =
     useCreateArticleMutation({client})
@@ -143,7 +141,8 @@ function ArticleEditor() {
     url: '',
     properties: [],
     canonicalUrl: '',
-    shared: peerByDefault,
+    shared: false,
+    paywall: false,
     hidden: false,
     disableComments: false,
     breaking: false,
@@ -155,6 +154,22 @@ function ArticleEditor() {
     socialMediaImage: undefined,
     likes: 0,
     trackingPixels: undefined
+  })
+
+  useSettingsListQuery({
+    client,
+    onCompleted(data) {
+      setMetadata({
+        ...metadata,
+        shared: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
+          ?.value,
+        paywall: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
+          ?.value
+      })
+    }
+  })
+  const {data: paywallData} = usePaywallListQuery({
+    client
   })
 
   const isNew = id === undefined
@@ -170,7 +185,8 @@ function ArticleEditor() {
     client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: {id: articleID!}
+    variables: {id: articleID!},
+    skip: !articleID
   })
 
   const isNotFound = articleData && !articleData.article
@@ -195,12 +211,12 @@ function ArticleEditor() {
         shared,
         hidden,
         disableComments,
-        pending,
         tags,
         url,
         slug,
         trackingPixels,
-        likes
+        likes,
+        paywallId
       } = articleData.article
       const {
         preTitle,
@@ -236,6 +252,7 @@ function ArticleEditor() {
         properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
+        paywall: !!paywallId,
         hidden,
         disableComments,
         breaking,
@@ -349,6 +366,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
+      paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,

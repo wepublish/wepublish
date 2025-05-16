@@ -125,6 +125,7 @@ export interface ArticleMetadata {
   readonly canonicalUrl: string
   readonly image?: FullImageFragment
   readonly shared: boolean
+  readonly paywall?: boolean
   readonly hidden?: boolean | null
   readonly disableComments?: boolean | null
   readonly breaking: boolean
@@ -170,6 +171,7 @@ function ArticleMetadataPanel({
     defaultTags,
     authors,
     shared,
+    paywall,
     hidden,
     disableComments,
     breaking,
@@ -537,6 +539,16 @@ function ArticleMetadataPanel({
                 <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
               </Group>
             )}
+
+            <Group controlId="paywall">
+              <ControlLabel>{t('articleEditor.panels.paywall')}</ControlLabel>
+
+              <Toggle
+                checked={paywall}
+                disabled={!isAuthorized}
+                onChange={paywall => onChange?.({...value, paywall})}
+              />
+            </Group>
 
             <Group controlId="hidden">
               <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>

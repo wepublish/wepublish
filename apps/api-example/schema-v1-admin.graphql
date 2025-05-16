@@ -31,8 +31,6 @@ type Query {
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   payment(id: String): Payment
   payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
-  setting(name: String!): Setting
-  settings: [Setting!]!
   ratingSystem: FullCommentRatingSystem!
   tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
@@ -669,44 +667,6 @@ enum PaymentSort {
   modifiedAt
 }
 
-type Setting {
-  id: String!
-  name: SettingName!
-  value: GraphQLSettingValueType!
-  settingRestriction: SettingRestriction
-}
-
-enum SettingName {
-  allowGuestCommenting
-  allowGuestCommentRating
-  allowGuestPollVoting
-  sendLoginJwtExpiresMin
-  resetPasswordJwtExpiresMin
-  peeringTimeoutInMs
-  makeActiveSubscribersApiPublic
-  makeNewSubscribersApiPublic
-  makeRenewingSubscribersApiPublic
-  makeNewDeactivationsApiPublic
-  makeExpectedRevenueApiPublic
-  makeRevenueApiPublic
-  commentCharLimit
-  allowCommentEditing
-}
-
-scalar GraphQLSettingValueType
-
-type SettingRestriction {
-  maxValue: Int
-  minValue: Int
-  inputLength: Int
-  allowedValues: AllowedSettingVals
-}
-
-type AllowedSettingVals {
-  stringChoice: [String]
-  boolChoice: Boolean
-}
-
 type FullCommentRatingSystem {
   id: String!
   name: String
@@ -852,7 +812,6 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
   deleteComment(id: String!): Comment!
-  updateSettingList(value: [UpdateSettingArgs]): [Setting]
   createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
   updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
@@ -1085,11 +1044,6 @@ input CommentRevisionUpdateInput {
 input CommentRatingOverrideUpdateInput {
   answerId: String!
   value: Int
-}
-
-input UpdateSettingArgs {
-  name: SettingName!
-  value: GraphQLSettingValueType!
 }
 
 input UpdateCommentRatingSystemAnswer {

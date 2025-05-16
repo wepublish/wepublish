@@ -80,6 +80,10 @@ const modelFieldDefinitions = [{
                 type: "Peer",
                 relationName: "ArticleToPeer"
             }, {
+                name: "paywall",
+                type: "Paywall",
+                relationName: "ArticleToPaywall"
+            }, {
                 name: "navigations",
                 type: "NavigationLink",
                 relationName: "ArticleToNavigationLink"
@@ -407,6 +411,10 @@ const modelFieldDefinitions = [{
                 name: "crowdfundings",
                 type: "Crowdfunding",
                 relationName: "CrowdfundingToMemberPlan"
+            }, {
+                name: "paywalls",
+                type: "PaywallMemberplan",
+                relationName: "MemberPlanToPaywallMemberplan"
             }]
     }, {
         name: "NavigationLink",
@@ -932,6 +940,28 @@ const modelFieldDefinitions = [{
                 type: "Crowdfunding",
                 relationName: "CrowdfundingToCrowdfundingGoal"
             }]
+    }, {
+        name: "Paywall",
+        fields: [{
+                name: "memberPlans",
+                type: "PaywallMemberplan",
+                relationName: "PaywallToPaywallMemberplan"
+            }, {
+                name: "articles",
+                type: "Article",
+                relationName: "ArticleToPaywall"
+            }]
+    }, {
+        name: "PaywallMemberplan",
+        fields: [{
+                name: "memberPlan",
+                type: "MemberPlan",
+                relationName: "MemberPlanToPaywallMemberplan"
+            }, {
+                name: "paywall",
+                type: "Paywall",
+                relationName: "PaywallToPaywallMemberplan"
+            }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -1258,6 +1288,9 @@ export function defineArticleRevisionSocialMediaAuthorFactory(options) {
 function isArticlepeerFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Peer";
 }
+function isArticlepaywallFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Paywall";
+}
 function autoGenerateArticleScalarsOrEnums({ seq }) {
     return {
         shared: getScalarFieldValueGenerator().Boolean({ modelName: "Article", fieldName: "shared", isId: false, isUnique: false, seq })
@@ -1282,7 +1315,10 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
             const defaultAssociations = {
                 peer: isArticlepeerFactory(defaultData.peer) ? {
                     create: yield defaultData.peer.build()
-                } : defaultData.peer
+                } : defaultData.peer,
+                paywall: isArticlepaywallFactory(defaultData.paywall) ? {
+                    create: yield defaultData.paywall.build()
+                } : defaultData.paywall
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
@@ -5542,4 +5578,136 @@ function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolve
  */
 export function defineCrowdfundingGoalFactory(options) {
     return defineCrowdfundingGoalFactoryInternal(options);
+}
+function autoGeneratePaywallScalarsOrEnums({ seq }) {
+    return {};
+}
+function definePaywallFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("Paywall", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePaywallScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().paywall.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "Paywall",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link Paywall} model.
+ *
+ * @param options
+ * @returns factory {@link PaywallFactoryInterface}
+ */
+export function definePaywallFactory(options) {
+    return definePaywallFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isPaywallMemberplanmemberPlanFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "MemberPlan";
+}
+function isPaywallMemberplanpaywallFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Paywall";
+}
+function autoGeneratePaywallMemberplanScalarsOrEnums({ seq }) {
+    return {};
+}
+function definePaywallMemberplanFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PaywallMemberplan", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePaywallMemberplanScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                memberPlan: isPaywallMemberplanmemberPlanFactory(defaultData.memberPlan) ? {
+                    create: yield defaultData.memberPlan.build()
+                } : defaultData.memberPlan,
+                paywall: isPaywallMemberplanpaywallFactory(defaultData.paywall) ? {
+                    create: yield defaultData.paywall.build()
+                } : defaultData.paywall
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            paywallId: inputData.paywallId,
+            memberPlanId: inputData.memberPlanId
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().paywallMemberplan.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "PaywallMemberplan",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link PaywallMemberplan} model.
+ *
+ * @param options
+ * @returns factory {@link PaywallMemberplanFactoryInterface}
+ */
+export function definePaywallMemberplanFactory(options) {
+    return definePaywallMemberplanFactoryInternal(options);
 }
