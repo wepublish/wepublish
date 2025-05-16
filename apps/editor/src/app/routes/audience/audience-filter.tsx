@@ -11,8 +11,6 @@ import {
   AudienceComponentFilter,
   TimeResolution
 } from './useAudienceFilter'
-import {RangeType} from 'rsuite/esm/DatePicker'
-import {DateRange} from 'react-aria'
 
 const TagPickerStyled = styled(TagPicker)`
   margin-top: ${({theme}) => theme.spacing(2)};
