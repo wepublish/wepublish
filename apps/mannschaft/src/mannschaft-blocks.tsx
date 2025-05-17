@@ -12,6 +12,7 @@ export const createNewAdTeaser = (): TeaserGridBlock => ({
   numColumns: 1,
   teasers: [
     {
+      __typename: 'CustomTeaser',
       type: TeaserType.Custom,
       properties: [],
       contentUrl: null,
