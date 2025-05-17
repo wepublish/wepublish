@@ -11,10 +11,10 @@ import {
   XAxis,
   YAxis
 } from 'recharts'
+import {Placeholder} from 'rsuite'
 
 import {AudienceStatsComputed} from './useAudience'
 import {AudienceClientFilter} from './useAudienceFilter'
-import {Loader, Placeholder} from 'rsuite'
 
 export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
   createdSubscriptionCount: 'var(--rs-green-900)',
