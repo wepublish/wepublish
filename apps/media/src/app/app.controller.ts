@@ -10,7 +10,8 @@ import {
   Req,
   UploadedFile,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  NotFoundException
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
 import {
@@ -23,16 +24,31 @@ import {
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'
+import {ImageCacheService} from './imageCache.service'
 
 @Controller({
   version: '1'
 })
 export class AppController {
-  constructor(private readonly media: MediaService) {}
+  constructor(
+    private readonly media: MediaService,
+    private readonly imageCacheService: ImageCacheService
+  ) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
     res.status(200).send({status: 'ok'})
+  }
+
+  @Get('/cacheState')
+  async cacheState(@Res() res: Response) {
+    const state = this.imageCacheService.state()
+    res.status(state.healty ? 200 : 500).send(state.stats)
+  }
+
+  @Get('/favicon.ico')
+  async favicon(@Res() res: Response) {
+    throw new NotFoundException()
   }
 
   @UseGuards(TokenAuthGuard)
@@ -73,27 +89,47 @@ export class AppController {
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    // Handle etag
-    const etagClient = req.headers['if-none-match']
-    if (etagClient) {
-      const remoteEtag = await this.media.getRemoteEtag(
-        `images/${imageId}/${getTransformationKey(transformations)}`
-      )
-      if (`"${remoteEtag}"` === etagClient) {
+    const cacheKey = `${imageId}-${getTransformationKey(transformations)}`
+
+    // Check if image is cached
+    const cachedBuffer = this.imageCacheService.get(cacheKey)
+
+    if (cachedBuffer[0]) {
+      const etag = this.media.generateETag(cachedBuffer[0])
+
+      // Handle ETag
+      if (cachedBuffer[1] === 200 && req.headers['if-none-match'] === `"${etag}"`) {
         res.status(304).end()
         return
       }
+
+      res.setHeader('Content-Type', 'image/webp')
+      res.setHeader('ETag', etag)
+      res.setHeader('Cache-Control', `public, max-age=172800`)
+      res.status(cachedBuffer[1])
+      res.end(cachedBuffer[0])
+      return
     }
 
-    const [file, etag] = await this.media.getImage(imageId, transformations)
+    // Not in cache, fetch and process image
+    const [file, etag, imageExists] = await this.media.getImage(imageId, transformations)
     res.setHeader('Content-Type', 'image/webp')
 
     if (process.env['NODE_ENV'] === 'production') {
       res.setHeader('ETag', etag)
-      res.setHeader('Cache-Control', `public, max-age=172800`) // cache for 48 hours and then re-checks the ETag
+      res.setHeader('Cache-Control', `public, max-age=172800`)
+    }
+    const buffer = await this.media.bufferStream(file)
+
+    if (!imageExists) {
+      res.status(404)
+      res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
+      this.imageCacheService.set(cacheKey, buffer, 404, 120)
+    } else {
+      this.imageCacheService.set(cacheKey, buffer)
     }
 
-    return file.pipe(res)
+    res.end(buffer)
   }
 
   @UseGuards(TokenAuthGuard)
