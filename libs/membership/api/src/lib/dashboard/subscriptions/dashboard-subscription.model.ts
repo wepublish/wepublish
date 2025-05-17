@@ -35,3 +35,69 @@ export class DashboardSubscription {
   @Field(type => SubscriptionDeactivationReason, {nullable: true})
   reasonForDeactivation?: SubscriptionDeactivationReason
 }
+
+@ObjectType()
+export class DailySubscriptionStatsUser {
+  @Field()
+  id!: string
+
+  @Field()
+  name!: string
+
+  @Field(() => String, {nullable: true})
+  firstName?: string | null
+
+  @Field()
+  email!: string
+}
+
+@ObjectType()
+export class DailySubscriptionStats {
+  @Field()
+  date!: string
+
+  @Field()
+  totalActiveSubscriptionCount!: number
+
+  @Field()
+  createdSubscriptionCount!: number
+
+  @Field(type => [DailySubscriptionStatsUser])
+  createdSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field()
+  createdUnpaidSubscriptionCount!: number
+
+  @Field(type => [DailySubscriptionStatsUser])
+  createdUnpaidSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field()
+  replacedSubscriptionCount!: number
+
+  @Field(type => [DailySubscriptionStatsUser])
+  replacedSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field()
+  renewedSubscriptionCount!: number
+
+  @Field(type => [DailySubscriptionStatsUser])
+  renewedSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field()
+  deactivatedSubscriptionCount!: number
+
+  @Field(type => [DailySubscriptionStatsUser])
+  deactivatedSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field()
+  subscriptionMonthlyRevenueAvg!: number
+
+  @Field()
+  subscriptionMonthlyRevenueSum!: number
+
+  @Field()
+  subscriptionDailyRevenue!: number
+
+  @Field()
+  subscriptionDurationAvg!: number
+}

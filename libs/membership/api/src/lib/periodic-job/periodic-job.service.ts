@@ -125,7 +125,7 @@ export class PeriodicJobService {
         data: {
           deactivation: {
             create: {
-              date: new Date(),
+              date: subscription.paidUntil ?? subscription.startsAt,
               reason: SubscriptionDeactivationReason.userSelfDeactivated
             }
           },
@@ -422,7 +422,10 @@ export class PeriodicJobService {
       }
     }
 
-    await this.subscriptionController.deactivateSubscription(unpaidInvoice)
+    // Type assertion is safe here due to the above check
+    await this.subscriptionController.deactivateSubscription(
+      unpaidInvoice as typeof unpaidInvoice & {subscription: Subscription}
+    )
     const {subscription, ...invoice} = unpaidInvoice
 
     await this.sendTemplateMail(
