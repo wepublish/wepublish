@@ -9,6 +9,7 @@ import {
   AudienceApiFilter,
   AudienceClientFilter,
   AudienceComponentFilter,
+  preDefinedDates,
   TimeResolution
 } from './useAudienceFilter'
 
@@ -60,12 +61,7 @@ export function AudienceFilter({
   }, [memberPlans])
 
   const oneClickDateRanges = useMemo<any[]>(() => {
-    const today = new Date(new Date().setHours(0, 0, 0, 0))
-    const lastWeek = new Date(new Date().setDate(today.getDate() - 7))
-    const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1))
-    const lastQuarter = new Date(new Date().setMonth(today.getMonth() - 3))
-    const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1))
-
+    const {today, lastWeek, lastMonth, lastQuarter, lastYear} = preDefinedDates()
     return [
       {
         label: t('audienceFilter.rangeLastWeek'),
@@ -85,11 +81,6 @@ export function AudienceFilter({
       }
     ]
   }, [t])
-
-  // triggers initial data load
-  useEffect(() => {
-    setApiFilter({dateRange: oneClickDateRanges[2].value})
-  }, [])
 
   return (
     <Grid style={{width: '100%'}}>

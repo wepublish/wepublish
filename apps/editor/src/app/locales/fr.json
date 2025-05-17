@@ -509,7 +509,9 @@
       "newUser": "Nouvel <0>utilisateur</0> ajouté",
       "noData": "Pas de données actuelles sur les abonnés",
       "user": "Utilisateur",
-      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée"
+      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",

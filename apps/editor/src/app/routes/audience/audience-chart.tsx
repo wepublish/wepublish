@@ -41,7 +41,7 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
   } = clientFilter
 
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer height={400}>
       <ComposedChart data={audienceStats}>
         <XAxis
           dataKey={'date'}

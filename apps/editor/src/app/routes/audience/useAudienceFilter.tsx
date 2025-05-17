@@ -28,6 +28,10 @@ export type AudienceClientFilter = Pick<
   | 'replacedSubscriptionCount'
 >
 
+export type AudienceClientFilterString = {
+  [K in keyof AudienceClientFilter]: string
+}
+
 export interface AudienceComponentFilter {
   filter: boolean
   chart: boolean
@@ -95,5 +99,28 @@ export function useAudienceFilter({fetchStats}: UseAudienceFilterProps) {
     setAudienceClientFilter,
     audienceComponentFilter,
     setAudienceComponentFilter
+  }
+}
+
+export interface PreDefinedDates {
+  today: Date
+  lastWeek: Date
+  lastMonth: Date
+  lastQuarter: Date
+  lastYear: Date
+}
+
+export function preDefinedDates(): PreDefinedDates {
+  const today = new Date(new Date().setHours(0, 0, 0, 0))
+  const lastWeek = new Date(new Date().setDate(today.getDate() - 7))
+  const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1))
+  const lastQuarter = new Date(new Date().setMonth(today.getMonth() - 3))
+  const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1))
+  return {
+    today,
+    lastWeek,
+    lastMonth,
+    lastQuarter,
+    lastYear
   }
 }

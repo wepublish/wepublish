@@ -7,14 +7,14 @@ import {
   ListViewHeader,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {useMemo} from 'react'
+import {useEffect, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 
 import {AudienceChart} from './audience-chart'
 import {AudienceFilter} from './audience-filter'
 import {AudienceTable} from './audience-table'
 import {useAudience} from './useAudience'
-import {useAudienceFilter} from './useAudienceFilter'
+import {PreDefinedDates, preDefinedDates, useAudienceFilter} from './useAudienceFilter'
 
 const AudienceChartWrapper = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
@@ -29,7 +29,17 @@ const TableWrapperStyled = styled(TableWrapper)`
   margin-top: ${({theme}) => theme.spacing(8)};
 `
 
-function AudienceDashboard() {
+interface AudienceDashboardProps {
+  hideHeader?: boolean
+  hideFilter?: boolean
+  initialDateRange?: keyof PreDefinedDates
+}
+
+function AudienceDashboard({
+  hideHeader,
+  hideFilter,
+  initialDateRange = 'lastMonth'
+}: AudienceDashboardProps) {
   const {t} = useTranslation()
   const client = getApiClientV2()
   const [fetchStats, {data: rawAudienceStats}] = useDailySubscriptionStatsLazyQuery({
@@ -59,14 +69,23 @@ function AudienceDashboard() {
     [resolution, audienceStatsComputed, audienceStatsAggregatedByMonth]
   )
 
+  // triggers initial data load
+  useEffect(() => {
+    const today = preDefinedDates()['today']
+    const dateRange = preDefinedDates()[initialDateRange]
+    setAudienceApiFilter({dateRange: [dateRange, today]})
+  }, [])
+
   return (
     <>
       <ListViewContainer>
-        <ListViewHeader>
-          <h2>{t('audienceDashboard.title')}</h2>
-        </ListViewHeader>
+        {!hideHeader && (
+          <ListViewHeader>
+            <h2>{t('audienceDashboard.title')}</h2>
+          </ListViewHeader>
+        )}
 
-        {audienceComponentFilter.filter && (
+        {!hideFilter && audienceComponentFilter.filter && (
           <ListViewFilterArea style={{alignItems: 'center'}}>
             <AudienceFilter
               resolution={resolution}

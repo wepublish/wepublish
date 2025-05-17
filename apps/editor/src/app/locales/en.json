@@ -555,7 +555,9 @@
       "newUser": "New <0>user</0> added",
       "noData": "No current subscriber data",
       "user": "User",
-      "yearlySubscribers": "New subscribers over past year"
+      "yearlySubscribers": "New subscribers over past year",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Go to Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
