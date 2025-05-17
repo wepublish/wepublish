@@ -1,5 +1,5 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
-import {PaymentState, Prisma, PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 import {ok} from 'assert'
 import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
 import {differenceInDays, endOfDay, startOfDay} from 'date-fns'
@@ -570,7 +570,7 @@ export class DashboardSubscriptionService {
     }
 
     const dates: Date[] = []
-    let temp = new Date(current)
+    const temp = new Date(current)
     while (temp <= end) {
       dates.push(new Date(temp)) // clone to avoid mutation
       temp.setDate(temp.getDate() + 1)
