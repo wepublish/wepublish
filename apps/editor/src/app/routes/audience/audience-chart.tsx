@@ -42,7 +42,7 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
 
   return (
     <ResponsiveContainer height={400}>
-      <ComposedChart data={audienceStats}>
+      <ComposedChart data={audienceStats} reverseStackOrder>
         <XAxis
           dataKey={'date'}
           tick={({x, y, payload}) => (
@@ -77,14 +77,6 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
           />
         )}
 
-        {deactivatedSubscriptionCount && (
-          <Bar
-            stackId="created"
-            dataKey={'deactivatedSubscriptionCount'}
-            fill={chartColors.deactivatedSubscriptionCount}
-          />
-        )}
-
         {createdSubscriptionCount && (
           <Bar
             stackId="created"
@@ -111,6 +103,14 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
             stackId="created"
             dataKey={'replacedSubscriptionCount'}
             fill={chartColors.replacedSubscriptionCount}
+          />
+        )}
+        {deactivatedSubscriptionCount && (
+          <Bar
+            stackId="created"
+            dataKey={'deactivatedSubscriptionCount'}
+            fill={chartColors.deactivatedSubscriptionCount}
+            z={99} // Ensures this bar is rendered above others
           />
         )}
       </ComposedChart>
