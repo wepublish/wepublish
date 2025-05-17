@@ -44,6 +44,7 @@ import {
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
 import Mitmachen from './mitmachen'
+import {BajourArticleDateWithShare} from '../src/bajour-article-date-with-share'
 
 setDefaultOptions({
   locale: de
@@ -142,6 +143,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
+            ArticleDate={BajourArticleDateWithShare}
             Banner={BajourBanner}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
