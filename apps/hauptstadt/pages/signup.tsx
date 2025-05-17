@@ -1,33 +1,24 @@
-import styled from '@emotion/styled'
-import {Typography} from '@mui/material'
 import {
   IntendedRouteStorageKey,
   RegistrationFormContainer,
   useUser
 } from '@wepublish/authentication/website'
+import {PageContainer} from '@wepublish/page/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie} from 'cookies-next'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-const SignupWrapper = styled('div')`
-  display: grid;
-  justify-content: center;
-`
-
 export default function SignUp() {
   const {hasUser} = useUser()
   const router = useRouter()
-  const {
-    elements: {H3, Link}
-  } = useWebsiteBuilder()
 
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
@@ -38,15 +29,9 @@ export default function SignUp() {
   }
 
   return (
-    <SignupWrapper>
-      <H3 component="h1">Registriere dich noch heute</H3>
-
-      <Typography variant="body1" paragraph>
-        (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
-      </Typography>
-
+    <PageContainer slug="signup">
       <RegistrationFormContainer />
-    </SignupWrapper>
+    </PageContainer>
   )
 }
 
@@ -59,6 +44,12 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'login'
+      }
+    }),
     client.query({
       query: NavigationListDocument
     }),
