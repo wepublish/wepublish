@@ -24,6 +24,23 @@ const availableStats: AggregatedUsers[] = [
   'replacedSubscriptionUsers'
 ]
 
+function getIconByUserFilter(filterProp: AggregatedUsers) {
+  switch (filterProp) {
+    case 'createdSubscriptionUsers':
+      return <MdLibraryAdd />
+    case 'createdUnpaidSubscriptionUsers':
+      return <MdCreditCardOff />
+    case 'deactivatedSubscriptionUsers':
+      return <MdCancel />
+    case 'renewedSubscriptionUsers':
+      return <MdRefresh />
+    case 'replacedSubscriptionUsers':
+      return <MdSpaceBar />
+    default:
+      break
+  }
+}
+
 interface AudienceDetailDrawerProps {
   audienceStats: AudienceStatsComputed | undefined
   setOpen: Dispatch<SetStateAction<AudienceStatsComputed | undefined>>
@@ -36,23 +53,6 @@ export function AudienceDetailDrawer({
   timeResolution
 }: AudienceDetailDrawerProps) {
   const {t} = useTranslation()
-
-  function getIconByUserFilter(filterProp: AggregatedUsers) {
-    switch (filterProp) {
-      case 'createdSubscriptionUsers':
-        return <MdLibraryAdd />
-      case 'createdUnpaidSubscriptionUsers':
-        return <MdCreditCardOff />
-      case 'deactivatedSubscriptionUsers':
-        return <MdCancel />
-      case 'renewedSubscriptionUsers':
-        return <MdRefresh />
-      case 'replacedSubscriptionUsers':
-        return <MdSpaceBar />
-      default:
-        break
-    }
-  }
 
   const [selectedStat, setSelectedStat] = useState<AggregatedUsers>('deactivatedSubscriptionUsers')
 
