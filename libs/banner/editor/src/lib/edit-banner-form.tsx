@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   CreateBannerActionInput,
   FullImageFragment,
@@ -27,6 +28,7 @@ export const EditBannerForm = () => {
     title: '',
     text: '',
     active: false,
+    delay: 0,
     showOnArticles: false,
     showForLoginStatus: LoginStatus.All
     //tags: []
@@ -85,7 +87,6 @@ export const EditBannerForm = () => {
   }
 
   const handleAddAction = (action: CreateBannerActionInput) => {
-    const {...actionWithoutTypename} = action
     setBanner({
       ...banner,
       actions: [...(banner.actions || []), action]

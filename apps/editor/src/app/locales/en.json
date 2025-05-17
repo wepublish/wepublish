@@ -220,13 +220,16 @@
         "delete": "Delete banner"
       },
       "form": {
+        "displayOptions": "Display Options",
         "title": "Title (maximized only)",
         "text": "Text (maximized only)",
         "cta": "Call to action (minimized only)",
+        "delay": "Delay in seconds",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
         "showForLoginStatus": "Display for",
+        "html": "HTML-Code",
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
@@ -238,7 +241,8 @@
           "add": "Add new action",
           "label": "Label",
           "url": "URL",
-          "style": "Style"
+          "style": "Style",
+          "role": "Role"
         }
       },
       "list": {

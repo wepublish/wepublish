@@ -26,6 +26,7 @@ describe('BannerActionService', () => {
     cta: undefined,
     imageId: undefined,
     active: true,
+    delay: 0,
     showOnArticles: true,
     showForLoginStatus: LoginStatus.ALL
   }
