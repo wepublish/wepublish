@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import {useMemberPlanListQuery} from '@wepublish/editor/api'
-import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
+import {Dispatch, SetStateAction, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker, Toggle} from 'rsuite'
+import {RangeType} from 'rsuite/esm/DateRangePicker'
 
 import {AudienceFilterToggle, ToggleLable} from './audience-filter-toggle'
 import {
@@ -60,7 +61,7 @@ export function AudienceFilter({
     )
   }, [memberPlans])
 
-  const oneClickDateRanges = useMemo<any[]>(() => {
+  const oneClickDateRanges = useMemo<RangeType[]>(() => {
     const {today, lastWeek, lastMonth, lastQuarter, lastYear} = preDefinedDates()
     return [
       {
@@ -106,7 +107,7 @@ export function AudienceFilter({
             format="dd.MM.yyyy"
             placeholder={t('audienceFilter.rangePickerPlaceholder')}
             style={{width: '100%'}}
-            ranges={oneClickDateRanges}
+            ranges={oneClickDateRanges as RangeType[]}
           />
           <TagPickerStyled
             size="lg"

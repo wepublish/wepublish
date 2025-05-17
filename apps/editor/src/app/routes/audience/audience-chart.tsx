@@ -14,6 +14,7 @@ import {
 
 import {AudienceStatsComputed} from './useAudience'
 import {AudienceClientFilter} from './useAudienceFilter'
+import {Loader, Placeholder} from 'rsuite'
 
 export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
   createdSubscriptionCount: 'var(--rs-green-900)',
@@ -27,9 +28,10 @@ export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
 interface AudienceChartProps {
   audienceStats: AudienceStatsComputed[]
   clientFilter: AudienceClientFilter
+  loading?: boolean
 }
 
-export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps) {
+export function AudienceChart({clientFilter, audienceStats, loading}: AudienceChartProps) {
   const {t} = useTranslation()
   const [readyRenderChart, setReadyRenderChart] = useState<boolean>(false)
 
@@ -50,78 +52,82 @@ export function AudienceChart({clientFilter, audienceStats}: AudienceChartProps)
   return (
     readyRenderChart && (
       <ResponsiveContainer width="100%" height={400}>
-        <ComposedChart data={audienceStats} reverseStackOrder>
-          <XAxis
-            dataKey={'date'}
-            tick={({x, y, payload}) => (
-              <text x={x} y={y + 15} textAnchor="middle">
-                {new Date(payload.value).toLocaleDateString('de-CH', {dateStyle: 'short'})}
-              </text>
+        {loading ? (
+          <Placeholder.Graph active />
+        ) : (
+          <ComposedChart data={audienceStats} reverseStackOrder>
+            <XAxis
+              dataKey={'date'}
+              tick={({x, y, payload}) => (
+                <text x={x} y={y + 15} textAnchor="middle">
+                  {new Date(payload.value).toLocaleDateString('de-CH', {dateStyle: 'short'})}
+                </text>
+              )}
+            />
+            <YAxis domain={['auto', 'auto']} />
+            <Tooltip
+              formatter={(value, name, item) => [value, t(`audience.legend.${name}`)]}
+              labelFormatter={label =>
+                new Date(label).toLocaleDateString('de-CH', {dateStyle: 'medium'})
+              }
+            />
+            <Legend
+              formatter={value => t(`audience.legend.${value}`)}
+              verticalAlign={'bottom'}
+              align="center"
+              layout="horizontal"
+            />
+
+            <ReferenceLine y={0} />
+
+            {totalActiveSubscriptionCount && (
+              <Line
+                type={'monotone'}
+                dataKey={'totalActiveSubscriptionCount'}
+                stroke={chartColors.totalActiveSubscriptionCount}
+                strokeWidth={2}
+                fill={chartColors.totalActiveSubscriptionCount}
+              />
             )}
-          />
-          <YAxis domain={['auto', 'auto']} />
-          <Tooltip
-            formatter={(value, name, item) => [value, t(`audience.legend.${name}`)]}
-            labelFormatter={label =>
-              new Date(label).toLocaleDateString('de-CH', {dateStyle: 'medium'})
-            }
-          />
-          <Legend
-            formatter={value => t(`audience.legend.${value}`)}
-            verticalAlign={'bottom'}
-            align="center"
-            layout="horizontal"
-          />
 
-          <ReferenceLine y={0} />
-
-          {totalActiveSubscriptionCount && (
-            <Line
-              type={'monotone'}
-              dataKey={'totalActiveSubscriptionCount'}
-              stroke={chartColors.totalActiveSubscriptionCount}
-              strokeWidth={2}
-              fill={chartColors.totalActiveSubscriptionCount}
-            />
-          )}
-
-          {createdSubscriptionCount && (
-            <Bar
-              stackId="created"
-              dataKey={'createdSubscriptionCount'}
-              fill={chartColors.createdSubscriptionCount}
-            />
-          )}
-          {renewedSubscriptionCount && (
-            <Bar
-              stackId="created"
-              dataKey={'renewedSubscriptionCount'}
-              fill={chartColors.renewedSubscriptionCount}
-            />
-          )}
-          {createdUnpaidSubscriptionCount && (
-            <Bar
-              stackId="created"
-              dataKey={'createdUnpaidSubscriptionCount'}
-              fill={chartColors.createdUnpaidSubscriptionCount}
-            />
-          )}
-          {replacedSubscriptionCount && (
-            <Bar
-              stackId="created"
-              dataKey={'replacedSubscriptionCount'}
-              fill={chartColors.replacedSubscriptionCount}
-            />
-          )}
-          {deactivatedSubscriptionCount && (
-            <Bar
-              stackId="created"
-              dataKey={'deactivatedSubscriptionCount'}
-              fill={chartColors.deactivatedSubscriptionCount}
-              z={99} // Ensures this bar is rendered above others
-            />
-          )}
-        </ComposedChart>
+            {createdSubscriptionCount && (
+              <Bar
+                stackId="created"
+                dataKey={'createdSubscriptionCount'}
+                fill={chartColors.createdSubscriptionCount}
+              />
+            )}
+            {renewedSubscriptionCount && (
+              <Bar
+                stackId="created"
+                dataKey={'renewedSubscriptionCount'}
+                fill={chartColors.renewedSubscriptionCount}
+              />
+            )}
+            {createdUnpaidSubscriptionCount && (
+              <Bar
+                stackId="created"
+                dataKey={'createdUnpaidSubscriptionCount'}
+                fill={chartColors.createdUnpaidSubscriptionCount}
+              />
+            )}
+            {replacedSubscriptionCount && (
+              <Bar
+                stackId="created"
+                dataKey={'replacedSubscriptionCount'}
+                fill={chartColors.replacedSubscriptionCount}
+              />
+            )}
+            {deactivatedSubscriptionCount && (
+              <Bar
+                stackId="created"
+                dataKey={'deactivatedSubscriptionCount'}
+                fill={chartColors.deactivatedSubscriptionCount}
+                z={99} // Ensures this bar is rendered above others
+              />
+            )}
+          </ComposedChart>
+        )}
       </ResponsiveContainer>
     )
   )

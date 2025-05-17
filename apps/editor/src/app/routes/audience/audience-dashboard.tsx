@@ -19,7 +19,6 @@ import {PreDefinedDates, preDefinedDates, useAudienceFilter} from './useAudience
 const AudienceChartWrapper = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
   padding-top: ${({theme}) => theme.spacing(2)};
-  padding-right: ${({theme}) => theme.spacing(4)};
   height: 100%;
   width: 100%;
   min-height: 40vh;
@@ -42,7 +41,7 @@ function AudienceDashboard({
 }: AudienceDashboardProps) {
   const {t} = useTranslation()
   const client = getApiClientV2()
-  const [fetchStats, {data: rawAudienceStats}] = useDailySubscriptionStatsLazyQuery({
+  const [fetchStats, {data: rawAudienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
     client
   })
 
@@ -103,7 +102,11 @@ function AudienceDashboard({
 
       {audienceComponentFilter.chart && (
         <AudienceChartWrapper>
-          <AudienceChart audienceStats={audienceStats} clientFilter={audienceClientFilter} />
+          <AudienceChart
+            audienceStats={audienceStats}
+            clientFilter={audienceClientFilter}
+            loading={loading}
+          />
         </AudienceChartWrapper>
       )}
 
@@ -113,6 +116,7 @@ function AudienceDashboard({
             audienceStats={audienceStats}
             clientFilter={audienceClientFilter}
             timeResolution={resolution}
+            loading={loading}
           />
         </TableWrapperStyled>
       )}

@@ -15,9 +15,15 @@ interface AudienceTableProps {
   audienceStats: AudienceStatsComputed[]
   clientFilter: AudienceClientFilter
   timeResolution: TimeResolution
+  loading?: boolean
 }
 
-export function AudienceTable({audienceStats, clientFilter, timeResolution}: AudienceTableProps) {
+export function AudienceTable({
+  audienceStats,
+  clientFilter,
+  timeResolution,
+  loading
+}: AudienceTableProps) {
   const {t} = useTranslation()
 
   const {
@@ -35,7 +41,12 @@ export function AudienceTable({audienceStats, clientFilter, timeResolution}: Aud
 
   return (
     <>
-      <Table data={audienceStats} style={{width: '100%'}} virtualized height={800}>
+      <Table
+        data={audienceStats}
+        style={{width: '100%'}}
+        virtualized
+        height={800}
+        loading={loading}>
         <Column resizable width={140}>
           <HeaderCell>{t('audienceTable.header.date')}</HeaderCell>
           <Cell dataKey="date">

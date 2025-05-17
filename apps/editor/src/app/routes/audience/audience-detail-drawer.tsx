@@ -93,7 +93,9 @@ export function AudienceDetailDrawer({
                       active={selectedStat === availableStat}
                       onClick={() => setSelectedStat(availableStat)}
                       icon={getIconByUserFilter(availableStat)}>
-                      {t(`audience.legend.${availableStat}`)}
+                      {`${t(`audience.legend.${availableStat}`)} (${
+                        audienceStats?.[availableStat]?.length
+                      })`}
                     </Nav.Item>
                   ))}
                 </Nav>
