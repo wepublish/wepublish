@@ -194,6 +194,14 @@ export class ArticleService {
         hidden,
         disableComments,
         revisions: {
+          updateMany: {
+            where: {
+              publishedAt: null
+            },
+            data: {
+              archivedAt: new Date()
+            }
+          },
           create: {
             ...revision,
             blocks: mappedBlocks as any[],
@@ -630,7 +638,8 @@ const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
     return {
       revisions: {
         some: {
-          publishedAt: filter.draft ? null : {not: null}
+          publishedAt: filter.draft ? null : {not: null},
+          archivedAt: null
         }
       }
     }

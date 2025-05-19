@@ -122,6 +122,14 @@ export class PageService {
       data: {
         slug,
         revisions: {
+          updateMany: {
+            where: {
+              publishedAt: null
+            },
+            data: {
+              archivedAt: new Date()
+            }
+          },
           create: {
             ...revision,
             userId,
@@ -440,7 +448,8 @@ const createDraftFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =
     return {
       revisions: {
         some: {
-          publishedAt: filter.draft ? null : {not: null}
+          publishedAt: filter.draft ? null : {not: null},
+          archivedAt: null
         }
       }
     }
