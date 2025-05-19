@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {
+  getApiClientV2,
   Setting,
   SettingName,
   useSettingsListQuery,
@@ -39,7 +40,6 @@ import {
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
 
 const Panel = styled(RPanel)`
   margin-bottom: 10px;
@@ -186,6 +186,11 @@ function SettingList() {
       value: false,
       name: SettingName.ShowPendingWhenNotPublished,
       label: 'settingList.showPendingWhenNotPublished'
+    },
+    [SettingName.AllowGuestPreviews]: {
+      value: false,
+      name: SettingName.AllowGuestPreviews,
+      label: 'settingList.allowGuestPreviews'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -690,6 +695,25 @@ function SettingList() {
                       onChange={checked =>
                         setSetting({
                           ...settings[SettingName.ShowPendingWhenNotPublished],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group controlId={SettingName.AllowGuestPreviews}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.AllowGuestPreviews].label)}
+                        <SettingInfo text={t('settingList.warnings.allowGuestPreviews')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.AllowGuestPreviews].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.AllowGuestPreviews],
                           value: checked
                         })
                       }

@@ -972,7 +972,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-
       "import": {
         "import": "Import",
         "title": "Import article",
@@ -1168,6 +1167,7 @@
       "successTitle": "Saved",
       "articlePage": "Articles & Pages",
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
+      "allowGuestPreviews": "Allow guest previews of article and pages",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1186,7 +1186,8 @@
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "revenueApiPublic": "Exposes invoices anonymized to the public.",
-        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before."
+        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before.",
+        "allowGuestPreviews": "Allow guest previews of article and pages"
       }
     },
     "subscriptionFlow": {

@@ -1,13 +1,13 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLScalarType,
-  GraphQLInputObjectType,
-  GraphQLList,
+  GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLString
 } from 'graphql'
 
 import {Context} from '../context'
@@ -48,7 +48,11 @@ export const GraphQLSettingName = new GraphQLEnumType({
     },
     [SettingName.MAKE_REVENUE_API_PUBLIC]: {value: SettingName.MAKE_REVENUE_API_PUBLIC},
     [SettingName.COMMENT_CHAR_LIMIT]: {value: SettingName.COMMENT_CHAR_LIMIT},
-    [SettingName.ALLOW_COMMENT_EDITING]: {value: SettingName.ALLOW_COMMENT_EDITING}
+    [SettingName.ALLOW_COMMENT_EDITING]: {value: SettingName.ALLOW_COMMENT_EDITING},
+    [SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED]: {
+      value: SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED
+    },
+    [SettingName.ALLOW_GUEST_PREVIEWS]: {value: SettingName.ALLOW_GUEST_PREVIEWS}
   }
 })
 

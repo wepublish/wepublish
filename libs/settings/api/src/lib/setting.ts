@@ -25,7 +25,9 @@ export enum SettingName {
 
   ALLOW_COMMENT_EDITING = 'allowCommentEditing',
 
-  SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished'
+  SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished',
+
+  ALLOW_GUEST_PREVIEWS = 'allowGuestPreviews'
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>
