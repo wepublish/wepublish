@@ -92,8 +92,21 @@ const BannerWrapper = styled('div')<BannerWrapperProps>(
 )
 
 export const Banner = ({data, loading, error, className}: BuilderBannerProps) => {
+  const [showBanner, setShowBanner] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`
+
+  useEffect(() => {
+    if (!data?.primaryBanner) {
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setShowBanner(true)
+    }, (data?.primaryBanner?.delay ?? 0) * 1000)
+
+    return () => clearTimeout(timer)
+  }, [data?.primaryBanner])
 
   useEffect(() => {
     const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0
@@ -120,6 +133,12 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     return <></>
   }
 
+  if (!showBanner) {
+    return <></>
+  }
+
+  const htmlContent = data?.primaryBanner?.html
+
   return (
     <BannerWrapper
       hasImage={!!data?.primaryBanner.image}
@@ -132,26 +151,30 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
           style={{backgroundImage: `url(${data?.primaryBanner.image.url})`}}></BannerImage>
       )}
 
-      <BannerContent>
-        <BannerTitle>{data?.primaryBanner.title}</BannerTitle>
-        <BannerText>{data?.primaryBanner.text}</BannerText>
-        {data?.primaryBanner.cta && <BannerCta>{data?.primaryBanner.cta}</BannerCta>}
+      {htmlContent != null && htmlContent != '' ? (
+        <BannerContent dangerouslySetInnerHTML={{__html: htmlContent}} />
+      ) : (
+        <BannerContent>
+          <BannerTitle>{data?.primaryBanner.title}</BannerTitle>
+          <BannerText>{data?.primaryBanner.text}</BannerText>
+          {data?.primaryBanner.cta && <BannerCta>{data?.primaryBanner.cta}</BannerCta>}
 
-        <BannerActions>
-          {data?.primaryBanner.actions &&
-            data?.primaryBanner.actions.map(a => (
-              <Link
-                href={a.url}
-                key={a.url}
-                onClick={e => handleActionClick(e, a)}
-                data-role={a.role}>
-                <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
-                  {a.label}
-                </Button>
-              </Link>
-            ))}
-        </BannerActions>
-      </BannerContent>
+          <BannerActions>
+            {data?.primaryBanner.actions &&
+              data?.primaryBanner.actions.map(a => (
+                <Link
+                  href={a.url}
+                  key={a.url}
+                  onClick={e => handleActionClick(e, a)}
+                  data-role={a.role}>
+                  <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
+                    {a.label}
+                  </Button>
+                </Link>
+              ))}
+          </BannerActions>
+        </BannerContent>
+      )}
     </BannerWrapper>
   )
 }
