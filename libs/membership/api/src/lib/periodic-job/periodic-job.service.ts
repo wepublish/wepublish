@@ -423,9 +423,10 @@ export class PeriodicJobService {
     }
 
     // Type assertion is safe here due to the above check
-    await this.subscriptionController.deactivateSubscription(
-      unpaidInvoice as typeof unpaidInvoice & {subscription: Subscription}
-    )
+    await this.subscriptionController.deactivateSubscription({
+      ...unpaidInvoice,
+      subscription: unpaidInvoice.subscription
+    })
     const {subscription, ...invoice} = unpaidInvoice
 
     await this.sendTemplateMail(
