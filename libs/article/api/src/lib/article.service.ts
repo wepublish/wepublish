@@ -283,7 +283,8 @@ export class ArticleService {
     // Unpublish existing pending revisions
     await this.prisma.articleRevision.updateMany({
       data: {
-        publishedAt: null
+        publishedAt: null,
+        archivedAt: new Date()
       },
       where: {
         articleId: id,

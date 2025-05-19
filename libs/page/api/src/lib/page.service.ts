@@ -200,7 +200,8 @@ export class PageService {
     // Unpublish existing pending revisions
     await this.prisma.pageRevision.updateMany({
       data: {
-        publishedAt: null
+        publishedAt: null,
+        archivedAt: new Date()
       },
       where: {
         pageId: id,
