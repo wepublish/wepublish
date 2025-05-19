@@ -301,7 +301,7 @@ export class SubscriptionService {
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {
-          subscriptionID: invoice.subscriptionID!,
+          subscriptionID: invoice.subscription.id || invoice.subscriptionID!,
           date: invoice.subscription.paidUntil ?? invoice.subscription.startsAt,
           reason: SubscriptionDeactivationReason.invoiceNotPaid
         }
