@@ -1353,15 +1353,16 @@
     },
     "resources": {
       "teaserType": {
-        "article": "Article",
-        "peerArticle": "Peer Article",
-        "page": "Page",
-        "event": "Event",
-        "custom": "Custom"
+        "Article": "Article",
+        "PeerArticle": "Peer Article",
+        "Page": "Page",
+        "Event": "Event",
+        "Custom": "Custom"
       },
       "teaserSort": {
-        "hotAndTrending": "Hot & Trending",
-        "publishedAt": "Publication date"
+        "HotAndTrending": "Chaud et tendance",
+        "PublishedAt": "Date de publication",
+        "UpdatedAt": "Date de modification"
       }
     },
     "authorEditPanel": {

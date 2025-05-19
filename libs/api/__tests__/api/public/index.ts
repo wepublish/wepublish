@@ -3313,7 +3313,8 @@ export type TeaserListBlockInput = {
 
 export enum TeaserListBlockSort {
   HotAndTrending = 'HotAndTrending',
-  PublishedAt = 'PublishedAt'
+  PublishedAt = 'PublishedAt',
+  UpdatedAt = 'UpdatedAt'
 }
 
 export enum TeaserType {

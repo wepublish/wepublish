@@ -45,7 +45,10 @@ export class TeaserListBlockResolver {
               tags: filter.tags,
               published: true
             },
-            sort: ArticleSort.PublishedAt,
+            sort:
+              sort === TeaserListBlockSort.UpdatedAt
+                ? ArticleSort.ModifiedAt
+                : ArticleSort.PublishedAt,
             order: SortOrder.Descending,
             skip,
             take

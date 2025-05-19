@@ -1877,6 +1877,7 @@ input TeaserListBlockInput {
 enum TeaserListBlockSort {
   HotAndTrending
   PublishedAt
+  UpdatedAt
 }
 
 enum TeaserType {

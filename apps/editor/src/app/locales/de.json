@@ -913,7 +913,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
       "title": "Titel",
-
       "import": {
         "import": "Importieren",
         "title": "Artikel importieren",
@@ -1396,15 +1395,16 @@
     },
     "resources": {
       "teaserType": {
-        "article": "Artikel",
-        "peerArticle": "Gepeerte Artikel",
-        "page": "Seite",
-        "event": "Event",
-        "custom": "Benutzerdefinierte"
+        "Article": "Artikel",
+        "PeerArticle": "Gepeerte Artikel",
+        "Page": "Seite",
+        "Event": "Event",
+        "Custom": "Benutzerdefinierte"
       },
       "teaserSort": {
-        "hotAndTrending": "Beliebtheit",
-        "publishedAt": "Publikationsdatum"
+        "HotAndTrending": "Beliebtheit",
+        "PublishedAt": "Veröffentlichungsdatum",
+        "UpdatedAt": "Änderungsdatum"
       }
     },
     "authorEditPanel": {
