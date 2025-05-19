@@ -131,6 +131,10 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
                 label: t(`resources.teaserSort.${TeaserListBlockSort.PublishedAt}`),
                 value: TeaserListBlockSort.PublishedAt
               },
+              {
+                label: t(`resources.teaserSort.${TeaserListBlockSort.UpdatedAt}`),
+                value: TeaserListBlockSort.UpdatedAt
+              },
               ...(teaserType === TeaserType.Article
                 ? [
                     {

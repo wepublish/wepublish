@@ -6,6 +6,7 @@ import {Tag} from '@wepublish/tag/api'
 
 export enum TeaserListBlockSort {
   PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt',
   HotAndTrending = 'hotAndTrending'
 }
 

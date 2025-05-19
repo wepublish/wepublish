@@ -972,7 +972,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-
       "import": {
         "import": "Import",
         "title": "Import article",
@@ -1506,15 +1505,16 @@
     },
     "resources": {
       "teaserType": {
-        "article": "Article",
-        "peerArticle": "Peer Article",
-        "page": "Page",
-        "event": "Event",
-        "custom": "Custom"
+        "Article": "Article",
+        "PeerArticle": "Peer Article",
+        "Page": "Page",
+        "Event": "Event",
+        "Custom": "Custom"
       },
       "teaserSort": {
-        "hotAndTrending": "Hot & Trending",
-        "publishedAt": "Publication date"
+        "HotAndTrending": "Hot & Trending",
+        "PublishedAt": "Publication date",
+        "UpdatedAt": "Modification date"
       }
     },
     "authorEditPanel": {
