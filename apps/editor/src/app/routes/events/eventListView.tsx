@@ -1,4 +1,5 @@
 import {ApolloError} from '@apollo/client'
+import {TagType} from '@wepublish/editor/api'
 import {Event, EventFilter, getApiClientV2, useEventListQuery} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
@@ -100,6 +101,7 @@ function EventListView() {
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
+          tagType={TagType.Event}
         />
       </ListViewContainer>
 
