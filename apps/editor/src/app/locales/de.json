@@ -1399,15 +1399,14 @@
     },
     "resources": {
       "teaserType": {
-        "article": "Artikel",
-        "peerArticle": "Gepeerte Artikel",
-        "page": "Seite",
-        "event": "Event",
-        "custom": "Benutzerdefinierte"
+        "Article": "Artikel",
+        "Page": "Seite",
+        "Event": "Event",
+        "Custom": "Benutzerdefinierte"
       },
       "teaserSort": {
-        "hotAndTrending": "Beliebtheit",
-        "publishedAt": "Publikationsdatum"
+        "HotAndTrending": "Beliebtheit",
+        "PublishedAt": "Publikationsdatum"
       }
     },
     "authorEditPanel": {
