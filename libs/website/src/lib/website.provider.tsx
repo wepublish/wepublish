@@ -40,6 +40,7 @@ import {
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
+  BaseTeaser,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
@@ -49,7 +50,9 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock
+  YouTubeVideoBlock,
+  AlternatingTeaserGridBlock,
+  AlternatingTeaser
 } from '@wepublish/block-content/website'
 import {
   Comment,
@@ -232,6 +235,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserGridFlex: TeaserGridFlexBlock,
             TeaserGrid: TeaserGridBlock,
             TeaserList: TeaserListBlock,
+            BaseTeaser,
             Teaser,
             BildwurfAd: BildwurfAdBlock,
             IFrame: IFrameBlock,
@@ -250,7 +254,9 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ContextBox,
             FocusTeaser,
             ImageSlider,
-            TeaserSlider
+            TeaserSlider,
+            AlternatingTeaser,
+            AlternatingTeaserGrid: AlternatingTeaserGridBlock
           }}
           richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{

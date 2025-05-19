@@ -1,9 +1,9 @@
 import {Meta} from '@storybook/react'
-import {Teaser} from './teaser'
 import {mockCustomTeaser} from '@wepublish/storybook/mocks'
+import {BaseTeaser} from './base-teaser'
 
 export default {
-  component: Teaser,
+  component: BaseTeaser,
   title: 'Blocks/Teaser/Custom'
 } as Meta
 

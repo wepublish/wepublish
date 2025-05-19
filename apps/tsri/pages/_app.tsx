@@ -133,7 +133,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             PaymentAmount={PaymentAmountPicker}
             elements={{Link: NextWepublishLink}}
             blocks={{
-              Teaser: TsriTeaser,
+              BaseTeaser: TsriTeaser,
               Break: TsriBreakBlock,
               Quote: TsriQuoteBlock,
               RichText: TsriRichText,

@@ -230,6 +230,7 @@ const imageStyles = (theme: Theme) => css`
 
 export const TeaserContentWrapper = styled('div')`
   display: grid;
+  column-gap: ${({theme}) => theme.spacing(2)};
   grid-auto-rows: max-content;
   align-items: start;
   grid-template-areas:
@@ -328,7 +329,11 @@ const TeaserContent = ({
 
   if (href) {
     return (
-      <Link color="inherit" underline="none" href={href}>
+      <Link
+        color="inherit"
+        underline="none"
+        href={href}
+        css={{display: 'grid', alignItems: 'stretch'}}>
         <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
       </Link>
     )
@@ -337,7 +342,7 @@ const TeaserContent = ({
   return <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
 }
 
-export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
+export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
   const lead = teaser && selectTeaserLead(teaser)

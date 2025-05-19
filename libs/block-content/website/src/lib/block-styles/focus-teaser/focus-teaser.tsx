@@ -4,8 +4,8 @@ import {allPass} from 'ramda'
 import {alignmentForTeaserBlock} from '../../teaser/teaser-grid-block'
 import {TeaserListBlockTeasers, isTeaserListBlock} from '../../teaser/teaser-list-block'
 import {BlockContent, TeaserListBlock} from '@wepublish/website/api'
-import {hasBlockStyle} from '../../blocks'
-import {selectTeaserTags} from '../../teaser/teaser'
+import {hasBlockStyle} from '../../has-blockstyle'
+import {selectTeaserTags} from '../../teaser/base-teaser'
 import {ImageWrapper} from '@wepublish/image/website'
 
 export const FocusTeaserWrapper = styled('section')`

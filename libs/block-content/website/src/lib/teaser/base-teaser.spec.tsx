@@ -1,9 +1,9 @@
 import {render} from '@testing-library/react'
-import * as stories from './teaser.stories'
-import * as articleStories from './teaser.article.stories'
-import * as pageStories from './teaser.page.stories'
-import * as eventStories from './teaser.event.stories'
-import * as customStories from './teaser.custom.stories'
+import * as stories from './base-teaser.stories'
+import * as articleStories from './base-teaser.article.stories'
+import * as pageStories from './base-teaser.page.stories'
+import * as eventStories from './base-teaser.event.stories'
+import * as customStories from './base-teaser.custom.stories'
 import {composeStories} from '@storybook/react'
 
 const storiesCmp = composeStories(stories)

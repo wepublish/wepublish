@@ -7,7 +7,7 @@ import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {hasBlockStyle} from '../../blocks'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {
   alignmentForTeaserBlock,
   isFilledTeaser,

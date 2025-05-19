@@ -32,6 +32,7 @@ export const HighlightBlockStyle = ({
           key={index}
           teaser={teaser}
           numColumns={numColumns}
+          index={index}
           alignment={alignmentForTeaserBlock(index, numColumns)}
           blockStyle={blockStyle}
         />

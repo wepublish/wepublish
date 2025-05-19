@@ -218,6 +218,7 @@ export type WebsiteBuilderProps = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
+    BaseTeaser: ComponentType<BuilderTeaserProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -343,6 +344,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     TeaserList: NoComponent,
+    BaseTeaser: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },
@@ -350,6 +352,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   blockStyles: {
     ImageSlider: NoComponent,
     TeaserSlider: NoComponent,
+    AlternatingTeaser: NoComponent,
+    AlternatingTeaserGrid: NoComponent,
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent
@@ -367,17 +371,16 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   thirdParty: {}
 })
 
-export const useWebsiteBuilder = () => {
-  return useContext(WebsiteBuilderContext)
-}
+export const useWebsiteBuilder = () => useContext(WebsiteBuilderContext)
 
 export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
   ({children, ...components}) => {
     const parentComponents = useWebsiteBuilder()
-    const newComponents = useMemo(
-      () => mergeDeepRight(parentComponents, components) as WebsiteBuilderProps,
-      [components, parentComponents]
-    )
+    const newComponents = useMemo(() => {
+      console.log(parentComponents, components)
+
+      return mergeDeepRight(parentComponents, components) as WebsiteBuilderProps
+    }, [components, parentComponents])
 
     return (
       <WebsiteBuilderContext.Provider value={newComponents}>

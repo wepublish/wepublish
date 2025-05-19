@@ -29,6 +29,11 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {
+  HauptstadtTeaser,
+  HauptstadtTeaserGrid,
+  HauptstadtTeaserList
+} from '../src/components/hauptstadt-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
@@ -113,7 +118,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             elements={{Link: NextWepublishLink}}
-            blocks={{Subscribe: Mitmachen}}
+            blocks={{
+              Subscribe: Mitmachen,
+              BaseTeaser: HauptstadtTeaser,
+              TeaserList: HauptstadtTeaserList,
+              TeaserGrid: HauptstadtTeaserGrid
+            }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>

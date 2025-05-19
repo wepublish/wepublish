@@ -28,6 +28,12 @@ const cache = new InMemoryCache({
 })
 
 export const parameters = {
+  initialGlobals: {
+    locale: 'en',
+    locales: {
+      en: 'English'
+    }
+  },
   apolloClient: {
     MockedProvider,
     cache,
