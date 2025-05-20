@@ -74,7 +74,7 @@ export class TeaserListBlockResolver {
           tags: filter.tags,
           published: true
         },
-        sort: PageSort.PublishedAt,
+        sort: sort === TeaserListBlockSort.UpdatedAt ? PageSort.ModifiedAt : PageSort.PublishedAt,
         order: SortOrder.Descending,
         skip,
         take
@@ -97,7 +97,7 @@ export class TeaserListBlockResolver {
         filter: {
           tags: filter.tags
         },
-        sort: EventSort.StartsAt,
+        sort: sort === TeaserListBlockSort.UpdatedAt ? EventSort.ModifiedAt : EventSort.StartsAt,
         order: SortOrder.Descending,
         skip,
         take
