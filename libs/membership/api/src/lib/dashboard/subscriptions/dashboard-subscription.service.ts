@@ -2,14 +2,15 @@ import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ok} from 'assert'
 import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
-import {differenceInDays, endOfDay, startOfDay} from 'date-fns'
+import {differenceInDays, endOfDay, startOfDay, format} from 'date-fns'
 import NodeCache from 'node-cache'
 import {createHash} from 'crypto'
 
 /**
- * Peered article cache configuration and setup
+ * Stats cache configuration and setup
  */
 const ONE_MIN_IN_SEC = 60
+const ONE_HOUR_IN_SEC = ONE_MIN_IN_SEC * 60
 const dailyStatsCache = new NodeCache({
   checkperiod: ONE_MIN_IN_SEC,
   deleteOnExpire: true,
@@ -449,11 +450,14 @@ export class DashboardSubscriptionService {
   private getCacheTTLByDate(date: Date) {
     const now = new Date()
     const daysBetween = differenceInDays(now, date)
-    // 14 Tage max cache duration 14 * 60
+
+    // 14 Tage max cache duration 14 * 24h
     const cappedDays = Math.min(daysBetween, 336)
-    const secondsPerDay = 60 * 60
+
     // +1 to ensure its never 0 this means cache for ever
-    return cappedDays * secondsPerDay + 1
+    // First day is cached for 1 sec (min) every day (live); In the past every day is cached for 60 min longer than the previous limited by 14 days
+    // eg. 3 day in the past (3 * 3600) + 1 sec
+    return cappedDays * ONE_HOUR_IN_SEC + 1
   }
 
   private calculateDailyActiveSubscriptionStats(
@@ -470,12 +474,13 @@ export class DashboardSubscriptionService {
         )
       }
     }
+    const subscriptionCount = activeSubscriptions.length
     return {
       subscriptionMonthlyRevenueSum,
-      subscriptionMonthlyRevenueAvg: Math.ceil(
-        subscriptionMonthlyRevenueSum / activeSubscriptions.length
-      ),
-      subscriptionDurationAvg: Math.ceil(subscriptionDurationInDaysSum / activeSubscriptions.length)
+      subscriptionMonthlyRevenueAvg:
+        subscriptionCount > 0 ? Math.ceil(subscriptionMonthlyRevenueSum / subscriptionCount) : 0,
+      subscriptionDurationAvg:
+        subscriptionCount > 0 ? Math.ceil(subscriptionDurationInDaysSum / subscriptionCount) : 0
     }
   }
 
@@ -504,7 +509,7 @@ export class DashboardSubscriptionService {
       this.calculateDailyActiveSubscriptionStats(totalActiveSubscriptions)
 
     return {
-      date: new Date(current).toISOString().split('T')[0],
+      date: format(current, 'yyyy-MM-dd'),
       totalActiveSubscriptionCount: totalActiveSubscriptions.length,
       createdSubscriptionCount: createdSubscriptions.length,
       createdSubscriptionUsers: createdSubscriptions.map(
