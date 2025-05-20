@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable, Scope} from '@nestjs/common'
 import {Article} from '@prisma/client'
 import {ArticleTeaser, EventTeaser, Teaser, TeaserType} from './teaser.model'
 import {isTeaserSlotsBlock, TeaserSlotsBlock} from '../teaser-slot/teaser-slots.model'
@@ -11,7 +11,7 @@ import {BlockType} from '../block-type.model'
 import {isTeaserGridFlexBlock} from './teaser-flex.model'
 import {isTeaserGridBlock} from './teaser-grid.model'
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class SlotTeasersLoader {
   private loadedTeasers: (typeof Teaser)[] = []
 
