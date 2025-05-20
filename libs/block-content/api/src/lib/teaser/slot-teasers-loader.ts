@@ -100,7 +100,7 @@ export class SlotTeasersLoader {
     }
 
     if (teaserType === TeaserType.Event) {
-      const pages = await this.eventService.getEvents({
+      const events = await this.eventService.getEvents({
         filter: {
           tags: filter?.tags
         },
@@ -109,7 +109,7 @@ export class SlotTeasersLoader {
         take
       })
 
-      const teasers = pages.nodes.map(
+      const teasers = events.nodes.map(
         event =>
           ({
             eventID: event.id,

@@ -90,7 +90,7 @@ export class TeaserListBlockResolver {
     }
 
     if (teaserType === TeaserType.Event) {
-      const pages = await this.eventService.getEvents({
+      const events = await this.eventService.getEvents({
         filter: {
           tags: filter.tags
         },
@@ -100,7 +100,7 @@ export class TeaserListBlockResolver {
         take
       })
 
-      return pages.nodes.map(
+      return events.nodes.map(
         event =>
           ({
             eventID: event.id,
