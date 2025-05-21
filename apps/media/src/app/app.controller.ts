@@ -117,7 +117,11 @@ export class AppController {
 
     if (process.env['NODE_ENV'] === 'production') {
       res.setHeader('ETag', etag)
-      res.setHeader('Cache-Control', `public, max-age=172800`)
+      // max-age= 365days, immutable, stale-if-error= 7days, stale-while-revalidate= 1day
+      res.setHeader(
+        'Cache-Control',
+        `public, max-age=31536000, immutable, stale-if-error=604800, stale-while-revalidate=86400`
+      )
     }
     const buffer = await this.media.bufferStream(file)
 
