@@ -94,35 +94,28 @@ export class AppController {
     // Check if image is cached
     const cachedBuffer = this.imageCacheService.get(cacheKey)
 
+    res.setHeader('Content-Type', 'image/webp')
+
+    if (process.env['NODE_ENV'] === 'production') {
+      // max-age = 365days, immutable, stale-if-error = 30days, stale-while-revalidate = 1day
+      res.setHeader(
+        'Cache-Control',
+        `public, max-age=31536000, immutable, stale-if-error=2592000, stale-while-revalidate=86400`
+      )
+    }
+
     if (cachedBuffer[0]) {
-      const etag = this.media.generateETag(cachedBuffer[0])
-
-      // Handle ETag
-      if (cachedBuffer[1] === 200 && req.headers['if-none-match'] === `"${etag}"`) {
-        res.status(304).end()
-        return
+      if (cachedBuffer[1] !== 200) {
+        res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
       }
-
-      res.setHeader('Content-Type', 'image/webp')
-      res.setHeader('ETag', etag)
-      res.setHeader('Cache-Control', `public, max-age=172800`)
       res.status(cachedBuffer[1])
       res.end(cachedBuffer[0])
       return
     }
 
     // Not in cache, fetch and process image
-    const [file, etag, imageExists] = await this.media.getImage(imageId, transformations)
-    res.setHeader('Content-Type', 'image/webp')
+    const [file, imageExists] = await this.media.getImage(imageId, transformations)
 
-    if (process.env['NODE_ENV'] === 'production') {
-      res.setHeader('ETag', etag)
-      // max-age= 365days, immutable, stale-if-error= 7days, stale-while-revalidate= 1day
-      res.setHeader(
-        'Cache-Control',
-        `public, max-age=31536000, immutable, stale-if-error=604800, stale-while-revalidate=86400`
-      )
-    }
     const buffer = await this.media.bufferStream(file)
 
     if (!imageExists) {

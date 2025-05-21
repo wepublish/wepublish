@@ -82,10 +82,6 @@ export class MediaService {
     })
   }
 
-  public async getRemoteEtag(image: string) {
-    return (await this.storage.getFileInformation(this.config.transformationBucket, image)).etag
-  }
-
   public async getImage(imageId: string, transformations: TransformationsDto) {
     const transformationsKey = getTransformationKey(transformations)
 
@@ -102,9 +98,8 @@ export class MediaService {
       throw e
     }
     const fileBuffer = await this.bufferStream(file)
-    const etag = this.generateETag(fileBuffer)
 
-    return await Promise.all([Readable.from(fileBuffer), etag, true])
+    return await Promise.all([Readable.from(fileBuffer), true])
   }
 
   private getFallbackImage(transformations: TransformationsDto): Readable {
@@ -215,9 +210,7 @@ export class MediaService {
         {ContentType: `image/${metadata.format}`}
       )
     }
-    const etag = this.generateETag(await this.bufferStream(transformedImage.clone()))
-
-    return Promise.all([transformedImage, etag, imageExists])
+    return Promise.all([transformedImage, imageExists])
   }
 
   public async saveImage(imageId: string, image: Buffer) {
