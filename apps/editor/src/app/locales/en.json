@@ -1628,7 +1628,10 @@
         "actions": "Actions"
       },
       "showUsers": "Show details",
-      "byDate": "By"
+      "byDate": "By",
+      "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
+      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included.",
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Replaced, renewed, and deactivated subscriptions are included."
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   DailySubscriptionStatsUser
 } from '@wepublish/editor/api-v2'
 import {useCallback, useMemo} from 'react'
+
 import {AudienceClientFilter} from './useAudienceFilter'
 
 export interface RenewalFigures {
@@ -67,23 +68,20 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
 
   const getRenewalFigures = useCallback(
     (dailyStat: Partial<DailySubscriptionStats>): RenewalFigures => {
-      let totalToBeRenewed = 0
-      let renewedAndReplaced = 0
-      if (audienceClientFilter.renewedSubscriptionCount) {
-        totalToBeRenewed += dailyStat?.renewedSubscriptionCount || 0
-        renewedAndReplaced += dailyStat?.renewedSubscriptionCount || 0
-      }
-      if (audienceClientFilter.replacedSubscriptionCount) {
-        totalToBeRenewed += dailyStat?.replacedSubscriptionCount || 0
-        renewedAndReplaced += dailyStat?.replacedSubscriptionCount || 0
-      }
-      if (audienceClientFilter.deactivatedSubscriptionCount) {
-        totalToBeRenewed += dailyStat?.deactivatedSubscriptionCount || 0
-      }
+      const totalToBeRenewed = dailyStat
+        ? (dailyStat.renewedSubscriptionCount || 0) +
+          (dailyStat.replacedSubscriptionCount || 0) +
+          (dailyStat.deactivatedSubscriptionCount || 0)
+        : 0
+
+      const renewedAndReplaced = dailyStat
+        ? totalToBeRenewed - (dailyStat.deactivatedSubscriptionCount || 0)
+        : 0
 
       const cancellationRate = Math.round(
         ((dailyStat?.deactivatedSubscriptionCount || 0) * 100) / totalToBeRenewed || 0
       )
+
       const renewalRate = totalToBeRenewed === 0 ? 0 : 100 - cancellationRate
 
       return {
@@ -93,7 +91,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
         renewalRate
       }
     },
-    [audienceClientFilter]
+    []
   )
 
   const audienceStatsComputed = useMemo<AudienceStatsComputed[]>(() => {
@@ -154,7 +152,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
     [audienceStatsComputed]
   )
 
-  const getSummedUpCounts = useCallback(
+  const getCountsByMonth = useCallback(
     (statsByMonth: AudienceStatsComputed[]) => {
       return (
         [
@@ -169,7 +167,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
     [sumUpCounts]
   )
 
-  const getMergedUsers = useCallback(
+  const getUsersByMonth = useCallback(
     (statsByMonth: AudienceStatsComputed[]) => {
       return (
         [
@@ -186,34 +184,30 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
 
   const audienceStatsAggregatedByMonth = useMemo<AudienceStatsComputed[]>(() => {
     const aggregatedStats: AudienceStatsComputed[] = []
-
-    // unique last days of every month
     const lastDaysOfMonths = getLastDaysOfMonths()
 
-    // aggregate data per month
+    // aggregate data month by month
     for (const lastDayOfMonthIso of lastDaysOfMonths) {
       const statsByMonth: AudienceStatsComputed[] = getStatsByMonth(lastDayOfMonthIso)
 
       const lastDayOfMonthWithStats = statsByMonth[statsByMonth.length - 1]
 
-      // sum up the count figures
-      const summedUpCounts = getSummedUpCounts(statsByMonth)
+      const countsByMonth = getCountsByMonth(statsByMonth)
 
-      // merge the user
-      const mergedUsers = getMergedUsers(statsByMonth)
+      const usersByMonth = getUsersByMonth(statsByMonth)
 
-      const totalNewSubscriptions = getTotalNewSubscriptionsByDay(summedUpCounts)
+      const totalNewSubscriptions = getTotalNewSubscriptionsByDay(countsByMonth)
       const renewalFigures = getRenewalFigures({
-        ...summedUpCounts,
+        ...countsByMonth,
         deactivatedSubscriptionCount:
-          (summedUpCounts as SumUpCount).deactivatedSubscriptionCount * -1
+          (countsByMonth as SumUpCount).deactivatedSubscriptionCount * -1
       })
 
       aggregatedStats.push({
         ...lastDayOfMonthWithStats,
         date: lastDayOfMonthWithStats.date,
-        ...summedUpCounts,
-        ...mergedUsers,
+        ...countsByMonth,
+        ...usersByMonth,
         totalNewSubscriptions,
         ...renewalFigures
       })
@@ -223,8 +217,8 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
   }, [
     getLastDaysOfMonths,
     getStatsByMonth,
-    getSummedUpCounts,
-    getMergedUsers,
+    getCountsByMonth,
+    getUsersByMonth,
     getTotalNewSubscriptionsByDay,
     getRenewalFigures
   ])

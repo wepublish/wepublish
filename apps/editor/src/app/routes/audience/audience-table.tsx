@@ -1,8 +1,10 @@
+import styled from '@emotion/styled'
 import ListIcon from '@rsuite/icons/List'
 import {DailySubscriptionStats} from '@wepublish/editor/api-v2'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button} from 'rsuite'
+import {MdInfo} from 'react-icons/md'
+import {Button, Tooltip, Whisper} from 'rsuite'
 import Table, {RowDataType} from 'rsuite/esm/Table'
 
 import {AudienceDetailDrawer} from './audience-detail-drawer'
@@ -10,6 +12,20 @@ import {AudienceStatsComputed} from './useAudience'
 import {AudienceClientFilter, TimeResolution} from './useAudienceFilter'
 
 const {Column, HeaderCell, Cell} = Table
+
+const Info = styled.div`
+  margin-left: ${({theme}) => theme.spacing(1)};
+  position: relative;
+  display: inline-block;
+`
+
+const HeaderInfo = ({text}: {text: string}) => (
+  <Whisper trigger="hover" speaker={<Tooltip>{text}</Tooltip>} placement="top">
+    <Info>
+      <MdInfo size={24} />
+    </Info>
+  </Whisper>
+)
 
 interface AudienceTableProps {
   audienceStats: AudienceStatsComputed[]
@@ -87,8 +103,11 @@ export function AudienceTable({
           </Column>
         )}
 
-        <Column resizable width={120}>
-          <HeaderCell>{t('audience.legend.totalNewSubscriptions')}</HeaderCell>
+        <Column resizable width={150}>
+          <HeaderCell>
+            {t('audience.legend.totalNewSubscriptions')}{' '}
+            <HeaderInfo text={t('audienceTable.totalNewSubscriptionsInfo')} />
+          </HeaderCell>
           <Cell dataKey="totalNewSubscriptions">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <b>{rowData.totalNewSubscriptions}</b>
@@ -109,8 +128,11 @@ export function AudienceTable({
             <Cell dataKey="totalActiveSubscriptionCount" />
           </Column>
         )}
-        <Column resizable width={120}>
-          <HeaderCell>{t('audience.legend.renewalRate')}</HeaderCell>
+        <Column resizable width={150}>
+          <HeaderCell>
+            {t('audience.legend.renewalRate')}{' '}
+            <HeaderInfo text={t('audienceTable.renewalRateInfo')} />
+          </HeaderCell>
           <Cell dataKey="renewalRate">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <>
@@ -123,7 +145,10 @@ export function AudienceTable({
           </Cell>
         </Column>
         <Column resizable width={150}>
-          <HeaderCell>{t('audience.legend.cancellationRate')}</HeaderCell>
+          <HeaderCell>
+            {t('audience.legend.cancellationRate')}{' '}
+            <HeaderInfo text={t('audienceTable.cancellationRateInfo')} />
+          </HeaderCell>
           <Cell dataKey="cancellationRate">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <>
