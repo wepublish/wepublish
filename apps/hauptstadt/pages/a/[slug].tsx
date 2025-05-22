@@ -1,3 +1,4 @@
+import {ThemeProvider} from '@mui/material'
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
@@ -18,6 +19,8 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
+
+import {articleTheme} from '../../src/theme'
 
 export default function ArticleBySlugOrId() {
   const {
@@ -41,7 +44,7 @@ export default function ArticleBySlugOrId() {
   } as ComponentProps<typeof ArticleContainer>
 
   return (
-    <>
+    <ThemeProvider theme={articleTheme}>
       <ArticleContainer {...containerProps} />
 
       {data?.article && (
@@ -50,7 +53,9 @@ export default function ArticleBySlugOrId() {
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            filter={articles =>
+              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+            }
           />
         </ArticleWrapper>
       )}
@@ -61,7 +66,7 @@ export default function ArticleBySlugOrId() {
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}
-    </>
+    </ThemeProvider>
   )
 }
 

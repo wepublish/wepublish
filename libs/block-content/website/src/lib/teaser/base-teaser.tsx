@@ -1,4 +1,4 @@
-import {Chip, css, Theme} from '@mui/material'
+import {Chip, css, SxProps, Theme} from '@mui/material'
 import styled from '@emotion/styled'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
@@ -318,6 +318,8 @@ export const TeaserTags = styled('div')`
   grid-area: tags;
 `
 
+const stretchToParentHeight = {display: 'grid', alignItems: 'stretch'} satisfies SxProps
+
 const TeaserContent = ({
   href,
   className,
@@ -329,11 +331,7 @@ const TeaserContent = ({
 
   if (href) {
     return (
-      <Link
-        color="inherit"
-        underline="none"
-        href={href}
-        css={{display: 'grid', alignItems: 'stretch'}}>
+      <Link color="inherit" underline="none" href={href} css={stretchToParentHeight}>
         <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
       </Link>
     )

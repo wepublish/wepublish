@@ -1,4 +1,3 @@
-import {mergeDeepRight} from 'ramda'
 import {
   ComponentType,
   createContext,
@@ -112,6 +111,7 @@ import {
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
+import {BuilderContentWrapperProps} from './content-wrapper.interface'
 
 const NoComponent = () => null
 
@@ -160,6 +160,7 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
   TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
+  ContentWrapper: ComponentType<BuilderContentWrapperProps>
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>
@@ -286,6 +287,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  ContentWrapper: NoComponent,
 
   elements: {
     Rating: NoComponent,
@@ -354,6 +356,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserSlider: NoComponent,
     AlternatingTeaser: NoComponent,
     AlternatingTeaserGrid: NoComponent,
+    AlternatingTeaserList: NoComponent,
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent
@@ -376,11 +379,38 @@ export const useWebsiteBuilder = () => useContext(WebsiteBuilderContext)
 export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
   ({children, ...components}) => {
     const parentComponents = useWebsiteBuilder()
-    const newComponents = useMemo(() => {
-      console.log(parentComponents, components)
-
-      return mergeDeepRight(parentComponents, components) as WebsiteBuilderProps
-    }, [components, parentComponents])
+    const newComponents = useMemo(
+      () =>
+        ({
+          ...parentComponents,
+          ...components,
+          blocks: {
+            ...parentComponents.blocks,
+            ...components.blocks
+          },
+          blockStyles: {
+            ...parentComponents.blockStyles,
+            ...components.blockStyles
+          },
+          thirdParty: {
+            ...parentComponents.thirdParty,
+            ...components.thirdParty
+          },
+          elements: {
+            ...parentComponents.elements,
+            ...components.elements
+          },
+          date: {
+            ...parentComponents.date,
+            ...components.date
+          },
+          meta: {
+            ...parentComponents.meta,
+            ...components.meta
+          }
+        } as WebsiteBuilderProps),
+      [components, parentComponents]
+    )
 
     return (
       <WebsiteBuilderContext.Provider value={newComponents}>

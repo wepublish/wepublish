@@ -1,7 +1,8 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
-import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
   authLink,
@@ -29,11 +30,18 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
+import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
+import {HauptstadtFooter} from '../src/components/hauptstadt-footer'
+import {HauptstadtNavbar} from '../src/components/hauptstadt-navbar'
 import {
+  HauptstadtAlternatingTeaser,
+  HauptstadtFocusTeaser,
   HauptstadtTeaser,
   HauptstadtTeaserGrid,
   HauptstadtTeaserList
 } from '../src/components/hauptstadt-teaser'
+import {MainSpacer} from '../src/components/main-spacer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
@@ -64,17 +72,6 @@ const Spacer = styled('div')`
   grid-template-rows: min-content 1fr min-content;
   gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
-`
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
 `
 
 const LogoLink = styled(NextWepublishLink)`
@@ -118,11 +115,19 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             elements={{Link: NextWepublishLink}}
+            Footer={HauptstadtFooter}
+            Navbar={HauptstadtNavbar}
+            ContentWrapper={HauptstadtContentWrapper}
             blocks={{
               Subscribe: Mitmachen,
               BaseTeaser: HauptstadtTeaser,
               TeaserList: HauptstadtTeaserList,
-              TeaserGrid: HauptstadtTeaserGrid
+              TeaserGrid: HauptstadtTeaserGrid,
+              Break: HauptstadtBreakBlock
+            }}
+            blockStyles={{
+              FocusTeaser: HauptstadtFocusTeaser,
+              AlternatingTeaser: HauptstadtAlternatingTeaser
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
@@ -173,6 +178,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </Spacer>
 
               <RoutedAdminBar />
+
+              {publicRuntimeConfig.env.GA_ID && (
+                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

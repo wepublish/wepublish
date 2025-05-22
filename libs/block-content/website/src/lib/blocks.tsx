@@ -49,7 +49,10 @@ import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
 import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
 import {ImageContext} from '@wepublish/image/website'
-import {isAlternatingTeaserBlockStyle} from './block-styles/alternating/is-alternating'
+import {
+  isAlternatingTeaserGridBlockStyle,
+  isAlternatingTeaserListBlockStyle
+} from './block-styles/alternating/is-alternating'
 
 export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const {blocks, blockStyles} = useWebsiteBuilder()
@@ -60,7 +63,8 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
     [isFocusTeaserBlockStyle, block => <blockStyles.FocusTeaser {...block} />],
     [isContextBoxBlockStyle, block => <blockStyles.ContextBox {...block} />],
     [isBannerBlockStyle, block => <blockStyles.Banner {...block} />],
-    [isAlternatingTeaserBlockStyle, block => <blockStyles.AlternatingTeaserGrid {...block} />]
+    [isAlternatingTeaserGridBlockStyle, block => <blockStyles.AlternatingTeaserGrid {...block} />],
+    [isAlternatingTeaserListBlockStyle, block => <blockStyles.AlternatingTeaserList {...block} />]
   ])
 
   const facebookEmbedCond = cond([

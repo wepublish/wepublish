@@ -60,16 +60,8 @@ export const HeadingWithoutImage = styled('div')`
 `
 
 const buttonStyles = (theme: Theme) => css`
-  text-transform: none;
-  background-color: ${theme.palette.common.black};
   margin-top: ${theme.spacing(2)};
   width: fit-content;
-  padding: ${theme.spacing(1)} ${theme.spacing(3)};
-  border-radius: ${theme.spacing(4)};
-
-  :hover {
-    background-color: ${theme.palette.common.black};
-  }
 `
 
 const richTextStyles = (theme: Theme) => css`
@@ -116,7 +108,9 @@ export const BreakBlock = ({
 
         {!hideButton && linkURL && linkText && (
           <Button
+            color="accent"
             variant="contained"
+            size="large"
             LinkComponent={Link}
             href={linkURL ?? ''}
             target={linkTarget ?? '_blank'}

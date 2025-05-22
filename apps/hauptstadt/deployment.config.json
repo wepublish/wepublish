@@ -2,7 +2,9 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "GA_ID": "G-44TZTJNQ6H"
+      },
       "secret_env": [],
       "custom_domain": "https://www.hauptstadt.be"
     },

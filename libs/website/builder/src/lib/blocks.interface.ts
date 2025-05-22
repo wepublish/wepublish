@@ -88,7 +88,7 @@ type TeaserTypeProps =
       teaser?: Teaser | null | undefined
       alignment: FlexAlignment
       numColumns?: never
-      index?: never
+      index: number
     }
   | {
       blockStyle: string | null | undefined

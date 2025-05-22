@@ -91,6 +91,7 @@ export const FocusTeaser = ({
             teaser={focusedTeaser}
             alignment={alignmentForTeaserBlock(0, 1)}
             blockStyle={blockStyle}
+            index={1}
           />
         </FocusedTeaser>
       </FocusedTeaserContent>
@@ -103,6 +104,7 @@ export const FocusTeaser = ({
               teaser={teaser}
               alignment={alignmentForTeaserBlock(index, 4)}
               blockStyle={blockStyle}
+              index={index}
             />
           ))}
         </TeaserListBlockTeasers>

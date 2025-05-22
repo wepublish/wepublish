@@ -11,6 +11,7 @@ import {
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper
 } from '@wepublish/block-content/website'
+import {BuilderContentWrapperProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const ContentWidthContext = createContext({
   fullWidth: false
@@ -29,9 +30,9 @@ export const useFullWidthContent = () => {
   return context.fullWidth ?? false
 }
 
-export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
+export const ContentWrapperStyled = styled('article')<BuilderContentWrapperProps>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(7)};
+  row-gap: ${({theme}) => theme.spacing(7)};
 
   ${({theme, fullWidth}) =>
     !fullWidth &&
@@ -63,8 +64,9 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
     `}
 `
 
-export const ContentWrapper = (props: ComponentProps<typeof ContentWrapperStyled>) => {
+export const ContentWrapper = (props: BuilderContentWrapperProps) => {
+  const {ContentWrapper: Cmp} = useWebsiteBuilder()
   const fullWidth = useFullWidthContent()
 
-  return <ContentWrapperStyled fullWidth={fullWidth} {...props} />
+  return <Cmp fullWidth={fullWidth} {...props} />
 }

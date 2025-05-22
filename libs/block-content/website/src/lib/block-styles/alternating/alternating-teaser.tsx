@@ -16,7 +16,7 @@ export const teaserLeftImage = css`
     'image authors'
     'image .';
   grid-template-columns: ${(100 / 12) * 7}% 1fr;
-  grid-template-rows: repeat(6, auto);
+  grid-template-rows: repeat(6, minmax(0, auto));
 `
 
 export const teaserRightImage = css`
@@ -28,7 +28,7 @@ export const teaserRightImage = css`
     'authors image'
     '. image';
   grid-template-columns: 1fr ${(100 / 12) * 7}%;
-  grid-template-rows: repeat(6, auto);
+  grid-template-rows: repeat(6, minmax(0, auto));
 `
 
 export const alternatingTeaser = css`
@@ -56,9 +56,12 @@ export const AlternatingTeaser = memo((props: BuilderTeaserProps) => {
   return (
     <BaseTeaser
       {...props}
-      css={css`
-        ${(props.index ?? 0) % 2 === 0 ? teaserRightImage : teaserLeftImage}
+      css={theme => css`
         ${alternatingTeaser}
+
+        ${theme.breakpoints.up('md')} {
+          ${(props.index ?? 0) % 2 === 0 ? teaserRightImage : teaserLeftImage}
+        }
       `}
     />
   )

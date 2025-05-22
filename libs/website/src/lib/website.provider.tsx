@@ -52,6 +52,7 @@ import {
   VimeoVideoBlock,
   YouTubeVideoBlock,
   AlternatingTeaserGridBlock,
+  AlternatingTeaserListBlock,
   AlternatingTeaser
 } from '@wepublish/block-content/website'
 import {
@@ -109,6 +110,7 @@ import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
+import {ContentWrapperStyled} from '@wepublish/content/website'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -196,6 +198,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           PaymentMethodPicker={PaymentMethodPicker}
           TransactionFee={TransactionFee}
           Subscribe={Subscribe}
+          ContentWrapper={ContentWrapperStyled}
           elements={{
             TextField,
             Rating,
@@ -256,7 +259,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ImageSlider,
             TeaserSlider,
             AlternatingTeaser,
-            AlternatingTeaserGrid: AlternatingTeaserGridBlock
+            AlternatingTeaserGrid: AlternatingTeaserGridBlock,
+            AlternatingTeaserList: AlternatingTeaserListBlock
           }}
           richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{

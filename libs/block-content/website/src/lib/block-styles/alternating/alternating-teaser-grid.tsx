@@ -1,6 +1,8 @@
-import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const AlternatingTeaserGridBlock = (props: BuilderTeaserGridBlockProps) => {
+export const AlternatingTeaserGridBlock = (
+  props: BuilderBlockStyleProps['AlternatingTeaserGrid']
+) => {
   const {
     blocks: {TeaserGrid}
   } = useWebsiteBuilder()

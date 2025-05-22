@@ -75,7 +75,7 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
 export const FooterPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
   background-color: ${({theme}) => theme.palette.grey[800]};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  color: ${({theme}) => theme.palette.getContrastText(theme.palette.grey[800])};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   position: absolute;
