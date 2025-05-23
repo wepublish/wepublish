@@ -40,7 +40,10 @@ export function AudienceTable({
   timeResolution,
   loading
 }: AudienceTableProps) {
-  const {t} = useTranslation()
+  const {
+    t,
+    i18n: {language}
+  } = useTranslation()
 
   const {
     totalActiveSubscriptionCount,
@@ -69,7 +72,7 @@ export function AudienceTable({
             {(rowData: RowDataType<DailySubscriptionStats>) => (
               <>
                 {timeResolution === 'monthly' && <span>{t('audienceTable.byDate')}</span>}{' '}
-                {new Date(rowData.date).toLocaleDateString('de', {dateStyle: 'medium'})}
+                {new Date(rowData.date).toLocaleDateString(language, {dateStyle: 'medium'})}
               </>
             )}
           </Cell>

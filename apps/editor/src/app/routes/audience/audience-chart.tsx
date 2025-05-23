@@ -32,7 +32,10 @@ interface AudienceChartProps {
 }
 
 export function AudienceChart({clientFilter, audienceStats, loading}: AudienceChartProps) {
-  const {t} = useTranslation()
+  const {
+    t,
+    i18n: {language}
+  } = useTranslation()
   const [readyRenderChart, setReadyRenderChart] = useState<boolean>(false)
 
   const {
@@ -60,7 +63,7 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
               dataKey={'date'}
               tick={({x, y, payload}) => (
                 <text x={x} y={y + 15} textAnchor="middle">
-                  {new Date(payload.value).toLocaleDateString('de-CH', {dateStyle: 'short'})}
+                  {new Date(payload.value).toLocaleDateString(language, {dateStyle: 'short'})}
                 </text>
               )}
             />
@@ -68,7 +71,7 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
             <Tooltip
               formatter={(value, name, item) => [value, t(`audience.legend.${name}`)]}
               labelFormatter={label =>
-                new Date(label).toLocaleDateString('de-CH', {dateStyle: 'medium'})
+                new Date(label).toLocaleDateString(language, {dateStyle: 'medium'})
               }
             />
             <Legend

@@ -52,7 +52,10 @@ export function AudienceDetailDrawer({
   setOpen,
   timeResolution
 }: AudienceDetailDrawerProps) {
-  const {t} = useTranslation()
+  const {
+    t,
+    i18n: {language}
+  } = useTranslation()
 
   const [selectedStat, setSelectedStat] = useState<AggregatedUsers>('deactivatedSubscriptionUsers')
 
@@ -63,9 +66,9 @@ export function AudienceDetailDrawer({
     }
 
     return audienceStats?.date
-      ? new Date(audienceStats.date).toLocaleDateString('de-CH', dateTimeFormat)
+      ? new Date(audienceStats.date).toLocaleDateString(language, dateTimeFormat)
       : t('audienceDetailDrawer.noDateAvailable')
-  }, [audienceStats, timeResolution, t])
+  }, [audienceStats, timeResolution, t, language])
 
   return (
     <Drawer
