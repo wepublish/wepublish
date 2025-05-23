@@ -505,7 +505,9 @@
       "newUser": "Neuer <0>User</0> erstellt",
       "noData": "Keine aktuellen Abo-Daten",
       "user": "Benutzer",
-      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr"
+      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Zum Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -769,8 +771,9 @@
       "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
       "users": "User",
-      "usersAndMembers": "User & Abos",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -1420,6 +1423,9 @@
       "noPixelInfoDescription": "Dies ist etwa der Fall, wenn kein Tracking konfiguriert ist oder bei alten Artikeln.",
       "errorHeader": "Fehler"
     },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
+    },
     "crowdfunding": {
       "list": {
         "title": "Crowdfundings",
@@ -1456,6 +1462,66 @@
         "remove": "Entfernen",
         "add": "Ziel hinzufügen"
       }
+    },
+    "audienceFilter": {
+      "daily": "Täglich",
+      "monthly": "Monatlich",
+      "rangePickerPlaceholder": "von - bis",
+      "filterSubscriptionPlans": "Nach Abo Pläne filtern",
+      "chart": "Diagramm",
+      "table": "Tabelle",
+      "panelHeader": "Auswahl der Daten",
+      "rangeLastWeek": "Letzte Woche",
+      "rangeLastMonth": "Letzter Monat",
+      "rangeLastQuarter": "Letztes Quartal",
+      "rangeLastYear": "Letztes Jahr"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",
+          "createdUnpaidSubscriptionCount": "Neu gelöste aber bis dato unbezahlte Abos.",
+          "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert wurden.",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode.",
+          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+        },
+        "totalActiveSubscriptionCount": "Total aktive Abos",
+        "createdUnpaidSubscriptionCount": "Neue unbezahlte Abos",
+        "renewedSubscriptionCount": "Erneuerte Abos",
+        "createdSubscriptionCount": "Neue Abos",
+        "deactivatedSubscriptionCount": "Deaktivierte Abos",
+        "replacedSubscriptionCount": "Ersetzte Abos",
+        "totalNewSubscriptions": "Total neue Abos",
+        "renewalRate": "Erneuerungsrate",
+        "cancellationRate": "Kündigungsrate",
+        "createdSubscriptionUsers": "Neue Abos",
+        "createdUnpaidSubscriptionUsers": "Neue unbezahlte Abos",
+        "deactivatedSubscriptionUsers": "Deaktivierte Abos",
+        "renewedSubscriptionUsers": "Erneuerte Abos",
+        "replacedSubscriptionUsers": "Ersetzte Abos"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Benutzer filtern nach",
+      "id": "ID",
+      "firstName": "Vorname",
+      "name": "Nachname",
+      "email": "E-Mail",
+      "goToUser": "Link zum Benutzer",
+      "close": "Schliessen",
+      "userBtn": "Link zum Benutzer"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Datum",
+        "actions": "Aktionen"
+      },
+      "showUsers": "Details anzeigen",
+      "byDate": "Per",
+      "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
+      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos.",
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos."
     }
   }
 }

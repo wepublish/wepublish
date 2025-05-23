@@ -703,6 +703,34 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailySubscriptionStats = {
+  __typename?: 'DailySubscriptionStats';
+  createdSubscriptionCount: Scalars['Float'];
+  createdSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  createdUnpaidSubscriptionCount: Scalars['Float'];
+  createdUnpaidSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  date: Scalars['String'];
+  deactivatedSubscriptionCount: Scalars['Float'];
+  deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  renewedSubscriptionCount: Scalars['Float'];
+  renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  replacedSubscriptionCount: Scalars['Float'];
+  replacedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  subscriptionDailyRevenue: Scalars['Float'];
+  subscriptionDurationAvg: Scalars['Float'];
+  subscriptionMonthlyRevenueAvg: Scalars['Float'];
+  subscriptionMonthlyRevenueSum: Scalars['Float'];
+  totalActiveSubscriptionCount: Scalars['Float'];
+};
+
+export type DailySubscriptionStatsUser = {
+  __typename?: 'DailySubscriptionStatsUser';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
   amount: Scalars['Int'];
@@ -2559,6 +2587,12 @@ export type Query = {
   crowdfunding: CrowdfundingWithActiveGoal;
   /** Returns a paginated list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  /**
+   *
+   *       Returns daily stats in a given timeframe.
+   *
+   */
+  dailySubscriptionStats: Array<DailySubscriptionStats>;
   /** Returns a event by id. */
   event: Event;
   /**
@@ -2787,6 +2821,13 @@ export type QueryConsentsArgs = {
 
 export type QueryCrowdfundingArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryDailySubscriptionStatsArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  start: Scalars['DateTime'];
 };
 
 
@@ -4016,6 +4057,15 @@ export type FullCrowdfundingFragment = { __typename?: 'Crowdfunding', id: string
 export type FullCrowdfundingGoalFragment = { __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number };
 
 export type FullCrowdfundingGoalWithProgressFragment = { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null };
+
+export type DailySubscriptionStatsQueryVariables = Exact<{
+  start: Scalars['DateTime'];
+  end?: InputMaybe<Scalars['DateTime']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
+
+
+export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, createdUnpaidSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, subscriptionMonthlyRevenueAvg: number, subscriptionMonthlyRevenueSum: number, subscriptionDailyRevenue: number, subscriptionDurationAvg: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, createdUnpaidSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
 
 export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }> | null };
 
@@ -6764,6 +6814,83 @@ export function useDeleteCrowdfundingMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteCrowdfundingMutationHookResult = ReturnType<typeof useDeleteCrowdfundingMutation>;
 export type DeleteCrowdfundingMutationResult = Apollo.MutationResult<DeleteCrowdfundingMutation>;
 export type DeleteCrowdfundingMutationOptions = Apollo.BaseMutationOptions<DeleteCrowdfundingMutation, DeleteCrowdfundingMutationVariables>;
+export const DailySubscriptionStatsDocument = gql`
+    query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: [String!]) {
+  dailySubscriptionStats(start: $start, end: $end, memberPlanIds: $memberPlanIds) {
+    date
+    totalActiveSubscriptionCount
+    createdSubscriptionCount
+    createdSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    createdUnpaidSubscriptionCount
+    createdUnpaidSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    replacedSubscriptionCount
+    replacedSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    renewedSubscriptionCount
+    renewedSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    deactivatedSubscriptionCount
+    deactivatedSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    subscriptionMonthlyRevenueAvg
+    subscriptionMonthlyRevenueSum
+    subscriptionDailyRevenue
+    subscriptionDurationAvg
+  }
+}
+    `;
+
+/**
+ * __useDailySubscriptionStatsQuery__
+ *
+ * To run a query within a React component, call `useDailySubscriptionStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDailySubscriptionStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDailySubscriptionStatsQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *      memberPlanIds: // value for 'memberPlanIds'
+ *   },
+ * });
+ */
+export function useDailySubscriptionStatsQuery(baseOptions: Apollo.QueryHookOptions<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>(DailySubscriptionStatsDocument, options);
+      }
+export function useDailySubscriptionStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>(DailySubscriptionStatsDocument, options);
+        }
+export type DailySubscriptionStatsQueryHookResult = ReturnType<typeof useDailySubscriptionStatsQuery>;
+export type DailySubscriptionStatsLazyQueryHookResult = ReturnType<typeof useDailySubscriptionStatsLazyQuery>;
+export type DailySubscriptionStatsQueryResult = Apollo.QueryResult<DailySubscriptionStatsQuery, DailySubscriptionStatsQueryVariables>;
 export const EventListDocument = gql`
     query EventList($filter: EventFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
   events(
