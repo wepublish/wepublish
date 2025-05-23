@@ -73,7 +73,7 @@ function AudienceDashboard({
     const today = preDefinedDates()['today']
     const dateRange = preDefinedDates()[initialDateRange]
     setAudienceApiFilter({dateRange: [dateRange, today]})
-  }, [])
+  }, [initialDateRange, setAudienceApiFilter])
 
   return (
     <>

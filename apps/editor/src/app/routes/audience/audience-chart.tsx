@@ -123,7 +123,6 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
                 stackId="created"
                 dataKey={'deactivatedSubscriptionCount'}
                 fill={chartColors.deactivatedSubscriptionCount}
-                z={99} // Ensures this bar is rendered above others
               />
             )}
           </ComposedChart>

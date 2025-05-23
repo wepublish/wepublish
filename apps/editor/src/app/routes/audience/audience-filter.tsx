@@ -20,10 +20,13 @@ const TagPickerStyled = styled(TagPicker)`
 
 const ComponentFilterContainer = styled.div`
   margin-top: ${({theme}) => theme.spacing(2)};
+  display: flex;
+  flex-wrap: wrap;
 `
 
-const ToggleWithLeftMargin = styled(Toggle)`
-  margin-left: ${({theme}) => theme.spacing(2)};
+const ToggleContainer = styled('div')`
+  margin-right: ${({theme}) => theme.spacing(2)};
+  margin-top: ${({theme}) => theme.spacing(1)};
 `
 
 export interface AudienceFilterProps {
@@ -87,7 +90,7 @@ export function AudienceFilter({
     <Grid style={{width: '100%'}}>
       <Row>
         {/* select date range */}
-        <Col xs={3}>
+        <Col xs={4}>
           <RadioGroup
             name="aggregation-picker"
             inline
@@ -99,7 +102,7 @@ export function AudienceFilter({
           </RadioGroup>
         </Col>
 
-        <Col xs={5}>
+        <Col xs={6}>
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
@@ -118,21 +121,25 @@ export function AudienceFilter({
           />
 
           <ComponentFilterContainer>
-            <Toggle
-              checked={componentFilter.chart}
-              onChange={chart => setComponentFilter({...componentFilter, chart})}
-            />{' '}
-            <ToggleLable>{t('audienceFilter.chart')}</ToggleLable>
-            <ToggleWithLeftMargin
-              checked={componentFilter.table}
-              onChange={table => setComponentFilter({...componentFilter, table})}
-            />{' '}
-            <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
+            <ToggleContainer>
+              <Toggle
+                checked={componentFilter.chart}
+                onChange={chart => setComponentFilter({...componentFilter, chart})}
+              />{' '}
+              <ToggleLable>{t('audienceFilter.chart')}</ToggleLable>
+            </ToggleContainer>
+            <ToggleContainer>
+              <Toggle
+                checked={componentFilter.table}
+                onChange={table => setComponentFilter({...componentFilter, table})}
+              />{' '}
+              <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
+            </ToggleContainer>
           </ComponentFilterContainer>
         </Col>
 
         {/* filter data */}
-        <Col xs={16}>
+        <Col xs={14}>
           <Panel header={t('audienceFilter.panelHeader')} bordered>
             <Row>
               {Object.keys(clientFilter).map(filterKey => (
