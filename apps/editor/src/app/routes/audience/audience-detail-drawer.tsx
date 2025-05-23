@@ -1,3 +1,4 @@
+import {DailySubscriptionStatsUser} from '@wepublish/editor/api-v2'
 import {Dispatch, SetStateAction, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -130,7 +131,7 @@ export function AudienceDetailDrawer({
               <Column resizable width={300}>
                 <HeaderCell>{t('audienceDetailDrawer.goToUser')}</HeaderCell>
                 <Cell>
-                  {(entry: any) => (
+                  {(entry: DailySubscriptionStatsUser) => (
                     <Button
                       href={`/users/edit/${entry.id}`}
                       size="xs"
