@@ -28,10 +28,6 @@ export type AudienceClientFilter = Pick<
   | 'replacedSubscriptionCount'
 >
 
-export type AudienceClientFilterString = {
-  [K in keyof AudienceClientFilter]: string
-}
-
 export interface AudienceComponentFilter {
   filter: boolean
   chart: boolean
