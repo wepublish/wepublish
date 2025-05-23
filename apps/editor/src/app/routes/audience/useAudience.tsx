@@ -117,14 +117,11 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
     []
   )
 
-  const mergeUsers = useCallback(
+  const sumUpUsers = useCallback(
     (monthStats: AudienceStatsComputed[], userProperty: AggregatedUsers) => {
-      let mergedUsers: DailySubscriptionStatsUser[] = []
-
-      for (const stat of monthStats) {
-        mergedUsers = [...mergedUsers, ...(stat[userProperty] as DailySubscriptionStatsUser[])]
-      }
-      return mergedUsers
+      return monthStats.flatMap(
+        monthStat => monthStat[userProperty] as DailySubscriptionStatsUser[]
+      )
     },
     []
   )
@@ -177,9 +174,9 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
           'renewedSubscriptionUsers',
           'replacedSubscriptionUsers'
         ] as AggregatedUsers[]
-      ).reduce((acc, key) => ({...acc, [key]: mergeUsers(statsByMonth, key)}), {})
+      ).reduce((acc, key) => ({...acc, [key]: sumUpUsers(statsByMonth, key)}), {})
     },
-    [mergeUsers]
+    [sumUpUsers]
   )
 
   const audienceStatsAggregatedByMonth = useMemo<AudienceStatsComputed[]>(() => {
