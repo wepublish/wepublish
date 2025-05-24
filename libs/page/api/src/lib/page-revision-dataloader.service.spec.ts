@@ -78,16 +78,16 @@ describe('PageRevisionDataloaderService', () => {
       prismaMock.pageRevision.findMany.mockResolvedValue([])
 
       await service.load('123')
-      expect(prismaMock.pageRevision.findFirst).toHaveBeenCalled()
-      expect(prismaMock.pageRevision.findFirst.mock.calls).toMatchSnapshot()
+      expect(prismaMock.pageRevision.findMany).toHaveBeenCalled()
+      expect(prismaMock.pageRevision.findMany.mock.calls).toMatchSnapshot()
     })
 
     it('should load many', async () => {
       prismaMock.pageRevision.findMany.mockResolvedValue([])
 
       await service.loadMany(['123', '321'])
-      expect(prismaMock.pageRevision.findFirst).toHaveBeenCalled()
-      expect(prismaMock.pageRevision.findFirst.mock.calls).toMatchSnapshot()
+      expect(prismaMock.pageRevision.findMany).toHaveBeenCalled()
+      expect(prismaMock.pageRevision.findMany.mock.calls).toMatchSnapshot()
     })
   })
 })
