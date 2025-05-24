@@ -20,6 +20,7 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   fields: {
     name: {type: new GraphQLNonNull(GraphQLString)},
     logoID: {type: GraphQLString},
+    squareLogoId: {type: GraphQLString},
     themeColor: {type: new GraphQLNonNull(GraphQLColor)},
     themeFontColor: {type: new GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
@@ -38,6 +39,13 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}) => {
         return profile.logoID ? loaders.images.load(profile.logoID) : null
+      })
+    },
+
+    squareLogo: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
+        return profile.squareLogoId ? loaders.images.load(profile.squareLogoId) : null
       })
     },
 

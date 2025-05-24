@@ -676,7 +676,6 @@ type ImageFactoryDefineInput = {
     focalPoint?: ImagefocalPointFactory | Prisma.FocalPointCreateNestedOneWithoutImageInput;
     Author?: Prisma.AuthorCreateNestedManyWithoutImageInput;
     MemberPlan?: Prisma.MemberPlanCreateNestedManyWithoutImageInput;
-    PeerProfile?: Prisma.PeerProfileCreateNestedManyWithoutLogoInput;
     Comment?: Prisma.CommentCreateNestedManyWithoutGuestUserImageInput;
     articleRevisionSocialMediaImages?: Prisma.ArticleRevisionCreateNestedManyWithoutSocialMediaImageInput;
     articleRevisionImages?: Prisma.ArticleRevisionCreateNestedManyWithoutImageInput;
@@ -687,6 +686,8 @@ type ImageFactoryDefineInput = {
     events?: Prisma.EventCreateNestedManyWithoutImageInput;
     paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutImageInput;
     banners?: Prisma.BannerCreateNestedManyWithoutImageInput;
+    peerProfileLogo?: Prisma.PeerProfileCreateNestedManyWithoutLogoInput;
+    peerProfileSquareLogo?: Prisma.PeerProfileCreateNestedManyWithoutSquareLogoInput;
 };
 type ImageFactoryDefineOptions = {
     defaultData?: Resolver<ImageFactoryDefineInput, BuildDataOptions>;
@@ -1621,7 +1622,11 @@ export interface PaymentFactoryInterface<TOptions extends PaymentFactoryDefineOp
 export declare function definePaymentFactory<TOptions extends PaymentFactoryDefineOptions>(options: TOptions): PaymentFactoryInterface<TOptions>;
 type PeerProfilelogoFactory = {
     _factoryFor: "Image";
-    build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPeerProfileInput["create"]>;
+    build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPeerProfileLogoInput["create"]>;
+};
+type PeerProfilesquareLogoFactory = {
+    _factoryFor: "Image";
+    build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPeerProfileSquareLogoInput["create"]>;
 };
 type PeerProfileFactoryDefineInput = {
     id?: string;
@@ -1632,7 +1637,8 @@ type PeerProfileFactoryDefineInput = {
     callToActionText?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     callToActionImageURL?: string | null;
     callToActionImageID?: string | null;
-    logo?: PeerProfilelogoFactory | Prisma.ImageCreateNestedOneWithoutPeerProfileInput;
+    logo?: PeerProfilelogoFactory | Prisma.ImageCreateNestedOneWithoutPeerProfileLogoInput;
+    squareLogo?: PeerProfilesquareLogoFactory | Prisma.ImageCreateNestedOneWithoutPeerProfileSquareLogoInput;
 };
 type PeerProfileFactoryDefineOptions = {
     defaultData?: Resolver<PeerProfileFactoryDefineInput, BuildDataOptions>;

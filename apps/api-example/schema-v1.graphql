@@ -80,6 +80,7 @@ type Query {
 type PeerProfile {
   name: String!
   logo: Image
+  squareLogo: Image
   themeColor: Color!
   themeFontColor: Color!
   hostURL: String!

@@ -53,6 +53,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   const [logoImage, setLogoImage] = useState<PeerProfileImage>()
+  const [squareLogoImage, setSquareLogoImage] = useState<PeerProfileImage>()
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
   const [themeFontColor, setThemeFontColor] = useState('')
@@ -60,7 +61,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
   const [callToActionImage, setCallToActionImage] = useState<Maybe<FullImageFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')
-  const [isLogoChange, setIsLogoChange] = useState(false)
+  const [whatImageChange, setWhatImageChange] = useState<'logo' | 'squareLogo' | 'cta'>()
 
   const {
     data,
@@ -80,6 +81,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   useEffect(() => {
     if (data?.peerProfile) {
       setLogoImage(data.peerProfile.logo)
+      setSquareLogoImage(data.peerProfile.squareLogo)
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
       setThemeFontColor(data.peerProfile.themeFontColor)
@@ -110,6 +112,7 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         input: {
           name,
           logoID: logoImage?.id,
+          squareLogoId: squareLogoImage?.id,
           themeColor,
           themeFontColor,
           callToActionText: callToActionText!,
@@ -139,7 +142,8 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     callToActionImageURL: StringType()
       .isURL(t('errorMessages.invalidUrlErrorMessage'))
       .isRequired(t('errorMessages.noUrlErrorMessage')),
-    profileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage'))
+    profileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage')),
+    squareProfileImg: StringType().isRequired(t('errorMessages.noImageErrorMessage'))
   })
 
   return (
@@ -155,7 +159,8 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         callToActionImage,
         callToActionTextURL,
         callToActionImageURL,
-        profileImg: logoImage?.id
+        profileImg: logoImage?.id,
+        squareProfileImg: squareLogoImage?.id
       }}>
       <Drawer.Header>
         <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
@@ -180,17 +185,39 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             left={20}
             disabled={isLoading}
             openChooseModalOpen={() => {
-              setIsLogoChange(true)
+              setWhatImageChange('logo')
               setChooseModalOpen(true)
             }}
             openEditModalOpen={() => {
-              setIsLogoChange(true)
+              setWhatImageChange('logo')
               setEditModalOpen(true)
             }}
             removeImage={() => setLogoImage(undefined)}
           />
           <Group>
             <HiddenFontControl name="profileImg" value={logoImage?.id || ''} />
+          </Group>
+        </Panel>
+
+        <Panel bodyFill header={toggleRequiredLabel(t('peerList.panels.squareImage'))}>
+          <ChooseEditImage
+            image={squareLogoImage}
+            header={''}
+            top={0}
+            left={20}
+            disabled={isLoading}
+            openChooseModalOpen={() => {
+              setWhatImageChange('squareLogo')
+              setChooseModalOpen(true)
+            }}
+            openEditModalOpen={() => {
+              setWhatImageChange('squareLogo')
+              setEditModalOpen(true)
+            }}
+            removeImage={() => setSquareLogoImage(undefined)}
+          />
+          <Group>
+            <HiddenFontControl name="squareProfileImg" value={squareLogoImage?.id || ''} />
           </Group>
         </Panel>
 
@@ -255,11 +282,11 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 left={20}
                 disabled={isLoading}
                 openChooseModalOpen={() => {
-                  setIsLogoChange(false)
+                  setWhatImageChange('cta')
                   setChooseModalOpen(true)
                 }}
                 openEditModalOpen={() => {
-                  setIsLogoChange(false)
+                  setWhatImageChange('cta')
                   setEditModalOpen(true)
                 }}
                 removeImage={() => setCallToActionImage(undefined)}
@@ -286,7 +313,22 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: any) => {
             setChooseModalOpen(false)
-            isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
+
+            switch (whatImageChange) {
+              case 'cta': {
+                setCallToActionImage(value)
+                break
+              }
+              case 'logo': {
+                setLogoImage(value)
+                break
+              }
+              case 'squareLogo': {
+                setSquareLogoImage(value)
+                break
+              }
+            }
+
             setTimeout(() => {
               form.current?.check?.()
             }, 500)
@@ -295,9 +337,15 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       </Drawer>
 
       <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
-        {(logoImage || callToActionImage) && (
+        {(logoImage || squareLogoImage || callToActionImage) && (
           <ImageEditPanel
-            id={isLogoChange ? logoImage?.id : callToActionImage?.id}
+            id={
+              whatImageChange === 'logo'
+                ? logoImage?.id
+                : whatImageChange === 'squareLogo'
+                ? squareLogoImage?.id
+                : callToActionImage?.id
+            }
             onClose={() => setEditModalOpen(false)}
           />
         )}
