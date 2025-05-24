@@ -1,0 +1,132 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthorResolver Mutation: createAuthor 1`] = `
+{
+  "data": {
+    "createAuthor": {
+      "id": "2",
+      "slug": "new-author",
+    },
+  },
+}
+`;
+
+exports[`AuthorResolver Mutation: deleteAuthor 1`] = `
+{
+  "data": {
+    "deleteAuthor": {
+      "id": "1",
+    },
+  },
+}
+`;
+
+exports[`AuthorResolver Mutation: updateAuthor 1`] = `
+{
+  "data": {
+    "updateAuthor": {
+      "id": "1",
+      "slug": "updated-author",
+    },
+  },
+}
+`;
+
+exports[`AuthorResolver Query: getAuthor by id 1`] = `
+{
+  "data": {
+    "getAuthorsById": {
+      "bio": [],
+      "id": "1",
+      "imageID": null,
+      "jobTitle": "Author Job",
+      "links": [],
+      "name": "Author Name",
+      "slug": "author-slug",
+    },
+  },
+}
+`;
+
+exports[`AuthorResolver Query: getAuthor by id: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 5,
+          "line": 3,
+        },
+      ],
+      "message": "Author not found",
+      "path": [
+        "getAuthorsById",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`AuthorResolver Query: getAuthor by slug 1`] = `
+{
+  "data": {
+    "getAuthorBySlug": {
+      "bio": [],
+      "id": "1",
+      "imageID": null,
+      "jobTitle": "Author Job",
+      "links": [],
+      "name": "Author Name",
+      "slug": "author-slug",
+    },
+  },
+}
+`;
+
+exports[`AuthorResolver Query: getAuthor by slug: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 5,
+          "line": 3,
+        },
+      ],
+      "message": "Author not found",
+      "path": [
+        "getAuthorBySlug",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`AuthorResolver Query: getAuthors list 1`] = `
+{
+  "data": {
+    "getAuthors": {
+      "nodes": [
+        {
+          "bio": [],
+          "id": "1",
+          "imageID": null,
+          "jobTitle": "Author Job",
+          "links": [],
+          "name": "Author Name",
+          "slug": "author-slug",
+        },
+      ],
+      "totalCount": 1,
+    },
+  },
+}
+`;
