@@ -1400,6 +1400,7 @@ export enum SettingName {
   AllowGuestCommentRating = 'allowGuestCommentRating',
   AllowGuestCommenting = 'allowGuestCommenting',
   AllowGuestPollVoting = 'allowGuestPollVoting',
+  AllowGuestPreviews = 'allowGuestPreviews',
   CommentCharLimit = 'commentCharLimit',
   MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
   MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
@@ -1409,7 +1410,8 @@ export enum SettingName {
   MakeRevenueApiPublic = 'makeRevenueApiPublic',
   PeeringTimeoutInMs = 'peeringTimeoutInMs',
   ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
-  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
+  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin',
+  ShowPendingWhenNotPublished = 'showPendingWhenNotPublished'
 }
 
 export type SettingRestriction = {
