@@ -1,32 +1,22 @@
-import styled from '@emotion/styled'
-import {Typography} from '@mui/material'
 import {
   AuthTokenStorageKey,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {UserSession} from '@wepublish/website/api'
+import {PageContainer} from '@wepublish/page/website'
+import {addClientCacheToV1Props, PageDocument, UserSession} from '@wepublish/website/api'
 import {getV1ApiClient, LoginWithJwtDocument} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
-const LoginWrapper = styled('div')`
-  display: grid;
-  justify-content: center;
-`
-
 type LoginProps = {sessionToken?: UserSession}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
-  const {
-    elements: {H3, Link}
-  } = useWebsiteBuilder()
   const router = useRouter()
 
   useEffect(() => {
@@ -44,20 +34,14 @@ export default function Login({sessionToken}: LoginProps) {
   }
 
   return (
-    <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
-
-      <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
-      </Typography>
-
+    <PageContainer slug="login">
       <LoginFormContainer
         defaults={{
           email: router.query?.mail as string | undefined,
           requirePassword: !!router.query?.requirePassword
         }}
       />
-    </LoginWrapper>
+    </PageContainer>
   )
 }
 
@@ -91,7 +75,15 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
     }
   }
 
-  return {
-    props: {}
-  }
+  await Promise.all([
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'login'
+      }
+    })
+  ])
+  const props = addClientCacheToV1Props(client, {})
+
+  return props
 }
