@@ -202,12 +202,15 @@ export class PageService {
       }
     })
 
+    const pagePublishedAt =
+      !page.publishedAt || page.publishedAt > publishedAt ? publishedAt : page.publishedAt
+
     return this.prisma.page.update({
       where: {
         id
       },
       data: {
-        publishedAt: page.publishedAt ?? publishedAt,
+        publishedAt: pagePublishedAt,
         modifiedAt: new Date(),
         revisions: {
           update: {

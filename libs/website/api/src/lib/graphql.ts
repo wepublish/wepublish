@@ -706,6 +706,34 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailySubscriptionStats = {
+  __typename?: 'DailySubscriptionStats';
+  createdSubscriptionCount: Scalars['Float'];
+  createdSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  createdUnpaidSubscriptionCount: Scalars['Float'];
+  createdUnpaidSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  date: Scalars['String'];
+  deactivatedSubscriptionCount: Scalars['Float'];
+  deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  renewedSubscriptionCount: Scalars['Float'];
+  renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  replacedSubscriptionCount: Scalars['Float'];
+  replacedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  subscriptionDailyRevenue: Scalars['Float'];
+  subscriptionDurationAvg: Scalars['Float'];
+  subscriptionMonthlyRevenueAvg: Scalars['Float'];
+  subscriptionMonthlyRevenueSum: Scalars['Float'];
+  totalActiveSubscriptionCount: Scalars['Float'];
+};
+
+export type DailySubscriptionStatsUser = {
+  __typename?: 'DailySubscriptionStatsUser';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
   amount: Scalars['Int'];
@@ -2564,6 +2592,12 @@ export type Query = {
   crowdfunding: CrowdfundingWithActiveGoal;
   /** Returns a paginated list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  /**
+   *
+   *       Returns daily stats in a given timeframe.
+   *
+   */
+  dailySubscriptionStats: Array<DailySubscriptionStats>;
   /** Returns a event by id. */
   event: Event;
   /**
@@ -2792,6 +2826,13 @@ export type QueryConsentsArgs = {
 
 export type QueryCrowdfundingArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryDailySubscriptionStatsArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  start: Scalars['DateTime'];
 };
 
 

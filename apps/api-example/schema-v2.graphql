@@ -515,6 +515,32 @@ input CustomTeaserInput {
   title: String
 }
 
+type DailySubscriptionStats {
+  createdSubscriptionCount: Float!
+  createdSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  createdUnpaidSubscriptionCount: Float!
+  createdUnpaidSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  date: String!
+  deactivatedSubscriptionCount: Float!
+  deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  renewedSubscriptionCount: Float!
+  renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  replacedSubscriptionCount: Float!
+  replacedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  subscriptionDailyRevenue: Float!
+  subscriptionDurationAvg: Float!
+  subscriptionMonthlyRevenueAvg: Float!
+  subscriptionMonthlyRevenueSum: Float!
+  totalActiveSubscriptionCount: Float!
+}
+
+type DailySubscriptionStatsUser {
+  email: String!
+  firstName: String
+  id: String!
+  name: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -1549,6 +1575,9 @@ type Query {
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
+
+  "\n      Returns daily stats in a given timeframe.\n    "
+  dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
   """Returns a event by id."""
   event(id: String!): Event!

@@ -102,11 +102,13 @@ export class NovaMediaAdapter implements MediaAdapter {
     if (transformations?.width || transformations?.height) {
       let xFocalPoint = ''
       let yFocalPoint = ''
+
       if (image?.focalPoint?.x) {
         xFocalPoint = image.focalPoint.x > 0.6 ? 'right' : image.focalPoint.x < 0.4 ? 'left' : ''
+      }
 
-        yFocalPoint =
-          image.focalPoint.y ?? 0 > 0.6 ? 'bottom' : image.focalPoint.y ?? 0 < 0.4 ? 'top' : ''
+      if (image?.focalPoint?.y) {
+        yFocalPoint = image.focalPoint.y > 0.6 ? 'bottom' : image.focalPoint.y < 0.4 ? 'top' : ''
       }
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined

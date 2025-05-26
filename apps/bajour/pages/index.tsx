@@ -4,12 +4,12 @@ import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {
   addClientCacheToV1Props,
-  BlockContent,
   CommentListDocument,
   CommentSort,
   getV1ApiClient,
   NavigationListDocument,
   PageDocument,
+  PageQuery,
   PeerProfileDocument,
   SettingListDocument,
   SortOrder,
@@ -74,7 +74,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
 
   const [page] = await Promise.all([
-    client.query({
+    client.query<PageQuery>({
       query: PageDocument,
       variables: {
         slug: 'home'
@@ -91,7 +91,7 @@ export const getStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  const fdTTeaser = page.data?.page?.blocks.find((block: BlockContent) => {
+  const fdTTeaser = page.data?.page?.latest.blocks.find(block => {
     return isFrageDesTages(block)
   }) as TeaserListBlock | undefined
 

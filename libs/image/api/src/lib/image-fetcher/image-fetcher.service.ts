@@ -10,7 +10,7 @@ export class ImageFetcherService {
   async fetch(url: string, filename = 'transformed-image.jpg'): Promise<ArrayBufferUpload> {
     try {
       const {data: arrayBuffer, headers} = await firstValueFrom(
-        this.httpService.get(url, {responseType: 'arraybuffer'})
+        this.httpService.get(url, {responseType: 'arraybuffer', timeout: 30000})
       )
       const mimetype = headers['content-type']
 

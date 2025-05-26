@@ -1,4 +1,4 @@
-import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
+import {CommentItemType, TagType, useCreateCommentMutation} from '@wepublish/editor/api'
 import {
   ArticleFilter,
   ArticleListDocument,
@@ -155,6 +155,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
+          tagType={TagType.Article}
         />
       </ListViewContainer>
 

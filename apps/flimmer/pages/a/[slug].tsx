@@ -36,9 +36,9 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlugIdOrToken() {
+export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id, token}
+    query: {slug, id}
   } = useRouter()
 
   const {data} = useArticleQuery({
@@ -51,8 +51,7 @@ export default function ArticleBySlugIdOrToken() {
 
   const containerProps = {
     slug,
-    id,
-    token
+    id
   } as ComponentProps<typeof ArticleContainer>
 
   return (
@@ -100,7 +99,7 @@ export default function ArticleBySlugIdOrToken() {
 export const getStaticPaths = getArticlePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug, id, token} = params || {}
+  const {slug, id} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -110,8 +109,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: ArticleDocument,
       variables: {
         slug,
-        id,
-        token
+        id
       }
     }),
     client.query({
@@ -146,6 +144,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

@@ -995,7 +995,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'TeaserGridBlock':
       return {
         key,
-        type: EditorBlockType.TeaserGrid1,
+        type: block.numColumns === 1 ? EditorBlockType.TeaserGrid1 : EditorBlockType.TeaserGrid6,
         value: {
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
