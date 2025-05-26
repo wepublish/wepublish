@@ -13,7 +13,7 @@ import {TeaserSlotsAutofillControls} from './teaserSlots/teaser-slots-autofill-c
 import {useTranslation} from 'react-i18next'
 import {ContentForTeaser} from './teaserGridBlock'
 import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
-import {IconButtonTooltip, PlaceholderInput} from '@wepublish/ui/editor'
+import {IconButtonTooltip, PlaceholderInput} from '../atoms'
 // import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
 
 const IconButton = styled(RIconButton)`
