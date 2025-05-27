@@ -13,7 +13,7 @@ import {
 export class TeaserSlotsAutofillConfig {
   @Field(() => Boolean)
   enabled!: boolean
-  @Field(() => TeaserType, {nullable: true})
+  @Field(() => TeaserType, {nullable: true, defaultValue: TeaserType.Article})
   teaserType?: TeaserType
   @Field(() => TeaserListBlockSort, {nullable: true, defaultValue: TeaserListBlockSort.PublishedAt})
   sort?: TeaserListBlockSort

@@ -230,6 +230,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         {type: TeaserSlotType.Manual},
         {type: TeaserSlotType.Manual}
       ],
+      autofillTeasers: [],
       teasers: []
     },
     label: 'blocks.teaserSlots.label',

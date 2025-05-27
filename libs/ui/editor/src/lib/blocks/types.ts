@@ -292,6 +292,7 @@ export interface TeaserSlotsBlockValue extends BaseBlockValue {
   title?: string | null
   autofillConfig: TeaserSlotsAutofillConfigInput
   slots: Array<TeaserSlot>
+  autofillTeasers: Array<Teaser | null>
   teasers: Array<Teaser | null>
 }
 
@@ -1026,7 +1027,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                 } as Teaser)
           })),
           autofillConfig: block.autofillConfig,
-          teasers: block.teasers.map(mapTeaserToQueryTeaser)
+          autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+          teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser)
         }
       }
 

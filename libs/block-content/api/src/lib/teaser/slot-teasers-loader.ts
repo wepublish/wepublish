@@ -54,9 +54,12 @@ export class SlotTeasersLoader {
     const blocks = []
     for (const block of revisionBlocks) {
       if (isTeaserSlotsBlock(block)) {
+        const autofillTeasers = await this.getAutofillTeasers(block)
+        const teasers = await this.getTeasers(block, autofillTeasers)
         blocks.push({
           ...block,
-          teasers: await this.getTeasers(block)
+          autofillTeasers,
+          teasers
         })
       } else {
         blocks.push(block)
@@ -65,7 +68,21 @@ export class SlotTeasersLoader {
     return blocks
   }
 
-  async getTeasers(slotsBlock: TeaserSlotsBlock): Promise<(typeof Teaser)[]> {
+  async getTeasers(
+    {slots}: TeaserSlotsBlock,
+    autofillTeasers: (typeof Teaser)[]
+  ): Promise<(typeof Teaser | null)[]> {
+    return slots?.map(({teaser: manualTeaser, type}, index) => {
+      const autofillIndex = slots
+        .slice(0, index)
+        .filter(slot => slot.type === TeaserSlotType.Autofill).length
+      return (
+        (type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex]) ?? null
+      )
+    })
+  }
+
+  async getAutofillTeasers(slotsBlock: TeaserSlotsBlock): Promise<(typeof Teaser)[]> {
     const {teaserType, sort, filter} = slotsBlock.autofillConfig
     const take = slotsBlock.slots.filter(({type}) => type === TeaserSlotType.Autofill).length
 

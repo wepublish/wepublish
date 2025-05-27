@@ -35,11 +35,7 @@ export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsCo
     })
   }
 
-  const sortOptions = [
-    {label: 'Published date', value: 'publishedAt'},
-    {label: 'Created date', value: 'createdAt'},
-    {label: 'Title', value: 'title'}
-  ]
+  const sortOptions = [{label: 'Published date', value: 'PublishedAt'}]
 
   return (
     <ConfigContainer>
@@ -49,7 +45,7 @@ export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsCo
           defaultTags={[]}
           name="tags"
           tagType={TagType.Article}
-          setSelectedTags={tags => handleChange('filter', {tags} ?? [])}
+          setSelectedTags={tags => handleChange('filter', {tags})}
           selectedTags={config.filter?.tags}
         />
         <HelpText>Enter tags separated by commas. Leave empty for no tag filtering.</HelpText>

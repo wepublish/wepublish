@@ -3385,7 +3385,7 @@ export type TeaserSlotsAutofillConfig = BaseBlock & {
   enabled: Scalars['Boolean'];
   filter?: Maybe<TeaserListBlockFilter>;
   sort?: Maybe<TeaserListBlockSort>;
-  teaserType?: Maybe<TeaserType>;
+  teaserType: TeaserType;
   type: BlockType;
 };
 
@@ -3393,12 +3393,13 @@ export type TeaserSlotsAutofillConfigInput = {
   enabled: Scalars['Boolean'];
   filter?: InputMaybe<TeaserListBlockFilterInput>;
   sort?: InputMaybe<TeaserListBlockSort>;
-  teaserType?: InputMaybe<TeaserType>;
+  teaserType?: TeaserType;
 };
 
 export type TeaserSlotsBlock = BaseBlock & {
   __typename?: 'TeaserSlotsBlock';
   autofillConfig: TeaserSlotsAutofillConfig;
+  autofillTeasers: Array<Maybe<Teaser>>;
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   slots: Array<TeaserSlot>;

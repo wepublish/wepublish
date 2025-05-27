@@ -13,10 +13,10 @@ import {
   ListicleItemInput,
   PollBlockInput,
   TeaserGridBlockInput,
+  TeaserGridFlexBlockInput,
   TeaserListBlockInput,
   TeaserSlotsBlockInput,
-  TeaserGridFlexBlockInput,
-  TeaserListBlockInput
+  TeaserType
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {createSafeHostUrl} from '@wepublish/peering/api'
@@ -33,8 +33,7 @@ import {
   ArticleQuery,
   ArticleQueryVariables,
   DateFilter as GqlDateFilter,
-  FullImageFragment,
-  TeaserType
+  FullImageFragment
 } from './graphql'
 import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
 

@@ -1942,11 +1942,12 @@ input TeaserSlotsAutofillConfigInput {
   enabled: Boolean!
   filter: TeaserListBlockFilterInput
   sort: TeaserListBlockSort = PublishedAt
-  teaserType: TeaserType
+  teaserType: TeaserType = Article
 }
 
 type TeaserSlotsBlock implements BaseBlock {
   autofillConfig: TeaserSlotsAutofillConfig!
+  autofillTeasers: [Teaser!]!
   blockStyle: String
   blockStyleName: String
   slots: [TeaserSlot!]!
