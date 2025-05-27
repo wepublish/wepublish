@@ -2378,6 +2378,7 @@ export type PeerProfile = {
   hostURL: Scalars['String'];
   logo?: Maybe<Image>;
   name: Scalars['String'];
+  squareLogo?: Maybe<Image>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
   websiteURL: Scalars['String'];
