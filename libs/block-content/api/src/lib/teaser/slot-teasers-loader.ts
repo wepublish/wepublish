@@ -95,7 +95,7 @@ export class SlotTeasersLoader {
           } as ArticleTeaser)
       )
 
-      this.loadedTeasers.push(...teasers)
+      this.addLoadedTeaser(...teasers)
       return teasers
     }
 
@@ -119,7 +119,7 @@ export class SlotTeasersLoader {
             title: undefined
           } as EventTeaser)
       )
-      this.loadedTeasers.push(...teasers)
+      this.addLoadedTeaser(...teasers)
       return teasers
     }
 
