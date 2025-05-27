@@ -1,5 +1,10 @@
-import {ThemeProvider} from '@mui/material'
-import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
+import styled from '@emotion/styled'
+import {
+  ArticleContainer,
+  ArticleInfoWrapper,
+  ArticleListContainer,
+  ArticleWrapper
+} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
@@ -20,7 +25,11 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import {articleTheme} from '../../src/theme'
+const Article = styled(ArticleContainer)`
+  ${ArticleInfoWrapper} {
+    grid-row-start: 3;
+  }
+`
 
 export default function ArticleBySlugOrId() {
   const {
@@ -44,8 +53,8 @@ export default function ArticleBySlugOrId() {
   } as ComponentProps<typeof ArticleContainer>
 
   return (
-    <ThemeProvider theme={articleTheme}>
-      <ArticleContainer {...containerProps} />
+    <>
+      <Article {...containerProps} />
 
       {data?.article && (
         <ArticleWrapper>
@@ -66,7 +75,7 @@ export default function ArticleBySlugOrId() {
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}
-    </ThemeProvider>
+    </>
   )
 }
 

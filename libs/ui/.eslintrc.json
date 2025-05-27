@@ -7,7 +7,7 @@
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
         "no-empty": "warn",
-        "react/display-name": [0],
+        "react/display-name": false,
         "react/jsx-boolean-value": [1],
         "react/prop-types": [0],
         "i18next/no-literal-string": [

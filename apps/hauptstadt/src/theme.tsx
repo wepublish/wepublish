@@ -1,5 +1,7 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
-import {theme as WePTheme} from '@wepublish/ui'
+import {createBreakpoints} from '@mui/system'
+import {deepmerge} from '@mui/utils'
+import {responsiveProperty, theme as WePTheme} from '@wepublish/ui'
 import localFont from 'next/font/local'
 import {PartialDeep} from 'type-fest'
 
@@ -125,19 +127,32 @@ const {
   palette: {augmentColor}
 } = WePTheme
 
-const theme = createTheme(WePTheme, {
+const variablesTheme = createTheme(WePTheme, {
+  breakpoints: createBreakpoints({
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1088,
+      xl: 1088
+    }
+  }),
   palette: {
     primary: augmentColor({color: {main: '#abd8da'}}),
     secondary: augmentColor({color: {main: '#272727'}}),
     accent: augmentColor({color: {main: '#f3ded0'}}),
     success: augmentColor({color: {main: '#abd8da'}}),
     warning: augmentColor({color: {main: '#f4e7bd'}})
-  },
+  }
+} as PartialDeep<Theme> | ThemeOptions)
+
+const theme = createTheme(variablesTheme, {
   typography: {
     allVariants: {
       lineHeight: 1.25,
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     },
+    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
     h1: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
@@ -164,14 +179,12 @@ const theme = createTheme(WePTheme, {
     },
     body1: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.25
+      lineHeight: 1.6,
+      fontSize: '1.125rem'
     },
     body2: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.25
-    },
-    button: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
     },
     caption: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
@@ -189,20 +202,97 @@ const theme = createTheme(WePTheme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.3
     },
-    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1088
+    button: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
+    },
+    // Teaser
+    teaserTitle: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 22,
+        min: 20,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      }),
+      marginBottom: '8px'
+    },
+    teaserLead: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 16,
+        min: 14,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      })
+    },
+    teaserMeta: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 10,
+        min: 10,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      })
+    },
+    teaserPretitle: {
+      transform: 'unset',
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 
-export const articleTheme = createTheme(theme, {
-  breakpoints: WePTheme.breakpoints.values
+export const alternatingTeaserTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      ...deepmerge(
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          max: 32,
+          min: 24,
+          unit: 'rem',
+          breakpoints: Object.values(variablesTheme.breakpoints.values)
+        }),
+        responsiveProperty({
+          cssProperty: 'marginBottom',
+          max: 24,
+          min: 8,
+          unit: 'px',
+          breakpoints: Object.values(variablesTheme.breakpoints.values)
+        })
+      )
+    },
+    teaserLead: {
+      lineHeight: 'inherit',
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 21,
+        min: 16,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      })
+    },
+    teaserMeta: {
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 14,
+        min: 12,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      })
+    },
+    teaserPretitle: {
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 20,
+        min: 16,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      })
+    }
+  }
 } as PartialDeep<Theme> | ThemeOptions)
 
 export {theme as default}

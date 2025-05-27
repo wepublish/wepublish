@@ -50,7 +50,6 @@ import {
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserListBlockProps,
-  BuilderTeaserProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
@@ -112,6 +111,7 @@ import {
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
 import {BuilderContentWrapperProps} from './content-wrapper.interface'
+import {BuilderTeaserProps} from './teaser.interface'
 
 const NoComponent = () => null
 

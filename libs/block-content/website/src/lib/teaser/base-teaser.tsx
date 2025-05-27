@@ -1,4 +1,4 @@
-import {Chip, css, SxProps, Theme} from '@mui/material'
+import {Chip, css, SxProps, Theme, Typography} from '@mui/material'
 import styled from '@emotion/styled'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
@@ -287,8 +287,6 @@ export const TeaserPreTitle = styled('div')`
   background-color: ${({theme}) => theme.palette.accent.main};
   color: ${({theme}) => theme.palette.accent.contrastText};
   width: fit-content;
-  font-size: 14px;
-  font-weight: 300;
   transform: translateY(-100%);
 
   :where(${TeaserWrapper}:hover &) {
@@ -302,8 +300,6 @@ export const TeaserPreTitle = styled('div')`
 `
 
 export const TeaserMetadata = styled('div')`
-  margin: 0;
-  font-size: 12px;
   grid-area: authors;
 `
 
@@ -352,7 +348,7 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
 
   const {
     date,
-    elements: {Image, Paragraph, H4}
+    elements: {Image}
   } = useWebsiteBuilder()
 
   return (
@@ -364,17 +360,23 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
 
         {preTitle && (
           <TeaserPreTitleWrapper>
-            <TeaserPreTitle>{preTitle}</TeaserPreTitle>
+            <Typography variant="teaserPretitle" component={TeaserPreTitle}>
+              {preTitle}
+            </Typography>
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
 
-        <H4 component={TeaserTitle} gutterBottom>
+        <Typography variant="teaserTitle" component={TeaserTitle}>
           {title}
-        </H4>
-        {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
+        </Typography>
+        {lead && (
+          <Typography variant="teaserLead" component={TeaserLead}>
+            {lead}
+          </Typography>
+        )}
 
-        <TeaserMetadata>
+        <Typography variant="teaserMeta" component={TeaserMetadata}>
           {authors && authors?.length ? (
             <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
           ) : null}
@@ -385,7 +387,7 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
               {date.format(new Date(publishDate), false)}{' '}
             </TeaserTime>
           )}
-        </TeaserMetadata>
+        </Typography>
 
         {!!tags?.length && (
           <TeaserTags>

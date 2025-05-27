@@ -4,8 +4,8 @@ import {
   TeaserPreTitleWrapper
 } from '../../teaser/base-teaser'
 import {css} from '@emotion/react'
-import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {memo} from 'react'
+import styled from '@emotion/styled'
+import {BaseTeaser, BuilderTeaserProps} from '@wepublish/website/builder'
 
 export const teaserLeftImage = css`
   grid-template-areas:
@@ -16,7 +16,6 @@ export const teaserLeftImage = css`
     'image authors'
     'image .';
   grid-template-columns: ${(100 / 12) * 7}% 1fr;
-  grid-template-rows: repeat(6, minmax(0, auto));
 `
 
 export const teaserRightImage = css`
@@ -28,10 +27,15 @@ export const teaserRightImage = css`
     'authors image'
     '. image';
   grid-template-columns: 1fr ${(100 / 12) * 7}%;
-  grid-template-rows: repeat(6, minmax(0, auto));
 `
 
-export const alternatingTeaser = css`
+export const AltTeaser = styled(BaseTeaser)`
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-rows: repeat(6, minmax(0, auto));
+
+    ${({index}) => ((index ?? 0) % 2 === 0 ? teaserRightImage : teaserLeftImage)}
+  }
+
   ${TeaserPreTitleNoContent} {
     grid-area: pretitle;
     width: 20%;
@@ -48,21 +52,6 @@ export const alternatingTeaser = css`
   }
 `
 
-export const AlternatingTeaser = memo((props: BuilderTeaserProps) => {
-  const {
-    blocks: {BaseTeaser}
-  } = useWebsiteBuilder()
-
-  return (
-    <BaseTeaser
-      {...props}
-      css={theme => css`
-        ${alternatingTeaser}
-
-        ${theme.breakpoints.up('md')} {
-          ${(props.index ?? 0) % 2 === 0 ? teaserRightImage : teaserLeftImage}
-        }
-      `}
-    />
-  )
-})
+export const AlternatingTeaser = ({alignment, ...props}: BuilderTeaserProps) => {
+  return <AltTeaser {...props} alignment={{...alignment, w: 1}} />
+}

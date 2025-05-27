@@ -20,4 +20,9 @@ export * from './lib/user.interface'
 export * from './lib/website-builder.context'
 export * from './lib/hooks/use-async-action'
 export * from './lib/api-alert'
+
 export * from './lib/content-wrapper.interface'
+export * from './lib/content-wrapper.component'
+
+export * from './lib/teaser.interface'
+export * from './lib/teaser.component'

@@ -1,14 +1,12 @@
 import {
   BlockContent,
   EventBlock,
-  FlexAlignment,
   HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
-  Teaser,
   TeaserGridBlock,
   TwitterTweetBlock,
   FacebookPostBlock,
@@ -81,21 +79,3 @@ export type BuilderTeaserGridBlockProps = Omit<TeaserGridBlock, 'type'> & {
 export type BuilderTeaserListBlockProps = Omit<TeaserListBlock, 'type'> & {
   className?: string
 }
-
-type TeaserTypeProps =
-  | {
-      blockStyle: string | null | undefined
-      teaser?: Teaser | null | undefined
-      alignment: FlexAlignment
-      numColumns?: never
-      index: number
-    }
-  | {
-      blockStyle: string | null | undefined
-      teaser: Teaser | null | undefined
-      alignment: FlexAlignment
-      numColumns: number
-      index: number
-    }
-
-export type BuilderTeaserProps = TeaserTypeProps & {className?: string}

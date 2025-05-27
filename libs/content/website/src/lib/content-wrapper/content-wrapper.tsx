@@ -11,7 +11,10 @@ import {
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper
 } from '@wepublish/block-content/website'
-import {BuilderContentWrapperProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderContentWrapperProps,
+  ContentWrapper as BuilderContentWrapper
+} from '@wepublish/website/builder'
 
 export const ContentWidthContext = createContext({
   fullWidth: false
@@ -65,8 +68,7 @@ export const ContentWrapperStyled = styled('article')<BuilderContentWrapperProps
 `
 
 export const ContentWrapper = (props: BuilderContentWrapperProps) => {
-  const {ContentWrapper: Cmp} = useWebsiteBuilder()
   const fullWidth = useFullWidthContent()
 
-  return <Cmp fullWidth={fullWidth} {...props} />
+  return <BuilderContentWrapper fullWidth={fullWidth} {...props} />
 }

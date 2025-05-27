@@ -4,7 +4,9 @@ import {
   SimplePaletteColorOptions,
   Theme as MaterialTheme
 } from '@mui/material'
-import {createBreakpoints} from '@mui/system'
+import {TypographyStyleOptions} from '@mui/material/styles/createTypography'
+import {createBreakpoints, Theme, ThemeProvider} from '@mui/system'
+import {ComponentType, memo} from 'react'
 
 const {
   palette: {augmentColor},
@@ -17,12 +19,28 @@ declare module '@emotion/react' {
 }
 
 declare module '@mui/material/styles' {
+  // Palette
   interface Palette {
     accent: SimplePaletteColorOptions
   }
 
   interface PaletteOptions {
     accent: SimplePaletteColorOptions
+  }
+
+  // Typography
+  interface TypographyVariants {
+    teaserPretitle: TypographyStyleOptions
+    teaserTitle: TypographyStyleOptions
+    teaserLead: TypographyStyleOptions
+    teaserMeta: TypographyStyleOptions
+  }
+
+  interface TypographyVariantsOptions {
+    teaserPretitle?: TypographyStyleOptions
+    teaserTitle?: TypographyStyleOptions
+    teaserLead?: TypographyStyleOptions
+    teaserMeta?: TypographyStyleOptions
   }
 }
 
@@ -32,11 +50,23 @@ declare module '@mui/material/Button' {
   }
 }
 
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    teaserPretitle: true
+    teaserTitle: true
+    teaserLead: true
+    teaserMeta: true
+  }
+}
+
+export const baseTheme = createTheme()
+
 export const theme = createTheme({
   typography: {
     allVariants: {
       lineHeight: 1.4
     },
+    fontFamily: ['Merriweather', 'Roboto', 'sans-serif'].join(','),
     h1: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
@@ -56,10 +86,7 @@ export const theme = createTheme({
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
-      fontSize: '1.625rem',
-      '@media (min-width: 900px)': {
-        fontSize: '2rem'
-      }
+      fontSize: '1.625rem'
     },
     h5: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
@@ -72,7 +99,29 @@ export const theme = createTheme({
     body1: {
       lineHeight: 1.7
     },
-    fontFamily: ['Merriweather', 'Roboto', 'sans-serif'].join(',')
+
+    teaserTitle: {
+      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontWeight: 600,
+      lineHeight: 1.15,
+      fontSize: '1.625rem',
+      marginBottom: `0.35em`,
+      [baseTheme.breakpoints.up('md')]: {
+        fontSize: '2rem'
+      }
+    },
+    teaserPretitle: {
+      fontSize: '0.875rem',
+      fontWeight: 300
+    },
+    teaserLead: {
+      lineHeight: 1.7,
+      marginBottom: baseTheme.spacing(3),
+      fontSize: '1rem'
+    },
+    teaserMeta: {
+      fontSize: '0.75rem'
+    }
   },
   palette: {
     primary: augmentColor({color: {main: '#e91e63'}}),
@@ -149,3 +198,63 @@ export const theme = createTheme({
     }
   })
 })
+
+export const createWithTheme = <
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  P extends object
+>(
+  ControlledComponent: ComponentType<P>,
+  theme: Theme
+) =>
+  memo<P>(props => (
+    <ThemeProvider theme={theme}>
+      <ControlledComponent {...(props as P)} />
+    </ThemeProvider>
+  ))
+
+export function responsiveProperty({
+  cssProperty,
+  min,
+  max,
+  unit = 'rem',
+  breakpoints,
+  transform
+}: {
+  cssProperty: keyof TypographyStyleOptions
+  min: number
+  max: number
+  unit: 'rem' | 'em' | 'px'
+  breakpoints: number[]
+  transform?: (number: number) => number
+}): TypographyStyleOptions {
+  if (unit === 'rem') {
+    min = min / 16
+    max = max / 16
+  }
+
+  const output: TypographyStyleOptions = {
+    [cssProperty]: `${min}${unit}`
+  }
+
+  if (min !== max) {
+    const factor = (max - min) / breakpoints[breakpoints.length - 1]
+
+    breakpoints.forEach(breakpoint => {
+      if (!breakpoint) {
+        return
+      }
+
+      let value = min + factor * breakpoint
+
+      if (transform) {
+        value = transform(value)
+      }
+
+      output[`@media (min-width:${breakpoint}px)`] = {
+        [cssProperty]: `${Math.round(value * 10000) / 10000}${unit}`
+      }
+    })
+  }
+
+  return output
+}

@@ -21,15 +21,19 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
         }
 
         & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
-          grid-column: 6/32;
+          grid-column: 4/34;
         }
 
         & > :is(${BreakBlockWrapper}) {
           grid-column: 9/29;
         }
 
-        & > ${ArticleListWrapper}, & > ${CommentListWrapper} {
-          grid-column: 6/32 !important;
+        && > ${ArticleListWrapper} {
+          grid-column: -1/1;
+        }
+
+        && > ${CommentListWrapper} {
+          grid-column: 8/30;
         }
       }
     `}
