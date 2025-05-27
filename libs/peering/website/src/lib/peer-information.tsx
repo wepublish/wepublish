@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {BuilderPeerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {ContentWrapper} from '@wepublish/content/website'
 
 export const PeerInformationWrapper = styled('aside')`
   display: grid;
@@ -32,26 +33,28 @@ export function PeerInformation({profile, originUrl, className}: BuilderPeerProp
   } = useWebsiteBuilder()
 
   return (
-    <PeerInformationWrapper className={className}>
-      <PeerInformationName>
-        {profile?.callToActionImage && <Image image={profile.callToActionImage} />}
-      </PeerInformationName>
+    <ContentWrapper>
+      <PeerInformationWrapper className={className}>
+        <PeerInformationName>
+          {profile?.callToActionImage && <Image image={profile.callToActionImage} />}
+        </PeerInformationName>
 
-      <PeerInformationCTA>
-        <Button
-          variant="contained"
-          color="primary"
-          href={profile?.callToActionURL ?? profile?.websiteURL}
-          LinkComponent={Link}>
-          <RichText richText={profile?.callToActionText ?? []} />
-        </Button>
-      </PeerInformationCTA>
+        <PeerInformationCTA>
+          <Button
+            variant="contained"
+            color="primary"
+            href={profile?.callToActionURL ?? profile?.websiteURL}
+            LinkComponent={Link}>
+            <RichText richText={profile?.callToActionText ?? []} />
+          </Button>
+        </PeerInformationCTA>
 
-      {originUrl && (
-        <PeerInformationOrigin>
-          <Link href={originUrl}>Zum Originalartikel</Link>
-        </PeerInformationOrigin>
-      )}
-    </PeerInformationWrapper>
+        {originUrl && (
+          <PeerInformationOrigin>
+            <Link href={originUrl}>Zum Originalartikel</Link>
+          </PeerInformationOrigin>
+        )}
+      </PeerInformationWrapper>
+    </ContentWrapper>
   )
 }
