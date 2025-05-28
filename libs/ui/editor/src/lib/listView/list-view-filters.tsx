@@ -7,7 +7,6 @@ import {
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
-  useTagListLazyQuery,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
 import {useEffect, useMemo, useState} from 'react'
@@ -36,7 +35,7 @@ import {
   PeerArticleFilter
 } from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
-import {TagCheckPicker, TagRefFragment} from '../panel/tagCheckPicker'
+import {SelectTags} from '../atoms/tag/selectTags'
 
 const {Group} = RForm
 
@@ -122,7 +121,13 @@ export interface ListViewFiltersProps {
   tagType?: TagType
 }
 
-export function ListViewFilters({fields, filter, onSetFilter, className}: ListViewFiltersProps) {
+export function ListViewFilters({
+  fields,
+  filter,
+  onSetFilter,
+  className,
+  tagType
+}: ListViewFiltersProps) {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
@@ -146,10 +151,6 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
   })
 
   const [pollFetch, {data: pollData}] = usePollLazyQuery({
-    fetchPolicy: 'network-only'
-  })
-
-  const [tagFetch, {data: tagData}] = useTagListLazyQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -288,7 +289,6 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
   }
 
   const authorsData = filter?.authors?.map(author => ({id: author})) || []
-  const tagsData = filter?.tags?.map(tag => ({id: tag})) || []
   return (
     <>
       <Form className={className}>
@@ -434,11 +434,11 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
 
         {fields.includes('tags') && (
           <Group style={formInputStyle}>
-            <TagCheckPicker
-              list={tagsData as TagRefFragment[]}
-              onChange={value => {
-                return updateFilter({tags: value ? value.map(tag => tag.id) : []})
-              }}
+            <SelectTags
+              defaultTags={[]}
+              tagType={tagType ?? TagType.Article}
+              setSelectedTags={tags => updateFilter({tags})}
+              placeholder={t('navbar.articleTags')}
             />
           </Group>
         )}

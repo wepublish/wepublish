@@ -40,6 +40,7 @@ import fr from './locales/rsuiteFr'
 import {Login} from './login'
 import {ArticleEditor} from './routes/articles/articleEditor'
 import {ArticleList} from './routes/articles/articleList'
+import {AudienceDashboard} from './routes/audience/audience-dashboard'
 import {AuthorList} from './routes/authors/authorList'
 import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
@@ -603,6 +604,17 @@ export function App() {
                 </Base>
               }
             />
+
+            {/* Audience Routes */}
+            <Route
+              path="audience/dashboard"
+              element={
+                <Base>
+                  <AudienceDashboard />
+                </Base>
+              }
+            />
+
             {/* Subscription Routes */}
             <Route
               path="subscriptions"

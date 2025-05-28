@@ -67,7 +67,7 @@ export class CrowdfundingService {
           return true
         }
 
-        return true
+        return false
       })
 
     if (!activeGoal) {

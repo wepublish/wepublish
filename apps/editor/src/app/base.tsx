@@ -26,6 +26,7 @@ import {
   MdLogout,
   MdMail,
   MdMoney,
+  MdMultilineChart,
   MdOutgoingMail,
   MdOutlineGridView,
   MdPersonAddAlt1,
@@ -559,12 +560,20 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_SUBSCRIPTION',
                     'CAN_GET_SUBSCRIPTIONS',
                     'CAN_GET_SUBSCRIPTION',
-                    'CAN_DELETE_SUBSCRIPTION'
+                    'CAN_DELETE_SUBSCRIPTION',
+                    'CAN_GET_AUDIENCE_STATS'
                   ]}>
-                  <Nav.Menu
-                    eventKey={'usersAndMembers'}
-                    title={t('navbar.usersAndMembers')}
-                    icon={<MdGroups />}>
+                  <Nav.Menu eventKey={'audience'} title={t('navbar.audience')} icon={<MdGroups />}>
+                    <PermissionControl qualifyingPermissions={['CAN_GET_AUDIENCE_STATS']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/audience/dashboard"
+                        active={path.includes('audience/dashboard')}
+                        icon={<MdMultilineChart />}>
+                        {t('navbar.audienceDashboard')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     <Nav.Item
                       as={NavLink}
                       href="/users"

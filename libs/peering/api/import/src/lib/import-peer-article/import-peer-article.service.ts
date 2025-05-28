@@ -4,17 +4,10 @@ import {ArticleDataloaderService} from '@wepublish/article/api'
 import {
   BlockContentInput,
   BlockType,
-  CommentBlockInput,
-  EventBlockInput,
-  HTMLBlockInput,
   ImageGalleryBlockInput,
   ImageGalleryImageInput,
   ListicleBlockInput,
-  ListicleItemInput,
-  PollBlockInput,
-  TeaserGridBlockInput,
-  TeaserGridFlexBlockInput,
-  TeaserListBlockInput
+  ListicleItemInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
 import {createSafeHostUrl} from '@wepublish/peering/api'
@@ -294,7 +287,7 @@ export class ImportPeerArticleService {
     //@TODO: Maybe copy block style? (search for identical blockStyleName + blockType)
 
     return Promise.all(
-      blocks.map(async block => {
+      blocks.flatMap(async block => {
         switch (block.__typename) {
           case 'BreakBlock':
           case 'QuoteBlock':
@@ -352,75 +345,7 @@ export class ImportPeerArticleService {
             } as ImageGalleryBlockInput
           }
 
-          case 'CommentBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.Comment,
-              filter: {
-                comments: [],
-                tags: []
-              }
-            } as CommentBlockInput
-          }
-
-          case 'EventBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.Event,
-              filter: {
-                events: [],
-                tags: []
-              }
-            } as EventBlockInput
-          }
-
-          case 'PollBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.Poll,
-              pollId: undefined
-            } as PollBlockInput
-          }
-
-          case 'TeaserGridBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.TeaserGrid,
-              teasers: [new Array(block.numColumns === 1 ? 1 : 6).map(() => null)]
-            } as TeaserGridBlockInput
-          }
-
-          case 'TeaserGridFlexBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.TeaserGridFlex,
-              flexTeasers: []
-            } as TeaserGridFlexBlockInput
-          }
-
-          case 'TeaserListBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.TeaserList,
-              filter: {
-                tags: []
-              },
-              teaserType: lower(block.teaserType),
-              sort: block.sort ? lower(block.sort) : null
-            } as TeaserListBlockInput
-          }
-
-          case 'HTMLBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.HTML
-            } as HTMLBlockInput
-          }
-
-          case 'CrowdfundingBlock':
-          case 'UnknownBlock':
           case 'TitleBlock':
-          case 'BildwurfAdBlock':
           case 'IFrameBlock':
           case 'PolisConversationBlock':
           case 'YouTubeVideoBlock':
@@ -431,8 +356,7 @@ export class ImportPeerArticleService {
           case 'SoundCloudTrackBlock':
           case 'TikTokVideoBlock':
           case 'TwitterTweetBlock':
-          case 'RichTextBlock':
-          case 'SubscribeBlock': {
+          case 'RichTextBlock': {
             return {
               ...stripUnwantedProperties(block),
               type: lower(block.type)
@@ -442,8 +366,7 @@ export class ImportPeerArticleService {
           }
 
           default: {
-            const _exhaustiveCheck: never = block
-            throw new Error(`Unhandled case: ${block}`)
+            return []
           }
         }
       })

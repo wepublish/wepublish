@@ -254,10 +254,9 @@ model Image {
   height      Int
   width       Int
 
-  Author      Author[]
-  MemberPlan  MemberPlan[]
-  PeerProfile PeerProfile[]
-  Comment     Comment[]
+  Author     Author[]
+  MemberPlan MemberPlan[]
+  Comment    Comment[]
 
   articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
   articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
@@ -272,7 +271,9 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  banners Banner[]
+  banners               Banner[]
+  peerProfileLogo       PeerProfile[] @relation("logo")
+  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -728,7 +729,10 @@ model PeerProfile {
   callToActionImageID  String?
 
   logoID String?
-  logo   Image?  @relation(fields: [logoID], references: [id])
+  logo   Image?  @relation("logo", fields: [logoID], references: [id])
+
+  squareLogoId String?
+  squareLogo   Image?  @relation("squareLogo", fields: [squareLogoId], references: [id])
 
   @@map("peerProfiles")
 }

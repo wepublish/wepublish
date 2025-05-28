@@ -41,6 +41,7 @@ type Query {
 type PeerProfile {
   name: String!
   logo: Image
+  squareLogo: Image
   themeColor: Color!
   themeFontColor: Color!
   hostURL: String!
@@ -830,6 +831,7 @@ type Mutation {
 input PeerProfileInput {
   name: String!
   logoID: String
+  squareLogoId: String
   themeColor: Color!
   themeFontColor: Color!
   callToActionText: RichText!

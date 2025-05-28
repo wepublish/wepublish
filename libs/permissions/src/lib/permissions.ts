@@ -790,6 +790,12 @@ export const CanDeleteBlockStyle: Permission = {
   deprecated: false
 }
 
+export const CanGetAudienceStats: Permission = {
+  id: 'CAN_GET_AUDIENCE_STATS',
+  description: 'Allows reading statistics about the audience.',
+  deprecated: false
+}
+
 /**
  * Paywall
  */
@@ -933,7 +939,8 @@ export const AllPermissions: Permission[] = [
   CanDeleteBlockStyle,
   CanCreatePaywall,
   CanUpdatePaywall,
-  CanDeletePaywall
+  CanDeletePaywall,
+  CanGetAudienceStats
 ]
 
 export const EditorPermissions: Permission[] = [

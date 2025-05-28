@@ -196,10 +196,6 @@ const modelFieldDefinitions = [{
                 type: "MemberPlan",
                 relationName: "ImageToMemberPlan"
             }, {
-                name: "PeerProfile",
-                type: "PeerProfile",
-                relationName: "ImageToPeerProfile"
-            }, {
                 name: "Comment",
                 type: "Comment",
                 relationName: "CommentToImage"
@@ -239,6 +235,14 @@ const modelFieldDefinitions = [{
                 name: "banners",
                 type: "Banner",
                 relationName: "BannerToImage"
+            }, {
+                name: "peerProfileLogo",
+                type: "PeerProfile",
+                relationName: "logo"
+            }, {
+                name: "peerProfileSquareLogo",
+                type: "PeerProfile",
+                relationName: "squareLogo"
             }]
     }, {
         name: "CommentsRevisions",
@@ -538,7 +542,11 @@ const modelFieldDefinitions = [{
         fields: [{
                 name: "logo",
                 type: "Image",
-                relationName: "ImageToPeerProfile"
+                relationName: "logo"
+            }, {
+                name: "squareLogo",
+                type: "Image",
+                relationName: "squareLogo"
             }]
     }, {
         name: "Peer",
@@ -3313,6 +3321,9 @@ export function definePaymentFactory(options) {
 function isPeerProfilelogoFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
+function isPeerProfilesquareLogoFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
+}
 function autoGeneratePeerProfileScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "PeerProfile", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -3341,7 +3352,10 @@ function definePeerProfileFactoryInternal({ defaultData: defaultDataResolver, tr
             const defaultAssociations = {
                 logo: isPeerProfilelogoFactory(defaultData.logo) ? {
                     create: yield defaultData.logo.build()
-                } : defaultData.logo
+                } : defaultData.logo,
+                squareLogo: isPeerProfilesquareLogoFactory(defaultData.squareLogo) ? {
+                    create: yield defaultData.squareLogo.build()
+                } : defaultData.squareLogo
             };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
