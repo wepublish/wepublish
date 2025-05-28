@@ -1,7 +1,6 @@
 import {Meta} from '@storybook/react'
 import {TeaserSlotsBlock} from './teaser-slots-block'
-import {mockArticleTeaser, mockEventTeaser, mockPageTeaser} from '@wepublish/storybook/mocks'
-import {Teaser} from '@wepublish/website/api'
+import {mockArticleTeaser} from '@wepublish/storybook/mocks'
 
 export default {
   component: TeaserSlotsBlock,
