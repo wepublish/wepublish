@@ -12,6 +12,7 @@ describe('BannerResolver', () => {
     id: '1',
     imageId: '123',
     active: true,
+    delay: 0,
     title: '',
     text: '',
     showOnArticles: false,
@@ -137,6 +138,7 @@ describe('BannerResolver', () => {
       const createInput = {
         name: 'New Banner',
         active: true,
+        delay: 0,
         title: 'New Banner Title',
         text: 'New Banner Text',
         showOnArticles: false,
@@ -153,6 +155,7 @@ describe('BannerResolver', () => {
         title: 'Updated Banner Title',
         text: 'Updated Banner Text',
         active: true,
+        delay: 0,
         showOnArticles: false,
         showForLoginStatus: LoginStatus.ALL,
         actions: []
