@@ -40,13 +40,13 @@ export class ArticleService {
     take = 10,
     skip
   }: ArticleListArgs) {
-    const orderBy = createArticleOrder(sort, order)
-    const where = createArticleFilter(filter ?? {})
-
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body)
       filter.id = articleIds
     }
+
+    const orderBy = createArticleOrder(sort, order)
+    const where = createArticleFilter(filter ?? {})
 
     const [totalCount, articles] = await Promise.all([
       this.prisma.article.count({
