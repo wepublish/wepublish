@@ -8,6 +8,13 @@ import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatCurrency} from '../formatters/format-currency'
 import {Currency} from '@wepublish/website/api'
+import {
+  canPayInvoice,
+  isBexio,
+  isInvoiceActive,
+  isPayrexxSubscription,
+  isSepa
+} from './invoice-list'
 
 export const InvoiceListItemWrapper = styled('div')`
   display: grid;
@@ -48,19 +55,7 @@ export const InvoiceListItemActions = styled('div')`
   }
 `
 
-export function InvoiceListItem({
-  id,
-  total,
-  paidAt,
-  createdAt,
-  canceledAt,
-  dueAt,
-  subscription,
-  isSepa,
-  canPay,
-  pay,
-  className
-}: BuilderInvoiceListItemProps) {
+export function InvoiceListItem({invoice, pay, className}: BuilderInvoiceListItemProps) {
   const {
     meta: {locale},
     elements: {H6, Button, Alert, Link},
@@ -71,19 +66,18 @@ export function InvoiceListItem({
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
 
+  const {canceledAt, paidAt, subscription, dueAt, id, createdAt, total} = invoice
+
   const showPayrexxSubscriptionWarning = useMemo(
     () =>
-      subscription?.paymentMethod.slug === 'payrexx-subscription' &&
-      new Date() > new Date(dueAt) &&
-      !canceledAt &&
-      !paidAt,
-    [canceledAt, dueAt, paidAt, subscription?.paymentMethod.slug]
+      isPayrexxSubscription(invoice) && isInvoiceActive(invoice) && new Date() > new Date(dueAt),
+    [invoice, dueAt]
   )
 
   return (
     <InvoiceListItemWrapper className={className}>
       <InvoiceListItemContent>
-        {!paidAt && !canceledAt && (
+        {isInvoiceActive(invoice) && (
           <H6>Offene Rechnung {subscription && <>für {subscription.memberPlan.name}</>}</H6>
         )}
 
@@ -99,7 +93,6 @@ export function InvoiceListItem({
           <InvoiceListItemMetaItem>
             <MdOutlineInfo /> Rechnungs-Nr: {id}
           </InvoiceListItemMetaItem>
-
           <InvoiceListItemMetaItem>
             <MdCalendarMonth />
             <span>
@@ -110,7 +103,7 @@ export function InvoiceListItem({
             </span>
           </InvoiceListItemMetaItem>
 
-          {!isSepa && (
+          {!isSepa(invoice) && (
             <InvoiceListItemMetaItem>
               <MdOutlineWarning />
               <span>
@@ -121,7 +114,6 @@ export function InvoiceListItem({
               </span>
             </InvoiceListItemMetaItem>
           )}
-
           <InvoiceListItemMetaItem>
             <MdAttachMoney /> Betrag von{' '}
             {formatCurrency(total / 100, subscription?.memberPlan.currency ?? Currency.Chf, locale)}
@@ -148,7 +140,7 @@ export function InvoiceListItem({
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
-        {canPay && (
+        {canPayInvoice(invoice) && (
           <InvoiceListItemActions>
             <Button onClick={callAction(pay)} disabled={loading}>
               Jetzt Bezahlen
@@ -156,11 +148,15 @@ export function InvoiceListItem({
           </InvoiceListItemActions>
         )}
 
-        {isSepa && (
+        {isSepa(invoice) && (
           <Alert severity="warning">
             Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage
             in Anspruch nehmen.
           </Alert>
+        )}
+
+        {isBexio(invoice) && (
+          <Alert severity="warning">Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.</Alert>
         )}
 
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}

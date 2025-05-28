@@ -36,10 +36,9 @@ export type BuilderSubscriptionListProps = Pick<
   onExtend?: (subscriptionId: string) => Promise<void>
 }
 
-export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
+export type BuilderInvoiceListItemProps = {
   className?: string
-  isSepa?: boolean
-  canPay: boolean
+  invoice: FullInvoiceFragment
   pay?: () => Promise<void>
 }
 

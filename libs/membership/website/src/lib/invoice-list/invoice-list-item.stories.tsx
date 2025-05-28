@@ -62,7 +62,7 @@ const invoice = {
 
 export const Default: StoryObj = {
   args: {
-    ...invoice,
+    invoice,
     canPay: false,
     pay: action('pay')
   }
@@ -72,7 +72,10 @@ export const Unpaid: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paidAt: null,
+    invoice: {
+      ...invoice,
+      paidAt: null
+    },
     canPay: true
   }
 }
@@ -81,8 +84,11 @@ export const Canceled: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paidAt: null,
-    canceledAt: '2023-01-01'
+    invoice: {
+      ...invoice,
+      paidAt: null,
+      canceledAt: '2023-01-01'
+    }
   }
 }
 
@@ -120,12 +126,34 @@ export const WithPayrexxSubscriptionsWarning: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paidAt: null,
-    canceledAt: null,
-    subscription: {
-      ...subscription,
-      paymentMethod: {
-        slug: 'payrexx-subscription'
+    invoice: {
+      ...invoice,
+      paidAt: null,
+      canceledAt: null,
+      subscription: {
+        ...subscription,
+        paymentMethod: {
+          ...subscription?.paymentMethod,
+          slug: 'payrexx-subscription'
+        }
+      }
+    }
+  }
+}
+
+export const BexioInvoice: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    invoice: {
+      ...invoice,
+      paidAt: null,
+      canceledAt: null,
+      subscription: {
+        ...subscription,
+        paymentMethod: {
+          slug: 'bexio'
+        }
       }
     }
   }
