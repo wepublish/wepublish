@@ -1,10 +1,4 @@
-import styled from '@emotion/styled'
-import {
-  ArticleContainer,
-  ArticleInfoWrapper,
-  ArticleListContainer,
-  ArticleWrapper
-} from '@wepublish/article/website'
+import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
@@ -25,11 +19,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-const Article = styled(ArticleContainer)`
-  ${ArticleInfoWrapper} {
-    grid-row-start: 3;
-  }
-`
+import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
 
 export default function ArticleBySlugOrId() {
   const {
@@ -54,7 +44,7 @@ export default function ArticleBySlugOrId() {
 
   return (
     <>
-      <Article {...containerProps} />
+      <HauptstadtArticle {...containerProps} />
 
       {data?.article && (
         <ArticleWrapper>
@@ -71,7 +61,10 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && !data.article.disableComments && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
+          <H3 component={'h2'} id="comments">
+            Kommentare
+          </H3>
+
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}

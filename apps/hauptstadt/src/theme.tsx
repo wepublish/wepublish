@@ -146,13 +146,73 @@ const variablesTheme = createTheme(WePTheme, {
   }
 } as PartialDeep<Theme> | ThemeOptions)
 
+const caption = {
+  lineHeight: 1.3,
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    max: 16,
+    min: 14,
+    unit: 'rem',
+    breakpoints: [variablesTheme.breakpoints.values.md]
+  })
+}
+
+const body = {
+  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  lineHeight: 1.6,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    max: 18,
+    min: 17,
+    unit: 'rem',
+    breakpoints: [variablesTheme.breakpoints.values.md]
+  })
+}
+
+const h3 = {
+  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  lineHeight: 1.2,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    max: 46,
+    min: 30,
+    unit: 'rem',
+    breakpoints: [variablesTheme.breakpoints.values.md]
+  })
+}
+
+const h4 = {
+  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  lineHeight: 1.2,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    max: 24,
+    min: 24,
+    unit: 'rem',
+    breakpoints: []
+  })
+}
+
+const h6 = {
+  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  lineHeight: 1.35,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    max: 26,
+    min: 20,
+    unit: 'rem',
+    breakpoints: [variablesTheme.breakpoints.values.md]
+  })
+}
+
 const theme = createTheme(variablesTheme, {
   typography: {
+    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
       lineHeight: 1.25,
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     },
-    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
     h1: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
@@ -161,35 +221,19 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
-    h3: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.2
-    },
-    h4: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.2
-    },
+    h3,
+    h4,
     h5: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
-    h6: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.2
-    },
-    body1: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.6,
-      fontSize: '1.125rem'
-    },
+    h6,
+    body1: body,
     body2: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.25
     },
-    caption: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.3
-    },
+    caption,
     overline: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.3
@@ -205,6 +249,8 @@ const theme = createTheme(variablesTheme, {
     button: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     },
+    //Article
+    articleAuthors: caption,
     // Teaser
     teaserTitle: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
@@ -265,7 +311,7 @@ export const alternatingTeaserTheme = createTheme(theme, {
       )
     },
     teaserLead: {
-      lineHeight: 'inherit',
+      lineHeight: 1.25,
       ...responsiveProperty({
         cssProperty: 'fontSize',
         max: 21,

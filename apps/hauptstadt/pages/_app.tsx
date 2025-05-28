@@ -30,10 +30,13 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {HauptstadtArticleAuthors, HauptstadtArticleMeta} from '../src/components/hauptstadt-article'
+import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
 import {HauptstadtFooter} from '../src/components/hauptstadt-footer'
 import {HauptstadtNavbar} from '../src/components/hauptstadt-navbar'
+import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
 import {
   HauptstadtAlternatingTeaser,
   HauptstadtFocusTeaser,
@@ -118,8 +121,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Footer={HauptstadtFooter}
             Navbar={HauptstadtNavbar}
             ContentWrapper={HauptstadtContentWrapper}
+            AuthorChip={HauptstadtAuthorChip}
+            ArticleAuthors={HauptstadtArticleAuthors}
+            ArticleMeta={HauptstadtArticleMeta}
             blocks={{
               Subscribe: Mitmachen,
+              Quote: HauptstadtQuoteBlock,
               BaseTeaser: HauptstadtTeaser,
               TeaserList: HauptstadtTeaserList,
               TeaserGrid: HauptstadtTeaserGrid,

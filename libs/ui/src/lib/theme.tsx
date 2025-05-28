@@ -34,6 +34,8 @@ declare module '@mui/material/styles' {
     teaserTitle: TypographyStyleOptions
     teaserLead: TypographyStyleOptions
     teaserMeta: TypographyStyleOptions
+
+    articleAuthors: TypographyStyleOptions
   }
 
   interface TypographyVariantsOptions {
@@ -41,6 +43,8 @@ declare module '@mui/material/styles' {
     teaserTitle?: TypographyStyleOptions
     teaserLead?: TypographyStyleOptions
     teaserMeta?: TypographyStyleOptions
+
+    articleAuthors?: TypographyStyleOptions
   }
 }
 
@@ -56,6 +60,8 @@ declare module '@mui/material/Typography' {
     teaserTitle: true
     teaserLead: true
     teaserMeta: true
+
+    articleAuthors: true
   }
 }
 
@@ -99,7 +105,14 @@ export const theme = createTheme({
     body1: {
       lineHeight: 1.7
     },
-
+    caption: {
+      lineHeight: 1.7
+    },
+    // Article
+    articleAuthors: {
+      lineHeight: 1.7
+    },
+    // Teaser
     teaserTitle: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,

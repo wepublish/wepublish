@@ -1,4 +1,4 @@
-import {Link, css} from '@mui/material'
+import {Link, Typography, css} from '@mui/material'
 import styled from '@emotion/styled'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, ImageBlock as ImageBlockType} from '@wepublish/website/api'
@@ -50,9 +50,9 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
         )}
 
         {(caption || image?.source) && (
-          <ImageBlockCaption>
+          <Typography variant="caption" component={ImageBlockCaption}>
             {caption} {image?.source ? <>(Bild: {image?.source})</> : null}
-          </ImageBlockCaption>
+          </Typography>
         )}
       </ImageBlockInnerWrapper>
     </ImageBlockWrapper>

@@ -16,8 +16,9 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
       ${theme.breakpoints.up('md')} {
         grid-template-columns: repeat(36, 1fr);
 
-        & > * {
-          grid-column: 8/30;
+        & > *,
+        && > ${CommentListWrapper} {
+          grid-column: 7/31;
         }
 
         & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
@@ -30,10 +31,6 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
 
         && > ${ArticleListWrapper} {
           grid-column: -1/1;
-        }
-
-        && > ${CommentListWrapper} {
-          grid-column: 8/30;
         }
       }
     `}
