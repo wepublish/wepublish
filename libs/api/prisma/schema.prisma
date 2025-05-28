@@ -1297,11 +1297,14 @@ model Banner {
   title String
   text  String
   cta   String?
+  html  String?
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
 
   active Boolean @default(true)
+
+  delay Int @default(0)
 
   showOnArticles     Boolean     @default(true)
   showOnPages        Page[]

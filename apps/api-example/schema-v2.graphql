@@ -168,6 +168,8 @@ type Banner {
   actions: [BannerAction!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   id: String!
   image: Image
   imageId: String
@@ -399,6 +401,8 @@ input CreateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   imageId: String
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
@@ -2047,6 +2051,8 @@ input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   id: String!
   imageId: String
   showForLoginStatus: LoginStatus!
