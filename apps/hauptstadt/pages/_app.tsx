@@ -1,6 +1,6 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
-import {CssBaseline, ThemeProvider} from '@mui/material'
+import {css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
@@ -30,7 +30,11 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {HauptstadtArticleAuthors, HauptstadtArticleMeta} from '../src/components/hauptstadt-article'
+import {
+  ArticleMetaWrapper,
+  HauptstadtArticleAuthors,
+  HauptstadtArticleMeta
+} from '../src/components/hauptstadt-article'
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
@@ -68,6 +72,18 @@ i18next
   })
 
 z.setErrorMap(zodI18nMap)
+
+const noPrint = (
+  <GlobalStyles
+    styles={css`
+      @media print {
+        ${ArticleMetaWrapper} {
+          display: none !important;
+        }
+      }
+    `}
+  />
+)
 
 const Spacer = styled('div')`
   display: grid;
@@ -140,6 +156,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              {noPrint}
 
               <Head>
                 <title key="title">{siteTitle}</title>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Badge, Typography} from '@mui/material'
+import {NoSsr, Typography} from '@mui/material'
 import {ArticleContainer, ArticleInfoWrapper} from '@wepublish/article/website'
 import {TitleBlockWrapper} from '@wepublish/block-content/website'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
@@ -9,10 +9,11 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {Fragment} from 'react'
-import {FaCommentSlash, FaRegComment} from 'react-icons/fa6'
+import {FaCommentSlash, FaRegComment, FaShare} from 'react-icons/fa6'
+import {MdFormatSize, MdPrint} from 'react-icons/md'
 
 export const HauptstadtArticle = styled(ArticleContainer)`
-  > ${TitleBlockWrapper}:first-child {
+  > ${TitleBlockWrapper}:first-of-type {
     grid-row-start: 2;
   }
 
@@ -68,19 +69,9 @@ export const ArticleMetaComments = styled('div')`
   margin-right: ${({theme}) => theme.spacing(2)};
 `
 
-const ArticleMetaBadge = styled(Badge)`
-  .MuiBadge-badge {
-    right: -3px;
-    top: 11px;
-    border: 2px solid ${({theme}) => theme.palette.background.paper};
-    background: ${({theme}) => theme.palette.primary.main};
-    color: ${({theme}) => theme.palette.primary.contrastText};
-  }
-`
-
 export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaProps) => {
   const {
-    elements: {Link}
+    elements: {Link, Button}
   } = useWebsiteBuilder()
   const {data} = useCommentListQuery({
     fetchPolicy: 'cache-only',
@@ -90,19 +81,51 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
   })
 
   const commentCount = data?.comments.length
+  const canShare = typeof window !== 'undefined' && 'share' in navigator
 
   return (
     <ArticleMetaWrapper className={className}>
       <ArticleMetaComments>
-        <Link href="#comments" color="inherit">
-          <ArticleMetaBadge
-            max={99}
-            showZero
-            badgeContent={commentCount}
-            invisible={!!article.disableComments}>
-            {article.disableComments ? <FaCommentSlash size={24} /> : <FaRegComment size={24} />}
-          </ArticleMetaBadge>
-        </Link>
+        <Button
+          color="primary"
+          variant="text"
+          LinkComponent={Link}
+          href="#comments"
+          startIcon={
+            article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
+          }>
+          {!commentCount ? 'Keine Beiträge' : `${commentCount} Beiträge`}
+        </Button>
+
+        {canShare && (
+          <NoSsr>
+            <Button
+              color="primary"
+              variant="text"
+              startIcon={<FaShare size={16} />}
+              onClick={async () => {
+                navigator.share({
+                  url: article.url,
+                  title: article.latest.title ?? undefined,
+                  text: article.latest.lead ?? undefined
+                })
+              }}>
+              Teilen
+            </Button>
+          </NoSsr>
+        )}
+
+        <Button
+          color="primary"
+          variant="text"
+          startIcon={<MdPrint size={16} />}
+          onClick={() => print()}>
+          Drucken
+        </Button>
+
+        <Button color="primary" variant="text" startIcon={<MdFormatSize size={16} />}>
+          Schrift
+        </Button>
       </ArticleMetaComments>
     </ArticleMetaWrapper>
   )

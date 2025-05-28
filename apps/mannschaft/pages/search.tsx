@@ -146,6 +146,7 @@ export default function Search() {
         {teasers.map((teaser, teaserIndex) => (
           <div key={teaserIndex}>
             <MannschaftBaseTeaser
+              index={teaserIndex}
               teaser={teaser as Teaser}
               blockStyle=""
               alignment={alignmentForTeaserBlock(teaserIndex, 1)}

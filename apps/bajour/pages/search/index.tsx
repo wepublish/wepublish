@@ -164,6 +164,7 @@ export const NavbarPhraseResults = ({teasers}: {teasers: Teaser[]}) => {
         return (
           <Teaser
             key={index}
+            index={index}
             teaser={teaser}
             blockStyle=""
             alignment={alignmentForTeaserBlock(index, 1)}
