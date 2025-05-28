@@ -139,7 +139,7 @@ function PeerList() {
             <FlexItem colspan={2}>
               <Avatar
                 circle
-                src={profile?.logo?.squareURL || undefined}
+                src={profile?.squareLogo?.squareURL ?? profile?.logo?.squareURL ?? undefined}
                 alt={profile?.name?.substr(0, 2)}
               />
             </FlexItem>
@@ -219,7 +219,11 @@ function PeerList() {
                 <Avatar
                   size="lg"
                   circle
-                  src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
+                  src={
+                    peerInfoData?.peerProfile?.squareLogo?.squareURL ??
+                    peerInfoData?.peerProfile?.logo?.squareURL ??
+                    undefined
+                  }
                   alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
                 />
                 <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>

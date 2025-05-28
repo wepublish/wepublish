@@ -3,6 +3,9 @@ fragment FullPeerProfile on PeerProfile {
   logo {
     ...FullImage
   }
+  squareLogo {
+    ...FullImage
+  }
 
   themeColor
   themeFontColor
