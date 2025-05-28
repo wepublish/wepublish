@@ -89,6 +89,7 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
@@ -2343,6 +2344,7 @@ export type PeerArticle = HasOptionalPeerLc & {
 export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
