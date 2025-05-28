@@ -202,7 +202,7 @@ export class UpdateArticleInput extends CreateArticleInput {
 @InputType()
 export class ArticleFilter {
   @Field(() => [String], {nullable: true})
-  id?: string[]
+  ids?: string[]
   @Field({nullable: true})
   title?: string
   @Field({nullable: true})

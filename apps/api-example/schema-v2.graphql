@@ -75,7 +75,7 @@ input ArticleFilter {
   body: String
   draft: Boolean
   excludeIds: [String!]
-  id: [String!]
+  ids: [String!]
   includeHidden: Boolean
   lead: String
   peerId: String
@@ -1423,7 +1423,7 @@ input PeerArticleFilter {
   authors: [String!]
   body: String
   excludeIds: [String!]
-  id: [String!]
+  ids: [String!]
   lead: String
   peerId: String
   preTitle: String
@@ -1913,6 +1913,7 @@ input TeaserListBlockInput {
 enum TeaserListBlockSort {
   HotAndTrending
   PublishedAt
+  UpdatedAt
 }
 
 type TeaserSlot {
@@ -1943,8 +1944,8 @@ type TeaserSlotsAutofillConfig implements BaseBlock {
 input TeaserSlotsAutofillConfigInput {
   enabled: Boolean!
   filter: TeaserListBlockFilterInput
-  sort: TeaserListBlockSort = PublishedAt
-  teaserType: TeaserType = Article
+  sort: TeaserListBlockSort
+  teaserType: TeaserType
 }
 
 type TeaserSlotsBlock implements BaseBlock {

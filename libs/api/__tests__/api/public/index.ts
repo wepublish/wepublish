@@ -88,7 +88,7 @@ export type ArticleFilter = {
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
-  id?: InputMaybe<Array<Scalars['String']>>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
@@ -2347,7 +2347,7 @@ export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   excludeIds?: InputMaybe<Array<Scalars['String']>>;
-  id?: InputMaybe<Array<Scalars['String']>>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
@@ -3362,7 +3362,8 @@ export type TeaserListBlockInput = {
 
 export enum TeaserListBlockSort {
   HotAndTrending = 'HotAndTrending',
-  PublishedAt = 'PublishedAt'
+  PublishedAt = 'PublishedAt',
+  UpdatedAt = 'UpdatedAt'
 }
 
 export type TeaserSlot = {

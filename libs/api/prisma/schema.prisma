@@ -612,7 +612,6 @@ model PageRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   blocks                 Json
-  searchPlainText        String?
 
   imageID String?
   image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])

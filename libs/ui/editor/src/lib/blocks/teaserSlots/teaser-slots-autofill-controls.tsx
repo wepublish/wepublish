@@ -6,7 +6,11 @@ import {Button, Panel, Tag, Toggle} from 'rsuite'
 import GearIcon from '@rsuite/icons/Gear'
 import {TeaserSlotsAutofillDialog} from './teaser-slots-autofill-dialog'
 import {useTagListQuery} from '@wepublish/editor/api'
-import {TeaserSlotsAutofillConfigInput} from '@wepublish/editor/api-v2'
+import {
+  TeaserListBlockSort,
+  TeaserSlotsAutofillConfigInput,
+  TeaserType
+} from '@wepublish/editor/api-v2'
 
 interface TeaserSlotsContorlsProps {
   config: TeaserSlotsAutofillConfigInput
@@ -67,7 +71,9 @@ export function TeaserSlotsAutofillControls({
   const handleConfigSave = (newConfig: TeaserSlotsAutofillConfigInput) => {
     onConfigChange({
       ...newConfig,
-      enabled: true
+      enabled: true,
+      sort: TeaserListBlockSort.PublishedAt,
+      teaserType: TeaserType.Article
     })
     setConfigDialogOpen(false)
     refetch({filter: {tag: newConfig.filter?.tags?.join(' ')}})
