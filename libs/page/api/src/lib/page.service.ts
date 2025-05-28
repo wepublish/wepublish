@@ -337,6 +337,33 @@ export class PageService {
       }
     })
   }
+
+  async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
+    try {
+      const formattedQuery = searchQuery.replace(/\s+/g, '&')
+
+      const foundPageIds = await this.prisma.$queryRaw<Array<{id: string}>>`
+        SELECT p.id
+        FROM pages p
+          JOIN public."pages.revisions" pr
+            ON p."id" = pr."pageId"
+            AND pr."publishedAt" IS NOT NULL
+            AND pr."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(pr.title, '')) ||
+              to_tsvector('german', coalesce(pr.description, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
+                '["string"]'
+              ) @@ to_tsquery('german', ${formattedQuery});
+      `
+
+      return foundPageIds.map(item => item.id)
+    } catch (error) {
+      console.error('Error performing full-text search on pages:', error)
+      return []
+    }
+  }
 }
 
 export const createPageOrder = (
