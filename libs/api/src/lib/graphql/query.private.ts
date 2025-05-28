@@ -80,8 +80,6 @@ import {PollSort, getPolls} from './poll/poll.private-queries'
 import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
-import {GraphQLSetting} from './setting'
-import {getSetting, getSettings} from './setting/setting.private-queries'
 import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLSubscribersPerMonth,
@@ -512,21 +510,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         {filter, sort, order, cursor, take, skip},
         {authenticate, prisma: {payment}}
       ) => getAdminPayments(filter, sort, order, cursor, skip, take, authenticate, payment)
-    },
-
-    // Setting
-    // ======
-
-    setting: {
-      type: GraphQLSetting,
-      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
-      resolve: (root, {name}, {authenticate, prisma: {setting}}) =>
-        getSetting(name, authenticate, setting)
-    },
-
-    settings: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSetting))),
-      resolve: (root, _, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
     },
 
     // Rating System

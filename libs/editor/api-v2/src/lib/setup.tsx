@@ -50,7 +50,6 @@ export function getSettings(): ClientSettings {
   if (!settings) {
     const defaultSettings = {
       apiURL: 'http://localhost:4000',
-      peerByDefault: false,
       imgMinSizeToCompress: 10
     }
 

@@ -55,6 +55,7 @@ import {NavigationList} from './routes/navigations/navigationList'
 import {PageEditor} from './routes/pages/pageEditor'
 import {PageList} from './routes/pages/pageList'
 import {PaymentMethodList} from './routes/paymentMethods/paymentMethodList'
+import {PaywallEditView} from './routes/paywall/paywallEditView'
 import {PeerArticleList} from './routes/peerArticles/peerArticleList'
 import {PeerList} from './routes/peers/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
@@ -268,6 +269,14 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Article} />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywall"
+              element={
+                <Base>
+                  <PaywallEditView />
                 </Base>
               }
             />

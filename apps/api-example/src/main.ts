@@ -7,12 +7,9 @@ import {PaymentsService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
-import {
-  HOT_AND_TRENDING_DATA_SOURCE,
-  HotAndTrendingDataSource,
-  MAX_PAYLOAD_SIZE
-} from '@wepublish/api'
 import {json, urlencoded} from 'body-parser'
+import {HotAndTrendingDataSource, HOT_AND_TRENDING_DATA_SOURCE} from '@wepublish/article/api'
+import {MAX_PAYLOAD_SIZE} from '@wepublish/utils/api'
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000
