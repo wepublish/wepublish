@@ -42,7 +42,7 @@ export class ArticleService {
   }: ArticleListArgs) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body)
-      filter.id = articleIds
+      filter.ids = articleIds
     }
 
     const orderBy = createArticleOrder(sort, order)
@@ -534,11 +534,11 @@ export const createArticleOrder = (
   }
 }
 
-const createIdFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.id) {
+const createIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.ids) {
     return {
       id: {
-        in: filter.id
+        in: filter.ids
       }
     }
   }
@@ -741,7 +741,7 @@ const createPeerIdFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
-    createIdFilter(filter),
+    createIdsFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
     createPublicationDateFromFilter(filter),

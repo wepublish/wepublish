@@ -74,7 +74,7 @@ input ArticleFilter {
   authors: [String!]
   body: String
   draft: Boolean
-  id: [String!]
+  ids: [String!]
   includeHidden: Boolean
   lead: String
   peerId: String
@@ -1418,7 +1418,7 @@ type PeerArticle implements HasOptionalPeerLc {
 input PeerArticleFilter {
   authors: [String!]
   body: String
-  id: [String!]
+  ids: [String!]
   lead: String
   peerId: String
   preTitle: String
