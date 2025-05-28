@@ -1,3 +1,4 @@
+import {CSSObject} from '@emotion/react'
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {createBreakpoints} from '@mui/system'
 import {deepmerge} from '@mui/utils'
@@ -138,7 +139,7 @@ const variablesTheme = createTheme(WePTheme, {
     }
   }),
   palette: {
-    primary: augmentColor({color: {main: '#abd8da'}}),
+    primary: augmentColor({color: {main: '#abd8da', dark: '#587072'}}),
     secondary: augmentColor({color: {main: '#272727'}}),
     accent: augmentColor({color: {main: '#f3ded0'}}),
     success: augmentColor({color: {main: '#abd8da'}}),
@@ -264,6 +265,7 @@ const theme = createTheme(variablesTheme, {
       marginBottom: '8px'
     },
     teaserLead: {
+      lineHeight: 1.25,
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
@@ -287,8 +289,39 @@ const theme = createTheme(variablesTheme, {
       transform: 'unset',
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        textPrimary: ({theme}) => {
+          return {
+            color: theme.palette.primary.dark
+          }
+        }
+      }
+    },
+    MuiLink: {
+      defaultProps: {
+        underline: 'always'
+      },
+      styleOverrides: {
+        root: ({ownerState, theme}) => {
+          const styles = {} as CSSObject
+
+          if (ownerState.underline !== 'none') {
+            styles.textDecoration = 'underline'
+          }
+
+          if (ownerState.color === 'primary') {
+            styles.color = theme.palette.primary.dark
+          }
+
+          return styles
+        }
+      }
+    }
   }
-} as PartialDeep<Theme> | ThemeOptions)
+} as ThemeOptions)
 
 export const alternatingTeaserTheme = createTheme(theme, {
   typography: {

@@ -2,9 +2,9 @@ import {
   BuilderBreakBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderTeaserGridBlockProps,
-  BuilderTeaserListBlockProps,
-  BuilderTeaserProps
+  BuilderTeaserListBlockProps
 } from './blocks.interface'
+import {BuilderTeaserProps} from './teaser.interface'
 
 export type BuilderBlockStyleProps = {
   ImageSlider: BuilderImageGalleryBlockProps

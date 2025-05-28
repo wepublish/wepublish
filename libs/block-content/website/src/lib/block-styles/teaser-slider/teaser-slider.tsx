@@ -167,6 +167,7 @@ export const TeaserSlider = ({
             {filledTeasers.map((teaser, index) => (
               <div key={index} className="keen-slider__slide">
                 <Teaser
+                  index={index}
                   teaser={teaser}
                   blockStyle={blockStyle}
                   alignment={alignmentForTeaserBlock(0, 3)}
