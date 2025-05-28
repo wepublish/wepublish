@@ -16,11 +16,11 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: UserSession
     })
 
     const setCookieAndToken = useCallback(
-      (newToken: UserSession | null) => {
+      async (newToken: UserSession | null) => {
         setToken(newToken)
 
         if (newToken) {
-          setCookie(AuthTokenStorageKey, JSON.stringify(newToken), {
+          await setCookie(AuthTokenStorageKey, JSON.stringify(newToken), {
             expires: new Date(newToken.expiresAt),
             sameSite: 'strict',
             secure: process.env.NODE_ENV === 'production'

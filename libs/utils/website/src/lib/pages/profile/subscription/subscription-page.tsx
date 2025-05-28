@@ -83,7 +83,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -98,11 +98,12 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
       req: ctx.req,
       res: ctx.res,
       expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
+      sameSite: 'strict',
+      httpOnly: true // @TODO: Config
     })
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([
