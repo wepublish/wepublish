@@ -415,6 +415,9 @@
       "teaserGrid6": {
         "label": "6 Kol"
       },
+      "teaserSlots": {
+        "label": "Teaser Slots"
+      },
       "title": {
         "label": "Titel",
         "leadText": "Lead-Text ",

@@ -413,6 +413,9 @@
       "teaserGrid6": {
         "label": "6 Col"
       },
+      "teaserSlots": {
+        "label": "Teaser Slots"
+      },
       "title": {
         "label": "Title",
         "leadText": "Lead Text ",

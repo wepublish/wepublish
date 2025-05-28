@@ -150,7 +150,7 @@ export class TeaserInput {
   [TeaserType.Custom]?: CustomTeaserInput
 }
 
-export function mapTeaserUnionMap(value: TeaserInput | undefined | null): typeof Teaser | null {
+export function mapTeaserUnionMap(value: TeaserInput | null | undefined): typeof Teaser | null {
   if (!value) {
     return null
   }
