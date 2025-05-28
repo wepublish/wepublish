@@ -937,6 +937,7 @@
         "editPeerInfo": "Modifier les informations de mon profil peer",
         "getRemote": "Récupérer le profil du peer à distance",
         "image": "Image",
+        "squareImage": "Image carrée",
         "information": "Information",
         "leaveEmpty": "Laissez vide si vous ne voulez pas le modifier",
         "name": "Nom",

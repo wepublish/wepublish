@@ -1015,6 +1015,7 @@
         "editPeerInfo": "Edit Peer Info",
         "getRemote": "Fetch Remote Peer Profile",
         "image": "Image",
+        "squareImage": "Square image",
         "information": "Information",
         "leaveEmpty": "Leave empty if you don't want to change it",
         "name": "Name",
