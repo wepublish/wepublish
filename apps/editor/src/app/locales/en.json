@@ -975,7 +975,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-
       "import": {
         "import": "Import",
         "title": "Import article",
