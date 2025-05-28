@@ -15,14 +15,8 @@ import {
   PrimeDataLoader,
   SortOrder
 } from '@wepublish/utils/api'
-import {
-  BlockContent,
-  BlockType,
-  mapBlockUnionMap,
-  RichTextBlock
-} from '@wepublish/block-content/api'
+import {mapBlockUnionMap} from '@wepublish/block-content/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
-import {toPlaintext} from '@wepublish/richtext'
 
 @Injectable()
 export class ArticleService {
@@ -48,6 +42,11 @@ export class ArticleService {
   }: ArticleListArgs) {
     const orderBy = createArticleOrder(sort, order)
     const where = createArticleFilter(filter ?? {})
+
+    if (filter?.body) {
+      const articleIds = await this.performFullTextSearch(filter.body)
+      filter.id = articleIds
+    }
 
     const [totalCount, articles] = await Promise.all([
       this.prisma.article.count({
@@ -100,7 +99,6 @@ export class ArticleService {
     userId: string | null | undefined
   ) {
     const mappedBlocks = blocks.map(mapBlockUnionMap)
-    const searchPlainText = blocksToSearchText(mappedBlocks)
 
     const article = await this.prisma.article.create({
       data: {
@@ -122,7 +120,6 @@ export class ArticleService {
             ...revision,
             userId,
             blocks: mappedBlocks as any[],
-            searchPlainText,
             properties: {
               createMany: {
                 data: properties
@@ -183,7 +180,6 @@ export class ArticleService {
     }
 
     const mappedBlocks = blocks.map(mapBlockUnionMap)
-    const searchPlainText = blocksToSearchText(mappedBlocks)
 
     return this.prisma.article.update({
       where: {id},
@@ -197,7 +193,6 @@ export class ArticleService {
           create: {
             ...revision,
             blocks: mappedBlocks as any[],
-            searchPlainText,
             userId,
             properties: {
               createMany: {
@@ -487,6 +482,34 @@ export class ArticleService {
       }
     })
   }
+
+  async performFullTextSearch(searchQuery: string): Promise<string[]> {
+    try {
+      const formattedQuery = searchQuery.replace(/\s+/g, '&')
+
+      const foundArticleIds = await this.prisma.$queryRaw<Array<{id: string}>>`
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ${formattedQuery});
+      `
+
+      return foundArticleIds.map(item => item.id)
+    } catch (error) {
+      console.error('Error performing full-text search:', error)
+      return []
+    }
+  }
 }
 
 export const createArticleOrder = (
@@ -509,6 +532,18 @@ export const createArticleOrder = (
         publishedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
+}
+
+const createIdFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.id) {
+    return {
+      id: {
+        in: filter.id
+      }
+    }
+  }
+
+  return {}
 }
 
 const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
@@ -558,25 +593,6 @@ const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
       }
     }
   }
-
-  return {}
-}
-
-const createBodyFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.body) {
-    return {
-      revisions: {
-        some: {
-          searchPlainText: {
-            contains: filter.body,
-            mode: 'insensitive'
-          }
-        }
-      }
-    }
-  }
-
-  return {}
 
   return {}
 }
@@ -737,12 +753,12 @@ const createExcludeIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleW
 
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
+    createIdFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createLeadFilter(filter),
-    createBodyFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
     createAuthorFilter(filter),
@@ -754,27 +770,3 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     }
   ]
 })
-
-/**
- * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
- * TODO: write migration for existing articles and pages. Implement function on all page mutations.
- * @param blocks
- * @returns
- */
-export function blocksToSearchText(blocks: Array<typeof BlockContent>): string | undefined {
-  if (!blocks) {
-    return
-  }
-
-  try {
-    const richTextBlocks = blocks.filter(
-      (block): block is RichTextBlock => block.type === BlockType.RichText
-    )
-
-    return richTextBlocks.map(richTextBlock => toPlaintext(richTextBlock.richText)).join(' ')
-  } catch (error) {
-    console.log(error)
-  }
-
-  return undefined
-}

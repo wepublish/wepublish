@@ -75,6 +75,7 @@ input ArticleFilter {
   body: String
   draft: Boolean
   excludeIds: [String!]
+  id: [String!]
   includeHidden: Boolean
   lead: String
   peerId: String
@@ -1422,6 +1423,7 @@ input PeerArticleFilter {
   authors: [String!]
   body: String
   excludeIds: [String!]
+  id: [String!]
   lead: String
   peerId: String
   preTitle: String
