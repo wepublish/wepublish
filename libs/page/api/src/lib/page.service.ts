@@ -124,7 +124,8 @@ export class PageService {
         revisions: {
           updateMany: {
             where: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: null
             },
             data: {
               archivedAt: new Date()
