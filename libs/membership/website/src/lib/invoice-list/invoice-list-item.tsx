@@ -15,6 +15,7 @@ import {
   isPayrexxSubscription,
   isSepa
 } from './invoice-list'
+import {PayrexxSubscriptionMigrator} from './payrexx-subscription-migrator'
 
 export const InvoiceListItemWrapper = styled('div')`
   display: grid;
@@ -159,20 +160,8 @@ export function InvoiceListItem({invoice, pay, className}: BuilderInvoiceListIte
           <Alert severity="warning">Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.</Alert>
         )}
 
-        {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
-        {/* @TODO: Make href used in <Link> component customizable if necessary. You may want to make the custom Bajour filters default filters. */}
-        {showPayrexxSubscriptionWarning && (
-          <Alert
-            severity="warning"
-            action={
-              <Link
-                href={`/mitmachen?memberPlanBySlug=${subscription?.memberPlan.slug}&upsell=true&deactivateSubscriptionId=${subscription?.id}`}>
-                <Button>Jetzt Abo ersetzen</Button>
-              </Link>
-            }>
-            Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet.
-          </Alert>
-        )}
+        {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions will have been migrated  */}
+        {showPayrexxSubscriptionWarning && <PayrexxSubscriptionMigrator invoice={invoice} />}
       </InvoiceListItemContent>
     </InvoiceListItemWrapper>
   )
