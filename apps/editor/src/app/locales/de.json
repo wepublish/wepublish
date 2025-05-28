@@ -360,6 +360,9 @@
       "teaserGrid6": {
         "label": "6 Kol"
       },
+      "teaserSlots": {
+        "label": "Teaser Slots"
+      },
       "title": {
         "label": "Titel",
         "leadText": "Lead-Text ",
@@ -916,7 +919,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
       "title": "Titel",
-
       "import": {
         "import": "Importieren",
         "title": "Artikel importieren",

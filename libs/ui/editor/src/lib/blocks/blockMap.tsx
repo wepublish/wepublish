@@ -5,6 +5,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFilter,
   MdFilter1,
   MdFilter6,
   MdFilter9Plus,
@@ -182,33 +183,6 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdFilter6 />
   },
 
-  [EditorBlockType.TeaserGridFlex]: {
-    field: props => <TeaserGridFlexBlock {...props} />,
-    defaultValue: {
-      flexTeasers: [
-        {
-          alignment: {i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false},
-          teaser: null
-        },
-        {
-          alignment: {i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false},
-          teaser: null
-        },
-        {
-          alignment: {i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false},
-          teaser: null
-        },
-        {
-          alignment: {i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false},
-          teaser: null
-        }
-      ],
-      blockStyle: undefined
-    },
-    label: 'blocks.teaserFlexGrid.label',
-    icon: <MdViewQuilt />
-  },
-
   [EditorBlockType.TeaserSlots]: {
     field: props => <TeaserSlotsBlock {...props} />,
     defaultValue: {
@@ -234,7 +208,34 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       teasers: []
     },
     label: 'blocks.teaserSlots.label',
-    icon: <MdFilter6 />
+    icon: <MdFilter />
+  },
+
+  [EditorBlockType.TeaserGridFlex]: {
+    field: props => <TeaserGridFlexBlock {...props} />,
+    defaultValue: {
+      flexTeasers: [
+        {
+          alignment: {i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false},
+          teaser: null
+        },
+        {
+          alignment: {i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false},
+          teaser: null
+        }
+      ],
+      blockStyle: undefined
+    },
+    label: 'blocks.teaserFlexGrid.label',
+    icon: <MdViewQuilt />
   },
 
   [EditorBlockType.Html]: {
