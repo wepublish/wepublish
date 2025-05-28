@@ -49,7 +49,6 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
-  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -252,10 +251,9 @@ model Image {
   height      Int
   width       Int
 
-  Author      Author[]
-  MemberPlan  MemberPlan[]
-  PeerProfile PeerProfile[]
-  Comment     Comment[]
+  Author     Author[]
+  MemberPlan MemberPlan[]
+  Comment    Comment[]
 
   articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
   articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
@@ -270,7 +268,9 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  banners Banner[]
+  banners               Banner[]
+  peerProfileLogo       PeerProfile[] @relation("logo")
+  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -614,7 +614,6 @@ model PageRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   blocks                 Json
-  searchPlainText        String?
 
   imageID String?
   image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])
@@ -726,7 +725,10 @@ model PeerProfile {
   callToActionImageID  String?
 
   logoID String?
-  logo   Image?  @relation(fields: [logoID], references: [id])
+  logo   Image?  @relation("logo", fields: [logoID], references: [id])
+
+  squareLogoId String?
+  squareLogo   Image?  @relation("squareLogo", fields: [squareLogoId], references: [id])
 
   @@map("peerProfiles")
 }

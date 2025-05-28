@@ -87,6 +87,7 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
@@ -699,6 +700,34 @@ export type CustomTeaserInput = {
   preTitle?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type DailySubscriptionStats = {
+  __typename?: 'DailySubscriptionStats';
+  createdSubscriptionCount: Scalars['Float'];
+  createdSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  createdUnpaidSubscriptionCount: Scalars['Float'];
+  createdUnpaidSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  date: Scalars['String'];
+  deactivatedSubscriptionCount: Scalars['Float'];
+  deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  renewedSubscriptionCount: Scalars['Float'];
+  renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  replacedSubscriptionCount: Scalars['Float'];
+  replacedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  subscriptionDailyRevenue: Scalars['Float'];
+  subscriptionDurationAvg: Scalars['Float'];
+  subscriptionMonthlyRevenueAvg: Scalars['Float'];
+  subscriptionMonthlyRevenueSum: Scalars['Float'];
+  totalActiveSubscriptionCount: Scalars['Float'];
+};
+
+export type DailySubscriptionStatsUser = {
+  __typename?: 'DailySubscriptionStatsUser';
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type DashboardInvoice = {
@@ -2313,6 +2342,7 @@ export type PeerArticle = HasOptionalPeerLc & {
 export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
@@ -2350,6 +2380,7 @@ export type PeerProfile = {
   hostURL: Scalars['String'];
   logo?: Maybe<Image>;
   name: Scalars['String'];
+  squareLogo?: Maybe<Image>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
   websiteURL: Scalars['String'];
@@ -2557,6 +2588,12 @@ export type Query = {
   crowdfunding: CrowdfundingWithActiveGoal;
   /** Returns a paginated list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
+  /**
+   *
+   *       Returns daily stats in a given timeframe.
+   *
+   */
+  dailySubscriptionStats: Array<DailySubscriptionStats>;
   /** Returns a event by id. */
   event: Event;
   /**
@@ -2785,6 +2822,13 @@ export type QueryConsentsArgs = {
 
 export type QueryCrowdfundingArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryDailySubscriptionStatsArgs = {
+  end?: InputMaybe<Scalars['DateTime']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  start: Scalars['DateTime'];
 };
 
 
@@ -3313,7 +3357,8 @@ export type TeaserListBlockInput = {
 
 export enum TeaserListBlockSort {
   HotAndTrending = 'HotAndTrending',
-  PublishedAt = 'PublishedAt'
+  PublishedAt = 'PublishedAt',
+  UpdatedAt = 'UpdatedAt'
 }
 
 export enum TeaserType {
@@ -3610,16 +3655,16 @@ export type ImageRefFragment = { __typename?: 'Image', id: string, link?: string
 
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
-export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type PeerRefFragment = { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string };
 
-export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
 
 export type PeerQueryVariables = Exact<{
   id: Scalars['String'];
@@ -3788,6 +3833,9 @@ export const FullPeerProfile = gql`
   themeColor
   themeFontColor
   logo {
+    ...ImageRef
+  }
+  squareLogo {
     ...ImageRef
   }
 }

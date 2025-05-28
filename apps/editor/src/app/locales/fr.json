@@ -509,7 +509,9 @@
       "newUser": "Nouvel <0>utilisateur</0> ajouté",
       "noData": "Pas de données actuelles sur les abonnés",
       "user": "Utilisateur",
-      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée"
+      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -762,8 +764,9 @@
       "userConsents": "Consentement de l'utilisateur",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur & Abonnements",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -934,6 +937,7 @@
         "editPeerInfo": "Modifier les informations de mon profil peer",
         "getRemote": "Récupérer le profil du peer à distance",
         "image": "Image",
+        "squareImage": "Image carrée",
         "information": "Information",
         "leaveEmpty": "Laissez vide si vous ne voulez pas le modifier",
         "name": "Nom",
@@ -1372,6 +1376,9 @@
     "selectableItemsActions": {
       "selectedItems": "{{numberOfItems}} éléments sélectionnés"
     },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
+    },
     "crowdfunding": {
       "list": {
         "title": "Crowdfundings",
@@ -1408,6 +1415,66 @@
         "remove": "Supprimer",
         "add": "Ajouter un objectif"
       }
+    },
+    "audienceFilter": {
+      "daily": "Quotidien",
+      "monthly": "Mensuel",
+      "rangePickerPlaceholder": "de - à",
+      "filterSubscriptionPlans": "Filtrer par plans d'abonnement",
+      "chart": "Graphique",
+      "table": "Tableau",
+      "panelHeader": "Sélection des données",
+      "rangeLastWeek": "Semaine dernière",
+      "rangeLastMonth": "Mois dernier",
+      "rangeLastQuarter": "Dernier trimestre",
+      "rangeLastYear": "Année dernière"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence.",
+          "createdUnpaidSubscriptionCount": "Nouveaux abonnements créés mais non payés à ce jour.",
+          "renewedSubscriptionCount": "Abonnements renouvelés pour une nouvelle période.",
+          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période jusqu'à présent.",
+          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai)."
+        },
+        "totalActiveSubscriptionCount": "Total des abonnements actifs",
+        "createdUnpaidSubscriptionCount": "Nouveaux abonnements non payés",
+        "renewedSubscriptionCount": "Abonnements renouvelés",
+        "createdSubscriptionCount": "Nouveaux abonnements",
+        "deactivatedSubscriptionCount": "Abonnements désactivés",
+        "replacedSubscriptionCount": "Abonnements remplacés",
+        "totalNewSubscriptions": "Total des nouveaux abonnements",
+        "renewalRate": "Taux de renouvellement",
+        "cancellationRate": "Taux de résiliation",
+        "createdSubscriptionUsers": "Nouveaux abonnements",
+        "createdUnpaidSubscriptionUsers": "Nouveaux abonnements non payés",
+        "deactivatedSubscriptionUsers": "Abonnements désactivés",
+        "renewedSubscriptionUsers": "Abonnements renouvelés",
+        "replacedSubscriptionUsers": "Abonnements remplacés"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Filtrer les utilisateurs par",
+      "id": "ID",
+      "firstName": "Prénom",
+      "name": "Nom",
+      "email": "E-mail",
+      "goToUser": "Lien vers l'utilisateur",
+      "close": "Fermer",
+      "userBtn": "Lien vers l'utilisateur"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "showUsers": "Afficher les détails",
+      "byDate": "Par",
+      "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
+      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte.",
+      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte."
     }
   }
 }
