@@ -5,94 +5,146 @@ fragment FullImage on Image {
   source
 }
 
-fragment FullArticle on Article {
-  id
-}
-
-fragment FullPage on Page {
-  id
-}
-
-fragment FullEvent on Event {
-  id
-}
-
-fragment FullPoll on FullPoll {
-  id
-}
-
-fragment CommentBlockComment on Comment {
-  id
-}
-
-fragment PeerWithProfile on Peer {
-  id
-}
-
-fragment ArticleWithoutBlocks on Article {
-  id
-}
-
-fragment PageWithoutBlocks on Page {
-  id
-}
-
 fragment ImportBlock on BlockContent {
-  ...FullBlock
+  __typename
 
-  ... on PollBlock {
-    __typename
+  ... on TitleBlock {
+    blockStyle
     type
+    title
+    lead
   }
 
-  ... on HTMLBlock {
-    __typename
+  ... on ImageBlock {
+    blockStyle
     type
+    caption
+    linkUrl
+    image {
+      ...FullImage
+    }
   }
 
-  ... on EventBlock {
-    __typename
+  ... on ImageGalleryBlock {
+    blockStyle
     type
-  }
-
-  ... on CommentBlock {
-    __typename
-    type
-  }
-
-  ... on TeaserListBlock {
-    __typename
-    type
-    teaserType
-    take
-    skip
-    sort
-  }
-
-  ... on TeaserGridBlock {
-    __typename
-    type
-  }
-
-  ... on TeaserGridFlexBlock {
-    __typename
-    type
-
-    flexTeasers {
-      alignment {
-        i
-        x
-        y
-        w
-        h
-        static
+    images {
+      caption
+      image {
+        ...FullImage
       }
     }
   }
 
-  ... on UnknownBlock {
-    __typename
+  ... on QuoteBlock {
+    blockStyle
     type
+    quote
+    author
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on RichTextBlock {
+    blockStyle
+    type
+    richText
+  }
+
+  ... on ListicleBlock {
+    blockStyle
+    type
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on BreakBlock {
+    blockStyle
+    type
+    text
+    richText
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on FacebookPostBlock {
+    blockStyle
+    type
+    userID
+    postID
+  }
+
+  ... on FacebookVideoBlock {
+    blockStyle
+    type
+    userID
+    videoID
+  }
+
+  ... on InstagramPostBlock {
+    blockStyle
+    type
+    postID
+  }
+
+  ... on TwitterTweetBlock {
+    blockStyle
+    type
+    userID
+    tweetID
+  }
+
+  ... on VimeoVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on YouTubeVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on SoundCloudTrackBlock {
+    blockStyle
+    type
+    trackID
+  }
+
+  ... on PolisConversationBlock {
+    blockStyle
+    type
+    conversationID
+  }
+
+  ... on TikTokVideoBlock {
+    blockStyle
+    type
+    userID
+    videoID
+  }
+
+  ... on IFrameBlock {
+    blockStyle
+    type
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
   }
 }
 
