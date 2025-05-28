@@ -196,6 +196,7 @@ export class ArticleService {
         revisions: {
           updateMany: {
             where: {
+              archivedAt: null
               publishedAt: null
             },
             data: {
