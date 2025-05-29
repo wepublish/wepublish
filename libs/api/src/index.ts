@@ -10,7 +10,6 @@ export * from './lib/graphql/permissions'
 
 export * from './lib/db/user'
 export * from './lib/db/userRole'
-export * from './lib/db/author'
 export * from './lib/db/image'
 export * from './lib/db/comment'
 export * from './lib/db/common'
@@ -35,6 +34,7 @@ export * from './lib/challenges/cfTurnstile'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 
+export * from '@wepublish/author/api'
 export * from '@wepublish/banner/api'
 export * from '@wepublish/crowdfunding/api'
 export * from '@wepublish/settings/api'
