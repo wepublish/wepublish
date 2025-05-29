@@ -56,7 +56,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {Descendant, Element, type Node, Text} from 'slate'
+import {type Node, Descendant, Element, Text} from 'slate'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
