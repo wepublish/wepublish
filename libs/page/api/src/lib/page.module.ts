@@ -14,9 +14,10 @@ import {
   HasPageResolver
 } from './has-page/has-page.resolver'
 import {BlockContentModule} from '@wepublish/block-content/api'
+import {SettingModule} from '@wepublish/settings/api'
 
 @Module({
-  imports: [PrismaModule, ImageModule, forwardRef(() => BlockContentModule)],
+  imports: [PrismaModule, ImageModule, SettingModule, forwardRef(() => BlockContentModule)],
   providers: [
     PageDataloaderService,
     PageRevisionDataloaderService,

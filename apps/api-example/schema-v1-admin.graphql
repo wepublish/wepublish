@@ -692,6 +692,8 @@ enum SettingName {
   makeRevenueApiPublic
   commentCharLimit
   allowCommentEditing
+  showPendingWhenNotPublished
+  allowGuestPreviews
 }
 
 scalar GraphQLSettingValueType
