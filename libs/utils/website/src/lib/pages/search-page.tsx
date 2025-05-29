@@ -14,10 +14,10 @@ import {
   usePhraseQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticProps} from 'next'
+import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {useMemo} from 'react'
+import {useEffect, useMemo} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdSearch} from 'react-icons/md'
 import {z} from 'zod'
@@ -48,26 +48,27 @@ const ITEMS_PER_PAGE = 12
 
 const searchPageSchema = z.object({
   page: z.coerce.number().gte(1).default(1),
-  q: z.string().default('')
+  q: z.coerce.string().nullish()
 })
 
-export const SearchPage = () => {
+export const SearchPage = ({
+  query
+}: InferGetServerSidePropsType<typeof SearchPageGetServerSideProps>) => {
   const {
     blocks: {TeaserGrid},
-    elements: {IconButton, TextField, Pagination, Alert}
+    elements: {IconButton, TextField, Pagination, Alert, H3, H4}
   } = useWebsiteBuilder()
 
   const router = useRouter()
-  const {query} = router
-  const {page, q: phraseQuery} = searchPageSchema.parse(query)
+  const {page, q: phraseQuery} = searchPageSchema.parse(router.isReady ? router.query : query)
 
-  const {control, handleSubmit} = useForm<z.infer<typeof searchPageSchema>>({
-    resolver: zodResolver(searchPageSchema),
-    defaultValues: {
-      q: phraseQuery,
-      page: 1
-    }
+  const {control, handleSubmit, setFocus} = useForm<z.infer<typeof searchPageSchema>>({
+    resolver: zodResolver(searchPageSchema)
   })
+
+  useEffect(() => {
+    setFocus('q')
+  }, [setFocus])
 
   const {
     data: phraseData,
@@ -76,7 +77,7 @@ export const SearchPage = () => {
   } = usePhraseQuery({
     skip: !phraseQuery,
     variables: {
-      query: phraseQuery,
+      query: phraseQuery!,
       take: ITEMS_PER_PAGE,
       skip: (page - 1) * ITEMS_PER_PAGE
     }
@@ -103,6 +104,8 @@ export const SearchPage = () => {
 
   return (
     <SearchPageWrapper>
+      <H3 component="h1">Suche</H3>
+
       <SearchForm
         onSubmit={handleSubmit(({q}) =>
           router.push({
@@ -112,21 +115,24 @@ export const SearchPage = () => {
         <Controller
           name={'q'}
           control={control}
+          defaultValue={phraseQuery}
           render={({field}) => (
             <TextField
               type="search"
               autoComplete="search"
-              label="Artikelsuche"
               fullWidth
+              placeholder="Suche nach Artikeln und Seiten"
               {...field}
             />
           )}
         />
 
-        <IconButton type="submit" aria-label="Artikelsuche">
+        <IconButton type="submit" aria-label="Suchen">
           <MdSearch size={28} />
         </IconButton>
       </SearchForm>
+
+      {phraseQuery && <H4 component="h2">Suchergebnisse</H4>}
 
       {loading && <CircularProgress sx={{justifySelf: 'center'}} size={48} />}
       {error && <Alert severity="error">{error.message}</Alert>}
@@ -149,12 +155,8 @@ export const SearchPage = () => {
   )
 }
 
-export const SearchPageGetStaticProps: GetStaticProps = async () => {
+export const SearchPageGetServerSideProps = (async ({query}) => {
   const {publicRuntimeConfig} = getConfig()
-
-  if (!publicRuntimeConfig.env.API_URL) {
-    return {props: {}, revalidate: 1}
-  }
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
@@ -166,10 +168,9 @@ export const SearchPageGetStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {query})
 
   return {
-    props,
-    revalidate: 60 // every 60 seconds
+    props
   }
-}
+}) satisfies GetServerSideProps

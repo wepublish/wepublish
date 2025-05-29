@@ -287,7 +287,16 @@ const theme = createTheme(variablesTheme, {
     },
     teaserPretitle: {
       transform: 'unset',
-      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
+      padding: `0 ${variablesTheme.spacing(0.5)}`,
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.5,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 16,
+        min: 15,
+        unit: 'rem',
+        breakpoints: [variablesTheme.breakpoints.values.md]
+      })
     }
   },
   components: {
@@ -363,6 +372,7 @@ export const alternatingTeaserTheme = createTheme(theme, {
       })
     },
     teaserPretitle: {
+      padding: `${variablesTheme.spacing(0.5)} ${variablesTheme.spacing(2)}`,
       ...responsiveProperty({
         cssProperty: 'fontSize',
         max: 20,

@@ -1,4 +1,4 @@
 export {
   SearchPage as default,
-  SearchPageGetStaticProps as getStaticProps
+  SearchPageGetServerSideProps as getServerSideProps
 } from '@wepublish/utils/website'
