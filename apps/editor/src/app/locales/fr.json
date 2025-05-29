@@ -364,6 +364,9 @@
       "teaserGrid6": {
         "label": "6 Col"
       },
+      "teaserSlots": {
+        "label": "Machines à sous tease"
+      },
       "title": {
         "label": "Titre",
         "leadText": "Lead ",

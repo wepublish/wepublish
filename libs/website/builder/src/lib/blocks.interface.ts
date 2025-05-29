@@ -1,32 +1,29 @@
 import {
+  BildwurfAdBlock,
   BlockContent,
+  BreakBlock,
+  CommentBlock,
+  CrowdfundingBlock,
   EventBlock,
   HtmlBlock,
+  IFrameBlock,
   ImageBlock,
   ImageGalleryBlock,
+  InstagramPostBlock,
+  ListicleBlock,
+  PolisConversationBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
   TeaserGridBlock,
-  TwitterTweetBlock,
-  FacebookPostBlock,
-  FacebookVideoBlock,
-  InstagramPostBlock,
-  VimeoVideoBlock,
-  YouTubeVideoBlock,
-  SoundCloudTrackBlock,
-  PolisConversationBlock,
-  TikTokVideoBlock,
-  BildwurfAdBlock,
-  IFrameBlock,
-  ListicleBlock,
   TeaserGridFlexBlock,
-  TitleBlock,
-  BreakBlock,
-  CommentBlock,
   TeaserListBlock,
-  SubscribeBlock,
-  CrowdfundingBlock
+  TeaserSlotsBlock,
+  TikTokVideoBlock,
+  TitleBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {
@@ -77,5 +74,9 @@ export type BuilderTeaserGridBlockProps = Omit<TeaserGridBlock, 'type'> & {
 }
 
 export type BuilderTeaserListBlockProps = Omit<TeaserListBlock, 'type'> & {
+  className?: string
+}
+
+export type BuilderTeaserSlotsBlockProps = Omit<TeaserSlotsBlock, 'type'> & {
   className?: string
 }

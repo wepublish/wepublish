@@ -13,6 +13,7 @@ declare module 'react' {
 
 type ImageItem<Size extends BuilderImageWidths> = {size: Size; url: string | null | undefined}
 type ImageItems = [
+  xxl: ImageItem<1500>,
   xl: ImageItem<1200>,
   l: ImageItem<1000>,
   m: ImageItem<800>,
@@ -22,6 +23,7 @@ type ImageItems = [
 ]
 
 export const imageToImageItems = (image: FullImageFragment): ImageItems => [
+  {url: image.xxl, size: 1500},
   {url: image.xl, size: 1200},
   {url: image.l, size: 1000},
   {url: image.m, size: 800},
@@ -31,6 +33,7 @@ export const imageToImageItems = (image: FullImageFragment): ImageItems => [
 ]
 
 export const imageToSquareImageItems = (image: FullImageFragment): ImageItems => [
+  {url: image.xxlSquare, size: 1500},
   {url: image.xlSquare, size: 1200},
   {url: image.lSquare, size: 1000},
   {url: image.mSquare, size: 800},

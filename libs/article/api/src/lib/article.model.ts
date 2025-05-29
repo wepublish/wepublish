@@ -207,6 +207,8 @@ export class UpdateArticleInput extends CreateArticleInput {
 
 @InputType()
 export class ArticleFilter {
+  @Field(() => [String], {nullable: true})
+  ids?: string[]
   @Field({nullable: true})
   title?: string
   @Field({nullable: true})
@@ -240,6 +242,9 @@ export class ArticleFilter {
 
   @Field({nullable: true})
   peerId?: string
+
+  @Field(() => [String], {nullable: true})
+  excludeIds?: string[]
 }
 
 @ArgsType()

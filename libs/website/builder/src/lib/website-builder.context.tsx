@@ -32,12 +32,11 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderIFrameBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
-  BuilderSubscribeBlockProps,
+  BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
@@ -47,6 +46,7 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserListBlockProps,
@@ -55,7 +55,8 @@ import {
   BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
   BuilderYouTubeVideoBlockProps,
-  BuilderCrowdfundingBlockProps
+  BuilderCrowdfundingBlockProps,
+  BuilderTeaserSlotsBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -220,6 +221,7 @@ export type WebsiteBuilderProps = {
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
     BaseTeaser: ComponentType<BuilderTeaserProps>
+    TeaserSlots: ComponentType<BuilderTeaserSlotsBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -347,6 +349,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserGrid: NoComponent,
     TeaserList: NoComponent,
     BaseTeaser: NoComponent,
+    TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },

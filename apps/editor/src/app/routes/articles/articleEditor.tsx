@@ -24,6 +24,7 @@ import {
   EditorTemplate,
   InfoData,
   ListicleBlockListValue,
+  mapBlockValueToBlockInput,
   NavigationBar,
   PermissionControl,
   PublishArticlePanel,
@@ -32,7 +33,6 @@ import {
   StateColor,
   TitleBlockListValue,
   TitleBlockValue,
-  unionMapForBlock,
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
@@ -56,7 +56,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {type Node, Descendant, Element, Text} from 'slate'
+import {Descendant, Element, type Node, Text} from 'slate'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -372,7 +372,7 @@ function ArticleEditor() {
       tagIds: metadata.tags,
       canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,
-      blocks: blocks.map(unionMapForBlock),
+      blocks: blocks.map(mapBlockValueToBlockInput),
       hideAuthor: metadata.hideAuthor,
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,

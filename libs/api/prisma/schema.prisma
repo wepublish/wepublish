@@ -49,7 +49,6 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
-  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
@@ -617,7 +616,6 @@ model PageRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   blocks                 Json
-  searchPlainText        String?
 
   imageID String?
   image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])
@@ -1275,6 +1273,7 @@ enum BlockType {
   TeaserGrid6    @map("teaserGrid6")
   TeaserGridFlex @map("teaserGridFlex")
   TeaserList     @map("teaserList")
+  TeaserSlots    @map("teaserSlots")
   HTML           @map("html")
   Subscribe      @map("subscribe")
   Crowdfunding   @map("crowdfunding")
@@ -1302,11 +1301,14 @@ model Banner {
   title String
   text  String
   cta   String?
+  html  String?
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
 
   active Boolean @default(true)
+
+  delay Int @default(0)
 
   showOnArticles     Boolean     @default(true)
   showOnPages        Page[]

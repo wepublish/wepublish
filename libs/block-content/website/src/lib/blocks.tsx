@@ -53,6 +53,7 @@ import {
   isAlternatingTeaserGridBlockStyle,
   isAlternatingTeaserListBlockStyle
 } from './block-styles/alternating/is-alternating'
+import {isTeaserSlotsBlock} from './teaser/teaser-slots-block'
 
 export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const {blocks, blockStyles} = useWebsiteBuilder()
@@ -87,7 +88,8 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const teaserCond = cond([
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
     [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
-    [isTeaserListBlock, block => <blocks.TeaserList {...block} />]
+    [isTeaserListBlock, block => <blocks.TeaserList {...block} />],
+    [isTeaserSlotsBlock, block => <blocks.TeaserSlots {...block} />]
   ])
 
   const imageCond = cond([

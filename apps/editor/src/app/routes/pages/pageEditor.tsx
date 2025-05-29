@@ -15,13 +15,13 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
+  mapBlockValueToBlockInput,
   NavigationBar,
   PageMetadata,
   PageMetadataPanel,
   PermissionControl,
   PublishPagePanel,
   StateColor,
-  unionMapForBlock,
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
@@ -226,7 +226,7 @@ function PageEditor() {
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
       socialMediaImageID: metadata.socialMediaImage?.id || undefined,
-      blocks: blocks.map(unionMapForBlock)
+      blocks: blocks.map(mapBlockValueToBlockInput)
     }
   }
 

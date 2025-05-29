@@ -76,6 +76,8 @@ input ArticleFilter {
   authors: [String!]
   body: String
   draft: Boolean
+  excludeIds: [String!]
+  ids: [String!]
   includeHidden: Boolean
   lead: String
   peerId: String
@@ -168,6 +170,8 @@ type Banner {
   actions: [BannerAction!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   id: String!
   image: Image
   imageId: String
@@ -238,7 +242,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -263,6 +267,7 @@ input BlockContentInput {
   teaserGrid: TeaserGridBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
   teaserList: TeaserListBlockInput
+  teaserSlots: TeaserSlotsBlockInput
   tikTokVideo: TikTokVideoBlockInput
   title: TitleBlockInput
   twitterTweet: TwitterTweetBlockInput
@@ -301,6 +306,7 @@ enum BlockType {
   TeaserGrid
   TeaserGridFlex
   TeaserList
+  TeaserSlots
   TikTokVideo
   Title
   TwitterTweet
@@ -397,6 +403,8 @@ input CreateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   imageId: String
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
@@ -598,6 +606,7 @@ enum EditorBlockType {
   TeaserGrid6
   TeaserGridFlex
   TeaserList
+  TeaserSlots
   Title
 }
 
@@ -1444,6 +1453,8 @@ type PeerArticle implements HasOptionalPeerLc {
 input PeerArticleFilter {
   authors: [String!]
   body: String
+  excludeIds: [String!]
+  ids: [String!]
   lead: String
   peerId: String
   preTitle: String
@@ -1941,6 +1952,58 @@ input TeaserListBlockInput {
 enum TeaserListBlockSort {
   HotAndTrending
   PublishedAt
+  UpdatedAt
+}
+
+type TeaserSlot {
+  teaser: Teaser
+  type: TeaserSlotType!
+}
+
+input TeaserSlotInput {
+  teaser: TeaserInput
+  type: TeaserSlotType! = Autofill
+}
+
+enum TeaserSlotType {
+  Autofill
+  Manual
+}
+
+type TeaserSlotsAutofillConfig implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  enabled: Boolean!
+  filter: TeaserListBlockFilter
+  sort: TeaserListBlockSort
+  teaserType: TeaserType
+  type: BlockType!
+}
+
+input TeaserSlotsAutofillConfigInput {
+  enabled: Boolean!
+  filter: TeaserListBlockFilterInput
+  sort: TeaserListBlockSort
+  teaserType: TeaserType
+}
+
+type TeaserSlotsBlock implements BaseBlock {
+  autofillConfig: TeaserSlotsAutofillConfig!
+  autofillTeasers: [Teaser!]!
+  blockStyle: String
+  blockStyleName: String
+  slots: [TeaserSlot!]!
+  teasers: [Teaser]!
+  title: String
+  type: BlockType!
+}
+
+input TeaserSlotsBlockInput {
+  autofillConfig: TeaserSlotsAutofillConfigInput!
+  blockStyle: String
+  blockStyleName: String
+  slots: [TeaserSlotInput!]!
+  title: String
 }
 
 enum TeaserType {
@@ -2023,6 +2086,8 @@ input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   id: String!
   imageId: String
   showForLoginStatus: LoginStatus!

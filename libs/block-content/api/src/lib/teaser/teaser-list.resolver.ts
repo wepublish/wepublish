@@ -45,7 +45,10 @@ export class TeaserListBlockResolver {
               tags: filter.tags,
               published: true
             },
-            sort: ArticleSort.PublishedAt,
+            sort:
+              sort === TeaserListBlockSort.UpdatedAt
+                ? ArticleSort.ModifiedAt
+                : ArticleSort.PublishedAt,
             order: SortOrder.Descending,
             skip,
             take
@@ -71,7 +74,7 @@ export class TeaserListBlockResolver {
           tags: filter.tags,
           published: true
         },
-        sort: PageSort.PublishedAt,
+        sort: sort === TeaserListBlockSort.UpdatedAt ? PageSort.ModifiedAt : PageSort.PublishedAt,
         order: SortOrder.Descending,
         skip,
         take
@@ -90,17 +93,17 @@ export class TeaserListBlockResolver {
     }
 
     if (teaserType === TeaserType.Event) {
-      const pages = await this.eventService.getEvents({
+      const events = await this.eventService.getEvents({
         filter: {
           tags: filter.tags
         },
-        sort: EventSort.StartsAt,
+        sort: sort === TeaserListBlockSort.UpdatedAt ? EventSort.ModifiedAt : EventSort.StartsAt,
         order: SortOrder.Descending,
         skip,
         take
       })
 
-      return pages.nodes.map(
+      return events.nodes.map(
         event =>
           ({
             eventID: event.id,
