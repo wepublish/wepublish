@@ -54,7 +54,8 @@ import {
   YouTubeVideoBlock,
   AlternatingTeaserGridBlock,
   AlternatingTeaserListBlock,
-  AlternatingTeaser
+  AlternatingTeaser,
+  AlternatingTeaserSlotsBlock
 } from '@wepublish/block-content/website'
 import {
   Comment,
@@ -266,7 +267,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserSlider,
             AlternatingTeaser,
             AlternatingTeaserGrid: AlternatingTeaserGridBlock,
-            AlternatingTeaserList: AlternatingTeaserListBlock
+            AlternatingTeaserList: AlternatingTeaserListBlock,
+            AlternatingTeaserSlots: AlternatingTeaserSlotsBlock
           }}
           richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{

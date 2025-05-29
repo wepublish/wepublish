@@ -57,10 +57,10 @@ export const FocusedTeaser = styled('div')`
 
 export const FocusTeaser = ({
   teasers,
-  filter,
   blockStyle,
   title,
-  className
+  className,
+  ...props
 }: BuilderBlockStyleProps['FocusTeaser']) => {
   const {
     blocks: {Teaser},
@@ -71,7 +71,10 @@ export const FocusTeaser = ({
 
   const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>
   const tags =
-    focusedTeaser && selectTeaserTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
+    'filter' in props
+      ? focusedTeaser &&
+        selectTeaserTags(focusedTeaser).filter(({id}) => props.filter.tags?.includes(id))
+      : []
 
   return (
     <FocusTeaserWrapper className={className}>

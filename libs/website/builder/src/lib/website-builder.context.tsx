@@ -360,6 +360,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     AlternatingTeaser: NoComponent,
     AlternatingTeaserGrid: NoComponent,
     AlternatingTeaserList: NoComponent,
+    AlternatingTeaserSlots: NoComponent,
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent
