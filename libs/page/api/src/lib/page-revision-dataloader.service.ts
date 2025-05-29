@@ -19,44 +19,20 @@ export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
 
       for (const pageId of pageIds) {
         revisionPromises.push(
-          this.prisma.pageRevision.findFirst({
-            where: {
-              pageId
-            },
-            orderBy: {
-              createdAt: 'desc'
-              // on purpose not checking for publishedAt
-              // so we only get the latest revision, we check for it later on
-            }
-          }),
-          this.prisma.pageRevision.findFirst({
+          this.prisma.pageRevision.findMany({
             where: {
               pageId,
-              publishedAt: {
-                gt: new Date()
-              }
+              archivedAt: null
             },
+            take: 3,
             orderBy: {
-              createdAt: 'desc'
-            }
-          }),
-          this.prisma.pageRevision.findFirst({
-            where: {
-              pageId,
-              publishedAt: {
-                lte: new Date()
-              }
-            },
-            orderBy: {
-              createdAt: 'desc'
+              publishedAt: 'desc'
             }
           })
         )
       }
 
-      const revisions = (await Promise.all(revisionPromises)).filter((rev): rev is PageRevision =>
-        Boolean(rev)
-      )
+      const revisions = (await Promise.all(revisionPromises)).flat()
 
       return pageIds.map((pageId): RevisionMap => {
         const published = revisions.find(
