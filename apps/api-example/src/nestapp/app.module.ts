@@ -6,10 +6,10 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
-  BexioPaymentProvider,
   BannerApiModule,
-  CrowdfundingApiModule,
+  BexioPaymentProvider,
   ConsentModule,
+  CrowdfundingApiModule,
   DashboardModule,
   EventModule,
   EventsImportModule,
@@ -37,8 +37,8 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  SystemInfoModule,
   SubscriptionModule,
+  SystemInfoModule,
   VersionInformationModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
@@ -366,7 +366,16 @@ import {MediaAdapterModule} from '@wepublish/image/api'
     SettingModule,
     EventModule,
     PageModule,
-    PeerModule,
+    PeerModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        return {
+          hostURL: config.get('HOST_URL') || 'http://localhost:4000',
+          websiteURL: config.get('WEBSITE_URL') || 'http://localhost:3000'
+        }
+      }
+    }),
     CommentModule,
     ArticleModule,
     BlockContentModule,

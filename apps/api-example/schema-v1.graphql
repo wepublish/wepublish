@@ -17,14 +17,6 @@ directive @shareable on FIELD_DEFINITION | OBJECT
 directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
 type Query {
-  """This query returns the peer profile."""
-  peerProfile: PeerProfile!
-
-  """
-  This query takes either the ID or the slug and returns the peer profile.
-  """
-  peer(id: String, slug: Slug): Peer
-
   """This query takes either the ID or the slug and returns the author."""
   author(id: String, slug: Slug): Author
 
@@ -74,19 +66,37 @@ type Query {
   _service: _Service!
 }
 
-type PeerProfile {
+type Author {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
   name: String!
-  logo: Image
-  squareLogo: Image
-  themeColor: Color!
-  themeFontColor: Color!
-  hostURL: String!
-  websiteURL: String!
-  callToActionText: RichText!
-  callToActionURL: String!
-  callToActionImageURL: String
-  callToActionImage: Image
+  slug: Slug!
+  url: String!
+  links: [AuthorLink!]
+  bio: RichText
+  jobTitle: String
+  image: Image
+  tags: [Tag!]!
+  hideOnArticle: Boolean
+  hideOnTeaser: Boolean
+  hideOnTeam: Boolean
+  peer: Peer
 }
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+scalar Slug
+
+type AuthorLink {
+  title: String!
+  url: String!
+}
+
+scalar RichText
 
 type Image {
   id: String!
@@ -109,11 +119,6 @@ type Image {
   url: String
   transformURL(input: ImageTransformation): String
 }
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
 
 type FocalPoint {
   x: Float!
@@ -142,47 +147,6 @@ enum ImageOutput {
   webp
 }
 
-"""A hexidecimal color value."""
-scalar Color
-
-scalar RichText
-
-type Peer {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: String!
-  isDisabled: Boolean
-  hostURL: String!
-  profile: PeerProfile
-}
-
-scalar Slug
-
-type Author {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  url: String!
-  links: [AuthorLink!]
-  bio: RichText
-  jobTitle: String
-  image: Image
-  tags: [Tag!]!
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-  peer: Peer
-}
-
-type AuthorLink {
-  title: String!
-  url: String!
-}
-
 type Tag {
   id: String!
   tag: String
@@ -198,6 +162,34 @@ enum TagType {
   Article
   Page
 }
+
+type Peer {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+  isDisabled: Boolean
+  hostURL: String!
+  profile: PeerProfile
+}
+
+type PeerProfile {
+  name: String!
+  logo: Image
+  squareLogo: Image
+  themeColor: Color!
+  themeFontColor: Color!
+  hostURL: String!
+  websiteURL: String!
+  callToActionText: RichText!
+  callToActionURL: String!
+  callToActionImageURL: String
+  callToActionImage: Image
+}
+
+"""A hexidecimal color value."""
+scalar Color
 
 type AuthorConnection {
   nodes: [Author!]!

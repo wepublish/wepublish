@@ -49,7 +49,7 @@ type Article implements HasOptionalPeerLc {
   latest: ArticleRevision!
   likes: Int!
   modifiedAt: DateTime!
-  peer: Peer
+  peer: PeerV2
   peerArticleId: String
   peerId: String
   pending: ArticleRevision
@@ -342,6 +342,9 @@ input BreakBlockInput {
   richText: RichText!
   text: String
 }
+
+"""A hexadecimal color value (#RRGGBB)"""
+scalar Color
 
 type Comment {
   id: String!
@@ -868,7 +871,7 @@ interface HasOptionalPage {
 }
 
 interface HasOptionalPeerLc {
-  peer: Peer
+  peer: PeerV2
   peerId: String
 }
 
@@ -1411,16 +1414,12 @@ enum PaymentPeriodicity {
   yearly
 }
 
-type Peer {
-  id: String!
-}
-
 type PeerArticle implements HasOptionalPeerLc {
   createdAt: DateTime!
   id: String!
   latest: PeerArticleRevision!
   modifiedAt: DateTime!
-  peer: Peer
+  peer: PeerV2
   peerId: String
   publishedAt: DateTime!
   slug: String
@@ -1457,6 +1456,34 @@ type PeerImage {
   license: String
   source: String
   url: String!
+}
+
+type PeerProfileV2 {
+  callToActionImage: Image
+  callToActionImageID: String
+  callToActionImageURL: String
+  callToActionText: RichText!
+  callToActionURL: String!
+  hostURL: String!
+  logo: Image
+  logoID: String
+  name: String!
+  squareLogo: Image
+  squareLogoId: String
+  themeColor: Color!
+  themeFontColor: Color!
+  websiteURL: String!
+}
+
+type PeerV2 {
+  createdAt: DateTime!
+  hostURL: String!
+  id: String!
+  isDisabled: Boolean
+  modifiedAt: DateTime!
+  name: String!
+  profile: PeerProfileV2
+  slug: String!
 }
 
 type PeriodicJob {
@@ -1646,8 +1673,16 @@ type Query {
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
 
+  """
+  This query takes either the ID or the slug and returns the peer profile.
+  """
+  peer(id: String, slug: Slug): PeerV2
+
   """Returns a paginated list of peer articles based on the filters given."""
   peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
+
+  """This query returns the peer profile."""
+  peerProfile: PeerProfileV2!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """

@@ -29,9 +29,6 @@ import {
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {GraphQLPeer, GraphQLPeerProfile} from './peer'
-import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
-import {getPeerByIdOrSlug} from './peer/peer.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLPublicSubscription} from './subscription-public'
@@ -42,21 +39,6 @@ import {GraphQLPublicUser} from './user'
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    peerProfile: {
-      type: new GraphQLNonNull(GraphQLPeerProfile),
-      description: 'This query returns the peer profile.',
-      resolve: (root, args, {hostURL, websiteURL, prisma: {peerProfile}}) =>
-        getPublicPeerProfile(hostURL, websiteURL, peerProfile)
-    },
-
-    peer: {
-      type: GraphQLPeer,
-      args: {id: {type: GraphQLString}, slug: {type: GraphQLSlug}},
-      description: 'This query takes either the ID or the slug and returns the peer profile.',
-      resolve: (root, {id, slug}, {loaders: {peer, peerBySlug}}) =>
-        getPeerByIdOrSlug(id, slug, peer, peerBySlug)
-    },
-
     // Author
     // ======
 
