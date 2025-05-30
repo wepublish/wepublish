@@ -17,7 +17,7 @@ import {
 } from 'react-icons/md'
 import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
-import {MembershipModal} from '../membership-modal/membership-modal'
+import {Modal} from '@wepublish/ui'
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -193,7 +193,7 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
-      <MembershipModal
+      <Modal
         open={!!confirmCancel}
         onSubmit={async () => {
           setConfirmCancel(false)
@@ -209,9 +209,9 @@ export function SubscriptionListItem({
           Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
           Rechnungen des Abos werden storniert.
         </Paragraph>
-      </MembershipModal>
+      </Modal>
 
-      <MembershipModal
+      <Modal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}
         onSubmit={async () => {
@@ -224,7 +224,7 @@ export function SubscriptionListItem({
           Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
           willst. Weiterfahren?
         </Paragraph>
-      </MembershipModal>
+      </Modal>
     </SubscriptionListItemWrapper>
   )
 }

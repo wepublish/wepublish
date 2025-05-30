@@ -1,10 +1,10 @@
 import {render} from '@testing-library/react'
-import * as stories from './membership-modal.stories'
+import * as stories from './modal.stories'
 import {composeStories} from '@storybook/react'
 
 const storiesCmp = composeStories(stories)
 
-describe('Membership Modal', () => {
+describe('Modal', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
       render(<Component />)

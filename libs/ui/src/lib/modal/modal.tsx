@@ -1,9 +1,9 @@
-import {Modal} from '@mui/material'
+import {Modal as MuiModal} from '@mui/material'
 import styled from '@emotion/styled'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren} from 'react'
 
-export const MembershipModalWrapper = styled('section')`
+export const ModalWrapper = styled('section')`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -17,20 +17,20 @@ export const MembershipModalWrapper = styled('section')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export const MembershipModalContent = styled('div')`
+export const ModalContent = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   padding: ${({theme}) => theme.spacing(2)};
   padding-bottom: 0;
 `
 
-export const MembershipModalActions = styled('div')`
+export const ModalActions = styled('div')`
   display: flex;
   justify-content: end;
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export type MembershipModalProps = {
+export type ModalProps = {
   className?: string
   open: boolean
   submitText: string
@@ -38,35 +38,31 @@ export type MembershipModalProps = {
   onSubmit: () => void
 }
 
-export const MembershipModal = ({
+export const Modal = ({
   className,
   open,
   onCancel,
   onSubmit,
   submitText,
   children
-}: PropsWithChildren<MembershipModalProps>) => {
+}: PropsWithChildren<ModalProps>) => {
   const {
     elements: {Button}
   } = useWebsiteBuilder()
 
   return (
-    <Modal
-      open={open}
-      onClose={onCancel}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description">
-      <MembershipModalWrapper className={className}>
-        <MembershipModalContent>{children}</MembershipModalContent>
+    <MuiModal open={open} onClose={onCancel}>
+      <ModalWrapper className={className}>
+        <ModalContent>{children}</ModalContent>
 
-        <MembershipModalActions>
+        <ModalActions>
           <Button onClick={onCancel} variant="text" color="secondary">
             Abbrechen
           </Button>
 
           <Button onClick={onSubmit}>{submitText}</Button>
-        </MembershipModalActions>
-      </MembershipModalWrapper>
-    </Modal>
+        </ModalActions>
+      </ModalWrapper>
+    </MuiModal>
   )
 }

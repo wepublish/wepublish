@@ -1,11 +1,11 @@
 import {Meta, StoryObj} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
 import {H5, Paragraph} from '@wepublish/ui'
-import {MembershipModal} from './membership-modal'
+import {Modal} from './modal'
 
 export default {
-  component: MembershipModal,
-  title: 'Components/MembershipModal'
+  component: Modal,
+  title: 'Components/Modal'
 } as Meta
 
 export const Default: StoryObj = {

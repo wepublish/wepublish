@@ -8,9 +8,11 @@ import {
   BuilderArticleMetaProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {Fragment} from 'react'
+import {Fragment, useState} from 'react'
 import {FaCommentSlash, FaRegComment, FaShare} from 'react-icons/fa6'
 import {MdFormatSize, MdPrint} from 'react-icons/md'
+
+import {FontSizePicker} from './font-size-picker'
 
 export const HauptstadtArticle = styled(ArticleContainer)`
   > ${TitleBlockWrapper}:first-of-type {
@@ -70,6 +72,7 @@ export const ArticleMetaComments = styled('div')`
 `
 
 export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaProps) => {
+  const [openFontSizeModal, setOpenFontSizeModal] = useState(false)
   const {
     elements: {Link, Button}
   } = useWebsiteBuilder()
@@ -84,49 +87,63 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
   const canShare = typeof window !== 'undefined' && 'share' in navigator
 
   return (
-    <ArticleMetaWrapper className={className}>
-      <ArticleMetaComments>
-        <Button
-          color="primary"
-          variant="text"
-          LinkComponent={Link}
-          href="#comments"
-          startIcon={
-            article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
-          }>
-          {!commentCount ? 'Keine Beiträge' : `${commentCount} Beiträge`}
-        </Button>
+    <>
+      <ArticleMetaWrapper className={className}>
+        <ArticleMetaComments>
+          <Button
+            color="primary"
+            variant="text"
+            LinkComponent={Link}
+            href="#comments"
+            startIcon={
+              article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
+            }>
+            {!commentCount
+              ? 'Keine Beiträge'
+              : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
+          </Button>
 
-        {canShare && (
-          <NoSsr>
-            <Button
-              color="primary"
-              variant="text"
-              startIcon={<FaShare size={16} />}
-              onClick={async () => {
-                navigator.share({
-                  url: article.url,
-                  title: article.latest.title ?? undefined,
-                  text: article.latest.lead ?? undefined
-                })
-              }}>
-              Teilen
-            </Button>
-          </NoSsr>
-        )}
+          {canShare && (
+            <NoSsr>
+              <Button
+                color="primary"
+                variant="text"
+                startIcon={<FaShare size={16} />}
+                onClick={async () => {
+                  navigator.share({
+                    url: article.url,
+                    title: article.latest.title ?? undefined,
+                    text: article.latest.lead ?? undefined
+                  })
+                }}>
+                Teilen
+              </Button>
+            </NoSsr>
+          )}
 
-        <Button
-          color="primary"
-          variant="text"
-          startIcon={<MdPrint size={16} />}
-          onClick={() => print()}>
-          Drucken
-        </Button>
+          <Button
+            color="primary"
+            variant="text"
+            startIcon={<MdPrint size={16} />}
+            onClick={() => print()}>
+            Drucken
+          </Button>
 
-        <Button color="primary" variant="text" startIcon={<MdFormatSize size={16} />}>
-          Schrift
-        </Button>
-      </ArticleMetaComments>
-    </ArticleMetaWrapper>
+          <Button
+            color="primary"
+            variant="text"
+            startIcon={<MdFormatSize size={16} />}
+            onClick={() => setOpenFontSizeModal(true)}>
+            Schrift
+          </Button>
+        </ArticleMetaComments>
+      </ArticleMetaWrapper>
+
+      <FontSizePicker
+        open={openFontSizeModal}
+        onCancel={() => setOpenFontSizeModal(false)}
+        onSubmit={() => setOpenFontSizeModal(false)}
+      />
+    </>
   )
 }
