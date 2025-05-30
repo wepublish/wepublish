@@ -34,9 +34,6 @@ type Query {
   """This query returns the comments of an item."""
   comments(itemId: String!, sort: CommentSort, order: SortOrder = Descending): [Comment!]!
 
-  """This query returns the redirect Uri."""
-  authProviders(redirectUri: String): [AuthProvider!]!
-
   """This query returns the user."""
   me: User
 
@@ -353,11 +350,6 @@ type CommentRating {
 
 enum CommentSort {
   rating
-}
-
-type AuthProvider {
-  name: String!
-  url: String!
 }
 
 type Invoice {

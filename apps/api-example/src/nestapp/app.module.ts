@@ -48,9 +48,11 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
+import {Issuer} from 'openid-client'
 import {BlockContentModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
+import {AuthProviderModule} from '@wepublish/authprovider-api'
 import {PageModule} from '@wepublish/page/api'
 import {PeerModule} from '@wepublish/peering/api'
 import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
@@ -327,6 +329,37 @@ import {MediaAdapterModule} from '@wepublish/image/api'
     MembershipModule,
     DashboardModule,
     AuthenticationModule,
+
+    // Important: Import AuthProviderModule after AuthenticationModule
+    // to ensure the Public decorator works correctly
+    AuthProviderModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        const oauth2Providers = configFile.OAuthProviders || []
+
+        return {
+          oauth2ProvidersFactory: async () => {
+            return await Promise.all(
+              oauth2Providers.map(async provider => {
+                const issuer = await Issuer.discover(provider.discoverUrl)
+                return {
+                  name: provider.name,
+                  provider,
+                  client: new issuer.Client({
+                    client_id: provider.clientId,
+                    client_secret: provider.clientKey,
+                    redirect_uris: provider.redirectUri,
+                    response_types: ['code']
+                  })
+                }
+              })
+            )
+          }
+        }
+      }
+    }),
     PermissionModule,
     ConsentModule,
     StatsModule,
@@ -418,6 +451,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
       },
       inject: [ConfigService]
     }
+    // System info key provider
   ]
 })
 export class AppModule {}

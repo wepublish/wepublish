@@ -1,12 +1,11 @@
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {SortOrder} from '@wepublish/utils/api'
+import {GraphQLSlug, SortOrder} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
 import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {AuthorSort} from '../db/author'
 import {MemberPlanSort} from '../db/memberPlan'
 import {NotFound} from '../error'
-import {GraphQLAuthProvider} from './auth'
 import {
   GraphQLAuthor,
   GraphQLAuthorConnection,
@@ -35,10 +34,9 @@ import {getPublicPeerProfile} from './peer-profile/peer-profile.public-queries'
 import {getPeerByIdOrSlug} from './peer/peer.public-queries'
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
-import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {TagSort, getTags} from './tag/tag.query'
+import {getTags, TagSort} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
@@ -116,30 +114,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           commentRatingSystemAnswers,
           comment
         )
-      }
-    },
-
-    // Auth
-    // =======
-
-    authProviders: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthProvider))),
-      args: {redirectUri: {type: GraphQLString}},
-      description: 'This query returns the redirect Uri.',
-      async resolve(root, {redirectUri}, {getOauth2Clients}) {
-        const clients = await getOauth2Clients()
-        return clients.map(client => {
-          const url = client.client.authorizationUrl({
-            scope: client.provider.scopes.join(),
-            response_mode: 'query',
-            redirect_uri: `${redirectUri}/${client.name}`,
-            state: 'fakeRandomString'
-          })
-          return {
-            name: client.name,
-            url
-          }
-        })
       }
     },
 

@@ -147,6 +147,11 @@ input ArticleTeaserInput {
   title: String
 }
 
+type AuthProvider {
+  name: String!
+  url: String!
+}
+
 type Author {
   id: String!
 }
@@ -1564,6 +1569,11 @@ type Query {
 
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+
+  """
+  This query returns available OAuth providers with their authorization URLs.
+  """
+  authProviders(redirectUri: String): [AuthProvider!]!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
