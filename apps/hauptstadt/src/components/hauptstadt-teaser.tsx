@@ -12,6 +12,7 @@ import {
   TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
+  TeaserSlider,
   TeaserWrapper
 } from '@wepublish/block-content/website'
 import {ImageWrapper} from '@wepublish/image/website'
@@ -109,5 +110,13 @@ export const HauptstadtFocusTeaser = styled(FocusTeaser)`
   &:hover ${TeaserPreTitle} {
     color: ${({theme}) => theme.palette.primary.contrastText};
     background-color: ${({theme}) => theme.palette.primary.main};
+  }
+`
+
+export const HauptstadtTeaserSlider = styled(TeaserSlider)`
+  .keen-slider__slide {
+    // Makes all teasers the same height
+    display: grid;
+    align-items: stretch;
   }
 `

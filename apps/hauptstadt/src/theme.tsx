@@ -195,7 +195,7 @@ const h4 = {
   })
 }
 
-const h6 = {
+const subtitle1 = {
   fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.35,
   ...responsiveProperty({
@@ -228,7 +228,10 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
-    h6,
+    h6: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.2
+    },
     body1: body,
     body2: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
@@ -239,10 +242,7 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.3
     },
-    subtitle1: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.3
-    },
+    subtitle1,
     subtitle2: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.3

@@ -108,6 +108,11 @@ export const theme = createTheme({
     caption: {
       lineHeight: 1.7
     },
+    subtitle1: {
+      ...baseTheme.typography.h6,
+      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontWeight: 300
+    },
     // Article
     articleAuthors: {
       lineHeight: 1.7

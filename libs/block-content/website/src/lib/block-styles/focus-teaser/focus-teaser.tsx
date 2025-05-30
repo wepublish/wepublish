@@ -1,12 +1,13 @@
 import styled from '@emotion/styled'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {allPass} from 'ramda'
+import {allPass, anyPass} from 'ramda'
 import {alignmentForTeaserBlock} from '../../teaser/teaser-grid-block'
 import {TeaserListBlockTeasers, isTeaserListBlock} from '../../teaser/teaser-list-block'
-import {BlockContent, TeaserListBlock} from '@wepublish/website/api'
+import {BlockContent, TeaserListBlock, TeaserSlotsBlock} from '@wepublish/website/api'
 import {hasBlockStyle} from '../../has-blockstyle'
 import {selectTeaserTags} from '../../teaser/base-teaser'
 import {ImageWrapper} from '@wepublish/image/website'
+import {isTeaserSlotsBlock} from '../../teaser/teaser-slots-block'
 
 export const FocusTeaserWrapper = styled('section')`
   grid-column: -1/1;
@@ -118,4 +119,5 @@ export const FocusTeaser = ({
 
 export const isFocusTeaserBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlock => allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
+): block is TeaserListBlock | TeaserSlotsBlock =>
+  allPass([hasBlockStyle('Focus'), anyPass([isTeaserListBlock, isTeaserSlotsBlock])])(block)

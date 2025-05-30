@@ -38,15 +38,15 @@ import {
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
-import {HauptstadtFooter} from '../src/components/hauptstadt-footer'
-import {HauptstadtNavbar} from '../src/components/hauptstadt-navbar'
+import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
 import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
 import {
   HauptstadtAlternatingTeaser,
   HauptstadtFocusTeaser,
   HauptstadtTeaser,
   HauptstadtTeaserGrid,
-  HauptstadtTeaserList
+  HauptstadtTeaserList,
+  HauptstadtTeaserSlider
 } from '../src/components/hauptstadt-teaser'
 import {MainSpacer} from '../src/components/main-spacer'
 import {ReactComponent as Logo} from '../src/logo.svg'
@@ -150,7 +150,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             }}
             blockStyles={{
               FocusTeaser: HauptstadtFocusTeaser,
-              AlternatingTeaser: HauptstadtAlternatingTeaser
+              AlternatingTeaser: HauptstadtAlternatingTeaser,
+              TeaserSlider: HauptstadtTeaserSlider
             }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
@@ -182,7 +183,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Spacer>
                 <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
+                  categorySlugs={[['pages']]}
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
@@ -194,7 +195,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </MainSpacer>
                 </main>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <FooterContainer slug="main" categorySlugs={[['pages']]}>
                   <LogoLink href="/" aria-label="Startseite">
                     <LogoWrapper />
                   </LogoLink>

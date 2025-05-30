@@ -136,13 +136,13 @@ const footerPaperLinkStyling = (theme: Theme) => css`
   }
 `
 
-const FooterPaperCategoryLinks = styled('div')`
+export const FooterPaperCategoryLinks = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
 
-const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
+export const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
