@@ -3,6 +3,7 @@ import {
   RegistrationFormContainer,
   useUser
 } from '@wepublish/authentication/website'
+import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {
   addClientCacheToV1Props,
@@ -29,9 +30,11 @@ export default function SignUp() {
   }
 
   return (
-    <PageContainer slug="signup">
-      <RegistrationFormContainer />
-    </PageContainer>
+    <ContentWidthProvider fullWidth>
+      <PageContainer slug="signup">
+        <RegistrationFormContainer />
+      </PageContainer>
+    </ContentWidthProvider>
   )
 }
 

@@ -4,6 +4,7 @@ import {
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
+import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps} from '@wepublish/utils/website'
 import {addClientCacheToV1Props, PageDocument, UserSession} from '@wepublish/website/api'
@@ -35,14 +36,16 @@ export default function Login({sessionToken}: LoginProps) {
   }
 
   return (
-    <PageContainer slug="login">
-      <LoginFormContainer
-        defaults={{
-          email: router.query?.mail as string | undefined,
-          requirePassword: !!router.query?.requirePassword
-        }}
-      />
-    </PageContainer>
+    <ContentWidthProvider fullWidth>
+      <PageContainer slug="login">
+        <LoginFormContainer
+          defaults={{
+            email: router.query?.mail as string | undefined,
+            requirePassword: !!router.query?.requirePassword
+          }}
+        />
+      </PageContainer>
+    </ContentWidthProvider>
   )
 }
 
