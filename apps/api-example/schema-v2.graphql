@@ -49,7 +49,7 @@ type Article implements HasOptionalPeerLc {
   latest: ArticleRevision!
   likes: Int!
   modifiedAt: DateTime!
-  peer: PeerV2
+  peer: Peer
   peerArticleId: String
   peerId: String
   pending: ArticleRevision
@@ -152,8 +152,30 @@ type AuthProvider {
   url: String!
 }
 
-type Author {
+type Author implements HasImage & HasOptionalPeerLc {
+  bio: RichText
+  createdAt: DateTime!
+  hideOnArticle: Boolean!
+  hideOnTeam: Boolean!
+  hideOnTeaser: Boolean!
   id: String!
+  image: Image
+  imageID: String
+  jobTitle: String
+  links: [AuthorLink!]
+  modifiedAt: DateTime!
+  name: String!
+  peer: Peer
+  peerId: String
+  slug: Slug!
+  tags: [Tag!]!
+  url: String!
+}
+
+type AuthorConnection {
+  nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type AuthorCreatedAction implements BaseAction & HasAuthor {
@@ -161,6 +183,24 @@ type AuthorCreatedAction implements BaseAction & HasAuthor {
   author: Author!
   authorId: String!
   date: DateTime!
+}
+
+input AuthorFilter {
+  hideOnTeam: Boolean
+  name: String
+  tagIds: [String!]
+}
+
+type AuthorLink {
+  title: String!
+  url: String!
+}
+
+"""Sorting options for authors"""
+enum AuthorSort {
+  CreatedAt
+  ModifiedAt
+  Name
 }
 
 type AvailablePaymentMethod {
@@ -871,7 +911,7 @@ interface HasOptionalPage {
 }
 
 interface HasOptionalPeerLc {
-  peer: PeerV2
+  peer: Peer
   peerId: String
 }
 
@@ -1414,12 +1454,23 @@ enum PaymentPeriodicity {
   yearly
 }
 
+type Peer {
+  createdAt: DateTime!
+  hostURL: String!
+  id: String!
+  isDisabled: Boolean
+  modifiedAt: DateTime!
+  name: String!
+  profile: PeerProfile
+  slug: String!
+}
+
 type PeerArticle implements HasOptionalPeerLc {
   createdAt: DateTime!
   id: String!
   latest: PeerArticleRevision!
   modifiedAt: DateTime!
-  peer: PeerV2
+  peer: Peer
   peerId: String
   publishedAt: DateTime!
   slug: String
@@ -1458,7 +1509,7 @@ type PeerImage {
   url: String!
 }
 
-type PeerProfileV2 {
+type PeerProfile {
   callToActionImage: Image
   callToActionImageID: String
   callToActionImageURL: String
@@ -1473,17 +1524,6 @@ type PeerProfileV2 {
   themeColor: Color!
   themeFontColor: Color!
   websiteURL: String!
-}
-
-type PeerV2 {
-  createdAt: DateTime!
-  hostURL: String!
-  id: String!
-  isDisabled: Boolean
-  modifiedAt: DateTime!
-  name: String!
-  profile: PeerProfileV2
-  slug: String!
 }
 
 type PeriodicJob {
@@ -1601,6 +1641,12 @@ type Query {
   This query returns available OAuth providers with their authorization URLs.
   """
   authProviders(redirectUri: String): [AuthProvider!]!
+
+  """Get an author by ID or slug"""
+  author(id: String, slug: Slug): Author
+
+  """Get a paginated list of authors with optional filtering and sorting"""
+  authors(cursor: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): AuthorConnection!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
@@ -1676,13 +1722,13 @@ type Query {
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
-  peer(id: String, slug: Slug): PeerV2
+  peer(id: String, slug: Slug): Peer
 
   """Returns a paginated list of peer articles based on the filters given."""
   peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
 
   """This query returns the peer profile."""
-  peerProfile: PeerProfileV2!
+  peerProfile: PeerProfile!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """

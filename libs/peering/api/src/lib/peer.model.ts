@@ -1,7 +1,7 @@
 import {Field, ObjectType} from '@nestjs/graphql'
 import {PeerProfile} from './peer-profile.model.js'
 
-@ObjectType('PeerV2')
+@ObjectType('Peer')
 export class Peer {
   @Field()
   id!: string

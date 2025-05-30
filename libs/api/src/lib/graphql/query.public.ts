@@ -3,16 +3,8 @@ import {GraphQLSlug, SortOrder} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
 import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
-import {AuthorSort} from '../db/author'
 import {MemberPlanSort} from '../db/memberPlan'
 import {NotFound} from '../error'
-import {
-  GraphQLAuthor,
-  GraphQLAuthorConnection,
-  GraphQLAuthorFilter,
-  GraphQLAuthorSort
-} from './author'
-import {getPublicAuthors} from './author/author.public-queries'
 import {GraphQLChallenge} from './challenge'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
@@ -39,37 +31,6 @@ import {GraphQLPublicUser} from './user'
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // Author
-    // ======
-
-    author: {
-      type: GraphQLAuthor,
-      args: {id: {type: GraphQLString}, slug: {type: GraphQLSlug}},
-      description: 'This query takes either the ID or the slug and returns the author.',
-      resolve(root, {id, slug}, {authenticateUser, loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
-        }
-
-        return id ? loaders.authorsByID.load(id) : loaders.authorsBySlug.load(slug)
-      }
-    },
-
-    authors: {
-      type: new GraphQLNonNull(GraphQLAuthorConnection),
-      args: {
-        cursor: {type: GraphQLString},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLAuthorFilter},
-        sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      description: 'This query is to get the authors.',
-      resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {author}}) =>
-        getPublicAuthors(filter, sort, order, cursor, skip, take, author)
-    },
-
     // Comments
     // =======
 

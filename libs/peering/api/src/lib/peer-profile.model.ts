@@ -4,7 +4,7 @@ import {GraphQLRichText} from '@wepublish/richtext/api'
 import {ColorScalar} from './scalars/color.scalar'
 import {Node} from 'slate'
 
-@ObjectType('PeerProfileV2')
+@ObjectType('PeerProfile')
 export class PeerProfile {
   @Field()
   name!: string

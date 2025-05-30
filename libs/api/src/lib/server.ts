@@ -7,13 +7,13 @@ import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/sc
 import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mail/api'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
 import {
-  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageDisabled,
+  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginUsageReportingDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {setupMailProvider} from './mails'
-import {serverLogger, setLogger, logger, MAX_PAYLOAD_SIZE} from '@wepublish/utils/api'
+import {logger, MAX_PAYLOAD_SIZE, serverLogger, setLogger} from '@wepublish/utils/api'
 import {graphQLJSSchemaToAST} from '@apollo/federation-internals'
 import {buildSubgraphSchema} from '@apollo/subgraph'
 import gql from 'graphql-tag'
@@ -21,10 +21,8 @@ import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import * as fs from 'fs'
-import {GraphQLAuthorResolver} from './graphql/author'
 import {GraphQLPollResolver} from './graphql/poll/poll'
 import {GraphQLCommentResolver} from './graphql/comment/comment'
-import {GraphQLPeerResolver} from './graphql/peer'
 import {GraphQLUserResolver} from './graphql/user'
 import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
 
@@ -87,11 +85,9 @@ export class WepublishServer {
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
-      extend type Author @key(fields: "id")
       extend type PublicSubscription @key(fields: "id")
       extend type Comment @key(fields: "id")
       extend type FullPoll @key(fields: "id")
-      extend type Peer @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
       extend type PaymentMethod @key(fields: "id")
@@ -139,10 +135,8 @@ export class WepublishServer {
     }
 
     const federatedResolvers = {
-      Author: GraphQLAuthorResolver,
       Comment: GraphQLCommentResolver,
       FullPoll: GraphQLPollResolver,
-      Peer: GraphQLPeerResolver,
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
       User: GraphQLUserResolver,

@@ -69,6 +69,7 @@ import {
 } from '@wepublish/tracking-pixel/api'
 import {HttpModule, HttpService} from '@nestjs/axios'
 import {MediaAdapterModule} from '@wepublish/image/api'
+import {AuthorModule} from '@wepublish/author/api'
 
 @Global()
 @Module({
@@ -93,6 +94,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
         } as ApolloDriverConfig
       }
     }),
+    AuthorModule,
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],

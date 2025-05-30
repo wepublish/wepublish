@@ -1,4 +1,4 @@
-fragment FullPeerProfile on PeerProfileV2 {
+fragment FullPeerProfile on PeerProfile {
     name
     logo {
         ...FullImage
@@ -20,7 +20,7 @@ fragment FullPeerProfile on PeerProfileV2 {
         ...FullImage
     }
 }
-fragment FullPeer on PeerV2 {
+fragment FullPeer on Peer {
     id
     createdAt
     modifiedAt
