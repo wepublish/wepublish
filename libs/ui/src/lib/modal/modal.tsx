@@ -60,7 +60,9 @@ export const Modal = ({
             Abbrechen
           </Button>
 
-          <Button onClick={onSubmit}>{submitText}</Button>
+          <Button variant={'contained'} color="primary" onClick={onSubmit}>
+            {submitText}
+          </Button>
         </ModalActions>
       </ModalWrapper>
     </MuiModal>

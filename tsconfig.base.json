@@ -103,7 +103,8 @@
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/website/translations/*": ["libs/website/translations/src/lib/*"],
-      "@wepublish/paywall/api": ["libs/paywall/api/src/index.ts"]
+      "@wepublish/paywall/api": ["libs/paywall/api/src/index.ts"],
+      "@wepublish/paywall/website": ["libs/paywall/website/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -113,6 +113,7 @@ import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.inte
 import {BuilderBlockStyleProps} from './block-styles.interface'
 import {BuilderContentWrapperProps} from './content-wrapper.interface'
 import {BuilderTeaserProps} from './teaser.interface'
+import {BuilderPaywallProps} from './paywall.interface'
 
 const NoComponent = () => null
 
@@ -162,6 +163,7 @@ export type WebsiteBuilderProps = {
   TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
   ContentWrapper: ComponentType<BuilderContentWrapperProps>
+  Paywall: ComponentType<BuilderPaywallProps>
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>
@@ -290,6 +292,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
   ContentWrapper: NoComponent,
+  Paywall: NoComponent,
 
   elements: {
     Rating: NoComponent,

@@ -19,6 +19,7 @@ export const HauptstadtBanner = styled(Banner)`
   color: ${({theme}) => theme.palette.primary.contrastText};
 
   button {
+    border: 1px solid transparent;
     padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(2)};
 
     ${({theme}) => theme.breakpoints.up('md')} {
@@ -81,7 +82,7 @@ export const HauptstadtBanner = styled(Banner)`
     left: 50%;
     transform: translateX(-50%);
     width: 90vw;
-    max-width: 370px;
+    max-width: ${370 / 16}rem;
 
     ${({theme}) => theme.breakpoints.up('sm')} {
       bottom: ${({theme}) => theme.spacing(6)};

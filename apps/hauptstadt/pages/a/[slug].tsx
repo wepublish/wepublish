@@ -1,5 +1,6 @@
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
+import {ShowPaywallContext} from '@wepublish/paywall/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
@@ -23,7 +24,7 @@ import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
 
 export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id}
+    query: {slug, id, articleId}
   } = useRouter()
   const {
     elements: {H3}
@@ -44,7 +45,10 @@ export default function ArticleBySlugOrId() {
 
   return (
     <>
-      <HauptstadtArticle {...containerProps} />
+      <ShowPaywallContext.Provider
+        value={{showPaywall: articleId === data?.article.id ? false : undefined}}>
+        <HauptstadtArticle {...containerProps} />
+      </ShowPaywallContext.Provider>
 
       {data?.article && (
         <ArticleWrapper>

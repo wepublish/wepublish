@@ -26,3 +26,6 @@ export * from './lib/content-wrapper.component'
 
 export * from './lib/teaser.interface'
 export * from './lib/teaser.component'
+
+export * from './lib/paywall.interface'
+export * from './lib/paywall.component'

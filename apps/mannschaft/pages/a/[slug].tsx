@@ -35,7 +35,6 @@ const paywallCss = css`
 
   // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
   & > :nth-child(3) {
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
     mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
   }
 `

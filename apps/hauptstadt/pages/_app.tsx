@@ -4,7 +4,13 @@ import {css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {BannerWrapper} from '@wepublish/banner/website'
-import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {
+  FooterContainer,
+  FooterWrapper,
+  NavbarContainer,
+  NavbarWrapper
+} from '@wepublish/navigation/website'
+import {PaywallWrapper} from '@wepublish/paywall/website'
 import {
   AsyncSessionProvider,
   authLink,
@@ -52,7 +58,6 @@ import {
   HauptstadtTeaserSlider
 } from '../src/components/hauptstadt-teaser'
 import {MainSpacer} from '../src/components/main-spacer'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
@@ -80,7 +85,11 @@ const noPrint = (
   <GlobalStyles
     styles={css`
       @media print {
-        ${ArticleMetaWrapper}, ${BannerWrapper} {
+        ${ArticleMetaWrapper},
+        ${BannerWrapper},
+        ${NavbarWrapper},
+        ${FooterWrapper},
+        ${PaywallWrapper} {
           display: none !important;
         }
       }
@@ -94,22 +103,6 @@ const Spacer = styled('div')`
   grid-template-rows: min-content 1fr min-content;
   gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -200,11 +193,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                     </MainSpacer>
                   </main>
 
-                  <FooterContainer slug="main" categorySlugs={[['pages']]}>
-                    <LogoLink href="/" aria-label="Startseite">
-                      <LogoWrapper />
-                    </LogoLink>
-                  </FooterContainer>
+                  <FooterContainer slug="main" categorySlugs={[['pages']]} />
                 </Spacer>
 
                 <RoutedAdminBar />

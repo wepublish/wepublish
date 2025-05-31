@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {NoSsr, Typography} from '@mui/material'
 import {ArticleContainer, ArticleInfoWrapper} from '@wepublish/article/website'
 import {TitleBlockWrapper} from '@wepublish/block-content/website'
+import {useShowPaywall} from '@wepublish/paywall/website'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
 import {
   BuilderArticleAuthorsProps,
@@ -82,6 +83,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
       itemId: article.id
     }
   })
+  const includeIdInUrl = !useShowPaywall(article.paywall)
 
   const commentCount = data?.comments.length
   const canShare = typeof window !== 'undefined' && 'share' in navigator
@@ -111,7 +113,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
                 startIcon={<FaShare size={16} />}
                 onClick={async () => {
                   navigator.share({
-                    url: article.url,
+                    url: `${article.url}${includeIdInUrl ? `?articleId=${article.id}` : ''}`,
                     title: article.latest.title ?? undefined,
                     text: article.latest.lead ?? undefined
                   })

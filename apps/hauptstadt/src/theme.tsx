@@ -359,24 +359,32 @@ const theme = createTheme(variablesTheme, {
         textPrimary: {
           color: '#587072'
         },
-        root: ({ownerState, theme}) => {
-          const parentStyles: unknown =
-            typeof WePTheme?.components?.MuiButton?.styleOverrides?.root === 'function'
-              ? WePTheme?.components?.MuiButton?.styleOverrides?.root({ownerState, theme})
-              : WePTheme?.components?.MuiButton?.styleOverrides?.root
-
-          if (ownerState.variant === 'text') {
-            return parentStyles
+        contained: {
+          borderRadius: '4px',
+          fontWeight: 300,
+          textTransform: 'uppercase',
+          letterSpacing: '0.0892857143em'
+        },
+        outlined: {
+          borderRadius: '4px',
+          fontWeight: 300,
+          textTransform: 'uppercase',
+          letterSpacing: '0.0892857143em',
+          ['&, &:hover']: {
+            borderWidth: '1px'
           }
-
-          const baseStyles: CSSObject = {
-            borderRadius: '4px',
-            fontWeight: 300,
-            textTransform: 'uppercase',
-            letterSpacing: '0.0892857143em'
+        },
+        outlinedPrimary: ({theme}) => ({
+          ['&, &&:hover']: {
+            color: theme.palette.primary.dark,
+            borderColor: theme.palette.primary.dark
           }
-
-          return {...(parentStyles as CSSObject), ...baseStyles}
+        }),
+        outlinedSecondary: ({theme}) => ({
+          color: theme.palette.secondary.main
+        }),
+        text: {
+          borderRadius: '4px'
         }
       }
     },

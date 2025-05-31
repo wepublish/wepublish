@@ -113,6 +113,7 @@ import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
 import {ContentWrapperStyled} from '@wepublish/content/website'
+import {Paywall} from '@wepublish/paywall/website'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -205,6 +206,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           TransactionFee={TransactionFee}
           Subscribe={Subscribe}
           ContentWrapper={ContentWrapperStyled}
+          Paywall={Paywall}
           elements={{
             TextField,
             Rating,
