@@ -3,19 +3,24 @@
     "production": {
       "deployment": true,
       "env": {
-        "GA_ID": "G-44TZTJNQ6H"
+        "GA_ID": "G-44TZTJNQ6H",
+        "DEPLOY_ENV": "production"
       },
       "secret_env": [],
       "custom_domain": "https://www.hauptstadt.be"
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
       "secret_env": []
     }
   }

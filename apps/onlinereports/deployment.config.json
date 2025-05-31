@@ -2,18 +2,24 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "production"
+      },
       "secret_env": [],
       "custom_domain": "https://onlinereports.ch"
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
       "secret_env": []
     }
   }
