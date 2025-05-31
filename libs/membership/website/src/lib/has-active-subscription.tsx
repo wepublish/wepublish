@@ -2,7 +2,7 @@ import {useUser} from '@wepublish/authentication/website'
 import {useSubscriptionsQuery} from '@wepublish/website/api'
 import {useMemo} from 'react'
 
-export const useHasActiveSubscription = () => {
+export const useActiveSubscriptions = () => {
   const {hasUser} = useUser()
   const {data} = useSubscriptionsQuery({
     fetchPolicy: 'cache-first',
@@ -11,7 +11,7 @@ export const useHasActiveSubscription = () => {
 
   return useMemo(
     () =>
-      !!data?.subscriptions.find(
+      data?.subscriptions.filter(
         subscription =>
           subscription.paidUntil &&
           new Date() > new Date(subscription.startsAt) &&
@@ -19,4 +19,10 @@ export const useHasActiveSubscription = () => {
       ),
     [data?.subscriptions]
   )
+}
+
+export const useHasActiveSubscription = () => {
+  const runningSubscriptions = useActiveSubscriptions()
+
+  return !!runningSubscriptions?.length
 }

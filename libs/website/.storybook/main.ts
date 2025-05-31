@@ -12,8 +12,7 @@ configureSort({
 
 export default {
   framework: {
-    name: '@storybook/nextjs',
-    options: {}
+    name: '@storybook/nextjs'
   },
 
   docs: {},
@@ -46,7 +45,7 @@ export default {
     '@storybook/addon-themes',
     'storybook-react-i18next',
     '@chromatic-com/storybook',
-    '@storybook/addon-webpack5-compiler-babel'
+    '@storybook/addon-webpack5-compiler-swc'
   ],
 
   babel: (config, options) => {

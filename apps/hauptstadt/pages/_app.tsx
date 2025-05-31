@@ -1,13 +1,21 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
-import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import {css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {GoogleAnalytics} from '@next/third-parties/google'
+import {BannerWrapper} from '@wepublish/banner/website'
 import {
+  FooterContainer,
+  FooterWrapper,
+  NavbarContainer,
+  NavbarWrapper
+} from '@wepublish/navigation/website'
+import {PaywallWrapper} from '@wepublish/paywall/website'
+import {
+  AsyncSessionProvider,
   authLink,
   NextWepublishLink,
-  RoutedAdminBar,
-  SessionProvider
+  RoutedAdminBar
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -29,7 +37,27 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
+import {FontSizeProvider} from '../src/components/font-size-picker'
+import {
+  ArticleMetaWrapper,
+  HauptstadtArticleAuthors,
+  HauptstadtArticleMeta
+} from '../src/components/hauptstadt-article'
+import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
+import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
+import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
+import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
+import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
+import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
+import {
+  HauptstadtAlternatingTeaser,
+  HauptstadtFocusTeaser,
+  HauptstadtTeaser,
+  HauptstadtTeaserGrid,
+  HauptstadtTeaserList,
+  HauptstadtTeaserSlider
+} from '../src/components/hauptstadt-teaser'
+import {MainSpacer} from '../src/components/main-spacer'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
@@ -53,39 +81,28 @@ i18next
 
 z.setErrorMap(zodI18nMap)
 
+const noPrint = (
+  <GlobalStyles
+    styles={css`
+      @media print {
+        ${ArticleMetaWrapper},
+        ${BannerWrapper},
+        ${NavbarWrapper},
+        ${FooterWrapper},
+        ${PaywallWrapper} {
+          display: none !important;
+        }
+      }
+    `}
+  />
+)
+
 const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
   gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
-`
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -107,66 +124,88 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+      <AsyncSessionProvider sessionToken={pageProps.sessionToken ?? null}>
         <WebsiteProvider>
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
             elements={{Link: NextWepublishLink}}
-            blocks={{Subscribe: Mitmachen}}
+            Footer={HauptstadtFooter}
+            Navbar={HauptstadtNavbar}
+            ContentWrapper={HauptstadtContentWrapper}
+            AuthorChip={HauptstadtAuthorChip}
+            ArticleAuthors={HauptstadtArticleAuthors}
+            ArticleMeta={HauptstadtArticleMeta}
+            Banner={HauptstadtBanner}
+            blocks={{
+              Subscribe: Mitmachen,
+              Quote: HauptstadtQuoteBlock,
+              BaseTeaser: HauptstadtTeaser,
+              TeaserList: HauptstadtTeaserList,
+              TeaserGrid: HauptstadtTeaserGrid,
+              Break: HauptstadtBreakBlock
+            }}
+            blockStyles={{
+              FocusTeaser: HauptstadtFocusTeaser,
+              AlternatingTeaser: HauptstadtAlternatingTeaser,
+              TeaserSlider: HauptstadtTeaserSlider
+            }}
             date={{format: dateFormatter}}
             meta={{siteTitle}}>
             <ThemeProvider theme={theme}>
-              <CssBaseline />
+              <FontSizeProvider>
+                <CssBaseline />
+                {noPrint}
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <Head>
+                  <title key="title">{siteTitle}</title>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                {/* Feeds */}
-                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                  {/* Feeds */}
+                  <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                  <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                  <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-                {/* Sitemap */}
-                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                  {/* Sitemap */}
+                  <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
-                <meta name="theme-color" content="#ffffff" />
-              </Head>
+                  {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                  <link rel="manifest" href="/site.webmanifest" />
+                  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                  <meta name="msapplication-TileColor" content="#ffffff" />
+                  <meta name="theme-color" content="#ffffff" />
+                </Head>
 
-              <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+                <Spacer>
+                  <NavBar
+                    categorySlugs={[['pages']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                  />
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+                  <main>
+                    <MainSpacer maxWidth="lg">
+                      <Component {...pageProps} />
+                    </MainSpacer>
+                  </main>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                  <LogoLink href="/" aria-label="Startseite">
-                    <LogoWrapper />
-                  </LogoLink>
-                </FooterContainer>
-              </Spacer>
+                  <FooterContainer slug="main" categorySlugs={[['pages']]} />
+                </Spacer>
 
-              <RoutedAdminBar />
+                <RoutedAdminBar />
+
+                {publicRuntimeConfig.env.GA_ID && (
+                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                )}
+              </FontSizeProvider>
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
-      </SessionProvider>
+      </AsyncSessionProvider>
     </AppCacheProvider>
   )
 }

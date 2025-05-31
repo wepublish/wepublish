@@ -81,8 +81,12 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
       fetchUserInvoices()
     },
     onCompleted(data) {
-      if (!data.createSubscription?.intentSecret) {
+      if (data.createSubscription?.intentSecret == null) {
         return
+      }
+
+      if (data.createSubscription.intentSecret === '') {
+        window.location.href = '/profile'
       }
 
       if (data.createSubscription.paymentMethod.paymentProviderID === 'stripe') {

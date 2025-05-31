@@ -1,4 +1,3 @@
-import {mergeDeepRight} from 'ramda'
 import {
   ComponentType,
   createContext,
@@ -51,14 +50,13 @@ import {
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserListBlockProps,
-  BuilderTeaserProps,
-  BuilderTeaserSlotsBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
   BuilderYouTubeVideoBlockProps,
-  BuilderCrowdfundingBlockProps
+  BuilderCrowdfundingBlockProps,
+  BuilderTeaserSlotsBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -113,6 +111,9 @@ import {
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
+import {BuilderContentWrapperProps} from './content-wrapper.interface'
+import {BuilderTeaserProps} from './teaser.interface'
+import {BuilderPaywallProps} from './paywall.interface'
 
 const NoComponent = () => null
 
@@ -161,6 +162,8 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
   TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
+  ContentWrapper: ComponentType<BuilderContentWrapperProps>
+  Paywall: ComponentType<BuilderPaywallProps>
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>
@@ -219,6 +222,7 @@ export type WebsiteBuilderProps = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
+    BaseTeaser: ComponentType<BuilderTeaserProps>
     TeaserSlots: ComponentType<BuilderTeaserSlotsBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
@@ -287,6 +291,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  ContentWrapper: NoComponent,
+  Paywall: NoComponent,
 
   elements: {
     Rating: NoComponent,
@@ -345,6 +351,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     TeaserList: NoComponent,
+    BaseTeaser: NoComponent,
     TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
@@ -353,6 +360,10 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   blockStyles: {
     ImageSlider: NoComponent,
     TeaserSlider: NoComponent,
+    AlternatingTeaser: NoComponent,
+    AlternatingTeaserGrid: NoComponent,
+    AlternatingTeaserList: NoComponent,
+    AlternatingTeaserSlots: NoComponent,
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent
@@ -370,15 +381,41 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   thirdParty: {}
 })
 
-export const useWebsiteBuilder = () => {
-  return useContext(WebsiteBuilderContext)
-}
+export const useWebsiteBuilder = () => useContext(WebsiteBuilderContext)
 
 export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
   ({children, ...components}) => {
     const parentComponents = useWebsiteBuilder()
     const newComponents = useMemo(
-      () => mergeDeepRight(parentComponents, components) as WebsiteBuilderProps,
+      () =>
+        ({
+          ...parentComponents,
+          ...components,
+          blocks: {
+            ...parentComponents.blocks,
+            ...components.blocks
+          },
+          blockStyles: {
+            ...parentComponents.blockStyles,
+            ...components.blockStyles
+          },
+          thirdParty: {
+            ...parentComponents.thirdParty,
+            ...components.thirdParty
+          },
+          elements: {
+            ...parentComponents.elements,
+            ...components.elements
+          },
+          date: {
+            ...parentComponents.date,
+            ...components.date
+          },
+          meta: {
+            ...parentComponents.meta,
+            ...components.meta
+          }
+        } as WebsiteBuilderProps),
       [components, parentComponents]
     )
 

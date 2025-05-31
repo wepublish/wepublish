@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import {BlockContent, TitleBlock as TitleBlockType} from '@wepublish/website/api'
-import {BuilderTitleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderTitleBlockProps} from '@wepublish/website/builder'
 import {H3} from '@wepublish/ui'
+import {Typography} from '@mui/material'
 
 export const isTitleBlock = (block: Pick<BlockContent, '__typename'>): block is TitleBlockType =>
   block.__typename === 'TitleBlock'
@@ -14,14 +15,14 @@ export const TitleBlockWrapper = styled('div')`
 export const TitleBlockTitle = styled(H3)``
 
 export const TitleBlock = ({title, lead, className}: BuilderTitleBlockProps) => {
-  const {
-    elements: {H6}
-  } = useWebsiteBuilder()
-
   return (
     <TitleBlockWrapper className={className}>
       <TitleBlockTitle component="h1">{title}</TitleBlockTitle>
-      {lead && <H6 component="p">{lead}</H6>}
+      {lead && (
+        <Typography variant="subtitle1" component="p">
+          {lead}
+        </Typography>
+      )}
     </TitleBlockWrapper>
   )
 }

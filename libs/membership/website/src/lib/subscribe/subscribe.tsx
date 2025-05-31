@@ -32,9 +32,9 @@ import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/form
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
-import {MembershipModal} from '../membership-modal/membership-modal'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
+import {Modal} from '@wepublish/ui'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -569,7 +569,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         )}
       </SubscribeNarrowSection>
 
-      <MembershipModal
+      <Modal
         open={openConfirm}
         onSubmit={() => {
           onSubmit()
@@ -594,7 +594,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
-      </MembershipModal>
+      </Modal>
     </SubscribeWrapper>
   )
 }

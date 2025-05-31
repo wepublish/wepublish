@@ -1,5 +1,6 @@
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
+import {ShowPaywallContext} from '@wepublish/paywall/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
@@ -19,9 +20,11 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
+import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
+
 export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id}
+    query: {slug, id, articleId}
   } = useRouter()
   const {
     elements: {H3}
@@ -42,7 +45,10 @@ export default function ArticleBySlugOrId() {
 
   return (
     <>
-      <ArticleContainer {...containerProps} />
+      <ShowPaywallContext.Provider
+        value={{showPaywall: articleId === data?.article.id ? false : undefined}}>
+        <HauptstadtArticle {...containerProps} />
+      </ShowPaywallContext.Provider>
 
       {data?.article && (
         <ArticleWrapper>
@@ -50,14 +56,19 @@ export default function ArticleBySlugOrId() {
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            filter={articles =>
+              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+            }
           />
         </ArticleWrapper>
       )}
 
       {data?.article && !data.article.disableComments && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
+          <H3 component={'h2'} id="comments">
+            Kommentare
+          </H3>
+
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}

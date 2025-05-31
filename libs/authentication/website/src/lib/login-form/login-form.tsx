@@ -133,7 +133,8 @@ export function LoginForm({
         {loginLinkSent && (
           <Alert severity="success">
             Falls ein Account unter der Email &quot;{loginWithEmail.data?.sendWebsiteLogin}&quot;
-            besteht, sollte bald ein Login-Link in deinem Email Postfach sein.
+            besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen
+            Moment dauern. Bitte prüfe auch deinen Spam-Ordner.
           </Alert>
         )}
 

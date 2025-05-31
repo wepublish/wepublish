@@ -124,7 +124,8 @@ function PageEditor() {
     client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: {id: pageID!}
+    variables: {id: pageID!},
+    skip: !pageID
   })
 
   const {t} = useTranslation()

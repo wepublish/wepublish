@@ -171,7 +171,7 @@ const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
-    fontSize: '1.1em',
+    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
     padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
   }
 })
@@ -313,7 +313,11 @@ export function Navbar({
           categories={categories}
           closeMenu={toggleMenu}>
           {iconItems?.links.map((link, index) => (
-            <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
+            <Link
+              key={index}
+              href={navigationLinkToUrl(link)}
+              onClick={() => setMenuOpen(false)}
+              color="inherit">
               <TextToIcon title={link.label} size={32} />
             </Link>
           ))}
@@ -381,7 +385,7 @@ export const NavPaperLinksGroup = styled('div')`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   `}
 `

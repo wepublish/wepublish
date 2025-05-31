@@ -75,7 +75,7 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
 export const FooterPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
   background-color: ${({theme}) => theme.palette.grey[800]};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  color: ${({theme}) => theme.palette.getContrastText(theme.palette.grey[800])};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   position: absolute;
@@ -136,13 +136,13 @@ const footerPaperLinkStyling = (theme: Theme) => css`
   }
 `
 
-const FooterPaperCategoryLinks = styled('div')`
+export const FooterPaperCategoryLinks = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
 
-const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
+export const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 

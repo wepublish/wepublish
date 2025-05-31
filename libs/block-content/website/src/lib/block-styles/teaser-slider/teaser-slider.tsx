@@ -6,8 +6,13 @@ import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {hasBlockStyle} from '../../blocks'
+import {
+  BlockContent,
+  TeaserGridBlock,
+  TeaserListBlock,
+  TeaserSlotsBlock
+} from '@wepublish/website/api'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {
   alignmentForTeaserBlock,
   isFilledTeaser,
@@ -19,6 +24,7 @@ import {
   BuilderTeaserListBlockProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
+import {isTeaserSlotsBlock} from '../../teaser/teaser-slots-block'
 
 export const SliderWrapper = styled('section')`
   display: grid;
@@ -167,6 +173,7 @@ export const TeaserSlider = ({
             {filledTeasers.map((teaser, index) => (
               <div key={index} className="keen-slider__slide">
                 <Teaser
+                  index={index}
                   teaser={teaser}
                   blockStyle={blockStyle}
                   alignment={alignmentForTeaserBlock(0, 3)}
@@ -195,5 +202,8 @@ export const TeaserSlider = ({
 
 export const isTeaserSliderBlockStyle = (
   block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
-  allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
+): block is TeaserGridBlock | TeaserListBlock | TeaserSlotsBlock =>
+  allPass([
+    hasBlockStyle('Slider'),
+    anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock])
+  ])(block)

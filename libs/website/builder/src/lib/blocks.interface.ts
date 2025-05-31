@@ -7,7 +7,6 @@ import {
   EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
-  FlexAlignment,
   HtmlBlock,
   IFrameBlock,
   ImageBlock,
@@ -20,7 +19,6 @@ import {
   RichTextBlock,
   SoundCloudTrackBlock,
   SubscribeBlock,
-  Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
   TeaserListBlock,
@@ -86,19 +84,3 @@ export type BuilderTeaserListBlockProps = Omit<TeaserListBlock, 'type'> & {
 export type BuilderTeaserSlotsBlockProps = Omit<TeaserSlotsBlock, 'type'> & {
   className?: string
 }
-
-type TeaserTypeProps =
-  | {
-      blockStyle: string | null | undefined
-      teaser?: Teaser | null | undefined
-      alignment: FlexAlignment
-      numColumns?: never
-    }
-  | {
-      blockStyle: string | null | undefined
-      teaser: Teaser | null | undefined
-      alignment: FlexAlignment
-      numColumns: number
-    }
-
-export type BuilderTeaserProps = TeaserTypeProps & {className?: string}

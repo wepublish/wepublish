@@ -1,9 +1,9 @@
 import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
-import {GoogleAnalyticsConfig} from '@wepublish/api'
 import StipeType from 'stripe'
 import {ProLitterisCountPixelProps, TrackingPixelProvider} from '@wepublish/tracking-pixel/api'
+import {GoogleAnalyticsConfig} from '@wepublish/google-analytics/api'
 
 type General = {
   apolloPlayground: boolean
