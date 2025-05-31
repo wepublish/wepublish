@@ -365,6 +365,10 @@ const theme = createTheme(variablesTheme, {
               ? WePTheme?.components?.MuiButton?.styleOverrides?.root({ownerState, theme})
               : WePTheme?.components?.MuiButton?.styleOverrides?.root
 
+          if (ownerState.variant === 'text') {
+            return parentStyles
+          }
+
           const baseStyles: CSSObject = {
             borderRadius: '4px',
             fontWeight: 300,
