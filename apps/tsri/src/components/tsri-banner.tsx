@@ -1,20 +1,16 @@
 import styled from '@emotion/styled'
-import {Banner, BannerCloseButton, BannerContent, BannerTitle} from '@wepublish/banner/website'
+import {Banner, BannerCloseButton, BannerContentWrapper} from '@wepublish/banner/website'
 
 const TsriBanner = styled(Banner)(
   ({theme}) => `
 
-  ${BannerContent} {
+  ${BannerContentWrapper} {
     background-color: ${theme.palette.primary.main};
     padding: ${theme.spacing(2)};
 
     ${theme.breakpoints.up('md')} {
       padding: ${theme.spacing(6)} ${theme.spacing(12)};
     }
-  }
-
-  ${BannerTitle} {
-    font-size: ${theme.typography.h3.fontSize};
   }
 
   ${BannerCloseButton} {

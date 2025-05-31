@@ -13,7 +13,23 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   compiler: {
-    emotion: true
+    emotion: {
+      sourceMap: true,
+      importMap: {
+        '@mui/material': {
+          styled: {
+            canonicalImport: ['@emotion/styled', 'default'],
+            styledBaseImport: ['@mui/material', 'styled']
+          }
+        },
+        '@mui/material/styles': {
+          styled: {
+            canonicalImport: ['@emotion/styled', 'default'],
+            styledBaseImport: ['@mui/material/styles', 'styled']
+          }
+        }
+      }
+    }
   },
   webpack(config, {webpack}) {
     /**

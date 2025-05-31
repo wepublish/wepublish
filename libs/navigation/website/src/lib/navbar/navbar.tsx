@@ -171,7 +171,7 @@ const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
-    fontSize: '1.1em',
+    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
     padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
   }
 })

@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import {css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {BannerWrapper} from '@wepublish/banner/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
   AsyncSessionProvider,
@@ -37,6 +38,7 @@ import {
   HauptstadtArticleMeta
 } from '../src/components/hauptstadt-article'
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
+import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
@@ -78,7 +80,7 @@ const noPrint = (
   <GlobalStyles
     styles={css`
       @media print {
-        ${ArticleMetaWrapper} {
+        ${ArticleMetaWrapper}, ${BannerWrapper} {
           display: none !important;
         }
       }
@@ -141,6 +143,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             AuthorChip={HauptstadtAuthorChip}
             ArticleAuthors={HauptstadtArticleAuthors}
             ArticleMeta={HauptstadtArticleMeta}
+            Banner={HauptstadtBanner}
             blocks={{
               Subscribe: Mitmachen,
               Quote: HauptstadtQuoteBlock,

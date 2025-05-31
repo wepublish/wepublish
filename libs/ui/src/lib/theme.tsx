@@ -36,6 +36,10 @@ declare module '@mui/material/styles' {
     teaserMeta: TypographyStyleOptions
 
     articleAuthors: TypographyStyleOptions
+
+    bannerTitle: TypographyStyleOptions
+    bannerText: TypographyStyleOptions
+    bannerCta: TypographyStyleOptions
   }
 
   interface TypographyVariantsOptions {
@@ -45,6 +49,10 @@ declare module '@mui/material/styles' {
     teaserMeta?: TypographyStyleOptions
 
     articleAuthors?: TypographyStyleOptions
+
+    bannerTitle?: TypographyStyleOptions
+    bannerText?: TypographyStyleOptions
+    bannerCta?: TypographyStyleOptions
   }
 }
 
@@ -62,6 +70,10 @@ declare module '@mui/material/Typography' {
     teaserMeta: true
 
     articleAuthors: true
+
+    bannerTitle: true
+    bannerText: true
+    bannerCta: true
   }
 }
 
@@ -139,6 +151,16 @@ export const theme = createTheme({
     },
     teaserMeta: {
       fontSize: '0.75rem'
+    },
+    // Banner
+    bannerTitle: {
+      ...baseTheme.typography.h5
+    },
+    bannerText: {
+      ...baseTheme.typography.body1
+    },
+    bannerCta: {
+      ...baseTheme.typography.h6
     }
   },
   palette: {

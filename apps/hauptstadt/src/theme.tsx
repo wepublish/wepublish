@@ -58,11 +58,22 @@ export const ABCWhyte = localFont({
   src: [
     {
       path: '../public/fonts/abc-white/ABCWhyte-Thin.woff2',
-      weight: '200',
+      weight: '100',
       style: 'normal'
     },
     {
       path: '../public/fonts/abc-white/ABCWhyte-ThinItalic.woff2',
+      weight: '100',
+      style: 'italic'
+    },
+    //
+    {
+      path: '../public/fonts/abc-white/ABCWhyte-Light.woff2',
+      weight: '200',
+      style: 'normal'
+    },
+    {
+      path: '../public/fonts/abc-white/ABCWhyte-LightItalic.woff2',
       weight: '200',
       style: 'italic'
     },
@@ -139,7 +150,7 @@ const variablesTheme = createTheme(WePTheme, {
     }
   }),
   palette: {
-    primary: augmentColor({color: {main: '#abd8da', dark: '#587072'}}),
+    primary: augmentColor({color: {main: '#abd8da'}}),
     secondary: augmentColor({color: {main: '#272727'}}),
     accent: augmentColor({color: {main: '#f3ded0'}}),
     success: augmentColor({color: {main: '#abd8da'}}),
@@ -148,6 +159,7 @@ const variablesTheme = createTheme(WePTheme, {
 } as PartialDeep<Theme> | ThemeOptions)
 
 const caption = {
+  ...variablesTheme.typography.caption,
   lineHeight: 1.3,
   fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   ...responsiveProperty({
@@ -160,6 +172,7 @@ const caption = {
 }
 
 const body = {
+  ...variablesTheme.typography.body1,
   fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.6,
   ...responsiveProperty({
@@ -172,6 +185,7 @@ const body = {
 }
 
 const h3 = {
+  ...variablesTheme.typography.h3,
   fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.2,
   ...responsiveProperty({
@@ -184,6 +198,7 @@ const h3 = {
 }
 
 const h4 = {
+  ...variablesTheme.typography.h4,
   fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.2,
   ...responsiveProperty({
@@ -195,7 +210,14 @@ const h4 = {
   })
 }
 
+const h5 = {
+  ...variablesTheme.typography.h5,
+  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  lineHeight: 1.2
+}
+
 const subtitle1 = {
+  ...variablesTheme.typography.subtitle1,
   fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.35,
   ...responsiveProperty({
@@ -224,10 +246,7 @@ const theme = createTheme(variablesTheme, {
     },
     h3,
     h4,
-    h5: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.2
-    },
+    h5,
     h6: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
@@ -297,15 +316,63 @@ const theme = createTheme(variablesTheme, {
         unit: 'rem',
         breakpoints: [variablesTheme.breakpoints.values.md]
       })
+    },
+    //
+    bannerTitle: {
+      ...h5,
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 28,
+        min: 24,
+        unit: 'rem',
+        breakpoints: [variablesTheme.breakpoints.values.md]
+      })
+    },
+    bannerText: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 200,
+      lineHeight: 1.35,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 18,
+        min: 16,
+        unit: 'rem',
+        breakpoints: [variablesTheme.breakpoints.values.md]
+      })
+    },
+    bannerCta: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 800,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 23,
+        min: 20,
+        unit: 'rem',
+        breakpoints: [variablesTheme.breakpoints.values.md]
+      })
     }
   },
   components: {
     MuiButton: {
       styleOverrides: {
-        textPrimary: ({theme}) => {
-          return {
-            color: theme.palette.primary.dark
+        textPrimary: {
+          color: '#587072'
+        },
+        root: ({ownerState, theme}) => {
+          const parentStyles: unknown =
+            typeof WePTheme?.components?.MuiButton?.styleOverrides?.root === 'function'
+              ? WePTheme?.components?.MuiButton?.styleOverrides?.root({ownerState, theme})
+              : WePTheme?.components?.MuiButton?.styleOverrides?.root
+
+          const baseStyles: CSSObject = {
+            borderRadius: '4px',
+            fontWeight: 300,
+            textTransform: 'uppercase',
+            letterSpacing: '0.0892857143em'
           }
+
+          return {...(parentStyles as CSSObject), ...baseStyles}
         }
       }
     },
@@ -322,7 +389,7 @@ const theme = createTheme(variablesTheme, {
           }
 
           if (ownerState.color === 'primary') {
-            styles.color = theme.palette.primary.dark
+            styles.color = '#587072'
           }
 
           return styles
