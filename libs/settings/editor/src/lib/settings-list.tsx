@@ -690,7 +690,7 @@ function SettingList() {
                     <Form.ControlLabel>
                       <>
                         {t(settings[SettingName.NewArticlePeering].label)}
-                        <SettingInfo text={t('settingList.warnings.NewArticlePeering')} />
+                        <SettingInfo text={t('settingList.warnings.newArticlePeering')} />
                       </>
                     </Form.ControlLabel>
 
@@ -710,7 +710,7 @@ function SettingList() {
                     <Form.ControlLabel>
                       <>
                         {t(settings[SettingName.NewArticlePaywall].label)}
-                        <SettingInfo text={t('settingList.warnings.NewArticlePaywall')} />
+                        <SettingInfo text={t('settingList.warnings.newArticlePaywall')} />
                       </>
                     </Form.ControlLabel>
 

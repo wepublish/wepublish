@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import {css, GlobalStyles} from '@mui/material'
 import {FullPaywallFragment} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useIntersectionObserver} from 'usehooks-ts'
-import {BannerWrapper} from '@wepublish/banner/website'
+import {forceHideBanner} from '@wepublish/banner/website'
 
 type BuilderPaywallProps = {className?: string} & FullPaywallFragment
 
@@ -27,16 +26,6 @@ const PaywallActions = styled.div`
     grid-template-columns: max-content max-content;
   }
 `
-
-const hideBanner = (
-  <GlobalStyles
-    styles={css`
-      ${BannerWrapper} {
-        display: none !important;
-      }
-    `}
-  />
-)
 
 export const Paywall = ({className, description}: BuilderPaywallProps) => {
   const {
@@ -71,7 +60,7 @@ export const Paywall = ({className, description}: BuilderPaywallProps) => {
         </Button>
       </PaywallActions>
 
-      {isIntersecting && hideBanner}
+      {isIntersecting && forceHideBanner}
     </PaywallWrapper>
   )
 }

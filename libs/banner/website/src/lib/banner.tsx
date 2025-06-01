@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Typography} from '@mui/material'
+import {css, GlobalStyles, Typography} from '@mui/material'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -195,3 +195,13 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     </BannerWrapper>
   )
 }
+
+export const forceHideBanner = (
+  <GlobalStyles
+    styles={css`
+      ${BannerWrapper} {
+        display: none !important;
+      }
+    `}
+  />
+)

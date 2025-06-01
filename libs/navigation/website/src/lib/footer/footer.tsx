@@ -3,6 +3,8 @@ import styled from '@emotion/styled'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
+import {useIntersectionObserver} from 'usehooks-ts'
+import {forceHideBanner} from '@wepublish/banner/website'
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
@@ -153,13 +155,17 @@ const FooterPaper = ({
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
 }) => {
+  const {isIntersecting, ref} = useIntersectionObserver({
+    initialIsIntersecting: false,
+    threshold: 0.9
+  })
   const {
     elements: {Link, H4, H6}
   } = useWebsiteBuilder()
   const theme = useTheme()
 
   return (
-    <FooterPaperWrapper>
+    <FooterPaperWrapper ref={ref}>
       {!!main?.links.length && (
         <FooterPaperMainLinks>
           {main.links.map((link, index) => {
@@ -209,6 +215,8 @@ const FooterPaper = ({
           ))}
         </>
       )}
+
+      {isIntersecting && forceHideBanner}
     </FooterPaperWrapper>
   )
 }
