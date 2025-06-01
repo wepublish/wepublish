@@ -61,15 +61,13 @@ export const HauptstadtArticleAuthors = ({article, className}: BuilderArticleAut
   )
 }
 
-export const ArticleMetaWrapper = styled('div')`
+const HauptstadtArticleMetaWrapper = styled('div')`
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  gap: ${({theme}) => theme.spacing(2)};
-`
 
-export const ArticleMetaComments = styled('div')`
-  margin-right: ${({theme}) => theme.spacing(2)};
+  .MuiButton-startIcon {
+    margin-right: ${({theme}) => theme.spacing(0.5)};
+  }
 `
 
 export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaProps) => {
@@ -90,56 +88,54 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
 
   return (
     <>
-      <ArticleMetaWrapper className={className}>
-        <ArticleMetaComments>
-          <Button
-            color="primary"
-            variant="text"
-            LinkComponent={Link}
-            href="#comments"
-            startIcon={
-              article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
-            }>
-            {!commentCount
-              ? 'Keine Beiträge'
-              : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
-          </Button>
+      <HauptstadtArticleMetaWrapper className={className}>
+        <Button
+          color="primary"
+          variant="text"
+          LinkComponent={Link}
+          href="#comments"
+          startIcon={
+            article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
+          }>
+          {!commentCount
+            ? 'Keine Beiträge'
+            : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
+        </Button>
 
-          {canShare && (
-            <NoSsr>
-              <Button
-                color="primary"
-                variant="text"
-                startIcon={<FaShare size={16} />}
-                onClick={async () => {
-                  navigator.share({
-                    url: `${article.url}${includeIdInUrl ? `?articleId=${article.id}` : ''}`,
-                    title: article.latest.title ?? undefined,
-                    text: article.latest.lead ?? undefined
-                  })
-                }}>
-                Teilen
-              </Button>
-            </NoSsr>
-          )}
+        {canShare && (
+          <NoSsr>
+            <Button
+              color="primary"
+              variant="text"
+              startIcon={<FaShare size={16} />}
+              onClick={async () => {
+                navigator.share({
+                  url: `${article.url}${includeIdInUrl ? `?articleId=${article.id}` : ''}`,
+                  title: article.latest.title ?? undefined,
+                  text: article.latest.lead ?? undefined
+                })
+              }}>
+              Teilen
+            </Button>
+          </NoSsr>
+        )}
 
-          <Button
-            color="primary"
-            variant="text"
-            startIcon={<MdPrint size={16} />}
-            onClick={() => print()}>
-            Drucken
-          </Button>
+        <Button
+          color="primary"
+          variant="text"
+          startIcon={<MdPrint size={16} />}
+          onClick={() => print()}>
+          Drucken
+        </Button>
 
-          <Button
-            color="primary"
-            variant="text"
-            startIcon={<MdFormatSize size={16} />}
-            onClick={() => setOpenFontSizeModal(true)}>
-            Schrift
-          </Button>
-        </ArticleMetaComments>
-      </ArticleMetaWrapper>
+        <Button
+          color="primary"
+          variant="text"
+          startIcon={<MdFormatSize size={16} />}
+          onClick={() => setOpenFontSizeModal(true)}>
+          Schrift
+        </Button>
+      </HauptstadtArticleMetaWrapper>
 
       <FontSizePicker
         open={openFontSizeModal}
