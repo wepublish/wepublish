@@ -143,9 +143,7 @@ export function LoginForm({
           disabled={loading || loginLinkSent}
           type="submit"
           onClick={onSubmit}>
-          {!loginWithPassword && (
-            <>{loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern'}</>
-          )}
+          {!loginWithPassword && (loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern')}
 
           {loginWithPassword && 'Login'}
         </Button>

@@ -18,15 +18,6 @@ export const HauptstadtBanner = styled(Banner)`
   background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
 
-  button {
-    border: 1px solid transparent;
-    padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(2)};
-
-    ${({theme}) => theme.breakpoints.up('md')} {
-      padding: ${({theme}) => theme.spacing(1.5)} ${({theme}) => theme.spacing(2.5)};
-    }
-  }
-
   [data-role='PRIMARY'] button {
     background-color: transparent;
     border: 1px solid ${({theme}) => theme.palette.secondary.main};

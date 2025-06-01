@@ -3,6 +3,7 @@ import {FullPaywallFragment} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useIntersectionObserver} from 'usehooks-ts'
 import {forceHideBanner} from '@wepublish/banner/website'
+import {useUser} from '@wepublish/authentication/website'
 
 type BuilderPaywallProps = {className?: string} & FullPaywallFragment
 
@@ -28,6 +29,7 @@ const PaywallActions = styled.div`
 `
 
 export const Paywall = ({className, description}: BuilderPaywallProps) => {
+  const {hasUser} = useUser()
   const {
     elements: {Button, Link},
     blocks: {RichText}
@@ -41,23 +43,15 @@ export const Paywall = ({className, description}: BuilderPaywallProps) => {
       <RichText richText={description ?? []} />
 
       <PaywallActions>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="large"
-          LinkComponent={Link}
-          href={'/mitmachen'}>
+        <Button variant="contained" color="secondary" LinkComponent={Link} href={'/mitmachen'}>
           Abonnent*in werden
         </Button>
 
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="large"
-          LinkComponent={Link}
-          href={'/login'}>
-          Login
-        </Button>
+        {!hasUser && (
+          <Button variant="outlined" color="secondary" LinkComponent={Link} href={'/login'}>
+            Login
+          </Button>
+        )}
       </PaywallActions>
 
       {isIntersecting && forceHideBanner}

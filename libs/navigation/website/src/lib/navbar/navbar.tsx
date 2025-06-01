@@ -282,19 +282,20 @@ export function Navbar({
                 color="warning"
                 startIcon={<MdWarning />}
                 sx={buttonStyles}
+                size="medium"
                 {...profileBtn}>
                 <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
               </Button>
             )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} {...subscribeBtn}>
+              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...subscribeBtn}>
                 {t('navbar.subscribe')}
               </Button>
             )}
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} {...profileBtn}>
+              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
                 Mein Konto
               </Button>
             )}

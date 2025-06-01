@@ -355,7 +355,20 @@ const theme = createTheme(variablesTheme, {
   },
   components: {
     MuiButton: {
+      defaultProps: {
+        size: 'large'
+      },
       styleOverrides: {
+        sizeLarge: ({theme}) => ({
+          fontSize: '14px',
+          padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+          [theme.breakpoints.up('md')]: {
+            padding: `${theme.spacing(1.5)} ${theme.spacing(2.5)}`
+          }
+        }),
+        containedSizeLarge: {
+          border: '1px solid transparent'
+        },
         textPrimary: {
           color: '#587072'
         },

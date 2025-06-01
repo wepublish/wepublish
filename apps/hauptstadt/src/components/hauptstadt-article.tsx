@@ -61,7 +61,7 @@ export const HauptstadtArticleAuthors = ({article, className}: BuilderArticleAut
   )
 }
 
-const HauptstadtArticleMetaWrapper = styled('div')`
+export const HauptstadtArticleMetaWrapper = styled('div')`
   display: flex;
   flex-flow: row wrap;
 
@@ -92,6 +92,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
         <Button
           color="primary"
           variant="text"
+          size="medium"
           LinkComponent={Link}
           href="#comments"
           startIcon={
@@ -107,6 +108,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
             <Button
               color="primary"
               variant="text"
+              size="medium"
               startIcon={<FaShare size={16} />}
               onClick={async () => {
                 navigator.share({
@@ -123,6 +125,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
         <Button
           color="primary"
           variant="text"
+          size="medium"
           startIcon={<MdPrint size={16} />}
           onClick={() => print()}>
           Drucken
@@ -131,6 +134,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
         <Button
           color="primary"
           variant="text"
+          size="medium"
           startIcon={<MdFormatSize size={16} />}
           onClick={() => setOpenFontSizeModal(true)}>
           Schrift

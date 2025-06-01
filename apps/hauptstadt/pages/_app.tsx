@@ -39,9 +39,9 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {FontSizeProvider} from '../src/components/font-size-picker'
 import {
-  ArticleMetaWrapper,
   HauptstadtArticleAuthors,
-  HauptstadtArticleMeta
+  HauptstadtArticleMeta,
+  HauptstadtArticleMetaWrapper
 } from '../src/components/hauptstadt-article'
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
@@ -85,7 +85,7 @@ const noPrint = (
   <GlobalStyles
     styles={css`
       @media print {
-        ${ArticleMetaWrapper},
+        ${HauptstadtArticleMetaWrapper},
         ${BannerWrapper},
         ${NavbarWrapper},
         ${FooterWrapper},
