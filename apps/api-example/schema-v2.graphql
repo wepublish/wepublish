@@ -1080,6 +1080,31 @@ input InstagramPostBlockInput {
   postID: String
 }
 
+type Invoice {
+  canceledAt: DateTime
+  createdAt: DateTime!
+  description: String
+  dueAt: DateTime!
+  id: String!
+  items: [InvoiceItem!]!
+  mail: String!
+  modifiedAt: DateTime!
+  paidAt: DateTime
+  subscription: PublicSubscription
+  subscriptionID: String!
+  total: Int!
+}
+
+type InvoiceItem {
+  amount: Int!
+  createdAt: DateTime!
+  description: String
+  modifiedAt: DateTime!
+  name: String!
+  quantity: Int!
+  total: Int!
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1678,6 +1703,11 @@ type Query {
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
 
+  """
+  Check the status of an invoice and update with information from the payment provider
+  """
+  checkInvoiceStatus(id: String!): Invoice
+
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!
 
@@ -1719,6 +1749,9 @@ type Query {
 
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
+
+  """Get all invoices for the authenticated user"""
+  invoices: [Invoice!]!
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!

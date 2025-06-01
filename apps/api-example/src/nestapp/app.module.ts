@@ -71,6 +71,7 @@ import {
 import {HttpModule, HttpService} from '@nestjs/axios'
 import {MediaAdapterModule} from '@wepublish/image/api'
 import {AuthorModule} from '@wepublish/author/api'
+import {InvoiceModule} from '@wepublish/invoice/api'
 
 @Global()
 @Module({
@@ -330,6 +331,7 @@ import {AuthorModule} from '@wepublish/author/api'
     }),
     ApiModule,
     MembershipModule,
+    InvoiceModule,
     DashboardModule,
     AuthenticationModule,
 

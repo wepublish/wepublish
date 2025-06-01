@@ -23,9 +23,6 @@ type Query {
   """This query returns the user."""
   me: User
 
-  """This query returns the invoices  of the authenticated user."""
-  invoices: [Invoice!]!
-
   """This query returns the subscriptions of the authenticated user."""
   subscriptions: [PublicSubscription!]!
 
@@ -34,11 +31,6 @@ type Query {
 
   """This query returns the member plans."""
   memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
-
-  """
-  This mutation will check the invoice status and update with information from the paymentProvider
-  """
-  checkInvoiceStatus(id: String!): Invoice
 
   """
   This query generates a challenge which can be used to access protected endpoints.
@@ -247,31 +239,6 @@ enum CommentSort {
 enum SortOrder {
   Ascending
   Descending
-}
-
-type Invoice {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  mail: String!
-  description: String
-  paidAt: DateTime
-  dueAt: DateTime!
-  canceledAt: DateTime
-  items: [InvoiceItem!]!
-  subscriptionID: String!
-  subscription: PublicSubscription
-  total: Int!
-}
-
-type InvoiceItem {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  total: Int!
 }
 
 type PublicSubscription {
