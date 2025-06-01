@@ -837,7 +837,13 @@ type FocalPoint {
 }
 
 type FullPoll {
+  answers: [PollAnswerWithVoteCount!]!
+  closedAt: DateTime
+  externalVoteSources: [PollExternalVoteSource!]!
   id: String!
+  infoText: RichText
+  opensAt: DateTime!
+  question: String
 }
 
 """Setting Value"""
@@ -1561,6 +1567,13 @@ type PollAnswerInVote {
   id: String!
 }
 
+type PollAnswerWithVoteCount {
+  answer: String
+  id: String!
+  pollId: String!
+  votes: Int!
+}
+
 type PollBlock implements BaseBlock & HasOptionalPoll {
   blockStyle: String
   blockStyleName: String
@@ -1573,6 +1586,18 @@ input PollBlockInput {
   blockStyle: String
   blockStyleName: String
   pollId: String
+}
+
+type PollExternalVote {
+  amount: VoteValue!
+  answerId: String!
+  id: String!
+}
+
+type PollExternalVoteSource {
+  id: String!
+  source: String
+  voteAmounts: [PollExternalVote!]!
 }
 
 type PollStartedAction implements BaseAction & HasPoll {
@@ -1735,6 +1760,7 @@ type Query {
   This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
   """
   phrase(articleSort: ArticleSort! = PublishedAt, order: SortOrder! = Descending, pageSort: PageSort! = PublishedAt, query: String!, skip: Int! = 0, take: Int! = 10): Phrase!
+  poll(id: String!): FullPoll!
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
@@ -1789,6 +1815,7 @@ type Query {
 
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
+  userPollVote(pollId: String!): String
   versionInformation: VersionInformation!
 }
 
@@ -2257,6 +2284,9 @@ input VimeoVideoBlockInput {
   blockStyleName: String
   videoID: String
 }
+
+"""A valid vote value"""
+scalar VoteValue
 
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String

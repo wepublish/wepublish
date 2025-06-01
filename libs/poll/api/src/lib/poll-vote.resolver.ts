@@ -9,6 +9,7 @@ import {
 import {PollVoteService} from './poll-vote.service'
 import {CanDeletePollVote, CanGetPollVote} from '@wepublish/permissions'
 import {Permissions} from '@wepublish/permissions/api'
+import {Authenticated, CurrentUser, UserSession} from '@wepublish/authentication/api'
 
 @Resolver(() => PollVote)
 export class PollVoteResolver {
@@ -28,5 +29,14 @@ export class PollVoteResolver {
   })
   public deletePollVotes(@Args() {ids}: PoleVoteByIdArgs) {
     return this.pollService.deletePollVotes({ids})
+  }
+
+  @Query(() => String, {nullable: true})
+  @Authenticated()
+  async userPollVote(
+    @Args('pollId') pollId: string,
+    @CurrentUser() {user}: UserSession
+  ): Promise<string | null> {
+    return this.pollService.userPollVote(pollId, user.id)
   }
 }

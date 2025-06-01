@@ -21,8 +21,6 @@ import {
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {GraphQLFullPoll} from './poll/poll'
-import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLPublicUser} from './user'
 
@@ -240,27 +238,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
       resolve: (root, input, {prisma: {commentRatingSystem}}) =>
         getRatingSystem(commentRatingSystem)
-    },
-
-    // Poll
-    // =======
-    poll: {
-      type: new GraphQLNonNull(GraphQLFullPoll),
-      description: 'This query returns a poll with all the needed data',
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {id}, {prisma: {poll}}) => getPoll(id, poll)
-    },
-
-    userPollVote: {
-      type: GraphQLString,
-      description: 'This query returns the answerId of a poll if the user has already voted on it.',
-      args: {
-        pollId: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
-        userPollVote(pollId, authenticateUser, pollVote)
     }
   }
 })

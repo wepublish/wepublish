@@ -21,7 +21,6 @@ import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import * as fs from 'fs'
-import {GraphQLPollResolver} from './graphql/poll/poll'
 import {GraphQLCommentResolver} from './graphql/comment/comment'
 import {GraphQLUserResolver} from './graphql/user'
 import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
@@ -87,7 +86,6 @@ export class WepublishServer {
 
       extend type PublicSubscription @key(fields: "id")
       extend type Comment @key(fields: "id")
-      extend type FullPoll @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
 
@@ -137,7 +135,6 @@ export class WepublishServer {
 
     const federatedResolvers = {
       Comment: GraphQLCommentResolver,
-      FullPoll: GraphQLPollResolver,
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
       User: GraphQLUserResolver,

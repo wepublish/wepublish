@@ -7,6 +7,19 @@ import {Injectable} from '@nestjs/common'
 export class PollVoteService {
   constructor(readonly prisma: PrismaClient) {}
 
+  async userPollVote(pollId: string, userId: string): Promise<string | null> {
+    const vote = await this.prisma.pollVote.findUnique({
+      where: {
+        pollId_userId: {
+          pollId,
+          userId
+        }
+      }
+    })
+
+    return vote?.answerId || null
+  }
+
   async getPollVotes({
     filter,
     sort = PollVoteSort.CreatedAt,
