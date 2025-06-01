@@ -5,9 +5,10 @@ import {HasAuthorResolver, HasOptionalAuthorResolver} from './has-author/has-aut
 import {AuthorService} from './author.service'
 import {AuthorResolver} from './author.resolver'
 import {ArticleAuthorsService} from './article-authors.service'
+import {TagModule} from '@wepublish/tag/api'
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, TagModule],
   providers: [
     AuthorDataloaderService,
     AuthorService,

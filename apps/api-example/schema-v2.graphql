@@ -1763,6 +1763,27 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
+  """This query returns a list of tags"""
+  tags(
+    """Cursor for pagination"""
+    cursor: String
+
+    """Filter for tags"""
+    filter: TagFilter
+
+    """Sort order"""
+    order: SortOrder! = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: TagSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): TagConnection
+
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
@@ -1933,6 +1954,36 @@ type SystemMailModel {
 
 type Tag {
   id: String!
+  main: Boolean!
+  tag: String
+  type: TagType
+  url: String!
+}
+
+type TagConnection {
+  nodes: [Tag!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input TagFilter {
+  tag: String
+  type: TagType
+}
+
+enum TagSort {
+  CreatedAt
+  ModifiedAt
+  Tag
+}
+
+"""Type of tag."""
+enum TagType {
+  Article
+  Author
+  Comment
+  Event
+  Page
 }
 
 union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser

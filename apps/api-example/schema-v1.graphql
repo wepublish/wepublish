@@ -53,9 +53,6 @@ type Query {
   This query returns the answerId of a poll if the user has already voted on it.
   """
   userPollVote(pollId: String!): String
-
-  """This query returns a list of tags"""
-  tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
@@ -440,23 +437,6 @@ type PollExternalVote {
 
 """A valid vote value"""
 scalar VoteValue
-
-type TagConnection {
-  nodes: [Tag!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input TagFilter {
-  type: TagType
-  tag: String
-}
-
-enum TagSort {
-  CreatedAt
-  ModifiedAt
-  Tag
-}
 
 type Mutation {
   createSession(email: String!, password: String!): SessionWithToken!

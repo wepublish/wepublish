@@ -90,6 +90,7 @@ export class WepublishServer {
       extend type FullPoll @key(fields: "id")
       extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
+
       extend type PaymentMethod @key(fields: "id")
       extend type MemberPlan @key(fields: "id")
       extend type User @key(fields: "id")

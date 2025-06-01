@@ -24,8 +24,6 @@ import {
 import {GraphQLFullPoll} from './poll/poll'
 import {getPoll, userPollVote} from './poll/poll.public-queries'
 import {GraphQLPublicSubscription} from './subscription-public'
-import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags, TagSort} from './tag/tag.query'
 import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
@@ -263,24 +261,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {pollId}, {authenticateUser, prisma: {pollVote}}) =>
         userPollVote(pollId, authenticateUser, pollVote)
-    },
-
-    // Tag
-    // ==========
-
-    tags: {
-      type: GraphQLTagConnection,
-      description: 'This query returns a list of tags',
-      args: {
-        cursor: {type: GraphQLString},
-        take: {type: GraphQLInt, defaultValue: 10},
-        skip: {type: GraphQLInt, defaultValue: 0},
-        filter: {type: GraphQLTagFilter},
-        sort: {type: GraphQLTagSort, defaultValue: TagSort.CreatedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve: (root, {filter, sort, order, cursor, take, skip}, {prisma}) =>
-        getTags(filter, sort, order, cursor, skip, take, prisma.tag)
     }
   }
 })

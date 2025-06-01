@@ -12,7 +12,7 @@ import {PageService, PageSort} from '@wepublish/page/api'
 import {Article} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
 import {EventService, EventSort} from '@wepublish/event/api'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagDataloader} from '@wepublish/tag/api'
 
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {
@@ -121,8 +121,10 @@ export class TeaserListBlockResolver {
 
 @Resolver(() => TeaserListBlockFilter)
 export class TeaserListBlockFilterResolver {
+  public constructor(private tagDataloader: TagDataloader) {}
+
   @ResolveField(() => [Tag])
   async tagObjects(@Parent() parent: TeaserListBlockFilter) {
-    return parent.tags.map(id => ({__typename: 'Tag', id}))
+    return this.tagDataloader.loadMany(parent.tags)
   }
 }

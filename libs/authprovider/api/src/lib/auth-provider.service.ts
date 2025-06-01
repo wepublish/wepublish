@@ -1,5 +1,4 @@
 import {Inject, Injectable} from '@nestjs/common'
-import {Issuer} from 'openid-client'
 
 export const OAUTH2_CLIENTS_PROVIDER = 'OAUTH2_CLIENTS_PROVIDER'
 type OAuth2ClientsProvider = () => Promise<any[]>

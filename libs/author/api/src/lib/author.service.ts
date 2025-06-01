@@ -11,10 +11,7 @@ function lowercaseFirstLetter(str: string): string {
 
 @Injectable()
 export class AuthorService {
-  constructor(
-    private prisma: PrismaClient,
-    private authorDataloaderService: AuthorDataloaderService
-  ) {}
+  constructor(private prisma: PrismaClient) {}
 
   @PrimeDataLoader(AuthorDataloaderService)
   async getAuthorById(id: string) {
@@ -87,21 +84,6 @@ export class AuthorService {
         endCursor: lastAuthor?.id
       }
     }
-  }
-
-  async getTagIds(authorId: string) {
-    return this.prisma.tag.findMany({
-      select: {
-        id: true
-      },
-      where: {
-        authors: {
-          some: {
-            authorId
-          }
-        }
-      }
-    })
   }
 }
 

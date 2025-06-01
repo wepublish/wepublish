@@ -61,6 +61,7 @@ import {ArticleModule} from '@wepublish/article/api'
 import {PhraseModule} from '@wepublish/phrase/api'
 import {ActionModule} from '@wepublish/action/api'
 import {NavigationModule} from '@wepublish/navigation/api'
+import {TagModule} from '@wepublish/tag/api'
 import {UserModule} from '@wepublish/user/api'
 import {
   ProlitterisTrackingPixelProvider,
@@ -387,6 +388,7 @@ import {AuthorModule} from '@wepublish/author/api'
     UserModule,
     SubscriptionModule,
     NavigationModule,
+    TagModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,
