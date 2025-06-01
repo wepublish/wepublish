@@ -106,6 +106,19 @@ export class TagService {
     })
   }
 
+  @PrimeDataLoader(TagDataloader)
+  async getTagsByCommentId(commentId: string): Promise<TagFields[]> {
+    return this.prisma.tag.findMany({
+      where: {
+        comments: {
+          some: {
+            commentId
+          }
+        }
+      }
+    })
+  }
+
   private createTagOrder(
     field: TagSort,
     sortOrder: SortOrder

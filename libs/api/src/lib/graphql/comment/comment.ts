@@ -4,9 +4,8 @@ import {
   CommentRejectionReason,
   CommentState
 } from '@prisma/client'
-import {AuthSessionType} from '@wepublish/authentication/api'
+import {AuthSessionType, unselectPassword} from '@wepublish/authentication/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
-import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
@@ -320,12 +319,10 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
         })
       },
       authorType: {type: new GraphQLNonNull(GraphQLCommentAuthorType)},
-
       itemID: {type: new GraphQLNonNull(GraphQLString)},
       itemType: {
         type: new GraphQLNonNull(GraphQLCommentItemType)
       },
-
       children: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
         resolve: createProxyingResolver(({id}, _, {session, prisma: {comment}}) => {
@@ -334,14 +331,11 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
           return getPublicChildrenCommentsByParentId(id, userId, comment)
         })
       },
-
       title: {type: GraphQLString},
       lead: {type: GraphQLString},
       text: {type: GraphQLRichText},
-
       state: {type: new GraphQLNonNull(GraphQLCommentState)},
       source: {type: GraphQLString},
-
       rejectionReason: {type: GraphQLString},
       featured: {type: GraphQLBoolean},
       createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},

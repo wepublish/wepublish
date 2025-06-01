@@ -7,8 +7,6 @@ import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLChallenge} from './challenge'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
-import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
-import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {GraphQLSortOrder} from './common'
 import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
 import {
@@ -23,35 +21,6 @@ import {GraphQLPublicUser} from './user'
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // Comments
-    // =======
-
-    comments: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
-      args: {
-        itemId: {type: new GraphQLNonNull(GraphQLString)},
-        sort: {type: GraphQLPublicCommentSort},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      description: 'This query returns the comments of an item.',
-      resolve: (
-        root,
-        {itemId, sort, order},
-        {session, prisma: {comment}, loaders: {commentRatingSystemAnswers}}
-      ) => {
-        const userId = session?.type === AuthSessionType.User ? session.user.id : null
-
-        return getPublicCommentsForItemById(
-          itemId,
-          userId,
-          sort,
-          order,
-          commentRatingSystemAnswers,
-          comment
-        )
-      }
-    },
-
     // User
     // ====
 

@@ -383,11 +383,48 @@ input BreakBlockInput {
   text: String
 }
 
+type CalculatedRating {
+  answer: CommentRatingSystemAnswer!
+  count: Int!
+  mean: Float!
+  total: Int!
+}
+
 """A hexadecimal color value (#RRGGBB)"""
 scalar Color
 
 type Comment {
+  authorType: CommentAuthorType!
+  calculatedRatings: [CalculatedRating!]
+  children: [Comment!]!
+  createdAt: DateTime!
+  featured: Boolean
+  guestUserImage: Image
+  guestUsername: String
   id: String!
+  itemID: String!
+  itemType: CommentItemType!
+  lead: String
+  modifiedAt: DateTime!
+  overriddenRatings: [overriddenRating!]
+  parentComment: Comment
+  parentID: String
+  rejectionReason: String
+  source: String
+  state: CommentState!
+  tags: [Tag!]!
+  text: RichText
+  title: String
+  url: String!
+  user: User
+  userRatings: [CommentRating!]
+}
+
+enum CommentAuthorType {
+  author
+  guestUser
+  team
+  verifiedUser
 }
 
 type CommentBlock implements BaseBlock {
@@ -421,6 +458,40 @@ type CommentCreatedAction implements BaseAction & HasComment {
   comment: Comment!
   commentId: String!
   date: DateTime!
+}
+
+enum CommentItemType {
+  article
+  page
+}
+
+type CommentRating {
+  answer: CommentRatingSystemAnswer!
+  commentId: String!
+  createdAt: DateTime!
+  disabled: Boolean
+  fingerprint: String
+  id: String!
+  userId: String
+  value: Int!
+}
+
+type CommentRatingSystemAnswer {
+  answer: String
+  id: String!
+  ratingSystemId: String!
+  type: RatingSystemType!
+}
+
+enum CommentSort {
+  rating
+}
+
+enum CommentState {
+  Approved
+  PendingApproval
+  PendingUserChanges
+  Rejected
 }
 
 type Consent {
@@ -834,6 +905,12 @@ input FlexTeaserInput {
 type FocalPoint {
   x: Float!
   y: Float!
+}
+
+type FullCommentRatingSystem {
+  answers: [CommentRatingSystemAnswer!]!
+  id: String!
+  name: String
 }
 
 type FullPoll {
@@ -1708,6 +1785,9 @@ type Query {
   """
   checkInvoiceStatus(id: String!): Invoice
 
+  """This query returns the comments of an item."""
+  comments(itemId: String!, order: SortOrder = Descending, sort: CommentSort): [Comment!]!
+
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!
 
@@ -1799,6 +1879,7 @@ type Query {
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
+  ratingSystem: FullCommentRatingSystem!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
@@ -1868,6 +1949,10 @@ input QuoteBlockInput {
   blockStyleName: String
   imageID: String
   quote: String
+}
+
+enum RatingSystemType {
+  Star
 }
 
 scalar RichText
@@ -2335,3 +2420,8 @@ input YouTubeVideoBlockInput {
 }
 
 scalar link__Import
+
+type overriddenRating {
+  answerId: String!
+  value: Int
+}
