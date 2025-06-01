@@ -66,7 +66,7 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
       </Panel>
 
       <Panel bordered style={{overflow: 'initial'}}>
-        <Form.Group controlId="anyMemberPlan">
+        <Form.Group>
           <Form.Control
             name="anyMemberPlan"
             checked={!!paywall.anyMemberPlan}

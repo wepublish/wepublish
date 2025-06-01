@@ -29,6 +29,7 @@ import {
   MdMultilineChart,
   MdOutgoingMail,
   MdOutlineGridView,
+  MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
   MdPieChartOutline,
@@ -240,9 +241,9 @@ export function Base({children}: BaseProps) {
                       <Nav.Item
                         as={NavLink}
                         href="/articles/paywall"
-                        icon={<MdFileCopy />}
+                        icon={<MdPayment />}
                         active={path === 'articles/paywall'}>
-                        {t('navbar.paywall')}
+                        {t('paywall.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>
