@@ -3,8 +3,6 @@ import {UserInputError} from 'apollo-server-express'
 import {GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
-import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {GraphQLSortOrder} from './common'
 import {getActiveMemberPlans} from './member-plan/member-plan.public-queries'
 import {
@@ -45,15 +43,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description: 'This query returns the member plans.',
       resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {memberPlan}}) =>
         getActiveMemberPlans(filter, sort, order, cursor, skip, take, memberPlan)
-    },
-
-    // Rating System
-    // ==========
-
-    ratingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      resolve: (root, input, {prisma: {commentRatingSystem}}) =>
-        getRatingSystem(commentRatingSystem)
     }
   }
 })

@@ -48,7 +48,7 @@ registerEnumType(CommentRejectionReason, {
 })
 
 export enum RatingSystemType {
-  Star = 'star'
+  star = 'star'
 }
 
 registerEnumType(RatingSystemType, {

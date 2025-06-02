@@ -1904,7 +1904,9 @@ type Query {
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
-  ratingSystem: FullCommentRatingSystem!
+
+  """This query returns the comment rating system."""
+  ratingSystem: FullCommentRatingSystem
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
@@ -1980,7 +1982,7 @@ input QuoteBlockInput {
 }
 
 enum RatingSystemType {
-  Star
+  star
 }
 
 scalar RichText

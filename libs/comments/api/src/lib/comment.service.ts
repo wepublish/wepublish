@@ -8,6 +8,7 @@ import {
   PublicCommentSort,
   RatingSystemType
 } from './comment.model'
+import {RatingSystemService} from './rating-system'
 
 export interface CommentWithRevisions {
   title: string | null
@@ -19,31 +20,10 @@ export interface CommentWithRevisions {
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly prisma: PrismaClient) {}
-
-  async getRatingSystem() {
-    return this.prisma.commentRatingSystem.findFirst({
-      include: {
-        answers: true
-      }
-    })
-  }
-
-  async userCommentRating(commentId: string, userId: string | null) {
-    if (!userId) {
-      return []
-    }
-
-    return this.prisma.commentRating.findMany({
-      where: {
-        commentId,
-        userId
-      },
-      include: {
-        answer: true
-      }
-    })
-  }
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly ratingSystem: RatingSystemService
+  ) {}
 
   mapCommentToPublicComment(comment: any): CommentWithRevisions {
     const {revisions} = comment
@@ -125,7 +105,7 @@ export class CommentService {
     sort: PublicCommentSort | null,
     order: SortOrder
   ) {
-    const ratingSystem = await this.getRatingSystem()
+    const ratingSystem = await this.ratingSystem.getRatingSystem()
 
     const answers: CommentRatingSystemAnswer[] = (ratingSystem?.answers || []).map(answer => ({
       id: answer.id,

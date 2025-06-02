@@ -22,7 +22,6 @@ type Query {
 
   """This query returns the member plans."""
   memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
-  ratingSystem: FullCommentRatingSystem!
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
@@ -158,23 +157,6 @@ enum MemberPlanSort {
 enum SortOrder {
   Ascending
   Descending
-}
-
-type FullCommentRatingSystem {
-  id: String!
-  name: String
-  answers: [CommentRatingSystemAnswer!]!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
 }
 
 type Mutation {
@@ -375,6 +357,17 @@ type CalculatedRating {
   total: Int!
   mean: Float!
   answer: CommentRatingSystemAnswer!
+}
+
+type CommentRatingSystemAnswer {
+  id: String!
+  ratingSystemId: String!
+  answer: String
+  type: RatingSystemType!
+}
+
+enum RatingSystemType {
+  star
 }
 
 type overriddenRating {

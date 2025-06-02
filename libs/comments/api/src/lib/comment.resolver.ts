@@ -7,13 +7,15 @@ import {Image} from '@wepublish/image/api'
 import {User} from '@wepublish/user/api'
 import {Tag, TagService} from '@wepublish/tag/api'
 import {CommentDataloaderService} from './comment-dataloader.service'
+import {RatingSystemService} from './rating-system'
 
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
     private readonly commentService: CommentService,
     private readonly commentDataloader: CommentDataloaderService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    private readonly ratingSystemService: RatingSystemService
   ) {}
 
   @Query(() => [Comment], {
@@ -38,14 +40,14 @@ export class CommentResolver {
   @Query(() => FullCommentRatingSystem)
   @Public()
   async ratingSystem() {
-    return this.commentService.getRatingSystem()
+    return this.ratingSystemService.getRatingSystem()
   }
 
   @ResolveField(() => [CommentRating])
   @Public()
   async userRatings(@Parent() comment: Comment, @CurrentUser() session?: UserSession | null) {
     const userId = session?.user?.id || null
-    return this.commentService.userCommentRating(comment.id, userId)
+    return this.ratingSystemService.getUserCommentRatings(comment.id, userId)
   }
 
   @ResolveField(() => Image, {nullable: true})

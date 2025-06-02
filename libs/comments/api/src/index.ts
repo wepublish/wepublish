@@ -6,3 +6,6 @@ export * from './lib/comment.resolver'
 
 export * from './lib/has-comment/has-comment.model'
 export * from './lib/has-comment/has-comment.resolver'
+
+export * from './lib/rating-system/rating-system.service'
+export * from './lib/rating-system/rating-system.resolver'
