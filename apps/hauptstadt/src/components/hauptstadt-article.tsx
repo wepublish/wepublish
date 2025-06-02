@@ -3,6 +3,7 @@ import {NoSsr, Typography} from '@mui/material'
 import {ArticleContainer, ArticleInfoWrapper} from '@wepublish/article/website'
 import {TitleBlockWrapper} from '@wepublish/block-content/website'
 import {useShowPaywall} from '@wepublish/paywall/website'
+import {Button} from '@wepublish/ui'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
 import {
   BuilderArticleAuthorsProps,
@@ -70,10 +71,19 @@ export const HauptstadtArticleMetaWrapper = styled('div')`
   }
 `
 
+const MetaWrapperButton = styled(Button)`
+  padding-top: 0;
+  color: black;
+`
+
+const MetaWrapperTypography = styled(Typography)`
+  text-decoration: underline;
+`
+
 export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaProps) => {
   const [openFontSizeModal, setOpenFontSizeModal] = useState(false)
   const {
-    elements: {Link, Button}
+    elements: {Link}
   } = useWebsiteBuilder()
   const {data} = useCommentListQuery({
     fetchPolicy: 'cache-only',
@@ -89,7 +99,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
   return (
     <>
       <HauptstadtArticleMetaWrapper className={className}>
-        <Button
+        <MetaWrapperButton
           color="primary"
           variant="text"
           size="medium"
@@ -98,14 +108,16 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           startIcon={
             article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
           }>
-          {!commentCount
-            ? 'Keine Beiträge'
-            : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
-        </Button>
+          <MetaWrapperTypography variant="caption">
+            {!commentCount
+              ? 'Keine Beiträge'
+              : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
+          </MetaWrapperTypography>
+        </MetaWrapperButton>
 
         {canShare && (
           <NoSsr>
-            <Button
+            <MetaWrapperButton
               color="primary"
               variant="text"
               size="medium"
@@ -117,28 +129,28 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
                   text: article.latest.lead ?? undefined
                 })
               }}>
-              Teilen
-            </Button>
+              <MetaWrapperTypography variant="caption">Teilen</MetaWrapperTypography>
+            </MetaWrapperButton>
           </NoSsr>
         )}
 
-        <Button
+        <MetaWrapperButton
           color="primary"
           variant="text"
           size="medium"
           startIcon={<MdPrint size={16} />}
           onClick={() => print()}>
-          Drucken
-        </Button>
+          <MetaWrapperTypography variant="caption">Drucken</MetaWrapperTypography>
+        </MetaWrapperButton>
 
-        <Button
+        <MetaWrapperButton
           color="primary"
           variant="text"
           size="medium"
           startIcon={<MdFormatSize size={16} />}
           onClick={() => setOpenFontSizeModal(true)}>
-          Schrift
-        </Button>
+          <MetaWrapperTypography variant="caption">Schrift</MetaWrapperTypography>
+        </MetaWrapperButton>
       </HauptstadtArticleMetaWrapper>
 
       <FontSizePicker
