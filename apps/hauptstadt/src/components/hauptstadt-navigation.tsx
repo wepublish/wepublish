@@ -19,6 +19,7 @@ export const HauptstadtNavbar = styled(Navbar)`
     margin-right: auto;
     width: 100%;
     max-width: ${({theme}) => theme.breakpoints.values.lg}px;
+    border-bottom: 1px solid ${({theme}) => theme.palette.primary.main};
 
     ${({theme}) => theme.breakpoints.up('lg')} {
       padding-left: ${({theme}) => theme.spacing(3)};
