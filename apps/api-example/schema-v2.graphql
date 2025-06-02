@@ -1922,6 +1922,9 @@ type Query {
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
+  """This query returns the subscriptions of the authenticated user."""
+  subscriptions: [PublicSubscription!]!
+
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 

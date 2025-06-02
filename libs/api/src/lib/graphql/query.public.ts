@@ -1,7 +1,7 @@
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {GraphQLSlug, SortOrder} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
-import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
+import {GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
@@ -14,7 +14,6 @@ import {
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
@@ -28,25 +27,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description: 'This query returns the user.',
       resolve(root, args, {session}) {
         return session?.type === AuthSessionType.User ? session.user : null
-      }
-    },
-
-    subscriptions: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicSubscription))),
-      description: 'This query returns the subscriptions of the authenticated user.',
-      async resolve(root, _, {authenticateUser, prisma}) {
-        const {user} = authenticateUser()
-
-        return await prisma.subscription.findMany({
-          where: {
-            userID: user.id
-          },
-          include: {
-            deactivation: true,
-            periods: true,
-            properties: true
-          }
-        })
       }
     },
 

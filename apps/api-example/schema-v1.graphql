@@ -20,9 +20,6 @@ type Query {
   """This query returns the user."""
   me: User
 
-  """This query returns the subscriptions of the authenticated user."""
-  subscriptions: [PublicSubscription!]!
-
   """This query returns a member plan."""
   memberPlan(id: String, slug: Slug): MemberPlan
 
@@ -127,23 +124,6 @@ type PublicProperties {
   value: String!
 }
 
-type PublicSubscription {
-  id: String!
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  extendable: Boolean!
-  properties: [PublicProperties!]!
-  deactivation: SubscriptionDeactivation
-  url: String!
-  user: User
-  canExtend: Boolean!
-}
-
 type MemberPlan {
   id: String!
   name: String!
@@ -192,18 +172,6 @@ enum PaymentPeriodicity {
   quarterly
   biannual
   yearly
-}
-
-type SubscriptionDeactivation {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
-}
-
-enum SubscriptionDeactivationReason {
-  none
-  userSelfDeactivated
-  invoiceNotPaid
-  userReplacedSubscription
 }
 
 type MemberPlanConnection {
@@ -526,6 +494,35 @@ scalar Upload
 input InputPoint {
   x: Float!
   y: Float!
+}
+
+type PublicSubscription {
+  id: String!
+  memberPlan: MemberPlan!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  extendable: Boolean!
+  properties: [PublicProperties!]!
+  deactivation: SubscriptionDeactivation
+  url: String!
+  user: User
+  canExtend: Boolean!
+}
+
+type SubscriptionDeactivation {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
+}
+
+enum SubscriptionDeactivationReason {
+  none
+  userSelfDeactivated
+  invoiceNotPaid
+  userReplacedSubscription
 }
 
 input SubscriptionInput {
