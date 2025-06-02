@@ -58,7 +58,9 @@ export const BannerCloseButton = styled('span')`
   }
 `
 
-export const BannerTitle = styled('div')``
+export const BannerTitle = styled('div')`
+  padding-right: ${({theme}) => theme.spacing(3)};
+`
 export const BannerText = styled('div')``
 
 export const BannerActions = styled('div')`
