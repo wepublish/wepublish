@@ -291,6 +291,7 @@ const theme = createTheme(variablesTheme, {
     blockBreakTitle: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       textTransform: 'unset',
+      lineHeight: 1.2,
       ...deepmerge(
         responsiveProperty({
           cssProperty: 'fontSize',
