@@ -17,146 +17,8 @@ directive @shareable on FIELD_DEFINITION | OBJECT
 directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
 type Query {
-  """This query returns a member plan."""
-  memberPlan(id: String, slug: Slug): MemberPlan
-
-  """This query returns the member plans."""
-  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
-}
-
-type MemberPlan {
-  id: String!
-  name: String!
-  slug: String!
-  image: Image
-  description: RichText
-  tags: [String!]
-  currency: Currency!
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
-  maxCount: Int
-  extendable: Boolean!
-  availablePaymentMethods: [AvailablePaymentMethod!]!
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-type Image {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]!
-  link: String
-  source: String
-  license: String
-  fileSize: Int!
-  extension: String!
-  mimeType: String!
-  format: String!
-  width: Int!
-  height: Int!
-  focalPoint: FocalPoint
-  url: String
-  transformURL(input: ImageTransformation): String
-}
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
-
-type FocalPoint {
-  x: Float!
-  y: Float!
-}
-
-input ImageTransformation {
-  width: Int
-  height: Int
-  rotation: ImageRotation
-  quality: Float
-  output: ImageOutput
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
-}
-
-enum ImageOutput {
-  png
-  jpeg
-  webp
-}
-
-scalar RichText
-
-enum Currency {
-  CHF
-  EUR
-}
-
-type AvailablePaymentMethod {
-  paymentMethods: [PaymentMethod!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-type PaymentMethod {
-  id: String!
-  paymentProviderID: String!
-  name: String!
-  slug: Slug!
-  description: String!
-  imageId: String
-  image: Image
-}
-
-scalar Slug
-
-enum PaymentPeriodicity {
-  monthly
-  quarterly
-  biannual
-  yearly
-}
-
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input MemberPlanFilter {
-  name: String
-  active: Boolean
-  tags: [String!]
-}
-
-enum MemberPlanSort {
-  createdAt
-  modifiedAt
-}
-
-enum SortOrder {
-  Ascending
-  Descending
 }
 
 type Mutation {
@@ -266,6 +128,11 @@ type User {
   permissions: [String!]!
 }
 
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
 type UserAddress {
   company: String
   streetAddress: String
@@ -284,6 +151,55 @@ type OAuth2Account {
   type: String!
   provider: String!
   scope: String!
+}
+
+type Image {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  filename: String
+  title: String
+  description: String
+  tags: [String!]!
+  link: String
+  source: String
+  license: String
+  fileSize: Int!
+  extension: String!
+  mimeType: String!
+  format: String!
+  width: Int!
+  height: Int!
+  focalPoint: FocalPoint
+  url: String
+  transformURL(input: ImageTransformation): String
+}
+
+type FocalPoint {
+  x: Float!
+  y: Float!
+}
+
+input ImageTransformation {
+  width: Int
+  height: Int
+  rotation: ImageRotation
+  quality: Float
+  output: ImageOutput
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+enum ImageOutput {
+  png
+  jpeg
+  webp
 }
 
 type PublicProperties {
@@ -344,6 +260,8 @@ enum CommentItemType {
   article
   page
 }
+
+scalar RichText
 
 enum CommentState {
   approved
@@ -451,6 +369,25 @@ enum PaymentState {
   declined
 }
 
+type PaymentMethod {
+  id: String!
+  paymentProviderID: String!
+  name: String!
+  slug: Slug!
+  description: String!
+  imageId: String
+  image: Image
+}
+
+scalar Slug
+
+enum PaymentPeriodicity {
+  monthly
+  quarterly
+  biannual
+  yearly
+}
+
 input PublicPropertiesInput {
   key: String!
   value: String!
@@ -501,6 +438,35 @@ type PublicSubscription {
   url: String!
   user: User
   canExtend: Boolean!
+}
+
+type MemberPlan {
+  id: String!
+  name: String!
+  slug: String!
+  image: Image
+  description: RichText
+  tags: [String!]
+  currency: Currency!
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  maxCount: Int
+  extendable: Boolean!
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
+}
+
+enum Currency {
+  CHF
+  EUR
+}
+
+type AvailablePaymentMethod {
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+  forceAutoRenewal: Boolean!
 }
 
 type SubscriptionDeactivation {

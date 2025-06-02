@@ -203,12 +203,6 @@ enum AuthorSort {
   Name
 }
 
-type AvailablePaymentMethod {
-  forceAutoRenewal: Boolean!
-  paymentMethods: [PaymentMethod!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-}
-
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
@@ -624,11 +618,6 @@ type CrowdfundingWithActiveGoal {
   modifiedAt: DateTime!
   name: String!
   revenue: Float
-}
-
-enum Currency {
-  CHF
-  EUR
 }
 
 type CustomTeaser implements BaseTeaser & HasImage {
@@ -1251,21 +1240,24 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan {
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
-  availablePaymentMethods: [AvailablePaymentMethod!]!
-  confirmationPageId: String
-  currency: Currency!
-  description: RichText
-  extendable: Boolean!
-  failPageId: String
   id: String!
-  image: Image
-  maxCount: Int
-  name: String!
-  slug: String!
-  successPageId: String
+}
+
+type MemberPlanConnection {
+  nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input MemberPlanFilter {
+  active: Boolean
+  name: String
   tags: [String!]
+}
+
+enum MemberPlanSort {
+  createdAt
+  modifiedAt
 }
 
 type Mutation {
@@ -1859,7 +1851,13 @@ type Query {
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   """This query returns the user."""
-  me: User!
+  me: User
+
+  """This query returns a member plan."""
+  memberPlan(id: String, slug: Slug): MemberPlan
+
+  """This query returns the member plans."""
+  memberPlans(cursor: String, filter: MemberPlanFilter, order: SortOrder! = Descending, skip: Int! = 0, sort: MemberPlanSort! = createdAt, take: Int! = 10): MemberPlanConnection!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!

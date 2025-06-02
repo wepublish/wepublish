@@ -24,6 +24,7 @@ import * as fs from 'fs'
 import {GraphQLCommentResolver} from './graphql/comment/comment'
 import {GraphQLUserResolver} from './graphql/user'
 import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
+import {GraphQLMemberPlanResolver} from './graphql/memberPlan'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -138,7 +139,8 @@ export class WepublishServer {
       Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
       User: GraphQLUserResolver,
-      PublicSubscription: GraphQLSubscriptionResolver
+      PublicSubscription: GraphQLSubscriptionResolver,
+      MemberPlan: GraphQLMemberPlanResolver
     }
 
     for (const type in federatedResolvers) {

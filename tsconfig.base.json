@@ -58,6 +58,7 @@
       "@wepublish/jobs": ["libs/jobs/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media/api": ["libs/media/api/src/index.ts"],
+      "@wepublish/member-plan/api": ["libs/member-plan/api/src/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/membership/website": ["libs/membership/website/src/index.ts"],

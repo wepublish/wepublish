@@ -73,6 +73,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
 import {AuthorModule} from '@wepublish/author/api'
 import {InvoiceModule} from '@wepublish/invoice/api'
 import {ChallengeModule} from '@wepublish/challenge/api'
+import {MemberPlanModule} from '../../../../libs/member-plan/api/src'
 
 @Global()
 @Module({
@@ -330,6 +331,7 @@ import {ChallengeModule} from '@wepublish/challenge/api'
       inject: [ConfigService, PrismaClient],
       global: true
     }),
+    MemberPlanModule,
     ApiModule,
     MembershipModule,
     InvoiceModule,

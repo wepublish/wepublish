@@ -2658,7 +2658,7 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me: User;
+  me?: Maybe<User>;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -2902,10 +2902,10 @@ export type QueryMemberPlanArgs = {
 export type QueryMemberPlansArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<MemberPlanSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  order?: SortOrder;
+  skip?: Scalars['Int'];
+  sort?: MemberPlanSort;
+  take?: Scalars['Int'];
 };
 
 

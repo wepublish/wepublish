@@ -2660,7 +2660,7 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me: User;
+  me?: Maybe<User>;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -2904,10 +2904,10 @@ export type QueryMemberPlanArgs = {
 export type QueryMemberPlansArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<MemberPlanSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  order?: SortOrder;
+  skip?: Scalars['Int'];
+  sort?: MemberPlanSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -4263,7 +4263,7 @@ export type FullSessionWithTokenFragment = { __typename?: 'SessionWithToken', to
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, email: string, permissions: Array<string>, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, email: string, permissions: Array<string>, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null };
 
 export type LoginWithCredentialsMutationVariables = Exact<{
   email: Scalars['String'];
