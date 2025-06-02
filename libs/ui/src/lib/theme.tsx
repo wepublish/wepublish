@@ -6,7 +6,7 @@ import {
   Theme as MaterialTheme
 } from '@mui/material'
 import {TypographyStyleOptions} from '@mui/material/styles/createTypography'
-import {createBreakpoints, CSSInterpolation, Theme, ThemeProvider} from '@mui/system'
+import {Breakpoint, createBreakpoints, CSSInterpolation, Theme, ThemeProvider} from '@mui/system'
 import {ComponentType, memo} from 'react'
 
 const {
@@ -285,7 +285,7 @@ export const createWithTheme = <
     </ThemeProvider>
   ))
 
-export function responsiveProperty({
+export function autoResponsiveProperty({
   cssProperty,
   min,
   max,
@@ -324,6 +324,52 @@ export function responsiveProperty({
 
     output[`@media (min-width:${breakpoint}px)`] = {
       [cssProperty]: `${Math.round(value * 10000) / 10000}${unit}`
+    }
+  })
+
+  return output
+}
+
+export function responsiveProperty({
+  cssProperty,
+  unit = 'rem',
+  breakpoints,
+  values,
+  transform
+}: {
+  cssProperty: keyof TypographyStyleOptions
+  unit: 'rem' | 'em' | 'px'
+  breakpoints: {[key in Breakpoint]: number}
+  values: {[key in keyof typeof breakpoints]?: number}
+  transform?: (number: number) => number
+}): TypographyStyleOptions {
+  const output: TypographyStyleOptions = {}
+
+  Object.entries(breakpoints).forEach(([key, breakpoint]) => {
+    if (!breakpoint) {
+      return
+    }
+
+    let value = values[key as Breakpoint]
+
+    if (value == null) {
+      return
+    }
+
+    if (unit === 'rem') {
+      value = value / 16
+    }
+
+    if (transform) {
+      value = transform(value)
+    }
+
+    if (breakpoint === 0) {
+      output[cssProperty] = `${value}${unit}`
+    } else {
+      output[`@media (min-width:${breakpoint}px)`] = {
+        [cssProperty]: `${value}${unit}`
+      }
     }
   })
 

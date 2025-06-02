@@ -135,6 +135,12 @@ export const ABCWhyte = localFont({
   ]
 })
 
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xxl: true
+  }
+}
+
 const {
   palette: {augmentColor}
 } = WePTheme
@@ -145,8 +151,9 @@ const variablesTheme = createTheme(WePTheme, {
       xs: 0,
       sm: 600,
       md: 900,
-      lg: 1088,
-      xl: 1088
+      lg: 1080,
+      xl: 1464,
+      xxl: 2100
     }
   }),
   palette: {
@@ -164,10 +171,12 @@ const caption = {
   fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   ...responsiveProperty({
     cssProperty: 'fontSize',
-    max: 16,
-    min: 14,
     unit: 'rem',
-    breakpoints: [variablesTheme.breakpoints.values.md]
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 14,
+      md: 16
+    }
   })
 }
 
@@ -177,10 +186,12 @@ const body = {
   lineHeight: 1.6,
   ...responsiveProperty({
     cssProperty: 'fontSize',
-    max: 18,
-    min: 17,
     unit: 'rem',
-    breakpoints: [variablesTheme.breakpoints.values.md]
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 17,
+      md: 18
+    }
   })
 }
 
@@ -190,10 +201,12 @@ const h3 = {
   lineHeight: 1.2,
   ...responsiveProperty({
     cssProperty: 'fontSize',
-    max: 46,
-    min: 30,
     unit: 'rem',
-    breakpoints: [variablesTheme.breakpoints.values.md]
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 30,
+      md: 46
+    }
   })
 }
 
@@ -203,10 +216,11 @@ const h4 = {
   lineHeight: 1.2,
   ...responsiveProperty({
     cssProperty: 'fontSize',
-    max: 24,
-    min: 24,
     unit: 'rem',
-    breakpoints: []
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 24
+    }
   })
 }
 
@@ -222,10 +236,12 @@ const subtitle1 = {
   lineHeight: 1.35,
   ...responsiveProperty({
     cssProperty: 'fontSize',
-    max: 26,
-    min: 20,
     unit: 'rem',
-    breakpoints: [variablesTheme.breakpoints.values.md]
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 20,
+      md: 26
+    }
   })
 }
 
@@ -276,10 +292,12 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 22,
-        min: 22,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 22,
+          md: 22
+        }
       }),
       textTransform: 'unset',
       [variablesTheme.breakpoints.up('md')]: {
@@ -291,43 +309,75 @@ const theme = createTheme(variablesTheme, {
       fontWeight: 200,
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 15,
-        min: 15,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 15,
+          md: 15
+        }
       })
     },
     // Teaser
     teaserTitle: {
-      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 22,
-        min: 20,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 20,
+          lg: 22,
+          xl: 24,
+          xxl: 39
+        }
       }),
-      marginBottom: '8px'
+      ...responsiveProperty({
+        cssProperty: 'marginBottom',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 8,
+          xl: 16,
+          xxl: 36
+        }
+      })
     },
     teaserLead: {
       lineHeight: 1.25,
-      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 16,
-        min: 14,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 14,
+          lg: 16,
+          xl: 17,
+          xxl: 26
+        }
+      }),
+      ...responsiveProperty({
+        cssProperty: 'marginBottom',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 12,
+          xl: 16,
+          xxl: 36
+        }
       })
     },
     teaserMeta: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 10,
-        min: 10,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 10,
+          xl: 13,
+          xxl: 18
+        }
       })
     },
     teaserPretitle: {
@@ -337,10 +387,12 @@ const theme = createTheme(variablesTheme, {
       lineHeight: 1.5,
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 16,
-        min: 15,
         unit: 'rem',
-        breakpoints: [variablesTheme.breakpoints.values.md]
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 15,
+          md: 16
+        }
       })
     },
     //
@@ -349,10 +401,13 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 28,
-        min: 24,
         unit: 'rem',
-        breakpoints: [variablesTheme.breakpoints.values.md]
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 24,
+          lg: 28,
+          xl: 32
+        }
       })
     },
     bannerText: {
@@ -361,10 +416,13 @@ const theme = createTheme(variablesTheme, {
       lineHeight: 1.35,
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 18,
-        min: 16,
         unit: 'rem',
-        breakpoints: [variablesTheme.breakpoints.values.md]
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 16,
+          lg: 18,
+          xl: 21
+        }
       })
     },
     bannerCta: {
@@ -372,10 +430,13 @@ const theme = createTheme(variablesTheme, {
       fontWeight: 800,
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 23,
-        min: 20,
         unit: 'rem',
-        breakpoints: [variablesTheme.breakpoints.values.md]
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 20,
+          sm: 23,
+          md: 25
+        }
       })
     }
   },
@@ -446,6 +507,26 @@ const theme = createTheme(variablesTheme, {
           return styles
         }
       }
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          display: 'grid',
+          gap: theme.spacing(5),
+          [theme.breakpoints.up('md')]: {
+            gap: theme.spacing(10)
+          },
+          [theme.breakpoints.up('lg')]: {
+            maxWidth: '1080px'
+          },
+          [theme.breakpoints.up('xl')]: {
+            maxWidth: '1425px'
+          },
+          [theme.breakpoints.up('xxl')]: {
+            maxWidth: '2100px'
+          }
+        })
+      }
     }
   }
 } as ThemeOptions)
@@ -456,17 +537,25 @@ export const alternatingTeaserTheme = createTheme(theme, {
       ...deepmerge(
         responsiveProperty({
           cssProperty: 'fontSize',
-          max: 32,
-          min: 24,
           unit: 'rem',
-          breakpoints: Object.values(variablesTheme.breakpoints.values)
+          breakpoints: variablesTheme.breakpoints.values,
+          values: {
+            xs: 24,
+            lg: 32,
+            xl: 40,
+            xxl: 58
+          }
         }),
         responsiveProperty({
           cssProperty: 'marginBottom',
-          max: 24,
-          min: 8,
           unit: 'px',
-          breakpoints: Object.values(variablesTheme.breakpoints.values)
+          breakpoints: variablesTheme.breakpoints.values,
+          values: {
+            xs: 8,
+            md: 16,
+            lg: 24,
+            xxl: 48
+          }
         })
       )
     },
@@ -474,29 +563,41 @@ export const alternatingTeaserTheme = createTheme(theme, {
       lineHeight: 1.25,
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 21,
-        min: 16,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 16,
+          lg: 21,
+          xl: 23,
+          xxl: 36
+        }
       })
     },
     teaserMeta: {
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 14,
-        min: 12,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 12,
+          lg: 14,
+          xl: 15,
+          xxl: 20
+        }
       })
     },
     teaserPretitle: {
       padding: `${variablesTheme.spacing(0.5)} ${variablesTheme.spacing(2)}`,
       ...responsiveProperty({
         cssProperty: 'fontSize',
-        max: 20,
-        min: 16,
         unit: 'rem',
-        breakpoints: Object.values(variablesTheme.breakpoints.values)
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 16,
+          lg: 19,
+          xl: 20,
+          xxl: 27
+        }
       })
     }
   }

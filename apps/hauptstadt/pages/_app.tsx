@@ -1,6 +1,6 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
-import {css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {BannerWrapper} from '@wepublish/banner/website'
@@ -57,7 +57,6 @@ import {
   HauptstadtTeaserList,
   HauptstadtTeaserSlider
 } from '../src/components/hauptstadt-teaser'
-import {MainSpacer} from '../src/components/main-spacer'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
@@ -187,11 +186,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                     iconSlug="icons"
                   />
 
-                  <main>
-                    <MainSpacer maxWidth="lg">
-                      <Component {...pageProps} />
-                    </MainSpacer>
-                  </main>
+                  <Container component={'main'} maxWidth="lg">
+                    <Component {...pageProps} />
+                  </Container>
 
                   <FooterContainer slug="main" categorySlugs={[['pages']]} />
                 </Spacer>
