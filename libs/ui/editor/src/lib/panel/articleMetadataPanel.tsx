@@ -335,7 +335,7 @@ function ArticleMetadataPanel({
             </PaddingBottom>
 
             <Group>
-              <ControlLabel>{t('articleEditor.panels.likeCount')}</ControlLabel>
+              <ControlLabel>{t('articleEditor.panels.likeCount', {likeCount: likes})}</ControlLabel>
               <Control
                 accepter={InputNumber}
                 name="likes"

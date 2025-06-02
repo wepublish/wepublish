@@ -125,7 +125,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -1648,12 +1649,12 @@
       "navbar": "Paywall",
       "form": {
         "title": "Edit Paywall",
-        "name": "Internal Name",
-        "description": "Description",
+        "name": "Name of the paywall (NOT visible to the user)",
+        "description": "Paywall text (visible to the user)",
         "active": "Active",
         "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
-        "anyMemberPlan": "Allow any subscription to view the article",
-        "memberPlans": "Specific subscriptions to view the article"
+        "anyMemberPlan": "Allow any subscription to pass the paywall",
+        "memberPlans": "Only specific subscriptions can pass the paywall"
       }
     }
   }

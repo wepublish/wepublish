@@ -127,7 +127,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -1586,15 +1587,15 @@
       "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos."
     },
     "paywall": {
-      "navbar": "Bezahlmauer",
+      "navbar": "Paywall",
       "form": {
-        "title": "Bezahlmauer Bearbeiten",
-        "name": "Interner Name",
-        "description": "Beschreibung",
+        "title": "Paywall bearbeiten",
+        "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
+        "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
         "active": "Aktiv",
-        "activeHelpText": "Erlaubt die Bezahlmauer für alle Artikel zu deaktivieren",
-        "anyMemberPlan": "Jedes Abo darf den Artikel sehen",
-        "memberPlans": "Spezifische Abos dürfen den Artikel sehen"
+        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "anyMemberPlan": "Die Paywall entfällt für alle Abos",
+        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos"
       }
     }
   }

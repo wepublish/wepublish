@@ -131,7 +131,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Texte",
-        "default": "Default"
+        "default": "Default",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -1478,6 +1479,18 @@
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte.",
       "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Modifier le paywall",
+        "name": "Nom du paywall (NON visible par l'utilisateur)",
+        "description": "Texte du paywall (visible par l'utilisateur)",
+        "active": "Actif",
+        "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
+        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall"
+      }
     }
   }
 }
