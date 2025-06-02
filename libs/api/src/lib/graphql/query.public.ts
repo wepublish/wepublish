@@ -1,4 +1,3 @@
-import {AuthSessionType} from '@wepublish/authentication/api'
 import {GraphQLSlug, SortOrder} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
 import {GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
@@ -14,22 +13,10 @@ import {
   GraphQLPublicMemberPlan,
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
-import {GraphQLPublicUser} from './user'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // User
-    // ====
-
-    me: {
-      type: GraphQLPublicUser,
-      description: 'This query returns the user.',
-      resolve(root, args, {session}) {
-        return session?.type === AuthSessionType.User ? session.user : null
-      }
-    },
-
     memberPlan: {
       type: GraphQLPublicMemberPlan,
       args: {id: {type: GraphQLString}, slug: {type: GraphQLSlug}},

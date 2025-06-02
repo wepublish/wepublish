@@ -1858,6 +1858,9 @@ type Query {
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
+  """This query returns the user."""
+  me: User!
+
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
 
