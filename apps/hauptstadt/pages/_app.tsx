@@ -73,6 +73,7 @@ import {
   TeaserGridBlockWrapper,
   TitleBlockTitle
 } from '@wepublish/block-content/website'
+import {PrintLogo, PrintLogoWrapper} from '../src/components/print-logo'
 
 setDefaultOptions({
   locale: de
@@ -107,6 +108,10 @@ const noPrint = (
         ${TeaserGridBlockWrapper},
         ${PaywallWrapper} {
           display: none !important;
+        }
+
+        ${PrintLogoWrapper} {
+          display: block !important;
         }
 
         ${ArticleWrapper} {
@@ -223,6 +228,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
                   <main>
                     <MainSpacer maxWidth="lg">
+                      <PrintLogo />
                       <Component {...pageProps} />
                     </MainSpacer>
                   </main>
