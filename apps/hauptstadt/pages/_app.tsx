@@ -216,10 +216,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                     iconSlug="icons"
                   />
 
-                  <Container component={'main'} maxWidth="lg">
-                    <PrintLogo />
-                    <Component {...pageProps} />
-                  </Container>
+                  <main>
+                    <Container maxWidth="lg">
+                      <PrintLogo />
+                      <Component {...pageProps} />
+                    </Container>
+                  </main>
 
                   <FooterContainer slug="main" categorySlugs={[['pages']]} />
                 </Spacer>

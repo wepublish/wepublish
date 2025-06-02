@@ -290,19 +290,23 @@ const theme = createTheme(variablesTheme, {
     // Blocks
     blockBreakTitle: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
-      ...responsiveProperty({
-        cssProperty: 'fontSize',
-        unit: 'rem',
-        breakpoints: variablesTheme.breakpoints.values,
-        values: {
-          xs: 22,
-          md: 22
-        }
-      }),
       textTransform: 'unset',
-      [variablesTheme.breakpoints.up('md')]: {
-        fontStyle: 'unset'
-      }
+      ...deepmerge(
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: variablesTheme.breakpoints.values,
+          values: {
+            xs: 22,
+            md: 22
+          }
+        }),
+        {
+          [variablesTheme.breakpoints.up('md')]: {
+            fontStyle: 'unset'
+          }
+        }
+      )
     },
     blockBreakBody: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
