@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {ShowPaywallContext} from '@wepublish/paywall/website'
@@ -21,6 +22,9 @@ import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
 import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
+
+export const ArticleWrapperComments = styled(ArticleWrapper)``
+export const ArticleWrapperAppendix = styled(ArticleWrapper)``
 
 export default function ArticleBySlugOrId() {
   const {
@@ -51,7 +55,7 @@ export default function ArticleBySlugOrId() {
       </ShowPaywallContext.Provider>
 
       {data?.article && (
-        <ArticleWrapper>
+        <ArticleWrapperAppendix>
           <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
 
           <ArticleListContainer
@@ -60,17 +64,17 @@ export default function ArticleBySlugOrId() {
               articles.filter(article => article.id !== data.article?.id).splice(0, 3)
             }
           />
-        </ArticleWrapper>
+        </ArticleWrapperAppendix>
       )}
 
       {data?.article && !data.article.disableComments && (
-        <ArticleWrapper>
+        <ArticleWrapperComments>
           <H3 component={'h2'} id="comments">
             Kommentare
           </H3>
 
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
-        </ArticleWrapper>
+        </ArticleWrapperComments>
       )}
     </>
   )

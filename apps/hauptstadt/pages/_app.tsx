@@ -4,6 +4,7 @@ import {css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {BannerWrapper} from '@wepublish/banner/website'
+import {CommentListContainer} from '@wepublish/comments/website'
 import {
   FooterContainer,
   FooterWrapper,
@@ -59,7 +60,19 @@ import {
 } from '../src/components/hauptstadt-teaser'
 import {MainSpacer} from '../src/components/main-spacer'
 import theme from '../src/theme'
+import {ArticleWrapperAppendix, ArticleWrapperComments} from './a/[slug]'
 import Mitmachen from './mitmachen'
+import {ArticleWrapper} from '@wepublish/article/website'
+import {Image} from '@wepublish/image/website'
+import {
+  ImageBlock,
+  ImageBlockWrapper,
+  QuoteBlockWrapper,
+  RichTextBlockWrapper,
+  TeaserGridBlock,
+  TeaserGridBlockWrapper,
+  TitleBlockTitle
+} from '@wepublish/block-content/website'
 
 setDefaultOptions({
   locale: de
@@ -89,8 +102,29 @@ const noPrint = (
         ${BannerWrapper},
         ${NavbarWrapper},
         ${FooterWrapper},
+        ${ArticleWrapperComments},
+        ${ArticleWrapperAppendix},
+        ${TeaserGridBlockWrapper},
         ${PaywallWrapper} {
           display: none !important;
+        }
+
+        ${ArticleWrapper} {
+          padding-left: 15%;
+          padding-right: 15%;
+        }
+
+        ${ImageBlockWrapper},
+        ${QuoteBlockWrapper} {
+          page-break-inside: avoid;
+        }
+
+        ${RichTextBlockWrapper} p, ul, li, ol {
+          font-size: 13px !important;
+        }
+
+        iframe {
+          max-height: 90vh;
         }
       }
     `}
