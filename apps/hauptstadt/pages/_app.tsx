@@ -3,7 +3,14 @@ import styled from '@emotion/styled'
 import {Container, css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {ArticleWrapper} from '@wepublish/article/website'
 import {BannerWrapper} from '@wepublish/banner/website'
+import {
+  ImageBlockWrapper,
+  QuoteBlockWrapper,
+  RichTextBlockWrapper,
+  TeaserGridBlockWrapper
+} from '@wepublish/block-content/website'
 import {
   FooterContainer,
   FooterWrapper,
@@ -57,7 +64,9 @@ import {
   HauptstadtTeaserList,
   HauptstadtTeaserSlider
 } from '../src/components/hauptstadt-teaser'
+import {PrintLogo} from '../src/components/print-logo'
 import theme from '../src/theme'
+import {ArticleWrapperAppendix, ArticleWrapperComments} from './a/[slug]'
 import Mitmachen from './mitmachen'
 
 setDefaultOptions({
@@ -88,8 +97,29 @@ const noPrint = (
         ${BannerWrapper},
         ${NavbarWrapper},
         ${FooterWrapper},
+        ${ArticleWrapperComments},
+        ${ArticleWrapperAppendix},
+        ${TeaserGridBlockWrapper},
         ${PaywallWrapper} {
           display: none !important;
+        }
+
+        ${ArticleWrapper} {
+          padding-left: 15%;
+          padding-right: 15%;
+        }
+
+        ${ImageBlockWrapper},
+        ${QuoteBlockWrapper} {
+          page-break-inside: avoid;
+        }
+
+        ${RichTextBlockWrapper} :is(p, ul, li, ol) {
+          font-size: 13px !important;
+        }
+
+        iframe {
+          max-height: 90vh;
         }
       }
     `}
@@ -187,6 +217,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   />
 
                   <Container component={'main'} maxWidth="lg">
+                    <PrintLogo />
                     <Component {...pageProps} />
                   </Container>
 

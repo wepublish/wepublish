@@ -326,6 +326,7 @@ const theme = createTheme(variablesTheme, {
         breakpoints: variablesTheme.breakpoints.values,
         values: {
           xs: 20,
+          md: 20, // to override base theme
           lg: 22,
           xl: 24,
           xxl: 39
@@ -333,7 +334,7 @@ const theme = createTheme(variablesTheme, {
       }),
       ...responsiveProperty({
         cssProperty: 'marginBottom',
-        unit: 'rem',
+        unit: 'px',
         breakpoints: variablesTheme.breakpoints.values,
         values: {
           xs: 8,
@@ -358,7 +359,7 @@ const theme = createTheme(variablesTheme, {
       }),
       ...responsiveProperty({
         cssProperty: 'marginBottom',
-        unit: 'rem',
+        unit: 'px',
         breakpoints: variablesTheme.breakpoints.values,
         values: {
           xs: 12,
@@ -541,6 +542,7 @@ export const alternatingTeaserTheme = createTheme(theme, {
           breakpoints: variablesTheme.breakpoints.values,
           values: {
             xs: 24,
+            md: 32, // to override base theme
             lg: 32,
             xl: 40,
             xxl: 58
@@ -554,6 +556,7 @@ export const alternatingTeaserTheme = createTheme(theme, {
             xs: 8,
             md: 16,
             lg: 24,
+            xl: 24, // to override normal teaser theme
             xxl: 48
           }
         })
