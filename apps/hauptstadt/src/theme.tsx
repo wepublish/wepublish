@@ -271,9 +271,35 @@ const theme = createTheme(variablesTheme, {
     },
     //Article
     articleAuthors: caption,
+    // Blocks
+    blockBreakTitle: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 22,
+        min: 22,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      }),
+      textTransform: 'unset',
+      [variablesTheme.breakpoints.up('md')]: {
+        fontStyle: 'unset'
+      }
+    },
+    blockBreakBody: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 200,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        max: 15,
+        min: 15,
+        unit: 'rem',
+        breakpoints: Object.values(variablesTheme.breakpoints.values)
+      })
+    },
     // Teaser
     teaserTitle: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
         max: 22,
@@ -285,7 +311,7 @@ const theme = createTheme(variablesTheme, {
     },
     teaserLead: {
       lineHeight: 1.25,
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       ...responsiveProperty({
         cssProperty: 'fontSize',
         max: 16,

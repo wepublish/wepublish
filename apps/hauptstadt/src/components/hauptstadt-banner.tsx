@@ -31,13 +31,13 @@ export const HauptstadtBanner = styled(Banner)`
   ${BannerContent} {
     ${({theme}) => theme.breakpoints.up('md')} {
       border-right: 1px solid ${({theme}) => theme.palette.common.white};
-      padding-right: 48px;
+      padding-right: ${({theme}) => theme.spacing(6)};
     }
   }
 
   &[data-collapsed='false'] ${BannerCta} {
     ${({theme}) => theme.breakpoints.up('md')} {
-      padding-left: 48px;
+      padding-left: ${({theme}) => theme.spacing(6)};
     }
   }
 
@@ -54,7 +54,8 @@ export const HauptstadtBanner = styled(Banner)`
       ${({theme}) => theme.breakpoints.up('md')} {
         grid-template-columns: 1fr 1fr;
         align-items: center;
-        padding: ${({theme}) => theme.spacing(6)} ${({theme}) => theme.spacing(12)};
+        padding: ${({theme}) => theme.spacing(6)};
+        padding-right: ${({theme}) => theme.spacing(12)};
       }
     }
 

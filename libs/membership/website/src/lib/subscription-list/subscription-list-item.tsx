@@ -17,7 +17,7 @@ import {
 } from 'react-icons/md'
 import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
-import {Modal} from '@wepublish/ui'
+import {Modal} from '@wepublish/website/builder'
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;

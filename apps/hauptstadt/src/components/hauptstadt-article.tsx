@@ -3,8 +3,8 @@ import {NoSsr, Typography} from '@mui/material'
 import {ArticleContainer, ArticleInfoWrapper} from '@wepublish/article/website'
 import {TitleBlockWrapper} from '@wepublish/block-content/website'
 import {useShowPaywall} from '@wepublish/paywall/website'
-import {Button} from '@wepublish/ui'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
+import {Button} from '@wepublish/website/builder'
 import {
   BuilderArticleAuthorsProps,
   BuilderArticleMetaProps,
@@ -75,7 +75,7 @@ export const HauptstadtArticleMetaWrapper = styled('div')`
 
 const MetaWrapperButton = styled(Button)`
   padding-top: 0;
-  color: black;
+  color: ${({theme}) => theme.palette.common.black};
 `
 
 const MetaWrapperTypography = styled(Typography)`

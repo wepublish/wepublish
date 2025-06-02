@@ -34,7 +34,7 @@ import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
-import {Modal} from '@wepublish/ui'
+import {Modal} from '@wepublish/website/builder'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),

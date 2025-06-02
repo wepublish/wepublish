@@ -105,6 +105,7 @@ import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
+  BuilderModalProps,
   BuilderPaginationProps,
   BuilderRatingProps,
   BuilderTextFieldProps
@@ -185,6 +186,7 @@ export type WebsiteBuilderProps = {
     ListItem: ComponentType<BuilderListItemProps>
     Image: ComponentType<BuilderImageProps>
     ImageUpload: ComponentType<BuilderImageUploadProps>
+    Modal: ComponentType<BuilderModalProps>
   }
 
   richtext: {
@@ -313,7 +315,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     UnorderedList: NoComponent,
     ListItem: NoComponent,
     Image: NoComponent,
-    ImageUpload: NoComponent
+    ImageUpload: NoComponent,
+    Modal: NoComponent
   },
 
   richtext: {

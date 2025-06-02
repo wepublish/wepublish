@@ -1,7 +1,7 @@
 import {Modal as MuiModal} from '@mui/material'
 import styled from '@emotion/styled'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren} from 'react'
+import {Button} from '../button/button'
 
 export const ModalWrapper = styled('section')`
   position: absolute;
@@ -30,26 +30,15 @@ export const ModalActions = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-export type ModalProps = {
+export type ModalProps = PropsWithChildren<{
   className?: string
   open: boolean
   submitText: string
   onCancel: () => void
   onSubmit: () => void
-}
+}>
 
-export const Modal = ({
-  className,
-  open,
-  onCancel,
-  onSubmit,
-  submitText,
-  children
-}: PropsWithChildren<ModalProps>) => {
-  const {
-    elements: {Button}
-  } = useWebsiteBuilder()
-
+export const Modal = ({className, open, onCancel, onSubmit, submitText, children}: ModalProps) => {
   return (
     <MuiModal open={open} onClose={onCancel}>
       <ModalWrapper className={className}>

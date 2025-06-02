@@ -98,6 +98,7 @@ import {
   IconButton,
   Link,
   ListItem,
+  Modal,
   OrderedList,
   Pagination,
   Paragraph,
@@ -226,7 +227,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ImageUpload,
             OrderedList,
             ListItem,
-            Image
+            Image,
+            Modal
           }}
           blocks={{
             Blocks,

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {GlobalStyles, Slider, Stack} from '@mui/material'
-import {Modal, useLocalStorage} from '@wepublish/ui'
+import {useLocalStorage} from '@wepublish/ui'
+import {Modal} from '@wepublish/website/builder'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {ComponentProps, createContext, PropsWithChildren, useContext} from 'react'
 import {MdFormatSize, MdRestore} from 'react-icons/md'

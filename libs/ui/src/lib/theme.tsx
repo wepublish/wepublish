@@ -1,3 +1,4 @@
+import {SerializedStyles} from '@emotion/react'
 import {
   createTheme,
   CSSObject,
@@ -5,7 +6,7 @@ import {
   Theme as MaterialTheme
 } from '@mui/material'
 import {TypographyStyleOptions} from '@mui/material/styles/createTypography'
-import {createBreakpoints, Theme, ThemeProvider} from '@mui/system'
+import {createBreakpoints, CSSInterpolation, Theme, ThemeProvider} from '@mui/system'
 import {ComponentType, memo} from 'react'
 
 const {
@@ -16,6 +17,14 @@ const {
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface Theme extends MaterialTheme {}
+
+  export function css(
+    template: TemplateStringsArray,
+    ...args: Array<CSSInterpolation | TypographyStyleOptions | undefined>
+  ): SerializedStyles
+  export function css(
+    ...args: Array<CSSInterpolation | TypographyStyleOptions | undefined>
+  ): SerializedStyles
 }
 
 declare module '@mui/material/styles' {
@@ -40,6 +49,9 @@ declare module '@mui/material/styles' {
     bannerTitle: TypographyStyleOptions
     bannerText: TypographyStyleOptions
     bannerCta: TypographyStyleOptions
+
+    blockBreakTitle?: TypographyStyleOptions
+    blockBreakBody?: TypographyStyleOptions
   }
 
   interface TypographyVariantsOptions {
@@ -53,6 +65,9 @@ declare module '@mui/material/styles' {
     bannerTitle?: TypographyStyleOptions
     bannerText?: TypographyStyleOptions
     bannerCta?: TypographyStyleOptions
+
+    blockBreakTitle?: TypographyStyleOptions
+    blockBreakBody?: TypographyStyleOptions
   }
 }
 
@@ -74,6 +89,9 @@ declare module '@mui/material/Typography' {
     bannerTitle: true
     bannerText: true
     bannerCta: true
+
+    blockBreakTitle: true
+    blockBreakBody: true
   }
 }
 
@@ -128,6 +146,21 @@ export const theme = createTheme({
     // Article
     articleAuthors: {
       lineHeight: 1.7
+    },
+    // Blocks
+    blockBreakTitle: {
+      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
+      fontSize: '40px',
+      fontWeight: 600,
+      textTransform: 'uppercase',
+      [baseTheme.breakpoints.up('md')]: {
+        fontStyle: 'italic',
+        fontSize: '84px'
+      }
+    },
+    blockBreakBody: {
+      ...baseTheme.typography.body1,
+      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(',')
     },
     // Teaser
     teaserTitle: {
@@ -276,25 +309,23 @@ export function responsiveProperty({
     [cssProperty]: `${min}${unit}`
   }
 
-  if (min !== max) {
-    const factor = (max - min) / breakpoints[breakpoints.length - 1]
+  const factor = (max - min) / breakpoints[breakpoints.length - 1]
 
-    breakpoints.forEach(breakpoint => {
-      if (!breakpoint) {
-        return
-      }
+  breakpoints.forEach(breakpoint => {
+    if (!breakpoint) {
+      return
+    }
 
-      let value = min + factor * breakpoint
+    let value = min !== max ? min + factor * breakpoint : min
 
-      if (transform) {
-        value = transform(value)
-      }
+    if (transform) {
+      value = transform(value)
+    }
 
-      output[`@media (min-width:${breakpoint}px)`] = {
-        [cssProperty]: `${Math.round(value * 10000) / 10000}${unit}`
-      }
-    })
-  }
+    output[`@media (min-width:${breakpoint}px)`] = {
+      [cssProperty]: `${Math.round(value * 10000) / 10000}${unit}`
+    }
+  })
 
   return output
 }
