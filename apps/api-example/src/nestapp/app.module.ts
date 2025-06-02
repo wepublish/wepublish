@@ -72,6 +72,7 @@ import {HttpModule, HttpService} from '@nestjs/axios'
 import {MediaAdapterModule} from '@wepublish/image/api'
 import {AuthorModule} from '@wepublish/author/api'
 import {InvoiceModule} from '@wepublish/invoice/api'
+import {ChallengeModule} from '@wepublish/challenge/api'
 
 @Global()
 @Module({
@@ -388,6 +389,30 @@ import {InvoiceModule} from '@wepublish/invoice/api'
     PhraseModule,
     ActionModule,
     UserModule,
+    ChallengeModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          challenge: configFile.challenge || {
+            type: 'algebraic',
+            secret: 'default-challenge-secret',
+            validTime: 600,
+            width: 300,
+            height: 100,
+            background: '#ffffff',
+            noise: 1,
+            minValue: 1,
+            maxValue: 10,
+            operandAmount: 2,
+            operandTypes: ['+'],
+            mode: 'formula',
+            targetSymbol: '?'
+          }
+        }
+      },
+      inject: [ConfigService]
+    }),
     SubscriptionModule,
     NavigationModule,
     TagModule,

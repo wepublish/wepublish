@@ -36,7 +36,6 @@ export interface PeerModuleAsyncOptions {
     HasPeerLcResolver,
     HasOptionalPeerResolver,
     HasOptionalPeerLcResolver,
-    // Register our custom scalar
     {
       provide: 'PeerColorScalar',
       useValue: ColorScalar

@@ -28,11 +28,6 @@ type Query {
 
   """This query returns the member plans."""
   memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
-
-  """
-  This query generates a challenge which can be used to access protected endpoints.
-  """
-  challenge: Challenge!
   ratingSystem: FullCommentRatingSystem!
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
@@ -239,23 +234,6 @@ enum SortOrder {
   Ascending
   Descending
 }
-
-type Challenge {
-  type: CaptchaType
-  challenge: String
-  challengeID: String
-  validUntil: Date
-}
-
-enum CaptchaType {
-  Algebraic
-  CfTurnstile
-}
-
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
 
 type FullCommentRatingSystem {
   id: String!

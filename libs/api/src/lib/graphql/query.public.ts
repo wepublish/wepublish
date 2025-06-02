@@ -4,7 +4,6 @@ import {UserInputError} from 'apollo-server-express'
 import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLChallenge} from './challenge'
 import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
 import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {GraphQLSortOrder} from './common'
@@ -79,23 +78,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description: 'This query returns the member plans.',
       resolve: (root, {filter, sort, order, take, skip, cursor}, {prisma: {memberPlan}}) =>
         getActiveMemberPlans(filter, sort, order, cursor, skip, take, memberPlan)
-    },
-
-    // Challenge
-    // =======
-    challenge: {
-      type: new GraphQLNonNull(GraphQLChallenge),
-      description:
-        'This query generates a challenge which can be used to access protected endpoints.',
-      async resolve(_, {input}, {challenge}) {
-        const c = await challenge.generateChallenge()
-        return {
-          type: c.type,
-          challenge: c.challenge,
-          challengeID: c.challengeID,
-          validUntil: c.validUntil
-        }
-      }
     },
 
     // Rating System

@@ -390,6 +390,18 @@ type CalculatedRating {
   total: Int!
 }
 
+enum CaptchaType {
+  Algebraic
+  CfTurnstile
+}
+
+type Challenge {
+  challenge: String
+  challengeID: String
+  type: CaptchaType!
+  validUntil: Date
+}
+
 """A hexadecimal color value (#RRGGBB)"""
 scalar Color
 
@@ -682,6 +694,11 @@ type DashboardSubscription {
   renewsAt: DateTime
   startsAt: DateTime!
 }
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
 
 input DateFilter {
   comparison: DateFilterComparison!
@@ -1779,6 +1796,11 @@ type Query {
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
+
+  """
+  This query generates a challenge which can be used to access protected endpoints.
+  """
+  challenge: Challenge!
 
   """
   Check the status of an invoice and update with information from the payment provider
