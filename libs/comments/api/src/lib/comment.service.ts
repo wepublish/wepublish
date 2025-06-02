@@ -41,7 +41,7 @@ export class CommentService {
       where: {
         AND: [
           {parentID: parentId},
-          {OR: [userId ? {userID: userId} : {}, {state: CommentState.Approved}]}
+          {OR: [userId ? {userID: userId} : {}, {state: CommentState.approved}]}
         ]
       },
       orderBy: {
@@ -117,7 +117,7 @@ export class CommentService {
     const comments = await this.prisma.comment.findMany({
       where: {
         OR: [
-          {itemID: itemId, state: CommentState.Approved, parentID: null},
+          {itemID: itemId, state: CommentState.approved, parentID: null},
           userId ? {itemID: itemId, userID: userId, parentID: null} : {}
         ]
       },

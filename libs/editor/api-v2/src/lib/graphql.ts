@@ -429,7 +429,7 @@ export type Challenge = {
   __typename?: 'Challenge';
   challenge?: Maybe<Scalars['String']>;
   challengeID?: Maybe<Scalars['String']>;
-  type?: Maybe<CaptchaType>;
+  type: CaptchaType;
   validUntil?: Maybe<Scalars['Date']>;
 };
 
@@ -451,8 +451,9 @@ export type Comment = {
   itemID: Scalars['String'];
   itemType: CommentItemType;
   lead?: Maybe<Scalars['String']>;
-  modifiedAt?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
   overriddenRatings: Array<OverriddenRating>;
+  parentComment?: Maybe<Comment>;
   parentID?: Maybe<Scalars['String']>;
   rejectionReason?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
@@ -2585,7 +2586,7 @@ export type Query = {
   blockStyles: Array<BlockStyle>;
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
-  /** This mutation will check the invoice status and update with information from the paymentProvider */
+  /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus?: Maybe<Invoice>;
   /** This query returns the comments of an item. */
   comments: Array<Comment>;
@@ -2654,12 +2655,12 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  /** This query returns the invoices  of the authenticated user. */
+  /** Get all invoices for the authenticated user */
   invoices: Array<Invoice>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me?: Maybe<User>;
+  me: User;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -2697,13 +2698,13 @@ export type Query = {
   periodicJobLog: Array<PeriodicJob>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
-  /** This query returns a poll with all the needed data */
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
-  ratingSystem: FullCommentRatingSystem;
+  /** This query returns the comment rating system. */
+  ratingSystem?: Maybe<FullCommentRatingSystem>;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -2756,7 +2757,6 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
-  /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['String']>;
   versionInformation: VersionInformation;
 };
@@ -3033,10 +3033,10 @@ export type QuerySubscriptionFlowsArgs = {
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TagSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  order?: SortOrder;
+  skip?: Scalars['Int'];
+  sort?: TagSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -3290,6 +3290,7 @@ export enum TagSort {
   Tag = 'Tag'
 }
 
+/** Type of tag. */
 export enum TagType {
   Article = 'Article',
   Author = 'Author',
@@ -3661,7 +3662,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Comment | FullPoll | Image | MemberPlan | PaymentMethod | PollVote | PublicSubscription | Tag | User;
+export type _Entity = Comment | Image | MemberPlan | PaymentMethod | PollVote | PublicSubscription | Tag | User;
 
 export type _Service = {
   __typename?: '_Service';
@@ -8889,7 +8890,6 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "_Entity": [
       "Comment",
-      "FullPoll",
       "Image",
       "MemberPlan",
       "PaymentMethod",

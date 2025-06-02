@@ -26,10 +26,10 @@ registerEnumType(CommentItemType, {
 })
 
 export enum CommentState {
-  Approved = 'approved',
-  PendingApproval = 'pendingApproval',
-  PendingUserChanges = 'pendingUserChanges',
-  Rejected = 'rejected'
+  approved = 'approved',
+  pendingApproval = 'pendingApproval',
+  pendingUserChanges = 'pendingUserChanges',
+  rejected = 'rejected'
 }
 
 registerEnumType(CommentState, {

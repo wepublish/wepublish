@@ -500,10 +500,10 @@ enum CommentSort {
 }
 
 enum CommentState {
-  Approved
-  PendingApproval
-  PendingUserChanges
-  Rejected
+  approved
+  pendingApproval
+  pendingUserChanges
+  rejected
 }
 
 type Consent {
