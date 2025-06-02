@@ -4,6 +4,7 @@ import {
   BaseTeaser,
   FocusedTeaser,
   FocusTeaser,
+  TeaserAuthors,
   TeaserContentWrapper,
   TeaserGridBlock,
   TeaserImageWrapper,
@@ -41,6 +42,10 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
     margin-bottom: ${({theme}) => theme.spacing(2)};
   }
 
+  ${ImageWrapper} {
+    aspect-ratio: 3/2;
+  }
+
   ${TeaserPreTitleNoContent} {
     display: none;
   }
@@ -62,6 +67,10 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
     height: auto;
     width: max-content;
   }
+
+  ${TeaserAuthors} {
+    font-weight: 400;
+  }
 `
 
 export const HauptstadtAlternatingTeaser = createWithTheme(
@@ -76,7 +85,7 @@ export const HauptstadtAlternatingTeaser = createWithTheme(
 
     ${({theme}) => theme.breakpoints.up('md')} {
       ${TeaserImageWrapper} {
-        margin-bottom: ${({theme}) => theme.spacing(2)};
+        margin-bottom: 0;
       }
     }
   `,

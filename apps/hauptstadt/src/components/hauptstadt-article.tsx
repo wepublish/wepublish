@@ -17,6 +17,8 @@ import {MdFormatSize, MdPrint} from 'react-icons/md'
 import {FontSizePicker} from './font-size-picker'
 
 export const HauptstadtArticle = styled(ArticleContainer)`
+  gap: ${({theme}) => theme.spacing(3.5)};
+
   > ${TitleBlockWrapper}:first-of-type {
     grid-row-start: 2;
   }
