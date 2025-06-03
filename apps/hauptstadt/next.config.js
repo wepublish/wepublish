@@ -39,8 +39,8 @@ const nextConfig = {
       },
       // @TODO: CHECK (COPIED FROM BAJOUR)
       {
-        source: '/a/:articleId/:articleSlug',
-        destination: '/a/:articleSlug',
+        source: '/a/:id((?!tag).*)/:slug',
+        destination: '/a/:slug',
         permanent: false
       },
       // backwards compatibility for pages because of https://wepublish.atlassian.net/browse/HAS-23
