@@ -176,6 +176,7 @@ type ArticleRevisionFactoryDefineInput = {
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     publishedAt?: Date | null;
+    archivedAt?: Date | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutArticleRevisionInput;
     authors?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutRevisionInput;
     socialMediaAuthors?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutRevisionInput;
@@ -1407,6 +1408,7 @@ type PageRevisionFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     publishedAt?: Date | null;
+    archivedAt?: Date | null;
     title?: string | null;
     description?: string | null;
     socialMediaTitle?: string | null;
