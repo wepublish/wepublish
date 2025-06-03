@@ -22,13 +22,6 @@ type Query {
 }
 
 type Mutation {
-  createSession(email: String!, password: String!): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
-
-  """This mutation revokes and deletes the active session."""
-  revokeActiveSession: Boolean!
-
   """
   This mutation allows to add a comment. The input is of type CommentInput.
   """
@@ -106,51 +99,30 @@ type Mutation {
   voteOnPoll(answerId: String!): PollVote
 }
 
-type SessionWithToken {
-  user: User!
-  token: String!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-type User {
+type Comment {
   id: String!
-  name: String!
-  firstName: String
-  birthday: DateTime
-  email: String!
-  address: UserAddress
-  flair: String
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
-  image: Image
-  properties: [PublicProperties!]!
-  permissions: [String!]!
-}
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
+  parentID: String
+  guestUsername: String
+  guestUserImage: Image
+  user: User
+  tags: [Tag!]!
+  authorType: CommentAuthorType!
+  itemID: String!
+  itemType: CommentItemType!
+  children: [Comment!]!
+  title: String
+  lead: String
+  text: RichText
+  state: CommentState!
+  source: String
+  rejectionReason: String
+  featured: Boolean
+  createdAt: DateTime!
+  url: String!
+  modifiedAt: DateTime
+  calculatedRatings: [CalculatedRating!]!
+  overriddenRatings: [overriddenRating!]!
+  userRatings: [CommentRating!]!
 }
 
 type Image {
@@ -174,6 +146,11 @@ type Image {
   url: String
   transformURL(input: ImageTransformation): String
 }
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
 
 type FocalPoint {
   x: Float!
@@ -202,35 +179,44 @@ enum ImageOutput {
   webp
 }
 
+type User {
+  id: String!
+  name: String!
+  firstName: String
+  birthday: DateTime
+  email: String!
+  address: UserAddress
+  flair: String
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  oauth2Accounts: [OAuth2Account!]!
+  image: Image
+  properties: [PublicProperties!]!
+  permissions: [String!]!
+}
+
+type UserAddress {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type PaymentProviderCustomer {
+  paymentProviderID: String!
+  customerID: String!
+}
+
+type OAuth2Account {
+  type: String!
+  provider: String!
+  scope: String!
+}
+
 type PublicProperties {
   key: String!
   value: String!
-}
-
-type Comment {
-  id: String!
-  parentID: String
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: String!
-  itemType: CommentItemType!
-  children: [Comment!]!
-  title: String
-  lead: String
-  text: RichText
-  state: CommentState!
-  source: String
-  rejectionReason: String
-  featured: Boolean
-  createdAt: DateTime!
-  url: String!
-  modifiedAt: DateTime
-  calculatedRatings: [CalculatedRating!]!
-  overriddenRatings: [overriddenRating!]!
-  userRatings: [CommentRating!]!
 }
 
 type Tag {

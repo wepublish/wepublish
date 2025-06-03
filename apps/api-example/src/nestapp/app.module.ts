@@ -52,7 +52,7 @@ import {Issuer} from 'openid-client'
 import {BlockContentModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
-import {AuthProviderModule} from '@wepublish/authprovider-api'
+import {AuthProviderModule, OAuth2Client} from '@wepublish/authprovider/api'
 import {PageModule} from '@wepublish/page/api'
 import {PeerModule} from '@wepublish/peering/api'
 import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
@@ -73,7 +73,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
 import {AuthorModule} from '@wepublish/author/api'
 import {InvoiceModule} from '@wepublish/invoice/api'
 import {ChallengeModule} from '@wepublish/challenge/api'
-import {MemberPlanModule} from '../../../../libs/member-plan/api/src'
+import {MemberPlanModule} from '@wepublish/member-plan/api'
+import {SessionModule} from '@wepublish/session/api'
 
 @Global()
 @Module({
@@ -338,8 +339,30 @@ import {MemberPlanModule} from '../../../../libs/member-plan/api/src'
     DashboardModule,
     AuthenticationModule,
 
-    // Important: Import AuthProviderModule after AuthenticationModule
-    // to ensure the Public decorator works correctly
+    // Register SessionModule after AuthenticationModule but before AuthProviderModule
+    // to ensure proper order of dependencies
+    SessionModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const sessionTTL = parseInt(config.get('SESSION_TTL') || '0', 10) || 7 * 24 * 60 * 60 * 1000
+        const jwtSecretKey = config.get('JWT_SECRET_KEY') || 'development-secret-key'
+        const hostURL = config.get('HOST_URL') || 'http://localhost:4000'
+        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000'
+
+        if (process.env.NODE_ENV === 'production' && jwtSecretKey === 'development-secret-key') {
+          console.warn('WARNING: Using default JWT secret key in production environment!')
+        }
+
+        return {
+          sessionTTL,
+          jwtSecretKey,
+          hostURL,
+          websiteURL
+        }
+      }
+    }),
+
     AuthProviderModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -348,23 +371,21 @@ import {MemberPlanModule} from '../../../../libs/member-plan/api/src'
         const oauth2Providers = configFile.OAuthProviders || []
 
         return {
-          oauth2ProvidersFactory: async () => {
-            return await Promise.all(
-              oauth2Providers.map(async provider => {
-                const issuer = await Issuer.discover(provider.discoverUrl)
-                return {
-                  name: provider.name,
-                  provider,
-                  client: new issuer.Client({
-                    client_id: provider.clientId,
-                    client_secret: provider.clientKey,
-                    redirect_uris: provider.redirectUri,
-                    response_types: ['code']
-                  })
-                }
-              })
-            )
-          }
+          oauth2Clients: await Promise.all(
+            oauth2Providers.map(async provider => {
+              const issuer = await Issuer.discover(provider.discoverUrl)
+              return {
+                name: provider.name,
+                provider,
+                client: new issuer.Client({
+                  client_id: provider.clientId,
+                  client_secret: provider.clientKey,
+                  redirect_uris: provider.redirectUri,
+                  response_types: ['code']
+                })
+              } as OAuth2Client
+            })
+          )
         }
       }
     }),

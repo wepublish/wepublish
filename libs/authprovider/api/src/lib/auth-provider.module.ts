@@ -1,25 +1,20 @@
 import {DynamicModule, Module, Provider} from '@nestjs/common'
 import {AuthProviderResolver} from './auth-provider.resolver'
-import {AuthProviderService, OAUTH2_CLIENTS_PROVIDER} from './auth-provider.service'
-import {ModuleMetadata} from '@nestjs/common/interfaces'
+import {AuthProviderService} from './auth-provider.service'
 import {APP_GUARD} from '@nestjs/core'
 import {OptionalAuthenticationGuard, PublicGuard} from '@wepublish/authentication/api'
 import {OneOfGuard} from '@wepublish/nest-modules'
-
-export interface AuthProviderModuleOptions {
-  oauth2ProvidersFactory: () => Promise<any[]>
-}
-
-export interface AuthProviderModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  useFactory: (...args: any[]) => Promise<AuthProviderModuleOptions> | AuthProviderModuleOptions
-  inject?: any[]
-}
+import {createAsyncOptionsProvider} from '@wepublish/utils/api'
+import {
+  AUTH_PROVIDER_OAUTH2_CLIENTS,
+  AuthProviderModuleAsyncOptions,
+  AuthProviderModuleOptions
+} from './auth-provider-module-options'
 
 @Module({
   providers: [
     AuthProviderService,
     AuthProviderResolver,
-    // Add authentication guards to ensure Public decorator works
     {
       provide: APP_GUARD,
       useClass: OptionalAuthenticationGuard
@@ -33,35 +28,22 @@ export interface AuthProviderModuleAsyncOptions extends Pick<ModuleMetadata, 'im
   exports: [AuthProviderService, AuthProviderResolver]
 })
 export class AuthProviderModule {
-  static register(options: AuthProviderModuleOptions): DynamicModule {
-    return {
-      module: AuthProviderModule,
-      providers: [
-        {
-          provide: OAUTH2_CLIENTS_PROVIDER,
-          useFactory: () => options.oauth2ProvidersFactory
-        }
-      ]
-    }
-  }
-
   static registerAsync(options: AuthProviderModuleAsyncOptions): DynamicModule {
     return {
       module: AuthProviderModule,
       imports: options.imports || [],
-      providers: [...this.createAsyncProviders(options)]
+      providers: this.createAsyncProviders(options)
     }
   }
 
   private static createAsyncProviders(options: AuthProviderModuleAsyncOptions): Provider[] {
     return [
+      createAsyncOptionsProvider<AuthProviderModuleOptions>(AUTH_PROVIDER_OAUTH2_CLIENTS, options),
       {
-        provide: OAUTH2_CLIENTS_PROVIDER,
-        useFactory: async (...args: any[]) => {
-          const config = await options.useFactory(...args)
-          return config.oauth2ProvidersFactory
-        },
-        inject: options.inject || []
+        provide: AuthProviderService,
+        useFactory: ({oauth2Clients}: AuthProviderModuleOptions) =>
+          new AuthProviderService(oauth2Clients),
+        inject: [AUTH_PROVIDER_OAUTH2_CLIENTS]
       }
     ]
   }

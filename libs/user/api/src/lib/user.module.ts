@@ -9,6 +9,7 @@ import {
   HasUserResolver
 } from './has-user/has-user.resolver'
 import {UserResolver} from './user.resolver'
+import {UserService} from './user.service'
 
 @Module({
   imports: [PrismaModule, ImageModule],
@@ -18,8 +19,9 @@ import {UserResolver} from './user.resolver'
     HasUserLcResolver,
     HasOptionalUserResolver,
     HasOptionalUserLcResolver,
-    UserResolver
+    UserResolver,
+    UserService
   ],
-  exports: [UserDataloaderService]
+  exports: [UserDataloaderService, UserService]
 })
 export class UserModule {}

@@ -1282,6 +1282,9 @@ type Mutation {
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createSession(email: String!, password: String!): SessionWithToken!
+  createSessionWithJWT(jwt: String!): SessionWithToken!
+  createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -1347,6 +1350,9 @@ type Mutation {
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
+
+  """This mutation revokes and deletes the active session."""
+  revokeActiveSession: Boolean!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
@@ -1996,6 +2002,13 @@ input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
   richText: RichText!
+}
+
+type SessionWithToken {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  token: String!
+  user: User!
 }
 
 type Setting {

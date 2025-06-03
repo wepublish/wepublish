@@ -52,14 +52,7 @@ import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPollVote} from './poll/poll'
 import {voteOnPoll} from './poll/poll.public-mutation'
-import {GraphQLPublicSessionWithToken} from './session'
-import {
-  createJWTSession,
-  createOAuth2Session,
-  createSession,
-  createUserSession,
-  revokeSessionByToken
-} from './session/session.mutation'
+import {createUserSession} from './session/session.mutation'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
@@ -86,56 +79,6 @@ import {GraphQLDateTime} from 'graphql-scalars'
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    // Session
-    // =======
-
-    createSession: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        password: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
-        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithJWT: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        jwt: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
-        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithOAuth2Code: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        code: {type: new GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
-    },
-
-    revokeActiveSession: {
-      type: new GraphQLNonNull(GraphQLBoolean),
-      args: {},
-      description: 'This mutation revokes and deletes the active session.',
-      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
-        revokeSessionByToken(authenticateUser, session)
-    },
-
     // Comment
     // =======
     addComment: {

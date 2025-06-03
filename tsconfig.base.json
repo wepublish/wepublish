@@ -18,7 +18,7 @@
     "baseUrl": ".",
     "paths": {
       "@wepublish/action/api": ["libs/action/api/src/index.ts"],
-      "@wepublish/authprovider-api": ["libs/authprovider/api/src/index.ts"],
+      "@wepublish/authprovider/api": ["libs/authprovider/api/src/index.ts"],
       "@wepublish/analytics": ["libs/analytics/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
@@ -80,6 +80,7 @@
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
+      "@wepublish/session/api": ["libs/session/api/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],

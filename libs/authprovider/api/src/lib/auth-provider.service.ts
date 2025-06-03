@@ -1,19 +1,11 @@
-import {Inject, Injectable} from '@nestjs/common'
+import {OAuth2Client} from './auth-provider.types'
 
-export const OAUTH2_CLIENTS_PROVIDER = 'OAUTH2_CLIENTS_PROVIDER'
-type OAuth2ClientsProvider = () => Promise<any[]>
-
-@Injectable()
 export class AuthProviderService {
-  constructor(
-    @Inject(OAUTH2_CLIENTS_PROVIDER)
-    private getOauth2Clients: OAuth2ClientsProvider
-  ) {}
+  constructor(public oauth2Clients: OAuth2Client[]) {}
 
   async getAuthProviders(redirectUri?: string) {
-    const clients = await this.getOauth2Clients()
-
-    return clients.map(client => {
+    return this.oauth2Clients.map(client => {
+      console.log(client.provider)
       const url = client.client.authorizationUrl({
         scope: client.provider.scopes.join(' '),
         response_mode: 'query',
