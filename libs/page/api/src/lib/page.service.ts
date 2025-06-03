@@ -20,6 +20,9 @@ export class PageService {
     return this.prisma.page.findFirst({
       where: {
         slug
+      },
+      orderBy: {
+        publishedAt: 'asc' // there might be an unpublished page with the same slug
       }
     })
   }
