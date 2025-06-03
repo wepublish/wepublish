@@ -49,8 +49,10 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
 
   // Ensure the ResponsiveContainer does not render outside the viewport during initial load.
   useLayoutEffect(() => {
-    setReadyRenderChart(true)
-  }, [])
+    if (audienceStats.length) {
+      setReadyRenderChart(true)
+    }
+  }, [audienceStats])
 
   return (
     readyRenderChart && (
