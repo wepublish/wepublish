@@ -1382,10 +1382,11 @@ model Paywall {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name          String? @unique
-  description   Json?
-  anyMemberPlan Boolean @default(false)
-  active        Boolean @default(true)
+  name                  String? @unique
+  description           Json?
+  circumventDescription Json?
+  anyMemberPlan         Boolean @default(false)
+  active                Boolean @default(true)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]

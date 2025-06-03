@@ -4,6 +4,7 @@ fragment FullPaywall on Paywall {
   modifiedAt
   name
   description
+  circumventDescription
   active
   anyMemberPlan
   memberPlans {

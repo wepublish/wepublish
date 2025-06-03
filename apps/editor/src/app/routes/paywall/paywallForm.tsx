@@ -52,6 +52,20 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
           </Panel>
         </Form.Group>
 
+        <Form.Group controlId="description">
+          <Form.ControlLabel>{t('paywall.form.circumventDescription')}</Form.ControlLabel>
+          <Panel bordered>
+            <Form.Control
+              name="circumventDescription"
+              value={paywall.circumventDescription || []}
+              onChange={(circumventDescription: RichTextBlockValue['richText']) =>
+                onChange({circumventDescription})
+              }
+              accepter={RichTextBlock}
+            />
+          </Panel>
+        </Form.Group>
+
         <Form.Group controlId="active">
           <Form.Control
             name="active"

@@ -3,6 +3,7 @@ fragment FullPaywall on Paywall {
   anyMemberPlan
   name
   description
+  circumventDescription
   memberPlans {
     id
   }

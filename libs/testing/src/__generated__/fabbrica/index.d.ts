@@ -3103,6 +3103,7 @@ type PaywallFactoryDefineInput = {
     modifiedAt?: Date;
     name?: string | null;
     description?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
+    circumventDescription?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
     anyMemberPlan?: boolean;
     active?: boolean;
     memberPlans?: Prisma.PaywallMemberplanCreateNestedManyWithoutPaywallInput;

@@ -1126,7 +1126,7 @@ type Mutation {
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
+  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -1229,7 +1229,7 @@ type Mutation {
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, anyMemberPlan: Boolean, circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1425,6 +1425,7 @@ enum PaymentPeriodicity {
 type Paywall {
   active: Boolean!
   anyMemberPlan: Boolean!
+  circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
   id: String!

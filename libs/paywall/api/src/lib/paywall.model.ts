@@ -20,6 +20,9 @@ export class Paywall {
   @Field(() => GraphQLRichText, {nullable: true})
   description?: Descendant[]
 
+  @Field(() => GraphQLRichText, {nullable: true})
+  circumventDescription?: Descendant[]
+
   @Field()
   anyMemberPlan!: boolean
 

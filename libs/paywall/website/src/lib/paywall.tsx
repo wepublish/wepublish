@@ -1,11 +1,8 @@
 import styled from '@emotion/styled'
-import {FullPaywallFragment} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderPaywallProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useIntersectionObserver} from 'usehooks-ts'
 import {forceHideBanner} from '@wepublish/banner/website'
 import {useUser} from '@wepublish/authentication/website'
-
-type BuilderPaywallProps = {className?: string} & FullPaywallFragment
 
 export const PaywallWrapper = styled.div`
   display: grid !important; // exception as it should always be shown
@@ -28,7 +25,12 @@ const PaywallActions = styled.div`
   }
 `
 
-export const Paywall = ({className, description}: BuilderPaywallProps) => {
+export const Paywall = ({
+  className,
+  description,
+  circumventDescription,
+  hideContent
+}: BuilderPaywallProps) => {
   const {hasUser} = useUser()
   const {
     elements: {Button, Link},
@@ -40,7 +42,9 @@ export const Paywall = ({className, description}: BuilderPaywallProps) => {
 
   return (
     <PaywallWrapper className={className} ref={ref}>
-      <RichText richText={description ?? []} />
+      <RichText
+        richText={(hideContent ? circumventDescription ?? description : description) ?? []}
+      />
 
       <PaywallActions>
         <Button variant="contained" color="secondary" LinkComponent={Link} href={'/mitmachen'}>

@@ -1486,6 +1486,7 @@
         "title": "Modifier le paywall",
         "name": "Nom du paywall (NON visible par l'utilisateur)",
         "description": "Texte du paywall (visible par l'utilisateur)",
+        "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
         "active": "Actif",
         "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
         "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",

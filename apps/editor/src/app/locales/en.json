@@ -1651,6 +1651,7 @@
         "title": "Edit Paywall",
         "name": "Name of the paywall (NOT visible to the user)",
         "description": "Paywall text (visible to the user)",
+        "circumventDescription": "Paywall text when the article content is not hidden (visible to the user)",
         "active": "Active",
         "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
         "anyMemberPlan": "Allow any subscription to pass the paywall",

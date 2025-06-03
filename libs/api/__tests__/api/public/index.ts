@@ -1707,6 +1707,7 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
   anyMemberPlan: Scalars['Boolean'];
+  circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
   memberPlanIds?: Array<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -2066,6 +2067,7 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
+  circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
@@ -2364,6 +2366,7 @@ export type Paywall = {
   __typename?: 'Paywall';
   active: Scalars['Boolean'];
   anyMemberPlan: Scalars['Boolean'];
+  circumventDescription?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];

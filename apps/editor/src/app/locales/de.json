@@ -1592,6 +1592,7 @@
         "title": "Paywall bearbeiten",
         "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
         "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
+        "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt (Sichtbar für Benutzer:innen)",
         "active": "Aktiv",
         "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
         "anyMemberPlan": "Die Paywall entfällt für alle Abos",

@@ -69,7 +69,9 @@ export function Article({className, data, children, loading, error}: BuilderArti
         {article && <ArticleMeta article={article} />}
       </ArticleInfoWrapper>
 
-      {showPaywall && article?.paywall && <Paywall {...article.paywall} />}
+      {showPaywall && article?.paywall && (
+        <Paywall {...article.paywall} hideContent={hideContent} />
+      )}
 
       {children}
 
