@@ -2,11 +2,11 @@ import {FullPaywallFragment} from '@wepublish/website/api'
 import {createContext, useContext, useMemo} from 'react'
 import {useActiveSubscriptions} from '@wepublish/membership/website'
 
-export const ShowPaywallContext = createContext<{showPaywall?: boolean}>({})
+export const ShowPaywallContext = createContext<{showPaywall?: boolean; hideContent?: boolean}>({})
 
 export const useShowPaywall = (
   paywall?: FullPaywallFragment | null
-): paywall is FullPaywallFragment => {
+): {showPaywall: boolean; hideContent: boolean} => {
   const subscriptions = useActiveSubscriptions()
   const ctx = useContext(ShowPaywallContext)
 
@@ -14,17 +14,20 @@ export const useShowPaywall = (
     const memberPlanIds = subscriptions?.map(s => s.memberPlan.id) ?? []
 
     if (!paywall || !paywall.active) {
-      return false
-    }
-
-    if (ctx.showPaywall != null) {
-      return ctx.showPaywall
+      return {hideContent: false, showPaywall: false}
     }
 
     if (paywall.anyMemberPlan && subscriptions?.length) {
-      return true
+      return {showPaywall: true, hideContent: false}
     }
 
-    return !paywall?.memberPlans.some(memberPlan => memberPlanIds.includes(memberPlan.id))
-  }, [ctx.showPaywall, paywall, subscriptions])
+    return {
+      showPaywall:
+        ctx.showPaywall ??
+        !paywall?.memberPlans.some(memberPlan => memberPlanIds.includes(memberPlan.id)),
+      hideContent:
+        ctx.hideContent ??
+        !paywall?.memberPlans.some(memberPlan => memberPlanIds.includes(memberPlan.id))
+    }
+  }, [ctx.showPaywall, ctx.hideContent, paywall, subscriptions])
 }

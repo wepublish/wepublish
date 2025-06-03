@@ -55,6 +55,7 @@ import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
+import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
 import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
 import {
   HauptstadtAlternatingTeaser,
@@ -166,6 +167,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             ArticleAuthors={HauptstadtArticleAuthors}
             ArticleMeta={HauptstadtArticleMeta}
             Banner={HauptstadtBanner}
+            Paywall={HauptstadtPaywall}
             blocks={{
               Subscribe: Mitmachen,
               Quote: HauptstadtQuoteBlock,

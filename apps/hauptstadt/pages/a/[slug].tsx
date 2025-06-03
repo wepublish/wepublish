@@ -22,7 +22,6 @@ import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
 import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
-import {PrintLogo} from '../../src/components/print-logo'
 
 export const ArticleWrapperComments = styled(ArticleWrapper)``
 export const ArticleWrapperAppendix = styled(ArticleWrapper)``
@@ -51,7 +50,7 @@ export default function ArticleBySlugOrId() {
   return (
     <>
       <ShowPaywallContext.Provider
-        value={{showPaywall: articleId === data?.article.id ? false : undefined}}>
+        value={{hideContent: articleId === data?.article.id ? false : undefined}}>
         <HauptstadtArticle {...containerProps} />
       </ShowPaywallContext.Provider>
 

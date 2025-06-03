@@ -16,9 +16,9 @@ export const ArticleInfoWrapper = styled('aside')`
   grid-row-start: 2;
 `
 
-export const ArticleWrapper = styled(ContentWrapper)<{showPaywall?: boolean}>`
-  ${({showPaywall}) =>
-    showPaywall &&
+export const ArticleWrapper = styled(ContentWrapper)<{hideContent?: boolean}>`
+  ${({hideContent}) =>
+    hideContent &&
     css`
       // Shows the first 3 blocks (usually title, image, richtext) and hides the rest
       > :nth-child(n + 4):not(:is(${ArticleInfoWrapper})) {
@@ -50,10 +50,10 @@ export function Article({className, data, children, loading, error}: BuilderArti
   } = useWebsiteBuilder()
 
   const article = data?.article as ArticleType | undefined
-  const showPaywall = useShowPaywall(article?.paywall)
+  const {showPaywall, hideContent} = useShowPaywall(article?.paywall)
 
   return (
-    <ArticleWrapper className={className} showPaywall={showPaywall}>
+    <ArticleWrapper className={className} hideContent={hideContent}>
       {article && <ArticleSEO article={article} />}
 
       {article && (
@@ -69,7 +69,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
         {article && <ArticleMeta article={article} />}
       </ArticleInfoWrapper>
 
-      {showPaywall && <Paywall {...article.paywall!} />}
+      {showPaywall && article?.paywall && <Paywall {...article.paywall} />}
 
       {children}
 
