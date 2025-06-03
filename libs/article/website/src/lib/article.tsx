@@ -49,9 +49,8 @@ export function Article({className, data, children, loading, error}: BuilderArti
     blocks: {Blocks}
   } = useWebsiteBuilder()
 
-  const article = data?.article as ArticleType
-
-  const showPaywall = useShowPaywall(article.paywall)
+  const article = data?.article as ArticleType | undefined
+  const showPaywall = useShowPaywall(article?.paywall)
 
   return (
     <ArticleWrapper className={className} showPaywall={showPaywall}>
