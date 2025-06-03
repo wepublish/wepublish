@@ -33,5 +33,35 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
           grid-column: -1/1;
         }
       }
+
+      ${theme.breakpoints.up('xl')} {
+        & > *,
+        && > ${CommentListWrapper} {
+          grid-column: 10/28;
+        }
+
+        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+          grid-column: 7/31;
+        }
+
+        & > :is(${BreakBlockWrapper}) {
+          grid-column: 12/26;
+        }
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        & > *,
+        && > ${CommentListWrapper} {
+          grid-column: 12/26;
+        }
+
+        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+          grid-column: 9/29;
+        }
+
+        & > :is(${BreakBlockWrapper}) {
+          grid-column: 14/24;
+        }
+      }
     `}
 `
