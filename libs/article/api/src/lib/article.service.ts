@@ -190,6 +190,15 @@ export class ArticleService {
         hidden,
         disableComments,
         revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null
+            },
+            data: {
+              archivedAt: new Date()
+            }
+          },
           create: {
             ...revision,
             blocks: mappedBlocks as any[],
@@ -270,7 +279,8 @@ export class ArticleService {
     // Unpublish existing pending revisions
     await this.prisma.articleRevision.updateMany({
       data: {
-        publishedAt: null
+        publishedAt: null,
+        archivedAt: new Date()
       },
       where: {
         articleId: id,
@@ -646,7 +656,8 @@ const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
     return {
       revisions: {
         some: {
-          publishedAt: filter.draft ? null : {not: null}
+          publishedAt: filter.draft ? null : {not: null},
+          archivedAt: null
         }
       }
     }
