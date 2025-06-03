@@ -92,11 +92,6 @@ type Mutation {
 
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
-
-  """
-  This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
-  """
-  voteOnPoll(answerId: String!): PollVote
 }
 
 type Comment {
@@ -489,14 +484,6 @@ input PaymentFromInvoiceInput {
   failureURL: String
 }
 
-type PollVote {
-  id: String!
-  answerId: String!
-  pollId: String!
-  createdAt: DateTime!
-  disabled: Boolean!
-}
-
 scalar _FieldSet
 
 scalar _Any
@@ -505,4 +492,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Comment | Image | MemberPlan | PaymentMethod | PollVote | PublicSubscription | Tag | User
+union _Entity = Comment | Image | MemberPlan | PaymentMethod | PublicSubscription | Tag | User

@@ -1,11 +1,4 @@
-import {
-  Poll,
-  PollAnswer,
-  PollExternalVote,
-  PollExternalVoteSource,
-  PollVote,
-  Prisma
-} from '@prisma/client'
+import {Poll, PollAnswer, PollExternalVote, PollExternalVoteSource, Prisma} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
@@ -88,17 +81,6 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
       type: new GraphQLNonNull(GraphQLInt),
       resolve: pollAnswer => pollAnswer._count.votes
     }
-  }
-})
-
-export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
-  name: 'PollVote',
-  fields: {
-    id: {type: new GraphQLNonNull(GraphQLString)},
-    answerId: {type: new GraphQLNonNull(GraphQLString)},
-    pollId: {type: new GraphQLNonNull(GraphQLString)},
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    disabled: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 

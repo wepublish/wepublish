@@ -9,7 +9,12 @@ import {
 import {PollVoteService} from './poll-vote.service'
 import {CanDeletePollVote, CanGetPollVote} from '@wepublish/permissions'
 import {Permissions} from '@wepublish/permissions/api'
-import {Authenticated, CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {
+  Authenticated,
+  CurrentUser,
+  RequestFingerprint,
+  UserSession
+} from '@wepublish/authentication/api'
 
 @Resolver(() => PollVote)
 export class PollVoteResolver {
@@ -38,5 +43,17 @@ export class PollVoteResolver {
     @CurrentUser() {user}: UserSession
   ): Promise<string | null> {
     return this.pollService.userPollVote(pollId, user.id)
+  }
+
+  @Mutation(() => PollVote, {
+    nullable: true,
+    description: `This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous`
+  })
+  async voteOnPoll(
+    @Args('answerId') answerId: string,
+    @CurrentUser() session: UserSession | null,
+    @RequestFingerprint() fingerprint: string
+  ) {
+    return this.pollService.voteOnPoll(answerId, fingerprint, session?.user?.id)
   }
 }

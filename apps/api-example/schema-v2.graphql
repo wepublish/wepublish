@@ -1400,6 +1400,11 @@ type Mutation {
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
+
+  """
+  This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
+  """
+  voteOnPoll(answerId: String!): PollVote
 }
 
 type Navigation {

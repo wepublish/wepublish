@@ -50,8 +50,6 @@ import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
-import {GraphQLPollVote} from './poll/poll'
-import {voteOnPoll} from './poll/poll.public-mutation'
 import {createUserSession} from './session/session.mutation'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
@@ -1085,21 +1083,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
-    },
-
-    voteOnPoll: {
-      type: GraphQLPollVote,
-      args: {
-        answerId: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",
-      resolve: (
-        root,
-        {answerId},
-        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}, fingerprint}
-      ) =>
-        voteOnPoll(answerId, fingerprint, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })
