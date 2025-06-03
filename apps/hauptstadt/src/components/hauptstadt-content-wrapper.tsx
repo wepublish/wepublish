@@ -49,7 +49,7 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
         }
       }
 
-      ${theme.breakpoints.up('xl')} {
+      ${theme.breakpoints.up('xxl')} {
         & > *,
         && > ${CommentListWrapper} {
           grid-column: 12/26;
