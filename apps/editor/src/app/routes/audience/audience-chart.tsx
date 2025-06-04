@@ -36,7 +36,6 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
     t,
     i18n: {language}
   } = useTranslation()
-  const [readyRenderChart, setReadyRenderChart] = useState<boolean>(false)
 
   const {
     totalActiveSubscriptionCount,
@@ -48,9 +47,7 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
   } = clientFilter
 
   // Ensure the ResponsiveContainer does not render outside the viewport during initial load.
-  useLayoutEffect(() => {
-    setReadyRenderChart(true)
-  }, [])
+  const readyRenderChart = !!audienceStats.length
 
   return (
     readyRenderChart && (

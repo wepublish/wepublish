@@ -220,13 +220,16 @@
         "delete": "Delete banner"
       },
       "form": {
-        "title": "Title (maximized only)",
-        "text": "Text (maximized only)",
-        "cta": "Call to action (minimized only)",
+        "displayOptions": "Display Options",
+        "title": "Title",
+        "text": "Text",
+        "cta": "Call to action",
+        "delay": "Delay in seconds",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
         "showForLoginStatus": "Display for",
+        "html": "HTML-Code",
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
@@ -238,7 +241,8 @@
           "add": "Add new action",
           "label": "Label",
           "url": "URL",
-          "style": "Style"
+          "style": "Style",
+          "role": "Role"
         }
       },
       "list": {
@@ -408,6 +412,9 @@
       },
       "teaserGrid6": {
         "label": "6 Col"
+      },
+      "teaserSlots": {
+        "label": "Teaser Slots"
       },
       "title": {
         "label": "Title",
@@ -975,7 +982,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-
       "import": {
         "import": "Import",
         "title": "Import article",
@@ -1015,6 +1021,7 @@
         "editPeerInfo": "Edit Peer Info",
         "getRemote": "Fetch Remote Peer Profile",
         "image": "Image",
+        "squareImage": "Square image",
         "information": "Information",
         "leaveEmpty": "Leave empty if you don't want to change it",
         "name": "Name",

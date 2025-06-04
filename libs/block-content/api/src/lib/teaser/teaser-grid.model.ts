@@ -23,3 +23,7 @@ export class TeaserGridBlockInput extends OmitType(
   @Field(() => [TeaserInput], {nullable: 'items'})
   teasers!: Array<TeaserInput | null>
 }
+
+export function isTeaserGridBlock(block: BaseBlock<BlockType>): block is TeaserGridBlock {
+  return block.type === BlockType.TeaserGrid
+}

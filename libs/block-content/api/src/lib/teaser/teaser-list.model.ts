@@ -6,6 +6,7 @@ import {Tag} from '@wepublish/tag/api'
 
 export enum TeaserListBlockSort {
   PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt',
   HotAndTrending = 'hotAndTrending'
 }
 
@@ -52,7 +53,7 @@ export class TeaserListBlock extends BaseBlock<BlockType.TeaserList> {
     // so they have to be the same
     nullable: 'items'
   })
-  teasers!: Array<typeof Teaser>
+  teasers!: Array<typeof Teaser | null>
 }
 
 @InputType()

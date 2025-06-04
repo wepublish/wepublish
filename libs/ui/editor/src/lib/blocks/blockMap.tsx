@@ -5,6 +5,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFilter,
   MdFilter1,
   MdFilter6,
   MdFilter9Plus,
@@ -36,10 +37,16 @@ import {TeaserGridBlock} from './teaserGridBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
 import {TitleBlock} from './titleBlock'
 import {BlockValue, EmbedType} from './types'
-import {EditorBlockType, TeaserListBlockSort, TeaserType} from '@wepublish/editor/api-v2'
+import {
+  EditorBlockType,
+  TeaserListBlockSort,
+  TeaserSlotType,
+  TeaserType
+} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
 import {SubscribeBlock} from './subscribeBlock'
+import {TeaserSlotsBlock} from './teaserSlotsBlock'
 import {CrowdfundingBlock} from './CrowdfundingBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
@@ -174,6 +181,34 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: 'blocks.teaserGrid6.label',
     icon: <MdFilter6 />
+  },
+
+  [EditorBlockType.TeaserSlots]: {
+    field: props => <TeaserSlotsBlock {...props} />,
+    defaultValue: {
+      title: null,
+      blockStyle: undefined,
+      autofillConfig: {
+        enabled: false,
+        filter: {
+          tags: []
+        },
+        sort: TeaserListBlockSort.PublishedAt,
+        teaserType: TeaserType.Article
+      },
+      slots: [
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual}
+      ],
+      autofillTeasers: [],
+      teasers: []
+    },
+    label: 'blocks.teaserSlots.label',
+    icon: <MdFilter />
   },
 
   [EditorBlockType.TeaserGridFlex]: {

@@ -11,6 +11,7 @@ export const mockPeerProfile = ({
   callToActionImage = mockImage(),
   callToActionImageURL = mockImage().url,
   logo = mockImage(),
+  squareLogo = mockImage(),
   name = 'Peer',
   themeColor = '#faa',
   themeFontColor = '#000'
@@ -23,6 +24,7 @@ export const mockPeerProfile = ({
   callToActionImage,
   callToActionImageURL,
   logo,
+  squareLogo,
   name,
   themeColor,
   themeFontColor

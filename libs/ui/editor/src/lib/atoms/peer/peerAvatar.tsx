@@ -11,7 +11,7 @@ export const PeerAvatar = ({
     <InlineAvatar
       children={children}
       url={peer ? `/peering/edit/${peer?.id}` : undefined}
-      src={peer?.profile?.logo?.thumbURL}
+      src={peer?.profile?.squareLogo?.thumbURL ?? peer?.profile?.logo?.thumbURL}
       title={peer?.name}
       showAvatar={!!peer}
     />
