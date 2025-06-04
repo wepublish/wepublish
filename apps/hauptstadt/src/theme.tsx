@@ -182,7 +182,7 @@ const caption = {
 
 const body = {
   ...variablesTheme.typography.body1,
-  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.6,
   ...responsiveProperty({
     cssProperty: 'fontSize',
@@ -197,7 +197,7 @@ const body = {
 
 const h3 = {
   ...variablesTheme.typography.h3,
-  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.2,
   ...responsiveProperty({
     cssProperty: 'fontSize',
@@ -212,7 +212,7 @@ const h3 = {
 
 const h4 = {
   ...variablesTheme.typography.h4,
-  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.2,
   ...responsiveProperty({
     cssProperty: 'fontSize',
@@ -226,13 +226,13 @@ const h4 = {
 
 const h5 = {
   ...variablesTheme.typography.h5,
-  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.2
 }
 
 const subtitle1 = {
   ...variablesTheme.typography.subtitle1,
-  fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.35,
   ...responsiveProperty({
     cssProperty: 'fontSize',
@@ -247,39 +247,39 @@ const subtitle1 = {
 
 const theme = createTheme(variablesTheme, {
   typography: {
-    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+    fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
       lineHeight: 1.25,
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     },
     h1: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
     h2: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
     h3,
     h4,
     h5,
     h6: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
     body1: body,
     body2: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.25
     },
     caption,
     overline: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.3
     },
     subtitle1,
     subtitle2: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.3
     },
     button: {
@@ -519,7 +519,9 @@ const theme = createTheme(variablesTheme, {
         root: ({theme}) => ({
           display: 'grid',
           gap: theme.spacing(5),
+          maxWidth: '492px',
           [theme.breakpoints.up('md')]: {
+            maxWidth: '868px',
             gap: theme.spacing(10)
           },
           [theme.breakpoints.up('lg')]: {

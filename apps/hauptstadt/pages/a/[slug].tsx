@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
+import {
+  isTeaserGridBlock,
+  isTeaserGridFlexBlock,
+  isTeaserListBlock,
+  isTeaserSlotsBlock
+} from '@wepublish/block-content/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {ShowPaywallContext} from '@wepublish/paywall/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
@@ -19,6 +25,7 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {anyPass} from 'ramda'
 import {ComponentProps} from 'react'
 
 import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
@@ -47,6 +54,13 @@ export default function ArticleBySlugOrId() {
     id
   } as ComponentProps<typeof ArticleContainer>
 
+  const lastBlock = data?.article.latest.blocks.at(-1)
+  const isLastBlockTeaser =
+    lastBlock &&
+    anyPass([isTeaserGridBlock, isTeaserSlotsBlock, isTeaserGridFlexBlock, isTeaserListBlock])(
+      lastBlock
+    )
+
   return (
     <>
       <ShowPaywallContext.Provider
@@ -54,7 +68,7 @@ export default function ArticleBySlugOrId() {
         <HauptstadtArticle {...containerProps} />
       </ShowPaywallContext.Provider>
 
-      {data?.article && (
+      {data?.article && !isLastBlockTeaser && (
         <ArticleWrapperAppendix>
           <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
 

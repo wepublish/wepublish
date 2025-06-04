@@ -1364,7 +1364,8 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -3050,6 +3051,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
 };
 
@@ -3829,6 +3831,7 @@ export type PrimaryBannerQueryVariables = Exact<{
   documentType: BannerDocumentType;
   documentId: Scalars['String'];
   loggedIn: Scalars['Boolean'];
+  hasSubscription: Scalars['Boolean'];
 }>;
 
 
@@ -5751,11 +5754,12 @@ export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
 export const PrimaryBannerDocument = gql`
-    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!) {
+    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!, $hasSubscription: Boolean!) {
   primaryBanner(
     documentType: $documentType
     documentId: $documentId
     loggedIn: $loggedIn
+    hasSubscription: $hasSubscription
   ) {
     ...FullBanner
   }
@@ -5777,6 +5781,7 @@ export const PrimaryBannerDocument = gql`
  *      documentType: // value for 'documentType'
  *      documentId: // value for 'documentId'
  *      loggedIn: // value for 'loggedIn'
+ *      hasSubscription: // value for 'hasSubscription'
  *   },
  * });
  */

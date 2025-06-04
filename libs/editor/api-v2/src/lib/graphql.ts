@@ -1364,7 +1364,8 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -3050,6 +3051,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
 };
 

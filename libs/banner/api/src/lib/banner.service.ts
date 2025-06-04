@@ -28,15 +28,18 @@ export class BannerService {
   }
 
   async findFirst(args: PrimaryBannerArgs) {
+    const showForLoginStatus = args.hasSubscription
+      ? LoginStatus.SUBSCRIBED
+      : args.loggedIn
+      ? LoginStatus.LOGGED_IN
+      : LoginStatus.LOGGED_OUT
+
     if (args.documentType === BannerDocumentType.ARTICLE) {
       return this.prisma.banner.findFirst({
         where: {
           active: true,
           showOnArticles: true,
-          OR: [
-            {showForLoginStatus: LoginStatus.ALL},
-            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
-          ]
+          OR: [{showForLoginStatus: LoginStatus.ALL}, {showForLoginStatus}]
         }
       })
     } else if (args.documentType === BannerDocumentType.PAGE) {
@@ -48,10 +51,7 @@ export class BannerService {
               id: args.documentId
             }
           },
-          OR: [
-            {showForLoginStatus: LoginStatus.ALL},
-            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
-          ]
+          OR: [{showForLoginStatus: LoginStatus.ALL}, {showForLoginStatus}]
         }
       })
     } else {
