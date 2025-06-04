@@ -7,7 +7,7 @@ import {
   isTeaserSlotsBlock
 } from '@wepublish/block-content/website'
 import {CommentListContainer} from '@wepublish/comments/website'
-import {ShowPaywallContext} from '@wepublish/paywall/website'
+import {ShowPaywallContext, useShowPaywall} from '@wepublish/paywall/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
@@ -26,7 +26,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {anyPass} from 'ramda'
-import {ComponentProps} from 'react'
+import {ComponentProps, useEffect} from 'react'
 
 import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
 
@@ -34,11 +34,12 @@ export const ArticleWrapperComments = styled(ArticleWrapper)``
 export const ArticleWrapperAppendix = styled(ArticleWrapper)``
 
 export default function ArticleBySlugOrId() {
+  const router = useRouter()
   const {
     query: {slug, id, articleId}
   } = useRouter()
   const {
-    elements: {H3}
+    elements: {H4}
   } = useWebsiteBuilder()
 
   const {data} = useArticleQuery({
@@ -61,6 +62,18 @@ export default function ArticleBySlugOrId() {
       lastBlock
     )
 
+  const {showPaywall} = useShowPaywall(data?.article.paywall)
+
+  useEffect(() => {
+    if (!showPaywall && data?.article.paywall?.active) {
+      router.replace({
+        query: {
+          articleId: data.article.id
+        }
+      })
+    }
+  }, [data?.article.id, data?.article.paywall?.active, router, showPaywall])
+
   return (
     <>
       <ShowPaywallContext.Provider
@@ -70,7 +83,7 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && !isLastBlockTeaser && (
         <ArticleWrapperAppendix>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+          <H4 component={'h2'}>Das könnte dich auch interessieren</H4>
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
@@ -83,9 +96,9 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && !data.article.disableComments && (
         <ArticleWrapperComments>
-          <H3 component={'h2'} id="comments">
-            Kommentare
-          </H3>
+          <H4 component={'h2'} id="comments">
+            Diskussion
+          </H4>
 
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapperComments>
