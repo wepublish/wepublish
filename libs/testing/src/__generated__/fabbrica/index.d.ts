@@ -2244,6 +2244,7 @@ type TagFactoryDefineInput = {
     modifiedAt?: Date;
     type?: TagType;
     tag?: string | null;
+    description?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
     main?: boolean;
     peer?: TagpeerFactory | Prisma.PeerCreateNestedOneWithoutTagsInput;
     comments?: Prisma.TaggedCommentsCreateNestedManyWithoutTagInput;

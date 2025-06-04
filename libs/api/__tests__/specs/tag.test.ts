@@ -24,6 +24,7 @@ describe('Tags', () => {
       query: CreateTag,
       variables: {
         tag: generateRandomString(),
+        description: [],
         type: TagType.Comment
       }
     })
@@ -32,7 +33,8 @@ describe('Tags', () => {
       data: {
         createTag: {
           id: expect.any(String),
-          tag: expect.any(String)
+          tag: expect.any(String),
+          description: expect.any(Array)
         }
       }
     })

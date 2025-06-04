@@ -94,8 +94,8 @@ import {
   getSubscriptionById,
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
-import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags} from './tag/tag.private-query'
+import {GraphQLTag, GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
+import {getTags, getTag} from './tag/tag.private-query'
 import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
@@ -536,6 +536,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
         getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+    },
+
+    tag: {
+      type: GraphQLTag,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve: (root, {id}, {authenticate, prisma}) => getTag(id, authenticate, prisma.tag)
     },
 
     // Polls

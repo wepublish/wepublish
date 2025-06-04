@@ -628,6 +628,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
@@ -859,6 +860,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -1141,6 +1143,7 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
+  tag?: Maybe<Tag>;
   tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
@@ -1306,6 +1309,11 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
+};
+
+
+export type QueryTagArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1477,6 +1485,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
+  description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
@@ -1953,30 +1962,32 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
   tag?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']>;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
 
@@ -2571,6 +2582,7 @@ export const TagList = gql`
     nodes {
       id
       tag
+      description
     }
     pageInfo {
       startCursor
@@ -2583,18 +2595,20 @@ export const TagList = gql`
 }
     `;
 export const CreateTag = gql`
-    mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
     id
     tag
+    description
   }
 }
     `;
 export const UpdateTag = gql`
-    mutation UpdateTag($id: String!, $tag: String) {
-  updateTag(id: $id, tag: $tag) {
+    mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
+  updateTag(id: $id, tag: $tag, description: $description) {
     id
     tag
+    description
   }
 }
     `;
@@ -2603,6 +2617,7 @@ export const DeleteTag = gql`
   deleteTag(id: $id) {
     id
     tag
+    description
   }
 }
     `;

@@ -335,6 +335,29 @@ const theme = createTheme(variablesTheme, {
           }
         })
       }
+    },
+    // Set the navbar to be the same widths as MuiContainer
+    MuiToolbar: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          ['&&']: {
+            // since Appbar sets max width for Toolbar with specifity of 2, we have to increase the specifity to override
+            maxWidth: '492px',
+            [theme.breakpoints.up('md')]: {
+              maxWidth: '868px'
+            },
+            [theme.breakpoints.up('lg')]: {
+              maxWidth: '1080px'
+            },
+            [theme.breakpoints.up('xl')]: {
+              maxWidth: '1425px'
+            },
+            [theme.breakpoints.up('xxl')]: {
+              maxWidth: '2100px'
+            }
+          }
+        })
+      }
     }
   },
   typography: {
@@ -597,7 +620,6 @@ export const alternatingTeaserTheme = createTheme(theme, {
       })
     },
     teaserPretitle: {
-      padding: `${variablesTheme.spacing(0.5)} ${variablesTheme.spacing(2)}`,
       ...responsiveProperty({
         cssProperty: 'fontSize',
         unit: 'rem',

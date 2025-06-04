@@ -64,6 +64,8 @@ import {PollList} from './routes/polls/pollList'
 import {PollVoteListContainer} from './routes/polls/PollVotesListContainer'
 import {SubscriptionEditView} from './routes/subscriptions/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptions/subscriptionList'
+import {TagCreateView} from './routes/tags/tagCreateView'
+import {TagEditView} from './routes/tags/tagEditView'
 import {TagList} from './routes/tags/tagList'
 import {TokenList} from './routes/tokens/tokenList'
 import {UserRoleList} from './routes/userRoles/userRoleList'
@@ -274,6 +276,22 @@ export function App() {
               }
             />
             <Route
+              path="articles/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Article} />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
+            <Route
               path="articles/paywall"
               element={
                 <Base>
@@ -297,6 +315,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Page} />
+                </Base>
+              }
+            />
+            <Route
+              path="page/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Page} />
+                </Base>
+              }
+            />
+            <Route
+              path="page/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />
@@ -389,6 +423,22 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="comments/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Comment} />
+                </Base>
+              }
+            />
+            <Route
+              path="comments/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
 
             <Route
               path="comments/rating"
@@ -432,6 +482,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />
@@ -550,6 +616,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Author} />
+                </Base>
+              }
+            />
+            <Route
+              path="authors/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Author} />
+                </Base>
+              }
+            />
+            <Route
+              path="authors/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />

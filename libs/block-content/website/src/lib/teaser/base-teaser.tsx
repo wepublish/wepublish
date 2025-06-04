@@ -381,9 +381,10 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
             <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
           ) : null}
 
+          {publishDate && authors && authors?.length ? '| ' : null}
+
           {publishDate && (
             <TeaserTime suppressHydrationWarning dateTime={publishDate}>
-              {authors && authors?.length ? '| ' : null}
               {date.format(new Date(publishDate), false)}{' '}
             </TeaserTime>
           )}

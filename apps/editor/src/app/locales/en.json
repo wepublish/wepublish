@@ -1291,8 +1291,11 @@
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
         "createTag": "New Tag",
+        "editTag": "Edit {{tag}}",
         "placeholder": "Name of tag",
         "title": "Tags",
+        "name": "Name",
+        "description": "Description",
         "markAsMain": "Use as main tag"
       }
     },

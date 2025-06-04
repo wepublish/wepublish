@@ -630,6 +630,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
@@ -861,6 +862,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -1143,6 +1145,7 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
+  tag?: Maybe<Tag>;
   tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
@@ -1308,6 +1311,11 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
+};
+
+
+export type QueryTagArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1479,6 +1487,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
+  description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
@@ -2281,31 +2290,40 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+
+export type TagQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type TagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
+  description?: InputMaybe<Scalars['RichText']>;
   tag?: InputMaybe<Scalars['String']>;
   main?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type TokenRefFragment = { __typename?: 'Token', id: string, name: string };
 
@@ -5373,6 +5391,7 @@ export const TagListDocument = gql`
     nodes {
       id
       tag
+      description
       main
     }
     pageInfo {
@@ -5418,11 +5437,50 @@ export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ta
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
-export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+export const TagDocument = gql`
+    query Tag($id: String!) {
+  tag(id: $id) {
     id
     tag
+    description
+    main
+  }
+}
+    `;
+
+/**
+ * __useTagQuery__
+ *
+ * To run a query within a React component, call `useTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTagQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTagQuery(baseOptions: Apollo.QueryHookOptions<TagQuery, TagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+      }
+export function useTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+        }
+export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
+export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
+export type TagQueryResult = Apollo.QueryResult<TagQuery, TagQueryVariables>;
+export const CreateTagDocument = gql`
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
+    id
+    tag
+    description
     main
   }
 }
@@ -5443,6 +5501,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
  *   variables: {
  *      tag: // value for 'tag'
+ *      description: // value for 'description'
  *      type: // value for 'type'
  *   },
  * });
@@ -5455,10 +5514,11 @@ export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: String!, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, main: $main) {
+    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
+  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
     id
     tag
+    description
     main
   }
 }
@@ -5479,6 +5539,7 @@ export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, Upd
  * const [updateTagMutation, { data, loading, error }] = useUpdateTagMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      description: // value for 'description'
  *      tag: // value for 'tag'
  *      main: // value for 'main'
  *   },
@@ -5496,6 +5557,7 @@ export const DeleteTagDocument = gql`
   deleteTag(id: $id) {
     id
     tag
+    description
     main
   }
 }

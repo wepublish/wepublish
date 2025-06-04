@@ -1246,9 +1246,12 @@
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
-        "createTag": "Neuen Tag",
+        "createTag": "Neuer Tag",
+        "editTag": "{{tag}} Bearbeiten",
         "placeholder": "Name des Tags",
         "title": "Tags",
+        "name": "Name",
+        "description": "Beschreibung",
         "markAsMain": "Als Haupt-Tag verwenden"
       }
     },

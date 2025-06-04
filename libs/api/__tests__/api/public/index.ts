@@ -3324,6 +3324,7 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag';
+  description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;

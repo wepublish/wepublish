@@ -56,7 +56,7 @@ export const BannerForm = (props: BannerFormProps) => {
     fetchPolicy: 'cache-and-network'
   })
 
-  const pages = pageData.pages.nodes ?? []
+  const pages = pageData?.pages.nodes ?? []
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 

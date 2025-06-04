@@ -1,23 +1,9 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
-import {Container, css, CssBaseline, GlobalStyles, ThemeProvider} from '@mui/material'
+import {Container, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {ArticleWrapper} from '@wepublish/article/website'
-import {BannerWrapper} from '@wepublish/banner/website'
-import {
-  ImageBlockWrapper,
-  QuoteBlockWrapper,
-  RichTextBlockWrapper,
-  TeaserGridBlockWrapper
-} from '@wepublish/block-content/website'
-import {
-  FooterContainer,
-  FooterWrapper,
-  NavbarContainer,
-  NavbarWrapper
-} from '@wepublish/navigation/website'
-import {PaywallWrapper} from '@wepublish/paywall/website'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
   AsyncSessionProvider,
   authLink,
@@ -39,17 +25,15 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import deOverriden from '../locales/deOverriden.json'
 import {FontSizeProvider} from '../src/components/font-size-picker'
-import {
-  HauptstadtArticleAuthors,
-  HauptstadtArticleMeta,
-  HauptstadtArticleMetaWrapper
-} from '../src/components/hauptstadt-article'
+import {HauptstadtArticleAuthors, HauptstadtArticleMeta} from '../src/components/hauptstadt-article'
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
@@ -66,8 +50,8 @@ import {
   HauptstadtTeaserSlider
 } from '../src/components/hauptstadt-teaser'
 import {PrintLogo} from '../src/components/print-logo'
+import {printStyles} from '../src/print-styles'
 import theme from '../src/theme'
-import {ArticleWrapperAppendix, ArticleWrapperComments} from './a/[slug]'
 import Mitmachen from './mitmachen'
 
 setDefaultOptions({
@@ -77,7 +61,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
@@ -89,43 +73,6 @@ i18next
   })
 
 z.setErrorMap(zodI18nMap)
-
-const noPrint = (
-  <GlobalStyles
-    styles={css`
-      @media print {
-        ${HauptstadtArticleMetaWrapper},
-        ${BannerWrapper},
-        ${NavbarWrapper},
-        ${FooterWrapper},
-        ${ArticleWrapperComments},
-        ${ArticleWrapperAppendix},
-        ${TeaserGridBlockWrapper},
-        ${PaywallWrapper} {
-          display: none !important;
-        }
-
-        ${ArticleWrapper} {
-          padding-left: 15%;
-          padding-right: 15%;
-        }
-
-        ${ImageBlockWrapper},
-        ${QuoteBlockWrapper} {
-          page-break-inside: avoid;
-        }
-
-        ${RichTextBlockWrapper} :is(p, ul, li, ol) {
-          font-size: 13px !important;
-        }
-
-        iframe {
-          max-height: 90vh;
-        }
-      }
-    `}
-  />
-)
 
 const Spacer = styled('div')`
   display: grid;
@@ -186,7 +133,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             <ThemeProvider theme={theme}>
               <FontSizeProvider>
                 <CssBaseline />
-                {noPrint}
+                {printStyles}
 
                 <Head>
                   <title key="title">{siteTitle}</title>

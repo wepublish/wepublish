@@ -3,6 +3,7 @@ import {BuilderPaywallProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useIntersectionObserver} from 'usehooks-ts'
 import {forceHideBanner} from '@wepublish/banner/website'
 import {useUser} from '@wepublish/authentication/website'
+import {useTranslation} from 'react-i18next'
 
 export const PaywallWrapper = styled.div`
   display: grid !important; // exception as it should always be shown
@@ -31,6 +32,7 @@ export const Paywall = ({
   circumventDescription,
   hideContent
 }: BuilderPaywallProps) => {
+  const {t} = useTranslation()
   const {hasUser} = useUser()
   const {
     elements: {Button, Link},
@@ -48,12 +50,12 @@ export const Paywall = ({
 
       <PaywallActions>
         <Button variant="contained" color="secondary" LinkComponent={Link} href={'/mitmachen'}>
-          Abonnent*in werden
+          {t('paywall.subscribe')}
         </Button>
 
         {!hasUser && (
           <Button variant="outlined" color="secondary" LinkComponent={Link} href={'/login'}>
-            Login
+            {t('paywall.login')}
           </Button>
         )}
       </PaywallActions>

@@ -984,9 +984,10 @@ model Tag {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type TagType
-  tag  String?
-  main Boolean @default(false)
+  type        TagType
+  tag         String?
+  description Json?
+  main        Boolean @default(false)
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?
