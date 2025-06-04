@@ -419,7 +419,7 @@ input CreateCrowdfundingInput {
 }
 
 input CreateCrowdfundingMemberPlan {
-  id: ID!
+  id: String!
 }
 
 type Crowdfunding {
@@ -428,7 +428,7 @@ type Crowdfunding {
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
-  id: ID!
+  id: String!
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
@@ -469,7 +469,7 @@ type CrowdfundingGoalWithProgress {
 }
 
 type CrowdfundingMemberPlan {
-  id: ID!
+  id: String!
   name: String!
 }
 
@@ -480,7 +480,7 @@ type CrowdfundingWithActiveGoal {
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
-  id: ID!
+  id: String!
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
@@ -1127,7 +1127,7 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
-  deleteCrowdfunding(id: ID!): Boolean
+  deleteCrowdfunding(id: String!): Boolean
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
@@ -1566,7 +1566,7 @@ type Query {
   consents(filter: ConsentFilter): [Consent!]!
 
   """Get a single crowdfunding by id with calculated progress"""
-  crowdfunding(id: ID!): CrowdfundingWithActiveGoal!
+  crowdfunding(id: String!): CrowdfundingWithActiveGoal!
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
@@ -2002,7 +2002,7 @@ input UpdateCrowdfundingInput {
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
   goals: [CreateCrowdfundingGoalInput!]
-  id: ID!
+  id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
 }
