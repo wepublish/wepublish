@@ -1,7 +1,7 @@
 import {FullInvoiceFragment, SubscribeMutation, useSubscribeMutation} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useState} from 'react'
-import {useSubscribe} from '../subscribe/useSubscribe'
+import {useRedirectPages} from '../subscribe/useSubscribe'
 import {SubscribeResponseHandler} from '../subscribe/subscribe-response-handler'
 import {FetchResult} from '@apollo/client'
 
@@ -15,7 +15,7 @@ export function PayrexxSubscriptionMigrator({invoice}: PayrexxSubscriptionMigrat
   } = useWebsiteBuilder()
 
   const [subscribe] = useSubscribeMutation({})
-  const {fetchRedirectPages: fetchSuccessAndFailurePages} = useSubscribe()
+  const {fetchRedirectPages} = useRedirectPages()
 
   const [error, setError] = useState<string | undefined>()
   const [subscribeResponse, setSubscribeResponse] = useState<
@@ -43,7 +43,7 @@ export function PayrexxSubscriptionMigrator({invoice}: PayrexxSubscriptionMigrat
       return
     }
 
-    const [successPage, failPage] = await fetchSuccessAndFailurePages({
+    const [successPage, failPage] = await fetchRedirectPages({
       successPageId: memberPlan.successPageId,
       failPageId: memberPlan.failPageId
     })
