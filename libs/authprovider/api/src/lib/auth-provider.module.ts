@@ -1,9 +1,6 @@
 import {DynamicModule, Module, Provider} from '@nestjs/common'
 import {AuthProviderResolver} from './auth-provider.resolver'
 import {AuthProviderService} from './auth-provider.service'
-import {APP_GUARD} from '@nestjs/core'
-import {OptionalAuthenticationGuard, PublicGuard} from '@wepublish/authentication/api'
-import {OneOfGuard} from '@wepublish/nest-modules'
 import {createAsyncOptionsProvider} from '@wepublish/utils/api'
 import {
   AUTH_PROVIDER_OAUTH2_CLIENTS,
@@ -12,19 +9,7 @@ import {
 } from './auth-provider-module-options'
 
 @Module({
-  providers: [
-    AuthProviderService,
-    AuthProviderResolver,
-    {
-      provide: APP_GUARD,
-      useClass: OptionalAuthenticationGuard
-    },
-    {
-      provide: APP_GUARD,
-      useClass: OneOfGuard
-    },
-    PublicGuard
-  ],
+  providers: [AuthProviderService, AuthProviderResolver],
   exports: [AuthProviderService, AuthProviderResolver]
 })
 export class AuthProviderModule {
