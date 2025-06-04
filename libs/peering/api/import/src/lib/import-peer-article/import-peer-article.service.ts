@@ -17,14 +17,14 @@ import {pipe, replace, toLower} from 'ramda'
 import {ValueOf} from 'type-fest'
 import {
   Article,
+  ArticleFilter as GqlArticleFilter,
   ArticleList,
   ArticleListQuery,
   ArticleListQueryVariables,
   ArticleQuery,
   ArticleQueryVariables,
-  FullImageFragment,
-  ArticleFilter as GqlArticleFilter,
-  DateFilter as GqlDateFilter
+  DateFilter as GqlDateFilter,
+  FullImageFragment
 } from './graphql'
 import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
 

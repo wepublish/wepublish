@@ -209,6 +209,61 @@
         "tags": "Tags"
       }
     },
+    "banner": {
+      "edit": {
+        "title": "Banner bearbeiten"
+      },
+      "create": {
+        "title": "Banner hinzufügen"
+      },
+      "delete": {
+        "title": "Banner löschen",
+        "body": "Willst Du den Banner wirklich löschen?",
+        "delete": "Banner löschen"
+      },
+      "form": {
+        "displayOptions": "Anzeigeoptionen",
+        "title": "Titel",
+        "text": "Text",
+        "cta": "Call to action",
+        "delay": "Verzögerung in Sekunden",
+        "active": "Aktiv",
+        "showOnArticles": "Auf Artikeln anzeigen",
+        "showOnPages": "Auf Seiten anzeigen",
+        "showForLoginStatus": "Anzeigen für",
+        "html": "HTML-Code",
+        "loginStatus": {
+          "ALL": "alle",
+          "LOGGED_IN": "nur eingeloggt",
+          "LOGGED_OUT": "nur ausgeloggt"
+        },
+        "actions": "Aktionen",
+        "image": "Bild",
+        "action": {
+          "add": "Aktion hinzufügen",
+          "label": "Beschriftung",
+          "url": "URL",
+          "style": "Stil",
+          "role": "Funktion"
+        }
+      },
+      "list": {
+        "title": "Banner",
+        "text": "Text",
+        "createNew": "Neu erstellen",
+        "active": "Aktiv",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "actions": {
+        "add": "Aktion hinzufügen",
+        "role": {
+          "PRIMARY": "Primär",
+          "CANCEL": "Abbrechen",
+          "OTHER": "Andere"
+        }
+      }
+    },
     "blocks": {
       "crowdfunding": {
         "edit": "Bearbeiten",
@@ -359,6 +414,9 @@
       },
       "teaserGrid6": {
         "label": "6 Kol"
+      },
+      "teaserSlots": {
+        "label": "Teaser Slots"
       },
       "title": {
         "label": "Titel",
@@ -916,7 +974,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
       "title": "Titel",
-
       "import": {
         "import": "Importieren",
         "title": "Artikel importieren",

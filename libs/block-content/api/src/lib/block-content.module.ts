@@ -11,6 +11,7 @@ import {ArticleModule} from '@wepublish/article/api'
 import {PageModule} from '@wepublish/page/api'
 import {TeaserListBlockFilterResolver, TeaserListBlockResolver} from './teaser/teaser-list.resolver'
 import {BaseBlockResolver} from './base-block.resolver'
+import {SlotTeasersLoader} from './teaser/slot-teasers-loader'
 
 @Module({
   imports: [
@@ -28,7 +29,9 @@ import {BaseBlockResolver} from './base-block.resolver'
     EventBlockResolver,
     CommentBlockResolver,
     TeaserListBlockResolver,
-    TeaserListBlockFilterResolver
-  ]
+    TeaserListBlockFilterResolver,
+    SlotTeasersLoader
+  ],
+  exports: [SlotTeasersLoader]
 })
 export class BlockContentModule {}

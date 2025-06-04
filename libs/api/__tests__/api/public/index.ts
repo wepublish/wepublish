@@ -87,6 +87,8 @@ export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  excludeIds?: InputMaybe<Array<Scalars['String']>>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
@@ -231,6 +233,8 @@ export type Banner = {
   actions?: Maybe<Array<BannerAction>>;
   active: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
+  delay: Scalars['Int'];
+  html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
@@ -303,7 +307,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -328,6 +332,7 @@ export type BlockContentInput = {
   teaserGrid?: InputMaybe<TeaserGridBlockInput>;
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
   teaserList?: InputMaybe<TeaserListBlockInput>;
+  teaserSlots?: InputMaybe<TeaserSlotsBlockInput>;
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
   title?: InputMaybe<TitleBlockInput>;
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
@@ -367,6 +372,7 @@ export enum BlockType {
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   TikTokVideo = 'TikTokVideo',
   Title = 'Title',
   TwitterTweet = 'TwitterTweet',
@@ -577,6 +583,8 @@ export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
+  delay: Scalars['Int'];
+  html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
   showForLoginStatus: LoginStatus;
   showOnArticles: Scalars['Boolean'];
@@ -785,6 +793,7 @@ export enum EditorBlockType {
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
   TeaserList = 'TeaserList',
+  TeaserSlots = 'TeaserSlots',
   Title = 'Title'
 }
 
@@ -2341,6 +2350,8 @@ export type PeerArticle = HasOptionalPeerLc & {
 export type PeerArticleFilter = {
   authors?: InputMaybe<Array<Scalars['String']>>;
   body?: InputMaybe<Scalars['String']>;
+  excludeIds?: InputMaybe<Array<Scalars['String']>>;
+  ids?: InputMaybe<Array<Scalars['String']>>;
   lead?: InputMaybe<Scalars['String']>;
   peerId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
@@ -3355,8 +3366,63 @@ export type TeaserListBlockInput = {
 
 export enum TeaserListBlockSort {
   HotAndTrending = 'HotAndTrending',
-  PublishedAt = 'PublishedAt'
+  PublishedAt = 'PublishedAt',
+  UpdatedAt = 'UpdatedAt'
 }
+
+export type TeaserSlot = {
+  __typename?: 'TeaserSlot';
+  teaser?: Maybe<Teaser>;
+  type: TeaserSlotType;
+};
+
+export type TeaserSlotInput = {
+  teaser?: InputMaybe<TeaserInput>;
+  type?: TeaserSlotType;
+};
+
+export enum TeaserSlotType {
+  Autofill = 'Autofill',
+  Manual = 'Manual'
+}
+
+export type TeaserSlotsAutofillConfig = BaseBlock & {
+  __typename?: 'TeaserSlotsAutofillConfig';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  enabled: Scalars['Boolean'];
+  filter?: Maybe<TeaserListBlockFilter>;
+  sort?: Maybe<TeaserListBlockSort>;
+  teaserType?: Maybe<TeaserType>;
+  type: BlockType;
+};
+
+export type TeaserSlotsAutofillConfigInput = {
+  enabled: Scalars['Boolean'];
+  filter?: InputMaybe<TeaserListBlockFilterInput>;
+  sort?: InputMaybe<TeaserListBlockSort>;
+  teaserType?: InputMaybe<TeaserType>;
+};
+
+export type TeaserSlotsBlock = BaseBlock & {
+  __typename?: 'TeaserSlotsBlock';
+  autofillConfig: TeaserSlotsAutofillConfig;
+  autofillTeasers: Array<Teaser>;
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  slots: Array<TeaserSlot>;
+  teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
+  type: BlockType;
+};
+
+export type TeaserSlotsBlockInput = {
+  autofillConfig: TeaserSlotsAutofillConfigInput;
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  slots: Array<TeaserSlotInput>;
+  title?: InputMaybe<Scalars['String']>;
+};
 
 export enum TeaserType {
   Article = 'Article',
@@ -3444,6 +3510,8 @@ export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
+  delay: Scalars['Int'];
+  html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   imageId?: InputMaybe<Scalars['String']>;
   showForLoginStatus: LoginStatus;

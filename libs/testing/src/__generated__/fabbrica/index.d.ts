@@ -170,11 +170,11 @@ type ArticleRevisionFactoryDefineInput = {
     canonicalUrl?: string | null;
     breaking?: boolean;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
-    searchPlainText?: string | null;
     hideAuthor?: boolean;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     publishedAt?: Date | null;
+    archivedAt?: Date | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutArticleRevisionInput;
     authors?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutRevisionInput;
     socialMediaAuthors?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutRevisionInput;
@@ -1400,12 +1400,12 @@ type PageRevisionFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     publishedAt?: Date | null;
+    archivedAt?: Date | null;
     title?: string | null;
     description?: string | null;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
-    searchPlainText?: string | null;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutPageRevisionInput;
     image?: PageRevisionimageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput;
     socialMediaImage?: PageRevisionsocialMediaImageFactory | Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput;
@@ -2926,7 +2926,9 @@ type BannerFactoryDefineInput = {
     title?: string;
     text?: string;
     cta?: string | null;
+    html?: string | null;
     active?: boolean;
+    delay?: number;
     showOnArticles?: boolean;
     showForLoginStatus?: LoginStatus;
     image?: BannerimageFactory | Prisma.ImageCreateNestedOneWithoutBannersInput;

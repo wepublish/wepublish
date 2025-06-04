@@ -104,7 +104,9 @@ export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserL
       {!!teasersToDisplay.length && (
         <TeaserGrid>
           {teasersToDisplay.map(([, teaser], index) => (
-            <TeaserWrapper key={index}>{ContentForTeaser(teaser)}</TeaserWrapper>
+            <TeaserWrapper key={index}>
+              <ContentForTeaser teaser={teaser} />
+            </TeaserWrapper>
           ))}
         </TeaserGrid>
       )}

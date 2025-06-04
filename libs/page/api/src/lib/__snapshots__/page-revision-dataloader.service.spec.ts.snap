@@ -4,73 +4,35 @@ exports[`PageRevisionDataloaderService load should load many 1`] = `
 [
   [
     {
-      "orderBy": {
-        "createdAt": "desc",
-      },
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
+      "take": 3,
       "where": {
+        "archivedAt": null,
         "pageId": "123",
       },
     },
   ],
   [
     {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "gt": 2023-01-01T00:00:00.000Z,
+      "orderBy": [
+        {
+          "publishedAt": "desc",
         },
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "lte": 2023-01-01T00:00:00.000Z,
+        {
+          "createdAt": "desc",
         },
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
+      ],
+      "take": 3,
       "where": {
+        "archivedAt": null,
         "pageId": "321",
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "321",
-        "publishedAt": {
-          "gt": 2023-01-01T00:00:00.000Z,
-        },
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "321",
-        "publishedAt": {
-          "lte": 2023-01-01T00:00:00.000Z,
-        },
       },
     },
   ],
@@ -81,37 +43,18 @@ exports[`PageRevisionDataloaderService load should load one 1`] = `
 [
   [
     {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "gt": 2023-01-01T00:00:00.000Z,
+      "orderBy": [
+        {
+          "publishedAt": "desc",
         },
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "lte": 2023-01-01T00:00:00.000Z,
+        {
+          "createdAt": "desc",
         },
+      ],
+      "take": 3,
+      "where": {
+        "archivedAt": null,
+        "pageId": "123",
       },
     },
   ],

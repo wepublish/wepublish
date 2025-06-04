@@ -142,8 +142,8 @@ export function AudienceFilter({
         <Col xs={14}>
           <Panel header={t('audienceFilter.panelHeader')} bordered>
             <Row>
-              {Object.keys(clientFilter).map(filterKey => (
-                <Col xs={12}>
+              {Object.keys(clientFilter).map((filterKey, filterIndex) => (
+                <Col xs={12} key={`client-filter-${filterIndex}`}>
                   <AudienceFilterToggle
                     filterKey={filterKey as keyof AudienceClientFilter}
                     clientFilter={clientFilter}
