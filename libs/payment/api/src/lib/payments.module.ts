@@ -8,10 +8,11 @@ import {
   PaymentsModuleOptions
 } from './payments-module-options'
 import {PrismaClient} from '@prisma/client'
+import {PaymentDataloader} from './payment.dataloader'
 
 @Module({
   imports: [PrismaModule],
-  exports: [PaymentsService]
+  exports: [PaymentsService, PaymentDataloader]
 })
 export class PaymentsModule {
   static registerAsync(options: PaymentsModuleAsyncOptions): DynamicModule {
@@ -25,6 +26,7 @@ export class PaymentsModule {
 
   private static createAsyncProviders(options: PaymentsModuleAsyncOptions): Provider[] {
     return [
+      PaymentDataloader,
       createAsyncOptionsProvider<PaymentsModuleOptions>(PAYMENTS_MODULE_OPTIONS, options),
       {
         provide: PaymentsService,

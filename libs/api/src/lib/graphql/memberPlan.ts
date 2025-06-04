@@ -271,3 +271,16 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     confirmationPageId: {type: GraphQLString}
   })
 })
+
+export const GraphQLMemberPlanResolver = {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
+    const {id} = reference
+    const memberPlan = await loaders.memberPlansByID.load(id)
+
+    if (!memberPlan) {
+      throw new Error('MemberPlan not found')
+    }
+
+    return memberPlan
+  }
+}

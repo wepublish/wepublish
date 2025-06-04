@@ -3,11 +3,13 @@ import {ImageModule} from '@wepublish/image/api'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {UserDataloaderService} from './user-dataloader.service'
 import {
-  HasUserResolver,
-  HasUserLcResolver,
+  HasOptionalUserLcResolver,
   HasOptionalUserResolver,
-  HasOptionalUserLcResolver
+  HasUserLcResolver,
+  HasUserResolver
 } from './has-user/has-user.resolver'
+import {UserResolver} from './user.resolver'
+import {UserService} from './user.service'
 
 @Module({
   imports: [PrismaModule, ImageModule],
@@ -16,8 +18,10 @@ import {
     HasUserResolver,
     HasUserLcResolver,
     HasOptionalUserResolver,
-    HasOptionalUserLcResolver
+    HasOptionalUserLcResolver,
+    UserResolver,
+    UserService
   ],
-  exports: [UserDataloaderService]
+  exports: [UserDataloaderService, UserService]
 })
 export class UserModule {}

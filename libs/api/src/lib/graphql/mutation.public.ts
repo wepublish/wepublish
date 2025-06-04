@@ -38,28 +38,12 @@ import {
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
-import {rateComment} from './comment-rating/comment-rating.public-mutation'
-import {
-  GraphQLChallengeInput,
-  GraphQLPublicComment,
-  GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput
-} from './comment/comment'
-import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
+import {GraphQLChallengeInput} from './comment/comment'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
-import {GraphQLPollVote} from './poll/poll'
-import {voteOnPoll} from './poll/poll.public-mutation'
-import {GraphQLPublicSessionWithToken} from './session'
-import {
-  createJWTSession,
-  createOAuth2Session,
-  createSession,
-  createUserSession,
-  revokeSessionByToken
-} from './session/session.mutation'
+import {createUserSession} from './session/session.mutation'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
@@ -86,106 +70,6 @@ import {GraphQLDateTime} from 'graphql-scalars'
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    // Session
-    // =======
-
-    createSession: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        password: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
-        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithJWT: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        jwt: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
-        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithOAuth2Code: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        code: {type: new GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
-    },
-
-    revokeActiveSession: {
-      type: new GraphQLNonNull(GraphQLBoolean),
-      args: {},
-      description: 'This mutation revokes and deletes the active session.',
-      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
-        revokeSessionByToken(authenticateUser, session)
-    },
-
-    // Comment
-    // =======
-    addComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {input: {type: new GraphQLNonNull(GraphQLPublicCommentInput)}},
-      description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment, setting}, challenge}) =>
-        addPublicComment(input, optionalAuthenticateUser, challenge, setting, comment)
-    },
-
-    updateComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {
-        input: {type: new GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
-      },
-      description:
-        'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
-      resolve: (_, {input}, {prisma: {comment, setting}, authenticateUser}) =>
-        updatePublicComment(input, authenticateUser, comment, setting)
-    },
-
-    rateComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {
-        commentId: {type: new GraphQLNonNull(GraphQLString)},
-        answerId: {type: new GraphQLNonNull(GraphQLString)},
-        value: {type: new GraphQLNonNull(GraphQLInt)}
-      },
-      description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
-      resolve: (
-        root,
-        {commentId, answerId, value},
-        {
-          optionalAuthenticateUser,
-          prisma: {comment, commentRating, commentRatingSystemAnswer, setting}
-        }
-      ) =>
-        rateComment(
-          commentId,
-          answerId,
-          value,
-          undefined,
-          optionalAuthenticateUser,
-          commentRatingSystemAnswer,
-          commentRating,
-          comment,
-          setting
-        )
-    },
-
     registerMember: {
       type: new GraphQLNonNull(GraphQLMemberRegistration),
       args: {
@@ -1142,21 +1026,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
-    },
-
-    voteOnPoll: {
-      type: GraphQLPollVote,
-      args: {
-        answerId: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",
-      resolve: (
-        root,
-        {answerId},
-        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}, fingerprint}
-      ) =>
-        voteOnPoll(answerId, fingerprint, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })

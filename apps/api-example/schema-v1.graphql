@@ -17,556 +17,11 @@ directive @shareable on FIELD_DEFINITION | OBJECT
 directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
 type Query {
-  """This query returns the peer profile."""
-  peerProfile: PeerProfile!
-
-  """
-  This query takes either the ID or the slug and returns the peer profile.
-  """
-  peer(id: String, slug: Slug): Peer
-
-  """This query takes either the ID or the slug and returns the author."""
-  author(id: String, slug: Slug): Author
-
-  """This query is to get the authors."""
-  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
-
-  """This query returns the comments of an item."""
-  comments(itemId: String!, sort: CommentSort, order: SortOrder = Descending): [Comment!]!
-
-  """This query returns the redirect Uri."""
-  authProviders(redirectUri: String): [AuthProvider!]!
-
-  """This query returns the user."""
-  me: User
-
-  """This query returns the invoices  of the authenticated user."""
-  invoices: [Invoice!]!
-
-  """This query returns the subscriptions of the authenticated user."""
-  subscriptions: [PublicSubscription!]!
-
-  """This query returns a member plan."""
-  memberPlan(id: String, slug: Slug): MemberPlan
-
-  """This query returns the member plans."""
-  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = createdAt, order: SortOrder = Descending): MemberPlanConnection!
-
-  """
-  This mutation will check the invoice status and update with information from the paymentProvider
-  """
-  checkInvoiceStatus(id: String!): Invoice
-
-  """
-  This query generates a challenge which can be used to access protected endpoints.
-  """
-  challenge: Challenge!
-  ratingSystem: FullCommentRatingSystem!
-
-  """This query returns a poll with all the needed data"""
-  poll(id: String!): FullPoll!
-
-  """
-  This query returns the answerId of a poll if the user has already voted on it.
-  """
-  userPollVote(pollId: String!): String
-
-  """This query returns a list of tags"""
-  tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
 
-type PeerProfile {
-  name: String!
-  logo: Image
-  squareLogo: Image
-  themeColor: Color!
-  themeFontColor: Color!
-  hostURL: String!
-  websiteURL: String!
-  callToActionText: RichText!
-  callToActionURL: String!
-  callToActionImageURL: String
-  callToActionImage: Image
-}
-
-type Image {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]!
-  link: String
-  source: String
-  license: String
-  fileSize: Int!
-  extension: String!
-  mimeType: String!
-  format: String!
-  width: Int!
-  height: Int!
-  focalPoint: FocalPoint
-  url: String
-  transformURL(input: ImageTransformation): String
-}
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
-
-type FocalPoint {
-  x: Float!
-  y: Float!
-}
-
-input ImageTransformation {
-  width: Int
-  height: Int
-  rotation: ImageRotation
-  quality: Float
-  output: ImageOutput
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
-}
-
-enum ImageOutput {
-  png
-  jpeg
-  webp
-}
-
-"""A hexidecimal color value."""
-scalar Color
-
-scalar RichText
-
-type Peer {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: String!
-  isDisabled: Boolean
-  hostURL: String!
-  profile: PeerProfile
-}
-
-scalar Slug
-
-type Author {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  url: String!
-  links: [AuthorLink!]
-  bio: RichText
-  jobTitle: String
-  image: Image
-  tags: [Tag!]!
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-  peer: Peer
-}
-
-type AuthorLink {
-  title: String!
-  url: String!
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-type AuthorConnection {
-  nodes: [Author!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input AuthorFilter {
-  name: String
-  tagIds: [String!]
-  hideOnTeam: Boolean
-}
-
-enum AuthorSort {
-  createdAt
-  modifiedAt
-  NAME
-}
-
-enum SortOrder {
-  Ascending
-  Descending
-}
-
-type Comment {
-  id: String!
-  parentID: String
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: String!
-  itemType: CommentItemType!
-  children: [Comment!]!
-  title: String
-  lead: String
-  text: RichText
-  state: CommentState!
-  source: String
-  rejectionReason: String
-  featured: Boolean
-  createdAt: DateTime!
-  url: String!
-  modifiedAt: DateTime
-  calculatedRatings: [CalculatedRating!]!
-  overriddenRatings: [overriddenRating!]!
-  userRatings: [CommentRating!]!
-}
-
-type User {
-  id: String!
-  name: String!
-  firstName: String
-  birthday: DateTime
-  email: String!
-  address: UserAddress
-  flair: String
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
-  image: Image
-  properties: [PublicProperties!]!
-  permissions: [String!]!
-}
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
-}
-
-type PublicProperties {
-  key: String!
-  value: String!
-}
-
-enum CommentAuthorType {
-  author
-  team
-  verifiedUser
-  guestUser
-}
-
-enum CommentItemType {
-  article
-  page
-}
-
-enum CommentState {
-  approved
-  pendingApproval
-  pendingUserChanges
-  rejected
-}
-
-type CalculatedRating {
-  count: Int!
-  total: Int!
-  mean: Float!
-  answer: CommentRatingSystemAnswer!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
-}
-
-type CommentRating {
-  id: String!
-  userId: String
-  commentId: String!
-  value: Int!
-  createdAt: DateTime!
-  fingerprint: String
-  disabled: Boolean
-  answer: CommentRatingSystemAnswer!
-}
-
-enum CommentSort {
-  rating
-}
-
-type AuthProvider {
-  name: String!
-  url: String!
-}
-
-type Invoice {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  mail: String!
-  description: String
-  paidAt: DateTime
-  dueAt: DateTime!
-  canceledAt: DateTime
-  items: [InvoiceItem!]!
-  subscriptionID: String!
-  subscription: PublicSubscription
-  total: Int!
-}
-
-type InvoiceItem {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  total: Int!
-}
-
-type PublicSubscription {
-  id: String!
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  extendable: Boolean!
-  properties: [PublicProperties!]!
-  deactivation: SubscriptionDeactivation
-  url: String!
-  user: User
-  canExtend: Boolean!
-}
-
-type MemberPlan {
-  id: String!
-  name: String!
-  slug: String!
-  image: Image
-  description: RichText
-  tags: [String!]
-  currency: Currency!
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
-  maxCount: Int
-  extendable: Boolean!
-  availablePaymentMethods: [AvailablePaymentMethod!]!
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-enum Currency {
-  CHF
-  EUR
-}
-
-type AvailablePaymentMethod {
-  paymentMethods: [PaymentMethod!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-type PaymentMethod {
-  id: String!
-  paymentProviderID: String!
-  name: String!
-  slug: Slug!
-  description: String!
-  imageId: String
-  image: Image
-}
-
-enum PaymentPeriodicity {
-  monthly
-  quarterly
-  biannual
-  yearly
-}
-
-type SubscriptionDeactivation {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
-}
-
-enum SubscriptionDeactivationReason {
-  none
-  userSelfDeactivated
-  invoiceNotPaid
-  userReplacedSubscription
-}
-
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input MemberPlanFilter {
-  name: String
-  active: Boolean
-  tags: [String!]
-}
-
-enum MemberPlanSort {
-  createdAt
-  modifiedAt
-}
-
-type Challenge {
-  type: CaptchaType
-  challenge: String
-  challengeID: String
-  validUntil: Date
-}
-
-enum CaptchaType {
-  Algebraic
-  CfTurnstile
-}
-
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
-
-type FullCommentRatingSystem {
-  id: String!
-  name: String
-  answers: [CommentRatingSystemAnswer!]!
-}
-
-type FullPoll {
-  id: String!
-  question: String
-  opensAt: DateTime!
-  closedAt: DateTime
-  infoText: RichText
-  answers: [PollAnswerWithVoteCount!]!
-  externalVoteSources: [PollExternalVoteSource!]!
-}
-
-type PollAnswerWithVoteCount {
-  id: String!
-  pollId: String!
-  answer: String
-  votes: Int!
-}
-
-type PollExternalVoteSource {
-  id: String!
-  source: String
-  voteAmounts: [PollExternalVote!]!
-}
-
-type PollExternalVote {
-  id: String!
-  answerId: String!
-  amount: VoteValue!
-}
-
-"""A valid vote value"""
-scalar VoteValue
-
-type TagConnection {
-  nodes: [Tag!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input TagFilter {
-  type: TagType
-  tag: String
-}
-
-enum TagSort {
-  CreatedAt
-  ModifiedAt
-  Tag
-}
-
 type Mutation {
-  createSession(email: String!, password: String!): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
-
-  """This mutation revokes and deletes the active session."""
-  revokeActiveSession: Boolean!
-
-  """
-  This mutation allows to add a comment. The input is of type CommentInput.
-  """
-  addComment(input: CommentInput!): Comment!
-
-  """
-  This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.
-  """
-  updateComment(input: CommentUpdateInput!): Comment!
-
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
   """
@@ -627,40 +82,197 @@ type Mutation {
 
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
-
-  """
-  This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
-  """
-  voteOnPoll(answerId: String!): PollVote
 }
 
-type SessionWithToken {
-  user: User!
-  token: String!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-input CommentInput {
+type Comment {
+  id: String!
   parentID: String
   guestUsername: String
-  challenge: ChallengeInput
+  guestUserImage: Image
+  user: User
+  tags: [Tag!]!
+  authorType: CommentAuthorType!
   itemID: String!
   itemType: CommentItemType!
-  title: String
-  text: RichText!
-}
-
-input ChallengeInput {
-  challengeID: String
-  challengeSolution: String!
-}
-
-input CommentUpdateInput {
-  id: String!
-  text: RichText
+  children: [Comment!]!
   title: String
   lead: String
+  text: RichText
+  state: CommentState!
+  source: String
+  rejectionReason: String
+  featured: Boolean
+  createdAt: DateTime!
+  url: String!
+  modifiedAt: DateTime
+  calculatedRatings: [CalculatedRating!]!
+  overriddenRatings: [overriddenRating!]!
+  userRatings: [CommentRating!]!
+}
+
+type Image {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  filename: String
+  title: String
+  description: String
+  tags: [String!]!
+  link: String
+  source: String
+  license: String
+  fileSize: Int!
+  extension: String!
+  mimeType: String!
+  format: String!
+  width: Int!
+  height: Int!
+  focalPoint: FocalPoint
+  url: String
+  transformURL(input: ImageTransformation): String
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type FocalPoint {
+  x: Float!
+  y: Float!
+}
+
+input ImageTransformation {
+  width: Int
+  height: Int
+  rotation: ImageRotation
+  quality: Float
+  output: ImageOutput
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+enum ImageOutput {
+  png
+  jpeg
+  webp
+}
+
+type User {
+  id: String!
+  name: String!
+  firstName: String
+  birthday: DateTime
+  email: String!
+  address: UserAddress
+  flair: String
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  oauth2Accounts: [OAuth2Account!]!
+  image: Image
+  properties: [PublicProperties!]!
+  permissions: [String!]!
+}
+
+type UserAddress {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type PaymentProviderCustomer {
+  paymentProviderID: String!
+  customerID: String!
+}
+
+type OAuth2Account {
+  type: String!
+  provider: String!
+  scope: String!
+}
+
+type PublicProperties {
+  key: String!
+  value: String!
+}
+
+type Tag {
+  id: String!
+  tag: String
+  type: TagType
+  main: Boolean!
+  url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
+}
+
+enum CommentAuthorType {
+  author
+  team
+  verifiedUser
+  guestUser
+}
+
+enum CommentItemType {
+  article
+  page
+}
+
+scalar RichText
+
+enum CommentState {
+  approved
+  pendingApproval
+  pendingUserChanges
+  rejected
+}
+
+type CalculatedRating {
+  count: Int!
+  total: Int!
+  mean: Float!
+  answer: CommentRatingSystemAnswer!
+}
+
+type CommentRatingSystemAnswer {
+  id: String!
+  ratingSystemId: String!
+  answer: String
+  type: RatingSystemType!
+}
+
+enum RatingSystemType {
+  star
+}
+
+type overriddenRating {
+  answerId: String!
+  value: Int
+}
+
+type CommentRating {
+  id: String!
+  userId: String
+  commentId: String!
+  value: Int!
+  createdAt: DateTime!
+  fingerprint: String
+  disabled: Boolean
+  answer: CommentRatingSystemAnswer!
 }
 
 type Registration {
@@ -681,6 +293,11 @@ input UserAddressInput {
   zipCode: String
   city: String
   country: String
+}
+
+input ChallengeInput {
+  challengeID: String
+  challengeSolution: String!
 }
 
 type RegistrationAndPayment {
@@ -704,6 +321,25 @@ enum PaymentState {
   paid
   canceled
   declined
+}
+
+type PaymentMethod {
+  id: String!
+  paymentProviderID: String!
+  name: String!
+  slug: Slug!
+  description: String!
+  imageId: String
+  image: Image
+}
+
+scalar Slug
+
+enum PaymentPeriodicity {
+  monthly
+  quarterly
+  biannual
+  yearly
 }
 
 input PublicPropertiesInput {
@@ -741,6 +377,64 @@ input InputPoint {
   y: Float!
 }
 
+type PublicSubscription {
+  id: String!
+  memberPlan: MemberPlan!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  extendable: Boolean!
+  properties: [PublicProperties!]!
+  deactivation: SubscriptionDeactivation
+  url: String!
+  user: User
+  canExtend: Boolean!
+}
+
+type MemberPlan {
+  id: String!
+  name: String!
+  slug: String!
+  image: Image
+  description: RichText
+  tags: [String!]
+  currency: Currency!
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  maxCount: Int
+  extendable: Boolean!
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  successPageId: String
+  failPageId: String
+  confirmationPageId: String
+}
+
+enum Currency {
+  CHF
+  EUR
+}
+
+type AvailablePaymentMethod {
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+  forceAutoRenewal: Boolean!
+}
+
+type SubscriptionDeactivation {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
+}
+
+enum SubscriptionDeactivationReason {
+  none
+  userSelfDeactivated
+  invoiceNotPaid
+  userReplacedSubscription
+}
+
 input SubscriptionInput {
   id: String!
   memberPlanID: String!
@@ -763,14 +457,6 @@ input PaymentFromInvoiceInput {
   failureURL: String
 }
 
-type PollVote {
-  id: String!
-  answerId: String!
-  pollId: String!
-  createdAt: DateTime!
-  disabled: Boolean!
-}
-
 scalar _FieldSet
 
 scalar _Any
@@ -779,4 +465,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Author | Comment | FullPoll | Image | MemberPlan | PaymentMethod | Peer | PollVote | PublicSubscription | Tag | User
+union _Entity = Comment | Image | MemberPlan | PaymentMethod | PublicSubscription | Tag | User

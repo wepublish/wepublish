@@ -13,7 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A hexidecimal color value. */
+  /** A hexadecimal color value (#RRGGBB) */
   Color: string;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: string;
@@ -169,20 +169,22 @@ export type AuthProvider = {
   url: Scalars['String'];
 };
 
-export type Author = {
+export type Author = HasImage & HasOptionalPeerLc & {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
-  hideOnArticle?: Maybe<Scalars['Boolean']>;
-  hideOnTeam?: Maybe<Scalars['Boolean']>;
-  hideOnTeaser?: Maybe<Scalars['Boolean']>;
+  hideOnArticle: Scalars['Boolean'];
+  hideOnTeam: Scalars['Boolean'];
+  hideOnTeaser: Scalars['Boolean'];
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   jobTitle?: Maybe<Scalars['String']>;
   links?: Maybe<Array<AuthorLink>>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -215,10 +217,11 @@ export type AuthorLink = {
   url: Scalars['String'];
 };
 
+/** Sorting options for authors */
 export enum AuthorSort {
-  Name = 'NAME',
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
 }
 
 export type AvailablePaymentMethod = {
@@ -424,7 +427,7 @@ export type Challenge = {
   __typename?: 'Challenge';
   challenge?: Maybe<Scalars['String']>;
   challengeID?: Maybe<Scalars['String']>;
-  type?: Maybe<CaptchaType>;
+  type: CaptchaType;
   validUntil?: Maybe<Scalars['Date']>;
 };
 
@@ -446,8 +449,9 @@ export type Comment = {
   itemID: Scalars['String'];
   itemType: CommentItemType;
   lead?: Maybe<Scalars['String']>;
-  modifiedAt?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
   overriddenRatings: Array<OverriddenRating>;
+  parentComment?: Maybe<Comment>;
   parentID?: Maybe<Scalars['String']>;
   rejectionReason?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
@@ -2383,13 +2387,16 @@ export type PeerImage = {
 export type PeerProfile = {
   __typename?: 'PeerProfile';
   callToActionImage?: Maybe<Image>;
+  callToActionImageID?: Maybe<Scalars['String']>;
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   hostURL: Scalars['String'];
   logo?: Maybe<Image>;
+  logoID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   squareLogo?: Maybe<Image>;
+  squareLogoId?: Maybe<Scalars['String']>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
   websiteURL: Scalars['String'];
@@ -2565,11 +2572,11 @@ export type Query = {
   article: Article;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
-  /** This query returns the redirect Uri. */
+  /** This query returns available OAuth providers with their authorization URLs. */
   authProviders: Array<AuthProvider>;
-  /** This query takes either the ID or the slug and returns the author. */
+  /** Get an author by ID or slug */
   author?: Maybe<Author>;
-  /** This query is to get the authors. */
+  /** Get a paginated list of authors with optional filtering and sorting */
   authors: AuthorConnection;
   banner: Banner;
   banners: Array<Banner>;
@@ -2577,7 +2584,7 @@ export type Query = {
   blockStyles: Array<BlockStyle>;
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
-  /** This mutation will check the invoice status and update with information from the paymentProvider */
+  /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus?: Maybe<Invoice>;
   /** This query returns the comments of an item. */
   comments: Array<Comment>;
@@ -2646,7 +2653,7 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  /** This query returns the invoices  of the authenticated user. */
+  /** Get all invoices for the authenticated user */
   invoices: Array<Invoice>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
@@ -2689,13 +2696,13 @@ export type Query = {
   periodicJobLog: Array<PeriodicJob>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
-  /** This query returns a poll with all the needed data */
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
-  ratingSystem: FullCommentRatingSystem;
+  /** This query returns the comment rating system. */
+  ratingSystem?: Maybe<FullCommentRatingSystem>;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -2748,7 +2755,6 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
-  /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['String']>;
   versionInformation: VersionInformation;
 };
@@ -2896,10 +2902,10 @@ export type QueryMemberPlanArgs = {
 export type QueryMemberPlansArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<MemberPlanSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  order?: SortOrder;
+  skip?: Scalars['Int'];
+  sort?: MemberPlanSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -3025,10 +3031,10 @@ export type QuerySubscriptionFlowsArgs = {
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TagSort>;
-  take?: InputMaybe<Scalars['Int']>;
+  order?: SortOrder;
+  skip?: Scalars['Int'];
+  sort?: TagSort;
+  take?: Scalars['Int'];
 };
 
 
@@ -3282,6 +3288,7 @@ export enum TagSort {
   Tag = 'Tag'
 }
 
+/** Type of tag. */
 export enum TagType {
   Article = 'Article',
   Author = 'Author',
@@ -3653,7 +3660,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Author | Comment | FullPoll | Image | MemberPlan | PaymentMethod | Peer | PollVote | PublicSubscription | Tag | User;
+export type _Entity = Comment | Image | MemberPlan | PaymentMethod | PollVote | PublicSubscription | Tag | User;
 
 export type _Service = {
   __typename?: '_Service';
@@ -3668,7 +3675,7 @@ export type OverriddenRating = {
 
 export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam?: boolean | null, hideOnTeaser?: boolean | null, hideOnArticle?: boolean | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam: boolean, hideOnTeaser: boolean, hideOnArticle: boolean, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type AuthorListQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['String']>;
@@ -3678,14 +3685,14 @@ export type AuthorListQueryVariables = Exact<{
 }>;
 
 
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam?: boolean | null, hideOnTeaser?: boolean | null, hideOnArticle?: boolean | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam: boolean, hideOnTeaser: boolean, hideOnArticle: boolean, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type AuthorQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam?: boolean | null, hideOnTeaser?: boolean | null, hideOnArticle?: boolean | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam: boolean, hideOnTeaser: boolean, hideOnArticle: boolean, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3696,7 +3703,7 @@ export type FullCommentUserFragment = { __typename?: 'User', id: string, name: s
 
 export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Descendant[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
+export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
@@ -3712,7 +3719,7 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 
-export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
+export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
