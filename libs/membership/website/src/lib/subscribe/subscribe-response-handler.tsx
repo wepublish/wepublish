@@ -33,9 +33,7 @@ export function SubscribeResponseHandler({
   const handleError = useCallback(
     (errors: string[]) => {
       setErrors(errors)
-      if (onError) {
-        onError()
-      }
+      onError?.()
     },
     [onError]
   )
