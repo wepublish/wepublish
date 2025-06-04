@@ -17,8 +17,9 @@ import {BadRequestException} from '@nestjs/common'
 import {
   CanCreateArticle,
   CanDeleteArticle,
-  CanPublishArticle,
-  CanGetArticle
+  CanGetArticle,
+  CanPreview,
+  CanPublishArticle
 } from '@wepublish/permissions'
 import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
@@ -161,18 +162,24 @@ export class ArticleResolver {
     const {id: articleId} = parent
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
-    if (!isPreview || !hasPermission(CanGetArticle, user?.roles ?? [])) {
-      if (published) {
-        return published
-      }
-
-      const showPending = !!(await this.settings.load(SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED))
+    if (isPreview) {
+      const userHasReadAccess = hasPermission([CanGetArticle, CanPreview], user?.roles ?? [])
+      const guestPreviewsEnabled = !!(await this.settings.load(SettingName.ALLOW_GUEST_PREVIEWS))
         ?.value
-
-      return showPending && pending
+      if (userHasReadAccess || guestPreviewsEnabled) {
+        return draft ?? pending ?? published
+      }
     }
 
-    return draft ?? pending ?? published
+    if (!published) {
+      const showPending = !!(await this.settings.load(SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED))
+        ?.value
+      if (showPending) {
+        return pending
+      }
+    }
+
+    return published
   }
 
   @Permissions(CanGetArticle)

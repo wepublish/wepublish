@@ -15,8 +15,15 @@ import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
-import {CanCreatePage, CanDeletePage, CanGetPage, CanPublishPage} from '@wepublish/permissions'
+import {
+  CanCreatePage,
+  CanDeletePage,
+  CanGetPage,
+  CanPreview,
+  CanPublishPage
+} from '@wepublish/permissions'
 import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
+import {SettingDataloaderService, SettingName} from '@wepublish/settings/api'
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -24,7 +31,8 @@ export class PageResolver {
     private pageDataloader: PageDataloaderService,
     private pageRevisionsDataloader: PageRevisionDataloaderService,
     private pageService: PageService,
-    private urlAdapter: URLAdapter
+    private urlAdapter: URLAdapter,
+    private settings: SettingDataloaderService
   ) {}
 
   @Public()
@@ -118,11 +126,24 @@ export class PageResolver {
     const {id: pageId} = parent
     const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
 
-    if (!isPreview || !hasPermission(CanGetPage, user?.roles ?? [])) {
-      return published
+    if (isPreview) {
+      const userHasReadAccess = hasPermission([CanGetPage, CanPreview], user?.roles ?? [])
+      const guestPreviewsEnabled = !!(await this.settings.load(SettingName.ALLOW_GUEST_PREVIEWS))
+        ?.value
+      if (userHasReadAccess || guestPreviewsEnabled) {
+        return draft ?? pending ?? published
+      }
     }
 
-    return draft ?? pending ?? published
+    if (!published) {
+      const showPending = !!(await this.settings.load(SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED))
+        ?.value
+      if (showPending) {
+        return pending
+      }
+    }
+
+    return published
   }
 
   @Permissions(CanGetPage)
