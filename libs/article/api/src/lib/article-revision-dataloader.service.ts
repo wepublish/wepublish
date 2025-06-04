@@ -25,9 +25,14 @@ export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> 
               archivedAt: null
             },
             take: 3,
-            orderBy: {
-              publishedAt: 'desc'
-            }
+            orderBy: [
+              {
+                publishedAt: 'desc'
+              },
+              {
+                createdAt: 'desc'
+              }
+            ]
           })
         )
       }

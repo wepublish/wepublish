@@ -4,9 +4,14 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
 [
   [
     {
-      "orderBy": {
-        "publishedAt": "desc",
-      },
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
       "take": 3,
       "where": {
         "archivedAt": null,
@@ -16,9 +21,14 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
   ],
   [
     {
-      "orderBy": {
-        "publishedAt": "desc",
-      },
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
       "take": 3,
       "where": {
         "archivedAt": null,
@@ -33,9 +43,14 @@ exports[`ArticleRevisionDataloaderService load should load one 1`] = `
 [
   [
     {
-      "orderBy": {
-        "publishedAt": "desc",
-      },
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
       "take": 3,
       "where": {
         "archivedAt": null,

@@ -27,6 +27,9 @@ export class ArticleService {
     return this.prisma.article.findFirst({
       where: {
         slug
+      },
+      orderBy: {
+        publishedAt: 'asc' // there might be an unpublished article with the same slug
       }
     })
   }
