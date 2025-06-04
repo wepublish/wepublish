@@ -38,8 +38,7 @@ import {
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
-import {rateComment} from './comment-rating/comment-rating.public-mutation'
-import {GraphQLChallengeInput, GraphQLPublicComment} from './comment/comment'
+import {GraphQLChallengeInput} from './comment/comment'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -71,38 +70,6 @@ import {GraphQLDateTime} from 'graphql-scalars'
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    // Comment
-    // =======
-
-    rateComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {
-        commentId: {type: new GraphQLNonNull(GraphQLString)},
-        answerId: {type: new GraphQLNonNull(GraphQLString)},
-        value: {type: new GraphQLNonNull(GraphQLInt)}
-      },
-      description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
-      resolve: (
-        root,
-        {commentId, answerId, value},
-        {
-          optionalAuthenticateUser,
-          prisma: {comment, commentRating, commentRatingSystemAnswer, setting}
-        }
-      ) =>
-        rateComment(
-          commentId,
-          answerId,
-          value,
-          undefined,
-          optionalAuthenticateUser,
-          commentRatingSystemAnswer,
-          commentRating,
-          comment,
-          setting
-        )
-    },
-
     registerMember: {
       type: new GraphQLNonNull(GraphQLMemberRegistration),
       args: {
