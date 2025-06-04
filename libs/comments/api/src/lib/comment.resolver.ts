@@ -2,13 +2,20 @@ import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/gra
 import {Comment, CommentRating, FullCommentRatingSystem, PublicCommentSort} from './comment.model'
 import {CommentService} from './comment.service'
 import {SortOrder} from '@wepublish/utils/api'
-import {Authenticated, CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
+import {
+  Authenticated,
+  CurrentUser,
+  Public,
+  RequestFingerprint,
+  UserSession
+} from '@wepublish/authentication/api'
 import {Image} from '@wepublish/image/api'
 import {User} from '@wepublish/user/api'
 import {Tag, TagService} from '@wepublish/tag/api'
 import {CommentDataloaderService} from './comment-dataloader.service'
 import {RatingSystemService} from './rating-system'
 import {CommentInput, CommentUpdateInput} from './comment.input'
+import {PrismaService} from '@wepublish/nest-modules'
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -64,6 +71,20 @@ export class CommentResolver {
   @Public()
   async ratingSystem() {
     return this.ratingSystemService.getRatingSystem()
+  }
+
+  @Public()
+  @Mutation(() => Comment, {
+    description: `This mutation allows to rate a comment. Supports logged in and anonymous`
+  })
+  async rateComment(
+    @Args('commentId') commentId: string,
+    @Args('answerId') answerId: string,
+    @Args('value') value: number,
+    @CurrentUser() session: UserSession | null,
+    @RequestFingerprint() fingerprint: string
+  ) {
+    return this.commentService.rateComment(commentId, answerId, value, fingerprint, session)
   }
 
   @ResolveField(() => [CommentRating])

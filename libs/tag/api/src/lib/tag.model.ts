@@ -1,15 +1,9 @@
-import {Directive, Field, ObjectType, OmitType} from '@nestjs/graphql'
+import {Field, ObjectType, OmitType} from '@nestjs/graphql'
 import {TagType} from './tag.types'
 
-/**
- * Tag model with federation directives
- */
 @ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
 export class Tag {
   @Field()
-  @Directive('@external')
   id!: string
 
   @Field(() => String, {nullable: true})

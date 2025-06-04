@@ -1376,6 +1376,11 @@ type Mutation {
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
 
+  """
+  This mutation allows to rate a comment. Supports logged in and anonymous
+  """
+  rateComment(answerId: String!, commentId: String!, value: Float!): Comment!
+
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
   syncTemplates: Boolean

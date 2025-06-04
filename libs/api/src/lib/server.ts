@@ -17,11 +17,9 @@ import {logger, MAX_PAYLOAD_SIZE, serverLogger, setLogger} from '@wepublish/util
 import {graphQLJSSchemaToAST} from '@apollo/federation-internals'
 import {buildSubgraphSchema} from '@apollo/subgraph'
 import gql from 'graphql-tag'
-import {GraphQLTagResolver} from './graphql/tag/tag'
 import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import * as fs from 'fs'
-import {GraphQLCommentResolver} from './graphql/comment/comment'
 import {GraphQLUserResolver} from './graphql/user'
 import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
 import {GraphQLMemberPlanResolver} from './graphql/memberPlan'
@@ -86,8 +84,6 @@ export class WepublishServer {
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 
       extend type PublicSubscription @key(fields: "id")
-      extend type Comment @key(fields: "id")
-      extend type Tag @key(fields: "id")
       extend type Image @key(fields: "id")
 
       extend type PaymentMethod @key(fields: "id")
@@ -134,8 +130,6 @@ export class WepublishServer {
     }
 
     const federatedResolvers = {
-      Comment: GraphQLCommentResolver,
-      Tag: GraphQLTagResolver,
       Image: GraphQLImageResolver,
       User: GraphQLUserResolver,
       PublicSubscription: GraphQLSubscriptionResolver,

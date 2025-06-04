@@ -1,4 +1,4 @@
-import {Directive, Field, Float, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {Field, Float, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {Tag} from '@wepublish/tag/api'
 import {User} from '@wepublish/user/api'
 import {Image} from '@wepublish/image/api'
@@ -146,11 +146,8 @@ export class CommentRevision {
 }
 
 @ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
 export class Comment {
   @Field()
-  @Directive('@external')
   id!: string
 
   @Field(() => String, {nullable: true})

@@ -22,11 +22,6 @@ type Query {
 }
 
 type Mutation {
-  """
-  This mutation allows to rate a comment. Supports logged in and anonymous
-  """
-  rateComment(commentId: String!, answerId: String!, value: Int!): Comment!
-
   """This mutation allows to register a new member,"""
   registerMember(name: String!, firstName: String, email: String!, address: UserAddressInput, password: String, birthday: DateTime, challengeAnswer: ChallengeInput!): Registration!
 
@@ -84,30 +79,49 @@ type Mutation {
   createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
 }
 
-type Comment {
+type Registration {
+  user: User!
+  session: UserSession!
+}
+
+type User {
   id: String!
-  parentID: String
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: String!
-  itemType: CommentItemType!
-  children: [Comment!]!
-  title: String
-  lead: String
-  text: RichText
-  state: CommentState!
-  source: String
-  rejectionReason: String
-  featured: Boolean
-  createdAt: DateTime!
-  url: String!
-  modifiedAt: DateTime
-  calculatedRatings: [CalculatedRating!]!
-  overriddenRatings: [overriddenRating!]!
-  userRatings: [CommentRating!]!
+  name: String!
+  firstName: String
+  birthday: DateTime
+  email: String!
+  address: UserAddress
+  flair: String
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  oauth2Accounts: [OAuth2Account!]!
+  image: Image
+  properties: [PublicProperties!]!
+  permissions: [String!]!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type UserAddress {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type PaymentProviderCustomer {
+  paymentProviderID: String!
+  customerID: String!
+}
+
+type OAuth2Account {
+  type: String!
+  provider: String!
+  scope: String!
 }
 
 type Image {
@@ -131,11 +145,6 @@ type Image {
   url: String
   transformURL(input: ImageTransformation): String
 }
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
 
 type FocalPoint {
   x: Float!
@@ -164,120 +173,9 @@ enum ImageOutput {
   webp
 }
 
-type User {
-  id: String!
-  name: String!
-  firstName: String
-  birthday: DateTime
-  email: String!
-  address: UserAddress
-  flair: String
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
-  image: Image
-  properties: [PublicProperties!]!
-  permissions: [String!]!
-}
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
-}
-
 type PublicProperties {
   key: String!
   value: String!
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-enum CommentAuthorType {
-  author
-  team
-  verifiedUser
-  guestUser
-}
-
-enum CommentItemType {
-  article
-  page
-}
-
-scalar RichText
-
-enum CommentState {
-  approved
-  pendingApproval
-  pendingUserChanges
-  rejected
-}
-
-type CalculatedRating {
-  count: Int!
-  total: Int!
-  mean: Float!
-  answer: CommentRatingSystemAnswer!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
-}
-
-type CommentRating {
-  id: String!
-  userId: String
-  commentId: String!
-  value: Int!
-  createdAt: DateTime!
-  fingerprint: String
-  disabled: Boolean
-  answer: CommentRatingSystemAnswer!
-}
-
-type Registration {
-  user: User!
-  session: UserSession!
 }
 
 type UserSession {
@@ -412,6 +310,8 @@ type MemberPlan {
   confirmationPageId: String
 }
 
+scalar RichText
+
 enum Currency {
   CHF
   EUR
@@ -465,4 +365,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Comment | Image | MemberPlan | PaymentMethod | PublicSubscription | Tag | User
+union _Entity = Image | MemberPlan | PaymentMethod | PublicSubscription | User
