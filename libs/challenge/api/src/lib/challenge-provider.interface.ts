@@ -1,6 +1,7 @@
 import {Challenge, ChallengeValidationProps, ChallengeValidationReturn} from './challenge.model'
 
-export interface ChallengeProvider {
-  generateChallenge(): Promise<Challenge>
-  validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn>
+export abstract class ChallengeProvider {
+  abstract generateChallenge(): Promise<Challenge>
+
+  abstract validateChallenge(props: ChallengeValidationProps): Promise<ChallengeValidationReturn>
 }

@@ -1,4 +1,3 @@
-import {Injectable} from '@nestjs/common'
 import {
   CaptchaType,
   Challenge,
@@ -9,7 +8,6 @@ import {ChallengeProvider} from '../challenge-provider.interface'
 import FormData from 'form-data'
 import fetch from 'node-fetch'
 
-@Injectable()
 export class CFTurnstileProvider implements ChallengeProvider {
   constructor(private turnstileSecretKey: string, private turnstileSiteKey: string) {}
 
@@ -21,8 +19,8 @@ export class CFTurnstileProvider implements ChallengeProvider {
     return {
       type: CaptchaType.CfTurnstile,
       challengeID: this.turnstileSiteKey,
-      challenge: null,
-      validUntil: null
+      challenge: undefined,
+      validUntil: undefined
     }
   }
 

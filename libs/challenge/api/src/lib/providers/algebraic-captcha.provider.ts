@@ -8,7 +8,6 @@ import {createHash} from 'crypto'
 import {AlgebraicCaptcha} from 'algebraic-captcha'
 import {IParams} from 'algebraic-captcha/build/i-params'
 import {ChallengeProvider} from '../challenge-provider.interface'
-import {Injectable} from '@nestjs/common'
 
 type Store = {
   [key: string]: number
@@ -19,7 +18,6 @@ export interface TestingChallengeAnswer {
   challengeSolution: string
 }
 
-@Injectable()
 export class AlgebraicCaptchaChallenge implements ChallengeProvider {
   // Hash list to prevent replay attacks
   private validHashes: Store
