@@ -1,13 +1,14 @@
-import {Args, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {Comment, CommentRating, FullCommentRatingSystem, PublicCommentSort} from './comment.model'
 import {CommentService} from './comment.service'
 import {SortOrder} from '@wepublish/utils/api'
-import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
+import {Authenticated, CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {Image} from '@wepublish/image/api'
 import {User} from '@wepublish/user/api'
 import {Tag, TagService} from '@wepublish/tag/api'
 import {CommentDataloaderService} from './comment-dataloader.service'
 import {RatingSystemService} from './rating-system'
+import {CommentInput, CommentUpdateInput} from './comment.input'
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -35,6 +36,28 @@ export class CommentResolver {
       sort || null,
       order || SortOrder.Descending
     )
+  }
+
+  @Public()
+  @Mutation(() => Comment, {
+    description: `Create a new comment`
+  })
+  async addComment(
+    @Args('input') input: CommentInput,
+    @CurrentUser() session?: UserSession | null
+  ) {
+    return await this.commentService.addPublicComment(input, session)
+  }
+
+  @Authenticated()
+  @Mutation(() => Comment, {
+    description: `Update an existing comment`
+  })
+  async updateComment(
+    @Args('input') input: CommentUpdateInput,
+    @CurrentUser() session: UserSession
+  ) {
+    return this.commentService.updatePublicComment(input, session)
   }
 
   @Query(() => FullCommentRatingSystem)

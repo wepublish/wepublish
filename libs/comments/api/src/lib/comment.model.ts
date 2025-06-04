@@ -36,17 +36,6 @@ registerEnumType(CommentState, {
   name: 'CommentState'
 })
 
-export enum CommentRejectionReason {
-  Spam = 'spam',
-  Misconduct = 'misconduct',
-  Hate = 'hate',
-  FakeNews = 'fakeNews'
-}
-
-registerEnumType(CommentRejectionReason, {
-  name: 'CommentRejectionReason'
-})
-
 export enum RatingSystemType {
   star = 'star'
 }

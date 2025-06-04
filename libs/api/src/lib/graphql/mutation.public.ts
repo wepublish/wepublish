@@ -39,13 +39,7 @@ import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
-import {
-  GraphQLChallengeInput,
-  GraphQLPublicComment,
-  GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput
-} from './comment/comment'
-import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
+import {GraphQLChallengeInput, GraphQLPublicComment} from './comment/comment'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -79,24 +73,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   fields: {
     // Comment
     // =======
-    addComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {input: {type: new GraphQLNonNull(GraphQLPublicCommentInput)}},
-      description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment, setting}, challenge}) =>
-        addPublicComment(input, optionalAuthenticateUser, challenge, setting, comment)
-    },
-
-    updateComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {
-        input: {type: new GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
-      },
-      description:
-        'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
-      resolve: (_, {input}, {prisma: {comment, setting}, authenticateUser}) =>
-        updatePublicComment(input, authenticateUser, comment, setting)
-    },
 
     rateComment: {
       type: new GraphQLNonNull(GraphQLPublicComment),

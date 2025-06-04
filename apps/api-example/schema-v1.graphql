@@ -23,16 +23,6 @@ type Query {
 
 type Mutation {
   """
-  This mutation allows to add a comment. The input is of type CommentInput.
-  """
-  addComment(input: CommentInput!): Comment!
-
-  """
-  This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.
-  """
-  updateComment(input: CommentUpdateInput!): Comment!
-
-  """
   This mutation allows to rate a comment. Supports logged in and anonymous
   """
   rateComment(commentId: String!, answerId: String!, value: Int!): Comment!
@@ -285,28 +275,6 @@ type CommentRating {
   answer: CommentRatingSystemAnswer!
 }
 
-input CommentInput {
-  parentID: String
-  guestUsername: String
-  challenge: ChallengeInput
-  itemID: String!
-  itemType: CommentItemType!
-  title: String
-  text: RichText!
-}
-
-input ChallengeInput {
-  challengeID: String
-  challengeSolution: String!
-}
-
-input CommentUpdateInput {
-  id: String!
-  text: RichText
-  title: String
-  lead: String
-}
-
 type Registration {
   user: User!
   session: UserSession!
@@ -325,6 +293,11 @@ input UserAddressInput {
   zipCode: String
   city: String
   country: String
+}
+
+input ChallengeInput {
+  challengeID: String
+  challengeSolution: String!
 }
 
 type RegistrationAndPayment {

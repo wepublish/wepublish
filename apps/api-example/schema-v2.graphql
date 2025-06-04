@@ -396,6 +396,11 @@ type Challenge {
   validUntil: Date
 }
 
+input ChallengeInput {
+  challengeID: String
+  challengeSolution: String!
+}
+
 """A hexadecimal color value (#RRGGBB)"""
 scalar Color
 
@@ -466,6 +471,16 @@ type CommentCreatedAction implements BaseAction & HasComment {
   date: DateTime!
 }
 
+input CommentInput {
+  challenge: ChallengeInput
+  guestUsername: String
+  itemID: String!
+  itemType: CommentItemType!
+  parentID: String
+  text: RichText!
+  title: String
+}
+
 enum CommentItemType {
   article
   page
@@ -498,6 +513,13 @@ enum CommentState {
   pendingApproval
   pendingUserChanges
   rejected
+}
+
+input CommentUpdateInput {
+  id: String!
+  lead: String
+  text: RichText
+  title: String
 }
 
 type Consent {
@@ -1261,6 +1283,9 @@ enum MemberPlanSort {
 }
 
 type Mutation {
+  """Create a new comment"""
+  addComment(input: CommentInput!): Comment!
+
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
@@ -1370,6 +1395,9 @@ type Mutation {
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
+
+  """Update an existing comment"""
+  updateComment(input: CommentUpdateInput!): Comment!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!

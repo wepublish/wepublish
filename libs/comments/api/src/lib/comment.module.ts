@@ -6,17 +6,18 @@ import {CommentResolver} from './comment.resolver'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {TagModule} from '@wepublish/tag/api'
 import {RatingSystemResolver, RatingSystemService} from './rating-system'
+import {SettingModule} from '@wepublish/settings/api'
 
 @Module({
-  imports: [PrismaModule, TagModule],
+  imports: [PrismaModule, TagModule, SettingModule],
   providers: [
     CommentDataloaderService,
     HasCommentResolver,
     HasOptionalCommentResolver,
-    CommentService,
     RatingSystemService,
     CommentResolver,
-    RatingSystemResolver
+    RatingSystemResolver,
+    CommentService
   ],
   exports: [CommentDataloaderService, CommentService, RatingSystemService]
 })

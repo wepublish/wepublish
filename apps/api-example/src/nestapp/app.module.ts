@@ -413,6 +413,7 @@ import {SessionModule} from '@wepublish/session/api'
     ActionModule,
     UserModule,
     ChallengeModule.registerAsync({
+      global: true,
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))

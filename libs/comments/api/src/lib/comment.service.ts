@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import {CommentAuthorType, PrismaClient} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
 import {
   CalculatedRating,
@@ -9,6 +9,23 @@ import {
   RatingSystemType
 } from './comment.model'
 import {RatingSystemService} from './rating-system'
+import {
+  AnonymousCommentError,
+  AnonymousCommentsDisabledError,
+  ChallengeMissingCommentError,
+  CommentAuthenticationError,
+  CommentLengthError,
+  countRichtextChars,
+  hasPermission,
+  NotAuthorisedError,
+  NotFound,
+  UserInputError,
+  UserSession
+} from '@wepublish/api'
+import {CanCreateApprovedComment} from '@wepublish/permissions'
+import {ChallengeService} from '@wepublish/challenge/api'
+import {CommentInput, CommentUpdateInput} from './comment.input'
+import {SettingName, SettingsService} from '@wepublish/settings/api'
 
 export interface CommentWithRevisions {
   title: string | null
@@ -22,7 +39,9 @@ export interface CommentWithRevisions {
 export class CommentService {
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly ratingSystem: RatingSystemService
+    private readonly ratingSystem: RatingSystemService,
+    private readonly settingsService: SettingsService,
+    private readonly challengeService: ChallengeService
   ) {}
 
   mapCommentToPublicComment(comment: any): CommentWithRevisions {
@@ -150,5 +169,117 @@ export class CommentService {
     }
 
     return [...topComments, ...otherComments]
+  }
+
+  async addPublicComment(input: CommentInput, session?: UserSession | null) {
+    let authorType: CommentAuthorType = CommentAuthorType.verifiedUser
+    const commentLength = countRichtextChars(0, input.text)
+
+    const maxCommentLength = (
+      await this.settingsService.settingByName(SettingName.COMMENT_CHAR_LIMIT)
+    )?.value as number
+
+    if (commentLength > maxCommentLength) {
+      throw new CommentLengthError(+maxCommentLength)
+    }
+
+    const canSkipApproval = hasPermission(CanCreateApprovedComment, session?.roles ?? [])
+
+    // Challenge
+    if (!session?.user?.id) {
+      authorType = CommentAuthorType.guestUser
+
+      const guestCanCommentSetting = await this.settingsService.settingByName(
+        SettingName.ALLOW_GUEST_COMMENTING
+      )
+      if (!guestCanCommentSetting?.value) {
+        throw new AnonymousCommentsDisabledError()
+      }
+
+      if (!input.guestUsername) throw new AnonymousCommentError()
+      if (!input.challenge) throw new ChallengeMissingCommentError()
+
+      const challengeValidationResult = await this.challengeService.validateChallenge({
+        challengeID: input.challenge.challengeID,
+        solution: input.challenge.challengeSolution
+      })
+
+      if (!challengeValidationResult.valid)
+        throw new CommentAuthenticationError(challengeValidationResult.message)
+    }
+
+    // Cleanup
+    const {challenge: _, title, text, ...commentInput} = input
+
+    const comment = await this.prisma.comment.create({
+      data: {
+        ...commentInput,
+        revisions: {
+          create: {
+            text: text as any,
+            title
+          }
+        },
+        userID: session?.user.id,
+        authorType,
+        state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
+      },
+      include: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
+    })
+    return {...comment, title, text}
+  }
+
+  async updatePublicComment(
+    input: CommentUpdateInput,
+    {user, roles}: Pick<UserSession, 'user' | 'roles'>
+  ) {
+    const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
+
+    const comment = await this.prisma.comment.findUnique({
+      where: {
+        id: input.id
+      },
+      include: {revisions: {orderBy: {createdAt: 'asc'}}}
+    })
+
+    if (!comment) {
+      throw new NotFound('comment', input.id)
+    }
+
+    if (user.id !== comment?.userID) {
+      throw new NotAuthorisedError()
+    }
+
+    const commentEditingSetting = await this.settingsService.settingByName(
+      SettingName.ALLOW_COMMENT_EDITING
+    )
+
+    if (!commentEditingSetting?.value && comment.state !== CommentState.pendingUserChanges) {
+      throw new UserInputError('Comment state must be pending user changes')
+    }
+
+    const {id, text, title, lead} = input
+
+    const updatedComment = await this.prisma.comment.update({
+      where: {id},
+      data: {
+        revisions: {
+          create: {
+            text: (text ?? comment?.revisions.at(-1)?.text ?? '') as string,
+            title: (title ?? comment?.revisions.at(-1)?.title ?? '') as string,
+            lead: (lead ?? comment?.revisions.at(-1)?.lead ?? '') as string
+          }
+        },
+        state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
+      },
+      select: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
+    })
+
+    return {
+      ...updatedComment,
+      text: updatedComment.revisions.at(-1)?.text,
+      title: updatedComment.revisions.at(-1)?.title,
+      lead: updatedComment.revisions.at(-1)?.lead
+    }
   }
 }
