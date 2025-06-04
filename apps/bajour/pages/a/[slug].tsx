@@ -63,6 +63,12 @@ const RelatedArticleSlider = (props: BuilderArticleListProps) => {
   )
 }
 
+const ArticlePreTitleWrapper = styled('span')`
+  grid-row-start: 1;
+  font-size: 1em;
+  font-style: italic;
+`
+
 export const AuthorWrapper = styled(ContentWrapper)`
   margin: 0 ${({theme}) => theme.spacing(6)};
 
@@ -95,6 +101,8 @@ export default function ArticleBySlugOrId() {
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
   const isSearchSlider = data?.article?.tags.some(({tag}) => tag === SEARCH_SLIDER_TAG)
 
+  const preTitle = data?.article?.latest.preTitle
+
   return (
     <WebsiteBuilderProvider
       ArticleList={RelatedArticleSlider}
@@ -108,7 +116,9 @@ export default function ArticleBySlugOrId() {
           <SearchSlider key={data.article.id} article={data.article as ArticleType} includeSEO />
         ) : (
           <>
-            <ArticleContainer {...containerProps} />
+            <ArticleContainer {...containerProps}>
+              {preTitle && <ArticlePreTitleWrapper>{preTitle}</ArticlePreTitleWrapper>}
+            </ArticleContainer>
             <BriefingNewsletter />
 
             {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
