@@ -1,5 +1,13 @@
+import styled from '@emotion/styled'
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
+import {
+  isTeaserGridBlock,
+  isTeaserGridFlexBlock,
+  isTeaserListBlock,
+  isTeaserSlotsBlock
+} from '@wepublish/block-content/website'
 import {CommentListContainer} from '@wepublish/comments/website'
+import {ShowPaywallContext, useShowPaywall} from '@wepublish/paywall/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
@@ -17,14 +25,21 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
+import {anyPass} from 'ramda'
+import {ComponentProps, useEffect} from 'react'
+
+import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
+
+export const ArticleWrapperComments = styled(ArticleWrapper)``
+export const ArticleWrapperAppendix = styled(ArticleWrapper)``
 
 export default function ArticleBySlugOrId() {
+  const router = useRouter()
   const {
-    query: {slug, id}
+    query: {slug, id, articleId}
   } = useRouter()
   const {
-    elements: {H3}
+    elements: {H4}
   } = useWebsiteBuilder()
 
   const {data} = useArticleQuery({
@@ -40,26 +55,57 @@ export default function ArticleBySlugOrId() {
     id
   } as ComponentProps<typeof ArticleContainer>
 
+  const lastBlock = data?.article.latest.blocks.at(-1)
+  const isLastBlockTeaser =
+    lastBlock &&
+    anyPass([isTeaserGridBlock, isTeaserSlotsBlock, isTeaserGridFlexBlock, isTeaserListBlock])(
+      lastBlock
+    )
+
+  const {showPaywall} = useShowPaywall(data?.article.paywall)
+
+  useEffect(() => {
+    if (!showPaywall && data?.article.paywall?.active) {
+      router.replace(
+        {
+          query: {
+            articleId: data.article.id
+          }
+        },
+        undefined,
+        {shallow: true}
+      )
+    }
+  }, [data?.article.id, data?.article.paywall?.active, router, showPaywall])
+
   return (
     <>
-      <ArticleContainer {...containerProps} />
+      <ShowPaywallContext.Provider
+        value={{hideContent: articleId === data?.article.id ? false : undefined}}>
+        <HauptstadtArticle {...containerProps} />
+      </ShowPaywallContext.Provider>
 
-      {data?.article && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+      {data?.article && !isLastBlockTeaser && (
+        <ArticleWrapperAppendix>
+          <H4 component={'h2'}>Das könnte dich auch interessieren</H4>
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            filter={articles =>
+              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+            }
           />
-        </ArticleWrapper>
+        </ArticleWrapperAppendix>
       )}
 
       {data?.article && !data.article.disableComments && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
+        <ArticleWrapperComments>
+          <H4 component={'h2'} id="comments">
+            Diskussion
+          </H4>
+
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
-        </ArticleWrapper>
+        </ArticleWrapperComments>
       )}
     </>
   )

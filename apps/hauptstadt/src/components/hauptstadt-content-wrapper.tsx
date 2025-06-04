@@ -1,0 +1,67 @@
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
+import {ArticleListWrapper} from '@wepublish/article/website'
+import {BreakBlockWrapper} from '@wepublish/block-content/website'
+import {EventBlockWrapper, ImageBlockWrapper, SliderWrapper} from '@wepublish/block-content/website'
+import {CommentListWrapper} from '@wepublish/comments/website'
+import {ContentWrapperStyled} from '@wepublish/content/website'
+
+export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
+  display: grid;
+  row-gap: ${({theme}) => theme.spacing(7)};
+
+  ${({theme, fullWidth}) =>
+    !fullWidth &&
+    css`
+      ${theme.breakpoints.up('md')} {
+        grid-template-columns: repeat(36, 1fr);
+
+        & > *,
+        && > ${CommentListWrapper} {
+          grid-column: 7/31;
+        }
+
+        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+          grid-column: 4/34;
+        }
+
+        & > :is(${BreakBlockWrapper}) {
+          grid-column: 9/29;
+        }
+
+        && > ${ArticleListWrapper} {
+          grid-column: -1/1;
+        }
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        & > *,
+        && > ${CommentListWrapper} {
+          grid-column: 10/28;
+        }
+
+        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+          grid-column: 7/31;
+        }
+
+        & > :is(${BreakBlockWrapper}) {
+          grid-column: 12/26;
+        }
+      }
+
+      ${theme.breakpoints.up('xxl')} {
+        & > *,
+        && > ${CommentListWrapper} {
+          grid-column: 12/26;
+        }
+
+        & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}) {
+          grid-column: 9/29;
+        }
+
+        & > :is(${BreakBlockWrapper}) {
+          grid-column: 14/24;
+        }
+      }
+    `}
+`

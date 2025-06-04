@@ -35,7 +35,6 @@ export const TeaserSlotsBlockTeasers = styled('div')`
 export const TeaserSlotsBlock = ({
   title,
   teasers,
-  slots,
   blockStyle,
   className
 }: BuilderTeaserSlotsBlockProps) => {
@@ -49,16 +48,15 @@ export const TeaserSlotsBlock = ({
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserSlotsBlockTeasers>
-        {teasers?.map((teaser, index) => {
-          return (
-            <Teaser
-              key={index}
-              teaser={teaser}
-              alignment={alignmentForTeaserBlock(index, 3)}
-              blockStyle={blockStyle}
-            />
-          )
-        })}
+        {teasers?.map((teaser, index) => (
+          <Teaser
+            key={index}
+            index={index}
+            teaser={teaser}
+            alignment={alignmentForTeaserBlock(index, 3)}
+            blockStyle={blockStyle}
+          />
+        ))}
       </TeaserSlotsBlockTeasers>
     </TeaserSlotsBlockWrapper>
   )

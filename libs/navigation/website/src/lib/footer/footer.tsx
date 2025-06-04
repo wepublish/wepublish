@@ -3,6 +3,8 @@ import styled from '@emotion/styled'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
+import {useIntersectionObserver} from 'usehooks-ts'
+import {forceHideBanner} from '@wepublish/banner/website'
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
@@ -75,7 +77,7 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
 export const FooterPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
   background-color: ${({theme}) => theme.palette.grey[800]};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  color: ${({theme}) => theme.palette.getContrastText(theme.palette.grey[800])};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   position: absolute;
@@ -136,13 +138,13 @@ const footerPaperLinkStyling = (theme: Theme) => css`
   }
 `
 
-const FooterPaperCategoryLinks = styled('div')`
+export const FooterPaperCategoryLinks = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
 
-const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
+export const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
@@ -153,13 +155,17 @@ const FooterPaper = ({
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
 }) => {
+  const {isIntersecting, ref} = useIntersectionObserver({
+    initialIsIntersecting: false,
+    threshold: 0.9
+  })
   const {
     elements: {Link, H4, H6}
   } = useWebsiteBuilder()
   const theme = useTheme()
 
   return (
-    <FooterPaperWrapper>
+    <FooterPaperWrapper ref={ref}>
       {!!main?.links.length && (
         <FooterPaperMainLinks>
           {main.links.map((link, index) => {
@@ -209,6 +215,8 @@ const FooterPaper = ({
           ))}
         </>
       )}
+
+      {isIntersecting && forceHideBanner}
     </FooterPaperWrapper>
   )
 }

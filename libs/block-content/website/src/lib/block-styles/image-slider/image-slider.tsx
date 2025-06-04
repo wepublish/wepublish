@@ -2,7 +2,7 @@ import {useKeenSlider} from 'keen-slider/react'
 import {allPass} from 'ramda'
 import {useState} from 'react'
 
-import {hasBlockStyle} from '../../blocks'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {isImageGalleryBlock} from '../../image-gallery/image-gallery-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {

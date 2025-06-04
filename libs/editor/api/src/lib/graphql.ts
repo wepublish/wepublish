@@ -21,19 +21,12 @@ export type Scalars = {
   Date: string;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
-  GraphQLSettingValueType: any;
   RichText: Descendant[];
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
   /** A valid vote value */
   VoteValue: number;
-};
-
-export type AllowedSettingVals = {
-  __typename?: 'AllowedSettingVals';
-  boolChoice?: Maybe<Scalars['Boolean']>;
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type AuthProvider = {
@@ -529,7 +522,6 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
-  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
   updateSubscription?: Maybe<Subscription>;
   updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
@@ -638,6 +630,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
@@ -862,11 +855,6 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
-export type MutationUpdateSettingListArgs = {
-  value?: InputMaybe<Array<InputMaybe<UpdateSettingArgs>>>;
-};
-
-
 export type MutationUpdateSubscriptionArgs = {
   id: Scalars['String'];
   input: SubscriptionInput;
@@ -874,6 +862,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -1153,11 +1142,10 @@ export type Query = {
   ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
-  setting?: Maybe<Setting>;
-  settings: Array<Setting>;
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
+  tag?: Maybe<Tag>;
   tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
@@ -1306,11 +1294,6 @@ export type QueryRemotePeerProfileArgs = {
 };
 
 
-export type QuerySettingArgs = {
-  name: Scalars['String'];
-};
-
-
 export type QuerySubscriptionArgs = {
   id: Scalars['String'];
 };
@@ -1328,6 +1311,11 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
+};
+
+
+export type QueryTagArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1389,39 +1377,6 @@ export type SessionWithToken = {
   id: Scalars['String'];
   token: Scalars['String'];
   user: User;
-};
-
-export type Setting = {
-  __typename?: 'Setting';
-  id: Scalars['String'];
-  name: SettingName;
-  settingRestriction?: Maybe<SettingRestriction>;
-  value: Scalars['GraphQLSettingValueType'];
-};
-
-export enum SettingName {
-  AllowCommentEditing = 'allowCommentEditing',
-  AllowGuestCommentRating = 'allowGuestCommentRating',
-  AllowGuestCommenting = 'allowGuestCommenting',
-  AllowGuestPollVoting = 'allowGuestPollVoting',
-  CommentCharLimit = 'commentCharLimit',
-  MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
-  MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
-  MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
-  MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
-  MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
-  MakeRevenueApiPublic = 'makeRevenueApiPublic',
-  PeeringTimeoutInMs = 'peeringTimeoutInMs',
-  ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
-  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
-}
-
-export type SettingRestriction = {
-  __typename?: 'SettingRestriction';
-  allowedValues?: Maybe<AllowedSettingVals>;
-  inputLength?: Maybe<Scalars['Int']>;
-  maxValue?: Maybe<Scalars['Int']>;
-  minValue?: Maybe<Scalars['Int']>;
 };
 
 export enum SortOrder {
@@ -1532,6 +1487,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
+  description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
@@ -1616,11 +1572,6 @@ export type UpdatePollExternalVoteSources = {
   id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
-};
-
-export type UpdateSettingArgs = {
-  name: SettingName;
-  value: Scalars['GraphQLSettingValueType'];
 };
 
 export type UploadImageInput = {
@@ -2038,6 +1989,8 @@ export type MemberPlanListQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<MemberPlanSort>;
 }>;
 
 
@@ -2253,20 +2206,6 @@ export type PollQueryVariables = Exact<{
 
 export type PollQuery = { __typename?: 'Query', poll?: { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Descendant[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> } | null };
 
-export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null } | null };
-
-export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SettingListQuery = { __typename?: 'Query', settings: Array<{ __typename?: 'Setting', id: string, name: SettingName, value: any, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string | null> | null, boolChoice?: boolean | null } | null } | null }> };
-
-export type UpdateSettingListMutationVariables = Exact<{
-  input?: InputMaybe<Array<UpdateSettingArgs> | UpdateSettingArgs>;
-}>;
-
-
-export type UpdateSettingListMutation = { __typename?: 'Mutation', updateSettingList?: Array<{ __typename?: 'Setting', value: any } | null> | null };
-
 export type FullSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, slug: string, active: boolean, tags?: Array<string> | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, id: string, name: string, description?: Descendant[] | null, slug: string, active: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null };
 
 export type DeactivationFragment = { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason };
@@ -2351,31 +2290,40 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+
+export type TagQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type TagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
+  description?: InputMaybe<Scalars['RichText']>;
   tag?: InputMaybe<Scalars['String']>;
   main?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, main: boolean } | null };
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type TokenRefFragment = { __typename?: 'Token', id: string, name: string };
 
@@ -2832,18 +2780,6 @@ export const PollExternalVoteSourceFragmentDoc = gql`
     id
     answerId
     amount
-  }
-}
-    `;
-export const FullSettingFragmentDoc = gql`
-    fragment FullSetting on Setting {
-  id
-  name
-  value
-  settingRestriction {
-    maxValue
-    minValue
-    inputLength
   }
 }
     `;
@@ -4071,8 +4007,15 @@ export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoi
 export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
 export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
 export const MemberPlanListDocument = gql`
-    query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+    query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: MemberPlanSort) {
+  memberPlans(
+    filter: {name: $filter}
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullMemberPlan
     }
@@ -4103,6 +4046,8 @@ export const MemberPlanListDocument = gql`
  *      cursor: // value for 'cursor'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
@@ -5106,84 +5051,6 @@ export function usePollLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PollQ
 export type PollQueryHookResult = ReturnType<typeof usePollQuery>;
 export type PollLazyQueryHookResult = ReturnType<typeof usePollLazyQuery>;
 export type PollQueryResult = Apollo.QueryResult<PollQuery, PollQueryVariables>;
-export const SettingListDocument = gql`
-    query SettingList {
-  settings {
-    id
-    name
-    value
-    settingRestriction {
-      maxValue
-      minValue
-      inputLength
-      allowedValues {
-        stringChoice
-        boolChoice
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useSettingListQuery__
- *
- * To run a query within a React component, call `useSettingListQuery` and pass it any options that fit your needs.
- * When your component renders, `useSettingListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSettingListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useSettingListQuery(baseOptions?: Apollo.QueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
-      }
-export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
-        }
-export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
-export type SettingListLazyQueryHookResult = ReturnType<typeof useSettingListLazyQuery>;
-export type SettingListQueryResult = Apollo.QueryResult<SettingListQuery, SettingListQueryVariables>;
-export const UpdateSettingListDocument = gql`
-    mutation UpdateSettingList($input: [UpdateSettingArgs!]) {
-  updateSettingList(value: $input) {
-    value
-  }
-}
-    `;
-export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
-
-/**
- * __useUpdateSettingListMutation__
- *
- * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
-      }
-export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
-export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
-export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const SubscriptionListDocument = gql`
     query SubscriptionList($filter: SubscriptionFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: SubscriptionSort) {
   subscriptions(
@@ -5524,6 +5391,7 @@ export const TagListDocument = gql`
     nodes {
       id
       tag
+      description
       main
     }
     pageInfo {
@@ -5569,11 +5437,50 @@ export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ta
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
-export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+export const TagDocument = gql`
+    query Tag($id: String!) {
+  tag(id: $id) {
     id
     tag
+    description
+    main
+  }
+}
+    `;
+
+/**
+ * __useTagQuery__
+ *
+ * To run a query within a React component, call `useTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTagQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTagQuery(baseOptions: Apollo.QueryHookOptions<TagQuery, TagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+      }
+export function useTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
+        }
+export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
+export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
+export type TagQueryResult = Apollo.QueryResult<TagQuery, TagQueryVariables>;
+export const CreateTagDocument = gql`
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
+    id
+    tag
+    description
     main
   }
 }
@@ -5594,6 +5501,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
  *   variables: {
  *      tag: // value for 'tag'
+ *      description: // value for 'description'
  *      type: // value for 'type'
  *   },
  * });
@@ -5606,10 +5514,11 @@ export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: String!, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, main: $main) {
+    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
+  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
     id
     tag
+    description
     main
   }
 }
@@ -5630,6 +5539,7 @@ export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, Upd
  * const [updateTagMutation, { data, loading, error }] = useUpdateTagMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      description: // value for 'description'
  *      tag: // value for 'tag'
  *      main: // value for 'main'
  *   },
@@ -5647,6 +5557,7 @@ export const DeleteTagDocument = gql`
   deleteTag(id: $id) {
     id
     tag
+    description
     main
   }
 }
