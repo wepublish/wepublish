@@ -246,6 +246,97 @@ const subtitle1 = {
 }
 
 const theme = createTheme(variablesTheme, {
+  components: {
+    MuiButton: {
+      defaultProps: {
+        size: 'large'
+      },
+      styleOverrides: {
+        sizeLarge: ({theme}) => ({
+          fontSize: '14px',
+          padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+          [theme.breakpoints.up('md')]: {
+            padding: `${theme.spacing(1.5)} ${theme.spacing(2.5)}`
+          }
+        }),
+        containedSizeLarge: {
+          border: '1px solid transparent'
+        },
+        textPrimary: {
+          color: '#587072'
+        },
+        contained: {
+          borderRadius: '4px',
+          fontWeight: 300,
+          textTransform: 'uppercase',
+          letterSpacing: '0.0892857143em'
+        },
+        outlined: {
+          borderRadius: '4px',
+          fontWeight: 300,
+          textTransform: 'uppercase',
+          letterSpacing: '0.0892857143em',
+          ['&, &:hover']: {
+            borderWidth: '1px'
+          }
+        },
+        outlinedPrimary: ({theme}) => ({
+          ['&, &&:hover']: {
+            color: theme.palette.primary.dark,
+            borderColor: theme.palette.primary.dark
+          }
+        }),
+        outlinedSecondary: ({theme}) => ({
+          color: theme.palette.secondary.main
+        }),
+        text: {
+          borderRadius: '4px'
+        }
+      }
+    },
+    MuiLink: {
+      defaultProps: {
+        underline: 'always'
+      },
+      styleOverrides: {
+        root: ({ownerState, theme}) => {
+          const styles = {} as CSSObject
+
+          if (ownerState.underline !== 'none') {
+            styles.textDecoration = 'underline'
+          }
+
+          if (ownerState.color === 'primary') {
+            styles.color = '#587072'
+          }
+
+          return styles
+        }
+      }
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          display: 'grid',
+          gap: theme.spacing(5),
+          maxWidth: '492px',
+          [theme.breakpoints.up('md')]: {
+            maxWidth: '868px',
+            gap: theme.spacing(10)
+          },
+          [theme.breakpoints.up('lg')]: {
+            maxWidth: '1080px'
+          },
+          [theme.breakpoints.up('xl')]: {
+            maxWidth: '1425px'
+          },
+          [theme.breakpoints.up('xxl')]: {
+            maxWidth: '2100px'
+          }
+        })
+      }
+    }
+  },
   typography: {
     fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
     allVariants: {
@@ -445,97 +536,6 @@ const theme = createTheme(variablesTheme, {
         }
       })
     }
-  },
-  components: {
-    MuiButton: {
-      defaultProps: {
-        size: 'large'
-      },
-      styleOverrides: {
-        sizeLarge: ({theme}) => ({
-          fontSize: '14px',
-          padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-          [theme.breakpoints.up('md')]: {
-            padding: `${theme.spacing(1.5)} ${theme.spacing(2.5)}`
-          }
-        }),
-        containedSizeLarge: {
-          border: '1px solid transparent'
-        },
-        textPrimary: {
-          color: '#587072'
-        },
-        contained: {
-          borderRadius: '4px',
-          fontWeight: 300,
-          textTransform: 'uppercase',
-          letterSpacing: '0.0892857143em'
-        },
-        outlined: {
-          borderRadius: '4px',
-          fontWeight: 300,
-          textTransform: 'uppercase',
-          letterSpacing: '0.0892857143em',
-          ['&, &:hover']: {
-            borderWidth: '1px'
-          }
-        },
-        outlinedPrimary: ({theme}) => ({
-          ['&, &&:hover']: {
-            color: theme.palette.primary.dark,
-            borderColor: theme.palette.primary.dark
-          }
-        }),
-        outlinedSecondary: ({theme}) => ({
-          color: theme.palette.secondary.main
-        }),
-        text: {
-          borderRadius: '4px'
-        }
-      }
-    },
-    MuiLink: {
-      defaultProps: {
-        underline: 'always'
-      },
-      styleOverrides: {
-        root: ({ownerState, theme}) => {
-          const styles = {} as CSSObject
-
-          if (ownerState.underline !== 'none') {
-            styles.textDecoration = 'underline'
-          }
-
-          if (ownerState.color === 'primary') {
-            styles.color = '#587072'
-          }
-
-          return styles
-        }
-      }
-    },
-    MuiContainer: {
-      styleOverrides: {
-        root: ({theme}) => ({
-          display: 'grid',
-          gap: theme.spacing(5),
-          maxWidth: '492px',
-          [theme.breakpoints.up('md')]: {
-            maxWidth: '868px',
-            gap: theme.spacing(10)
-          },
-          [theme.breakpoints.up('lg')]: {
-            maxWidth: '1080px'
-          },
-          [theme.breakpoints.up('xl')]: {
-            maxWidth: '1425px'
-          },
-          [theme.breakpoints.up('xxl')]: {
-            maxWidth: '2100px'
-          }
-        })
-      }
-    }
   }
 } as ThemeOptions)
 
@@ -549,7 +549,7 @@ export const alternatingTeaserTheme = createTheme(theme, {
           breakpoints: variablesTheme.breakpoints.values,
           values: {
             xs: 24,
-            md: 32, // to override base theme
+            md: 24, // to override base theme
             lg: 32,
             xl: 40,
             xxl: 58

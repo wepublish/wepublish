@@ -21,7 +21,7 @@ export const ImageBlockWrapper = styled('figure')`
 
 export const ImageBlockInnerWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-template-columns: auto;
 `
 

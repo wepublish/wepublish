@@ -236,7 +236,8 @@
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
-          "LOGGED_OUT": "nur ausgeloggt"
+          "LOGGED_OUT": "nur ausgeloggt",
+          "SUBSCRIBED": "nur abonniert"
         },
         "actions": "Aktionen",
         "image": "Bild",

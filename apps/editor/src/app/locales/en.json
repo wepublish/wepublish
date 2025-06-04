@@ -234,7 +234,8 @@
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
-          "LOGGED_OUT": "logged out visitors"
+          "LOGGED_OUT": "logged out visitors",
+          "SUBSCRIBED": "subscribed visitors"
         },
         "actions": "Actions",
         "image": "Image",

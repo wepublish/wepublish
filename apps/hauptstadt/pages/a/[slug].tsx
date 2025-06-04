@@ -66,11 +66,15 @@ export default function ArticleBySlugOrId() {
 
   useEffect(() => {
     if (!showPaywall && data?.article.paywall?.active) {
-      router.replace({
-        query: {
-          articleId: data.article.id
-        }
-      })
+      router.replace(
+        {
+          query: {
+            articleId: data.article.id
+          }
+        },
+        undefined,
+        {shallow: true}
+      )
     }
   }, [data?.article.id, data?.article.paywall?.active, router, showPaywall])
 

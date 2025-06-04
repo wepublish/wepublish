@@ -25,12 +25,20 @@ import {alternatingTeaserTheme} from '../theme'
 export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
   align-items: stretch; // Makes all teasers the same height
   gap: ${({theme}) => theme.spacing(6)};
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-template-columns: 1fr;
+  }
 `
 
 export const HauptstadtTeaserList = styled(TeaserListBlock)`
   ${TeaserListBlockTeasers} {
     align-items: stretch; // Makes all teasers the same height
     gap: ${({theme}) => theme.spacing(6)};
+
+    ${({theme}) => theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr;
+    }
   }
 `
 
@@ -112,6 +120,10 @@ export const HauptstadtFocusTeaser = styled(FocusTeaser)`
   ${TeaserListBlockTeasers} {
     align-items: stretch; // Makes all teasers the same height
     gap: ${({theme}) => theme.spacing(6)};
+
+    ${({theme}) => theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr;
+    }
 
     ${({theme}) => theme.breakpoints.up('md')} {
       grid-template-columns: 1fr 1fr 1fr;
