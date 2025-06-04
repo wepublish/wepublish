@@ -1419,6 +1419,11 @@ type Mutation {
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
+  """
+  This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
+  """
+  updatePassword(password: String!, passwordRepeated: String!): User!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 

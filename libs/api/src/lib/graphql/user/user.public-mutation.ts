@@ -1,8 +1,7 @@
 import {Prisma, PrismaClient, User} from '@prisma/client'
 import {Context} from '../../context'
-import {hashPassword} from '../../db/user'
 import {unselectPassword} from '@wepublish/authentication/api'
-import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError} from '../../error'
+import {EmailAlreadyInUseError, NotFound} from '../../error'
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'
 
@@ -172,27 +171,4 @@ export const updatePublicUser = async (
   })
 
   return updateUser
-}
-
-export const updateUserPassword = async (
-  password: string,
-  passwordRepeated: string,
-  hashCostFactor: number,
-  authenticateUser: Context['authenticateUser'],
-  userClient: PrismaClient['user']
-) => {
-  const {user} = authenticateUser()
-  if (!user) throw new NotAuthenticatedError()
-
-  if (password !== passwordRepeated) {
-    throw new UserInputError('password and passwordRepeat are not equal')
-  }
-
-  return userClient.update({
-    where: {id: user.id},
-    data: {
-      password: await hashPassword(password, hashCostFactor)
-    },
-    select: unselectPassword
-  })
 }

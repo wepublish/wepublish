@@ -53,11 +53,6 @@ type Mutation {
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 
   """
-  This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
-  """
-  updatePassword(password: String!, passwordRepeated: String!): User
-
-  """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription

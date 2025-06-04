@@ -59,7 +59,6 @@ import {createUser} from './user/user.mutation'
 import {
   updatePaymentProviderCustomers,
   updatePublicUser,
-  updateUserPassword,
   uploadPublicUserProfileImage
 } from './user/user.public-mutation'
 
@@ -795,21 +794,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {authenticateUser, mediaAdapter, prisma: {image, user}}
       ) =>
         uploadPublicUserProfileImage(uploadImageInput, authenticateUser, mediaAdapter, image, user)
-    },
-
-    updatePassword: {
-      type: GraphQLPublicUser,
-      args: {
-        password: {type: new GraphQLNonNull(GraphQLString)},
-        passwordRepeated: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        "This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.",
-      resolve: (
-        root,
-        {password, passwordRepeated},
-        {authenticateUser, prisma: {user}, hashCostFactor}
-      ) => updateUserPassword(password, passwordRepeated, hashCostFactor, authenticateUser, user)
     },
 
     updateUserSubscription: {
