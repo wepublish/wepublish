@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PaymentsService should create a payment from invoice 1`] = `
+[
+  {
+    "data": {
+      "invoiceID": "inv1",
+      "paymentMethodID": "pm1",
+      "state": "created",
+    },
+  },
+]
+`;
+
+exports[`PaymentsService should create a payment from invoice 2`] = `
+[
+  {
+    "data": {
+      "intentData": "intentData",
+      "intentID": "intent1",
+      "intentSecret": "intentSecret",
+      "invoiceID": undefined,
+      "paymentData": "paymentData",
+      "paymentMethodID": undefined,
+      "state": "created",
+    },
+    "where": {
+      "id": "1",
+    },
+  },
+]
+`;
+
+exports[`PaymentsService should find payment provider by payment method ID 1`] = `
+[
+  "pm1",
+]
+`;
+
+exports[`PaymentsService should get a payment by ID 1`] = `
+[
+  {
+    "where": {
+      "id": "1",
+    },
+  },
+]
+`;
+
+exports[`PaymentsService should get payments with filters 1`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "createdAt": "asc",
+    },
+    "skip": 0,
+    "take": 3,
+    "where": {
+      "AND": [
+        {
+          "intentID": "intent1",
+        },
+      ],
+    },
+  },
+]
+`;
