@@ -77,7 +77,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
               label=""
               control={
                 <PaymentRadio aria-label={`${method.description} ${method.name}`}>
-                  {method.image && <Image image={method.image} css={icon} />}
+                  {method.image ? <Image image={method.image} css={icon} /> : method.name}
                 </PaymentRadio>
               }></FormControlLabel>
           ))}
