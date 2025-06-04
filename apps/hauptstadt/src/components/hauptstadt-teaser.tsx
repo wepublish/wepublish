@@ -8,6 +8,7 @@ import {
   TeaserContentWrapper,
   TeaserGridBlock,
   TeaserImageWrapper,
+  TeaserLead,
   TeaserListBlock,
   TeaserListBlockTeasers,
   TeaserPreTitle,
@@ -44,6 +45,7 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
   ${ImageWrapper} {
     aspect-ratio: 3/2;
+    max-height: unset;
   }
 
   ${TeaserPreTitleNoContent} {
@@ -71,6 +73,14 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
   ${TeaserAuthors} {
     font-weight: 400;
   }
+
+  ${TeaserLead} {
+    display: none;
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      display: block;
+    }
+  }
 `
 
 export const HauptstadtAlternatingTeaser = createWithTheme(
@@ -81,6 +91,12 @@ export const HauptstadtAlternatingTeaser = createWithTheme(
       height: 0px;
       margin: 0px;
       display: block;
+    }
+
+    // Small teasers have lead hidden on mobile
+    // We do not want that for the alternating teaser
+    ${TeaserLead} {
+      display: initial;
     }
 
     ${({theme}) => theme.breakpoints.up('md')} {

@@ -346,10 +346,6 @@ export function responsiveProperty({
   const output: TypographyStyleOptions = {}
 
   Object.entries(breakpoints).forEach(([key, breakpoint]) => {
-    if (!breakpoint) {
-      return
-    }
-
     let value = values[key as Breakpoint]
 
     if (value == null) {
