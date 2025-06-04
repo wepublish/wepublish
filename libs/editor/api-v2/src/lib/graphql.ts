@@ -613,7 +613,7 @@ export type CreateCrowdfundingInput = {
 };
 
 export type CreateCrowdfundingMemberPlan = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type Crowdfunding = {
@@ -623,7 +623,7 @@ export type Crowdfunding = {
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   goals: Array<CrowdfundingGoal>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlans: Array<CrowdfundingMemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -668,7 +668,7 @@ export type CrowdfundingGoalWithProgress = {
 
 export type CrowdfundingMemberPlan = {
   __typename?: 'CrowdfundingMemberPlan';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -680,7 +680,7 @@ export type CrowdfundingWithActiveGoal = {
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   goals: Array<CrowdfundingGoal>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlans: Array<CrowdfundingMemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -1807,7 +1807,7 @@ export type MutationDeleteConsentArgs = {
 
 
 export type MutationDeleteCrowdfundingArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -2891,7 +2891,7 @@ export type QueryConsentsArgs = {
 
 
 export type QueryCrowdfundingArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -3595,7 +3595,7 @@ export type UpdateCrowdfundingInput = {
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name: Scalars['String'];
 };
@@ -4165,7 +4165,7 @@ export type CrowdfundingsQueryVariables = Exact<{ [key: string]: never; }>;
 export type CrowdfundingsQuery = { __typename?: 'Query', crowdfundings: Array<{ __typename?: 'Crowdfunding', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, memberPlans: Array<{ __typename?: 'CrowdfundingMemberPlan', id: string }> }> };
 
 export type CrowdfundingQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -4186,7 +4186,7 @@ export type UpdateCrowdfundingMutationVariables = Exact<{
 export type UpdateCrowdfundingMutation = { __typename?: 'Mutation', updateCrowdfunding: { __typename?: 'CrowdfundingWithActiveGoal', id: string, name: string, countSubscriptionsFrom?: string | null, countSubscriptionsUntil?: string | null, additionalRevenue?: number | null, revenue?: number | null, goals: Array<{ __typename?: 'CrowdfundingGoal', id: string, title: string, description?: string | null, amount: number }>, activeCrowdfundingGoal?: { __typename?: 'CrowdfundingGoalWithProgress', id: string, title: string, description?: string | null, amount: number, progress?: number | null } | null, memberPlans: Array<{ __typename?: 'CrowdfundingMemberPlan', id: string }> } };
 
 export type DeleteCrowdfundingMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
@@ -6924,7 +6924,7 @@ export type CrowdfundingsQueryHookResult = ReturnType<typeof useCrowdfundingsQue
 export type CrowdfundingsLazyQueryHookResult = ReturnType<typeof useCrowdfundingsLazyQuery>;
 export type CrowdfundingsQueryResult = Apollo.QueryResult<CrowdfundingsQuery, CrowdfundingsQueryVariables>;
 export const CrowdfundingDocument = gql`
-    query Crowdfunding($id: ID!) {
+    query Crowdfunding($id: String!) {
   crowdfunding(id: $id) {
     ...FullCrowdfundingWithActiveGoal
   }
@@ -7025,7 +7025,7 @@ export type UpdateCrowdfundingMutationHookResult = ReturnType<typeof useUpdateCr
 export type UpdateCrowdfundingMutationResult = Apollo.MutationResult<UpdateCrowdfundingMutation>;
 export type UpdateCrowdfundingMutationOptions = Apollo.BaseMutationOptions<UpdateCrowdfundingMutation, UpdateCrowdfundingMutationVariables>;
 export const DeleteCrowdfundingDocument = gql`
-    mutation DeleteCrowdfunding($id: ID!) {
+    mutation DeleteCrowdfunding($id: String!) {
   deleteCrowdfunding(id: $id)
 }
     `;
