@@ -37,8 +37,16 @@ export class SessionResolver {
     description: 'This mutation revokes and deletes the active session.'
   })
   async revokeActiveSession(@CurrentUser() session: UserSession | null): Promise<Boolean> {
-    console.log({session})
-
     return await this.sessionService.revokeSession(session)
+  }
+
+  @Public()
+  @Mutation(() => String, {
+    description:
+      'This mutation sends a login link to the email if the user exists. Method will always return email address'
+  })
+  async sendWebsiteLogin(@Args('email') email: string) {
+    await this.sessionService.sendWebsiteLogin(email)
+    return email
   }
 }

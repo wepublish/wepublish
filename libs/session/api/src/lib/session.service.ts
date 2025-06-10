@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, UserEvent} from '@prisma/client'
 import {SessionWithToken} from './session.model'
 import {InvalidCredentialsError, NotActiveError} from './session.errors'
 import nanoid from 'nanoid/generate'
@@ -7,6 +7,14 @@ import {UserAuthenticationService} from './user-authentication.service'
 import {JwtAuthenticationService} from './jwt-authentication.service'
 import {OAuthAuthenticationService} from './oauth-authentication.service'
 import {UserSession} from '@wepublish/authentication/api'
+import {
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  logger,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND
+} from '@wepublish/api'
+import {MailContext, mailLogType} from '@wepublish/mail/api'
+import {SettingName, SettingsService} from '@wepublish/settings/api'
+import {Validator} from './validator'
 
 const IDAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -19,7 +27,9 @@ export class SessionService {
     @Inject(SESSION_TTL_TOKEN) private readonly sessionTTL: number,
     private userAuthenticationService: UserAuthenticationService,
     private jwtAuthenticationService: JwtAuthenticationService,
-    private oAuthAuthenticationService: OAuthAuthenticationService
+    private oAuthAuthenticationService: OAuthAuthenticationService,
+    private settingsService: SettingsService,
+    private mailContext: MailContext
   ) {}
 
   async createSessionWithEmailAndPassword(
@@ -93,5 +103,48 @@ export class SessionService {
       createdAt,
       expiresAt
     }
+  }
+
+  async sendWebsiteLogin(email: string) {
+    email = email.toLowerCase()
+    Validator.login.parse({email})
+
+    const user = await this.userAuthenticationService.getUserByEmail(email)
+    if (!user) return
+    const lastSendTimeStamp = user.properties.find(
+      property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
+    )
+
+    if (
+      lastSendTimeStamp &&
+      parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
+    ) {
+      logger('mutation.public').warn(
+        'User with ID %s requested Login Link multiple times in 15 min time window',
+        user.id
+      )
+      return email
+    }
+
+    const resetPwdSetting = await this.settingsService.settingByName(
+      SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN
+    )
+    const resetPwd =
+      (resetPwdSetting?.value as number) ??
+      parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '')
+
+    if (!resetPwd) {
+      throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
+    }
+
+    const remoteTemplate = await this.mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
+    await this.mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {},
+      mailType: mailLogType.UserFlow
+    })
+
+    await this.userAuthenticationService.updateUserLastLoginLinkSend(user.id)
   }
 }

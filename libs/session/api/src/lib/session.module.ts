@@ -12,6 +12,7 @@ import {AuthProviderModule} from '@wepublish/authprovider/api'
 import {RegisterResolver} from './register.resolver'
 import {RegisterService} from './register.service'
 import {ChallengeModule} from '@wepublish/challenge/api'
+import {SettingModule} from '@wepublish/settings/api'
 
 export interface SessionModuleOptions {
   sessionTTL: number
@@ -26,7 +27,7 @@ export interface SessionModuleAsyncOptions extends Pick<ModuleMetadata, 'imports
 }
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthProviderModule, ChallengeModule],
+  imports: [PrismaModule, UserModule, AuthProviderModule, ChallengeModule, SettingModule],
   exports: [SessionService]
 })
 export class SessionModule {

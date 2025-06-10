@@ -32,11 +32,6 @@ type Mutation {
   extendSubscription(subscriptionId: String!, successURL: String, failureURL: String): Payment!
 
   """
-  This mutation sends a login link to the email if the user exists. Method will always return email address
-  """
-  sendWebsiteLogin(email: String!): String!
-
-  """
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
   updateUser(input: UserInput!): User

@@ -13,4 +13,8 @@ export class Validator {
       })
       .optional()
   })
+
+  static login = z.object({
+    email: z.string().email()
+  })
 }

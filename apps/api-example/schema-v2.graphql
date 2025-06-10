@@ -1388,6 +1388,11 @@ type Mutation {
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """
+  This mutation sends a login link to the email if the user exists. Method will always return email address
+  """
+  sendWebsiteLogin(email: String!): String!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""

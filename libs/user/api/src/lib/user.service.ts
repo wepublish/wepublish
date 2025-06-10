@@ -12,7 +12,10 @@ export class UserService {
 
   async getUserByEmail(email: string) {
     return this.prisma.user.findUnique({
-      where: {email: email.toLowerCase()}
+      where: {email: email.toLowerCase()},
+      include: {
+        properties: true
+      }
     })
   }
 

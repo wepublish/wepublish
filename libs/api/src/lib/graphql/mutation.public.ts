@@ -2,10 +2,8 @@ import {
   MemberPlan,
   PaymentState,
   Subscription,
-  SubscriptionDeactivationReason,
-  UserEvent
+  SubscriptionDeactivationReason
 } from '@prisma/client'
-import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
@@ -33,8 +31,6 @@ import {
   UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
-import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
-import {Validator} from '../validator'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -52,8 +48,6 @@ import {
   updatePublicUser,
   uploadPublicUserProfileImage
 } from './user/user.public-mutation'
-
-import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -434,82 +428,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           migrateToTargetPaymentMethodID:
             subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
-      }
-    },
-
-    sendWebsiteLogin: {
-      type: new GraphQLNonNull(GraphQLString),
-      args: {
-        email: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        'This mutation sends a login link to the email if the user exists. Method will always return email address',
-      async resolve(root, {email}, {prisma, generateJWT, mailContext, urlAdapter}) {
-        email = email.toLowerCase()
-        await Validator.login.parse({email})
-
-        const user = await prisma.user.findUnique({
-          where: {email},
-          select: unselectPassword
-        })
-
-        if (!user) return email
-
-        const lastSendTimeStamp = user.properties.find(
-          property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
-        )
-
-        if (
-          lastSendTimeStamp &&
-          parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
-        ) {
-          logger('mutation.public').warn(
-            'User with ID %s requested Login Link multiple times in 15 min time window',
-            user.id
-          )
-          return email
-        }
-
-        const resetPwdSetting = await prisma.setting.findUnique({
-          where: {name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN}
-        })
-        const resetPwd =
-          (resetPwdSetting?.value as number) ??
-          parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '')
-
-        if (!resetPwd) {
-          throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
-        }
-
-        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
-        await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow
-        })
-
-        try {
-          await prisma.user.update({
-            where: {id: user.id},
-            data: {
-              properties: {
-                deleteMany: {
-                  key: USER_PROPERTY_LAST_LOGIN_LINK_SEND
-                },
-                create: {
-                  key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-                  public: false,
-                  value: `${Date.now()}`
-                }
-              }
-            }
-          })
-        } catch (error) {
-          logger('mutation.public').warn(error as Error, 'Updating User with ID %s failed', user.id)
-        }
-
-        return email
       }
     },
 
