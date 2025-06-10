@@ -36,7 +36,7 @@ FROM ${BUILD_IMAGE} AS  build-website
 
 COPY . .
 RUN npx prisma generate && \
-    npx nx build ${NEXT_PROJECT} --skip-nx-cache $(if [[ $DOCKER_BUILD_ENV == "development" ]]; then echo "--experimental-build-mode compile"; fi ) && \
+    npx nx build ${NEXT_PROJECT} --skip-nx-cache $(if [ $DOCKER_BUILD_ENV == "development" ]; then echo "--experimental-build-mode compile"; fi ) && \
     bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website
