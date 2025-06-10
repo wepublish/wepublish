@@ -49,6 +49,7 @@ import {
   uploadPublicUserProfileImage
 } from './user/user.public-mutation'
 import {sub} from 'date-fns'
+import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberContext'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -97,12 +98,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodSlug
         )
 
-        const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
-          loaders,
-          memberPlanSlug,
-          memberPlanID
-        )
-        const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+        const memberPlan = await getMemberPlanByIDOrSlug(loaders, memberPlanSlug, memberPlanID)
+        const paymentMethod = await getPaymentMethodByIDOrSlug(
           loaders,
           paymentMethodSlug,
           paymentMethodID
@@ -228,12 +225,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentMethodSlug
           )
 
-          const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
-            loaders,
-            memberPlanSlug,
-            memberPlanID
-          )
-          const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+          const memberPlan = await getMemberPlanByIDOrSlug(loaders, memberPlanSlug, memberPlanID)
+          const paymentMethod = await getPaymentMethodByIDOrSlug(
             loaders,
             paymentMethodSlug,
             paymentMethodID
@@ -474,6 +467,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           input,
           authenticateUser,
           memberContext,
+          loaders,
           loaders.activeMemberPlansByID,
           loaders.activePaymentMethodsByID,
           subscription,

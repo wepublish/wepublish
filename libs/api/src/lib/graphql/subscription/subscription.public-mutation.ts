@@ -3,6 +3,7 @@ import {PaymentPeriodicity, Prisma, PrismaClient, Subscription} from '@prisma/cl
 import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
 import {PaymentProvider} from '@wepublish/payment/api'
 import {handleRemoteManagedSubscription} from './subscription.private-mutation'
+import {getPaymentMethodByIDOrSlug} from '../../memberContext'
 
 export const updatePublicSubscription = async (
   id: string,
@@ -12,6 +13,7 @@ export const updatePublicSubscription = async (
   >,
   authenticateUser: Context['authenticateUser'],
   memberContext: Context['memberContext'],
+  loaders: Context['loaders'],
   activeMemberPlansByID: Context['loaders']['activeMemberPlansByID'],
   activePaymentMethodsByID: Context['loaders']['activePaymentMethodsByID'],
   subscriptionClient: PrismaClient['subscription'],
@@ -64,8 +66,8 @@ export const updatePublicSubscription = async (
   }
 
   // handle remote managed subscriptions (Payrexx Subscription)
-  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
-    memberContext.loaders,
+  const {paymentProviderID} = await getPaymentMethodByIDOrSlug(
+    loaders,
     undefined,
     subscription.paymentMethodID
   )
