@@ -12,7 +12,7 @@ import {
 export class MemberPlanService {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getMemberPlanById(id: string): Promise<MemberPlan | null> {
+  async getMemberPlanById(id: string) {
     return this.prisma.memberPlan.findFirst({
       where: {
         id,

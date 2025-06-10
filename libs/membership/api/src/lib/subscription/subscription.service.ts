@@ -41,17 +41,6 @@ export class SubscriptionService {
     private readonly payments: PaymentsService
   ) {}
 
-  public async getUserSubscriptions(userId: string) {
-    return this.prismaService.subscription.findMany({
-      where: {
-        userID: userId
-      },
-      select: {
-        id: true
-      }
-    })
-  }
-
   public async getActiveSubscriptionsWithoutInvoice(
     runDate: Date,
     closestRenewalDate: Date

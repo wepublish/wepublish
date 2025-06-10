@@ -4,17 +4,11 @@ import {
   HasOptionalSubscriptionResolver,
   HasSubscriptionResolver
 } from './has-subscription/has-subscription.resolver'
-import {SubscriptionResolver} from './subscription.resolver'
 import {SubscriptionService} from './subscription.service'
 
 @Module({
   imports: [PrismaModule],
-  providers: [
-    HasSubscriptionResolver,
-    HasOptionalSubscriptionResolver,
-    SubscriptionResolver,
-    SubscriptionService
-  ],
+  providers: [HasSubscriptionResolver, HasOptionalSubscriptionResolver, SubscriptionService],
   exports: []
 })
 export class SubscriptionModule {}

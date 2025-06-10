@@ -1450,6 +1450,11 @@ type Mutation {
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 
   """
+  This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
+  """
+  updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
+
+  """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
   """
   voteOnPoll(answerId: String!): PollVote
@@ -2182,6 +2187,15 @@ type SubscriptionFlowModel {
   numberOfSubscriptions: Int!
   paymentMethods: [PaymentMethod!]!
   periodicities: [PaymentPeriodicity!]!
+}
+
+input SubscriptionInput {
+  autoRenew: Boolean!
+  id: String!
+  memberPlanID: String!
+  monthlyAmount: Int!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
 }
 
 type SubscriptionInterval {

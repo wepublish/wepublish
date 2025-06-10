@@ -75,6 +75,7 @@ import {InvoiceModule} from '@wepublish/invoice/api'
 import {ChallengeModule} from '@wepublish/challenge/api'
 import {MemberPlanModule} from '@wepublish/member-plan/api'
 import {SessionModule} from '@wepublish/session/api'
+import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
 
 @Global()
 @Module({
@@ -412,6 +413,7 @@ import {SessionModule} from '@wepublish/session/api'
     PhraseModule,
     ActionModule,
     UserModule,
+    UserSubscriptionModule,
     ChallengeModule.registerAsync({
       global: true,
       imports: [ConfigModule],

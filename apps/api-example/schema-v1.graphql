@@ -40,11 +40,6 @@ type Mutation {
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 
   """
-  This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
-  """
-  updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
-
-  """
   This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now
   """
   cancelUserSubscription(id: String!): PublicSubscription
@@ -293,15 +288,6 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated
   invoiceNotPaid
   userReplacedSubscription
-}
-
-input SubscriptionInput {
-  id: String!
-  memberPlanID: String!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  paymentMethodID: String!
 }
 
 input PaymentProviderCustomerInput {

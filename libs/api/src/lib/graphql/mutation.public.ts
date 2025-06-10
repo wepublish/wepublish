@@ -35,8 +35,7 @@ import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
-import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
-import {updatePublicSubscription} from './subscription/subscription.public-mutation'
+import {GraphQLPublicSubscription} from './subscription-public'
 import {
   GraphQLPaymentProviderCustomer,
   GraphQLPaymentProviderCustomerInput,
@@ -447,32 +446,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {authenticateUser, mediaAdapter, prisma: {image, user}}
       ) =>
         uploadPublicUserProfileImage(uploadImageInput, authenticateUser, mediaAdapter, image, user)
-    },
-
-    updateUserSubscription: {
-      type: GraphQLPublicSubscription,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLString)},
-        input: {type: new GraphQLNonNull(GraphQLPublicSubscriptionInput)}
-      },
-      description:
-        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null",
-      resolve: (
-        root,
-        {id, input},
-        {authenticateUser, prisma: {subscription}, loaders, memberContext, paymentProviders}
-      ) =>
-        updatePublicSubscription(
-          id,
-          input,
-          authenticateUser,
-          memberContext,
-          loaders,
-          loaders.activeMemberPlansByID,
-          loaders.activePaymentMethodsByID,
-          subscription,
-          paymentProviders
-        )
     },
 
     cancelUserSubscription: {

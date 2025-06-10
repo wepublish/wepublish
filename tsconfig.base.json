@@ -94,6 +94,7 @@
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
       "@wepublish/user": ["libs/user/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
+      "@wepublish/user-subscription/api": ["libs/user-subscription/api/src/index.ts"],
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
