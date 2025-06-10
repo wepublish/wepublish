@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
-import { ArticleDate, ArticleDateWrapper } from '@wepublish/article/website';
-import { CommentListItemShare } from '@wepublish/comments/website';
-import { BuilderArticleDateProps } from '@wepublish/website/builder';
+import styled from '@emotion/styled'
+import { ArticleDate, ArticleDateWrapper } from '@wepublish/article/website'
+import { CommentListItemShare } from '@wepublish/comments/website'
+import { BuilderArticleDateProps } from '@wepublish/website/builder'
 
 const BajourArticleDateWithShareWrapper = styled(ArticleDateWrapper)`
   display: grid;
