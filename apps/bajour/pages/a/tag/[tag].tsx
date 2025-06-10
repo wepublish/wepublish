@@ -1,5 +1,7 @@
-import {capitalize, css} from '@mui/material'
+import {capitalize} from '@mui/material'
 import {ArticleListContainer} from '@wepublish/article/website'
+import {PageWrapper} from '@wepublish/page/website'
+import {TagType, useTagQuery} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
@@ -7,7 +9,6 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
-  TagType,
   useArticleListQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
@@ -26,21 +27,26 @@ const pageSchema = z.object({
   tag: z.string()
 })
 
-const uppercase = css`
-  text-transform: uppercase;
-`
-
 type ArticleListByTagProps = {
   tagId: string
 }
 
 export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   const {
-    elements: {H5, Alert, Pagination}
+    elements: {Alert, Pagination},
+    blocks: {Title, RichText}
   } = useWebsiteBuilder()
 
   const {query, replace} = useRouter()
   const {page, tag} = pageSchema.parse(query)
+
+  const {data: tagData} = useTagQuery({
+    variables: {
+      tag,
+      type: TagType.Article
+    },
+    fetchPolicy: 'cache-only'
+  })
 
   const variables = useMemo(
     () => ({
@@ -68,31 +74,36 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
 
   return (
     <Container>
-      <H5 component={'h1'} css={uppercase}>
-        {capitalize(tag)}
-      </H5>
+      <PageWrapper>
+        <div>
+          <Title title={capitalize(tag)} />
+          {!!tagData?.tags?.nodes[0]?.description?.length && (
+            <RichText richText={tagData.tags.nodes[0].description} />
+          )}
+        </div>
 
-      {data && !data.articles.nodes.length && (
-        <Alert severity="info">Keine Artikel vorhanden</Alert>
-      )}
+        {data && !data.articles.nodes.length && (
+          <Alert severity="info">Keine Artikel vorhanden</Alert>
+        )}
 
-      <ArticleListContainer variables={variables} />
+        <ArticleListContainer variables={variables} />
 
-      {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: {...query, page: value}
-              },
-              undefined,
-              {shallow: true, scroll: true}
-            )
-          }
-        />
-      )}
+        {pageCount > 1 && (
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              replace(
+                {
+                  query: {...query, page: value}
+                },
+                undefined,
+                {shallow: true, scroll: true}
+              )
+            }
+          />
+        )}
+      </PageWrapper>
     </Container>
   )
 }
@@ -103,7 +114,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: 'blocking'
   }
 }
-
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {tag} = params || {}
 

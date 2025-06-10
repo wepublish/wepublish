@@ -8,7 +8,24 @@ import {ContentWrapperStyled} from '@wepublish/content/website'
 
 export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
   display: grid;
-  row-gap: ${({theme}) => theme.spacing(7)};
+  row-gap: var(--content-row-gap);
+
+  --content-row-gap: ${({theme}) => theme.spacing(2.5)};
+  --content-column-gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    --content-row-gap: ${({theme}) => theme.spacing(4)};
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    --content-row-gap: ${({theme}) => theme.spacing(6)};
+    --content-column-gap: ${({theme}) => theme.spacing(6)};
+  }
+
+  ${({theme}) => theme.breakpoints.up('xxl')} {
+    --content-row-gap: ${({theme}) => theme.spacing(9.5)};
+    --content-column-gap: ${({theme}) => theme.spacing(9)};
+  }
 
   ${({theme, fullWidth}) =>
     !fullWidth &&

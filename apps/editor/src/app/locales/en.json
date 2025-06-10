@@ -235,7 +235,8 @@
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
           "LOGGED_OUT": "logged out visitors",
-          "SUBSCRIBED": "subscribed visitors"
+          "SUBSCRIBED": "subscribed visitors",
+          "UNSUBSCRIBED": "unsubscribed visitors"
         },
         "actions": "Actions",
         "image": "Image",

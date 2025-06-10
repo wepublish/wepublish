@@ -13,6 +13,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   ListViewActions,
   ListViewContainer,
+  ListViewFilterArea,
   ListViewHeader,
   PaddedCell,
   Table,
@@ -20,9 +21,17 @@ import {
 } from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {Button, IconButton as RIconButton, Modal, Pagination, Table as RTable} from 'rsuite'
+import {
+  Button,
+  IconButton as RIconButton,
+  Input,
+  InputGroup,
+  Modal,
+  Pagination,
+  Table as RTable
+} from 'rsuite'
 import {RowDataType} from 'rsuite/esm/Table'
 
 const IconButton = styled(RIconButton)`
@@ -41,19 +50,26 @@ function TagList({type}: TagListProps) {
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
+  const [tagSearch, setTagSearch] = useState<string>()
+
   const tagListVariables = {
     filter: {
-      type
+      type,
+      tag: tagSearch
     },
     take: limit,
     skip: (page - 1) * limit
   } as TagListQueryVariables
 
-  const {data, loading} = useTagListQuery({
+  const {data, loading, refetch} = useTagListQuery({
     variables: tagListVariables,
     fetchPolicy: 'cache-and-network'
   })
-  const [deleteTag] = useDeleteTagMutation()
+  const [deleteTag] = useDeleteTagMutation({
+    onCompleted() {
+      refetch()
+    }
+  })
 
   return (
     <>
@@ -70,6 +86,15 @@ function TagList({type}: TagListProps) {
             </IconButton>
           </Link>
         </ListViewActions>
+
+        <ListViewFilterArea>
+          <InputGroup>
+            <Input value={tagSearch} onChange={value => setTagSearch(value)} />
+            <InputGroup.Addon>
+              <MdSearch />
+            </InputGroup.Addon>
+          </InputGroup>
+        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>

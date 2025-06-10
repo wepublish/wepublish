@@ -33,11 +33,16 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import deOverriden from '../locales/deOverriden.json'
 import {FontSizeProvider} from '../src/components/font-size-picker'
-import {HauptstadtArticleAuthors, HauptstadtArticleMeta} from '../src/components/hauptstadt-article'
+import {
+  HauptstadtArticle,
+  HauptstadtArticleAuthors,
+  HauptstadtArticleMeta
+} from '../src/components/hauptstadt-article'
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
+import {HauptstadtEvent} from '../src/components/hauptstadt-event'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
 import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
 import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
@@ -47,7 +52,8 @@ import {
   HauptstadtTeaser,
   HauptstadtTeaserGrid,
   HauptstadtTeaserList,
-  HauptstadtTeaserSlider
+  HauptstadtTeaserSlider,
+  HauptstadtTeaserSlots
 } from '../src/components/hauptstadt-teaser'
 import {PrintLogo} from '../src/components/print-logo'
 import {printStyles} from '../src/print-styles'
@@ -111,8 +117,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Navbar={HauptstadtNavbar}
             ContentWrapper={HauptstadtContentWrapper}
             AuthorChip={HauptstadtAuthorChip}
+            Article={HauptstadtArticle}
             ArticleAuthors={HauptstadtArticleAuthors}
             ArticleMeta={HauptstadtArticleMeta}
+            Event={HauptstadtEvent}
             Banner={HauptstadtBanner}
             Paywall={HauptstadtPaywall}
             blocks={{
@@ -121,6 +129,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               BaseTeaser: HauptstadtTeaser,
               TeaserList: HauptstadtTeaserList,
               TeaserGrid: HauptstadtTeaserGrid,
+              TeaserSlots: HauptstadtTeaserSlots,
               Break: HauptstadtBreakBlock
             }}
             blockStyles={{

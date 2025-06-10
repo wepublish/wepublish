@@ -12,8 +12,6 @@ import {
   BannerTitle
 } from '@wepublish/banner/website'
 
-import {ABCWhyte} from '../theme'
-
 export const HauptstadtBanner = styled(Banner)`
   background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
@@ -22,10 +20,6 @@ export const HauptstadtBanner = styled(Banner)`
     background-color: transparent;
     border: 1px solid ${({theme}) => theme.palette.secondary.main};
     color: ${({theme}) => theme.palette.secondary.main};
-  }
-
-  ${BannerContentWrapper} {
-    font-family: ${ABCWhyte.style.fontFamily};
   }
 
   ${BannerContent} {

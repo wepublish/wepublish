@@ -192,13 +192,6 @@ export const TeaserWrapper = styled('article')<FlexAlignment>`
   `}
 `
 
-export const TeaserInnerWrapper = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  grid-template-rows: auto;
-  grid-auto-rows: max-content;
-`
-
 export const TeaserImageWrapper = styled('div')`
   grid-column: 1/13;
   width: 100%;

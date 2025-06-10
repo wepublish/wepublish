@@ -1,6 +1,9 @@
+import {css, Theme} from '@emotion/react'
 import {capitalize} from '@mui/material'
 import {ArticleListContainer} from '@wepublish/article/website'
-import {TagType} from '@wepublish/website/api'
+import {TitleBlockWrapper} from '@wepublish/block-content/website'
+import {PageWrapper} from '@wepublish/page/website'
+import {TagType, useTagQuery} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
@@ -28,13 +31,28 @@ type ArticleListByTagProps = {
   tagId: string
 }
 
+const richTextStyles = (theme: Theme) => css`
+  p {
+    ${theme.typography.subtitle1}
+  }
+`
+
 export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   const {
-    elements: {H3, Alert, Pagination}
+    elements: {Alert, Pagination},
+    blocks: {Title, RichText}
   } = useWebsiteBuilder()
 
   const {query, replace} = useRouter()
   const {page, tag} = pageSchema.parse(query)
+
+  const {data: tagData} = useTagQuery({
+    variables: {
+      tag,
+      type: TagType.Article
+    },
+    fetchPolicy: 'cache-only'
+  })
 
   const variables = useMemo(
     () => ({
@@ -61,8 +79,14 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   }, [data?.articles.totalCount])
 
   return (
-    <>
-      <H3 component="h1">{capitalize(tag)}</H3>
+    <PageWrapper>
+      <TitleBlockWrapper>
+        <Title title={capitalize(tag)} />
+
+        {!!tagData?.tags?.nodes[0]?.description?.length && (
+          <RichText richText={tagData.tags.nodes[0].description} css={richTextStyles} />
+        )}
+      </TitleBlockWrapper>
 
       {data && !data.articles.nodes.length && (
         <Alert severity="info">Keine Artikel vorhanden</Alert>
@@ -85,7 +109,7 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
           }
         />
       )}
-    </>
+    </PageWrapper>
   )
 }
 

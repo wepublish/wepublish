@@ -319,7 +319,7 @@ export function App() {
               }
             />
             <Route
-              path="page/tags/create"
+              path="pages/tags/create"
               element={
                 <Base>
                   <TagCreateView type={TagType.Page} />
@@ -327,7 +327,7 @@ export function App() {
               }
             />
             <Route
-              path="page/tags/edit/:id"
+              path="pages/tags/edit/:id"
               element={
                 <Base>
                   <TagEditView />

@@ -3,15 +3,17 @@ import {
   Footer,
   FooterName,
   FooterPaperCategoryLinks,
+  FooterPaperMainLinks,
   FooterPaperWrapper,
   Navbar,
   NavbarIconButtonWrapper,
   NavbarInnerWrapper,
   NavPaperCategoryLinks,
+  NavPaperMainLinks,
   NavPaperName
 } from '@wepublish/navigation/website'
 
-import {ABCWhyte} from '../theme'
+import {Tiempos} from '../theme'
 
 export const HauptstadtNavbar = styled(Navbar)`
   ${NavbarInnerWrapper} {
@@ -43,8 +45,11 @@ export const HauptstadtNavbar = styled(Navbar)`
   }
 
   ${NavPaperCategoryLinks} span {
-    font-family: ${ABCWhyte.style.fontFamily};
     font-weight: 400;
+  }
+
+  ${NavPaperMainLinks} span {
+    font-family: ${Tiempos.style.fontFamily};
   }
 `
 
@@ -59,7 +64,10 @@ export const HauptstadtFooter = styled(Footer)`
   }
 
   ${FooterPaperCategoryLinks} span {
-    font-family: ${ABCWhyte.style.fontFamily};
     font-weight: 400;
+  }
+
+  ${FooterPaperMainLinks} span {
+    font-family: ${Tiempos.style.fontFamily};
   }
 `

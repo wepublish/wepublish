@@ -1365,7 +1365,8 @@ export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
   LoggedOut = 'LOGGED_OUT',
-  Subscribed = 'SUBSCRIBED'
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type MailProviderModel = {

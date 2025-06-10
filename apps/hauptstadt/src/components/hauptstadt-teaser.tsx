@@ -1,4 +1,6 @@
+import {css} from '@emotion/react'
 import styled from '@emotion/styled'
+import {Theme} from '@mui/material'
 import {
   AlternatingTeaser,
   BaseTeaser,
@@ -15,6 +17,8 @@ import {
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserSlider,
+  TeaserSlotsBlock,
+  TeaserSlotsBlockTeasers,
   TeaserWrapper
 } from '@wepublish/block-content/website'
 import {ImageWrapper} from '@wepublish/image/website'
@@ -22,33 +26,98 @@ import {createWithTheme} from '@wepublish/ui'
 
 import {alternatingTeaserTheme} from '../theme'
 
+const teaserGaps = ({theme}: {theme: Theme}) => css`
+  padding-bottom: var(--content-row-gap);
+  column-gap: ${theme.spacing(1.5)};
+
+  ${theme.breakpoints.up('md')} {
+    column-gap: ${theme.spacing(2.5)};
+  }
+
+  ${theme.breakpoints.up('lg')} {
+    column-gap: ${theme.spacing(5)};
+  }
+
+  ${theme.breakpoints.up('xxl')} {
+    column-gap: ${theme.spacing(7.5)};
+  }
+`
+
 export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
   align-items: stretch; // Makes all teasers the same height
-  gap: ${({theme}) => theme.spacing(6)};
+  row-gap: var(--content-row-gap);
+  column-gap: var(--content-column-gap);
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-template-columns: 1fr;
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(12, 1fr);
   }
 `
 
 export const HauptstadtTeaserList = styled(TeaserListBlock)`
   ${TeaserListBlockTeasers} {
     align-items: stretch; // Makes all teasers the same height
-    gap: ${({theme}) => theme.spacing(6)};
+    row-gap: var(--content-row-gap);
+    column-gap: var(--content-column-gap);
 
     ${({theme}) => theme.breakpoints.up('sm')} {
       grid-template-columns: 1fr;
     }
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  }
+`
+
+export const HauptstadtTeaserSlots = styled(TeaserSlotsBlock)`
+  ${TeaserSlotsBlockTeasers} {
+    align-items: stretch; // Makes all teasers the same height
+    row-gap: var(--content-row-gap);
+    column-gap: var(--content-column-gap);
+
+    ${({theme}) => theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr;
+    }
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  }
+`
+
+const revertTeaserToDefault = ({theme}: {theme: Theme}) => css`
+  grid-template-areas:
+    'image'
+    'pretitle'
+    'title'
+    'lead'
+    'authors';
+  grid-template-rows: initial;
+  grid-template-columns: initial;
+
+  ${TeaserImageWrapper} {
+    margin-bottom: ${theme.spacing(2)};
   }
 `
 
 export const HauptstadtTeaser = styled(BaseTeaser)`
   border-bottom: 1px solid ${({theme}) => theme.palette.primary.main};
-  padding-bottom: ${({theme}) => theme.spacing(6)};
-  column-gap: ${({theme}) => theme.spacing(5)};
+  grid-template-rows: repeat(5, minmax(0, auto));
+  grid-template-areas:
+    'image .'
+    'image pretitle'
+    'image title'
+    'image authors'
+    'image .';
+  grid-template-columns: 1fr 2fr;
+  ${teaserGaps}
 
   ${TeaserImageWrapper} {
-    margin-bottom: ${({theme}) => theme.spacing(2)};
+    margin-bottom: 0;
   }
 
   ${ImageWrapper} {
@@ -57,7 +126,11 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
   }
 
   ${TeaserPreTitleNoContent} {
-    display: none;
+    grid-area: pretitle;
+    // Setting it to 0px instead of "display: none" allows the grid-area to properly size
+    // And makes the teaser content properly aligned when there's no pre title
+    height: 0px;
+    margin: 0px;
   }
 
   &:hover ${TeaserPreTitle} {
@@ -67,10 +140,6 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
   &:hover ${ImageWrapper} {
     transform: unset;
-  }
-
-  ${TeaserPreTitleNoContent} {
-    grid-area: pretitle;
   }
 
   ${TeaserPreTitleWrapper} {
@@ -84,8 +153,12 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
   ${TeaserLead} {
     display: none;
+  }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
+    ${revertTeaserToDefault}
+
+    ${TeaserLead} {
       display: block;
     }
   }
@@ -93,12 +166,13 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
 export const HauptstadtAlternatingTeaser = createWithTheme(
   styled(AlternatingTeaser)`
-    // Setting it to 0px instead of "display: none" allows the grid-area to properly size
-    // And makes the teaser content properly aligned when there's no pre title
+    ${revertTeaserToDefault}
+
     ${TeaserPreTitleNoContent} {
+      // Setting it to 0px instead of "display: none" allows the grid-area to properly size
+      // And makes the teaser content properly aligned when there's no pre title
       height: 0px;
       margin: 0px;
-      display: block;
     }
 
     // Small teasers have lead hidden on mobile
@@ -136,10 +210,22 @@ export const HauptstadtFocusTeaser = styled(FocusTeaser)`
     grid-row: unset;
   }
 
-  // We do not want the border for the focused teaser
-  ${FocusedTeaser} ${TeaserContentWrapper} {
-    border-bottom: unset;
-    padding-bottom: unset;
+  ${FocusedTeaser} {
+    // We do not want the border for the focused teaser
+    ${TeaserContentWrapper} {
+      border-bottom: unset;
+      padding-bottom: unset;
+    }
+
+    ${TeaserContentWrapper} {
+      ${revertTeaserToDefault}
+    }
+
+    // Small teasers have lead hidden on mobile
+    // We do not want that for the alternating teaser
+    ${TeaserLead} {
+      display: initial;
+    }
   }
 
   // Pretitle background is the same as the FocusTeaser background
@@ -151,6 +237,10 @@ export const HauptstadtFocusTeaser = styled(FocusTeaser)`
 `
 
 export const HauptstadtTeaserSlider = styled(TeaserSlider)`
+  ${TeaserContentWrapper} {
+    ${revertTeaserToDefault}
+  }
+
   .keen-slider__slide {
     // Makes all teasers the same height
     display: grid;

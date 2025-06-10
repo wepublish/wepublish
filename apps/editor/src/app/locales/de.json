@@ -237,7 +237,8 @@
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
           "LOGGED_OUT": "nur ausgeloggt",
-          "SUBSCRIBED": "nur abonniert"
+          "SUBSCRIBED": "nur abonniert",
+          "UNSUBSCRIBED": "nicht abonniert"
         },
         "actions": "Aktionen",
         "image": "Bild",

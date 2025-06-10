@@ -28,8 +28,6 @@ import {useRouter} from 'next/router'
 import {anyPass} from 'ramda'
 import {ComponentProps, useEffect} from 'react'
 
-import {HauptstadtArticle} from '../../src/components/hauptstadt-article'
-
 export const ArticleWrapperComments = styled(ArticleWrapper)``
 export const ArticleWrapperAppendix = styled(ArticleWrapper)``
 
@@ -82,7 +80,7 @@ export default function ArticleBySlugOrId() {
     <>
       <ShowPaywallContext.Provider
         value={{hideContent: articleId === data?.article.id ? false : undefined}}>
-        <HauptstadtArticle {...containerProps} />
+        <ArticleContainer {...containerProps} />
       </ShowPaywallContext.Provider>
 
       {data?.article && !isLastBlockTeaser && (

@@ -45,7 +45,7 @@ export const Paywall = ({
   return (
     <PaywallWrapper className={className} ref={ref}>
       <RichText
-        richText={(hideContent ? circumventDescription ?? description : description) ?? []}
+        richText={(hideContent ? description : circumventDescription ?? description) ?? []}
       />
 
       <PaywallActions>

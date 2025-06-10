@@ -1323,10 +1323,11 @@ model Banner {
 }
 
 enum LoginStatus {
-  SUBSCRIBED @map("subscribed")
-  LOGGED_IN  @map("logged_in")
-  LOGGED_OUT @map("logged_out")
-  ALL        @map("all")
+  UNSUBSCRIBED @map("unsubscribed")
+  SUBSCRIBED   @map("subscribed")
+  LOGGED_IN    @map("logged_in")
+  LOGGED_OUT   @map("logged_out")
+  ALL          @map("all")
 }
 
 model BannerAction {

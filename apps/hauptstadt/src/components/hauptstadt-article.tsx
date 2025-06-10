@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import {NoSsr, Typography} from '@mui/material'
-import {ArticleContainer, ArticleInfoWrapper} from '@wepublish/article/website'
+import {Article, ArticleInfoWrapper} from '@wepublish/article/website'
 import {TitleBlockWrapper} from '@wepublish/block-content/website'
 import {useShowPaywall} from '@wepublish/paywall/website'
+import {createWithTheme} from '@wepublish/ui'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
 import {Button} from '@wepublish/website/builder'
 import {
@@ -14,20 +15,24 @@ import {Fragment, useState} from 'react'
 import {FaCommentSlash, FaRegComment, FaShare} from 'react-icons/fa6'
 import {MdFormatSize, MdPrint} from 'react-icons/md'
 
+import {contentTheme} from '../theme'
 import {FontSizePicker} from './font-size-picker'
 
-export const HauptstadtArticle = styled(ArticleContainer)`
-  gap: ${({theme}) => theme.spacing(3.5)};
+export const HauptstadtArticle = createWithTheme(
+  styled(Article)`
+    gap: ${({theme}) => theme.spacing(3.5)};
 
-  > ${TitleBlockWrapper}:first-of-type {
-    grid-row-start: 2;
-  }
+    > ${TitleBlockWrapper}:first-of-type {
+      grid-row-start: 2;
+    }
 
-  ${ArticleInfoWrapper} {
-    grid-row-start: 3;
-    gap: ${({theme}) => theme.spacing(1)};
-  }
-`
+    ${ArticleInfoWrapper} {
+      grid-row-start: 3;
+      gap: ${({theme}) => theme.spacing(1)};
+    }
+  `,
+  contentTheme
+)
 
 const HauptstadtArticleAuthorsWrapper = styled('div')`
   padding-bottom: ${({theme}) => theme.spacing(0.5)};

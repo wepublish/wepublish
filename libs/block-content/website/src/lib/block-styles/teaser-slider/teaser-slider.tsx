@@ -162,11 +162,11 @@ export const TeaserSlider = ({
   return (
     !!filledTeasers.length && (
       <SliderWrapper className={className}>
-        <SliderTitle>
-          {(props as BuilderTeaserListBlockProps).title && (
+        {(props as BuilderTeaserListBlockProps).title && (
+          <SliderTitle>
             <H5 component={'h1'}>{(props as BuilderTeaserListBlockProps).title}</H5>
-          )}
-        </SliderTitle>
+          </SliderTitle>
+        )}
 
         <SliderInnerContainer>
           <SlidesContainer ref={ref} className="keen-slider">

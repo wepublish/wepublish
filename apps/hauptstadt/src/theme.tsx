@@ -6,7 +6,7 @@ import {responsiveProperty, theme as WePTheme} from '@wepublish/ui'
 import localFont from 'next/font/local'
 import {PartialDeep} from 'type-fest'
 
-const Tiempos = localFont({
+export const Tiempos = localFont({
   src: [
     {
       path: '../public/fonts/tiempos/tiempos-text-web-regular.woff2',
@@ -151,9 +151,9 @@ const variablesTheme = createTheme(WePTheme, {
       xs: 0,
       sm: 600,
       md: 900,
-      lg: 1080,
-      xl: 1464,
-      xxl: 2100
+      lg: 1000,
+      xl: 1480,
+      xxl: 2116
     }
   }),
   palette: {
@@ -161,7 +161,10 @@ const variablesTheme = createTheme(WePTheme, {
     secondary: augmentColor({color: {main: '#272727'}}),
     accent: augmentColor({color: {main: '#f3ded0'}}),
     success: augmentColor({color: {main: '#abd8da'}}),
-    warning: augmentColor({color: {main: '#f4e7bd'}})
+    warning: augmentColor({color: {main: '#f4e7bd'}}),
+    text: {
+      primary: '#000'
+    }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 
@@ -320,9 +323,11 @@ const theme = createTheme(variablesTheme, {
           display: 'grid',
           gap: theme.spacing(5),
           maxWidth: '492px',
+          [theme.breakpoints.up('sm')]: {
+            maxWidth: '760px'
+          },
           [theme.breakpoints.up('md')]: {
-            maxWidth: '868px',
-            gap: theme.spacing(10)
+            maxWidth: '868px'
           },
           [theme.breakpoints.up('lg')]: {
             maxWidth: '1080px'
@@ -343,6 +348,9 @@ const theme = createTheme(variablesTheme, {
           ['&&']: {
             // since Appbar sets max width for Toolbar with specifity of 2, we have to increase the specifity to override
             maxWidth: '492px',
+            [theme.breakpoints.up('sm')]: {
+              maxWidth: '760px'
+            },
             [theme.breakpoints.up('md')]: {
               maxWidth: '868px'
             },
@@ -562,7 +570,46 @@ const theme = createTheme(variablesTheme, {
   }
 } as ThemeOptions)
 
-export const alternatingTeaserTheme = createTheme(theme, {
+export const contentTheme = createTheme(theme, {
+  typography: {
+    fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h1: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h2: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h3: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h4: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h5: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h6: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    body1: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    body2: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle1: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle2: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    }
+  }
+})
+
+export const alternatingTeaserTheme = createTheme(contentTheme, {
   typography: {
     teaserTitle: {
       ...deepmerge(
@@ -633,6 +680,6 @@ export const alternatingTeaserTheme = createTheme(theme, {
       })
     }
   }
-} as PartialDeep<Theme> | ThemeOptions)
+})
 
 export {theme as default}

@@ -273,7 +273,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/pages"
                         icon={<MdDashboard />}
-                        active={path === 'page'}>
+                        active={path === 'pages'}>
                         {t('navbar.pages')}
                       </Nav.Item>
                     </PermissionControl>

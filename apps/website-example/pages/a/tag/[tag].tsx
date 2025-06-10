@@ -1,6 +1,7 @@
 import {capitalize} from '@mui/material'
 import {ArticleListContainer} from '@wepublish/article/website'
-import {TagType} from '@wepublish/website/api'
+import {PageWrapper} from '@wepublish/page/website'
+import {TagType, useTagQuery} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
@@ -30,11 +31,20 @@ type ArticleListByTagProps = {
 
 export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   const {
-    elements: {H3, Alert, Pagination}
+    elements: {Alert, Pagination},
+    blocks: {Title, RichText}
   } = useWebsiteBuilder()
 
   const {query, replace} = useRouter()
   const {page, tag} = pageSchema.parse(query)
+
+  const {data: tagData} = useTagQuery({
+    variables: {
+      tag,
+      type: TagType.Article
+    },
+    fetchPolicy: 'cache-only'
+  })
 
   const variables = useMemo(
     () => ({
@@ -61,8 +71,13 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   }, [data?.articles.totalCount])
 
   return (
-    <>
-      <H3 component="h1">{capitalize(tag)}</H3>
+    <PageWrapper>
+      <div>
+        <Title title={capitalize(tag)} />
+        {!!tagData?.tags?.nodes[0]?.description?.length && (
+          <RichText richText={tagData.tags.nodes[0].description} />
+        )}
+      </div>
 
       {data && !data.articles.nodes.length && (
         <Alert severity="info">Keine Artikel vorhanden</Alert>
@@ -85,7 +100,7 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
           }
         />
       )}
-    </>
+    </PageWrapper>
   )
 }
 

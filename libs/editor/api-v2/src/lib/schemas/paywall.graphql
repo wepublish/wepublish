@@ -28,6 +28,7 @@ query Paywall($id: String!) {
 mutation CreatePaywall(
   $name: String
   $description: RichText
+  $circumventDescription: RichText
   $active: Boolean!
   $anyMemberPlan: Boolean!
   $memberPlanIds: [String!]!
@@ -35,6 +36,7 @@ mutation CreatePaywall(
   createPaywall(
     name: $name
     description: $description
+    circumventDescription: $circumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
@@ -47,6 +49,7 @@ mutation UpdatePaywall(
   $id: String!
   $name: String
   $description: RichText
+  $circumventDescription: RichText
   $active: Boolean
   $anyMemberPlan: Boolean
   $memberPlanIds: [String!]
@@ -55,6 +58,7 @@ mutation UpdatePaywall(
     id: $id
     name: $name
     description: $description
+    circumventDescription: $circumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
