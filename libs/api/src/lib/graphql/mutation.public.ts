@@ -7,7 +7,6 @@ import {
 } from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/authentication/api'
-import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
   GraphQLInt,
@@ -20,8 +19,6 @@ import {Context} from '../context'
 import {SubscriptionWithRelations} from '../db/subscription'
 import {
   AlreadyUnpaidInvoices,
-  CommentAuthenticationError,
-  EmailAlreadyInUseError,
   InternalError,
   InvoiceAlreadyPaidOrCanceled,
   MonthlyAmountNotEnough,
@@ -38,24 +35,18 @@ import {
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
-import {GraphQLChallengeInput} from './comment/comment'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
-import {createUserSession} from './session/session.mutation'
 import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
-  GraphQLMemberRegistration,
-  GraphQLMemberRegistrationAndPayment,
   GraphQLPaymentProviderCustomer,
   GraphQLPaymentProviderCustomerInput,
   GraphQLPublicUser,
-  GraphQLPublicUserInput,
-  GraphQLUserAddressInput
+  GraphQLPublicUserInput
 } from './user'
-import {createUser} from './user/user.mutation'
 import {
   updatePaymentProviderCustomers,
   updatePublicUser,
@@ -64,259 +55,10 @@ import {
 
 import {mailLogType} from '@wepublish/mail/api'
 import {sub} from 'date-fns'
-import {GraphQLDateTime} from 'graphql-scalars'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    registerMember: {
-      type: new GraphQLNonNull(GraphQLMemberRegistration),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        firstName: {type: GraphQLString},
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        address: {type: GraphQLUserAddressInput},
-        password: {type: GraphQLString},
-        birthday: {
-          type: GraphQLDateTime
-        },
-        challengeAnswer: {
-          type: new GraphQLNonNull(GraphQLChallengeInput)
-        }
-      },
-      description: 'This mutation allows to register a new member,',
-      async resolve(
-        root,
-        {name, firstName, email, address, birthday, password, challengeAnswer},
-        {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
-      ) {
-        email = email.toLowerCase()
-        await Validator.createUser.parse({name, email, firstName})
-
-        const challengeValidationResult = await challenge.validateChallenge({
-          challengeID: challengeAnswer.challengeID,
-          solution: challengeAnswer.challengeSolution
-        })
-
-        if (!challengeValidationResult.valid) {
-          throw new CommentAuthenticationError(challengeValidationResult.message)
-        }
-
-        const userExists = await prisma.user.findUnique({
-          where: {
-            email
-          },
-          select: unselectPassword
-        })
-
-        if (userExists) {
-          throw new EmailAlreadyInUseError()
-        }
-
-        if (!password) {
-          password = crypto.randomBytes(48).toString('base64')
-        }
-
-        const user = await createUser(
-          {
-            name,
-            firstName,
-            email,
-            birthday,
-            address,
-            emailVerifiedAt: null,
-            active: true,
-            roleIDs: [],
-            password
-          },
-          hashCostFactor,
-          prisma,
-          mailContext
-        )
-
-        if (!user) {
-          logger('mutation.public').error('Could not create new user for email "%s"', email)
-          throw new InternalError()
-        }
-
-        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
-
-        return {
-          user,
-          session
-        }
-      }
-    },
-
-    registerMemberAndReceivePayment: {
-      type: new GraphQLNonNull(GraphQLMemberRegistrationAndPayment),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        birthday: {
-          type: GraphQLDateTime
-        },
-        firstName: {type: GraphQLString},
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        address: {type: GraphQLUserAddressInput},
-        password: {type: GraphQLString},
-        memberPlanID: {type: GraphQLString},
-        memberPlanSlug: {type: GraphQLSlug},
-        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
-        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLString},
-        paymentMethodSlug: {type: GraphQLSlug},
-        subscriptionProperties: {
-          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
-        },
-        successURL: {type: GraphQLString},
-        failureURL: {type: GraphQLString},
-        challengeAnswer: {
-          type: new GraphQLNonNull(GraphQLChallengeInput)
-        }
-      },
-      description:
-        'This mutation allows to register a new member, select a member plan, payment method and create an invoice. ',
-      async resolve(
-        root,
-        {
-          name,
-          firstName,
-          email,
-          address,
-          password,
-          birthday,
-          memberPlanID,
-          memberPlanSlug,
-          autoRenew,
-          paymentPeriodicity,
-          monthlyAmount,
-          paymentMethodID,
-          paymentMethodSlug,
-          subscriptionProperties,
-          successURL,
-          failureURL,
-          challengeAnswer
-        },
-        {
-          sessionTTL,
-          hashCostFactor,
-          prisma,
-          loaders,
-          memberContext,
-          challenge,
-          createPaymentWithProvider,
-          mailContext
-        }
-      ) {
-        email = email.toLowerCase()
-        await Validator.createUser.parse({name, email, firstName})
-        const challengeValidationResult = await challenge.validateChallenge({
-          challengeID: challengeAnswer.challengeID,
-          solution: challengeAnswer.challengeSolution
-        })
-        if (!challengeValidationResult.valid)
-          throw new CommentAuthenticationError(challengeValidationResult.message)
-
-        await memberContext.validateInputParamsCreateSubscription(
-          memberPlanID,
-          memberPlanSlug,
-          paymentMethodID,
-          paymentMethodSlug
-        )
-
-        const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
-          loaders,
-          memberPlanSlug,
-          memberPlanID
-        )
-
-        const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
-          loaders,
-          paymentMethodSlug,
-          paymentMethodID
-        )
-
-        // Check that monthly amount not
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
-
-        await memberContext.validateSubscriptionPaymentConfiguration(
-          memberPlan,
-          autoRenew,
-          paymentPeriodicity,
-          paymentMethod
-        )
-
-        const userExists = await prisma.user.findUnique({
-          where: {
-            email
-          },
-          select: unselectPassword
-        })
-
-        if (userExists) throw new EmailAlreadyInUseError()
-
-        if (!password) password = crypto.randomBytes(48).toString('base64')
-
-        const user = await createUser(
-          {
-            name,
-            firstName,
-            email,
-            address,
-            birthday,
-            emailVerifiedAt: null,
-            active: true,
-            roleIDs: [],
-            password
-          },
-          hashCostFactor,
-          prisma,
-          mailContext
-        )
-
-        if (!user) {
-          logger('mutation.public').error('Could not create new user for email "%s"', email)
-          throw new InternalError()
-        }
-
-        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
-        const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
-
-        const {subscription, invoice} = await memberContext.createSubscription(
-          prisma,
-          user.id,
-          paymentMethod.id,
-          paymentPeriodicity,
-          monthlyAmount,
-          memberPlan.id,
-          properties,
-          autoRenew,
-          memberPlan.extendable
-        )
-
-        if (!invoice) {
-          logger('mutation.public').error(
-            'Could not create new invoice for subscription with ID "%s"',
-            subscription.id
-          )
-          throw new InternalError()
-        }
-
-        return {
-          payment: await createPaymentWithProvider({
-            invoice,
-            saveCustomer: true,
-            paymentMethodID: paymentMethod.id,
-            successURL,
-            failureURL
-          }),
-          user,
-          session
-        }
-      }
-    },
-
     createSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {

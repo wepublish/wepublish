@@ -11,7 +11,6 @@ import {UserSession} from '@wepublish/authentication/api'
 const IDAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 export const SESSION_TTL_TOKEN = 'SESSION_TTL_TOKEN'
-export const OAUTH2_CLIENTS_PROVIDER = 'OAUTH2_CLIENTS_PROVIDER'
 
 @Injectable()
 export class SessionService {
@@ -71,7 +70,7 @@ export class SessionService {
     }))
   }
 
-  protected async createUserSession(userId: string): Promise<SessionWithToken> {
+  async createUserSession(userId: string): Promise<SessionWithToken> {
     const token = nanoid(IDAlphabet, 64)
 
     const expiresAt = new Date(Date.now() + this.sessionTTL)

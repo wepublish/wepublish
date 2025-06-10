@@ -1,4 +1,4 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, ObjectType, OmitType} from '@nestjs/graphql'
 import {User} from '@wepublish/user/api'
 
 @ObjectType()
@@ -15,3 +15,10 @@ export class SessionWithToken {
   @Field(() => User)
   user!: User
 }
+
+@ObjectType('UserSession')
+export class SessionWithTokenWithoutUser extends OmitType(
+  SessionWithToken,
+  ['user'] as const,
+  ObjectType
+) {}

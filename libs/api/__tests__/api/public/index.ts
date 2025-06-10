@@ -432,14 +432,14 @@ export type Challenge = {
 };
 
 export type ChallengeInput = {
-  challengeID?: InputMaybe<Scalars['String']>;
+  challengeID: Scalars['String'];
   challengeSolution: Scalars['String'];
 };
 
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
-  calculatedRatings: Array<CalculatedRating>;
+  calculatedRatings?: Maybe<Array<CalculatedRating>>;
   children: Array<Comment>;
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
@@ -450,7 +450,7 @@ export type Comment = {
   itemType: CommentItemType;
   lead?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
-  overriddenRatings: Array<OverriddenRating>;
+  overriddenRatings?: Maybe<Array<OverriddenRating>>;
   parentComment?: Maybe<Comment>;
   parentID?: Maybe<Scalars['String']>;
   rejectionReason?: Maybe<Scalars['String']>;
@@ -461,7 +461,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
-  userRatings: Array<CommentRating>;
+  userRatings?: Maybe<Array<CommentRating>>;
 };
 
 export enum CommentAuthorType {
@@ -1423,7 +1423,7 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** This mutation allows to add a comment. The input is of type CommentInput. */
+  /** Create a new comment */
   addComment: Comment;
   /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
   cancelUserSubscription?: Maybe<PublicSubscription>;
@@ -1524,10 +1524,8 @@ export type Mutation = {
   publishPage: Page;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
   rateComment: Comment;
-  /** This mutation allows to register a new member, */
+  /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
-  /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
-  registerMemberAndReceivePayment: RegistrationAndPayment;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -1544,7 +1542,7 @@ export type Mutation = {
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
-  /** This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text. */
+  /** Update an existing comment */
   updateComment: Comment;
   /**
    *
@@ -1561,7 +1559,7 @@ export type Mutation = {
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
-  updatePassword?: Maybe<User>;
+  updatePassword: User;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates an existing setting. */
@@ -1707,7 +1705,7 @@ export type MutationCreateSessionWithJwtArgs = {
 
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   code: Scalars['String'];
-  name: Scalars['String'];
+  provider: Scalars['String'];
   redirectUri: Scalars['String'];
 };
 
@@ -1890,27 +1888,6 @@ export type MutationRegisterMemberArgs = {
   firstName?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationRegisterMemberAndReceivePaymentArgs = {
-  address?: InputMaybe<UserAddressInput>;
-  autoRenew: Scalars['Boolean'];
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  challengeAnswer: ChallengeInput;
-  email: Scalars['String'];
-  failureURL?: InputMaybe<Scalars['String']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Int'];
-  name: Scalars['String'];
-  password?: InputMaybe<Scalars['String']>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
-  paymentPeriodicity: PaymentPeriodicity;
-  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
-  successURL?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3083,13 +3060,6 @@ export type Registration = {
   user: User;
 };
 
-export type RegistrationAndPayment = {
-  __typename?: 'RegistrationAndPayment';
-  payment: Payment;
-  session: UserSession;
-  user: User;
-};
-
 export type RichTextBlock = BaseBlock & {
   __typename?: 'RichTextBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -3660,7 +3630,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Comment | Image | MemberPlan | PaymentMethod | PollVote | PublicSubscription | Tag | User;
+export type _Entity = Image | MemberPlan | PaymentMethod | PublicSubscription | User;
 
 export type _Service = {
   __typename?: '_Service';
@@ -3768,20 +3738,6 @@ export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
 
 
 export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
-
-export type RegisterMemberAndReceivePaymentMutationVariables = Exact<{
-  name: Scalars['String'];
-  email: Scalars['String'];
-  autoRenew: Scalars['Boolean'];
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: Scalars['Int'];
-  challengeAnswer: ChallengeInput;
-  paymentMethodId?: InputMaybe<Scalars['String']>;
-  memberPlanId?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type RegisterMemberAndReceivePaymentMutation = { __typename?: 'Mutation', registerMemberAndReceivePayment: { __typename?: 'RegistrationAndPayment', payment: { __typename?: 'Payment', id: string }, user: { __typename?: 'User', id: string }, session: { __typename?: 'UserSession', token: string } } };
 
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
@@ -4012,30 +3968,6 @@ export const UpdatePaymentProviderCustomers = gql`
   updatePaymentProviderCustomers(input: $customers) {
     customerID
     paymentProviderID
-  }
-}
-    `;
-export const RegisterMemberAndReceivePayment = gql`
-    mutation RegisterMemberAndReceivePayment($name: String!, $email: String!, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $challengeAnswer: ChallengeInput!, $paymentMethodId: String, $memberPlanId: String) {
-  registerMemberAndReceivePayment(
-    name: $name
-    email: $email
-    autoRenew: $autoRenew
-    paymentPeriodicity: $paymentPeriodicity
-    monthlyAmount: $monthlyAmount
-    challengeAnswer: $challengeAnswer
-    paymentMethodID: $paymentMethodId
-    memberPlanID: $memberPlanId
-  ) {
-    payment {
-      id
-    }
-    user {
-      id
-    }
-    session {
-      token
-    }
   }
 }
     `;

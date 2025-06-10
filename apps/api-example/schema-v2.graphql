@@ -397,7 +397,7 @@ type Challenge {
 }
 
 input ChallengeInput {
-  challengeID: String
+  challengeID: String!
   challengeSolution: String!
 }
 
@@ -1379,7 +1379,12 @@ type Mutation {
   """
   This mutation allows to rate a comment. Supports logged in and anonymous
   """
-  rateComment(answerId: String!, commentId: String!, value: Float!): Comment!
+  rateComment(answerId: String!, commentId: String!, value: Int!): Comment!
+
+  """
+  This mutation registers a new member by providing name, email, and other required information.
+  """
+  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, name: String!, password: String): Registration!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -2032,6 +2037,11 @@ enum RatingSystemType {
   star
 }
 
+type Registration {
+  session: UserSession!
+  user: User!
+}
+
 scalar RichText
 
 type RichTextBlock implements BaseBlock {
@@ -2447,6 +2457,15 @@ type User {
   id: String!
 }
 
+input UserAddressInput {
+  city: String
+  company: String
+  country: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+}
+
 type UserConsent {
   consent: Consent!
   createdAt: DateTime!
@@ -2468,6 +2487,12 @@ enum UserEvent {
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL
+}
+
+type UserSession {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  token: String!
 }
 
 type VersionInformation {

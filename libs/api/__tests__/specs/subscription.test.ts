@@ -11,11 +11,7 @@ import {
   SubscriptionPeriod,
   User
 } from '@prisma/client'
-import {
-  PaymentPeriodicity,
-  RegisterMemberAndReceivePayment,
-  RegisterMemberAndReceivePaymentMutationVariables
-} from '../api/public'
+import {PaymentPeriodicity} from '../api/public'
 import {
   AlgebraicCaptchaChallenge,
   TestingChallengeAnswer
@@ -128,56 +124,6 @@ beforeAll(async () => {
 })
 
 describe('Subscriptions', () => {
-  describe('PUBLIC', () => {
-    test('can be created', async () => {
-      const publicSubscription: RegisterMemberAndReceivePaymentMutationVariables = {
-        autoRenew: false,
-        monthlyAmount: 100,
-        paymentPeriodicity: PaymentPeriodicity.Monthly,
-        email: 'public-subscription-user@wepublish.dev',
-        name: 'Public Subscription User',
-        memberPlanId: memberPlan.id,
-        paymentMethodId: paymentMethod.id,
-        challengeAnswer: {
-          ...testingChallengeResponse
-        }
-      }
-
-      const result = await testServerPublic.executeOperation({
-        query: RegisterMemberAndReceivePayment,
-        variables: {
-          ...publicSubscription
-        }
-      })
-
-      const subscription = result.data.registerMemberAndReceivePayment
-
-      const payment = await prisma.payment.findFirstOrThrow({
-        where: {
-          id: subscription.payment.id
-        }
-      })
-
-      const invoice = await prisma.invoice.findFirstOrThrow({
-        where: {
-          id: payment.invoiceID
-        }
-      })
-
-      // expects a session
-      expect(subscription.session.token).toBeTruthy()
-
-      // expects a payment
-      expect(subscription.payment.id).toBeTruthy()
-
-      // expects a user
-      expect(subscription.user.id).toBeTruthy()
-
-      // expects an invoice
-      expect(invoice.id).toBeTruthy()
-    })
-  })
-
   describe('PRIVATE', () => {
     test('can be created', async () => {
       const subscriptionInput: SubscriptionInput = {

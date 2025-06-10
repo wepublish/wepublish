@@ -3,15 +3,7 @@ import {CommentItemType} from './comment.model'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Node} from 'slate'
 import {CommentItemType as PCommentItemType} from '@prisma/client'
-
-@InputType()
-export class ChallengeInput {
-  @Field(() => String, {nullable: true})
-  challengeID?: string
-
-  @Field(() => String)
-  challengeSolution!: string
-}
+import {ChallengeInput} from '@wepublish/challenge/api'
 
 @InputType()
 export class CommentInput {

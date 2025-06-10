@@ -9,6 +9,9 @@ import {UserAuthenticationService} from './user-authentication.service'
 import {JwtAuthenticationService} from './jwt-authentication.service'
 import {OAuthAuthenticationService} from './oauth-authentication.service'
 import {AuthProviderModule} from '@wepublish/authprovider/api'
+import {RegisterResolver} from './register.resolver'
+import {RegisterService} from './register.service'
+import {ChallengeModule} from '@wepublish/challenge/api'
 
 export interface SessionModuleOptions {
   sessionTTL: number
@@ -23,7 +26,7 @@ export interface SessionModuleAsyncOptions extends Pick<ModuleMetadata, 'imports
 }
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthProviderModule],
+  imports: [PrismaModule, UserModule, AuthProviderModule, ChallengeModule],
   exports: [SessionService]
 })
 export class SessionModule {
@@ -43,6 +46,8 @@ export class SessionModule {
       UserAuthenticationService,
       JwtAuthenticationService,
       OAuthAuthenticationService,
+      RegisterService,
+      RegisterResolver,
       {
         provide: SESSION_TTL_TOKEN,
         useFactory: async (...args: any[]) => {

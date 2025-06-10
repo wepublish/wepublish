@@ -8,7 +8,6 @@ import {
   HasUserLcResolver,
   HasUserResolver
 } from './has-user/has-user.resolver'
-import {UserResolver} from './user.resolver'
 import {UserService} from './user.service'
 
 @Module({
@@ -19,7 +18,6 @@ import {UserService} from './user.service'
     HasUserLcResolver,
     HasOptionalUserResolver,
     HasOptionalUserLcResolver,
-    UserResolver,
     UserService
   ],
   exports: [UserDataloaderService, UserService]

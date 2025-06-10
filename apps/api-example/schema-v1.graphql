@@ -22,14 +22,6 @@ type Query {
 }
 
 type Mutation {
-  """This mutation allows to register a new member,"""
-  registerMember(name: String!, firstName: String, email: String!, address: UserAddressInput, password: String, birthday: DateTime, challengeAnswer: ChallengeInput!): Registration!
-
-  """
-  This mutation allows to register a new member, select a member plan, payment method and create an invoice. 
-  """
-  registerMemberAndReceivePayment(name: String!, birthday: DateTime, firstName: String, email: String!, address: UserAddressInput, password: String, memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, challengeAnswer: ChallengeInput!): RegistrationAndPayment!
-
   """Allows authenticated users to create additional subscriptions"""
   createSubscription(memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!], successURL: String, failureURL: String, deactivateSubscriptionId: String): Payment!
 
@@ -74,131 +66,6 @@ type Mutation {
   createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
 }
 
-type Registration {
-  user: User!
-  session: UserSession!
-}
-
-type User {
-  id: String!
-  name: String!
-  firstName: String
-  birthday: DateTime
-  email: String!
-  address: UserAddress
-  flair: String
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
-  image: Image
-  properties: [PublicProperties!]!
-  permissions: [String!]!
-}
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
-}
-
-type Image {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]!
-  link: String
-  source: String
-  license: String
-  fileSize: Int!
-  extension: String!
-  mimeType: String!
-  format: String!
-  width: Int!
-  height: Int!
-  focalPoint: FocalPoint
-  url: String
-  transformURL(input: ImageTransformation): String
-}
-
-type FocalPoint {
-  x: Float!
-  y: Float!
-}
-
-input ImageTransformation {
-  width: Int
-  height: Int
-  rotation: ImageRotation
-  quality: Float
-  output: ImageOutput
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
-}
-
-enum ImageOutput {
-  png
-  jpeg
-  webp
-}
-
-type PublicProperties {
-  key: String!
-  value: String!
-}
-
-type UserSession {
-  token: String!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-input UserAddressInput {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-input ChallengeInput {
-  challengeID: String
-  challengeSolution: String!
-}
-
-type RegistrationAndPayment {
-  payment: Payment!
-  user: User!
-  session: UserSession!
-}
-
 type Payment {
   id: String!
   intentSecret: String
@@ -228,6 +95,60 @@ type PaymentMethod {
 
 scalar Slug
 
+type Image {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  filename: String
+  title: String
+  description: String
+  tags: [String!]!
+  link: String
+  source: String
+  license: String
+  fileSize: Int!
+  extension: String!
+  mimeType: String!
+  format: String!
+  width: Int!
+  height: Int!
+  focalPoint: FocalPoint
+  url: String
+  transformURL(input: ImageTransformation): String
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type FocalPoint {
+  x: Float!
+  y: Float!
+}
+
+input ImageTransformation {
+  width: Int
+  height: Int
+  rotation: ImageRotation
+  quality: Float
+  output: ImageOutput
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+enum ImageOutput {
+  png
+  jpeg
+  webp
+}
+
 enum PaymentPeriodicity {
   monthly
   quarterly
@@ -240,6 +161,46 @@ input PublicPropertiesInput {
   value: String!
 }
 
+type User {
+  id: String!
+  name: String!
+  firstName: String
+  birthday: DateTime
+  email: String!
+  address: UserAddress
+  flair: String
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  oauth2Accounts: [OAuth2Account!]!
+  image: Image
+  properties: [PublicProperties!]!
+  permissions: [String!]!
+}
+
+type UserAddress {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type PaymentProviderCustomer {
+  paymentProviderID: String!
+  customerID: String!
+}
+
+type OAuth2Account {
+  type: String!
+  provider: String!
+  scope: String!
+}
+
+type PublicProperties {
+  key: String!
+  value: String!
+}
+
 input UserInput {
   name: String!
   firstName: String
@@ -248,6 +209,15 @@ input UserInput {
   flair: String
   birthday: DateTime
   uploadImageInput: UploadImageInput
+}
+
+input UserAddressInput {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
 }
 
 input UploadImageInput {
