@@ -66,10 +66,13 @@ if [[  $DEPLOYMENT == "docker"  ]]; then
     # Add secrets as build arguments to docker file
     sed -i "s|### FRONT_ARG_REPLACER ###|ARG $(echo ${var} |cut -d'=' -f 1)\n### FRONT_ARG_REPLACER ###|g" Dockerfile
   done
-  for var in $(echo $envvars |sed 's/\\n/ /g' ); do
+  envvars_converted=$(printf '%b' "$envvars")
+  IFS=$'\n'
+  for var in $(printf '%s\n' "$envvars_converted"); do
     # Add public env variables as env to docker file
     sed -i "s|### FRONT_ARG_REPLACER ###|ENV ${var}\n### FRONT_ARG_REPLACER ###|g" Dockerfile
   done
+  IFS=$' '
 fi
 
 if [[ ! -z ${secretenvvars} ]];then
