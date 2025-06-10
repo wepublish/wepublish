@@ -15,6 +15,10 @@ on:
       environment:
         required: true
         type: string
+      nx_next_build_options:
+        required: false
+        type: string
+        default: ""
 
 jobs:
   build-and-push:
@@ -47,10 +51,11 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }}
+          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} DOCKER_BUILD_ENV=${{ inputs.environment }}
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
+        if: ${{ inputs.environment != 'development' }}
         id: wait-for-version
         run: |
           MAX_RETRIES=120
@@ -89,7 +94,7 @@ jobs:
             ${{ inputs.website_tags }}
       - name: Wait for frontend to be deployed
         id: wait-for-frontend-deployment
-        if: ${{ inputs.environment != 'review' }}
+        if: ${{ inputs.environment != 'review' && inputs.environment != 'development' }}
         run: |
           MAX_RETRIES=120
           RETRY_DELAY=10
