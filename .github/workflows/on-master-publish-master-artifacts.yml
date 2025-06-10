@@ -76,7 +76,7 @@ jobs:
     with:
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.wepublish.dev
-      environment: staging
+      environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit

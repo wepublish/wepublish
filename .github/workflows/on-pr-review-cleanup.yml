@@ -65,6 +65,7 @@ jobs:
   uninstall_website:
     name: Uninstall website
     if: ${{ needs.cleanup-website-matrix.result == 'success' }}
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.cleanup-website-matrix.outputs.matrix)}}

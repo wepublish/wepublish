@@ -5,6 +5,11 @@ ENV=$1
 PROJECT=$2
 DEPLOYMENT=$3
 
+# Use env from staging for development build
+if [[ $ENV == "development" ]]; then
+  ENV="staging"
+fi
+
 # Static variables
 SECURE_ENV_PRFIX="DEPLOYMENT_${PROJECT^^}_"
 PROJECT_FILE=apps/${PROJECT}/deployment.config.json
