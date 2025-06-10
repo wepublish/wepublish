@@ -47,7 +47,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS=${{ github.ref_name == 'development' && '--experimental-build-mode compile' || '' }}
+          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS=${{ inputs.environment == 'development' && '--experimental-build-mode compile' || '' }}
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
