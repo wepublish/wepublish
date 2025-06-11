@@ -1,5 +1,11 @@
 import {Injectable} from '@nestjs/common'
-import {PaymentPeriodicity, Prisma, PrismaClient, Subscription} from '@prisma/client'
+import {
+  PaymentPeriodicity,
+  Prisma,
+  PrismaClient,
+  Subscription,
+  SubscriptionDeactivationReason
+} from '@prisma/client'
 import {
   MailContext,
   MonthlyAmountNotEnough,
@@ -7,9 +13,10 @@ import {
   PaymentConfigurationNotAllowed,
   PaymentsService
 } from '@wepublish/api'
-import {MemberPlanService} from '@wepublish/member-plan/api'
 import {RemoteSubscriptionsService} from './remote-subscriptions.service'
 import {MemberContext} from 'libs/api/src/lib/memberContext'
+import {UserInputError} from '@nestjs/apollo'
+import {MemberPlanService} from '@wepublish/member-plan/api'
 
 @Injectable()
 export class UserSubscriptionService {
@@ -81,7 +88,7 @@ export class UserSubscriptionService {
     }
 
     if (
-      !memberPlan.availablePaymentMethods.some(apm => {
+      !memberPlan.availablePaymentMethods.some((apm: any) => {
         if (apm.forceAutoRenewal && !autoRenew) {
           return false
         }
@@ -138,5 +145,56 @@ export class UserSubscriptionService {
     return await memberContext.handleSubscriptionChange({
       subscription: updateSubscription
     })
+  }
+
+  async cancelUserSubscription(userId: string, subscriptionId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {
+        id: subscriptionId,
+        userID: userId
+      },
+      include: {
+        deactivation: true,
+        periods: true,
+        properties: true
+      }
+    })
+
+    if (!subscription) {
+      throw new UserInputError(`Subscription not found ${subscriptionId}`)
+    }
+
+    if (subscription.deactivation) {
+      const msg =
+        subscription.deactivation.date < new Date()
+          ? 'Subscription is already canceled'
+          : 'Subscription is already marked to be canceled'
+      throw new UserInputError(msg)
+    }
+    const memberContext = new MemberContext({
+      prisma: this.prisma,
+      mailContext: this.mailContext,
+      paymentProviders: this.payments.getProviders()
+    })
+
+    await memberContext.deactivateSubscription({
+      subscription,
+      deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+    })
+
+    const updatedSubscription = await this.prisma.subscription.findUnique({
+      where: {id: subscriptionId},
+      include: {
+        deactivation: true,
+        periods: true,
+        properties: true
+      }
+    })
+
+    if (!updatedSubscription) {
+      throw new UserInputError(`Subscription not found ${subscriptionId}`)
+    }
+
+    return updatedSubscription
   }
 }

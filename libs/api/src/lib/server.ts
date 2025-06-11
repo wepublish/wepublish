@@ -21,8 +21,6 @@ import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import * as fs from 'fs'
 import {GraphQLUserResolver} from './graphql/user'
-import {GraphQLSubscriptionResolver} from './graphql/subscription-public'
-import {GraphQLMemberPlanResolver} from './graphql/memberPlan'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -82,12 +80,8 @@ export class WepublishServer {
       directive @tag(
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
-      extend type PublicSubscription @key(fields: "id")
       extend type Image @key(fields: "id")
-
       extend type PaymentMethod @key(fields: "id")
-      extend type MemberPlan @key(fields: "id")
       extend type User @key(fields: "id")
     `
     const typeDefs = [graphQLJSSchemaToAST(GraphQLWepublishPublicSchema), federatedTypeDefs]
@@ -131,9 +125,7 @@ export class WepublishServer {
 
     const federatedResolvers = {
       Image: GraphQLImageResolver,
-      User: GraphQLUserResolver,
-      PublicSubscription: GraphQLSubscriptionResolver,
-      MemberPlan: GraphQLMemberPlanResolver
+      User: GraphQLUserResolver
     }
 
     for (const type in federatedResolvers) {

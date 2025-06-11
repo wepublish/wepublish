@@ -13,7 +13,8 @@ export class Payment {
   @Field()
   id!: string
 
-  @Field()
+  @Field({nullable: true})
+  intentID?: string
   intentSecret?: string
 
   @Field(() => PaymentState)

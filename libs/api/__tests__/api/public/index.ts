@@ -1089,6 +1089,11 @@ export type HasOptionalPoll = {
   pollId?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalSubscription = {
+  subscription?: Maybe<PublicSubscription>;
+  subscriptionID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1099,14 +1104,24 @@ export type HasPageLc = {
   pageId: Scalars['String'];
 };
 
+export type HasPaymentMethod = {
+  paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
+};
+
 export type HasPoll = {
   poll: FullPoll;
   pollId: Scalars['String'];
 };
 
-export type HasSubscription = {
+export type HasSubscriptionLc = {
   subscription: PublicSubscription;
   subscriptionId: Scalars['String'];
+};
+
+export type HasUser = {
+  user: User;
+  userID: Scalars['String'];
 };
 
 export type HasUserLc = {
@@ -1301,7 +1316,7 @@ export type InstagramPostBlockInput = {
   postID?: InputMaybe<Scalars['String']>;
 };
 
-export type Invoice = {
+export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
@@ -1313,7 +1328,7 @@ export type Invoice = {
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
   subscription?: Maybe<PublicSubscription>;
-  subscriptionID: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
 };
 
@@ -1384,7 +1399,7 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
-export type MemberPlan = {
+export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
@@ -1396,6 +1411,7 @@ export type MemberPlan = {
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   slug: Scalars['String'];
@@ -1425,7 +1441,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new comment */
   addComment: Comment;
-  /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
+  /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
   createArticle: Article;
@@ -2247,11 +2263,12 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Int'];
 };
 
-export type Payment = {
+export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
   id: Scalars['String'];
-  intentSecret?: Maybe<Scalars['String']>;
+  intentSecret: Scalars['String'];
   paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
   state: PaymentState;
 };
 
@@ -2263,12 +2280,16 @@ export type PaymentFromInvoiceInput = {
   successURL?: InputMaybe<Scalars['String']>;
 };
 
-export type PaymentMethod = {
+export type PaymentMethod = HasImage & {
   __typename?: 'PaymentMethod';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   imageId?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -2514,7 +2535,7 @@ export type PublicPropertiesInput = {
   value: Scalars['String'];
 };
 
-export type PublicSubscription = {
+export type PublicSubscription = HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
   canExtend: Scalars['Boolean'];
@@ -2529,7 +2550,8 @@ export type PublicSubscription = {
   properties: Array<PublicProperties>;
   startsAt: Scalars['DateTime'];
   url: Scalars['String'];
-  user?: Maybe<User>;
+  user: User;
+  userID: Scalars['String'];
 };
 
 export type Query = {
@@ -3164,7 +3186,7 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
 };
 
-export type SubscriptionCreatedAction = BaseAction & HasSubscription & {
+export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
   __typename?: 'SubscriptionCreatedAction';
   actionType: ActionType;
   date: Scalars['DateTime'];
@@ -3630,7 +3652,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Image | MemberPlan | PaymentMethod | PublicSubscription | User;
+export type _Entity = Image | PaymentMethod | User;
 
 export type _Service = {
   __typename?: '_Service';

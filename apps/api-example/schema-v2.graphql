@@ -203,6 +203,12 @@ enum AuthorSort {
   Name
 }
 
+type AvailablePaymentMethod {
+  forceAutoRenewal: Boolean!
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+}
+
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
@@ -642,6 +648,11 @@ type CrowdfundingWithActiveGoal {
   revenue: Float
 }
 
+enum Currency {
+  CHF
+  EUR
+}
+
 type CustomTeaser implements BaseTeaser & HasImage {
   contentUrl: String
   image: Image
@@ -1031,6 +1042,11 @@ interface HasOptionalPoll {
   pollId: String
 }
 
+interface HasOptionalSubscription {
+  subscription: PublicSubscription
+  subscriptionID: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -1051,9 +1067,14 @@ interface HasPoll {
   pollId: String!
 }
 
-interface HasSubscription {
+interface HasSubscriptionLc {
   subscription: PublicSubscription!
   subscriptionId: String!
+}
+
+interface HasUser {
+  user: User!
+  userID: String!
 }
 
 interface HasUserLc {
@@ -1190,7 +1211,7 @@ input InstagramPostBlockInput {
   postID: String
 }
 
-type Invoice {
+type Invoice implements HasOptionalSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
   description: String
@@ -1201,7 +1222,7 @@ type Invoice {
   modifiedAt: DateTime!
   paidAt: DateTime
   subscription: PublicSubscription
-  subscriptionID: String!
+  subscriptionID: String
   total: Int!
 }
 
@@ -1266,8 +1287,23 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
-type MemberPlan {
+type MemberPlan implements HasImage {
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  confirmationPageId: String
+  currency: Currency!
+  description: RichText
+  extendable: Boolean!
+  failPageId: String
   id: String!
+  image: Image
+  imageID: String
+  maxCount: Int
+  name: String!
+  slug: String!
+  successPageId: String
+  tags: [String!]
 }
 
 type MemberPlanConnection {
@@ -1290,6 +1326,11 @@ enum MemberPlanSort {
 type Mutation {
   """Create a new comment"""
   addComment(input: CommentInput!): Comment!
+
+  """
+  This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
+  """
+  cancelUserSubscription(id: String!): PublicSubscription
 
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -1633,7 +1674,7 @@ type PaginatedPollVotes {
 
 type Payment implements HasPaymentMethod {
   id: String!
-  intentSecret: String!
+  intentID: String
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   state: PaymentState!
@@ -1872,8 +1913,27 @@ input PropertyInput {
   value: String!
 }
 
-type PublicSubscription {
+type PublicProperties {
+  key: String!
+  value: String!
+}
+
+type PublicSubscription implements HasUser {
+  autoRenew: Boolean!
+  canExtend: Boolean!
+  deactivation: SubscriptionDeactivation
+  extendable: Boolean!
   id: String!
+  memberPlan: MemberPlan!
+  monthlyAmount: Int!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  paymentPeriodicity: PaymentPeriodicity!
+  properties: [PublicProperties!]!
+  startsAt: DateTime!
+  url: String!
+  user: User!
+  userID: String!
 }
 
 type Query {
@@ -2205,11 +2265,16 @@ input SubscribeBlockInput {
   blockStyleName: String
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscription {
+type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
   actionType: ActionType!
   date: DateTime!
   subscription: PublicSubscription!
   subscriptionId: String!
+}
+
+type SubscriptionDeactivation {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
 }
 
 enum SubscriptionDeactivationReason {

@@ -14,20 +14,17 @@ import {
   AlreadyUnpaidInvoices,
   InternalError,
   MonthlyAmountNotEnough,
-  NotAuthenticatedError,
   NotFound,
   SubscriptionNotExtendable,
   SubscriptionNotFound,
   SubscriptionToDeactivateDoesNotExist,
-  UserIdNotFound,
-  UserSubscriptionAlreadyDeactivated
+  UserIdNotFound
 } from '../error'
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPublicPayment} from './payment'
-import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLPublicUser, GraphQLPublicUserInput} from './user'
 import {updatePublicUser, uploadPublicUserProfileImage} from './user/user.public-mutation'
 import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberContext'
@@ -428,51 +425,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {authenticateUser, mediaAdapter, prisma: {image, user}}
       ) =>
         uploadPublicUserProfileImage(uploadImageInput, authenticateUser, mediaAdapter, image, user)
-    },
-
-    cancelUserSubscription: {
-      type: GraphQLPublicSubscription,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        'This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now',
-      async resolve(root, {id}, {authenticateUser, prisma, memberContext}) {
-        const {user} = authenticateUser()
-        if (!user) throw new NotAuthenticatedError()
-
-        const subscription = await prisma.subscription.findUnique({
-          where: {id},
-          include: {
-            deactivation: true,
-            periods: true,
-            properties: true
-          }
-        })
-
-        if (!subscription || subscription.userID !== user.id) throw new NotFound('subscription', id)
-
-        if (subscription.deactivation)
-          throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
-
-        await memberContext.deactivateSubscription({
-          subscription,
-          deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
-        })
-
-        const updatedSubscription = await prisma.subscription.findUnique({
-          where: {id},
-          include: {
-            deactivation: true,
-            periods: true,
-            properties: true
-          }
-        })
-
-        if (!updatedSubscription) throw new NotFound('subscription', id)
-
-        return updatedSubscription
-      }
     },
 
     createPaymentFromSubscription: {

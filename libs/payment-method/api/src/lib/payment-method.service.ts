@@ -52,4 +52,17 @@ export class PaymentMethodService {
       where: {slug, active: true}
     })
   }
+
+  async getAvailablePaymentMethodsByIds(paymentMethodIds: string[]) {
+    return this.prisma.paymentMethod.findMany({
+      where: {
+        id: {
+          in: paymentMethodIds
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  }
 }

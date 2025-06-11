@@ -39,11 +39,6 @@ type Mutation {
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 
-  """
-  This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now
-  """
-  cancelUserSubscription(id: String!): PublicSubscription
-
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
 }
@@ -222,66 +217,6 @@ input InputPoint {
   y: Float!
 }
 
-type PublicSubscription {
-  id: String!
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  extendable: Boolean!
-  properties: [PublicProperties!]!
-  deactivation: SubscriptionDeactivation
-  url: String!
-  user: User
-  canExtend: Boolean!
-}
-
-type MemberPlan {
-  id: String!
-  name: String!
-  slug: String!
-  image: Image
-  description: RichText
-  tags: [String!]
-  currency: Currency!
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
-  maxCount: Int
-  extendable: Boolean!
-  availablePaymentMethods: [AvailablePaymentMethod!]!
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-scalar RichText
-
-enum Currency {
-  CHF
-  EUR
-}
-
-type AvailablePaymentMethod {
-  paymentMethods: [PaymentMethod!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-type SubscriptionDeactivation {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
-}
-
-enum SubscriptionDeactivationReason {
-  none
-  userSelfDeactivated
-  invoiceNotPaid
-  userReplacedSubscription
-}
-
 scalar _FieldSet
 
 scalar _Any
@@ -290,4 +225,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Image | MemberPlan | PaymentMethod | PublicSubscription | User
+union _Entity = Image | PaymentMethod | User

@@ -1091,6 +1091,11 @@ export type HasOptionalPoll = {
   pollId?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalSubscription = {
+  subscription?: Maybe<PublicSubscription>;
+  subscriptionID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1101,14 +1106,24 @@ export type HasPageLc = {
   pageId: Scalars['String'];
 };
 
+export type HasPaymentMethod = {
+  paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
+};
+
 export type HasPoll = {
   poll: FullPoll;
   pollId: Scalars['String'];
 };
 
-export type HasSubscription = {
+export type HasSubscriptionLc = {
   subscription: PublicSubscription;
   subscriptionId: Scalars['String'];
+};
+
+export type HasUser = {
+  user: User;
+  userID: Scalars['String'];
 };
 
 export type HasUserLc = {
@@ -1303,7 +1318,7 @@ export type InstagramPostBlockInput = {
   postID?: InputMaybe<Scalars['String']>;
 };
 
-export type Invoice = {
+export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
@@ -1315,7 +1330,7 @@ export type Invoice = {
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
   subscription?: Maybe<PublicSubscription>;
-  subscriptionID: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
 };
 
@@ -1386,7 +1401,7 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
-export type MemberPlan = {
+export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
@@ -1398,6 +1413,7 @@ export type MemberPlan = {
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   slug: Scalars['String'];
@@ -1427,7 +1443,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new comment */
   addComment: Comment;
-  /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
+  /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
   createArticle: Article;
@@ -2249,11 +2265,12 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Int'];
 };
 
-export type Payment = {
+export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
   id: Scalars['String'];
-  intentSecret?: Maybe<Scalars['String']>;
+  intentSecret: Scalars['String'];
   paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
   state: PaymentState;
 };
 
@@ -2265,12 +2282,16 @@ export type PaymentFromInvoiceInput = {
   successURL?: InputMaybe<Scalars['String']>;
 };
 
-export type PaymentMethod = {
+export type PaymentMethod = HasImage & {
   __typename?: 'PaymentMethod';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   imageId?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -2516,7 +2537,7 @@ export type PublicPropertiesInput = {
   value: Scalars['String'];
 };
 
-export type PublicSubscription = {
+export type PublicSubscription = HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
   canExtend: Scalars['Boolean'];
@@ -2531,7 +2552,8 @@ export type PublicSubscription = {
   properties: Array<PublicProperties>;
   startsAt: Scalars['DateTime'];
   url: Scalars['String'];
-  user?: Maybe<User>;
+  user: User;
+  userID: Scalars['String'];
 };
 
 export type Query = {
@@ -3166,7 +3188,7 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
 };
 
-export type SubscriptionCreatedAction = BaseAction & HasSubscription & {
+export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
   __typename?: 'SubscriptionCreatedAction';
   actionType: ActionType;
   date: Scalars['DateTime'];
@@ -3632,7 +3654,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Image | MemberPlan | PaymentMethod | PublicSubscription | User;
+export type _Entity = Image | PaymentMethod | User;
 
 export type _Service = {
   __typename?: '_Service';
@@ -3981,7 +4003,7 @@ export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymen
 
 export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> };
 
-export type FullPaymentFragment = { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
+export type FullPaymentFragment = { __typename?: 'Payment', id: string, intentSecret: string, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
 
 export type FullSubscriptionDeactivationFragment = { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason };
 
@@ -3989,7 +4011,7 @@ export type FullSubscriptionFragment = { __typename?: 'PublicSubscription', id: 
 
 export type FullInvoiceItemFragment = { __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number };
 
-export type FullInvoiceFragment = { __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID: string, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, canExtend: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
+export type FullInvoiceFragment = { __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID?: string | null, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, canExtend: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
 export type SubscribeMutationVariables = Exact<{
   memberPlanId?: InputMaybe<Scalars['String']>;
@@ -4006,7 +4028,7 @@ export type SubscribeMutationVariables = Exact<{
 }>;
 
 
-export type SubscribeMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } };
+export type SubscribeMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'Payment', id: string, intentSecret: string, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } };
 
 export type ResubscribeMutationVariables = Exact<{
   userId?: InputMaybe<Scalars['String']>;
@@ -4032,7 +4054,7 @@ export type PayInvoiceMutationVariables = Exact<{
 }>;
 
 
-export type PayInvoiceMutation = { __typename?: 'Mutation', createPaymentFromInvoice?: { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } | null };
+export type PayInvoiceMutation = { __typename?: 'Mutation', createPaymentFromInvoice?: { __typename?: 'Payment', id: string, intentSecret: string, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } | null };
 
 export type PaySubscriptionMutationVariables = Exact<{
   subscriptionId: Scalars['String'];
@@ -4041,7 +4063,7 @@ export type PaySubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type PaySubscriptionMutation = { __typename?: 'Mutation', createPaymentFromSubscription?: { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } | null };
+export type PaySubscriptionMutation = { __typename?: 'Mutation', createPaymentFromSubscription?: { __typename?: 'Payment', id: string, intentSecret: string, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } | null };
 
 export type CancelSubscriptionMutationVariables = Exact<{
   subscriptionId: Scalars['String'];
@@ -4057,12 +4079,12 @@ export type ExtendSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type ExtendSubscriptionMutation = { __typename?: 'Mutation', extendSubscription: { __typename?: 'Payment', id: string, intentSecret?: string | null, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } };
+export type ExtendSubscriptionMutation = { __typename?: 'Mutation', extendSubscription: { __typename?: 'Payment', id: string, intentSecret: string, state: PaymentState, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } } };
 
 export type InvoicesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type InvoicesQuery = { __typename?: 'Query', invoices: Array<{ __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID: string, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, canExtend: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
+export type InvoicesQuery = { __typename?: 'Query', invoices: Array<{ __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID?: string | null, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, canExtend: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
 
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4074,7 +4096,7 @@ export type CheckInvoiceStatusQueryVariables = Exact<{
 }>;
 
 
-export type CheckInvoiceStatusQuery = { __typename?: 'Query', checkInvoiceStatus?: { __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID: string, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, canExtend: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
+export type CheckInvoiceStatusQuery = { __typename?: 'Query', checkInvoiceStatus?: { __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID?: string | null, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, extendable: boolean, paidUntil?: string | null, canExtend: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
 
 export type MemberPlanListQueryVariables = Exact<{
   filter?: InputMaybe<MemberPlanFilter>;
@@ -7358,7 +7380,9 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "ImageBlock",
       "ImageGalleryImage",
       "ListicleItem",
+      "MemberPlan",
       "PageTeaser",
+      "PaymentMethod",
       "QuoteBlock"
     ],
     "HasOptionalArticle": [
@@ -7381,17 +7405,26 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     "HasOptionalPoll": [
       "PollBlock"
     ],
+    "HasOptionalSubscription": [
+      "Invoice"
+    ],
     "HasPage": [
       "PageNavigationLink"
     ],
     "HasPageLc": [
       "PageCreatedAction"
     ],
+    "HasPaymentMethod": [
+      "Payment"
+    ],
     "HasPoll": [
       "PollStartedAction"
     ],
-    "HasSubscription": [
+    "HasSubscriptionLc": [
       "SubscriptionCreatedAction"
+    ],
+    "HasUser": [
+      "PublicSubscription"
     ],
     "HasUserLc": [
       "UserCreatedAction"
@@ -7404,9 +7437,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "_Entity": [
       "Image",
-      "MemberPlan",
       "PaymentMethod",
-      "PublicSubscription",
       "User"
     ]
   }

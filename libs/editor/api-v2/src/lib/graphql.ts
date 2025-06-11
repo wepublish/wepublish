@@ -1091,6 +1091,11 @@ export type HasOptionalPoll = {
   pollId?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalSubscription = {
+  subscription?: Maybe<PublicSubscription>;
+  subscriptionID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1101,14 +1106,24 @@ export type HasPageLc = {
   pageId: Scalars['String'];
 };
 
+export type HasPaymentMethod = {
+  paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
+};
+
 export type HasPoll = {
   poll: FullPoll;
   pollId: Scalars['String'];
 };
 
-export type HasSubscription = {
+export type HasSubscriptionLc = {
   subscription: PublicSubscription;
   subscriptionId: Scalars['String'];
+};
+
+export type HasUser = {
+  user: User;
+  userID: Scalars['String'];
 };
 
 export type HasUserLc = {
@@ -1303,7 +1318,7 @@ export type InstagramPostBlockInput = {
   postID?: InputMaybe<Scalars['String']>;
 };
 
-export type Invoice = {
+export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
@@ -1315,7 +1330,7 @@ export type Invoice = {
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
   subscription?: Maybe<PublicSubscription>;
-  subscriptionID: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
 };
 
@@ -1386,7 +1401,7 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
-export type MemberPlan = {
+export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
@@ -1398,6 +1413,7 @@ export type MemberPlan = {
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   slug: Scalars['String'];
@@ -1427,7 +1443,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new comment */
   addComment: Comment;
-  /** This mutation allows to cancel the users subscriptions. The deactivation date will be either paidUntil or now */
+  /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
   createArticle: Article;
@@ -2249,11 +2265,12 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Int'];
 };
 
-export type Payment = {
+export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
   id: Scalars['String'];
-  intentSecret?: Maybe<Scalars['String']>;
+  intentSecret: Scalars['String'];
   paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
   state: PaymentState;
 };
 
@@ -2265,12 +2282,16 @@ export type PaymentFromInvoiceInput = {
   successURL?: InputMaybe<Scalars['String']>;
 };
 
-export type PaymentMethod = {
+export type PaymentMethod = HasImage & {
   __typename?: 'PaymentMethod';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   imageId?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -2516,7 +2537,7 @@ export type PublicPropertiesInput = {
   value: Scalars['String'];
 };
 
-export type PublicSubscription = {
+export type PublicSubscription = HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
   canExtend: Scalars['Boolean'];
@@ -2531,7 +2552,8 @@ export type PublicSubscription = {
   properties: Array<PublicProperties>;
   startsAt: Scalars['DateTime'];
   url: Scalars['String'];
-  user?: Maybe<User>;
+  user: User;
+  userID: Scalars['String'];
 };
 
 export type Query = {
@@ -3166,7 +3188,7 @@ export type SubscribeBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
 };
 
-export type SubscriptionCreatedAction = BaseAction & HasSubscription & {
+export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
   __typename?: 'SubscriptionCreatedAction';
   actionType: ActionType;
   date: Scalars['DateTime'];
@@ -3632,7 +3654,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Image | MemberPlan | PaymentMethod | PublicSubscription | User;
+export type _Entity = Image | PaymentMethod | User;
 
 export type _Service = {
   __typename?: '_Service';
@@ -3648,7 +3670,7 @@ export type OverriddenRating = {
 export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, url: string, latest: { __typename?: 'ArticleRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, title?: string | null, text?: Descendant[] | null, user?: { __typename?: 'User', firstName?: string | null, name: string } | null } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, url: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'FullPoll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user?: { __typename?: 'User', firstName?: string | null, name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
+export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, url: string, latest: { __typename?: 'ArticleRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, title?: string | null, text?: Descendant[] | null, user?: { __typename?: 'User', firstName?: string | null, name: string } | null } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, url: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'FullPoll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user: { __typename?: 'User', firstName?: string | null, name: string }, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
 
 export type ArticleCreatedActionRevisionFragment = { __typename?: 'ArticleRevision', title?: string | null, socialMediaTitle?: string | null };
 
@@ -3666,7 +3688,7 @@ type FullAction_PageCreatedAction_Fragment = { __typename: 'PageCreatedAction', 
 
 type FullAction_PollStartedAction_Fragment = { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'FullPoll', id: string, question?: string | null } };
 
-type FullAction_SubscriptionCreatedAction_Fragment = { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user?: { __typename?: 'User', firstName?: string | null, name: string } | null, memberPlan: { __typename?: 'MemberPlan', name: string } } };
+type FullAction_SubscriptionCreatedAction_Fragment = { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user: { __typename?: 'User', firstName?: string | null, name: string }, memberPlan: { __typename?: 'MemberPlan', name: string } } };
 
 type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } };
 
@@ -8814,7 +8836,9 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "ImageBlock",
       "ImageGalleryImage",
       "ListicleItem",
+      "MemberPlan",
       "PageTeaser",
+      "PaymentMethod",
       "QuoteBlock"
     ],
     "HasOptionalArticle": [
@@ -8837,17 +8861,26 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     "HasOptionalPoll": [
       "PollBlock"
     ],
+    "HasOptionalSubscription": [
+      "Invoice"
+    ],
     "HasPage": [
       "PageNavigationLink"
     ],
     "HasPageLc": [
       "PageCreatedAction"
     ],
+    "HasPaymentMethod": [
+      "Payment"
+    ],
     "HasPoll": [
       "PollStartedAction"
     ],
-    "HasSubscription": [
+    "HasSubscriptionLc": [
       "SubscriptionCreatedAction"
+    ],
+    "HasUser": [
+      "PublicSubscription"
     ],
     "HasUserLc": [
       "UserCreatedAction"
@@ -8860,9 +8893,7 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "_Entity": [
       "Image",
-      "MemberPlan",
       "PaymentMethod",
-      "PublicSubscription",
       "User"
     ]
   }

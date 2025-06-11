@@ -234,16 +234,3 @@ export const GraphQLCommentConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
-
-export const GraphQLCommentResolver = {
-  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
-    const {id} = reference
-    const comment = await loaders.commentsById.load(id)
-
-    if (!comment) {
-      throw new Error('Comment not found')
-    }
-
-    return comment
-  }
-}
