@@ -2,7 +2,7 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
+import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
@@ -199,6 +199,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
+
+              {publicRuntimeConfig.env.GTM_ID && (
+                <>
+                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+                </>
               )}
 
               {publicRuntimeConfig.env.SPARKLOOP_ID && (
