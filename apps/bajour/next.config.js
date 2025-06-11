@@ -29,7 +29,7 @@ const nextConfig = {
         permanent: false
       },
       {
-        source: '/a/:id((?!tag|preview).*)/:slug',
+        source: '/a/:id((?!tag|id).*)/:slug',
         destination: '/a/:slug',
         permanent: false
       },
