@@ -21,15 +21,20 @@ import {
   Tag,
   useArticleQuery
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Paywall, useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {anyPass} from 'ramda'
 import {ComponentProps, useEffect} from 'react'
 
+import {DuplicatedPaywall} from '../../src/components/hauptstadt-paywall'
+
 export const ArticleWrapperComments = styled(ArticleWrapper)``
 export const ArticleWrapperAppendix = styled(ArticleWrapper)``
+
+// @TODO:
+const ExtraPaywall = () => styled(Paywall)``
 
 export default function ArticleBySlugOrId() {
   const router = useRouter()
@@ -80,7 +85,9 @@ export default function ArticleBySlugOrId() {
     <>
       <ShowPaywallContext.Provider
         value={{hideContent: articleId === data?.article.id ? false : undefined}}>
-        <ArticleContainer {...containerProps} />
+        <ArticleContainer {...containerProps}>
+          <DuplicatedPaywall paywall={data?.article?.paywall} />
+        </ArticleContainer>
       </ShowPaywallContext.Provider>
 
       {data?.article && !isLastBlockTeaser && (

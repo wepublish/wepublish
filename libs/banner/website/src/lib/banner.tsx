@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {css, GlobalStyles, Typography} from '@mui/material'
+import {useSetIntendedRoute} from '@wepublish/authentication/website'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -101,6 +102,7 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
   const {
     elements: {Link}
   } = useWebsiteBuilder()
+  const setIntendedRoute = useSetIntendedRoute()
 
   useEffect(() => {
     if (!data?.primaryBanner) {
@@ -132,7 +134,11 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     if (action.role === BannerActionRole.Cancel) {
       e.preventDefault()
       handleClose()
+
+      return
     }
+
+    setIntendedRoute()
   }
 
   if (!data?.primaryBanner || loading || error) {
@@ -180,15 +186,15 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
 
             <BannerActions>
               {data?.primaryBanner.actions?.map(a => (
-                <Link
+                <Button
+                  color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}
+                  data-role={a.role}
+                  LinkComponent={Link}
                   href={a.url}
                   key={a.url}
-                  onClick={e => handleActionClick(e, a)}
-                  data-role={a.role}>
-                  <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
-                    {a.label}
-                  </Button>
-                </Link>
+                  onClick={e => handleActionClick(e, a)}>
+                  {a.label}
+                </Button>
               ))}
             </BannerActions>
           </BannerCta>

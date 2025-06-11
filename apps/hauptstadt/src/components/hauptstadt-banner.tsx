@@ -16,7 +16,7 @@ export const HauptstadtBanner = styled(Banner)`
   background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
 
-  [data-role='PRIMARY'] button {
+  [data-role='PRIMARY'] {
     background-color: transparent;
     border: 1px solid ${({theme}) => theme.palette.secondary.main};
     color: ${({theme}) => theme.palette.secondary.main};

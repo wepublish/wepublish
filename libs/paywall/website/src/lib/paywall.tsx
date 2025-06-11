@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {BuilderPaywallProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useIntersectionObserver} from 'usehooks-ts'
 import {forceHideBanner} from '@wepublish/banner/website'
-import {useUser} from '@wepublish/authentication/website'
+import {useSetIntendedRoute, useUser} from '@wepublish/authentication/website'
 import {useTranslation} from 'react-i18next'
 
 export const PaywallWrapper = styled.div`
@@ -41,6 +41,7 @@ export const Paywall = ({
   const {isIntersecting, ref} = useIntersectionObserver({
     initialIsIntersecting: false
   })
+  const setIntendedRoute = useSetIntendedRoute()
 
   return (
     <PaywallWrapper className={className} ref={ref}>
@@ -49,12 +50,22 @@ export const Paywall = ({
       />
 
       <PaywallActions>
-        <Button variant="contained" color="secondary" LinkComponent={Link} href={'/mitmachen'}>
+        <Button
+          variant="contained"
+          color="secondary"
+          LinkComponent={Link}
+          href={'/mitmachen'}
+          onClick={setIntendedRoute}>
           {t('paywall.subscribe')}
         </Button>
 
         {!hasUser && (
-          <Button variant="outlined" color="secondary" LinkComponent={Link} href={'/login'}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            LinkComponent={Link}
+            href={'/login'}
+            onClick={setIntendedRoute}>
             {t('paywall.login')}
           </Button>
         )}

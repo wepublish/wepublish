@@ -198,8 +198,8 @@ const body = {
   })
 }
 
-const h3 = {
-  ...variablesTheme.typography.h3,
+const h2 = {
+  ...variablesTheme.typography.h2,
   fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   lineHeight: 1.2,
   ...responsiveProperty({
@@ -209,6 +209,20 @@ const h3 = {
     values: {
       xs: 30,
       md: 46
+    }
+  })
+}
+
+const h3 = {
+  ...variablesTheme.typography.h4,
+  fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+  lineHeight: 1.2,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    unit: 'rem',
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 30
     }
   })
 }
@@ -230,7 +244,15 @@ const h4 = {
 const h5 = {
   ...variablesTheme.typography.h5,
   fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
-  lineHeight: 1.2
+  lineHeight: 1.2,
+  ...responsiveProperty({
+    cssProperty: 'fontSize',
+    unit: 'rem',
+    breakpoints: variablesTheme.breakpoints.values,
+    values: {
+      xs: 22
+    }
+  })
 }
 
 const subtitle1 = {
@@ -378,10 +400,7 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2
     },
-    h2: {
-      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
-      lineHeight: 1.2
-    },
+    h2,
     h3,
     h4,
     h5,

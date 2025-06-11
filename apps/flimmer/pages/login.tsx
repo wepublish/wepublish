@@ -13,7 +13,7 @@ import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -24,10 +24,11 @@ type LoginProps = {sessionToken?: UserSession}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
+  const router = useRouter()
+  const isRedirecting = useRef(false)
   const {
     elements: {H3, Link}
   } = useWebsiteBuilder()
-  const router = useRouter()
 
   useEffect(() => {
     if (sessionToken) {
@@ -40,7 +41,10 @@ export default function Login({sessionToken}: LoginProps) {
     deleteCookie(IntendedRouteStorageKey)
     const route = intendedRoute ?? '/profile'
 
-    router.replace(route)
+    if (!isRedirecting.current) {
+      router.replace(route)
+      isRedirecting.current = true
+    }
   }
 
   return (
