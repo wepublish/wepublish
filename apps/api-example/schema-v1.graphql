@@ -22,9 +22,6 @@ type Query {
 }
 
 type Mutation {
-  """Allows authenticated users to create additional subscriptions"""
-  createSubscriptionWithConfirmation(userId: String, memberPlanID: String, memberPlanSlug: Slug, autoRenew: Boolean!, paymentPeriodicity: PaymentPeriodicity!, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, subscriptionProperties: [PublicPropertiesInput!]): Boolean!
-
   """This mutation extends an subscription early"""
   extendSubscription(subscriptionId: String!, successURL: String, failureURL: String): Payment!
 
@@ -35,20 +32,6 @@ type Mutation {
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
-}
-
-scalar Slug
-
-enum PaymentPeriodicity {
-  monthly
-  quarterly
-  biannual
-  yearly
-}
-
-input PublicPropertiesInput {
-  key: String!
-  value: String!
 }
 
 type Payment {
@@ -77,6 +60,8 @@ type PaymentMethod {
   imageId: String
   image: Image
 }
+
+scalar Slug
 
 type Image {
   id: String!

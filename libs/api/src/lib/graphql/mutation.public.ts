@@ -1,134 +1,23 @@
 import {MemberPlan} from '@prisma/client'
 import {unselectPassword} from '@wepublish/authentication/api'
-import {
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLString
-} from 'graphql'
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {SubscriptionWithRelations} from '../db/subscription'
 import {
   AlreadyUnpaidInvoices,
   InternalError,
-  MonthlyAmountNotEnough,
   SubscriptionNotExtendable,
-  SubscriptionNotFound,
-  UserIdNotFound
+  SubscriptionNotFound
 } from '../error'
-import {GraphQLSlug, logger} from '@wepublish/utils/api'
-import {GraphQLMetadataPropertyPublicInput} from './common'
+import {logger} from '@wepublish/utils/api'
 import {GraphQLUploadImageInput} from './image'
-import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPublicPayment} from './payment'
 import {GraphQLPublicUser, GraphQLPublicUserInput} from './user'
 import {updatePublicUser, uploadPublicUserProfileImage} from './user/user.public-mutation'
-import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberContext'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    createSubscriptionWithConfirmation: {
-      type: new GraphQLNonNull(GraphQLBoolean),
-      args: {
-        userId: {type: GraphQLString},
-        memberPlanID: {type: GraphQLString},
-        memberPlanSlug: {type: GraphQLSlug},
-        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
-        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLString},
-        paymentMethodSlug: {type: GraphQLSlug},
-        subscriptionProperties: {
-          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
-        }
-      },
-      description: 'Allows authenticated users to create additional subscriptions',
-      async resolve(
-        root,
-        {
-          userId,
-          memberPlanID,
-          memberPlanSlug,
-          autoRenew,
-          paymentPeriodicity,
-          monthlyAmount,
-          paymentMethodID,
-          paymentMethodSlug,
-          subscriptionProperties
-        },
-        {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
-      ) {
-        try {
-          // authenticate user
-          const getUserByUserId = async (userId: string) => ({
-            user: await prisma.user.findFirst({where: {id: userId}})
-          })
-          const {user} = userId ? await getUserByUserId(userId) : authenticateUser()
-
-          if (!user) {
-            throw new UserIdNotFound()
-          }
-
-          await memberContext.validateInputParamsCreateSubscription(
-            memberPlanID,
-            memberPlanSlug,
-            paymentMethodID,
-            paymentMethodSlug
-          )
-
-          const memberPlan = await getMemberPlanByIDOrSlug(loaders, memberPlanSlug, memberPlanID)
-          const paymentMethod = await getPaymentMethodByIDOrSlug(
-            loaders,
-            paymentMethodSlug,
-            paymentMethodID
-          )
-
-          if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
-
-          await memberContext.validateSubscriptionPaymentConfiguration(
-            memberPlan,
-            autoRenew,
-            paymentPeriodicity,
-            paymentMethod
-          )
-
-          const properties = await memberContext.processSubscriptionProperties(
-            subscriptionProperties
-          )
-
-          const {subscription, invoice} = await memberContext.createSubscription(
-            user.id,
-            paymentMethod.id,
-            paymentPeriodicity,
-            monthlyAmount,
-            memberPlan.id,
-            properties,
-            autoRenew,
-            memberPlan.extendable,
-            undefined,
-            undefined,
-            true
-          )
-
-          if (!invoice) {
-            logger('mutation.public').error(
-              'Could not create new invoice for subscription with ID "%s"',
-              subscription.id
-            )
-            throw new InternalError()
-          }
-
-          return true
-        } catch (e: any) {
-          console.log(e.stack)
-          throw e
-        }
-      }
-    },
-
     extendSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {

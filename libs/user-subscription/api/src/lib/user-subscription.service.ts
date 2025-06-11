@@ -20,7 +20,7 @@ import {RemoteSubscriptionsService} from './remote-subscriptions.service'
 import {MemberContext} from 'libs/api/src/lib/memberContext'
 import {UserInputError} from '@nestjs/apollo'
 import {MemberPlanService} from '@wepublish/member-plan/api'
-import {CreateSubscriptionArgs} from './subscription.model'
+import {CreateSubscriptionArgs, CreateSubscriptionWithConfirmationArgs} from './subscription.model'
 import {PaymentMethodService} from '@wepublish/payment-method/api'
 
 @Injectable()
@@ -45,62 +45,24 @@ export class UserSubscriptionService {
     })
   }
 
-  async createSubscription(
-    userId: string,
-    {
-      memberPlanID,
-      memberPlanSlug,
+  async createSubscription(userId: string, args: CreateSubscriptionArgs) {
+    const {memberPlan, paymentMethod} = await this.validateSubscriptionInput(args)
+
+    const {
       autoRenew,
       paymentPeriodicity,
       monthlyAmount,
-      paymentMethodID,
-      paymentMethodSlug,
       subscriptionProperties,
       successURL,
       failureURL,
       deactivateSubscriptionId
-    }: CreateSubscriptionArgs
-  ) {
-    // authenticate user
+    } = args
 
     const memberContext = new MemberContext({
       prisma: this.prisma,
       mailContext: this.mailContext,
       paymentProviders: this.payments.getProviders()
     })
-
-    await memberContext.validateInputParamsCreateSubscription(
-      memberPlanID,
-      memberPlanSlug,
-      paymentMethodID,
-      paymentMethodSlug
-    )
-
-    const memberPlan = memberPlanID
-      ? await this.memberPlanService.getMemberPlanById(memberPlanID)
-      : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '')
-    if (!memberPlan) {
-      throw new UserInputError(`MemberPlan not found ${memberPlanID || memberPlanSlug}`)
-    }
-
-    const paymentMethod = paymentMethodID
-      ? await this.paymentMethodService.findActivePaymentMethodById(paymentMethodID)
-      : await this.paymentMethodService.findActivePaymentMethodBySlug(paymentMethodSlug ?? '')
-
-    if (!paymentMethod) {
-      throw new UserInputError(`PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`)
-    }
-
-    if (monthlyAmount < memberPlan.amountPerMonthMin) {
-      throw new UserInputError(`Monthly amount not enough`)
-    }
-
-    await memberContext.validateSubscriptionPaymentConfiguration(
-      memberPlan,
-      autoRenew,
-      paymentPeriodicity,
-      paymentMethod
-    )
 
     // Check if subscription which should be deactivated exists
     let subscriptionToDeactivate: null | Subscription = null
@@ -162,6 +124,54 @@ export class UserSubscriptionService {
       failureURL,
       userId
     })
+  }
+
+  async createSubscriptionWithConfirmation(
+    userId: string,
+    args: Omit<CreateSubscriptionWithConfirmationArgs, 'userId'>
+  ) {
+    try {
+      const {memberPlan, paymentMethod} = await this.validateSubscriptionInput(args)
+
+      const {autoRenew, paymentPeriodicity, monthlyAmount, subscriptionProperties} = args
+
+      const memberContext = new MemberContext({
+        prisma: this.prisma,
+        mailContext: this.mailContext,
+        paymentProviders: this.payments.getProviders()
+      })
+
+      const properties = await memberContext.processSubscriptionProperties(
+        subscriptionProperties ?? []
+      )
+
+      const {subscription, invoice} = await memberContext.createSubscription(
+        userId,
+        paymentMethod.id,
+        paymentPeriodicity,
+        monthlyAmount,
+        memberPlan.id,
+        properties,
+        autoRenew,
+        memberPlan.extendable,
+        undefined,
+        undefined,
+        true
+      )
+
+      if (!invoice) {
+        logger('mutation.public').error(
+          'Could not create new invoice for subscription with ID "%s"',
+          subscription.id
+        )
+        throw new InternalError()
+      }
+
+      return true
+    } catch (e: any) {
+      console.log(e.stack)
+      throw e
+    }
   }
 
   async updatePublicSubscription(
@@ -321,5 +331,62 @@ export class UserSubscriptionService {
     }
 
     return updatedSubscription
+  }
+
+  private async validateSubscriptionInput({
+    memberPlanID,
+    memberPlanSlug,
+    autoRenew,
+    paymentPeriodicity,
+    monthlyAmount,
+    paymentMethodID,
+    paymentMethodSlug
+  }: Omit<
+    CreateSubscriptionArgs,
+    'subscriptionProperties' | 'successURL' | 'failureURL' | 'deactivateSubscriptionId'
+  >) {
+    const memberContext = new MemberContext({
+      prisma: this.prisma,
+      mailContext: this.mailContext,
+      paymentProviders: this.payments.getProviders()
+    })
+
+    await memberContext.validateInputParamsCreateSubscription(
+      memberPlanID,
+      memberPlanSlug,
+      paymentMethodID,
+      paymentMethodSlug
+    )
+
+    const memberPlan = memberPlanID
+      ? await this.memberPlanService.getMemberPlanById(memberPlanID)
+      : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '')
+    if (!memberPlan) {
+      throw new UserInputError(`MemberPlan not found ${memberPlanID || memberPlanSlug}`)
+    }
+
+    const paymentMethod = paymentMethodID
+      ? await this.paymentMethodService.findActivePaymentMethodById(paymentMethodID)
+      : await this.paymentMethodService.findActivePaymentMethodBySlug(paymentMethodSlug ?? '')
+
+    if (!paymentMethod) {
+      throw new UserInputError(`PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`)
+    }
+
+    if (monthlyAmount < memberPlan.amountPerMonthMin) {
+      throw new UserInputError(`Monthly amount not enough`)
+    }
+
+    await memberContext.validateSubscriptionPaymentConfiguration(
+      memberPlan,
+      autoRenew,
+      paymentPeriodicity,
+      paymentMethod
+    )
+
+    return {
+      memberPlan,
+      paymentMethod
+    }
   }
 }

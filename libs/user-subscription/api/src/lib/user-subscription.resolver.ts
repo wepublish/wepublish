@@ -1,13 +1,22 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {CreateSubscriptionArgs, UserSubscriptionInput} from './subscription.model'
-import {Authenticated, CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {
+  CreateSubscriptionArgs,
+  CreateSubscriptionWithConfirmationArgs,
+  UserSubscriptionInput
+} from './subscription.model'
+import {Authenticated, CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {UserSubscriptionService} from './user-subscription.service'
 import {PublicSubscription} from '@wepublish/membership/api'
 import {Payment} from '../../../../payment/api/src/lib/payment.model'
+import {UserDataloaderService} from '@wepublish/user/api'
+import {UserInputError} from '@nestjs/apollo'
 
 @Resolver(() => PublicSubscription)
 export class UserSubscriptionResolver {
-  constructor(private readonly userSubscriptionService: UserSubscriptionService) {}
+  constructor(
+    private readonly userSubscriptionService: UserSubscriptionService,
+    private readonly userDataloader: UserDataloaderService
+  ) {}
 
   @Authenticated()
   @Query(() => [PublicSubscription], {
@@ -26,6 +35,22 @@ export class UserSubscriptionResolver {
     @CurrentUser() {user}: UserSession
   ) {
     return this.userSubscriptionService.createSubscription(user.id, args)
+  }
+
+  @Public()
+  @Mutation(() => Boolean, {
+    description: `Allows authenticated users to create additional subscriptions`
+  })
+  async createSubscriptionWithConfirmation(
+    @Args() {userId, ...args}: CreateSubscriptionWithConfirmationArgs,
+    @CurrentUser() session?: UserSession
+  ) {
+    const user = userId ? await this.userDataloader.load(userId) : session?.user
+    if (!user) {
+      throw new UserInputError('User not found')
+    }
+    await this.userSubscriptionService.createSubscriptionWithConfirmation(user.id, args)
+    return true
   }
 
   @Authenticated()
