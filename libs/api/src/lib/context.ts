@@ -812,11 +812,7 @@ export async function contextFromRequest(
           paymentID: updatedPayment.id
         })
 
-        await paymentProvider.updatePaymentWithIntentState({
-          intentState,
-          paymentsByID: loaders.paymentsByID,
-          invoicesByID: loaders.invoicesByID
-        })
+        await paymentProvider.updatePaymentWithIntentState({intentState})
       }
 
       if (intent.errorCode) {
