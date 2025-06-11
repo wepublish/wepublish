@@ -1,4 +1,5 @@
-import {Injectable, Logger} from '@nestjs/common'
+import {Injectable, Scope} from '@nestjs/common'
+import {Article} from '@prisma/client'
 import {ArticleTeaser, EventTeaser, Teaser, TeaserType} from './teaser.model'
 import {isTeaserSlotsBlock, TeaserSlotsBlock} from '../teaser-slot/teaser-slots.model'
 import {ArticleService, ArticleSort} from '@wepublish/article/api'
@@ -10,7 +11,7 @@ import {BlockType} from '../block-type.model'
 import {isTeaserGridFlexBlock} from './teaser-flex.model'
 import {isTeaserGridBlock} from './teaser-grid.model'
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class SlotTeasersLoader {
   private loadedTeasers: (typeof Teaser)[] = []
 
@@ -53,9 +54,12 @@ export class SlotTeasersLoader {
     const blocks = []
     for (const block of revisionBlocks) {
       if (isTeaserSlotsBlock(block)) {
+        const autofillTeasers = await this.getAutofillTeasers(block)
+        const teasers = await this.getTeasers(block, autofillTeasers)
         blocks.push({
           ...block,
-          teasers: await this.getTeasers(block)
+          autofillTeasers,
+          teasers
         })
       } else {
         blocks.push(block)
@@ -64,22 +68,38 @@ export class SlotTeasersLoader {
     return blocks
   }
 
-  async getTeasers(slotsBlock: TeaserSlotsBlock): Promise<(typeof Teaser)[]> {
+  async getTeasers(
+    {slots}: TeaserSlotsBlock,
+    autofillTeasers: (typeof Teaser)[]
+  ): Promise<(typeof Teaser | null)[]> {
+    return slots?.map(({teaser: manualTeaser, type}, index) => {
+      const autofillIndex = slots
+        .slice(0, index)
+        .filter(slot => slot.type === TeaserSlotType.Autofill).length
+      return (
+        (type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex]) ?? null
+      )
+    })
+  }
+
+  async getAutofillTeasers(slotsBlock: TeaserSlotsBlock): Promise<(typeof Teaser)[]> {
     const {teaserType, sort, filter} = slotsBlock.autofillConfig
     const take = slotsBlock.slots.filter(({type}) => type === TeaserSlotType.Autofill).length
+
     if (teaserType === TeaserType.Article) {
-      const request = {
-        filter: {
-          tags: filter?.tags,
-          published: true,
-          excludeIds: this.getLoadedTeasers(TeaserType.Article)
-        },
-        sort: ArticleSort.PublishedAt,
-        order: SortOrder.Descending,
-        take
-      }
-      new Logger('Teaser loader').log(JSON.stringify(request))
-      const articles = (await this.articleService.getArticles(request))?.nodes
+      let articles: Article[] = []
+      articles = (
+        await this.articleService.getArticles({
+          filter: {
+            tags: filter?.tags,
+            published: true,
+            excludeIds: this.getLoadedTeasers(TeaserType.Article)
+          },
+          sort: ArticleSort.PublishedAt,
+          order: SortOrder.Descending,
+          take
+        })
+      )?.nodes
 
       const teasers = articles.map(
         article =>
@@ -92,12 +112,12 @@ export class SlotTeasersLoader {
           } as ArticleTeaser)
       )
 
-      this.loadedTeasers.push(...teasers)
+      this.addLoadedTeaser(...teasers)
       return teasers
     }
 
     if (teaserType === TeaserType.Event) {
-      const pages = await this.eventService.getEvents({
+      const events = await this.eventService.getEvents({
         filter: {
           tags: filter?.tags
         },
@@ -106,7 +126,7 @@ export class SlotTeasersLoader {
         take
       })
 
-      const teasers = pages.nodes.map(
+      const teasers = events.nodes.map(
         event =>
           ({
             eventID: event.id,
@@ -116,7 +136,7 @@ export class SlotTeasersLoader {
             title: undefined
           } as EventTeaser)
       )
-      this.loadedTeasers.push(...teasers)
+      this.addLoadedTeaser(...teasers)
       return teasers
     }
 

@@ -15,7 +15,7 @@ export class TeaserSlotsAutofillConfig {
   enabled!: boolean
   @Field(() => TeaserType, {nullable: true})
   teaserType?: TeaserType
-  @Field(() => TeaserListBlockSort, {nullable: true, defaultValue: TeaserListBlockSort.PublishedAt})
+  @Field(() => TeaserListBlockSort, {nullable: true})
   sort?: TeaserListBlockSort
   @Field(() => TeaserListBlockFilter, {nullable: true})
   filter?: TeaserListBlockFilter

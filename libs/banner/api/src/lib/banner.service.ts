@@ -92,14 +92,14 @@ export class BannerService {
   }
 
   async update(args: UpdateBannerInput) {
-    const {id, actions, showOnPages, imageId, ...args_without_id} = args
+    const {id, actions, showOnPages, imageId, ...bannerInputs} = args
 
     return this.prisma.banner.update({
       where: {
         id
       },
       data: {
-        ...args_without_id,
+        ...bannerInputs,
         imageId: imageId ?? null,
         actions: {
           deleteMany: {},

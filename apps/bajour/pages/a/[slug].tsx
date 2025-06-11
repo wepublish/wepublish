@@ -73,7 +73,7 @@ export const AuthorWrapper = styled(ContentWrapper)`
 
 export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id, token}
+    query: {slug, id}
   } = useRouter()
   const {
     elements: {H5}
@@ -89,8 +89,7 @@ export default function ArticleBySlugOrId() {
 
   const containerProps = {
     slug,
-    id,
-    token
+    id
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
@@ -204,7 +203,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  if (article.data.article) {
+  if (article.data?.article) {
     await Promise.all([
       client.query({
         query: ArticleListDocument,
@@ -242,6 +241,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

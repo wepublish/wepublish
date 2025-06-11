@@ -7,7 +7,12 @@ import {PaymentsService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {GatewayModule} from './nestapp/gateway.module'
-import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingDataSource} from '@wepublish/api'
+import {
+  HOT_AND_TRENDING_DATA_SOURCE,
+  HotAndTrendingDataSource,
+  MAX_PAYLOAD_SIZE
+} from '@wepublish/api'
+import {json, urlencoded} from 'body-parser'
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000
@@ -19,6 +24,8 @@ async function bootstrap() {
     credentials: true
   })
   nestApp.use(helmet())
+  nestApp.use(json({limit: MAX_PAYLOAD_SIZE}))
+  nestApp.use(urlencoded({extended: true, limit: MAX_PAYLOAD_SIZE}))
   const mediaAdapter = nestApp.get(MediaAdapter)
   const paymentProviders = nestApp.get(PaymentsService).paymentProviders
   const mailProvider = nestApp.get(MailContext).mailProvider
@@ -32,6 +39,8 @@ async function bootstrap() {
     origin: true,
     credentials: true
   })
+  gatewayApp.use('/v1', json({limit: MAX_PAYLOAD_SIZE}))
+  gatewayApp.use('/v1', urlencoded({extended: true, limit: MAX_PAYLOAD_SIZE}))
   const publicExpressApp = gatewayApp.getHttpAdapter().getInstance()
 
   await runServer({

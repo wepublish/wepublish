@@ -19,45 +19,25 @@ export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> 
 
       for (const articleId of articleIds) {
         revisionPromises.push(
-          this.prisma.articleRevision.findFirst({
-            where: {
-              articleId
-              // on purpose not checking for publishedAt
-              // so we only get the latest revision, we check for it later on
-            },
-            orderBy: {
-              createdAt: 'desc'
-            }
-          }),
-          this.prisma.articleRevision.findFirst({
+          this.prisma.articleRevision.findMany({
             where: {
               articleId,
-              publishedAt: {
-                gt: new Date()
-              }
+              archivedAt: null
             },
-            orderBy: {
-              createdAt: 'desc'
-            }
-          }),
-          this.prisma.articleRevision.findFirst({
-            where: {
-              articleId,
-              publishedAt: {
-                lte: new Date()
+            take: 3,
+            orderBy: [
+              {
+                publishedAt: 'desc'
+              },
+              {
+                createdAt: 'desc'
               }
-            },
-            orderBy: {
-              createdAt: 'desc'
-            }
+            ]
           })
         )
       }
 
-      const revisions = (await Promise.all(revisionPromises)).filter(
-        (rev): rev is ArticleRevision => Boolean(rev)
-      )
-
+      const revisions = (await Promise.all(revisionPromises)).flat()
       return articleIds.map((articleId): RevisionMap => {
         const published = revisions.find(
           rev =>

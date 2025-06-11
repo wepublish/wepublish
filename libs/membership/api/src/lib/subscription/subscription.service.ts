@@ -297,12 +297,15 @@ export class SubscriptionService {
    * Deactivates the subscription belonging to an invoice.
    * @param invoice the invoice belonging to subscription.
    */
-  public async deactivateSubscription(invoice: Invoice) {
+  public async deactivateSubscription(invoice: Invoice & {subscription: Subscription | null}) {
+    if (!invoice.subscription) {
+      throw new BadRequestException(`Invoice ${invoice.id} has no subscription assigned!`)
+    }
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {
-          subscriptionID: invoice.subscriptionID!,
-          date: new Date(),
+          subscriptionID: invoice.subscription.id || invoice.subscriptionID!,
+          date: invoice.subscription.paidUntil ?? invoice.subscription.startsAt,
           reason: SubscriptionDeactivationReason.invoiceNotPaid
         }
       }),

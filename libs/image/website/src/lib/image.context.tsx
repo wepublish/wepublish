@@ -13,6 +13,7 @@ export const useImageProps = (props: BuilderImageProviderProps): BuilderImagePro
         {
           loading: 'lazy',
           fetchPriority: 'low',
+          maxWidth: 1200,
           ...props
         },
         contextProps

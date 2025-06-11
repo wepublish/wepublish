@@ -112,7 +112,7 @@ export const BestOfWePublishTeaser = ({teaser, alignment}: BestOfWePublishTeaser
   const href = (teaser && selectTeaserUrl(teaser)) ?? ''
   const image = teaser && selectTeaserImage(teaser)
   const peerName = teaser.article?.peer?.name
-  const peerLogo = teaser.article?.peer?.profile?.logo
+  const peerLogo = teaser.article?.peer?.profile?.squareLogo ?? teaser.article?.peer?.profile?.logo
 
   return (
     <TeaserWrapper {...alignment}>

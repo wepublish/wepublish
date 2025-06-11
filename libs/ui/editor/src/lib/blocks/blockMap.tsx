@@ -5,6 +5,7 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFilter,
   MdFilter1,
   MdFilter6,
   MdFilter9Plus,
@@ -182,6 +183,34 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdFilter6 />
   },
 
+  [EditorBlockType.TeaserSlots]: {
+    field: props => <TeaserSlotsBlock {...props} />,
+    defaultValue: {
+      title: null,
+      blockStyle: undefined,
+      autofillConfig: {
+        enabled: false,
+        filter: {
+          tags: []
+        },
+        sort: TeaserListBlockSort.PublishedAt,
+        teaserType: TeaserType.Article
+      },
+      slots: [
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual}
+      ],
+      autofillTeasers: [],
+      teasers: []
+    },
+    label: 'blocks.teaserSlots.label',
+    icon: <MdFilter />
+  },
+
   [EditorBlockType.TeaserGridFlex]: {
     field: props => <TeaserGridFlexBlock {...props} />,
     defaultValue: {
@@ -207,33 +236,6 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: 'blocks.teaserFlexGrid.label',
     icon: <MdViewQuilt />
-  },
-
-  [EditorBlockType.TeaserSlots]: {
-    field: props => <TeaserSlotsBlock {...props} />,
-    defaultValue: {
-      title: null,
-      blockStyle: undefined,
-      autofillConfig: {
-        enabled: false,
-        filter: {
-          tags: []
-        },
-        sort: TeaserListBlockSort.PublishedAt,
-        teaserType: TeaserType.Article
-      },
-      slots: [
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual}
-      ],
-      teasers: []
-    },
-    label: 'blocks.teaserSlots.label',
-    icon: <MdFilter6 />
   },
 
   [EditorBlockType.Html]: {

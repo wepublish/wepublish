@@ -13,7 +13,7 @@ import {TeaserSlotsAutofillControls} from './teaserSlots/teaser-slots-autofill-c
 import {useTranslation} from 'react-i18next'
 import {ContentForTeaser} from './teaserGridBlock'
 import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
-import {IconButtonTooltip, PlaceholderInput} from '@wepublish/ui/editor'
+import {IconButtonTooltip, PlaceholderInput} from '../atoms'
 // import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
 
 const IconButton = styled(RIconButton)`
@@ -157,7 +157,7 @@ export function TeaserSlotsBlock({
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const {autofillConfig, slots, teasers} = value
+  const {autofillConfig, slots, autofillTeasers} = value
 
   function handleTeaserLinkChange(index: number, teaser: TeaserTypeMixed | null) {
     onChange({
@@ -251,7 +251,7 @@ export function TeaserSlotsBlock({
       <TeaserSlotsAutofillControls
         config={autofillConfig}
         onConfigChange={handleAutofillConfigChange}
-        loadedTeasers={teasers?.length ?? 0}
+        loadedTeasers={autofillTeasers?.length ?? 0}
         autofillSlots={autofillSlotsCount}
       />
       <Grid
@@ -265,7 +265,7 @@ export function TeaserSlotsBlock({
             .slice(0, index)
             .filter(slot => slot.type === TeaserSlotType.Autofill).length
           const teaser = (
-            type === TeaserSlotType.Manual ? manualTeaser : teasers[autofillIndex] ?? null
+            type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex] ?? null
           ) as TeaserTypeMixed | null
 
           return (

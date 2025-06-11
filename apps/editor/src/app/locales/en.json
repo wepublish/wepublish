@@ -220,13 +220,16 @@
         "delete": "Delete banner"
       },
       "form": {
-        "title": "Title (maximized only)",
-        "text": "Text (maximized only)",
-        "cta": "Call to action (minimized only)",
+        "displayOptions": "Display Options",
+        "title": "Title",
+        "text": "Text",
+        "cta": "Call to action",
+        "delay": "Delay in seconds",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
         "showForLoginStatus": "Display for",
+        "html": "HTML-Code",
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
@@ -238,7 +241,8 @@
           "add": "Add new action",
           "label": "Label",
           "url": "URL",
-          "style": "Style"
+          "style": "Style",
+          "role": "Role"
         }
       },
       "list": {
@@ -409,6 +413,9 @@
       "teaserGrid6": {
         "label": "6 Col"
       },
+      "teaserSlots": {
+        "label": "Teaser Slots"
+      },
       "title": {
         "label": "Title",
         "leadText": "Lead Text ",
@@ -555,7 +562,9 @@
       "newUser": "New <0>user</0> added",
       "noData": "No current subscriber data",
       "user": "User",
-      "yearlySubscribers": "New subscribers over past year"
+      "yearlySubscribers": "New subscribers over past year",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Go to Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -830,8 +839,9 @@
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Subscriptions",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -972,7 +982,6 @@
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-
       "import": {
         "import": "Import",
         "title": "Import article",
@@ -1012,6 +1021,7 @@
         "editPeerInfo": "Edit Peer Info",
         "getRemote": "Fetch Remote Peer Profile",
         "image": "Image",
+        "squareImage": "Square image",
         "information": "Information",
         "leaveEmpty": "Leave empty if you don't want to change it",
         "name": "Name",
@@ -1506,15 +1516,14 @@
     },
     "resources": {
       "teaserType": {
-        "article": "Article",
-        "peerArticle": "Peer Article",
-        "page": "Page",
-        "event": "Event",
-        "custom": "Custom"
+        "Article": "Article",
+        "Page": "Page",
+        "Event": "Event",
+        "Custom": "Custom"
       },
       "teaserSort": {
-        "hotAndTrending": "Hot & Trending",
-        "publishedAt": "Publication date"
+        "HotAndTrending": "Hot & Trending",
+        "PublishedAt": "Publication date"
       }
     },
     "authorEditPanel": {
@@ -1530,6 +1539,9 @@
       "noPixelInfoHeader": "No tracking integration available",
       "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
       "errorHeader": "Error"
+    },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
     },
     "crowdfunding": {
       "list": {
@@ -1567,6 +1579,66 @@
         "remove": "Remove",
         "add": "Add Target"
       }
+    },
+    "audienceFilter": {
+      "daily": "Daily",
+      "monthly": "Monthly",
+      "rangePickerPlaceholder": "from - to",
+      "filterSubscriptionPlans": "Filter by subscription plans",
+      "chart": "Chart",
+      "table": "Table",
+      "panelHeader": "Select data",
+      "rangeLastWeek": "Last Week",
+      "rangeLastMonth": "Last Month",
+      "rangeLastQuarter": "Last Quarter",
+      "rangeLastYear": "Last Year"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
+          "createdUnpaidSubscriptionCount": "Newly created but unpaid subscriptions up to now.",
+          "renewedSubscriptionCount": "Subscriptions that have been renewed for another period.",
+          "createdSubscriptionCount": "Completely new subscriptions with only one period so far.",
+          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
+        },
+        "totalActiveSubscriptionCount": "Total active subscriptions",
+        "createdUnpaidSubscriptionCount": "New unpaid subscriptions",
+        "renewedSubscriptionCount": "Renewed subscriptions",
+        "createdSubscriptionCount": "New subscriptions",
+        "deactivatedSubscriptionCount": "Deactivated subscriptions",
+        "replacedSubscriptionCount": "Replaced subscriptions",
+        "totalNewSubscriptions": "Total new subscriptions",
+        "renewalRate": "Renewal rate",
+        "cancellationRate": "Cancellation rate",
+        "createdSubscriptionUsers": "New subscriptions",
+        "createdUnpaidSubscriptionUsers": "New unpaid subscriptions",
+        "deactivatedSubscriptionUsers": "Deactivated subscriptions",
+        "renewedSubscriptionUsers": "Renewed subscriptions",
+        "replacedSubscriptionUsers": "Replaced subscriptions"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Filter users by",
+      "id": "ID",
+      "firstName": "First name",
+      "name": "Last name",
+      "email": "Email",
+      "goToUser": "Link to user",
+      "close": "Close",
+      "userBtn": "Link to user"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "showUsers": "Show details",
+      "byDate": "By",
+      "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
+      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included.",
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Replaced, renewed, and deactivated subscriptions are included."
     }
   }
 }

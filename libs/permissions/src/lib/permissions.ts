@@ -790,6 +790,12 @@ export const CanDeleteBlockStyle: Permission = {
   deprecated: false
 }
 
+export const CanGetAudienceStats: Permission = {
+  id: 'CAN_GET_AUDIENCE_STATS',
+  description: 'Allows reading statistics about the audience.',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -909,7 +915,8 @@ export const AllPermissions: Permission[] = [
   CanCreateApprovedComment,
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
-  CanDeleteBlockStyle
+  CanDeleteBlockStyle,
+  CanGetAudienceStats
 ]
 
 export const EditorPermissions: Permission[] = [
