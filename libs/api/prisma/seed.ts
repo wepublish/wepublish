@@ -168,6 +168,17 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: {allowedValues: {boolChoice: true}}
       }
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.ALLOW_GUEST_PREVIEWS
+      },
+      update: {},
+      create: {
+        name: SettingName.ALLOW_GUEST_PREVIEWS,
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
+      }
+    }),
 
     // remove non-used settings
     prisma.setting.deleteMany({
