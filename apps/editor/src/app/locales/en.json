@@ -1661,7 +1661,13 @@
         "active": "Active",
         "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
         "anyMemberPlan": "Allow any subscription to pass the paywall",
-        "memberPlans": "Only specific subscriptions can pass the paywall"
+        "memberPlans": "Only specific subscriptions can pass the paywall",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass token",
+        "newBypassToken": "Create new bypass token",
+        "addBypass": "add",
+        "qrCodeTitle": "QR Code for Bypass Token",
+        "downloadSvg": "Download SVG"
       }
     }
   }

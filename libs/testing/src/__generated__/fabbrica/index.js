@@ -958,6 +958,10 @@ const modelFieldDefinitions = [{
                 name: "articles",
                 type: "Article",
                 relationName: "ArticleToPaywall"
+            }, {
+                name: "bypasses",
+                type: "PaywallBypass",
+                relationName: "PaywallToPaywallBypass"
             }]
     }, {
         name: "PaywallMemberplan",
@@ -969,6 +973,13 @@ const modelFieldDefinitions = [{
                 name: "paywall",
                 type: "Paywall",
                 relationName: "PaywallToPaywallMemberplan"
+            }]
+    }, {
+        name: "PaywallBypass",
+        fields: [{
+                name: "paywall",
+                type: "Paywall",
+                relationName: "PaywallToPaywallBypass"
             }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
@@ -5724,4 +5735,72 @@ function definePaywallMemberplanFactoryInternal({ defaultData: defaultDataResolv
  */
 export function definePaywallMemberplanFactory(options) {
     return definePaywallMemberplanFactoryInternal(options);
+}
+function isPaywallBypasspaywallFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Paywall";
+}
+function autoGeneratePaywallBypassScalarsOrEnums({ seq }) {
+    return {
+        token: getScalarFieldValueGenerator().String({ modelName: "PaywallBypass", fieldName: "token", isId: false, isUnique: true, seq })
+    };
+}
+function definePaywallBypassFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("PaywallBypass", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGeneratePaywallBypassScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                paywall: isPaywallBypasspaywallFactory(defaultData.paywall) ? {
+                    create: yield defaultData.paywall.build()
+                } : defaultData.paywall
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().paywallBypass.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "PaywallBypass",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link PaywallBypass} model.
+ *
+ * @param options
+ * @returns factory {@link PaywallBypassFactoryInterface}
+ */
+export function definePaywallBypassFactory(options) {
+    return definePaywallBypassFactoryInternal(options);
 }
