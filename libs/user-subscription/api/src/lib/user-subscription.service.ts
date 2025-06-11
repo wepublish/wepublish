@@ -1,10 +1,14 @@
 import {Injectable} from '@nestjs/common'
 import {
+  MemberPlan,
+  MetadataProperty,
   PaymentPeriodicity,
   Prisma,
   PrismaClient,
   Subscription,
-  SubscriptionDeactivationReason
+  SubscriptionDeactivation,
+  SubscriptionDeactivationReason,
+  SubscriptionPeriod
 } from '@prisma/client'
 import {
   InternalError,
@@ -14,14 +18,25 @@ import {
   NotFound,
   PaymentConfigurationNotAllowed,
   PaymentsService,
-  SubscriptionToDeactivateDoesNotExist
+  SubscriptionToDeactivateDoesNotExist,
+  unselectPassword
 } from '@wepublish/api'
 import {RemoteSubscriptionsService} from './remote-subscriptions.service'
 import {MemberContext} from 'libs/api/src/lib/memberContext'
 import {UserInputError} from '@nestjs/apollo'
 import {MemberPlanService} from '@wepublish/member-plan/api'
-import {CreateSubscriptionArgs, CreateSubscriptionWithConfirmationArgs} from './subscription.model'
+import {
+  CreateSubscriptionArgs,
+  CreateSubscriptionWithConfirmationArgs,
+  ExtendSubscriptionArgs
+} from './subscription.model'
 import {PaymentMethodService} from '@wepublish/payment-method/api'
+
+export type SubscriptionWithRelations = Subscription & {
+  periods: SubscriptionPeriod[]
+  properties: MetadataProperty[]
+  deactivation: SubscriptionDeactivation | null
+}
 
 @Injectable()
 export class UserSubscriptionService {
@@ -171,6 +186,130 @@ export class UserSubscriptionService {
     } catch (e: any) {
       console.log(e.stack)
       throw e
+    }
+  }
+
+  async extendSubscription(userId: string, args: ExtendSubscriptionArgs) {
+    const {subscriptionId, successURL, failureURL} = args
+
+    const subscription = (await this.prisma.subscription.findUnique({
+      where: {
+        id: subscriptionId
+      },
+      include: {
+        memberPlan: true
+      }
+    })) as SubscriptionWithRelations & {memberPlan: MemberPlan}
+
+    // Allow only valid and subscription belonging to the user to early extend
+    if (!subscription || subscription.userID !== userId) {
+      logger('extendSubscription').error(
+        'Could not find subscription with ID "%s" or subscription does not belong to user "%s"',
+        subscriptionId,
+        userId
+      )
+      throw new UserInputError(`SubscriptionId given not found!`)
+    }
+
+    // Prevent user from extending not extendable subscription
+    if (!subscription.extendable) {
+      throw new UserInputError(`Subscription with id ${subscription.id} is not extendable!`)
+    }
+
+    // Throw for unsupported payment providers
+    const paymentMethod = await this.prisma.paymentMethod.findUnique({
+      where: {
+        id: subscription.paymentMethodID
+      }
+    })
+    if (!paymentMethod) {
+      logger('extendSubscription').error(
+        'Could not find paymentMethod with ID "%s"',
+        subscription.paymentMethodID
+      )
+      throw new InternalError()
+    }
+
+    const paymentProvider = this.payments.paymentProviders.find(
+      obj => obj.id === paymentMethod.paymentProviderID
+    )
+
+    // Prevent user from creating new invoice while having unpaid invoices
+    const unpaidInvoices = await this.prisma.invoice.findMany({
+      where: {
+        subscriptionID: subscription.id,
+        paidAt: null
+      }
+    })
+    if (unpaidInvoices.length > 0) {
+      throw new UserInputError(`You cant create new invoice while you have unpaid invoices!`)
+    }
+
+    const memberContext = new MemberContext({
+      prisma: this.prisma,
+      mailContext: this.mailContext,
+      paymentProviders: this.payments.getProviders()
+    })
+
+    const invoice = await memberContext.renewSubscriptionForUser({
+      subscription
+    })
+    if (!invoice) {
+      logger('extendSubscription').error(
+        'Could not create new invoice for subscription with ID "%s"',
+        subscription.id
+      )
+      throw new InternalError()
+    }
+
+    // If payment provider supports off session payment try to charge
+    if (!paymentProvider || paymentProvider.offSessionPayments) {
+      const paymentMethod = await this.paymentMethodService.findActivePaymentMethodById(
+        subscription.paymentMethodID
+      )
+      if (!paymentMethod) {
+        logger('extendSubscription').warn(
+          'paymentMethod %s not found',
+          subscription.paymentMethodID
+        )
+        throw new InternalError()
+      }
+
+      const fullUser = await this.prisma.user.findUnique({
+        where: {id: subscription.userID},
+        select: unselectPassword
+      })
+      if (!fullUser) {
+        logger('extendSubscription').warn('user %s not found', subscription.userID)
+        throw new InternalError()
+      }
+
+      const customer = fullUser.paymentProviderCustomers.find(
+        ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
+      )
+      if (!customer) {
+        logger('extendSubscription').warn('customer %s not found', paymentMethod.paymentProviderID)
+      } else {
+        const user = await this.prisma.user.findUniqueOrThrow({where: {id: userId}})
+        // Charge customer
+        try {
+          const payment = await memberContext.chargeInvoice({
+            user,
+            invoice,
+            paymentMethodID: subscription.paymentMethodID,
+            customer
+          })
+          if (payment) {
+            return payment
+          }
+        } catch (e) {
+          logger('extendSubscription').warn(
+            'Invoice off session charge for subscription %s failed: %s',
+            subscription.id,
+            e
+          )
+        }
+      }
     }
   }
 

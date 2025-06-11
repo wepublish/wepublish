@@ -73,3 +73,15 @@ export class CreateSubscriptionWithConfirmationArgs extends OmitType(
   @Field({nullable: true})
   userId?: string
 }
+
+@ArgsType()
+export class ExtendSubscriptionArgs {
+  @Field()
+  subscriptionId!: string
+
+  @Field({nullable: true})
+  successURL?: string
+
+  @Field({nullable: true})
+  failureURL?: string
+}

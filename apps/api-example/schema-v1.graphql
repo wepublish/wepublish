@@ -22,9 +22,6 @@ type Query {
 }
 
 type Mutation {
-  """This mutation extends an subscription early"""
-  extendSubscription(subscriptionId: String!, successURL: String, failureURL: String): Payment!
-
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
@@ -34,34 +31,45 @@ type Mutation {
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 }
 
-type Payment {
+type User {
   id: String!
-  intentSecret: String
-  state: PaymentState!
-  paymentMethod: PaymentMethod!
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-type PaymentMethod {
-  id: String!
-  paymentProviderID: String!
   name: String!
-  slug: Slug!
-  description: String!
-  imageId: String
+  firstName: String
+  birthday: DateTime
+  email: String!
+  address: UserAddress
+  flair: String
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  oauth2Accounts: [OAuth2Account!]!
   image: Image
+  properties: [PublicProperties!]!
+  permissions: [String!]!
 }
 
-scalar Slug
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type UserAddress {
+  company: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type PaymentProviderCustomer {
+  paymentProviderID: String!
+  customerID: String!
+}
+
+type OAuth2Account {
+  type: String!
+  provider: String!
+  scope: String!
+}
 
 type Image {
   id: String!
@@ -84,11 +92,6 @@ type Image {
   url: String
   transformURL(input: ImageTransformation): String
 }
-
-"""
-A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar DateTime
 
 type FocalPoint {
   x: Float!
@@ -115,41 +118,6 @@ enum ImageOutput {
   png
   jpeg
   webp
-}
-
-type User {
-  id: String!
-  name: String!
-  firstName: String
-  birthday: DateTime
-  email: String!
-  address: UserAddress
-  flair: String
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
-  image: Image
-  properties: [PublicProperties!]!
-  permissions: [String!]!
-}
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
 }
 
 type PublicProperties {
@@ -204,4 +172,4 @@ type _Service {
   sdl: String
 }
 
-union _Entity = Image | PaymentMethod | User
+union _Entity = Image | User

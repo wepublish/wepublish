@@ -1379,7 +1379,9 @@ type Mutation {
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
-  """Allows authenticated users to create additional subscriptions"""
+  """
+  Allows guests and authenticated users to create additional subscriptions
+  """
   createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], userId: String): Boolean!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
@@ -1425,6 +1427,9 @@ type Mutation {
 
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
+
+  """Allows authenticated users to extend existing subscriptions"""
+  extendSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!

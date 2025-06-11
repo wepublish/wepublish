@@ -2,12 +2,13 @@ import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
+  ExtendSubscriptionArgs,
   UserSubscriptionInput
 } from './subscription.model'
 import {Authenticated, CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {UserSubscriptionService} from './user-subscription.service'
 import {PublicSubscription} from '@wepublish/membership/api'
-import {Payment} from '../../../../payment/api/src/lib/payment.model'
+import {Payment} from '@wepublish/payment/api'
 import {UserDataloaderService} from '@wepublish/user/api'
 import {UserInputError} from '@nestjs/apollo'
 
@@ -39,7 +40,7 @@ export class UserSubscriptionResolver {
 
   @Public()
   @Mutation(() => Boolean, {
-    description: `Allows authenticated users to create additional subscriptions`
+    description: `Allows guests and authenticated users to create additional subscriptions`
   })
   async createSubscriptionWithConfirmation(
     @Args() {userId, ...args}: CreateSubscriptionWithConfirmationArgs,
@@ -51,6 +52,17 @@ export class UserSubscriptionResolver {
     }
     await this.userSubscriptionService.createSubscriptionWithConfirmation(user.id, args)
     return true
+  }
+
+  @Authenticated()
+  @Mutation(() => Payment, {
+    description: `Allows authenticated users to extend existing subscriptions`
+  })
+  async extendSubscription(
+    @Args() args: ExtendSubscriptionArgs,
+    @CurrentUser() {user}: UserSession
+  ) {
+    return this.userSubscriptionService.extendSubscription(user.id, args)
   }
 
   @Authenticated()

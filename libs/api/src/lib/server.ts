@@ -81,7 +81,6 @@ export class WepublishServer {
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
       extend type Image @key(fields: "id")
-      extend type PaymentMethod @key(fields: "id")
       extend type User @key(fields: "id")
     `
     const typeDefs = [graphQLJSSchemaToAST(GraphQLWepublishPublicSchema), federatedTypeDefs]
