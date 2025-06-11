@@ -195,7 +195,10 @@ const body = {
       xs: 17,
       md: 18
     }
-  })
+  }),
+  ['&.MuiTypography-gutterBottom']: {
+    marginBottom: variablesTheme.spacing(2)
+  }
 }
 
 const h2 = {

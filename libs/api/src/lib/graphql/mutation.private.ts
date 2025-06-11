@@ -92,12 +92,7 @@ import {
 } from './poll/poll.private-mutation'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
-import {
-  createJWTSession,
-  createOAuth2Session,
-  createSession,
-  revokeSessionByToken
-} from './session/session.mutation'
+import {createJWTSession, createSession, revokeSessionByToken} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
@@ -188,26 +183,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
         createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithOAuth2Code: {
-      type: new GraphQLNonNull(GraphQLSessionWithToken),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        code: {type: new GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
     },
 
     revokeSession: {

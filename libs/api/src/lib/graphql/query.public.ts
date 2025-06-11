@@ -6,7 +6,6 @@ import {Context} from '../context'
 import {AuthorSort} from '../db/author'
 import {MemberPlanSort} from '../db/memberPlan'
 import {NotFound} from '../error'
-import {GraphQLAuthProvider} from './auth'
 import {
   GraphQLAuthor,
   GraphQLAuthorConnection,
@@ -116,30 +115,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           commentRatingSystemAnswers,
           comment
         )
-      }
-    },
-
-    // Auth
-    // =======
-
-    authProviders: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthProvider))),
-      args: {redirectUri: {type: GraphQLString}},
-      description: 'This query returns the redirect Uri.',
-      async resolve(root, {redirectUri}, {getOauth2Clients}) {
-        const clients = await getOauth2Clients()
-        return clients.map(client => {
-          const url = client.client.authorizationUrl({
-            scope: client.provider.scopes.join(),
-            response_mode: 'query',
-            redirect_uri: `${redirectUri}/${client.name}`,
-            state: 'fakeRandomString'
-          })
-          return {
-            name: client.name,
-            url
-          }
-        })
       }
     },
 

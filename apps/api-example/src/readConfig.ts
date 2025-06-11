@@ -9,7 +9,7 @@ type General = {
   apolloPlayground: boolean
   apolloIntrospection: boolean
   bcryptHashCostFactor: number
-  urlAdapter: string
+  urlAdapter: 'default' | 'hauptstadt'
   sessionTTLDays: number
 }
 
@@ -23,15 +23,6 @@ type MailProvider = {
   webhookEndpointSecret: string
   mailDomain: string
   baseURL: string
-}
-
-type OAuthProvider = {
-  name: string
-  discoverUrl: string
-  clientId: string
-  clientKey: string
-  redirectUri: string[]
-  scopes: string[]
 }
 
 type Payrexx = {
@@ -163,7 +154,6 @@ type TrackingPixels = ProLitteris & Omit<TrackingPixelProvider, 'createPixelUri'
 type Config = {
   general: General
   mailProvider: MailProvider
-  OAuthProviders: OAuthProvider[]
   paymentProviders: PaymentProvider[]
   mediaServer: karmaMediaServer | novaMediaServer
   challenge: AlgebraicCaptcha | Turnstile

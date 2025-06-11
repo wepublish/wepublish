@@ -6,7 +6,6 @@ type Query {
   peer(id: String!): Peer
   me: User
   sessions: [Session!]!
-  authProviders(redirectUri: String): [AuthProvider!]!
   user(id: String): User
   users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
   subscription(id: String!): Subscription
@@ -318,11 +317,6 @@ type Session {
   user: User!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type AuthProvider {
-  name: String!
-  url: String!
 }
 
 type UserConnection {
@@ -771,7 +765,6 @@ type Mutation {
   deletePeer(id: String!): Peer
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
   revokeSession(id: String!): Boolean!
   revokeActiveSession: Boolean!
   sessions: [Session!]!

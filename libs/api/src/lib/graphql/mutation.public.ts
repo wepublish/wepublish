@@ -55,7 +55,6 @@ import {voteOnPoll} from './poll/poll.public-mutation'
 import {GraphQLPublicSessionWithToken} from './session'
 import {
   createJWTSession,
-  createOAuth2Session,
   createSession,
   createUserSession,
   revokeSessionByToken
@@ -106,26 +105,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
         createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithOAuth2Code: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        code: {type: new GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
     },
 
     revokeActiveSession: {

@@ -26,7 +26,7 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -40,6 +40,8 @@ export const getStaticProps: GetStaticProps = async () => {
       query: PeerProfileDocument
     })
   ])
+
+  console.log(page.data.page.latest.blocks[0].teasers[0])
 
   const props = addClientCacheToV1Props(client, {})
 

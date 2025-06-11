@@ -35,7 +35,7 @@ import {IncomingMessage} from 'http'
 import jwt from 'jsonwebtoken'
 import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
-import {Client, Issuer} from 'openid-client'
+import {Client} from 'openid-client'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
@@ -117,14 +117,11 @@ export interface Context {
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
   readonly requestIP: string
   readonly fingerprint: string
-
-  getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): AuthSession
 
@@ -176,7 +173,6 @@ export interface ContextOptions {
   readonly urlAdapter: URLAdapter
   readonly mailProvider: BaseMailProvider
   readonly mailContextOptions: MailContextOptions
-  readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
@@ -209,7 +205,6 @@ export async function contextFromRequest(
     prisma,
     mediaAdapter,
     urlAdapter,
-    oauth2Providers,
     hooks,
     mailProvider,
     mailContextOptions,
@@ -656,31 +651,12 @@ export async function contextFromRequest(
     mailContext,
     mediaAdapter,
     urlAdapter,
-    oauth2Providers,
     paymentProviders,
     hooks,
     requestIP: requestIP ?? '',
     fingerprint: fingerprint ?? '',
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
     hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
-
-    async getOauth2Clients() {
-      return await Promise.all(
-        oauth2Providers.map(async provider => {
-          const issuer = await Issuer.discover(provider.discoverUrl)
-          return {
-            name: provider.name,
-            provider,
-            client: new issuer.Client({
-              client_id: provider.clientId,
-              client_secret: provider.clientKey,
-              redirect_uris: provider.redirectUri,
-              response_types: ['code']
-            })
-          }
-        })
-      )
-    },
 
     authenticateUser() {
       if (!session || session.type !== AuthSessionType.User) {

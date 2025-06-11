@@ -66,7 +66,7 @@ export function RenderElement({element}: BuilderRenderElementProps): ReactNode {
 
     case BlockFormat.ListItem:
       return (
-        <ListItem>
+        <ListItem css={lastChildNoGutter}>
           <RenderRichtext elements={element.children} />
         </ListItem>
       )

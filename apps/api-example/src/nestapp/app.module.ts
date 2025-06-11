@@ -4,7 +4,13 @@ import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ScheduleModule} from '@nestjs/schedule'
 
-import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
+import {
+  ApiModule,
+  HauptstadtURLAdapter,
+  PrismaModule,
+  URLAdapter,
+  URLAdapterModule
+} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
@@ -376,8 +382,17 @@ import {GoogleAnalyticsModule, GoogleAnalyticsService} from '@wepublish/google-a
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => {
-        return new URLAdapter(config.getOrThrow('WEBSITE_URL'))
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+        const urlAdapter =
+          configFile.general.urlAdapter === 'hauptstadt'
+            ? new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
+            : new URLAdapter(config.getOrThrow('WEBSITE_URL'))
+
+        console.log(urlAdapter)
+
+        return urlAdapter
       },
       inject: [ConfigService]
     }),

@@ -59,21 +59,10 @@ export type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {
   gutterBottom?: boolean
 }
 
-const gutterStyles = (theme: Theme) => css`
-  &.MuiTypography-gutterBottom {
-    margin-bottom: ${theme.spacing(3)};
-  }
-`
-
 export const Paragraph = forwardRef<HTMLParagraphElement, ParagraphProps>(
   ({children, gutterBottom = true, ...props}, ref) => {
     return (
-      <Typography
-        {...props}
-        ref={ref}
-        variant="body1"
-        gutterBottom={gutterBottom}
-        css={gutterStyles}>
+      <Typography {...props} ref={ref} variant="body1" gutterBottom={gutterBottom}>
         {children}
       </Typography>
     )

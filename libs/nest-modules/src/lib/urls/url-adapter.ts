@@ -13,7 +13,7 @@ import {
 
 @Injectable()
 export class URLAdapter {
-  constructor(private baseURL: string) {}
+  constructor(protected baseURL: string) {}
 
   async getSubscriptionURL(subscription: Subscription) {
     return `${this.baseURL}/profile/subscription/${subscription.id}`

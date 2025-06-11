@@ -21,26 +21,24 @@ import {
   Tag,
   useArticleQuery
 } from '@wepublish/website/api'
-import {Paywall, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
+import {usePathname, useSearchParams} from 'next/navigation'
 import {useRouter} from 'next/router'
 import {anyPass} from 'ramda'
-import {ComponentProps, useEffect} from 'react'
+import {ComponentProps} from 'react'
 
 import {DuplicatedPaywall} from '../../src/components/hauptstadt-paywall'
 
 export const ArticleWrapperComments = styled(ArticleWrapper)``
 export const ArticleWrapperAppendix = styled(ArticleWrapper)``
 
-// @TODO:
-const ExtraPaywall = () => styled(Paywall)``
-
 export default function ArticleBySlugOrId() {
   const router = useRouter()
   const {
     query: {slug, id, articleId}
-  } = useRouter()
+  } = router
   const {
     elements: {H4}
   } = useWebsiteBuilder()
@@ -52,11 +50,8 @@ export default function ArticleBySlugOrId() {
       id: id as string
     }
   })
-
-  const containerProps = {
-    slug,
-    id
-  } as ComponentProps<typeof ArticleContainer>
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
 
   const lastBlock = data?.article.latest.blocks.at(-1)
   const isLastBlockTeaser =
@@ -67,24 +62,23 @@ export default function ArticleBySlugOrId() {
 
   const {showPaywall} = useShowPaywall(data?.article.paywall)
 
-  useEffect(() => {
-    if (!showPaywall && data?.article.paywall?.active) {
-      router.replace(
-        {
-          query: {
-            articleId: data.article.id
-          }
-        },
-        undefined,
-        {shallow: true}
-      )
-    }
-  }, [data?.article.id, data?.article.paywall?.active, router, showPaywall])
+  if (!showPaywall && router.query.articleId) {
+    const nextSearchParams = new URLSearchParams(searchParams.toString())
+    nextSearchParams.delete('articleId')
+    const search = nextSearchParams.size ? `?${nextSearchParams}` : ''
+
+    router.replace(`${pathname}${search}`, undefined, {shallow: true})
+  }
+
+  const containerProps = {
+    slug,
+    id
+  } as ComponentProps<typeof ArticleContainer>
 
   return (
     <>
       <ShowPaywallContext.Provider
-        value={{hideContent: articleId === data?.article.id ? false : undefined}}>
+        value={{hideContent: articleId === data?.article.id ? undefined : false}}>
         <ArticleContainer {...containerProps}>
           <DuplicatedPaywall paywall={data?.article?.paywall} />
         </ArticleContainer>

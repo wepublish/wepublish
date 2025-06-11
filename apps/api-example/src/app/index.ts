@@ -3,7 +3,6 @@ import {
   AlgebraicCaptchaChallenge,
   ChallengeProvider,
   CfTurnstile,
-  Oauth2Provider,
   WepublishServer
 } from '@wepublish/api'
 import pinoMultiStream from 'pino-multi-stream'
@@ -12,7 +11,7 @@ import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
 import {readConfig} from '../readConfig'
-import {URLAdapter} from '@wepublish/nest-modules'
+import {URLAdapter, HauptstadtURLAdapter} from '@wepublish/nest-modules'
 import {HotAndTrendingDataSource} from '@wepublish/article/api'
 import {MediaAdapter} from '@wepublish/image/api'
 import {MailProvider} from '@wepublish/mail/api'
@@ -70,18 +69,6 @@ export async function runServer({
   await prisma.$connect()
 
   /*
-   * Load OAuth Providers
-   */
-
-  const oauth2Providers: Oauth2Provider[] = []
-  const Oauth2ProvidersRaw = config.OAuthProviders
-  if (Oauth2ProvidersRaw) {
-    for (const provider of Oauth2ProvidersRaw) {
-      oauth2Providers.push(provider)
-    }
-  }
-
-  /*
    * Load logging providers
    */
 
@@ -112,7 +99,10 @@ export async function runServer({
     level: 'debug'
   })
 
-  const urlAdapter = new URLAdapter(websiteURL)
+  const urlAdapter =
+    config.general.urlAdapter === 'hauptstadt'
+      ? new HauptstadtURLAdapter(websiteURL)
+      : new URLAdapter(websiteURL)
 
   /**
    * Challenge
@@ -148,7 +138,6 @@ export async function runServer({
       sessionTTL,
       mediaAdapter,
       prisma,
-      oauth2Providers,
       mailProvider,
       mailContextOptions: {
         defaultFromAddress: config.mailProvider.fromAddress || 'dev@wepublish.ch',

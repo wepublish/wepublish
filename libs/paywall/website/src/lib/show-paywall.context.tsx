@@ -1,6 +1,8 @@
 import {FullPaywallFragment} from '@wepublish/website/api'
 import {createContext, useContext, useMemo} from 'react'
 import {useActiveSubscriptions} from '@wepublish/membership/website'
+import {useUser} from '@wepublish/authentication/website'
+import {CanGetArticle} from '@wepublish/permissions'
 
 export const ShowPaywallContext = createContext<{showPaywall?: boolean; hideContent?: boolean}>({})
 
@@ -8,6 +10,7 @@ export const useShowPaywall = (
   paywall?: FullPaywallFragment | null
 ): {showPaywall: boolean; hideContent: boolean} => {
   const subscriptions = useActiveSubscriptions()
+  const {user} = useUser()
   const ctx = useContext(ShowPaywallContext)
 
   return useMemo(() => {
@@ -17,8 +20,12 @@ export const useShowPaywall = (
       return {hideContent: false, showPaywall: false}
     }
 
+    if (user?.permissions.includes(CanGetArticle.id)) {
+      return {hideContent: false, showPaywall: false}
+    }
+
     if (paywall.anyMemberPlan && subscriptions?.length) {
-      return {showPaywall: true, hideContent: false}
+      return {showPaywall: false, hideContent: false}
     }
 
     return {
@@ -29,5 +36,5 @@ export const useShowPaywall = (
         ctx.hideContent ??
         !paywall?.memberPlans.some(memberPlan => memberPlanIds.includes(memberPlan.id))
     }
-  }, [ctx.showPaywall, ctx.hideContent, paywall, subscriptions])
+  }, [subscriptions, paywall, user?.permissions, ctx.showPaywall, ctx.hideContent])
 }

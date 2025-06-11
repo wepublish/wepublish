@@ -13,7 +13,7 @@ import {UserSort} from '../db/user'
 import {UserRoleSort} from '../db/userRole'
 import {GivenTokeExpiryToLongError, UserIdNotFound} from '../error'
 
-import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
+import {GraphQLJWTToken} from './auth'
 import {
   GraphQLAuthor,
   GraphQLAuthorConnection,
@@ -194,27 +194,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSession))),
       resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
         getSessionsForUser(authenticateUser, session, userRole)
-    },
-
-    authProviders: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthProvider))),
-      args: {redirectUri: {type: GraphQLString}},
-      async resolve(root, {redirectUri}, {getOauth2Clients}) {
-        const clients = await getOauth2Clients()
-        return clients.map(client => {
-          const url = client.client.authorizationUrl({
-            scope: client.provider.scopes.join(),
-            response_mode: 'query',
-            redirect_uri: `${redirectUri}/${client.name}`,
-            state: 'fakeRandomString'
-          })
-
-          return {
-            name: client.name,
-            url
-          }
-        })
-      }
     },
 
     // Users

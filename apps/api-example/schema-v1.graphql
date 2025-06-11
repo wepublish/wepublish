@@ -34,9 +34,6 @@ type Query {
   """This query returns the comments of an item."""
   comments(itemId: String!, sort: CommentSort, order: SortOrder = Descending): [Comment!]!
 
-  """This query returns the redirect Uri."""
-  authProviders(redirectUri: String): [AuthProvider!]!
-
   """This query returns the user."""
   me: User
 
@@ -356,11 +353,6 @@ enum CommentSort {
   rating
 }
 
-type AuthProvider {
-  name: String!
-  url: String!
-}
-
 type Invoice {
   id: String!
   createdAt: DateTime!
@@ -553,7 +545,6 @@ enum TagSort {
 type Mutation {
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!

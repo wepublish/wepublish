@@ -131,7 +131,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
               startIcon={<FaShare size={16} />}
               onClick={async () => {
                 navigator.share({
-                  url: `${article.url}${includeIdInUrl ? `?articleId=${article.id}` : ''}`,
+                  url: window.location.href,
                   title: article.latest.title ?? undefined,
                   text: article.latest.lead ?? undefined
                 })

@@ -133,7 +133,10 @@ export const theme = createTheme({
       fontWeight: 300
     },
     body1: {
-      lineHeight: 1.7
+      lineHeight: 1.7,
+      ['&.MuiTypography-gutterBottom']: {
+        marginBottom: baseTheme.spacing(3)
+      }
     },
     caption: {
       lineHeight: 1.7
