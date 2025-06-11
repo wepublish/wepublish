@@ -9,6 +9,8 @@ import {
   PickType
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import {PaymentMethod} from '@wepublish/payment-method/api'
+import {MemberPlan} from '@wepublish/member-plan/api'
 import {Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
