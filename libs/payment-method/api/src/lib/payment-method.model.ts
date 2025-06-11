@@ -1,9 +1,9 @@
 import {ArgsType, Directive, Field, ID, InputType, ObjectType} from '@nestjs/graphql'
-import {HasImage, Image} from '@wepublish/image/api'
+import {HasImageLc, Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
 
 @ObjectType({
-  implements: () => [HasImage]
+  implements: () => [HasImageLc]
 })
 @Directive('@key(fields: "id")')
 export class PaymentMethod {
@@ -31,7 +31,7 @@ export class PaymentMethod {
   @Field()
   active!: boolean
 
-  imageID?: string
+  imageId!: string | null
   image?: Image
 }
 

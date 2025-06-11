@@ -15,6 +15,12 @@ export class Property {
   public!: boolean
 }
 
+@InputType()
+export class PropertyInput extends OmitType(Property, ['id'] as const, InputType) {
+  @Field({nullable: true})
+  id?: string
+}
+
 @ObjectType('PublicProperties')
 export class PublicProperty {
   @Field()
@@ -24,8 +30,5 @@ export class PublicProperty {
   value!: string
 }
 
-@InputType()
-export class PropertyInput extends OmitType(Property, ['id'] as const, InputType) {
-  @Field({nullable: true})
-  id?: string
-}
+@InputType('PublicPropertiesInput')
+export class PublicPropertyInput extends OmitType(PublicProperty, [] as const, InputType) {}

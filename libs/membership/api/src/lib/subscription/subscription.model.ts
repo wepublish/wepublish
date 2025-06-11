@@ -16,7 +16,7 @@ export class SubscriptionDeactivation {
   date!: Date
 
   @Field(() => SubscriptionDeactivationReason)
-  reason!: typeof SubscriptionDeactivationReason
+  reason!: SubscriptionDeactivationReason
 }
 
 @ObjectType({
@@ -32,7 +32,7 @@ export class PublicSubscription {
   memberPlan!: MemberPlan
 
   @Field(() => PaymentPeriodicity)
-  paymentPeriodicity!: typeof PaymentPeriodicity
+  paymentPeriodicity!: PaymentPeriodicity
 
   @Field(() => Int)
   monthlyAmount!: number

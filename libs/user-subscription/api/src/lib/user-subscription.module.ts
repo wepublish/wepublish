@@ -4,9 +4,10 @@ import {UserSubscriptionService} from './user-subscription.service'
 import {UserSubscriptionResolver} from './user-subscription.resolver'
 import {MemberPlanModule} from '@wepublish/member-plan/api'
 import {RemoteSubscriptionsService} from './remote-subscriptions.service'
+import {PaymentMethodModule} from '@wepublish/payment-method/api'
 
 @Module({
-  imports: [PrismaModule, MemberPlanModule],
+  imports: [PrismaModule, MemberPlanModule, PaymentMethodModule],
   providers: [UserSubscriptionService, RemoteSubscriptionsService, UserSubscriptionResolver],
   exports: []
 })

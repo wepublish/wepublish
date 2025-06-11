@@ -1,4 +1,4 @@
-import {MemberPlan, Subscription, SubscriptionDeactivationReason} from '@prisma/client'
+import {MemberPlan} from '@prisma/client'
 import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
@@ -17,7 +17,6 @@ import {
   NotFound,
   SubscriptionNotExtendable,
   SubscriptionNotFound,
-  SubscriptionToDeactivateDoesNotExist,
   UserIdNotFound
 } from '../error'
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
@@ -32,128 +31,6 @@ import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberCont
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    createSubscription: {
-      type: new GraphQLNonNull(GraphQLPublicPayment),
-      args: {
-        memberPlanID: {type: GraphQLString},
-        memberPlanSlug: {type: GraphQLSlug},
-        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
-        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLString},
-        paymentMethodSlug: {type: GraphQLSlug},
-        subscriptionProperties: {
-          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
-        },
-        successURL: {type: GraphQLString},
-        failureURL: {type: GraphQLString},
-        deactivateSubscriptionId: {type: GraphQLString}
-      },
-      description: 'Allows authenticated users to create additional subscriptions',
-      async resolve(
-        root,
-        {
-          memberPlanID,
-          memberPlanSlug,
-          autoRenew,
-          paymentPeriodicity,
-          monthlyAmount,
-          paymentMethodID,
-          paymentMethodSlug,
-          subscriptionProperties,
-          successURL,
-          failureURL,
-          deactivateSubscriptionId
-        },
-        {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
-      ) {
-        // authenticate user
-        const {user} = authenticateUser()
-        await memberContext.validateInputParamsCreateSubscription(
-          memberPlanID,
-          memberPlanSlug,
-          paymentMethodID,
-          paymentMethodSlug
-        )
-
-        const memberPlan = await getMemberPlanByIDOrSlug(loaders, memberPlanSlug, memberPlanID)
-        const paymentMethod = await getPaymentMethodByIDOrSlug(
-          loaders,
-          paymentMethodSlug,
-          paymentMethodID
-        )
-
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
-
-        await memberContext.validateSubscriptionPaymentConfiguration(
-          memberPlan,
-          autoRenew,
-          paymentPeriodicity,
-          paymentMethod
-        )
-
-        // Check if subscription which should be deactivated exists
-        let subscriptionToDeactivate: null | Subscription = null
-        if (deactivateSubscriptionId) {
-          subscriptionToDeactivate = await prisma.subscription.findUnique({
-            where: {
-              id: deactivateSubscriptionId,
-              userID: user.id,
-              deactivation: {
-                is: null
-              }
-            },
-            include: {
-              deactivation: true,
-              periods: true,
-              properties: true
-            }
-          })
-          if (!subscriptionToDeactivate)
-            throw new SubscriptionToDeactivateDoesNotExist(deactivateSubscriptionId)
-        }
-
-        const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
-
-        const {subscription, invoice} = await memberContext.createSubscription(
-          prisma,
-          user.id,
-          paymentMethod.id,
-          paymentPeriodicity,
-          monthlyAmount,
-          memberPlan.id,
-          properties,
-          autoRenew,
-          memberPlan.extendable,
-          subscriptionToDeactivate
-        )
-
-        if (!invoice) {
-          logger('mutation.public').error(
-            'Could not create new invoice for subscription with ID "%s"',
-            subscription.id
-          )
-          throw new InternalError()
-        }
-
-        if (subscriptionToDeactivate) {
-          await memberContext.deactivateSubscription({
-            subscription: subscriptionToDeactivate,
-            deactivationReason: SubscriptionDeactivationReason.userReplacedSubscription
-          })
-        }
-
-        return await createPaymentWithProvider({
-          invoice,
-          saveCustomer: true,
-          paymentMethodID: paymentMethod.id,
-          successURL,
-          failureURL,
-          user
-        })
-      }
-    },
-
     createSubscriptionWithConfirmation: {
       type: new GraphQLNonNull(GraphQLBoolean),
       args: {
@@ -224,7 +101,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           )
 
           const {subscription, invoice} = await memberContext.createSubscription(
-            prisma,
             user.id,
             paymentMethod.id,
             paymentPeriodicity,

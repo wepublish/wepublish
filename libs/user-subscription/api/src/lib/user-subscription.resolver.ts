@@ -1,8 +1,9 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {UserSubscriptionInput} from './subscription.model'
+import {CreateSubscriptionArgs, UserSubscriptionInput} from './subscription.model'
 import {Authenticated, CurrentUser, UserSession} from '@wepublish/authentication/api'
 import {UserSubscriptionService} from './user-subscription.service'
 import {PublicSubscription} from '@wepublish/membership/api'
+import {Payment} from '../../../../payment/api/src/lib/payment.model'
 
 @Resolver(() => PublicSubscription)
 export class UserSubscriptionResolver {
@@ -14,6 +15,17 @@ export class UserSubscriptionResolver {
   })
   async subscriptions(@CurrentUser() session: UserSession) {
     return this.userSubscriptionService.getUserSubscriptions(session.user.id)
+  }
+
+  @Authenticated()
+  @Mutation(() => Payment, {
+    description: `Allows authenticated users to create additional subscriptions`
+  })
+  async createSubscription(
+    @Args() args: CreateSubscriptionArgs,
+    @CurrentUser() {user}: UserSession
+  ) {
+    return this.userSubscriptionService.createSubscription(user.id, args)
   }
 
   @Authenticated()

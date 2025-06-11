@@ -1012,6 +1012,11 @@ interface HasImage {
   imageID: String
 }
 
+interface HasImageLc {
+  image: Image
+  imageId: String
+}
+
 interface HasOptionalArticle {
   article: Article
   articleID: String
@@ -1362,6 +1367,9 @@ type Mutation {
   createSessionWithJWT(jwt: String!): SessionWithToken!
   createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
 
+  """Allows authenticated users to create additional subscriptions"""
+  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], successURL: String): Payment!
+
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -1674,7 +1682,7 @@ type PaginatedPollVotes {
 
 type Payment implements HasPaymentMethod {
   id: String!
-  intentID: String
+  intentSecret: String!
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   state: PaymentState!
@@ -1688,13 +1696,13 @@ input PaymentFromInvoiceInput {
   successURL: String
 }
 
-type PaymentMethod implements HasImage {
+type PaymentMethod implements HasImageLc {
   active: Boolean!
   createdAt: DateTime!
   description: String!
   id: String!
   image: Image
-  imageID: String
+  imageId: String
   modifiedAt: DateTime!
   name: String!
   paymentProviderID: String!
@@ -1914,6 +1922,11 @@ input PropertyInput {
 }
 
 type PublicProperties {
+  key: String!
+  value: String!
+}
+
+input PublicPropertiesInput {
   key: String!
   value: String!
 }

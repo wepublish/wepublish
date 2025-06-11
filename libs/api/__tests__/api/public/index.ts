@@ -1059,6 +1059,11 @@ export type HasImage = {
   imageID?: Maybe<Scalars['String']>;
 };
 
+export type HasImageLc = {
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
+};
+
 export type HasOptionalArticle = {
   article?: Maybe<Article>;
   articleID?: Maybe<Scalars['String']>;
@@ -2280,14 +2285,13 @@ export type PaymentFromInvoiceInput = {
   successURL?: InputMaybe<Scalars['String']>;
 };
 
-export type PaymentMethod = HasImage & {
+export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod';
   active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['String'];
   image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
   imageId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];

@@ -13,12 +13,11 @@ export class Payment {
   @Field()
   id!: string
 
-  @Field({nullable: true})
-  intentID?: string
-  intentSecret?: string
+  @Field()
+  intentSecret!: string
 
   @Field(() => PaymentState)
-  state!: typeof PaymentState
+  state!: PaymentState
 
   paymentMethodID!: string
   paymentMethod!: PaymentMethod

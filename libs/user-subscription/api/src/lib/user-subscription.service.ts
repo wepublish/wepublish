@@ -7,16 +7,21 @@ import {
   SubscriptionDeactivationReason
 } from '@prisma/client'
 import {
+  InternalError,
+  logger,
   MailContext,
   MonthlyAmountNotEnough,
   NotFound,
   PaymentConfigurationNotAllowed,
-  PaymentsService
+  PaymentsService,
+  SubscriptionToDeactivateDoesNotExist
 } from '@wepublish/api'
 import {RemoteSubscriptionsService} from './remote-subscriptions.service'
 import {MemberContext} from 'libs/api/src/lib/memberContext'
 import {UserInputError} from '@nestjs/apollo'
 import {MemberPlanService} from '@wepublish/member-plan/api'
+import {CreateSubscriptionArgs} from './subscription.model'
+import {PaymentMethodService} from '@wepublish/payment-method/api'
 
 @Injectable()
 export class UserSubscriptionService {
@@ -24,6 +29,7 @@ export class UserSubscriptionService {
     private readonly prisma: PrismaClient,
     private readonly payments: PaymentsService,
     private readonly memberPlanService: MemberPlanService,
+    private readonly paymentMethodService: PaymentMethodService,
     private readonly remoteSubscriptionsService: RemoteSubscriptionsService,
     private readonly mailContext: MailContext
   ) {}
@@ -36,6 +42,125 @@ export class UserSubscriptionService {
       select: {
         id: true
       }
+    })
+  }
+
+  async createSubscription(
+    userId: string,
+    {
+      memberPlanID,
+      memberPlanSlug,
+      autoRenew,
+      paymentPeriodicity,
+      monthlyAmount,
+      paymentMethodID,
+      paymentMethodSlug,
+      subscriptionProperties,
+      successURL,
+      failureURL,
+      deactivateSubscriptionId
+    }: CreateSubscriptionArgs
+  ) {
+    // authenticate user
+
+    const memberContext = new MemberContext({
+      prisma: this.prisma,
+      mailContext: this.mailContext,
+      paymentProviders: this.payments.getProviders()
+    })
+
+    await memberContext.validateInputParamsCreateSubscription(
+      memberPlanID,
+      memberPlanSlug,
+      paymentMethodID,
+      paymentMethodSlug
+    )
+
+    const memberPlan = memberPlanID
+      ? await this.memberPlanService.getMemberPlanById(memberPlanID)
+      : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '')
+    if (!memberPlan) {
+      throw new UserInputError(`MemberPlan not found ${memberPlanID || memberPlanSlug}`)
+    }
+
+    const paymentMethod = paymentMethodID
+      ? await this.paymentMethodService.findActivePaymentMethodById(paymentMethodID)
+      : await this.paymentMethodService.findActivePaymentMethodBySlug(paymentMethodSlug ?? '')
+
+    if (!paymentMethod) {
+      throw new UserInputError(`PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`)
+    }
+
+    if (monthlyAmount < memberPlan.amountPerMonthMin) {
+      throw new UserInputError(`Monthly amount not enough`)
+    }
+
+    await memberContext.validateSubscriptionPaymentConfiguration(
+      memberPlan,
+      autoRenew,
+      paymentPeriodicity,
+      paymentMethod
+    )
+
+    // Check if subscription which should be deactivated exists
+    let subscriptionToDeactivate: null | Subscription = null
+    if (deactivateSubscriptionId) {
+      subscriptionToDeactivate = await this.prisma.subscription.findUnique({
+        where: {
+          id: deactivateSubscriptionId,
+          userID: userId,
+          deactivation: {
+            is: null
+          }
+        },
+        include: {
+          deactivation: true,
+          periods: true,
+          properties: true
+        }
+      })
+      if (!subscriptionToDeactivate)
+        throw new SubscriptionToDeactivateDoesNotExist(deactivateSubscriptionId)
+    }
+
+    const properties = await memberContext.processSubscriptionProperties(
+      subscriptionProperties ?? []
+    )
+
+    const {subscription, invoice} = await memberContext.createSubscription(
+      userId,
+      paymentMethod.id,
+      paymentPeriodicity,
+      monthlyAmount,
+      memberPlan.id,
+      properties,
+      autoRenew,
+      memberPlan.extendable,
+      subscriptionToDeactivate
+    )
+
+    if (!invoice) {
+      logger('mutation.public').error(
+        'Could not create new invoice for subscription with ID "%s"',
+        subscription.id
+      )
+      throw new InternalError()
+    }
+
+    if (subscriptionToDeactivate) {
+      await memberContext.deactivateSubscription({
+        subscription: subscriptionToDeactivate,
+        deactivationReason: SubscriptionDeactivationReason.userReplacedSubscription
+      })
+    }
+
+    return await this.payments.createPaymentWithProvider({
+      invoice,
+      saveCustomer: true,
+      paymentMethodID: paymentMethod.id,
+      successURL,
+      failureURL,
+      userId
     })
   }
 

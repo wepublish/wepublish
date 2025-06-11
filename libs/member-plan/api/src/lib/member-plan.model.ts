@@ -60,7 +60,7 @@ export class MemberPlan {
   tags?: string[]
 
   @Field(() => Currency)
-  currency!: typeof Currency
+  currency!: Currency
 
   @Field(() => Int)
   amountPerMonthMin!: number
