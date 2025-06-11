@@ -11,6 +11,10 @@ fragment FullPaywall on Paywall {
     id
     name
   }
+  bypasses {
+    id
+    token
+  }
 }
 
 query PaywallList {
@@ -50,6 +54,7 @@ mutation UpdatePaywall(
   $active: Boolean
   $anyMemberPlan: Boolean
   $memberPlanIds: [String!]
+  $bypassTokens: [String!]
 ) {
   updatePaywall(
     id: $id
@@ -58,6 +63,7 @@ mutation UpdatePaywall(
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
+    bypassTokens: $bypassTokens
   ) {
     ...FullPaywall
   }

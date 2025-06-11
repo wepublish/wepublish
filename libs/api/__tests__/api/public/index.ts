@@ -1456,6 +1456,8 @@ export type Mutation = {
   createPaymentFromSubscription?: Maybe<Payment>;
   /** Creates a paywall. */
   createPaywall: Paywall;
+  /** Creates a paywall bypass token. */
+  createPaywallBypass: PaywallBypass;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -1494,6 +1496,8 @@ export type Mutation = {
   deletePage: Scalars['String'];
   /** Deletes a paywall. */
   deletePaywall: Paywall;
+  /** Deletes a paywall bypass token. */
+  deletePaywallBypass: Scalars['String'];
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -1715,6 +1719,12 @@ export type MutationCreatePaywallArgs = {
 };
 
 
+export type MutationCreatePaywallBypassArgs = {
+  paywallId: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1825,6 +1835,11 @@ export type MutationDeletePageArgs = {
 
 
 export type MutationDeletePaywallArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePaywallBypassArgs = {
   id: Scalars['String'];
 };
 
@@ -2068,6 +2083,7 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
+  bypassTokens?: InputMaybe<Array<Scalars['String']>>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
@@ -2367,6 +2383,7 @@ export type Paywall = {
   __typename?: 'Paywall';
   active: Scalars['Boolean'];
   anyMemberPlan: Scalars['Boolean'];
+  bypasses: Array<PaywallBypass>;
   circumventDescription?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
@@ -2374,6 +2391,15 @@ export type Paywall = {
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
+};
+
+export type PaywallBypass = {
+  __typename?: 'PaywallBypass';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  paywallId: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type Peer = {

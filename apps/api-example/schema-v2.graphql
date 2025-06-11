@@ -1129,6 +1129,9 @@ type Mutation {
   """Creates a paywall."""
   createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
 
+  """Creates a paywall bypass token."""
+  createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
+
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
@@ -1160,6 +1163,9 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
+
+  """Deletes a paywall bypass token."""
+  deletePaywallBypass(id: String!): String!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
@@ -1230,7 +1236,7 @@ type Mutation {
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1426,6 +1432,7 @@ enum PaymentPeriodicity {
 type Paywall {
   active: Boolean!
   anyMemberPlan: Boolean!
+  bypasses: [PaywallBypass!]!
   circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
@@ -1433,6 +1440,14 @@ type Paywall {
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String
+}
+
+type PaywallBypass {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  paywallId: String!
+  token: String!
 }
 
 type Peer {

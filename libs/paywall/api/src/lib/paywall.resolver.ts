@@ -1,6 +1,6 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {PaywallDataloaderService} from './paywall-dataloader.service'
-import {Paywall, CreatePaywallInput, UpdatePaywallInput} from './paywall.model'
+import {Paywall, PaywallBypass, CreatePaywallInput, UpdatePaywallInput} from './paywall.model'
 import {PaywallService} from './paywall.service'
 import {Paywall as PPaywall} from '@prisma/client'
 import {CanCreatePaywall, CanDeletePaywall, CanUpdatePaywall} from '@wepublish/permissions'
@@ -56,5 +56,27 @@ export class PaywallResolver {
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: PPaywall) {
     return this.paywallService.getPaywallMemberplans(parent.id)
+  }
+
+  @ResolveField(() => [PaywallBypass])
+  async bypasses(@Parent() parent: PPaywall) {
+    return this.paywallService.getPaywallBypasses(parent.id)
+  }
+
+  @Permissions(CanCreatePaywall)
+  @Mutation(() => PaywallBypass, {
+    description: `Creates a paywall bypass token.`
+  })
+  public createPaywallBypass(@Args('paywallId') paywallId: string, @Args('token') token: string) {
+    return this.paywallService.createPaywallBypass(paywallId, token)
+  }
+
+  @Permissions(CanDeletePaywall)
+  @Mutation(() => String, {
+    description: `Deletes a paywall bypass token.`
+  })
+  public async deletePaywallBypass(@Args('id') id: string) {
+    await this.paywallService.deletePaywallBypass(id)
+    return id
   }
 }

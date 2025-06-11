@@ -1,6 +1,7 @@
 import {FullPaywallFragment} from '@wepublish/website/api'
 import {createContext, useContext, useMemo} from 'react'
 import {useActiveSubscriptions} from '@wepublish/membership/website'
+import {PaywallBypassService} from './paywall-bypass'
 
 export const ShowPaywallContext = createContext<{showPaywall?: boolean; hideContent?: boolean}>({})
 
@@ -19,6 +20,13 @@ export const useShowPaywall = (
 
     if (paywall.anyMemberPlan && subscriptions?.length) {
       return {showPaywall: true, hideContent: false}
+    }
+
+    const validTokens = paywall.bypasses?.map(bypass => bypass.token) ?? []
+    const hasBypass = PaywallBypassService.hasValidBypass(validTokens)
+
+    if (hasBypass) {
+      return {hideContent: false, showPaywall: false}
     }
 
     return {
