@@ -44,7 +44,6 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
-import {PURModel} from '../../mannschaft/src/cookie-or-pay/pur-model'
 
 setDefaultOptions({
   locale: de
