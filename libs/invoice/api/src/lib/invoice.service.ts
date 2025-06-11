@@ -81,14 +81,8 @@ export class InvoiceService {
       })
       await paymentProvider.updatePaymentWithIntentState({
         intentState,
-        paymentClient: this.prisma.payment,
         paymentsByID: this.paymentDataloader.dataloader,
-        invoicesByID: this.invoiceDataloader.dataloader,
-        subscriptionClient: this.prisma.subscription,
-        userClient: this.prisma.user,
-        invoiceClient: this.prisma.invoice,
-        subscriptionPeriodClient: this.prisma.subscriptionPeriod,
-        invoiceItemClient: this.prisma.invoiceItem
+        invoicesByID: this.invoiceDataloader.dataloader
       })
     }
 

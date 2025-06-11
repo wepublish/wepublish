@@ -65,14 +65,8 @@ export interface CreateRemoteInvoiceProps {
 
 export interface UpdatePaymentWithIntentStateProps {
   intentState: IntentState
-  paymentClient: PrismaClient['payment']
   paymentsByID: PaymentsByID
   invoicesByID: InvoicesByID
-  subscriptionClient: PrismaClient['subscription']
-  userClient: PrismaClient['user']
-  invoiceClient: PrismaClient['invoice']
-  subscriptionPeriodClient: PrismaClient['subscriptionPeriod']
-  invoiceItemClient: PrismaClient['invoiceItem']
 }
 
 export interface WebhookUpdatesProps {
@@ -130,6 +124,7 @@ export interface PaymentProviderProps {
   name: string
   offSessionPayments: boolean
   incomingRequestHandler?: NextHandleFunction
+  prisma: PrismaClient
 }
 
 export abstract class BasePaymentProvider implements PaymentProvider {
@@ -137,6 +132,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly name: string
   readonly offSessionPayments: boolean
   readonly remoteManagedSubscription: boolean = false
+  readonly prisma: PrismaClient
 
   readonly incomingRequestHandler: NextHandleFunction
 
@@ -145,6 +141,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     this.name = props.name
     this.offSessionPayments = props.offSessionPayments
     this.incomingRequestHandler = props.incomingRequestHandler ?? bodyParser.json()
+    this.prisma = props.prisma
   }
 
   abstract webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse>
@@ -167,18 +164,14 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   async updatePaymentWithIntentState({
     intentState,
-    paymentClient,
     paymentsByID,
-    invoicesByID,
-    subscriptionClient,
-    userClient,
-    invoiceClient
+    invoicesByID
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
     const payment = await paymentsByID.load(intentState.paymentID)
     // TODO: should we overwrite already paid/canceled payments
     if (!payment) throw new Error(`Payment with ID ${intentState.paymentID} not found`)
 
-    const updatedPayment = await paymentClient.update({
+    const updatedPayment = await this.prisma.payment.update({
       where: {id: payment.id},
       data: {
         state: intentState.state,
@@ -202,7 +195,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)
     }
 
-    const subscription = await subscriptionClient.findUnique({
+    const subscription = await this.prisma.subscription.findUnique({
       where: {
         id: invoice.subscriptionID
       },
@@ -223,14 +216,14 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     // Mark invoice as paid
     if (intentState.state === PaymentState.paid) {
-      await invoiceClient.update({
+      await this.prisma.invoice.update({
         where: {id: invoice.id},
         data: {
           paidAt: new Date()
         }
       })
 
-      await subscriptionClient.update({
+      await this.prisma.subscription.update({
         where: {id: invoice.subscriptionID},
         data: {
           paidUntil: invoicePeriod.endsAt
@@ -240,7 +233,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     // update payment provider
     if (intentState.customerID && payment.invoiceID) {
-      await this.updatePaymentProvider(userClient, subscription, intentState.customerID)
+      await this.updatePaymentProvider(subscription, intentState.customerID)
     }
 
     return updatedPayment
@@ -249,21 +242,16 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   /**
    * adding or updating paymentProvider customer ID for user
    *
-   * @param userClient
    * @param subscription
    * @param customerID
    * @private
    */
-  private async updatePaymentProvider(
-    userClient: PrismaClient['user'],
-    subscription: Subscription,
-    customerID: string
-  ) {
+  private async updatePaymentProvider(subscription: Subscription, customerID: string) {
     if (!subscription) {
       throw new Error('Empty subscription within updatePaymentProvider method.')
     }
 
-    const user = await userClient.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         id: subscription.userID
       },
@@ -274,7 +262,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
     if (!user) throw new Error(`User with ID ${subscription.userID} does not exist`)
 
-    await userClient.update({
+    await this.prisma.user.update({
       where: {
         id: user.id
       },

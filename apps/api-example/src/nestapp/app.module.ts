@@ -227,7 +227,8 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
-                  methods: paymentProvider.methods
+                  methods: paymentProvider.methods,
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'stripe') {
@@ -239,7 +240,8 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
-                  methods: paymentProvider.methods
+                  methods: paymentProvider.methods,
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'payrexx') {
@@ -260,7 +262,8 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
                   psp: paymentProvider.psp,
                   pm: paymentProvider.pm,
                   vatRate: paymentProvider.vatRate,
-                  incomingRequestHandler: bodyParser.json()
+                  incomingRequestHandler: bodyParser.json(),
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'payrexx-subscription') {
@@ -312,7 +315,8 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   apiBaseUrl: paymentProvider.apiBaseUrl,
                   incomingRequestHandler: bodyParser.urlencoded({extended: true}),
-                  methods: paymentProvider.methods
+                  methods: paymentProvider.methods,
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'no-charge') {
@@ -320,7 +324,8 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
                 new NeverChargePaymentProvider({
                   id: paymentProvider.id,
                   name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  prisma
                 })
               )
             } else {
