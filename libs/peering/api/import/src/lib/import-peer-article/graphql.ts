@@ -1480,7 +1480,7 @@ export type Mutation = {
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
-  /** Allows authenticated users to create additional subscriptions */
+  /** Allows guests and authenticated users to create additional subscriptions */
   createSubscriptionWithConfirmation: Scalars['Boolean'];
   /**
    *
@@ -1526,7 +1526,7 @@ export type Mutation = {
   duplicateArticle: Article;
   /** Duplicates an page. */
   duplicatePage: Page;
-  /** This mutation extends an subscription early */
+  /** Allows authenticated users to extend existing subscriptions */
   extendSubscription: Payment;
   /**
    *
@@ -3656,7 +3656,7 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type _Entity = Image | PaymentMethod | User;
+export type _Entity = Image | User;
 
 export type _Service = {
   __typename?: '_Service';
@@ -4155,7 +4155,6 @@ ${ImportBlock}`;
     ],
     "_Entity": [
       "Image",
-      "PaymentMethod",
       "User"
     ]
   }

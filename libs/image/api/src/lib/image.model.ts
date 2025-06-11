@@ -1,5 +1,6 @@
 import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Field, Float, ObjectType, Directive, Int} from '@nestjs/graphql'
+import {Directive, Field, Float, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
+import {FileUpload, GraphQLUpload} from 'graphql-upload'
 
 @ObjectType()
 export class FocalPoint {
@@ -71,4 +72,37 @@ export class ImageV2 {
 
   @Field(type => FocalPoint, {nullable: true})
   focalPoint?: FocalPoint
+}
+
+@InputType('InputPoint')
+export class FocalPointInput extends OmitType(FocalPoint, [] as const, InputType) {}
+
+@InputType()
+export class UploadImageInput {
+  @Field(() => GraphQLUpload)
+  file!: Promise<FileUpload>
+
+  @Field({nullable: true})
+  filename?: string
+
+  @Field({nullable: true})
+  title?: string
+
+  @Field({nullable: true})
+  description?: string
+
+  @Field(() => [String], {nullable: true})
+  tags?: string[]
+
+  @Field({nullable: true})
+  link?: string
+
+  @Field({nullable: true})
+  source?: string
+
+  @Field({nullable: true})
+  license?: string
+
+  @Field(() => FocalPointInput, {nullable: true})
+  focalPoint?: FocalPointInput
 }

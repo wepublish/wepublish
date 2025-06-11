@@ -26,9 +26,6 @@ type Mutation {
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
   updateUser(input: UserInput!): User
-
-  """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 }
 
 type User {

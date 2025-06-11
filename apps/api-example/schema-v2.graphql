@@ -1203,6 +1203,11 @@ type ImportedEventsDocument {
   totalCount: Int!
 }
 
+input InputPoint {
+  x: Float!
+  y: Float!
+}
+
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1526,6 +1531,9 @@ type Mutation {
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
+
+  """This mutation allows to upload and update the user's profile image."""
+  uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -2611,6 +2619,21 @@ input UpdateCrowdfundingInput {
   id: ID!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UploadImageInput {
+  description: String
+  file: Upload!
+  filename: String
+  focalPoint: InputPoint
+  license: String
+  link: String
+  source: String
+  tags: [String!]
+  title: String
 }
 
 type User {
