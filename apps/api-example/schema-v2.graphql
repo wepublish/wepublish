@@ -1363,6 +1363,9 @@ type Mutation {
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
   """
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
+
+  """This mutation allows to create payment by referencing a subscription."""
+  createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
   createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!

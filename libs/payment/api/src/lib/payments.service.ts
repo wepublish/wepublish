@@ -5,7 +5,7 @@ import {sub} from 'date-fns'
 import {PaymentMethodService} from '@wepublish/payment-method/api'
 import {UserInputError} from '@nestjs/apollo'
 import {GraphQLError} from 'graphql/index'
-import {PaymentFromInvoiceInput} from './payment.model'
+import {PaymentFromInvoiceInput, PaymentFromSubscriptionArgs} from './payment.model'
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string
@@ -118,6 +118,45 @@ export class PaymentsService {
       userId,
       migrateToTargetPaymentMethodID:
         subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
+    })
+  }
+
+  async createPaymentFromSubscription(
+    userId: string,
+    {subscriptionId, successURL, failureURL}: PaymentFromSubscriptionArgs
+  ) {
+    const invoice = await this.prisma.invoice.findFirst({
+      where: {
+        subscriptionID: subscriptionId,
+        paidAt: null,
+        canceledAt: null
+      },
+      include: {
+        items: true,
+        subscription: {
+          include: {
+            memberPlan: true
+          }
+        }
+      }
+    })
+
+    if (!invoice) {
+      throw new UserInputError(`Unpaid Invoice not found ${subscriptionId}`)
+    }
+
+    if (invoice.subscription?.userID !== userId) {
+      throw new UserInputError(`Subscription not found ${subscriptionId}`)
+    }
+
+    return await this.createPaymentWithProvider({
+      paymentMethodID: invoice.subscription?.paymentMethodID,
+      invoice,
+      saveCustomer: true,
+      successURL,
+      failureURL,
+      migrateToTargetPaymentMethodID:
+        invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
     })
   }
 

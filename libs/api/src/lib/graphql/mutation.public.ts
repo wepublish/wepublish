@@ -14,7 +14,6 @@ import {
   AlreadyUnpaidInvoices,
   InternalError,
   MonthlyAmountNotEnough,
-  NotFound,
   SubscriptionNotExtendable,
   SubscriptionNotFound,
   UserIdNotFound
@@ -301,57 +300,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {authenticateUser, mediaAdapter, prisma: {image, user}}
       ) =>
         uploadPublicUserProfileImage(uploadImageInput, authenticateUser, mediaAdapter, image, user)
-    },
-
-    createPaymentFromSubscription: {
-      type: GraphQLPublicPayment,
-      args: {
-        subscriptionId: {type: GraphQLString},
-        successURL: {type: GraphQLString},
-        failureURL: {type: GraphQLString}
-      },
-      description: 'This mutation allows to create payment by referencing a subscription.',
-      async resolve(
-        root,
-        {subscriptionId, successURL, failureURL},
-        {authenticateUser, createPaymentWithProvider, prisma}
-      ) {
-        const {user} = authenticateUser()
-
-        const invoice = await prisma.invoice.findFirst({
-          where: {
-            subscriptionID: subscriptionId,
-            paidAt: null,
-            canceledAt: null
-          },
-          include: {
-            items: true,
-            subscription: {
-              include: {
-                memberPlan: true
-              }
-            }
-          }
-        })
-
-        if (!invoice) {
-          throw new NotFound('Unpaid Invoice', subscriptionId)
-        }
-
-        if (invoice.subscription?.userID !== user.id) {
-          throw new NotFound('Subscription', subscriptionId)
-        }
-
-        return await createPaymentWithProvider({
-          paymentMethodID: invoice.subscription?.paymentMethodID,
-          invoice,
-          saveCustomer: true,
-          successURL,
-          failureURL,
-          migrateToTargetPaymentMethodID:
-            invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
-        })
-      }
     }
   }
 })

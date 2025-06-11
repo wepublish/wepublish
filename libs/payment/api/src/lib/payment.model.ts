@@ -1,4 +1,4 @@
-import {Directive, Field, InputType, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {ArgsType, Directive, Field, InputType, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaymentState} from '@prisma/client'
 import {HasPaymentMethod, PaymentMethod} from '@wepublish/payment-method/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
@@ -33,6 +33,18 @@ export class PaymentFromInvoiceInput {
 
   @Field(() => GraphQLSlug, {nullable: true})
   paymentMethodSlug?: string
+
+  @Field({nullable: true})
+  successURL?: string
+
+  @Field({nullable: true})
+  failureURL?: string
+}
+
+@ArgsType()
+export class PaymentFromSubscriptionArgs {
+  @Field({nullable: true})
+  subscriptionId?: string
 
   @Field({nullable: true})
   successURL?: string

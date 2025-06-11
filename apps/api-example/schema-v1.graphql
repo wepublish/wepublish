@@ -35,9 +35,6 @@ type Mutation {
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
-
-  """This mutation allows to create payment by referencing a subscription."""
-  createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
 }
 
 scalar Slug
