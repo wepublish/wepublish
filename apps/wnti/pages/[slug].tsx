@@ -34,7 +34,7 @@ export default function PageBySlugOrId() {
 export const getStaticPaths = getPagePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {slug, id} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -42,7 +42,8 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug
+        slug,
+        id
       }
     }),
     client.query({
