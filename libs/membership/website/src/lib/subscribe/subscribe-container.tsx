@@ -19,7 +19,7 @@ import {
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {useEffect, useMemo, useState} from 'react'
-import {useRedirectPages} from './useSubscribe'
+import {useSubscribe} from './useSubscribe'
 import {SubscribeResponseHandler} from './subscribe-response-handler'
 import {FetchResult} from '@apollo/client'
 
@@ -95,7 +95,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
   // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
   const [fetchPage] = usePageLazyQuery()
-  const {fetchRedirectPages} = useRedirectPages()
+  const {fetchRedirectPages: fetchSuccessAndFailurePages} = useSubscribe()
 
   useEffect(() => {
     if (!hasUser) {
@@ -146,7 +146,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
           )
           setSelectedMemberPlan(selectedMemberplan)
 
-          const [successPage, failPage] = await fetchRedirectPages({
+          const [successPage, failPage] = await fetchSuccessAndFailurePages({
             successPageId: selectedMemberplan?.successPageId,
             failPageId: selectedMemberplan?.failPageId
           })
@@ -177,7 +177,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
           setSelectedMemberPlan(selectedMemberplan)
 
-          const [successPage, failPage] = await fetchRedirectPages({
+          const [successPage, failPage] = await fetchSuccessAndFailurePages({
             successPageId: selectedMemberplan?.successPageId,
             failPageId: selectedMemberPlan?.failPageId
           })
