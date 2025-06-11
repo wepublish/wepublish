@@ -22,7 +22,6 @@ import {
   unselectPassword
 } from '@wepublish/api'
 import {RemoteSubscriptionsService} from './remote-subscriptions.service'
-import {MemberContext} from 'libs/api/src/lib/memberContext'
 import {UserInputError} from '@nestjs/apollo'
 import {MemberPlanService} from '@wepublish/member-plan/api'
 import {
@@ -31,6 +30,7 @@ import {
   ExtendSubscriptionArgs
 } from './subscription.model'
 import {PaymentMethodService} from '@wepublish/payment-method/api'
+import {MemberContextService} from './member-context.service'
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[]
@@ -46,7 +46,8 @@ export class UserSubscriptionService {
     private readonly memberPlanService: MemberPlanService,
     private readonly paymentMethodService: PaymentMethodService,
     private readonly remoteSubscriptionsService: RemoteSubscriptionsService,
-    private readonly mailContext: MailContext
+    private readonly mailContext: MailContext,
+    private readonly memberContext: MemberContextService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
@@ -73,12 +74,6 @@ export class UserSubscriptionService {
       deactivateSubscriptionId
     } = args
 
-    const memberContext = new MemberContext({
-      prisma: this.prisma,
-      mailContext: this.mailContext,
-      paymentProviders: this.payments.getProviders()
-    })
-
     // Check if subscription which should be deactivated exists
     let subscriptionToDeactivate: null | Subscription = null
     if (deactivateSubscriptionId) {
@@ -100,11 +95,11 @@ export class UserSubscriptionService {
         throw new SubscriptionToDeactivateDoesNotExist(deactivateSubscriptionId)
     }
 
-    const properties = await memberContext.processSubscriptionProperties(
+    const properties = await this.memberContext.processSubscriptionProperties(
       subscriptionProperties ?? []
     )
 
-    const {subscription, invoice} = await memberContext.createSubscription(
+    const {subscription, invoice} = await this.memberContext.createSubscription(
       userId,
       paymentMethod.id,
       paymentPeriodicity,
@@ -125,7 +120,7 @@ export class UserSubscriptionService {
     }
 
     if (subscriptionToDeactivate) {
-      await memberContext.deactivateSubscription({
+      await this.memberContext.deactivateSubscription({
         subscription: subscriptionToDeactivate,
         deactivationReason: SubscriptionDeactivationReason.userReplacedSubscription
       })
@@ -150,17 +145,11 @@ export class UserSubscriptionService {
 
       const {autoRenew, paymentPeriodicity, monthlyAmount, subscriptionProperties} = args
 
-      const memberContext = new MemberContext({
-        prisma: this.prisma,
-        mailContext: this.mailContext,
-        paymentProviders: this.payments.getProviders()
-      })
-
-      const properties = await memberContext.processSubscriptionProperties(
+      const properties = await this.memberContext.processSubscriptionProperties(
         subscriptionProperties ?? []
       )
 
-      const {subscription, invoice} = await memberContext.createSubscription(
+      const {subscription, invoice} = await this.memberContext.createSubscription(
         userId,
         paymentMethod.id,
         paymentPeriodicity,
@@ -245,13 +234,7 @@ export class UserSubscriptionService {
       throw new UserInputError(`You cant create new invoice while you have unpaid invoices!`)
     }
 
-    const memberContext = new MemberContext({
-      prisma: this.prisma,
-      mailContext: this.mailContext,
-      paymentProviders: this.payments.getProviders()
-    })
-
-    const invoice = await memberContext.renewSubscriptionForUser({
+    const invoice = await this.memberContext.renewSubscriptionForUser({
       subscription
     })
     if (!invoice) {
@@ -293,7 +276,7 @@ export class UserSubscriptionService {
         const user = await this.prisma.user.findUniqueOrThrow({where: {id: userId}})
         // Charge customer
         try {
-          const payment = await memberContext.chargeInvoice({
+          const payment = await this.memberContext.chargeInvoice({
             user,
             invoice,
             paymentMethodID: subscription.paymentMethodID,
@@ -410,13 +393,7 @@ export class UserSubscriptionService {
 
     if (!updateSubscription) throw new Error('Error during updateSubscription')
 
-    const memberContext = new MemberContext({
-      prisma: this.prisma,
-      mailContext: this.mailContext,
-      paymentProviders: this.payments.getProviders()
-    })
-
-    return await memberContext.handleSubscriptionChange({
+    return await this.memberContext.handleSubscriptionChange({
       subscription: updateSubscription
     })
   }
@@ -445,13 +422,8 @@ export class UserSubscriptionService {
           : 'Subscription is already marked to be canceled'
       throw new UserInputError(msg)
     }
-    const memberContext = new MemberContext({
-      prisma: this.prisma,
-      mailContext: this.mailContext,
-      paymentProviders: this.payments.getProviders()
-    })
 
-    await memberContext.deactivateSubscription({
+    await this.memberContext.deactivateSubscription({
       subscription,
       deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
     })
@@ -484,13 +456,7 @@ export class UserSubscriptionService {
     CreateSubscriptionArgs,
     'subscriptionProperties' | 'successURL' | 'failureURL' | 'deactivateSubscriptionId'
   >) {
-    const memberContext = new MemberContext({
-      prisma: this.prisma,
-      mailContext: this.mailContext,
-      paymentProviders: this.payments.getProviders()
-    })
-
-    await memberContext.validateInputParamsCreateSubscription(
+    await this.memberContext.validateInputParamsCreateSubscription(
       memberPlanID,
       memberPlanSlug,
       paymentMethodID,
@@ -516,7 +482,7 @@ export class UserSubscriptionService {
       throw new UserInputError(`Monthly amount not enough`)
     }
 
-    await memberContext.validateSubscriptionPaymentConfiguration(
+    await this.memberContext.validateSubscriptionPaymentConfiguration(
       memberPlan,
       autoRenew,
       paymentPeriodicity,
