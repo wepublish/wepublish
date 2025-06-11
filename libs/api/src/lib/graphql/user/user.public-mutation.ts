@@ -1,41 +1,9 @@
 import {Prisma, PrismaClient, User} from '@prisma/client'
 import {Context} from '../../context'
 import {unselectPassword} from '@wepublish/authentication/api'
-import {EmailAlreadyInUseError, NotFound} from '../../error'
+import {EmailAlreadyInUseError} from '../../error'
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'
-
-type UpdatePaymentProviderCustomers = {
-  paymentProviderID: string
-  customerID: string
-}[]
-
-export const updatePaymentProviderCustomers = async (
-  paymentProviderCustomers: UpdatePaymentProviderCustomers,
-  authenticateUser: Context['authenticateUser'],
-  userClient: PrismaClient['user']
-) => {
-  const {user} = authenticateUser()
-
-  const updateUser = await userClient.update({
-    where: {id: user.id},
-    data: {
-      paymentProviderCustomers: {
-        deleteMany: {
-          userId: user.id
-        },
-        createMany: {
-          data: paymentProviderCustomers
-        }
-      }
-    },
-    select: unselectPassword
-  })
-
-  if (!updateUser) throw new NotFound('User', user.id)
-
-  return updateUser.paymentProviderCustomers
-}
 
 /**
  * Uploads the user profile image and returns the image and updated user

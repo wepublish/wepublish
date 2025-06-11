@@ -1434,6 +1434,9 @@ type Mutation {
   """
   updatePassword(password: String!, passwordRepeated: String!): User!
 
+  """This mutation allows to update the Payment Provider Customers"""
+  updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
@@ -1633,6 +1636,16 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
+}
+
+type PaymentProviderCustomer {
+  customerID: String!
+  paymentProviderID: String!
+}
+
+input PaymentProviderCustomerInput {
+  customerID: String!
+  paymentProviderID: String!
 }
 
 type Peer {

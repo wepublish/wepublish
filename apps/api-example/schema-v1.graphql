@@ -44,9 +44,6 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
-  """This mutation allows to update the Payment Provider Customers"""
-  updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
-
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
   """
@@ -288,11 +285,6 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated
   invoiceNotPaid
   userReplacedSubscription
-}
-
-input PaymentProviderCustomerInput {
-  paymentProviderID: String!
-  customerID: String!
 }
 
 input PaymentFromInvoiceInput {

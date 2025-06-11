@@ -36,17 +36,8 @@ import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPublicSubscription} from './subscription-public'
-import {
-  GraphQLPaymentProviderCustomer,
-  GraphQLPaymentProviderCustomerInput,
-  GraphQLPublicUser,
-  GraphQLPublicUserInput
-} from './user'
-import {
-  updatePaymentProviderCustomers,
-  updatePublicUser,
-  uploadPublicUserProfileImage
-} from './user/user.public-mutation'
+import {GraphQLPublicUser, GraphQLPublicUserInput} from './user'
+import {updatePublicUser, uploadPublicUserProfileImage} from './user/user.public-mutation'
 import {sub} from 'date-fns'
 import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberContext'
 
@@ -491,20 +482,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         return updatedSubscription
       }
-    },
-
-    updatePaymentProviderCustomers: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer))),
-      args: {
-        input: {
-          type: new GraphQLNonNull(
-            new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomerInput))
-          )
-        }
-      },
-      description: 'This mutation allows to update the Payment Provider Customers',
-      resolve: (root, {input}, {authenticateUser, prisma: {user}}) =>
-        updatePaymentProviderCustomers(input, authenticateUser, user)
     },
 
     createPaymentFromInvoice: {
