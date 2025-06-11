@@ -823,14 +823,8 @@ export async function contextFromRequest(
 
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
-          paymentClient: prisma.payment,
           paymentsByID: loaders.paymentsByID,
-          invoicesByID: loaders.invoicesByID,
-          subscriptionClient: prisma.subscription,
-          userClient: prisma.user,
-          invoiceClient: prisma.invoice,
-          subscriptionPeriodClient: prisma.subscriptionPeriod,
-          invoiceItemClient: prisma.invoiceItem
+          invoicesByID: loaders.invoicesByID
         })
       }
 

@@ -215,7 +215,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
-                  methods: paymentProvider.methods
+                  methods: paymentProvider.methods,
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'stripe') {
@@ -227,7 +228,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
                   secretKey: paymentProvider.secretKey,
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
-                  methods: paymentProvider.methods
+                  methods: paymentProvider.methods,
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'payrexx') {
@@ -248,7 +250,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
                   psp: paymentProvider.psp,
                   pm: paymentProvider.pm,
                   vatRate: paymentProvider.vatRate,
-                  incomingRequestHandler: bodyParser.json()
+                  incomingRequestHandler: bodyParser.json(),
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'payrexx-subscription') {
@@ -300,7 +303,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
                   webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
                   apiBaseUrl: paymentProvider.apiBaseUrl,
                   incomingRequestHandler: bodyParser.urlencoded({extended: true}),
-                  methods: paymentProvider.methods
+                  methods: paymentProvider.methods,
+                  prisma
                 })
               )
             } else if (paymentProvider.type === 'no-charge') {
@@ -308,7 +312,8 @@ import {MediaAdapterModule} from '@wepublish/image/api'
                 new NeverChargePaymentProvider({
                   id: paymentProvider.id,
                   name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  prisma
                 })
               )
             } else {

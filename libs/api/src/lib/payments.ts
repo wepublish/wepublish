@@ -30,14 +30,8 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
                   // TODO: handle errors properly
                   await paymentProvider.updatePaymentWithIntentState({
                     intentState: paymentStatus,
-                    paymentClient: context.prisma.payment,
                     paymentsByID: context.loaders.paymentsByID,
-                    invoicesByID: context.loaders.invoicesByID,
-                    subscriptionClient: context.prisma.subscription,
-                    userClient: context.prisma.user,
-                    invoiceClient: context.prisma.invoice,
-                    subscriptionPeriodClient: context.prisma.subscriptionPeriod,
-                    invoiceItemClient: context.prisma.invoiceItem
+                    invoicesByID: context.loaders.invoicesByID
                   })
                 }
               }
