@@ -59,6 +59,7 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
 
   const teasers = compose(
     insert<Teaser>(position, {
+      __typename: 'CustomTeaser',
       type: TeaserType.Custom,
       properties: [],
       contentUrl: null,
