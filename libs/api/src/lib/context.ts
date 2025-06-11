@@ -632,18 +632,9 @@ export async function contextFromRequest(
   }
 
   const memberContext = new MemberContext({
-    loaders,
     prisma,
     paymentProviders,
-    mailContext,
-    getLoginUrlForUser(user: User): string {
-      const jwt = generateJWTWrapper({
-        id: user.id,
-        expiresInMinutes: 10080 // One week in minutes
-      })
-
-      return urlAdapter.getLoginURL(jwt)
-    }
+    mailContext
   })
 
   return {

@@ -14,7 +14,7 @@ import {
 } from '@prisma/client'
 import {unselectPassword} from '@wepublish/authentication/api'
 import {AlreadyUnpaidInvoices, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
-import {MemberContext} from '../../memberContext'
+import {getPaymentMethodByIDOrSlug, MemberContext} from '../../memberContext'
 import {PaymentProvider} from '@wepublish/payment/api'
 
 export const deleteSubscriptionById = (
@@ -199,6 +199,7 @@ export const updateAdminSubscription = async (
   {properties, ...input}: UpdateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
+  loaders: Context['loaders'],
   subscriptionClient: PrismaClient['subscription'],
   userClient: PrismaClient['user'],
   paymentProviders: PaymentProvider[],
@@ -226,8 +227,8 @@ export const updateAdminSubscription = async (
   }
 
   // handle remote managed subscriptions (Payrexx Subscription)
-  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
-    memberContext.loaders,
+  const {paymentProviderID} = await getPaymentMethodByIDOrSlug(
+    loaders,
     undefined,
     originalSubscription.paymentMethodID
   )

@@ -1,6 +1,6 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {ArticleRevision} from './article.model'
-import {Author} from '@wepublish/author/api'
+import {ArticleAuthorsService, Author} from '@wepublish/author/api'
 import {Image} from '@wepublish/image/api'
 import {ArticleRevisionService} from './article-revision.service'
 import {Property} from '@wepublish/utils/api'
@@ -10,7 +10,10 @@ import {hasPermission} from '@wepublish/permissions/api'
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
-  constructor(private revisionService: ArticleRevisionService) {}
+  constructor(
+    private revisionService: ArticleRevisionService,
+    private articleAuthors: ArticleAuthorsService
+  ) {}
 
   @ResolveField(() => [Property])
   public async properties(
@@ -25,16 +28,12 @@ export class ArticleRevisionResolver {
 
   @ResolveField(() => [Author])
   public async socialMediaAuthors(@Parent() revision: ArticleRevision) {
-    const authors = await this.revisionService.getSocialMediaAuthors(revision.id)
-
-    return authors.map(({id}) => ({__typename: 'Author', id}))
+    return this.articleAuthors.getSocialMediaAuthors(revision.id)
   }
 
   @ResolveField(() => [Author])
   public async authors(@Parent() revision: ArticleRevision) {
-    const authors = await this.revisionService.getAuthors(revision.id)
-
-    return authors.map(({id}) => ({__typename: 'Author', id}))
+    return this.articleAuthors.getAuthors(revision.id)
   }
 
   @ResolveField(() => Image, {nullable: true})

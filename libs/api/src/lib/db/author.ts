@@ -30,9 +30,9 @@ export interface AuthorInput {
 export type OptionalAuthor = Author | null
 
 export enum AuthorSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  Name = 'name'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
 }
 
 export interface AuthorFilter {
