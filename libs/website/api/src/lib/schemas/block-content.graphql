@@ -121,23 +121,23 @@ fragment BlockWithoutTeaser on BlockContent {
         }
     }
 
-  ... on CrowdfundingBlock {
-    blockStyle: blockStyleName
-    crowdfunding {
-      ...CrowdfundingWithActiveGoal
+    ... on CrowdfundingBlock {
+        blockStyle: blockStyleName
+        crowdfunding {
+            ...CrowdfundingWithActiveGoal
+        }
     }
-  }
 
-  ... on ListicleBlock {
-    blockStyle: blockStyleName
-    items {
-      title
-      richText
-      image {
-        ...FullImage
-      }
+    ... on ListicleBlock {
+        blockStyle: blockStyleName
+        items {
+            title
+            richText
+            image {
+                ...FullImage
+            }
+        }
     }
-  }
 
     ... on BreakBlock {
         blockStyle: blockStyleName
@@ -289,12 +289,6 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
     title
     type
     blockStyle: blockStyleName
-    slots {
-        type
-        teaser {
-            ...FullTeaser
-        }
-    }
     teasers {
         ...FullTeaser
     }

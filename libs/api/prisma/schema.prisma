@@ -49,12 +49,12 @@ model ArticleRevision {
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
-  searchPlainText        String?
   hideAuthor             Boolean
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
   publishedAt            DateTime?
+  archivedAt             DateTime?
 
   image   Image?  @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID String?
@@ -251,10 +251,9 @@ model Image {
   height      Int
   width       Int
 
-  Author      Author[]
-  MemberPlan  MemberPlan[]
-  PeerProfile PeerProfile[]
-  Comment     Comment[]
+  Author     Author[]
+  MemberPlan MemberPlan[]
+  Comment    Comment[]
 
   articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
   articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
@@ -269,7 +268,9 @@ model Image {
   events         Event[]
   paymentMethods PaymentMethod[]
 
-  banners Banner[]
+  banners               Banner[]
+  peerProfileLogo       PeerProfile[] @relation("logo")
+  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -606,13 +607,13 @@ model PageRevision {
   createdAt DateTime @default(now())
 
   publishedAt            DateTime?
+  archivedAt             DateTime?
   title                  String?
   description            String?
   properties             MetadataProperty[]
   socialMediaTitle       String?
   socialMediaDescription String?
   blocks                 Json
-  searchPlainText        String?
 
   imageID String?
   image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])
@@ -724,7 +725,10 @@ model PeerProfile {
   callToActionImageID  String?
 
   logoID String?
-  logo   Image?  @relation(fields: [logoID], references: [id])
+  logo   Image?  @relation("logo", fields: [logoID], references: [id])
+
+  squareLogoId String?
+  squareLogo   Image?  @relation("squareLogo", fields: [squareLogoId], references: [id])
 
   @@map("peerProfiles")
 }
@@ -1295,11 +1299,14 @@ model Banner {
   title String
   text  String
   cta   String?
+  html  String?
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
 
   active Boolean @default(true)
+
+  delay Int @default(0)
 
   showOnArticles     Boolean     @default(true)
   showOnPages        Page[]

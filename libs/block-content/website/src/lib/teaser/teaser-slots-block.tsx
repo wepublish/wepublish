@@ -3,7 +3,6 @@ import {BuilderTeaserSlotsBlockProps, useWebsiteBuilder} from '@wepublish/websit
 import {alignmentForTeaserBlock} from './teaser-grid-block'
 import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {TeaserSlotType} from '@wepublish/editor/api-v2'
 
 export const isTeaserSlotsBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -50,27 +49,17 @@ export const TeaserSlotsBlock = ({
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserSlotsBlockTeasers>
-        {getSlotsTeasers({slots, teasers}).map((teaser, index) => (
-          <Teaser
-            key={index}
-            teaser={teaser}
-            alignment={alignmentForTeaserBlock(index, 3)}
-            blockStyle={blockStyle}
-          />
-        ))}
+        {teasers?.map((teaser, index) => {
+          return (
+            <Teaser
+              key={index}
+              teaser={teaser}
+              alignment={alignmentForTeaserBlock(index, 3)}
+              blockStyle={blockStyle}
+            />
+          )
+        })}
       </TeaserSlotsBlockTeasers>
     </TeaserSlotsBlockWrapper>
   )
-}
-
-export function getSlotsTeasers({
-  slots,
-  teasers
-}: Pick<BuilderTeaserSlotsBlockProps, 'slots' | 'teasers'>) {
-  return slots?.map(({teaser: manualTeaser, type}, index) => {
-    const autofillIndex = slots
-      .slice(0, index)
-      .filter(slot => slot.type === TeaserSlotType.Autofill).length
-    return type === TeaserSlotType.Manual ? manualTeaser : teasers[autofillIndex] ?? null
-  })
 }

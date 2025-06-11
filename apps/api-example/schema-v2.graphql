@@ -75,6 +75,7 @@ input ArticleFilter {
   body: String
   draft: Boolean
   excludeIds: [String!]
+  ids: [String!]
   includeHidden: Boolean
   lead: String
   peerId: String
@@ -167,6 +168,8 @@ type Banner {
   actions: [BannerAction!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   id: String!
   image: Image
   imageId: String
@@ -398,6 +401,8 @@ input CreateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   imageId: String
   showForLoginStatus: LoginStatus!
   showOnArticles: Boolean!
@@ -422,7 +427,7 @@ input CreateCrowdfundingInput {
 }
 
 input CreateCrowdfundingMemberPlan {
-  id: ID!
+  id: String!
 }
 
 type Crowdfunding {
@@ -431,7 +436,7 @@ type Crowdfunding {
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
-  id: ID!
+  id: String!
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
@@ -472,7 +477,7 @@ type CrowdfundingGoalWithProgress {
 }
 
 type CrowdfundingMemberPlan {
-  id: ID!
+  id: String!
   name: String!
 }
 
@@ -483,7 +488,7 @@ type CrowdfundingWithActiveGoal {
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
-  id: ID!
+  id: String!
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
@@ -513,6 +518,32 @@ input CustomTeaserInput {
   preTitle: String
   properties: [PropertyInput!] = []
   title: String
+}
+
+type DailySubscriptionStats {
+  createdSubscriptionCount: Float!
+  createdSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  createdUnpaidSubscriptionCount: Float!
+  createdUnpaidSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  date: String!
+  deactivatedSubscriptionCount: Float!
+  deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  renewedSubscriptionCount: Float!
+  renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  replacedSubscriptionCount: Float!
+  replacedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  subscriptionDailyRevenue: Float!
+  subscriptionDurationAvg: Float!
+  subscriptionMonthlyRevenueAvg: Float!
+  subscriptionMonthlyRevenueSum: Float!
+  totalActiveSubscriptionCount: Float!
+}
+
+type DailySubscriptionStatsUser {
+  email: String!
+  firstName: String
+  id: String!
+  name: String!
 }
 
 type DashboardInvoice {
@@ -1105,7 +1136,7 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
-  deleteCrowdfunding(id: ID!): Boolean
+  deleteCrowdfunding(id: String!): Boolean
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
@@ -1396,6 +1427,7 @@ input PeerArticleFilter {
   authors: [String!]
   body: String
   excludeIds: [String!]
+  ids: [String!]
   lead: String
   peerId: String
   preTitle: String
@@ -1545,10 +1577,13 @@ type Query {
   consents(filter: ConsentFilter): [Consent!]!
 
   """Get a single crowdfunding by id with calculated progress"""
-  crowdfunding(id: ID!): CrowdfundingWithActiveGoal!
+  crowdfunding(id: String!): CrowdfundingWithActiveGoal!
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
+
+  "\n      Returns daily stats in a given timeframe.\n    "
+  dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
   """Returns a event by id."""
   event(id: String!): Event!
@@ -1882,6 +1917,7 @@ input TeaserListBlockInput {
 enum TeaserListBlockSort {
   HotAndTrending
   PublishedAt
+  UpdatedAt
 }
 
 type TeaserSlot {
@@ -1912,12 +1948,13 @@ type TeaserSlotsAutofillConfig implements BaseBlock {
 input TeaserSlotsAutofillConfigInput {
   enabled: Boolean!
   filter: TeaserListBlockFilterInput
-  sort: TeaserListBlockSort = PublishedAt
+  sort: TeaserListBlockSort
   teaserType: TeaserType
 }
 
 type TeaserSlotsBlock implements BaseBlock {
   autofillConfig: TeaserSlotsAutofillConfig!
+  autofillTeasers: [Teaser!]!
   blockStyle: String
   blockStyleName: String
   slots: [TeaserSlot!]!
@@ -2014,6 +2051,8 @@ input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
   cta: String
+  delay: Int!
+  html: String
   id: String!
   imageId: String
   showForLoginStatus: LoginStatus!
@@ -2028,7 +2067,7 @@ input UpdateCrowdfundingInput {
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
   goals: [CreateCrowdfundingGoalInput!]
-  id: ID!
+  id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
 }

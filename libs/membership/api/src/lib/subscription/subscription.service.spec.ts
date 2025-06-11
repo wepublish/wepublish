@@ -1,5 +1,6 @@
 import {
   Currency,
+  Invoice,
   PaymentPeriodicity,
   PrismaClient,
   Subscription,
@@ -807,15 +808,24 @@ describe('SubscriptionPaymentsService', () => {
         }
       }
     })
-    const invoiceToDeactivate = await prismaClient.invoice.findUnique({
-      where: {
-        id: invoice.id
-      },
-      include: {
-        subscription: true
-      }
+    const invoiceToDeactivate: (Invoice & {subscription: Subscription | null}) | null =
+      await prismaClient.invoice.findUnique({
+        where: {
+          id: invoice.id
+        },
+        include: {
+          subscription: true
+        }
+      })
+
+    if (!invoiceToDeactivate?.subscription) {
+      throw new Error('Missing subscription')
+    }
+
+    await subscriptionService.deactivateSubscription({
+      ...invoiceToDeactivate,
+      subscription: invoiceToDeactivate.subscription
     })
-    await subscriptionService.deactivateSubscription(invoiceToDeactivate!)
     const invoiceToDeactivateDeactivated = await prismaClient.invoice.findUnique({
       where: {
         id: invoice.id

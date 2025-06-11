@@ -292,6 +292,7 @@ export interface TeaserSlotsBlockValue extends BaseBlockValue {
   title?: string | null
   autofillConfig: TeaserSlotsAutofillConfigInput
   slots: Array<TeaserSlot>
+  autofillTeasers: Array<Teaser | null>
   teasers: Array<Teaser | null>
 }
 
@@ -995,7 +996,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'TeaserGridBlock':
       return {
         key,
-        type: EditorBlockType.TeaserGrid1,
+        type: block.numColumns === 1 ? EditorBlockType.TeaserGrid1 : EditorBlockType.TeaserGrid6,
         value: {
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
@@ -1026,7 +1027,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                 } as Teaser)
           })),
           autofillConfig: block.autofillConfig,
-          teasers: block.teasers.map(mapTeaserToQueryTeaser)
+          autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+          teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser)
         }
       }
 

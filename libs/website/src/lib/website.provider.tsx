@@ -80,7 +80,7 @@ import {
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
-import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
+import {RenderElement, RenderLeaf, RenderRichtext} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
@@ -254,7 +254,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ImageSlider,
             TeaserSlider
           }}
-          richtext={{RenderElement, RenderLeaf}}
+          richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{
             format: dateFormatter
           }}>

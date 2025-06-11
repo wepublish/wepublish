@@ -1,24 +1,8 @@
 import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
 import {getApiClientV2, PageSort, SortOrder, usePageListQuery} from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
-import {
-  Divider as RDivider,
-  Message,
-  Pagination as RPagination,
-  toaster,
-  SelectPicker
-} from 'rsuite'
-
-import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
-
-const Divider = styled(RDivider)`
-  margin: '12px 0';
-`
-
-const Pagination = styled(RPagination)`
-  margin: 0 12px 12px;
-`
+import {useMemo} from 'react'
+import {Message, SelectPicker, toaster} from 'rsuite'
+import {t} from 'i18next'
 
 interface SelectPageProps {
   className?: string
@@ -35,8 +19,6 @@ export function SelectPage({
   selectedPage,
   setSelectedPage
 }: SelectPageProps) {
-  const [page, setPage] = useState(1)
-
   /**
    * Error handling
    * @param error
@@ -58,7 +40,7 @@ export function SelectPage({
     variables: {
       sort: PageSort.PublishedAt,
       order: SortOrder.Ascending,
-      take: 50
+      take: 200
     },
     fetchPolicy: 'no-cache',
     onError: showErrors
@@ -73,7 +55,7 @@ export function SelectPage({
     }
 
     return pageData.pages.nodes.map(page => ({
-      label: page.latest.title,
+      label: page.latest.title || <i>{t('pages.overview.untitled')}</i>,
       value: page.id
     }))
   }, [pageData])
@@ -81,7 +63,6 @@ export function SelectPage({
   return (
     <SelectPicker
       block
-      virtualized
       disabled={disabled}
       className={className}
       name={name}
@@ -95,30 +76,6 @@ export function SelectPage({
         })
       }}
       onChange={(value, item) => setSelectedPage(value)}
-      renderMenu={menu => {
-        return (
-          <>
-            {menu}
-
-            <Divider />
-
-            <Pagination
-              limit={50}
-              maxButtons={DEFAULT_MAX_TABLE_PAGES}
-              first
-              last
-              prev
-              next
-              ellipsis
-              boundaryLinks
-              layout={['total', '-', '|', 'pager']}
-              total={pageData?.pages?.totalCount ?? 0}
-              activePage={page}
-              onChangePage={page => setPage(page)}
-            />
-          </>
-        )
-      }}
     />
   )
 }

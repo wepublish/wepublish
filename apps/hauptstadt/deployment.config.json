@@ -3,7 +3,8 @@
     "production": {
       "deployment": true,
       "env": {},
-      "secret_env": []
+      "secret_env": [],
+      "custom_domain": "https://www.hauptstadt.be"
     },
     "staging": {
       "deployment": true,

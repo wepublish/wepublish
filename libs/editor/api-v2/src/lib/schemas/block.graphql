@@ -87,33 +87,33 @@ fragment BlockWithoutTeaser on BlockContent {
         }
     }
 
-  ... on CrowdfundingBlock {
-    blockStyle
-    type
-    crowdfunding {
-      id
-      name
-      activeCrowdfundingGoal {
-        id
-        title
-        description
-        amount
-        progress
-      }
+    ... on CrowdfundingBlock {
+        blockStyle
+        type
+        crowdfunding {
+            id
+            name
+            activeCrowdfundingGoal {
+                id
+                title
+                description
+                amount
+                progress
+            }
+        }
     }
-  }
 
-  ... on ListicleBlock {
-    blockStyle
-    type
-    items {
-      title
-      richText
-      image {
-        ...FullImage
-      }
+    ... on ListicleBlock {
+        blockStyle
+        type
+        items {
+            title
+            richText
+            image {
+                ...FullImage
+            }
+        }
     }
-  }
 
     ... on BreakBlock {
         blockStyle
@@ -363,9 +363,8 @@ fragment FullBlock on BlockContent {
                 ...FullTeaser
             }
         },
-        teasers {
+        autofillTeasers {
             ...FullTeaser
         }
-
     }
 }

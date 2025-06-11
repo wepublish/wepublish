@@ -21,9 +21,10 @@ export class TeaserSlotsBlock extends BaseBlock<BlockType.TeaserSlots> {
   @Field(() => [TeaserSlot])
   slots!: Array<TeaserSlot>
 
+  @Field(() => [Teaser])
+  autofillTeasers!: Array<typeof Teaser>
+
   @Field(() => [Teaser], {
-    // not nullable but teaser grid/flex can be and it uses the same property,
-    // so they have to be the same
     nullable: 'items'
   })
   teasers!: Array<typeof Teaser | null>
@@ -32,7 +33,7 @@ export class TeaserSlotsBlock extends BaseBlock<BlockType.TeaserSlots> {
 @InputType()
 export class TeaserSlotsBlockInput extends OmitType(
   TeaserSlotsBlock,
-  ['teasers', 'slots', 'autofillConfig', 'type'] as const,
+  ['teasers', 'autofillTeasers', 'slots', 'autofillConfig', 'type'] as const,
   InputType
 ) {
   @Field(() => [TeaserSlotInput])

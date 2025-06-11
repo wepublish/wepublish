@@ -121,7 +121,8 @@ import {
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
   CanUpdateCrowdfunding,
-  CanDeleteCrowdfunding
+  CanDeleteCrowdfunding,
+  CanGetAudienceStats
 } from '@wepublish/permissions'
 
 export const AllPermissions: Permission[] = [
@@ -244,7 +245,8 @@ export const AllPermissions: Permission[] = [
   CanCreateApprovedComment,
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
-  CanDeleteBlockStyle
+  CanDeleteBlockStyle,
+  CanGetAudienceStats
 ]
 
 export const EditorPermissions: Permission[] = [

@@ -10,9 +10,7 @@
     },
     "staging": {
       "deployment": true,
-      "env": {
-        "GTM_ID": "GTM-TXZP35R"
-      },
+      "env": {},
       "secret_env": []
     },
     "review": {
