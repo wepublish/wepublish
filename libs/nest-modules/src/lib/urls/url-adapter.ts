@@ -20,7 +20,7 @@ export class URLAdapter {
   }
 
   async getArticleUrl(article: Article) {
-    return `${this.baseURL}/a/${article.slug}`
+    return article.slug ? `${this.baseURL}/a/${article.slug}` : `${this.baseURL}/a/id/${article.id}`
   }
 
   async getArticlePreviewUrl(article: Article) {
@@ -28,7 +28,7 @@ export class URLAdapter {
   }
 
   async getPageUrl(page: Page) {
-    return `${this.baseURL}/${page.slug}`
+    return page.slug != null ? `${this.baseURL}/${page.slug}` : `${this.baseURL}/id/${page.id}`
   }
 
   async getPagePreviewUrl(page: Page) {
