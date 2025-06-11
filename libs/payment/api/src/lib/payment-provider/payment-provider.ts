@@ -65,8 +65,6 @@ export interface CreateRemoteInvoiceProps {
 
 export interface UpdatePaymentWithIntentStateProps {
   intentState: IntentState
-  paymentsByID: PaymentsByID
-  invoicesByID: InvoicesByID
 }
 
 export interface WebhookUpdatesProps {
@@ -163,11 +161,9 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   }
 
   async updatePaymentWithIntentState({
-    intentState,
-    paymentsByID,
-    invoicesByID
+    intentState
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
-    const payment = await paymentsByID.load(intentState.paymentID)
+    const payment = await this.prisma.payment.findUnique({where: {id: intentState.paymentID}})
     // TODO: should we overwrite already paid/canceled payments
     if (!payment) throw new Error(`Payment with ID ${intentState.paymentID} not found`)
 
@@ -189,7 +185,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     }
 
     // get invoice and subscription joins out of the payment
-    const invoice = await invoicesByID.load(payment.invoiceID)
+    const invoice = await this.prisma.invoice.findUnique({where: {id: payment.invoiceID}})
 
     if (!invoice || !invoice.subscriptionID) {
       throw new Error(`Invoice with ID ${payment.invoiceID} does not exist`)

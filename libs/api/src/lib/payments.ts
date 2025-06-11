@@ -29,9 +29,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
                 for (const paymentStatus of webhookResponse.paymentStates) {
                   // TODO: handle errors properly
                   await paymentProvider.updatePaymentWithIntentState({
-                    intentState: paymentStatus,
-                    paymentsByID: context.loaders.paymentsByID,
-                    invoicesByID: context.loaders.invoicesByID
+                    intentState: paymentStatus
                   })
                 }
               }
