@@ -44,11 +44,6 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
-  """
-  This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
-  """
-  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
-
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(subscriptionId: String, successURL: String, failureURL: String): Payment
 }
@@ -285,14 +280,6 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated
   invoiceNotPaid
   userReplacedSubscription
-}
-
-input PaymentFromInvoiceInput {
-  invoiceID: String!
-  paymentMethodID: String
-  paymentMethodSlug: Slug
-  successURL: String
-  failureURL: String
 }
 
 scalar _FieldSet

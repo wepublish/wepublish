@@ -1,8 +1,13 @@
-import {Field, ID, InputType, ObjectType, ArgsType} from '@nestjs/graphql'
+import {ArgsType, Directive, Field, ID, InputType, ObjectType} from '@nestjs/graphql'
+import {HasImage, Image} from '@wepublish/image/api'
+import {GraphQLSlug} from '@wepublish/utils/api'
 
-@ObjectType()
+@ObjectType({
+  implements: () => [HasImage]
+})
+@Directive('@key(fields: "id")')
 export class PaymentMethod {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -14,7 +19,7 @@ export class PaymentMethod {
   @Field()
   name!: string
 
-  @Field()
+  @Field(() => GraphQLSlug)
   slug!: string
 
   @Field()
@@ -25,6 +30,9 @@ export class PaymentMethod {
 
   @Field()
   active!: boolean
+
+  imageID?: string
+  image?: Image
 }
 
 @InputType()

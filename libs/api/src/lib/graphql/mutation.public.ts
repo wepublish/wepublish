@@ -1,9 +1,4 @@
-import {
-  MemberPlan,
-  PaymentState,
-  Subscription,
-  SubscriptionDeactivationReason
-} from '@prisma/client'
+import {MemberPlan, Subscription, SubscriptionDeactivationReason} from '@prisma/client'
 import {unselectPassword} from '@wepublish/authentication/api'
 import {
   GraphQLBoolean,
@@ -18,27 +13,23 @@ import {SubscriptionWithRelations} from '../db/subscription'
 import {
   AlreadyUnpaidInvoices,
   InternalError,
-  InvoiceAlreadyPaidOrCanceled,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
-  PaymentAlreadyRunning,
   SubscriptionNotExtendable,
   SubscriptionNotFound,
   SubscriptionToDeactivateDoesNotExist,
   UserIdNotFound,
-  UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
-import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {GraphQLPublicPayment} from './payment'
 import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLPublicUser, GraphQLPublicUserInput} from './user'
 import {updatePublicUser, uploadPublicUserProfileImage} from './user/user.public-mutation'
-import {sub} from 'date-fns'
 import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberContext'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -481,87 +472,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!updatedSubscription) throw new NotFound('subscription', id)
 
         return updatedSubscription
-      }
-    },
-
-    createPaymentFromInvoice: {
-      type: GraphQLPublicPayment,
-      args: {
-        input: {type: new GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}
-      },
-      description:
-        'This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.',
-      async resolve(root, {input}, {authenticateUser, createPaymentWithProvider, loaders, prisma}) {
-        const {user} = authenticateUser()
-        const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
-
-        if (
-          (paymentMethodID == null && paymentMethodSlug == null) ||
-          (paymentMethodID != null && paymentMethodSlug != null)
-        ) {
-          throw new UserInputError(
-            'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
-          )
-        }
-
-        const paymentMethod = paymentMethodID
-          ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
-          : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
-        if (!paymentMethod)
-          throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
-
-        const invoice = await prisma.invoice.findUnique({
-          where: {
-            id: invoiceID
-          },
-          include: {
-            items: true
-          }
-        })
-
-        if (!invoice || !invoice.subscriptionID) throw new NotFound('Invoice', invoiceID)
-
-        if (invoice.paidAt || invoice.canceledAt) throw new InvoiceAlreadyPaidOrCanceled(invoiceID)
-
-        const subscription = await prisma.subscription.findUnique({
-          where: {
-            id: invoice.subscriptionID
-          },
-          include: {
-            deactivation: true,
-            periods: true,
-            properties: true,
-            memberPlan: true
-          }
-        })
-
-        if (!subscription || subscription.userID !== user.id)
-          throw new NotFound('Invoice', invoiceID)
-
-        // Prevent multiple payment of same invoice!
-        const blockingPaymnet = await prisma.payment.findFirst({
-          where: {
-            invoiceID,
-            state: {
-              in: [PaymentState.created, PaymentState.submitted, PaymentState.processing]
-            },
-            createdAt: {
-              gte: sub(new Date(), {minutes: 1})
-            }
-          }
-        })
-        if (blockingPaymnet) throw new PaymentAlreadyRunning(blockingPaymnet.id)
-
-        return await createPaymentWithProvider({
-          paymentMethodID: paymentMethod.id,
-          invoice,
-          saveCustomer: true,
-          successURL,
-          failureURL,
-          user,
-          migrateToTargetPaymentMethodID:
-            subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
-        })
       }
     },
 

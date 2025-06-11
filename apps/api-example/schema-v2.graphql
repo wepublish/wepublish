@@ -1041,6 +1041,11 @@ interface HasPageLc {
   pageId: String!
 }
 
+interface HasPaymentMethod {
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+}
+
 interface HasPoll {
   poll: FullPoll!
   pollId: String!
@@ -1307,6 +1312,11 @@ type Mutation {
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """
+  This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
+  """
+  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
   createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
@@ -1621,11 +1631,30 @@ type PaginatedPollVotes {
   totalCount: Int!
 }
 
-type PaymentMethod {
+type Payment implements HasPaymentMethod {
+  id: String!
+  intentSecret: String!
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  state: PaymentState!
+}
+
+input PaymentFromInvoiceInput {
+  failureURL: String
+  invoiceID: String!
+  paymentMethodID: String
+  paymentMethodSlug: Slug
+  successURL: String
+}
+
+type PaymentMethod implements HasImage {
+  active: Boolean!
+  createdAt: DateTime!
   description: String!
   id: String!
   image: Image
-  imageId: String
+  imageID: String
+  modifiedAt: DateTime!
   name: String!
   paymentProviderID: String!
   slug: Slug!
@@ -1646,6 +1675,16 @@ type PaymentProviderCustomer {
 input PaymentProviderCustomerInput {
   customerID: String!
   paymentProviderID: String!
+}
+
+enum PaymentState {
+  canceled
+  created
+  declined
+  paid
+  processing
+  requiresUserAction
+  submitted
 }
 
 type Peer {
