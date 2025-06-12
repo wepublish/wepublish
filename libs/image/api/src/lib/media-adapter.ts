@@ -1,7 +1,8 @@
 import {Injectable} from '@nestjs/common'
-import {Image} from '@prisma/client'
 import {FileUpload} from 'graphql-upload'
-import {ImageTransformation, UploadImage} from './image-upload'
+import {UploadImage} from './image-upload'
+import {Image} from './image.model'
+import {ImageTransformation} from './image-transformation.model'
 
 export interface ArrayBufferUpload {
   filename: string

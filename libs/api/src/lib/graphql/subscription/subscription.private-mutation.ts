@@ -117,7 +117,6 @@ export const createSubscription = async (
   authorise(CanCreateSubscription, roles)
 
   const {subscription} = await memberContext.createSubscription(
-    prismaClient,
     input['userID'],
     input['paymentMethodID'],
     input['paymentPeriodicity'],

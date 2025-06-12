@@ -3,7 +3,6 @@ import {Authenticated, CurrentUser, UserSession} from '@wepublish/authentication
 import {Invoice, InvoiceItem} from './invoice.model'
 import {InvoiceService} from './invoice.service'
 import {Session} from '@wepublish/editor/api'
-import {PublicSubscription} from '@wepublish/membership/api'
 
 @Resolver(() => Invoice)
 export class InvoiceResolver {
@@ -25,14 +24,6 @@ export class InvoiceResolver {
   @Authenticated()
   async checkInvoiceStatus(@Args('id') id: string, @CurrentUser() session: Session) {
     return this.invoiceService.checkInvoiceStatus(id, session.user.id)
-  }
-
-  @ResolveField(() => PublicSubscription, {nullable: true})
-  async subscription(@Parent() invoice: Invoice) {
-    if (!invoice.subscriptionID) {
-      return null
-    }
-    return {__typename: 'PublicSubscription', id: invoice.subscriptionID}
   }
 
   @ResolveField(() => Int)

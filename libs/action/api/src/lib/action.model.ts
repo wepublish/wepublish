@@ -1,5 +1,5 @@
-import {Field, ObjectType, registerEnumType, createUnionType, InterfaceType} from '@nestjs/graphql'
-import {HasSubscription, PublicSubscription} from '@wepublish/membership/api'
+import {createUnionType, Field, InterfaceType, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {HasSubscriptionLc, PublicSubscription} from '@wepublish/membership/api'
 import {Article, HasArticleLc} from '@wepublish/article/api'
 import {Author, HasAuthor} from '@wepublish/author/api'
 import {Comment, HasComment} from '@wepublish/comments/api'
@@ -60,10 +60,10 @@ export class PollStartedAction extends BaseAction<ActionType.PollStarted> implem
   poll!: FullPoll
 }
 
-@ObjectType({implements: [BaseAction, HasSubscription]})
+@ObjectType({implements: [BaseAction, HasSubscriptionLc]})
 export class SubscriptionCreatedAction
   extends BaseAction<ActionType.SubscriptionCreated>
-  implements HasSubscription
+  implements HasSubscriptionLc
 {
   subscriptionId!: string
   subscription!: PublicSubscription

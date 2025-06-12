@@ -18,13 +18,7 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
-import {
-  CalculatedRating,
-  Comment,
-  CommentRevision,
-  CommentSort,
-  PublicCommentSort
-} from '../../db/comment'
+import {CalculatedRating, Comment, CommentRevision, CommentSort} from '../../db/comment'
 import {createProxyingResolver} from '../../utility'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLImage} from '../image'
@@ -72,13 +66,6 @@ export const GraphQLCommentSort = new GraphQLEnumType({
   values: {
     [CommentSort.ModifiedAt]: {value: CommentSort.ModifiedAt},
     [CommentSort.CreatedAt]: {value: CommentSort.CreatedAt}
-  }
-})
-
-export const GraphQLPublicCommentSort = new GraphQLEnumType({
-  name: 'CommentSort',
-  values: {
-    [PublicCommentSort.Rating]: {value: PublicCommentSort.Rating}
   }
 })
 
@@ -234,16 +221,3 @@ export const GraphQLCommentConnection = new GraphQLObjectType({
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
-
-export const GraphQLCommentResolver = {
-  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
-    const {id} = reference
-    const comment = await loaders.commentsById.load(id)
-
-    if (!comment) {
-      throw new Error('Comment not found')
-    }
-
-    return comment
-  }
-}
