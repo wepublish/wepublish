@@ -1,4 +1,4 @@
-import {ApolloDriverConfig, ApolloFederationDriver} from '@nestjs/apollo'
+import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -82,7 +82,7 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
 @Module({
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloFederationDriver,
+      driver: ApolloDriver,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
@@ -92,7 +92,7 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
           resolvers: {RichText: GraphQLRichText},
           autoSchemaFile: './apps/api-example/schema-v2.graphql',
           sortSchema: true,
-          path: 'v2',
+          path: 'v1',
           cache: 'bounded',
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
