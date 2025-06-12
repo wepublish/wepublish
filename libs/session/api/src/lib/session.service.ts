@@ -15,6 +15,7 @@ import {
 import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {SettingName, SettingsService} from '@wepublish/settings/api'
 import {Validator} from './validator'
+import {User} from '@wepublish/user/api'
 
 const IDAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -44,7 +45,7 @@ export class SessionService {
     if (!user) throw new InvalidCredentialsError()
     if (!user.active) throw new NotActiveError()
 
-    return this.createUserSession(user.id)
+    return this.createUserSession(user)
   }
 
   async createSessionWithJWT(jwt: string): Promise<SessionWithToken> {
@@ -53,7 +54,7 @@ export class SessionService {
     if (!user) throw new InvalidCredentialsError()
     if (!user.active) throw new NotActiveError()
 
-    return this.createUserSession(user.id)
+    return this.createUserSession(user)
   }
 
   async createOAuth2Session(providerName: string, code: string, redirectUri: string) {
@@ -66,7 +67,7 @@ export class SessionService {
     if (!user) throw new InvalidCredentialsError()
     if (!user.active) throw new NotActiveError()
 
-    return this.createUserSession(user.id)
+    return this.createUserSession(user)
   }
 
   async revokeSession(session: UserSession | null) {
@@ -80,7 +81,7 @@ export class SessionService {
     }))
   }
 
-  async createUserSession(userId: string): Promise<SessionWithToken> {
+  async createUserSession(user: User): Promise<SessionWithToken> {
     const token = nanoid(IDAlphabet, 64)
 
     const expiresAt = new Date(Date.now() + this.sessionTTL)
@@ -91,14 +92,14 @@ export class SessionService {
         expiresAt,
         user: {
           connect: {
-            id: userId
+            id: user.id
           }
         }
       }
     })
 
     return {
-      user: {id: userId},
+      user,
       token,
       createdAt,
       expiresAt

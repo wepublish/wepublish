@@ -1,49 +1,81 @@
-import {Args, Mutation, Resolver} from '@nestjs/graphql'
-import {Authenticated, CurrentUser, UserSession} from '@wepublish/authentication/api'
-import {PublicSubscription} from '@wepublish/membership/api'
-import {UserService} from './user.service'
-import {PaymentProviderCustomer, PaymentProviderCustomerInput, User} from './user.model'
-import {UserInputError} from '@nestjs/apollo'
-import {UploadImageInput} from '@wepublish/image/api'
-import {ProfileService} from './profile.service'
+import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
+import {OAuth2Account, PaymentProviderCustomer, User, UserAddress} from './user.model'
+import {PrismaClient} from '@prisma/client'
+import {PublicProperty} from '@wepublish/utils/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 
-@Resolver(() => PublicSubscription)
+@Resolver(() => User)
 export class UserResolver {
   constructor(
-    private readonly userService: UserService,
-    private readonly profileService: ProfileService
+    private readonly prisma: PrismaClient,
+    private readonly imageDataloaderService: ImageDataloaderService
   ) {}
 
-  @Authenticated()
-  @Mutation(() => [PaymentProviderCustomer], {
-    description: `This mutation allows to update the Payment Provider Customers`
-  })
-  async updatePaymentProviderCustomers(
-    @Args('input', {type: () => [PaymentProviderCustomerInput]})
-    input: PaymentProviderCustomerInput[],
-    @CurrentUser() session: UserSession
-  ) {
-    const user = await this.userService.updatePaymentProviderCustomers(session.user.id, input)
-
-    if (!user) {
-      throw new UserInputError(`User not found ${session.user.id}`)
+  @ResolveField(() => Image)
+  public async image(@Parent() {image, userImageID}: User) {
+    if (!userImageID) {
+      return null
     }
-    return user.paymentProviderCustomers
+
+    if (image !== undefined) {
+      return image
+    }
+    return this.imageDataloaderService.load(userImageID)
   }
 
-  @Authenticated()
-  @Mutation(() => User, {
-    nullable: true,
-    description: `This mutation allows to upload and update the user's profile image.`
-  })
-  async uploadUserProfileImage(
-    @Args('uploadImageInput', {
-      type: () => UploadImageInput,
-      nullable: true
+  @ResolveField(() => UserAddress)
+  public async address(@Parent() {id: userId, address}: User) {
+    if (address !== undefined) {
+      return address
+    }
+    return this.prisma.userAddress.findUnique({
+      where: {userId}
     })
-    uploadImageInput: UploadImageInput | null,
-    @CurrentUser() session: UserSession
-  ) {
-    return this.profileService.uploadUserProfileImage(session.user, uploadImageInput)
+  }
+
+  @ResolveField(() => [PaymentProviderCustomer], {nullable: true})
+  public async paymentProviderCustomers(@Parent() {id: userId, paymentProviderCustomers}: User) {
+    if (paymentProviderCustomers !== undefined) {
+      return paymentProviderCustomers
+    }
+    return this.prisma.paymentProviderCustomer.findMany({
+      where: {userId}
+    })
+  }
+
+  @ResolveField(() => [OAuth2Account])
+  public async oauth2Accounts(@Parent() {id: userId, oauth2Accounts}: User) {
+    if (oauth2Accounts !== undefined) {
+      return oauth2Accounts
+    }
+    return this.prisma.userOAuth2Account.findMany({
+      where: {userId}
+    })
+  }
+
+  @ResolveField(() => [PublicProperty])
+  public async properties(@Parent() {id: userId, properties}: User) {
+    if (properties !== undefined) {
+      return properties
+    }
+
+    return this.prisma.metadataProperty.findMany({
+      where: {
+        userId,
+        public: true
+      }
+    })
+  }
+
+  @ResolveField(() => [String])
+  public async permissions(@Parent() {roleIDs}: User) {
+    const userRoles = await this.prisma.userRole.findMany({
+      where: {
+        id: {
+          in: roleIDs
+        }
+      }
+    })
+    return userRoles.flatMap(r => r.permissionIDs)
   }
 }

@@ -17,10 +17,8 @@ import {logger, MAX_PAYLOAD_SIZE, serverLogger, setLogger} from '@wepublish/util
 import {graphQLJSSchemaToAST} from '@apollo/federation-internals'
 import {buildSubgraphSchema} from '@apollo/subgraph'
 import gql from 'graphql-tag'
-import {GraphQLImageResolver} from './graphql/image'
 import {GraphQLObjectType, GraphQLUnionType, printSchema} from 'graphql'
 import * as fs from 'fs'
-import {GraphQLUserResolver} from './graphql/user'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -80,8 +78,6 @@ export class WepublishServer {
       directive @tag(
         name: String!
       ) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-      extend type Image @key(fields: "id")
-      extend type User @key(fields: "id")
     `
     const typeDefs = [graphQLJSSchemaToAST(GraphQLWepublishPublicSchema), federatedTypeDefs]
     const resolvers = {
@@ -120,18 +116,6 @@ export class WepublishServer {
           })
           .filter(([name, resolvers]) => Object.keys(resolvers).length > 0)
       )
-    }
-
-    const federatedResolvers = {
-      Image: GraphQLImageResolver,
-      User: GraphQLUserResolver
-    }
-
-    for (const type in federatedResolvers) {
-      resolvers[type] = {
-        ...resolvers[type],
-        ...federatedResolvers[type as keyof typeof federatedResolvers]
-      }
     }
 
     const publicSchema = buildSubgraphSchema({

@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {MediaAdapter} from './media-adapter'
 import {PrismaClient} from '@prisma/client'
-import {UploadImageInput} from './image.model'
+import {Image, ImageWithFocalPoint, isImageWithFocalPoint, UploadImageInput} from './image.model'
 
 @Injectable()
 export class ImageService {
@@ -57,5 +57,13 @@ export class ImageService {
   async deleteImage(imageId: string) {
     await this.mediaAdapter.deleteImage(imageId)
     await this.prisma.image.delete({where: {id: imageId}})
+  }
+
+  async ensureImageHasFocalPoint(image: Image): Promise<ImageWithFocalPoint> {
+    if (isImageWithFocalPoint(image)) {
+      return image
+    }
+    image.focalPoint = await this.prisma.focalPoint.findUnique({where: {imageId: image.id}})
+    return image as ImageWithFocalPoint
   }
 }

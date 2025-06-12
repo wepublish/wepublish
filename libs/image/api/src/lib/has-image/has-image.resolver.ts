@@ -1,9 +1,12 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {HasImage, HasImageLc} from './has-image.model'
 import {Image} from '../image.model'
+import {ImageDataloaderService} from '../image-dataloader.service'
 
 @Resolver(() => HasImage)
 export class HasImageResolver {
+  constructor(private imageDataloader: ImageDataloaderService) {}
+
   @ResolveField(() => Image, {nullable: true})
   public image(@Parent() block: HasImage) {
     const {imageID} = block
@@ -12,12 +15,14 @@ export class HasImageResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageID}
+    return this.imageDataloader.load(imageID)
   }
 }
 
 @Resolver(() => HasImageLc)
 export class HasImageLcResolver {
+  constructor(private imageDataloader: ImageDataloaderService) {}
+
   @ResolveField(() => Image, {nullable: true})
   public image(@Parent() block: HasImageLc) {
     const {imageId} = block
@@ -26,6 +31,6 @@ export class HasImageLcResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageId}
+    return this.imageDataloader.load(imageId)
   }
 }

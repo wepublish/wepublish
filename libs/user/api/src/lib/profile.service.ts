@@ -2,6 +2,9 @@ import {Injectable} from '@nestjs/common'
 import {unselectPassword} from './unselect-password'
 import {ImageService, UploadImageInput} from '@wepublish/image/api'
 import {PrismaClient, User} from '@prisma/client'
+import {UserInputError} from '@nestjs/apollo'
+import {UserInput} from '@wepublish/user/api'
+import {Validator} from '@wepublish/user'
 
 @Injectable()
 export class ProfileService {
@@ -34,6 +37,49 @@ export class ProfileService {
       },
       data: {
         userImageID: newImage?.id
+      },
+      select: unselectPassword
+    })
+  }
+
+  async updatePublicUser(
+    user: User,
+    {address, name, email, birthday, firstName, flair, uploadImageInput}: UserInput
+  ) {
+    email = email ? (email as string).toLowerCase() : email
+
+    Validator.createUser.parse({name, email, birthday, firstName})
+    Validator.createAddress.parse(address)
+
+    if (email && user.email !== email) {
+      const userExists = await this.prisma.user.findUnique({
+        where: {email: email as string}
+      })
+
+      if (userExists) {
+        throw new UserInputError(`Email already in use`)
+      }
+    }
+
+    // eventually upload user profile image
+    if (uploadImageInput !== undefined) {
+      await this.uploadUserProfileImage(user, uploadImageInput)
+    }
+    return this.prisma.user.update({
+      where: {id: user.id},
+      data: {
+        birthday,
+        name,
+        firstName,
+        address: address
+          ? {
+              upsert: {
+                create: address,
+                update: address
+              }
+            }
+          : undefined,
+        flair
       },
       select: unselectPassword
     })

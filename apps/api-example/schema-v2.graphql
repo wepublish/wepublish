@@ -942,8 +942,8 @@ input FlexTeaserInput {
 }
 
 type FocalPoint {
-  x: Float!
-  y: Float!
+  x: Float
+  y: Float
 }
 
 type FullCommentRatingSystem {
@@ -1111,7 +1111,24 @@ input IFrameBlockInput {
 }
 
 type Image {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  focalPoint: FocalPoint
+  format: String!
+  height: Int!
   id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  tags: [String!]!
+  title: String
+  transformURL(input: ImageTransformation!): String!
+  width: Int!
 }
 
 type ImageBlock implements BaseBlock & HasImage {
@@ -1156,24 +1173,30 @@ input ImageGalleryImageInput {
   imageID: String
 }
 
-type ImageV2 {
-  createdAt: DateTime!
-  description: RichText
-  extension: String!
-  fileSize: Int!
-  filename: String
-  focalPoint: FocalPoint
-  format: String!
-  height: Int!
-  id: String!
-  license: String
-  link: String
-  mimeType: String!
-  modifiedAt: DateTime!
-  source: String
-  tags: [String!]!
-  title: String
-  width: Int!
+enum ImageOutput {
+  jpeg
+  png
+  webp
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+input ImageTransformation {
+  blur: Boolean
+  grayscale: Boolean
+  height: Int
+  negate: Boolean
+  output: ImageOutput
+  quality: Float
+  rotation: ImageRotation
+  sharpen: Boolean
+  width: Int
 }
 
 input ImportArticleOptions {
@@ -1204,8 +1227,8 @@ type ImportedEventsDocument {
 }
 
 input InputPoint {
-  x: Float!
-  y: Float!
+  x: Float
+  y: Float
 }
 
 type InstagramPostBlock implements BaseBlock {
@@ -1524,6 +1547,11 @@ type Mutation {
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
+  """
+  This mutation allows to update the user's data by taking an input of type UserInput.
+  """
+  updateUser(input: UserInput!): User
+
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 
@@ -1568,6 +1596,12 @@ type NonDbProperty {
   key: String!
   public: Boolean!
   value: String!
+}
+
+type OAuth2Account {
+  provider: String!
+  scope: String!
+  type: String!
 }
 
 type Page {
@@ -2038,7 +2072,7 @@ type Query {
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """Returns an image by id."""
-  getImage(id: String!): ImageV2!
+  getImage(id: String!): Image!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
@@ -2637,7 +2671,27 @@ input UploadImageInput {
 }
 
 type User {
+  address: UserAddress
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
   id: String!
+  image: Image
+  name: String!
+  oauth2Accounts: [OAuth2Account!]!
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  permissions: [String!]!
+  properties: [PublicProperties!]!
+}
+
+type UserAddress {
+  city: String
+  company: String
+  country: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
 }
 
 input UserAddressInput {
@@ -2670,6 +2724,16 @@ enum UserEvent {
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL
+}
+
+input UserInput {
+  address: UserAddressInput
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
+  name: String!
+  uploadImageInput: UploadImageInput
 }
 
 type UserSession {

@@ -3,6 +3,7 @@ export * from './lib/image-fetcher/image-fetcher.module'
 export * from './lib/image-fetcher/image-fetcher.service'
 
 export * from './lib/image.model'
+export * from './lib/image-transformation.model'
 export * from './lib/image-dataloader.service'
 export * from './lib/image.resolver'
 export * from './lib/image.service'

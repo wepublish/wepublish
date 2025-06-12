@@ -9,7 +9,7 @@ import {
   UpdateEventInput
 } from './event.model'
 import {EventService} from './event.service'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
 import {Tag, TagService} from '@wepublish/tag/api'
 import {URLAdapter} from '@wepublish/nest-modules'
@@ -22,7 +22,8 @@ export class EventResolver {
     private eventService: EventService,
     private eventDataloader: EventDataloaderService,
     private urlAdapter: URLAdapter,
-    private tagService: TagService
+    private tagService: TagService,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @Public()
@@ -68,7 +69,7 @@ export class EventResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageId}
+    return this.imageDataloaderService.load(imageId)
   }
 
   @ResolveField(() => [Tag], {nullable: true})

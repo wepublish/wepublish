@@ -1,29 +1,24 @@
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Directive, Field, Float, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
+import {Field, Float, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
 import {FileUpload, GraphQLUpload} from 'graphql-upload'
+import {RequireProperties} from '@wepublish/utils/api'
 
 @ObjectType()
 export class FocalPoint {
-  @Field(type => Float)
-  x!: number
+  @Field(type => Float, {nullable: true})
+  x!: number | null
 
-  @Field(type => Float)
-  y!: number
+  @Field(type => Float, {nullable: true})
+  y!: number | null
+
+  imageId!: string
 }
 
 @ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
 export class Image {
   @Field()
-  @Directive('@external')
   id!: string
-}
 
-@ObjectType()
-export class ImageV2 {
-  @Field()
-  id!: string
+  peerId!: string | null
 
   @Field()
   createdAt!: Date
@@ -31,26 +26,26 @@ export class ImageV2 {
   @Field()
   modifiedAt!: Date
 
-  @Field({nullable: true})
-  filename?: string
+  @Field(() => String, {nullable: true})
+  filename!: string | null
 
-  @Field({nullable: true})
-  title?: string
+  @Field(() => String, {nullable: true})
+  title!: string | null
 
-  @Field(type => GraphQLRichText, {nullable: true})
-  description?: string
+  @Field(type => String, {nullable: true})
+  description!: string | null
 
   @Field(type => [String])
   tags!: string[]
 
-  @Field({nullable: true})
-  link?: string
+  @Field(() => String, {nullable: true})
+  link!: string | null
 
-  @Field({nullable: true})
-  source?: string
+  @Field(() => String, {nullable: true})
+  source!: string | null
 
-  @Field({nullable: true})
-  license?: string
+  @Field(() => String, {nullable: true})
+  license!: string | null
 
   @Field(type => Int)
   fileSize!: number
@@ -60,6 +55,9 @@ export class ImageV2 {
 
   @Field()
   mimeType!: string
+
+  @Field(() => String)
+  url?: string
 
   @Field()
   format!: string
@@ -71,7 +69,16 @@ export class ImageV2 {
   height!: number
 
   @Field(type => FocalPoint, {nullable: true})
-  focalPoint?: FocalPoint
+  focalPoint?: FocalPoint | null
+
+  @Field(() => String)
+  transformURL?: string
+}
+
+export type ImageWithFocalPoint = RequireProperties<Image, 'focalPoint'>
+
+export function isImageWithFocalPoint(image: Image): image is ImageWithFocalPoint {
+  return image.focalPoint !== undefined
 }
 
 @InputType('InputPoint')

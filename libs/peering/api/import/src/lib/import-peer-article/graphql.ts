@@ -1176,14 +1176,14 @@ export type Image = {
   source?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  transformURL?: Maybe<Scalars['String']>;
+  transformURL: Scalars['String'];
   url?: Maybe<Scalars['String']>;
   width: Scalars['Int'];
 };
 
 
 export type ImageTransformUrlArgs = {
-  input?: InputMaybe<ImageTransformation>;
+  input: ImageTransformation;
 };
 
 export type ImageBlock = BaseBlock & HasImage & {
@@ -1246,32 +1246,15 @@ export enum ImageRotation {
 }
 
 export type ImageTransformation = {
+  blur?: InputMaybe<Scalars['Boolean']>;
+  grayscale?: InputMaybe<Scalars['Boolean']>;
   height?: InputMaybe<Scalars['Int']>;
+  negate?: InputMaybe<Scalars['Boolean']>;
   output?: InputMaybe<ImageOutput>;
   quality?: InputMaybe<Scalars['Float']>;
   rotation?: InputMaybe<ImageRotation>;
+  sharpen?: InputMaybe<Scalars['Boolean']>;
   width?: InputMaybe<Scalars['Int']>;
-};
-
-export type ImageV2 = {
-  __typename?: 'ImageV2';
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['RichText']>;
-  extension: Scalars['String'];
-  fileSize: Scalars['Int'];
-  filename?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<FocalPoint>;
-  format: Scalars['String'];
-  height: Scalars['Int'];
-  id: Scalars['String'];
-  license?: Maybe<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  mimeType: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  source?: Maybe<Scalars['String']>;
-  tags: Array<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  width: Scalars['Int'];
 };
 
 export type ImportArticleOptions = {
@@ -2631,7 +2614,7 @@ export type Query = {
    */
   expectedRevenue: Array<DashboardInvoice>;
   /** Returns an image by id. */
-  getImage: ImageV2;
+  getImage: Image;
   /**
    *
    *       Returns the most viewed articles in descending order.
