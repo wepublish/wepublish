@@ -50,8 +50,10 @@ declare module '@mui/material/styles' {
     bannerText: TypographyStyleOptions
     bannerCta: TypographyStyleOptions
 
-    blockBreakTitle?: TypographyStyleOptions
-    blockBreakBody?: TypographyStyleOptions
+    blockBreakTitle: TypographyStyleOptions
+    blockBreakBody: TypographyStyleOptions
+
+    blockTitlePreTitle: TypographyStyleOptions
   }
 
   interface TypographyVariantsOptions {
@@ -68,6 +70,8 @@ declare module '@mui/material/styles' {
 
     blockBreakTitle?: TypographyStyleOptions
     blockBreakBody?: TypographyStyleOptions
+
+    blockTitlePreTitle?: TypographyStyleOptions
   }
 }
 
@@ -92,6 +96,8 @@ declare module '@mui/material/Typography' {
 
     blockBreakTitle: true
     blockBreakBody: true
+
+    blockTitlePreTitle: true
   }
 }
 
@@ -151,6 +157,10 @@ export const theme = createTheme({
       lineHeight: 1.7
     },
     // Blocks
+    blockTitlePreTitle: {
+      ...baseTheme.typography.body1,
+      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(',')
+    },
     blockBreakTitle: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontSize: '40px',

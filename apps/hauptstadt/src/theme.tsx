@@ -455,6 +455,21 @@ const theme = createTheme(variablesTheme, {
       })
     },
     // Blocks
+    blockTitlePreTitle: {
+      padding: `0 ${variablesTheme.spacing(0.5)}`,
+      marginBottom: `-${variablesTheme.spacing(1)}`,
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.5,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 18,
+          md: 23
+        }
+      })
+    },
     blockBreakTitle: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
       textTransform: 'unset',

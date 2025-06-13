@@ -9,9 +9,6 @@ import {forceHideBanner} from '@wepublish/banner/website'
 export const FooterWrapper = styled('footer')`
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
 `
 
 export const FooterInnerWrapper = styled(Toolbar)`
@@ -79,18 +76,12 @@ export const FooterPaperWrapper = styled('div')`
   background-color: ${({theme}) => theme.palette.grey[800]};
   color: ${({theme}) => theme.palette.getContrastText(theme.palette.grey[800])};
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  transform: translateY(100%);
-  overflow: hidden;
+  column-gap: ${({theme}) => theme.spacing(3)};
   row-gap: ${({theme}) => theme.spacing(8)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(6)};
+      column-gap: ${theme.spacing(6)};
       row-gap: ${theme.spacing(12)};
       grid-template-columns: 1fr 1fr;
       padding: calc(100% / 12) calc(100% / 6);
@@ -108,16 +99,6 @@ export const FooterName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
   font-size: 14px;
-`
-export const FooterSeparator = styled('div')`
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 50%;
-  background-color: ${({theme}) => theme.palette.common.black};
-  z-index: -1;
-  transform: translateY(-2rem);
 `
 
 export const LinksGroup = styled('div')`
@@ -182,39 +163,30 @@ const FooterPaper = ({
         </FooterPaperMainLinks>
       )}
 
-      {!!categories.length && (
-        <>
-          {categories.map((categoryArray, arrayIndex) => (
-            <LinksGroup key={`category-group-${arrayIndex}`}>
-              {arrayIndex > 0 && <FooterSeparator />}
-              {categoryArray.map(nav => (
-                <FooterPaperCategory key={nav.id}>
-                  <FooterName>{nav.name}</FooterName>
+      {categories.map((categoryArray, arrayIndex) => (
+        <LinksGroup key={arrayIndex}>
+          {categoryArray.map(nav => (
+            <FooterPaperCategory key={nav.id}>
+              <FooterName>{nav.name}</FooterName>
 
-                  <FooterPaperCategoryLinks>
-                    {nav.links?.map((link, index) => {
-                      const url = navigationLinkToUrl(link)
-
-                      return (
-                        <Link
-                          href={url}
-                          key={index}
-                          color="inherit"
-                          underline="none"
-                          css={footerPaperLinkStyling(theme)}>
-                          <H6 component="span" css={{fontWeight: '700'}}>
-                            {link.label}
-                          </H6>
-                        </Link>
-                      )
-                    })}
-                  </FooterPaperCategoryLinks>
-                </FooterPaperCategory>
-              ))}
-            </LinksGroup>
+              <FooterPaperCategoryLinks>
+                {nav.links?.map((link, index) => (
+                  <Link
+                    href={navigationLinkToUrl(link)}
+                    key={index}
+                    color="inherit"
+                    underline="none"
+                    css={footerPaperLinkStyling(theme)}>
+                    <H6 component="span" css={{fontWeight: '700'}}>
+                      {link.label}
+                    </H6>
+                  </Link>
+                ))}
+              </FooterPaperCategoryLinks>
+            </FooterPaperCategory>
           ))}
-        </>
-      )}
+        </LinksGroup>
+      ))}
 
       {isIntersecting && forceHideBanner}
     </FooterPaperWrapper>

@@ -13,13 +13,27 @@ export const TitleBlockWrapper = styled('div')`
 `
 export const TitleBlockTitle = styled('h1')``
 
-export const TitleBlock = ({title, lead, className}: BuilderTitleBlockProps) => {
+export const TitleBlockPreTitle = styled('div')`
+  padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
+  background-color: ${({theme}) => theme.palette.accent.main};
+  color: ${({theme}) => theme.palette.accent.contrastText};
+  width: fit-content;
+  margin-bottom: -${({theme}) => theme.spacing(1.5)};
+`
+
+export const TitleBlock = ({title, lead, preTitle, className}: BuilderTitleBlockProps) => {
   const {
     elements: {H2}
   } = useWebsiteBuilder()
 
   return (
     <TitleBlockWrapper className={className}>
+      {preTitle && (
+        <Typography variant="blockTitlePreTitle" component={TitleBlockPreTitle}>
+          {preTitle}
+        </Typography>
+      )}
+
       <H2 component={TitleBlockTitle}>{title}</H2>
 
       {lead && (
