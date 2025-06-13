@@ -201,9 +201,7 @@ export function SubscriptionListItem({
         }}
         onCancel={() => setConfirmCancel(false)}
         submitText={`Abo kündigen`}>
-        <H5 id="modal-modal-title" component="h1">
-          {name} wirklich kündigen?
-        </H5>
+        <H5 component="h1">{name} wirklich kündigen?</H5>
 
         <Paragraph gutterBottom={false}>
           Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
@@ -218,11 +216,11 @@ export function SubscriptionListItem({
           setConfirmExtend(false)
           await callAction(extend)()
         }}
-        submitText={'Jetzt Verlängern'}>
+        submitText={`Jetzt um ${subscriptionDuration} Verlängern`}>
         <H5 component="h1">Abo frühzeitig verlängern?</H5>
+
         <Paragraph gutterBottom={false}>
-          Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
-          willst. Weiterfahren?
+          Wir freuen uns, dass du dein Abo frühzeitig um {subscriptionDuration} verlängern willst.
         </Paragraph>
       </Modal>
     </SubscriptionListItemWrapper>

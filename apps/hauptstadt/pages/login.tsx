@@ -4,7 +4,6 @@ import {
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps} from '@wepublish/utils/website'
 import {addClientCacheToV1Props, PageDocument, UserSession} from '@wepublish/website/api'
@@ -14,6 +13,8 @@ import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect, useRef} from 'react'
+
+import {HauptstadtContentFullWidth} from '../src/components/hauptstadt-content-wrapper'
 
 type LoginProps = {sessionToken?: UserSession}
 
@@ -40,16 +41,16 @@ export default function Login({sessionToken}: LoginProps) {
   }
 
   return (
-    <ContentWidthProvider fullWidth>
-      <PageContainer slug="login">
+    <PageContainer slug="login">
+      <HauptstadtContentFullWidth>
         <LoginFormContainer
           defaults={{
             email: router.query?.mail as string | undefined,
             requirePassword: !!router.query?.requirePassword
           }}
         />
-      </PageContainer>
-    </ContentWidthProvider>
+      </HauptstadtContentFullWidth>
+    </PageContainer>
   )
 }
 

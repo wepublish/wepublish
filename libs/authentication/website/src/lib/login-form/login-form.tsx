@@ -36,6 +36,12 @@ const withCredentialsFormSchema = z.object({
 
 const loginFormSchema = z.union([withEmailFormSchema, withCredentialsFormSchema])
 
+const autofocus = (node: HTMLElement | null) => {
+  const inputNode = node?.querySelector('input') ?? node
+  console.log(inputNode)
+  inputNode?.focus()
+}
+
 export function LoginForm({
   loginWithCredentials,
   onSubmitLoginWithCredentials,
@@ -106,6 +112,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
+              ref={autofocus}
             />
           )}
         />

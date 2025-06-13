@@ -31,6 +31,8 @@ const imageStyles = css`
 
 export const ImageBlockCaption = styled('figcaption')``
 
+export const ImageBlockSource = styled('span')``
+
 export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlockProps) => {
   const {
     elements: {Image}
@@ -51,7 +53,8 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
 
         {(caption || image?.source) && (
           <Typography variant="caption" component={ImageBlockCaption}>
-            {caption} {image?.source ? <>(Bild: {image?.source})</> : null}
+            {caption}
+            {image?.source ? <ImageBlockSource> (Bild: {image?.source})</ImageBlockSource> : null}
           </Typography>
         )}
       </ImageBlockInnerWrapper>

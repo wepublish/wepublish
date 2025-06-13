@@ -61,6 +61,7 @@ export default function ArticleBySlugOrId() {
     )
 
   const {showPaywall} = useShowPaywall(data?.article.paywall)
+  const showDuplicatedPaywall = (data?.article.latest.blocks.length ?? 0) > 4
 
   if (!showPaywall && router.query.articleId) {
     const nextSearchParams = new URLSearchParams(searchParams.toString())
@@ -80,7 +81,7 @@ export default function ArticleBySlugOrId() {
       <ShowPaywallContext.Provider
         value={{hideContent: articleId === data?.article.id ? undefined : false}}>
         <ArticleContainer {...containerProps}>
-          <DuplicatedPaywall paywall={data?.article?.paywall} />
+          {showDuplicatedPaywall && <DuplicatedPaywall paywall={data?.article?.paywall} />}
         </ArticleContainer>
       </ShowPaywallContext.Provider>
 

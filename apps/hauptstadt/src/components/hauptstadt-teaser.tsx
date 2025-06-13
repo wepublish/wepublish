@@ -27,7 +27,7 @@ import {createWithTheme} from '@wepublish/ui'
 import {alternatingTeaserTheme} from '../theme'
 
 const teaserGaps = ({theme}: {theme: Theme}) => css`
-  padding-bottom: var(--content-row-gap);
+  padding-bottom: var(--page-content-row-gap);
   column-gap: ${theme.spacing(1.5)};
 
   ${theme.breakpoints.up('md')} {
@@ -45,7 +45,7 @@ const teaserGaps = ({theme}: {theme: Theme}) => css`
 
 export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
   align-items: stretch; // Makes all teasers the same height
-  row-gap: var(--content-row-gap);
+  row-gap: var(--page-content-row-gap);
   column-gap: var(--content-column-gap);
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -60,7 +60,7 @@ export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
 export const HauptstadtTeaserList = styled(TeaserListBlock)`
   ${TeaserListBlockTeasers} {
     align-items: stretch; // Makes all teasers the same height
-    row-gap: var(--content-row-gap);
+    row-gap: var(--page-content-row-gap);
     column-gap: var(--content-column-gap);
 
     ${({theme}) => theme.breakpoints.up('sm')} {
@@ -76,7 +76,7 @@ export const HauptstadtTeaserList = styled(TeaserListBlock)`
 export const HauptstadtTeaserSlots = styled(TeaserSlotsBlock)`
   ${TeaserSlotsBlockTeasers} {
     align-items: stretch; // Makes all teasers the same height
-    row-gap: var(--content-row-gap);
+    row-gap: var(--page-content-row-gap);
     column-gap: var(--content-column-gap);
 
     ${({theme}) => theme.breakpoints.up('sm')} {

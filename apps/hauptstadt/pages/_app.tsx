@@ -43,6 +43,10 @@ import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
 import {HauptstadtEvent} from '../src/components/hauptstadt-event'
+import {
+  HauptstadtImageBlock,
+  HauptstadtImageGalleryBlock
+} from '../src/components/hauptstadt-image-block'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
 import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
 import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
@@ -130,6 +134,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               TeaserList: HauptstadtTeaserList,
               TeaserGrid: HauptstadtTeaserGrid,
               TeaserSlots: HauptstadtTeaserSlots,
+              Image: HauptstadtImageBlock,
+              ImageGallery: HauptstadtImageGalleryBlock,
               Break: HauptstadtBreakBlock
             }}
             blockStyles={{

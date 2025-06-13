@@ -177,8 +177,8 @@ const caption = {
     unit: 'rem',
     breakpoints: variablesTheme.breakpoints.values,
     values: {
-      xs: 14,
-      md: 16
+      xs: 12,
+      md: 14
     }
   })
 }
@@ -198,6 +198,9 @@ const body = {
   }),
   ['&.MuiTypography-gutterBottom']: {
     marginBottom: variablesTheme.spacing(2)
+  },
+  ['&:is(li).MuiTypography-gutterBottom']: {
+    marginBottom: variablesTheme.spacing(1.5)
   }
 }
 
@@ -227,7 +230,10 @@ const h3 = {
     values: {
       xs: 30
     }
-  })
+  }),
+  ['&.MuiTypography-gutterBottom']: {
+    marginBottom: variablesTheme.spacing(3.5)
+  }
 }
 
 const h4 = {
@@ -241,7 +247,10 @@ const h4 = {
     values: {
       xs: 24
     }
-  })
+  }),
+  ['&.MuiTypography-gutterBottom']: {
+    marginBottom: variablesTheme.spacing(3)
+  }
 }
 
 const h5 = {
@@ -255,7 +264,10 @@ const h5 = {
     values: {
       xs: 22
     }
-  })
+  }),
+  ['&.MuiTypography-gutterBottom']: {
+    marginBottom: variablesTheme.spacing(2)
+  }
 }
 
 const subtitle1 = {
@@ -430,7 +442,18 @@ const theme = createTheme(variablesTheme, {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(',')
     },
     //Article
-    articleAuthors: caption,
+    articleAuthors: {
+      ...caption,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 14,
+          md: 16
+        }
+      })
+    },
     // Blocks
     blockBreakTitle: {
       fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),

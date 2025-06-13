@@ -3,7 +3,6 @@ import {
   RegistrationFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {
   addClientCacheToV1Props,
@@ -16,6 +15,8 @@ import {deleteCookie, getCookie} from 'cookies-next'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
+import {HauptstadtContentFullWidth} from '../src/components/hauptstadt-content-wrapper'
 
 export default function SignUp() {
   const {hasUser} = useUser()
@@ -30,11 +31,11 @@ export default function SignUp() {
   }
 
   return (
-    <ContentWidthProvider fullWidth>
-      <PageContainer slug="signup">
+    <PageContainer slug="signup">
+      <HauptstadtContentFullWidth>
         <RegistrationFormContainer />
-      </PageContainer>
-    </ContentWidthProvider>
+      </HauptstadtContentFullWidth>
+    </PageContainer>
   )
 }
 

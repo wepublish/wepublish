@@ -7,7 +7,6 @@ import theme from '../theme'
 
 export const HauptstadtPaywall = createWithTheme(
   styled(Paywall)`
-    grid-row-start: 5; // After 3rd block
     background-color: ${({theme}) => theme.palette.primary.main};
     color: ${({theme}) => theme.palette.primary.contrastText};
   `,
@@ -19,7 +18,13 @@ export const DuplicatedPaywall = ({paywall}: {paywall: Parameters<typeof useShow
 
   if (showPaywall && !hideContent) {
     return (
-      <BuilderPaywall {...paywall!} hideContent={hideContent} css={{gridRowStart: 'initial'}} />
+      <BuilderPaywall
+        {...paywall!}
+        hideContent={hideContent}
+        css={{
+          gridRowStart: 5 // After 3rd block
+        }}
+      />
     )
   }
 

@@ -6,24 +6,27 @@ import {EventBlockWrapper, ImageBlockWrapper, SliderWrapper} from '@wepublish/bl
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapperStyled} from '@wepublish/content/website'
 
+export const HauptstadtContentFullWidth = styled.div``
+
 export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
   display: grid;
-  row-gap: var(--content-row-gap);
+  row-gap: var(--page-content-row-gap);
 
-  --content-row-gap: ${({theme}) => theme.spacing(2.5)};
+  --page-content-row-gap: ${({theme}) => theme.spacing(2.5)};
+  --article-content-row-gap: ${({theme}) => theme.spacing(3)};
   --content-column-gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    --content-row-gap: ${({theme}) => theme.spacing(4)};
+    --page-content-row-gap: ${({theme}) => theme.spacing(4)};
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    --content-row-gap: ${({theme}) => theme.spacing(6)};
+    --page-content-row-gap: ${({theme}) => theme.spacing(6)};
     --content-column-gap: ${({theme}) => theme.spacing(6)};
   }
 
   ${({theme}) => theme.breakpoints.up('xxl')} {
-    --content-row-gap: ${({theme}) => theme.spacing(9.5)};
+    --page-content-row-gap: ${({theme}) => theme.spacing(9.5)};
     --content-column-gap: ${({theme}) => theme.spacing(9)};
   }
 
@@ -46,7 +49,7 @@ export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
           grid-column: 9/29;
         }
 
-        && > ${ArticleListWrapper} {
+        && > :is(${ArticleListWrapper}, ${HauptstadtContentFullWidth}) {
           grid-column: -1/1;
         }
       }

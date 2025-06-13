@@ -41,8 +41,6 @@ export const getStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  console.log(page.data.page.latest.blocks[0].teasers[0])
-
   const props = addClientCacheToV1Props(client, {})
 
   return {

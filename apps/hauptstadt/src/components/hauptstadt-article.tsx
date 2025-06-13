@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import {NoSsr, Typography} from '@mui/material'
 import {Article, ArticleInfoWrapper} from '@wepublish/article/website'
-import {TitleBlockWrapper} from '@wepublish/block-content/website'
-import {useShowPaywall} from '@wepublish/paywall/website'
+import {ImageBlockWrapper, TitleBlockWrapper} from '@wepublish/block-content/website'
 import {createWithTheme} from '@wepublish/ui'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
 import {Button} from '@wepublish/website/builder'
@@ -20,14 +19,23 @@ import {FontSizePicker} from './font-size-picker'
 
 export const HauptstadtArticle = createWithTheme(
   styled(Article)`
-    gap: ${({theme}) => theme.spacing(3.5)};
+    gap: var(--article-content-row-gap);
 
-    > ${TitleBlockWrapper}:first-of-type {
+    // Swap Image & Title position
+    > ${ImageBlockWrapper}:first-of-type + ${TitleBlockWrapper}:first-of-type {
       grid-row-start: 2;
     }
 
+    /* In case no image block exists */
+    ${TitleBlockWrapper}:first-of-type + ${ImageBlockWrapper},
+    ${ImageBlockWrapper}:first-of-type + ${TitleBlockWrapper} {
+      ~ ${ArticleInfoWrapper} {
+        grid-row-start: 3;
+      }
+    }
+
     ${ArticleInfoWrapper} {
-      grid-row-start: 3;
+      grid-row-start: 2;
       gap: ${({theme}) => theme.spacing(1)};
     }
   `,
@@ -98,7 +106,6 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
       itemId: article.id
     }
   })
-  const includeIdInUrl = !useShowPaywall(article.paywall)
 
   const commentCount = data?.comments.length
   const canShare = typeof window !== 'undefined' && 'share' in navigator
@@ -115,7 +122,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           startIcon={
             article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
           }>
-          <MetaWrapperTypography variant="caption">
+          <MetaWrapperTypography variant="articleAuthors">
             {!commentCount
               ? 'Keine Beiträge'
               : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
@@ -136,7 +143,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
                   text: article.latest.lead ?? undefined
                 })
               }}>
-              <MetaWrapperTypography variant="caption">Teilen</MetaWrapperTypography>
+              <MetaWrapperTypography variant="articleAuthors">Teilen</MetaWrapperTypography>
             </MetaWrapperButton>
           </NoSsr>
         )}
@@ -147,7 +154,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           size="medium"
           startIcon={<MdPrint size={16} />}
           onClick={() => print()}>
-          <MetaWrapperTypography variant="caption">Drucken</MetaWrapperTypography>
+          <MetaWrapperTypography variant="articleAuthors">Drucken</MetaWrapperTypography>
         </MetaWrapperButton>
 
         <MetaWrapperButton
@@ -156,7 +163,7 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           size="medium"
           startIcon={<MdFormatSize size={16} />}
           onClick={() => setOpenFontSizeModal(true)}>
-          <MetaWrapperTypography variant="caption">Schrift</MetaWrapperTypography>
+          <MetaWrapperTypography variant="articleAuthors">Schrift</MetaWrapperTypography>
         </MetaWrapperButton>
       </HauptstadtArticleMetaWrapper>
 
