@@ -57,6 +57,7 @@ export interface ListicleBlockValue extends BaseBlockValue {
 }
 
 export interface TitleBlockValue extends BaseBlockValue {
+  preTitle: string
   title: string
   lead: string
 }
@@ -459,6 +460,7 @@ export function mapBlockValueToBlockInput(block: BlockValue): BlockContentInput 
     case EditorBlockType.Title:
       return {
         title: {
+          preTitle: block.value.preTitle || undefined,
           title: block.value.title || undefined,
           lead: block.value.lead || undefined,
           blockStyle: block.value.blockStyle
@@ -783,6 +785,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         type: EditorBlockType.Title,
         value: {
           blockStyle: block.blockStyle,
+          preTitle: block.preTitle ?? '',
           title: block.title ?? '',
           lead: block.lead ?? ''
         }

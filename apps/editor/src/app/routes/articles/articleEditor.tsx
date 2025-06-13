@@ -89,7 +89,7 @@ const Tag = styled(RTag, {
 `
 
 const InitialArticleBlocks: BlockValue[] = [
-  {key: '0', type: EditorBlockType.Title, value: {title: '', lead: ''}},
+  {key: '0', type: EditorBlockType.Title, value: {preTitle: '', title: '', lead: ''}},
   {key: '1', type: EditorBlockType.Image, value: {image: null, caption: ''}}
 ]
 
@@ -284,11 +284,11 @@ function ArticleEditor() {
           date: new Date(articleData?.article?.pending?.publishedAt ?? '')
         })
       )
-    } else if (articleData?.article?.published) {
+    } else if (articleData?.article?.latest.publishedAt) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('articleEditor.overview.published', {
-          date: new Date(articleData?.article?.published?.publishedAt ?? '')
+          date: new Date(articleData?.article?.latest?.publishedAt ?? '')
         })
       )
     } else {
@@ -388,6 +388,7 @@ function ArticleEditor() {
       metadata.title === '' &&
       metadata.lead === '' &&
       metadata.seoTitle === '' &&
+      metadata.preTitle === '' &&
       blocks.length > 0
     ) {
       const titleBlock = blocks.find(block => block.type === EditorBlockType.Title)
@@ -396,6 +397,7 @@ function ArticleEditor() {
         const titleBlockValue = titleBlock.value as TitleBlockValue
         setMetadata({
           ...metadata,
+          preTitle: titleBlockValue.preTitle,
           title: titleBlockValue.title,
           lead: titleBlockValue.lead,
           seoTitle: titleBlockValue.title

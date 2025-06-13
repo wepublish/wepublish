@@ -29,12 +29,6 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
 export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
@@ -479,7 +473,6 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createSessionWithOAuth2Code: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
@@ -614,13 +607,6 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
-};
-
-
-export type MutationCreateSessionWithOAuth2CodeArgs = {
-  code: Scalars['String'];
-  name: Scalars['String'];
-  redirectUri: Scalars['String'];
 };
 
 
@@ -1114,7 +1100,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  authProviders: Array<AuthProvider>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   comment?: Maybe<Comment>;
@@ -1152,11 +1137,6 @@ export type Query = {
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
   users: UserConnection;
-};
-
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1724,22 +1704,6 @@ export type CreateSessionMutationVariables = Exact<{
 
 
 export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
-
-export type GetAuthProvidersQueryVariables = Exact<{
-  redirectUri: Scalars['String'];
-}>;
-
-
-export type GetAuthProvidersQuery = { __typename?: 'Query', authProviders: Array<{ __typename?: 'AuthProvider', name: string, url: string }> };
-
-export type CreateSessionWithOAuth2CodeMutationVariables = Exact<{
-  redirectUri: Scalars['String'];
-  name: Scalars['String'];
-  code: Scalars['String'];
-}>;
-
-
-export type CreateSessionWithOAuth2CodeMutation = { __typename?: 'Mutation', createSessionWithOAuth2Code: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
 
 export type CreateSessionWithJwtMutationVariables = Exact<{
   jwt: Scalars['String'];
@@ -2913,83 +2877,6 @@ export function useCreateSessionMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateSessionMutationHookResult = ReturnType<typeof useCreateSessionMutation>;
 export type CreateSessionMutationResult = Apollo.MutationResult<CreateSessionMutation>;
 export type CreateSessionMutationOptions = Apollo.BaseMutationOptions<CreateSessionMutation, CreateSessionMutationVariables>;
-export const GetAuthProvidersDocument = gql`
-    query GetAuthProviders($redirectUri: String!) {
-  authProviders(redirectUri: $redirectUri) {
-    name
-    url
-  }
-}
-    `;
-
-/**
- * __useGetAuthProvidersQuery__
- *
- * To run a query within a React component, call `useGetAuthProvidersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAuthProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAuthProvidersQuery({
- *   variables: {
- *      redirectUri: // value for 'redirectUri'
- *   },
- * });
- */
-export function useGetAuthProvidersQuery(baseOptions: Apollo.QueryHookOptions<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>(GetAuthProvidersDocument, options);
-      }
-export function useGetAuthProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>(GetAuthProvidersDocument, options);
-        }
-export type GetAuthProvidersQueryHookResult = ReturnType<typeof useGetAuthProvidersQuery>;
-export type GetAuthProvidersLazyQueryHookResult = ReturnType<typeof useGetAuthProvidersLazyQuery>;
-export type GetAuthProvidersQueryResult = Apollo.QueryResult<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>;
-export const CreateSessionWithOAuth2CodeDocument = gql`
-    mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $code: String!) {
-  createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
-    user {
-      email
-      roles {
-        ...FullUserRole
-      }
-    }
-    token
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-export type CreateSessionWithOAuth2CodeMutationFn = Apollo.MutationFunction<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
-
-/**
- * __useCreateSessionWithOAuth2CodeMutation__
- *
- * To run a mutation, you first call `useCreateSessionWithOAuth2CodeMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSessionWithOAuth2CodeMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSessionWithOAuth2CodeMutation, { data, loading, error }] = useCreateSessionWithOAuth2CodeMutation({
- *   variables: {
- *      redirectUri: // value for 'redirectUri'
- *      name: // value for 'name'
- *      code: // value for 'code'
- *   },
- * });
- */
-export function useCreateSessionWithOAuth2CodeMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>(CreateSessionWithOAuth2CodeDocument, options);
-      }
-export type CreateSessionWithOAuth2CodeMutationHookResult = ReturnType<typeof useCreateSessionWithOAuth2CodeMutation>;
-export type CreateSessionWithOAuth2CodeMutationResult = Apollo.MutationResult<CreateSessionWithOAuth2CodeMutation>;
-export type CreateSessionWithOAuth2CodeMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
 export const CreateSessionWithJwtDocument = gql`
     mutation CreateSessionWithJWT($jwt: String!) {
   createSessionWithJWT(jwt: $jwt) {

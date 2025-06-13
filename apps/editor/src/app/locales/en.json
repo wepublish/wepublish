@@ -421,8 +421,9 @@
       },
       "title": {
         "label": "Title",
-        "leadText": "Lead Text ",
-        "title": "Title"
+        "leadText": "Lead Text",
+        "title": "Title",
+        "preTitle": "Pre-title"
       }
     },
     "cancel": "Cancel",

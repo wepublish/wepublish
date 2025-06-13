@@ -370,8 +370,9 @@
       },
       "title": {
         "label": "Titre",
-        "leadText": "Lead ",
-        "title": "Titre"
+        "leadText": "Lead",
+        "title": "Titre",
+        "preTitle": "Pré-titre"
       }
     },
     "cancel": "Annuler",

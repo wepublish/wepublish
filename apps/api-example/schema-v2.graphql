@@ -2035,6 +2035,7 @@ type TitleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   lead: String
+  preTitle: String
   title: String
   type: BlockType!
 }
@@ -2043,6 +2044,7 @@ input TitleBlockInput {
   blockStyle: String
   blockStyleName: String
   lead: String
+  preTitle: String
   title: String
 }
 

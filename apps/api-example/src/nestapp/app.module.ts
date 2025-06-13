@@ -390,8 +390,6 @@ import {GoogleAnalyticsModule, GoogleAnalyticsService} from '@wepublish/google-a
             ? new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
             : new URLAdapter(config.getOrThrow('WEBSITE_URL'))
 
-        console.log(urlAdapter)
-
         return urlAdapter
       },
       inject: [ConfigService]

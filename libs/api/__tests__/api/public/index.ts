@@ -165,12 +165,6 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
 export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
@@ -1459,7 +1453,6 @@ export type Mutation = {
   createPaywall: Paywall;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createSessionWithOAuth2Code: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
   createSubscription: Payment;
   /** Create a new subscription flow */
@@ -1724,13 +1717,6 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
-};
-
-
-export type MutationCreateSessionWithOAuth2CodeArgs = {
-  code: Scalars['String'];
-  name: Scalars['String'];
-  redirectUri: Scalars['String'];
 };
 
 
@@ -2621,8 +2607,6 @@ export type Query = {
   article: Article;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
-  /** This query returns the redirect Uri. */
-  authProviders: Array<AuthProvider>;
   /** This query takes either the ID or the slug and returns the author. */
   author?: Maybe<Author>;
   /** This query is to get the authors. */
@@ -2832,11 +2816,6 @@ export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3521,6 +3500,7 @@ export type TitleBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -3529,6 +3509,7 @@ export type TitleBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
 

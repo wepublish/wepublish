@@ -27,12 +27,6 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
 export type Author = {
   __typename?: 'Author';
   bio?: Maybe<Scalars['RichText']>;
@@ -477,7 +471,6 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createSessionWithOAuth2Code: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
@@ -612,13 +605,6 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
-};
-
-
-export type MutationCreateSessionWithOAuth2CodeArgs = {
-  code: Scalars['String'];
-  name: Scalars['String'];
-  redirectUri: Scalars['String'];
 };
 
 
@@ -1112,7 +1098,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  authProviders: Array<AuthProvider>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   comment?: Maybe<Comment>;
@@ -1150,11 +1135,6 @@ export type Query = {
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
   users: UserConnection;
-};
-
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
