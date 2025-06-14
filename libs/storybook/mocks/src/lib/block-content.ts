@@ -47,14 +47,16 @@ import {mockCrowdfunding} from './crowdfunding'
 
 export const mockTitleBlock = ({
   title = 'Title Block',
-  lead = 'Lead'
+  lead = 'Lead',
+  preTitle = 'Pre-Title'
 }: Partial<TitleBlock> = {}): TitleBlock => ({
   type: BlockType.Title,
   __typename: 'TitleBlock',
   blockStyle: null,
   blockStyleName: null,
   lead,
-  title
+  title,
+  preTitle
 })
 
 export const mockImageBlock = ({

@@ -14,3 +14,7 @@ export const Default = {
 export const WithoutLead = {
   args: mockTitleBlock({lead: ''})
 }
+
+export const WithoutPreTitle = {
+  args: mockTitleBlock({preTitle: ''})
+}

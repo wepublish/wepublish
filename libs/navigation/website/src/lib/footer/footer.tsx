@@ -1,28 +1,23 @@
-import {Theme, Toolbar, css, useTheme} from '@mui/material'
+import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderFooterProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
 import {useIntersectionObserver} from 'usehooks-ts'
 import {forceHideBanner} from '@wepublish/banner/website'
+import {TextToIcon} from '@wepublish/ui'
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
   top: 0;
-`
 
-export const FooterInnerWrapper = styled(Toolbar)`
-  display: grid;
-  align-items: center;
-  grid-auto-flow: column;
-  justify-content: space-between;
-  justify-items: center;
+  --footer-paddingX: ${({theme}) => theme.spacing(2.5)};
+  --footer-paddingY: ${({theme}) => theme.spacing(2.5)};
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-auto-columns: 1fr;
-    }
-  `}
+  ${({theme}) => theme.breakpoints.up('md')} {
+    --footer-paddingX: calc(100% / 6);
+    --footer-paddingY: calc(100% / 12);
+  }
 `
 
 export const FooterMain = styled('div')`
@@ -49,7 +44,36 @@ export const FooterMainItems = styled('div')<{show: boolean}>`
   `}
 `
 
-export function Footer({className, categorySlugs, slug, data, loading, error}: BuilderFooterProps) {
+export const FooterIconsWrapper = styled.div`
+  padding: calc(var(--footer-paddingY) / 2) var(--footer-paddingX);
+  background: #000;
+  color: ${({theme}) => theme.palette.getContrastText('#000')};
+  display: grid;
+  grid-template-columns: 1fr;
+`
+
+export const FooterIcons = styled.div`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-self: end;
+`
+
+export function Footer({
+  className,
+  categorySlugs,
+  slug,
+  iconSlug,
+  data,
+  loading,
+  error
+}: BuilderFooterProps) {
+  const {isIntersecting, ref} = useIntersectionObserver({
+    initialIsIntersecting: false,
+    threshold: 0.9
+  })
+
   const mainItems = data?.navigations?.find(({key}) => key === slug)
 
   const categories = categorySlugs.map(categorySlugArray => {
@@ -64,32 +88,44 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
     }, [] as FullNavigationFragment[])
   })
 
+  const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
+
   return (
-    <FooterWrapper className={className}>
+    <FooterWrapper className={className} ref={ref}>
       <FooterPaper main={mainItems} categories={categories} />
+
+      <FooterIconsWrapper>
+        <FooterIcons>
+          {iconItems?.links.map((link, index) => (
+            <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
+              <TextToIcon title={link.label} size={32} />
+            </Link>
+          ))}
+        </FooterIcons>
+      </FooterIconsWrapper>
+
+      {isIntersecting && forceHideBanner}
     </FooterWrapper>
   )
 }
 
 export const FooterPaperWrapper = styled('div')`
-  padding: ${({theme}) => theme.spacing(2.5)};
+  padding: var(--footer-paddingY) var(--footer-paddingX);
   background-color: ${({theme}) => theme.palette.grey[800]};
   color: ${({theme}) => theme.palette.getContrastText(theme.palette.grey[800])};
   display: grid;
   column-gap: ${({theme}) => theme.spacing(3)};
   row-gap: ${({theme}) => theme.spacing(8)};
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      column-gap: ${theme.spacing(6)};
-      row-gap: ${theme.spacing(12)};
-      grid-template-columns: 1fr 1fr;
-      padding: calc(100% / 12) calc(100% / 6);
-    }
-  `}
+  ${({theme}) => theme.breakpoints.up('md')} {
+    column-gap: ${({theme}) => theme.spacing(6)};
+    row-gap: ${({theme}) => theme.spacing(12)};
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+  }
 `
 
-export const FooterPaperCategory = styled('div')`
+export const FooterCategory = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
   grid-auto-rows: max-content;
@@ -101,32 +137,33 @@ export const FooterName = styled('span')`
   font-size: 14px;
 `
 
-export const LinksGroup = styled('div')`
+export const FooterLinksGroup = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(max-content, 25ch));
     }
   `}
 `
 
-const footerPaperLinkStyling = (theme: Theme) => css`
-  ${theme.breakpoints.up('sm')} {
+export const FooterPaperLink = styled(Link)`
+  ${({theme}) => theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
 `
 
-export const FooterPaperCategoryLinks = styled('div')`
+export const FooterCategoryLinks = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
 
-export const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
+export const FooterMainLinks = styled(FooterCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
+  grid-auto-rows: max-content;
 `
 
 const FooterPaper = ({
@@ -136,59 +173,47 @@ const FooterPaper = ({
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
 }) => {
-  const {isIntersecting, ref} = useIntersectionObserver({
-    initialIsIntersecting: false,
-    threshold: 0.9
-  })
   const {
-    elements: {Link, H4, H6}
+    elements: {H4, H6}
   } = useWebsiteBuilder()
-  const theme = useTheme()
 
   return (
-    <FooterPaperWrapper ref={ref}>
+    <FooterPaperWrapper>
       {!!main?.links.length && (
-        <FooterPaperMainLinks>
-          {main.links.map((link, index) => {
-            const url = navigationLinkToUrl(link)
-
-            return (
-              <Link href={url} key={index} color="inherit" underline="none">
-                <H4 component="span" css={{fontWeight: '700'}}>
-                  {link.label}
-                </H4>
-              </Link>
-            )
-          })}
-        </FooterPaperMainLinks>
+        <FooterMainLinks>
+          {main.links.map((link, index) => (
+            <Link key={index} href={navigationLinkToUrl(link)} color="inherit" underline="none">
+              <H4 component="span" css={{fontWeight: '700'}}>
+                {link.label}
+              </H4>
+            </Link>
+          ))}
+        </FooterMainLinks>
       )}
 
       {categories.map((categoryArray, arrayIndex) => (
-        <LinksGroup key={arrayIndex}>
+        <FooterLinksGroup key={arrayIndex}>
           {categoryArray.map(nav => (
-            <FooterPaperCategory key={nav.id}>
+            <FooterCategory key={nav.id}>
               <FooterName>{nav.name}</FooterName>
 
-              <FooterPaperCategoryLinks>
+              <FooterCategoryLinks>
                 {nav.links?.map((link, index) => (
-                  <Link
+                  <FooterPaperLink
                     href={navigationLinkToUrl(link)}
                     key={index}
                     color="inherit"
-                    underline="none"
-                    css={footerPaperLinkStyling(theme)}>
+                    underline="none">
                     <H6 component="span" css={{fontWeight: '700'}}>
                       {link.label}
                     </H6>
-                  </Link>
+                  </FooterPaperLink>
                 ))}
-              </FooterPaperCategoryLinks>
-            </FooterPaperCategory>
+              </FooterCategoryLinks>
+            </FooterCategory>
           ))}
-        </LinksGroup>
+        </FooterLinksGroup>
       ))}
-
-      {isIntersecting && forceHideBanner}
     </FooterPaperWrapper>
   )
 }

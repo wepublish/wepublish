@@ -14,20 +14,22 @@ export * from './lib/navbar.interface'
 export * from './lib/page.interface'
 export * from './lib/peer.interface'
 export * from './lib/richText.interface'
-export * from './lib/typography.interface'
 export * from './lib/user.interface'
 export * from './lib/website-builder.context'
 export * from './lib/hooks/use-async-action'
 export * from './lib/api-alert'
 
 export * from './lib/content-wrapper.interface'
-export * from './lib/content-wrapper.component'
+export * from './lib/content-wrapper.components'
 
 export * from './lib/teaser.interface'
-export * from './lib/teaser.component'
+export * from './lib/teaser.components'
 
 export * from './lib/paywall.interface'
-export * from './lib/paywall.component'
+export * from './lib/paywall.components'
 
 export * from './lib/ui.interface'
 export * from './lib/ui.components'
+
+export * from './lib/typography.interface'
+export * from './lib/typography.components'

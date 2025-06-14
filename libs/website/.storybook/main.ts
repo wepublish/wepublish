@@ -44,8 +44,7 @@ export default {
     '@storybook/addon-links',
     '@storybook/addon-themes',
     'storybook-react-i18next',
-    '@chromatic-com/storybook',
-    '@storybook/addon-webpack5-compiler-swc'
+    '@chromatic-com/storybook'
   ],
 
   babel: (config, options) => {
