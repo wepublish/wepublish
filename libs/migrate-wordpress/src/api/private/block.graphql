@@ -1,166 +1,167 @@
 fragment FullTeaser on Teaser {
-    ... on ArticleTeaser {
-        style
+  ... on ArticleTeaser {
+    style
 
-        image {
-            ...ImageRef
-        }
-
-        preTitle
-        title
-        lead
-
-        article {
-            ...ArticleRef
-        }
+    image {
+      ...ImageRef
     }
 
-    ... on PeerArticleTeaser {
-        style
+    preTitle
+    title
+    lead
 
-        image {
-            ...ImageRef
-        }
+    article {
+      ...ArticleRef
+    }
+  }
 
-        preTitle
-        title
-        lead
+  ... on PeerArticleTeaser {
+    style
 
-        articleID
-        article {
-            ...ArticleRef
-        }
+    image {
+      ...ImageRef
     }
 
-    ... on PageTeaser {
-        style
+    preTitle
+    title
+    lead
 
-        image {
-            ...ImageRef
-        }
+    articleID
+    article {
+      ...ArticleRef
+    }
+  }
 
-        preTitle
-        title
-        lead
+  ... on PageTeaser {
+    style
 
-        page {
-            id
-        }
+    image {
+      ...ImageRef
     }
 
-    ... on EventTeaser {
-        style
+    preTitle
+    title
+    lead
 
-        image {
-            ...ImageRef
-        }
-
-        preTitle
-        title
-        lead
-
-        event {
-            id
-        }
+    page {
+      id
     }
+  }
+
+  ... on EventTeaser {
+    style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+
+    event {
+      id
+    }
+  }
 }
 
 fragment FullBlock on Block {
-    __typename
+  __typename
 
-    ... on TitleBlock {
-        title
-        lead
-    }
+  ... on TitleBlock {
+    preTitle
+    title
+    lead
+  }
 
-    ... on RichTextBlock {
-        richText
-    }
+  ... on RichTextBlock {
+    richText
+  }
 
-    ... on QuoteBlock {
-        quote
-        author
-        image {
-            ...ImageRef
-        }
+  ... on QuoteBlock {
+    quote
+    author
+    image {
+      ...ImageRef
     }
+  }
 
-    ... on LinkPageBreakBlock {
-        text
-        linkText
-        linkURL
-    }
+  ... on LinkPageBreakBlock {
+    text
+    linkText
+    linkURL
+  }
 
-    ... on ImageBlock {
-        caption
-        image {
-            ...ImageRef
-        }
+  ... on ImageBlock {
+    caption
+    image {
+      ...ImageRef
     }
+  }
 
-    ... on ImageGalleryBlock {
-        images {
-            caption
-            image {
-                ...ImageRef
-            }
-        }
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...ImageRef
+      }
     }
+  }
 
-    ... on ListicleBlock {
-        items {
-            title
-            image {
-                ...ImageRef
-            }
-            richText
-        }
+  ... on ListicleBlock {
+    items {
+      title
+      image {
+        ...ImageRef
+      }
+      richText
     }
+  }
 
-    ... on FacebookPostBlock {
-        userID
-        postID
-    }
+  ... on FacebookPostBlock {
+    userID
+    postID
+  }
 
-    ... on FacebookVideoBlock {
-        userID
-        videoID
-    }
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
 
-    ... on InstagramPostBlock {
-        postID
-    }
+  ... on InstagramPostBlock {
+    postID
+  }
 
-    ... on TwitterTweetBlock {
-        userID
-        tweetID
-    }
+  ... on TwitterTweetBlock {
+    userID
+    tweetID
+  }
 
-    ... on VimeoVideoBlock {
-        videoID
-    }
+  ... on VimeoVideoBlock {
+    videoID
+  }
 
-    ... on YouTubeVideoBlock {
-        videoID
-    }
+  ... on YouTubeVideoBlock {
+    videoID
+  }
 
-    ... on SoundCloudTrackBlock {
-        trackID
-    }
+  ... on SoundCloudTrackBlock {
+    trackID
+  }
 
-    ... on EmbedBlock {
-        url
-        title
-        width
-        height
-        styleCustom
-        sandbox
-    }
+  ... on EmbedBlock {
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
 
-    ... on TeaserGridBlock {
-        teasers {
-            ...FullTeaser
-        }
-        numColumns
+  ... on TeaserGridBlock {
+    teasers {
+      ...FullTeaser
     }
+    numColumns
+  }
 }

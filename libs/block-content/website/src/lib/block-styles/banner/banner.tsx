@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import {BlockContent, BreakBlock} from '@wepublish/website/api'
 import {useWebsiteBuilder, BuilderBlockStyleProps} from '@wepublish/website/builder'
 import {isBreakBlock} from '../../break/break-block'
-import {hasBlockStyle} from '../../blocks'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {allPass} from 'ramda'
 
 export const BannerWrapper = styled('a')`

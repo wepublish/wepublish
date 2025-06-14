@@ -2,7 +2,7 @@ import {AppBar, Box, GlobalStyles, SxProps, Theme, Toolbar, css, useTheme} from 
 import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
@@ -70,7 +70,9 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   `}
 `
 
-export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarLinks = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen?: boolean}>`
   display: none;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
@@ -89,12 +91,12 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
   }
 `
 
-const navbarLinkStyles = (theme: Theme) => css`
+export const NavbarLink = styled(Link)`
   font-size: 1rem;
   text-decoration: none;
-  color: ${theme.palette.common.black};
+  color: ${({theme}) => theme.palette.common.black};
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     font-size: 1.3rem;
   }
 `
@@ -113,7 +115,9 @@ export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
     `}
 `
 
-export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarActions = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen?: boolean}>`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -155,23 +159,25 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
-  css`
-    color: unset;
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    justify-self: center;
+export const NavbarLoginLink = styled(Link, {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen: boolean}>`
+  color: unset;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
 
-    ${isMenuOpen &&
+  ${({isMenuOpen}) =>
+    isMenuOpen &&
     css`
       z-index: -1;
     `}
-  `
+`
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
-    fontSize: '1.1em',
+    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
     padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
   }
 })
@@ -239,7 +245,7 @@ export function Navbar({
   )
 
   const {
-    elements: {IconButton, Image, Link, Button}
+    elements: {IconButton, Image, Button}
   } = useWebsiteBuilder()
 
   return (
@@ -259,21 +265,21 @@ export function Navbar({
             {!!headerItems?.links.length && (
               <NavbarLinks isMenuOpen={isMenuOpen}>
                 {headerItems.links.map((link, index) => (
-                  <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                  <NavbarLink key={index} href={navigationLinkToUrl(link)}>
                     {link.label}
-                  </Link>
+                  </NavbarLink>
                 ))}
               </NavbarLinks>
             )}
           </NavbarMain>
 
-          <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
+          <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
             <NavbarLogoWrapper>
               {!!logo && (
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
               )}
             </NavbarLogoWrapper>
-          </Link>
+          </NavbarLoginLink>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
             {hasUnpaidInvoices && profileBtn && (
@@ -282,19 +288,20 @@ export function Navbar({
                 color="warning"
                 startIcon={<MdWarning />}
                 sx={buttonStyles}
+                size="medium"
                 {...profileBtn}>
                 <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
               </Button>
             )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} {...subscribeBtn}>
+              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...subscribeBtn}>
                 {t('navbar.subscribe')}
               </Button>
             )}
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} {...profileBtn}>
+              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
                 Mein Konto
               </Button>
             )}
@@ -313,7 +320,11 @@ export function Navbar({
           categories={categories}
           closeMenu={toggleMenu}>
           {iconItems?.links.map((link, index) => (
-            <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
+            <Link
+              key={index}
+              href={navigationLinkToUrl(link)}
+              onClick={() => setMenuOpen(false)}
+              color="inherit">
               <TextToIcon title={link.label} size={32} />
             </Link>
           ))}
@@ -381,7 +392,7 @@ export const NavPaperLinksGroup = styled('div')`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   `}
 `

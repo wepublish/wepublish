@@ -1,5 +1,17 @@
 {
   "navbar": {
     "subscribe": "Member werden"
+  },
+  "paywall": {
+    "subscribe": "Abonnent*in werden",
+    "login": "Login"
+  },
+  "teaser": {
+    "author": {
+      "seperator": ", "
+    },
+    "meta": {
+      "seperator": " | "
+    }
   }
 }

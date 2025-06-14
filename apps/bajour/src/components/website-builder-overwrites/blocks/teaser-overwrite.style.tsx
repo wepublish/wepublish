@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {Button} from '@mui/material'
-import {TeaserInnerWrapper, TeaserLead} from '@wepublish/block-content/website'
+import {TeaserLead} from '@wepublish/block-content/website'
 import {Image} from '@wepublish/image/website'
 import {H1, Paragraph} from '@wepublish/ui'
 import {NextWepublishLink} from '@wepublish/utils/website'
@@ -39,7 +39,11 @@ export const TeaserImgStyled = styled(Image)`
   aspect-ratio: 3/2;
 `
 
-export const TeaserContentStyled = styled(TeaserInnerWrapper)`
+export const TeaserContentStyled = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
   grid-column: initial;
 `
 

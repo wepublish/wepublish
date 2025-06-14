@@ -52,7 +52,7 @@ import {CrowdfundingBlock} from './CrowdfundingBlock'
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
     field: props => <TitleBlock {...props} />,
-    defaultValue: {title: '', lead: '', blockStyle: undefined},
+    defaultValue: {title: '', lead: '', preTitle: '', blockStyle: undefined},
     label: 'blocks.title.label',
     icon: <MdTitle />
   },

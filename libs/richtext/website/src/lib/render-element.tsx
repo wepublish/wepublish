@@ -16,7 +16,7 @@ const tableCellStyles = (theme: Theme, borderColor?: string) => css`
 `
 
 const lastChildNoGutter = css`
-  &:last-child {
+  &&:last-child {
     margin-bottom: 0;
   }
 `
@@ -52,21 +52,21 @@ export function RenderElement({element}: BuilderRenderElementProps): ReactNode {
 
     case BlockFormat.UnorderedList:
       return (
-        <UnorderedList>
+        <UnorderedList css={lastChildNoGutter}>
           <RenderRichtext elements={element.children} />
         </UnorderedList>
       )
 
     case BlockFormat.OrderedList:
       return (
-        <OrderedList>
+        <OrderedList css={lastChildNoGutter}>
           <RenderRichtext elements={element.children} />
         </OrderedList>
       )
 
     case BlockFormat.ListItem:
       return (
-        <ListItem>
+        <ListItem css={lastChildNoGutter}>
           <RenderRichtext elements={element.children} />
         </ListItem>
       )

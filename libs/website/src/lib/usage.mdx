@@ -108,15 +108,15 @@ If you want to inject some global CSS you can do this by using [MUI's `GlobalSty
 ```tsx
 import {ArticleWrapper, WebsiteBuilderProvider} from "@wepublish/website";
 
-const globalStyling = css`
+const globalStyling = <GlobalStyles styles={css`
     ${ArticleWrapper} {
         font-size: 0.875em;
     }
-`
+`} />
 
 export const App = () => {
     return <>
-        <GlobalStyles styles={globalStyling} />
+        {globalStyling}
         ...
     </>
 }
