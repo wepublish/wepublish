@@ -6,6 +6,7 @@ import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
 import {PropsWithChildren} from 'react'
+import {useTranslation} from 'react-i18next'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -339,6 +340,7 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
   const authors = teaser && selectTeaserAuthors(teaser)
   const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
 
+  const {t} = useTranslation()
   const {
     date,
     elements: {Image}
@@ -371,14 +373,14 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
 
         <Typography variant="teaserMeta" component={TeaserMetadata}>
           {authors && authors?.length ? (
-            <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
+            <TeaserAuthors>Von {authors?.join(t('teaser.author.seperator'))}</TeaserAuthors>
           ) : null}
 
-          {publishDate && authors && authors?.length ? '| ' : null}
+          {publishDate && authors && authors?.length ? `${t('teaser.meta.seperator')}` : null}
 
           {publishDate && (
             <TeaserTime suppressHydrationWarning dateTime={publishDate}>
-              {date.format(new Date(publishDate), false)}{' '}
+              {date.format(new Date(publishDate), false)}
             </TeaserTime>
           )}
         </Typography>

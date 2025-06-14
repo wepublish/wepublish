@@ -1,5 +1,13 @@
 {
   "paywall": {
     "subscribe": "Jetzt Abo Lösen"
+  },
+  "teaser": {
+    "author": {
+      "seperator": " und "
+    },
+    "meta": {
+      "seperator": ", "
+    }
   }
 }

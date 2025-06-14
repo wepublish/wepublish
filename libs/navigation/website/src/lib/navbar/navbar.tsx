@@ -70,7 +70,9 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   `}
 `
 
-export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarLinks = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen?: boolean}>`
   display: none;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
@@ -113,7 +115,9 @@ export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
     `}
 `
 
-export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarActions = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen?: boolean}>`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -155,7 +159,9 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-export const NavbarLoginLink = styled(Link)<{isMenuOpen: boolean}>`
+export const NavbarLoginLink = styled(Link, {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen: boolean}>`
   color: unset;
   display: grid;
   align-items: center;
