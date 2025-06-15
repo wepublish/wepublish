@@ -1,0 +1,44 @@
+{
+  "name": "plate",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "plate",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/plate"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "plate"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "plate:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "plate:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "plate:build:production",
+          "dev": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
