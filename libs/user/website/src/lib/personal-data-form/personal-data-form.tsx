@@ -111,10 +111,10 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     elements: {TextField, Alert, Button, Paragraph, ImageUpload, Link, IconButton}
   } = useWebsiteBuilder()
   const theme = useTheme()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<boolean>()
   const [error, setError] = useState<Error>()
-  const [success, setSuccess] = useState(false)
-  const callAction = useAsyncAction(setLoading, setError, setSuccess)
+  const success = loading === false && !error
+  const callAction = useAsyncAction(setLoading, setError)
   const [showPassword, togglePassword] = useReducer(state => !state, false)
   const [showRepeatPassword, toggleRepeatPassword] = useReducer(state => !state, false)
 

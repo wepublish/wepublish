@@ -16,7 +16,8 @@ const nextConfig = {
   compiler: {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
     emotion: true
-  }
+  },
+  transpilePackages: ['katex', '@platejs/math', 'react-lite-youtube-embed', 'react-tweet']
 }
 
 const plugins = [

@@ -1,7 +1,7 @@
 {
   "name": "plate",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "plate",
+  "sourceRoot": "apps/plate",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -10,11 +10,11 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/plate"
+        "outputPath": "dist/apps/plate"
       },
       "configurations": {
         "development": {
-          "outputPath": "plate"
+          "outputPath": "apps/plate"
         },
         "production": {}
       }
