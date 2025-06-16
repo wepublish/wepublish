@@ -22,24 +22,16 @@ paymentProviders:
     name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
     offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
     secretKey: secret # Required for stripe-checkout / stripe
-    webhookApiKey: secret
-    instanceName: name  # Required for payrexx
-    instanceAPISecret: secret # Required for payrexx
+    webhookApiKey: ${PAYREXX_WEBHOOK_SECRET}
+    instanceName: ${PAYREXX_INSTANCE_NAME} # Required for payrexx
+    instanceAPISecret: ${PAYREXX_API_SECRET} # Required for payrexx
     psp: # Required for payrexx
-      - 0
       - 15
-      - 17
-      - 2
-      - 3
       - 36
     pm: # Required for payrexx
-      - 'postfinance_card'
-      - 'postfinance_efinance'
       - 'mastercard'
       - 'visa'
-      - 'twint'
       - 'invoice'
-      - 'paypal'
     vatRate: 8.1 # Required for payrexx
   - type: stripe
     id: stripe
@@ -81,11 +73,11 @@ paymentProviders:
     unitId: ${BEXIO_UNIT_ID}
     taxId: ${BEXIO_TAX_ID}
     accountId: ${BEXIO_ACCOUNT_ID}
-    invoiceTitleNewMembership: "New Invoice"
-    invoiceTitleRenewalMembership: "New Invoice"
-    invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
+    invoiceTitleNewMembership: 'New Invoice'
+    invoiceTitleRenewalMembership: 'New Invoice'
+    invoiceMailSubjectNewMembership: 'Invoice for :memberPlan.name:'
     invoiceMailBodyNewMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
-    invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
+    invoiceMailSubjectRenewalMembership: 'Invoice for :memberPlan.name:'
     invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
     markInvoiceAsOpen: False
   - type: no-charge
@@ -99,7 +91,7 @@ challenge:
 trackingPixelProviders:
   - type: prolitteris
     id: prolitteris
-    name: "Pro Litteris"
+    name: 'Pro Litteris'
     memberNr: '892761'
     onlyPaidContentAccess: false
     publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
