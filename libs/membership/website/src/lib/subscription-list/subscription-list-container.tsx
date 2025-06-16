@@ -81,10 +81,6 @@ export function SubscriptionListContainer({
                 })
 
                 window.location.href = page.data?.page.url ?? ''
-
-                // window.location.href = success
-                //   ? stripeMemberPlan.successPage?.url ?? ''
-                //   : stripeMemberPlan.failPage?.url ?? ''
               }
             }}
           />

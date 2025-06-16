@@ -1,9 +1,10 @@
-import {FullInvoiceFragment, SubscribeMutation, useSubscribeMutation} from '@wepublish/website/api'
+import {FullInvoiceFragment, useSubscribeMutation} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {useState} from 'react'
-import {useSubscribe} from '../subscribe/useSubscribe'
+import {useContext, useState} from 'react'
 import {SubscribeResponseHandler} from '../subscribe/subscribe-response-handler'
-import {FetchResult} from '@apollo/client'
+import {useSubscribe} from '../subscribe/useSubscribe'
+import {InvoiceListConext} from './invoice-list-container'
+import {MdRefresh} from 'react-icons/md'
 
 interface PayrexxSubscriptionMigratorProps {
   invoice: FullInvoiceFragment
@@ -11,67 +12,106 @@ interface PayrexxSubscriptionMigratorProps {
 
 export function PayrexxSubscriptionMigrator({invoice}: PayrexxSubscriptionMigratorProps) {
   const {
-    elements: {Button, Alert}
+    elements: {Button}
   } = useWebsiteBuilder()
+  const {fetchRedirectPageUrls, handleSubscribeResponse} = useSubscribe()
 
-  const [subscribe] = useSubscribeMutation({})
-  const {fetchRedirectPages: fetchSuccessAndFailurePages} = useSubscribe()
+  const {refetch: refetchInvoiceList} = useContext(InvoiceListConext)
 
-  const [error, setError] = useState<string | undefined>()
-  const [subscribeResponse, setSubscribeResponse] = useState<
-    FetchResult<SubscribeMutation> | undefined
-  >()
+  const [errors, setErrors] = useState<string[] | undefined>()
+  const [stripeIntent, setStripeIntent] = useState<string | undefined>()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const subscription = invoice.subscription
+  const memberPlan = subscription?.memberPlan
+
+  function handleError(errorMessage: string) {
+    setErrors([errorMessage])
+    // refetchInvoiceList?.()
+    setLoading(false)
+  }
+
+  const [subscribe] = useSubscribeMutation({
+    onError: error => handleError(error.message),
+    onCompleted: subscribeResponse => {
+      handleSubscribeResponse({
+        subscribeResponse,
+        memberPlan,
+        onError: errors => setErrors(errors),
+        onStripeIntent: stripeIntent => setStripeIntent(stripeIntent)
+      })
+    }
+  })
 
   async function migrateSubscription() {
-    const subscription = invoice.subscription
-    if (!subscription) {
-      setError('Ein unerwarter Fehler ist aufgetreten. Die Subscription ist nicht verfügbar.')
-      return
-    }
-
-    const {memberPlan} = subscription
-    const memberPlanId = memberPlan.id
-
-    const payrexxPaymentId = memberPlan.availablePaymentMethods.find(availablePaymentMethod => {
-      return availablePaymentMethod.paymentMethods.find(paymentMethod => {
-        return paymentMethod.slug === 'payrexx'
-      })
-    })?.paymentMethods?.[0]?.id
-
-    if (!payrexxPaymentId) {
-      setError('Der benötigte Payrexx-Payment-Adapter konnte nicht gefunden werden.')
-      return
-    }
-
-    const [successPage, failPage] = await fetchSuccessAndFailurePages({
-      successPageId: memberPlan.successPageId,
-      failPageId: memberPlan.failPageId
-    })
-
-    const response = await subscribe({
-      variables: {
-        deactivateSubscriptionId: subscription.id,
-        autoRenew: subscription.autoRenew,
-        monthlyAmount: subscription.monthlyAmount,
-        memberPlanId,
-        paymentPeriodicity: subscription.paymentPeriodicity,
-        paymentMethodId: payrexxPaymentId,
-        successURL: successPage.data?.page.url,
-        failureURL: failPage.data?.page.url
+    try {
+      setLoading(true)
+      if (!subscription) {
+        throw new Error('Unerwarter Fehler: Die Subscription ist nicht verfügbar.')
       }
-    })
 
-    setSubscribeResponse(response)
+      if (!memberPlan) {
+        throw new Error('Unerwarteter Fehler: MemberPlan ist nicht verfügbar.')
+      }
+
+      const memberPlanId = memberPlan.id
+
+      const payrexxPaymentId = memberPlan.availablePaymentMethods
+        .find(availablePaymentMethod => {
+          return availablePaymentMethod.paymentMethods.find(paymentMethod => {
+            return paymentMethod.slug === 'payrexx'
+          })
+        })
+        ?.paymentMethods?.find(paymentMethod => paymentMethod.slug === 'payrexx')?.id
+
+      if (!payrexxPaymentId) {
+        throw new Error('Der benötigte Payrexx-Payment-Adapter konnte nicht gefunden werden.')
+      }
+
+      const {successURL, failureURL} = await fetchRedirectPageUrls({
+        successPageId: memberPlan.successPageId,
+        failPageId: memberPlan.failPageId
+      })
+
+      await subscribe({
+        variables: {
+          deactivateSubscriptionId: subscription.id,
+          autoRenew: subscription.autoRenew,
+          monthlyAmount: subscription.monthlyAmount,
+          memberPlanId,
+          paymentPeriodicity: subscription.paymentPeriodicity,
+          paymentMethodId: payrexxPaymentId,
+          successURL,
+          failureURL
+        }
+      })
+    } catch (error) {
+      handleError(error as string)
+    }
   }
 
   return (
     <>
-      {error && <Alert severity="warning">{error}</Alert>}
       <SubscribeResponseHandler
-        subscribeResponse={subscribeResponse}
-        memberPlan={invoice.subscription?.memberPlan}
+        errors={errors}
+        memberPlan={memberPlan}
+        stripeClientSecret={stripeIntent}
       />
-      <Button onClick={async () => await migrateSubscription()}>Jetzt bezahlen</Button>
+      {errors?.length ? (
+        <Button
+          onClick={async () => {
+            setLoading(true)
+            await refetchInvoiceList?.()
+          }}
+          disabled={loading}
+          startIcon={<MdRefresh />}>
+          Neu laden
+        </Button>
+      ) : (
+        <Button onClick={async () => await migrateSubscription()} disabled={loading}>
+          Jetzt bezahlen
+        </Button>
+      )}
     </>
   )
 }

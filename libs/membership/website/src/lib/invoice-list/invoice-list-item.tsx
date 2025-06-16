@@ -70,9 +70,8 @@ export function InvoiceListItem({invoice, pay, className}: BuilderInvoiceListIte
   const {canceledAt, paidAt, subscription, dueAt, id, createdAt, total} = invoice
 
   const showPayrexxSubscriptionWarning = useMemo(
-    () =>
-      isPayrexxSubscription(invoice) && isInvoiceActive(invoice) && new Date() > new Date(dueAt),
-    [invoice, dueAt]
+    () => isPayrexxSubscription(invoice) && isInvoiceActive(invoice),
+    [invoice]
   )
 
   return (
