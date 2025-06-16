@@ -33,13 +33,17 @@ export class SlackMailProvider extends BaseMailProvider {
       ]
     }
 
-    await fetch(this.webhookURL, {
-      method: 'POST',
-      headers: {
-        'Conetent-type': 'application/json'
-      },
-      body: JSON.stringify(message)
-    })
+    try {
+      await fetch(this.webhookURL, {
+        method: 'POST',
+        headers: {
+          'Conetent-type': 'application/json'
+        },
+        body: JSON.stringify(message)
+      })
+    } catch (error) {
+      throw new Error(`E-Mail could not be sent. An error occured ${error.toString()}`)
+    }
   }
 
   async getTemplates() {
