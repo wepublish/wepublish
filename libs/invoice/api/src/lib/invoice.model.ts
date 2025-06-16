@@ -1,5 +1,5 @@
 import {Field, Int, ObjectType} from '@nestjs/graphql'
-import {PublicSubscription} from '@wepublish/membership/api'
+import {HasOptionalSubscription, PublicSubscription} from '@wepublish/membership/api'
 
 @ObjectType()
 export class InvoiceItem {
@@ -25,7 +25,9 @@ export class InvoiceItem {
   total!: number
 }
 
-@ObjectType()
+@ObjectType({
+  implements: () => [HasOptionalSubscription]
+})
 export class Invoice {
   @Field()
   id!: string
@@ -54,10 +56,7 @@ export class Invoice {
   @Field(() => [InvoiceItem])
   items!: InvoiceItem[]
 
-  @Field()
   subscriptionID!: string
-
-  @Field(() => PublicSubscription, {nullable: true})
   subscription?: PublicSubscription | null
 
   @Field(() => Int)

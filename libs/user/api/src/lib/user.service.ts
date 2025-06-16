@@ -2,10 +2,10 @@ import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {unselectPassword} from './unselect-password'
-import {Validator} from '../../../../api/src/lib/validator'
-import {EmailAlreadyInUseError} from '@wepublish/api'
 import {CreateUserInput} from './user.input'
 import {PaymentProviderCustomerInput} from './user.model'
+import {UserInputError} from '@nestjs/apollo'
+import {Validator} from '@wepublish/user'
 
 @Injectable()
 export class UserService {
@@ -36,7 +36,7 @@ export class UserService {
   }
 
   async createUser(input: CreateUserInput) {
-    let {name, firstName, email, address, birthday, password, properties, active} = input
+    const {name, firstName, email, address, birthday, password, properties, active} = input
     const userExists = await this.prisma.user.findUnique({
       where: {
         email
@@ -45,13 +45,13 @@ export class UserService {
     })
 
     if (userExists) {
-      throw new EmailAlreadyInUseError()
+      throw new UserInputError(`Email already in use`)
     }
 
     const hashedPassword = await this.hashPassword(password)
     input.email = input.email.toLowerCase()
-    await Validator.createUser.parse(input)
-    await Validator.createAddress.parse(address)
+    Validator.createUser.parse(input)
+    Validator.createAddress.parse(address)
 
     return this.prisma.user.create({
       data: {

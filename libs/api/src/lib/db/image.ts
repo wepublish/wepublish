@@ -1,7 +1,7 @@
-import {FocalPoint, Image} from '@prisma/client'
+import {Image} from '@prisma/client'
 
 export interface ImageWithTransformURL extends Image {
-  readonly transformURL?: string | null
+  readonly transformURL?: string
 }
 
 export enum ImageSort {
@@ -13,5 +13,3 @@ export interface ImageFilter {
   readonly title?: string
   readonly tags?: string[]
 }
-
-export type ImageWithFocalPoint = Image & {focalPoint: FocalPoint}

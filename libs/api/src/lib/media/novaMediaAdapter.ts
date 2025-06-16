@@ -1,14 +1,14 @@
 import {URL} from 'url'
 import FormData from 'form-data'
-import {ImageWithFocalPoint} from '../db/image'
 import fetch from 'node-fetch'
 import type {FileUpload} from 'graphql-upload'
 import {
   ArrayBufferUpload,
-  MediaAdapter,
-  UploadImage,
+  Image,
+  ImageRotation,
   ImageTransformation,
-  ImageRotation
+  MediaAdapter,
+  UploadImage
 } from '@wepublish/image/api'
 import {MediaServerError} from './karmaMediaAdapter'
 
@@ -93,10 +93,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     return true
   }
 
-  async getImageURL(
-    image: ImageWithFocalPoint,
-    transformations?: ImageTransformation
-  ): Promise<string> {
+  async getImageURL(image: Image, transformations?: ImageTransformation): Promise<string> {
     const queryParameters = [] as string[]
 
     if (transformations?.width || transformations?.height) {

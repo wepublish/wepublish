@@ -812,17 +812,7 @@ export async function contextFromRequest(
           paymentID: updatedPayment.id
         })
 
-        await paymentProvider.updatePaymentWithIntentState({
-          intentState,
-          paymentClient: prisma.payment,
-          paymentsByID: loaders.paymentsByID,
-          invoicesByID: loaders.invoicesByID,
-          subscriptionClient: prisma.subscription,
-          userClient: prisma.user,
-          invoiceClient: prisma.invoice,
-          subscriptionPeriodClient: prisma.subscriptionPeriod,
-          invoiceItemClient: prisma.invoiceItem
-        })
+        await paymentProvider.updatePaymentWithIntentState({intentState})
       }
 
       if (intent.errorCode) {

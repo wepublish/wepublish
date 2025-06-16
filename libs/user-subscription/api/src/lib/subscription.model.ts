@@ -1,6 +1,7 @@
-import {Field, InputType, Int, registerEnumType} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, Int, OmitType, registerEnumType} from '@nestjs/graphql'
 import type {PaymentPeriodicity as PaymentPeriodicityType} from '@prisma/client'
 import {PaymentPeriodicity} from '@prisma/client'
+import {GraphQLSlug, PublicPropertyInput} from '@wepublish/utils/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -25,4 +26,62 @@ export class UserSubscriptionInput {
 
   @Field()
   paymentMethodID: string
+}
+
+@ArgsType()
+export class CreateSubscriptionArgs {
+  @Field({nullable: true})
+  memberPlanID?: string
+
+  @Field(() => GraphQLSlug, {nullable: true})
+  memberPlanSlug?: string
+
+  @Field()
+  autoRenew!: boolean
+
+  @Field(() => PaymentPeriodicity)
+  paymentPeriodicity!: PaymentPeriodicity
+
+  @Field(() => Int)
+  monthlyAmount!: number
+
+  @Field({nullable: true})
+  paymentMethodID?: string
+
+  @Field(() => GraphQLSlug, {nullable: true})
+  paymentMethodSlug?: string
+
+  @Field(() => [PublicPropertyInput], {nullable: true})
+  subscriptionProperties?: PublicPropertyInput[]
+
+  @Field({nullable: true})
+  successURL?: string
+
+  @Field({nullable: true})
+  failureURL?: string
+
+  @Field({nullable: true})
+  deactivateSubscriptionId?: string
+}
+
+@ArgsType()
+export class CreateSubscriptionWithConfirmationArgs extends OmitType(
+  CreateSubscriptionArgs,
+  ['successURL', 'failureURL', 'deactivateSubscriptionId'],
+  ArgsType
+) {
+  @Field({nullable: true})
+  userId?: string
+}
+
+@ArgsType()
+export class ExtendSubscriptionArgs {
+  @Field()
+  subscriptionId!: string
+
+  @Field({nullable: true})
+  successURL?: string
+
+  @Field({nullable: true})
+  failureURL?: string
 }

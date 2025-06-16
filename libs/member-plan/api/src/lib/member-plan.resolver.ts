@@ -9,10 +9,14 @@ import {
 } from './member-plan.model'
 import {MemberPlanService} from './member-plan.service'
 import {UserInputError} from '@nestjs/apollo'
+import {PaymentMethodService} from '@wepublish/payment-method/api'
 
 @Resolver(() => MemberPlan)
 export class MemberPlanResolver {
-  constructor(private readonly memberPlanService: MemberPlanService) {}
+  constructor(
+    private readonly memberPlanService: MemberPlanService,
+    private readonly paymentMethodService: PaymentMethodService
+  ) {}
 
   @Public()
   @Query(() => MemberPlan, {
@@ -22,7 +26,7 @@ export class MemberPlanResolver {
   async memberPlan(
     @Args('id', {nullable: true}) id?: string,
     @Args('slug', {type: () => GraphQLSlug, nullable: true}) slug?: string
-  ): Promise<MemberPlan | null> {
+  ) {
     if ((!id && !slug) || (id && slug)) {
       throw new UserInputError('You must provide either `id` or `slug`.')
     }

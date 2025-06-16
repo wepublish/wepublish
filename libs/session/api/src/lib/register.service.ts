@@ -54,7 +54,7 @@ export class RegisterService {
       mailType: mailLogType.SystemMail
     })
 
-    const session = await this.sessionService.createUserSession(user.id)
+    const session = await this.sessionService.createUserSession(user)
 
     return {
       user,

@@ -1,12 +1,12 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLFloat,
   GraphQLEnumType,
-  GraphQLInputObjectType
+  GraphQLFloat,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -14,7 +14,7 @@ import {GraphQLUpload} from 'graphql-upload'
 
 import {Context} from '../context'
 import {ImageSort, ImageWithTransformURL} from '../db/image'
-import {ImageRotation, ImageOutput} from '@wepublish/image/api'
+import {ImageOutput, ImageRotation} from '@wepublish/image/api'
 import {GraphQLPageInfo} from './common'
 import {createProxyingResolver} from '../utility'
 
@@ -48,9 +48,9 @@ export const GraphQLImageRotation = new GraphQLEnumType({
 export const GraphQLImageOutput = new GraphQLEnumType({
   name: 'ImageOutput',
   values: {
-    [ImageOutput.PNG]: {value: ImageOutput.PNG},
-    [ImageOutput.JPEG]: {value: ImageOutput.JPEG},
-    [ImageOutput.WEBP]: {value: ImageOutput.WEBP}
+    [ImageOutput.png]: {value: ImageOutput.png},
+    [ImageOutput.jpeg]: {value: ImageOutput.jpeg},
+    [ImageOutput.webp]: {value: ImageOutput.webp}
   }
 })
 
