@@ -83,6 +83,7 @@
       "@wepublish/storybook/mocks": ["libs/storybook/mocks/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
+      "@wepublish/tag/website": ["libs/tag/website/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],

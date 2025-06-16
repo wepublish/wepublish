@@ -33,3 +33,6 @@ export * from './lib/ui.components'
 
 export * from './lib/typography.interface'
 export * from './lib/typography.components'
+
+export * from './lib/tag.interface'
+export * from './lib/tag.components'

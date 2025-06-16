@@ -21,6 +21,7 @@ import {useEffect, useMemo} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdSearch} from 'react-icons/md'
 import {z} from 'zod'
+import {PageWrapper} from '@wepublish/page/website'
 
 const SearchForm = styled('form')`
   display: grid;
@@ -29,10 +30,7 @@ const SearchForm = styled('form')`
   grid-template-columns: 1fr max-content;
 `
 
-const SearchPageWrapper = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-`
+const SearchPageWrapper = styled(PageWrapper)``
 
 const pageToTeaser = (page: Page): PageTeaser => ({
   __typename: 'PageTeaser',
@@ -103,7 +101,7 @@ export const SearchPage = ({
   const noResultsFound = !teasers.length && !loading && !error && phraseQuery
 
   return (
-    <SearchPageWrapper>
+    <SearchPageWrapper fullWidth>
       <H3 component="h1">Suche</H3>
 
       <SearchForm

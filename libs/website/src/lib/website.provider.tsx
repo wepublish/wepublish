@@ -115,6 +115,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
 import {ContentWrapperStyled} from '@wepublish/content/website'
 import {Paywall} from '@wepublish/paywall/website'
+import {Tag, TagSEO} from '@wepublish/tag/website'
 
 export type WebsiteProps = PropsWithChildren
 
@@ -208,6 +209,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Subscribe={Subscribe}
           ContentWrapper={ContentWrapperStyled}
           Paywall={Paywall}
+          Tag={Tag}
+          TagSEO={TagSEO}
           elements={{
             TextField,
             Rating,

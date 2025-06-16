@@ -115,6 +115,7 @@ import {BuilderBlockStyleProps} from './block-styles.interface'
 import {BuilderContentWrapperProps} from './content-wrapper.interface'
 import {BuilderTeaserProps} from './teaser.interface'
 import {BuilderPaywallProps} from './paywall.interface'
+import {BuilderTagProps, BuilderTagSEOProps} from './tag.interface'
 
 const NoComponent = () => null
 
@@ -125,6 +126,8 @@ export type WebsiteBuilderProps = {
   Footer: ComponentType<BuilderFooterProps>
   Page: ComponentType<BuilderPageProps>
   PageSEO: ComponentType<BuilderPageSEOProps>
+  Tag: ComponentType<BuilderTagProps>
+  TagSEO: ComponentType<BuilderTagSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
   ArticleMeta: ComponentType<BuilderArticleMetaProps>
@@ -266,6 +269,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PeriodicityPicker: NoComponent,
   Page: NoComponent,
   PageSEO: NoComponent,
+  Tag: NoComponent,
+  TagSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
   ArticleMeta: NoComponent,
