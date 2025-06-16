@@ -32,7 +32,7 @@ export class AvailablePaymentMethod {
   paymentMethods!: PaymentMethod[]
 
   @Field(() => [PaymentPeriodicity])
-  paymentPeriodicities!: (typeof PaymentPeriodicity)[]
+  paymentPeriodicities!: PaymentPeriodicity[]
 
   @Field()
   forceAutoRenewal!: boolean
