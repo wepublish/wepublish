@@ -127,6 +127,7 @@ export type BuilderSubscribeProps<
   }>
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
   transactionFee?: (monthlyAmount: number) => number
   transactionFeeText?: string

@@ -106,34 +106,38 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-export const isTrialMemberPlan = (memberPlan?: FullMemberPlanFragment | undefined | null) =>
-  !!memberPlan?.tags?.find(tag => tag === 'trial-subscription')
-
 export const getPaymentText = (
   autoRenew: boolean,
   extendable: boolean,
   paymentPeriodicity: PaymentPeriodicity,
   monthlyAmount: number,
   currency: Currency,
-  locale: string
-) =>
-  autoRenew && extendable
-    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
-    : extendable
-    ? `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
-    : `Für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
+  locale: string,
+  trial: boolean
+) => {
+  if (trial) {
+    return 'Gratis-Probeabo'
+  }
+  if (autoRenew && extendable) {
+    return `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+      currency,
+      locale
+    )}`
+  }
+  if (!autoRenew && extendable) {
+    return `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+      currency,
+      locale
+    )}`
+  }
+  return `Für ${formatCurrency(
+    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+    currency,
+    locale
+  )}`
+}
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
@@ -150,6 +154,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
+  trial,
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId
@@ -267,7 +272,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     selectedPaymentPeriodicity,
     monthlyAmount,
     selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
+    locale,
+    !!trial
   )
 
   const monthlyPaymentText = getPaymentText(
@@ -276,7 +282,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     PaymentPeriodicity.Monthly,
     watch<'monthlyAmount'>('monthlyAmount'),
     selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
+    locale,
+    !!trial
   )
 
   const onSubmit = handleSubmit(data => {
@@ -562,9 +569,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               setOpenConfirm(true)
             }
           }}>
-          {isTrialMemberPlan(selectedMemberPlan)
-            ? 'Gratis Probe-Abo lösen'
-            : `${paymentText} ${donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}`}
+          {`${paymentText} ${
+            donate?.(selectedMemberPlan) ? 'spenden' : trial ? 'lösen' : 'abonnieren'
+          }`}
         </Button>
 
         {autoRenew && termsOfServiceUrl ? (

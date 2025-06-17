@@ -44,6 +44,7 @@ export type SubscribeContainerProps<
     | 'defaults'
     | 'termsOfServiceUrl'
     | 'donate'
+    | 'trial'
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'
@@ -61,6 +62,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
+  trial,
   transactionFee,
   transactionFeeText,
   returningUserId
@@ -219,6 +221,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        trial={trial}
         transactionFee={transactionFee}
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}
