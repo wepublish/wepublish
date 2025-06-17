@@ -205,6 +205,10 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
+export function lowercaseFirstLetter(str: string): string {
+  return str.charAt(0).toLowerCase() + str.slice(1)
+}
+
 export function countRichtextChars(blocksCharLength: number, nodes: any) {
   return nodes.reduce((charLength: number, node: any) => {
     if (!node.text && !node.children) return charLength

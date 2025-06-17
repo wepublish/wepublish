@@ -6,10 +6,10 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
-  BexioPaymentProvider,
   BannerApiModule,
-  CrowdfundingApiModule,
+  BexioPaymentProvider,
   ConsentModule,
+  CrowdfundingApiModule,
   DashboardModule,
   EventModule,
   EventsImportModule,
@@ -37,8 +37,8 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  SystemInfoModule,
   SubscriptionModule,
+  SystemInfoModule,
   VersionInformationModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
@@ -48,9 +48,11 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
+import {Issuer} from 'openid-client'
 import {BlockContentModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {PollModule} from '@wepublish/poll/api'
+import {AuthProviderModule, OAuth2Client} from '@wepublish/authprovider/api'
 import {PageModule} from '@wepublish/page/api'
 import {PeerModule} from '@wepublish/peering/api'
 import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
@@ -59,6 +61,7 @@ import {ArticleModule} from '@wepublish/article/api'
 import {PhraseModule} from '@wepublish/phrase/api'
 import {ActionModule} from '@wepublish/action/api'
 import {NavigationModule} from '@wepublish/navigation/api'
+import {TagModule} from '@wepublish/tag/api'
 import {UserModule} from '@wepublish/user/api'
 import {
   ProlitterisTrackingPixelProvider,
@@ -67,6 +70,13 @@ import {
 } from '@wepublish/tracking-pixel/api'
 import {HttpModule, HttpService} from '@nestjs/axios'
 import {MediaAdapterModule} from '@wepublish/image/api'
+import {AuthorModule} from '@wepublish/author/api'
+import {InvoiceModule} from '@wepublish/invoice/api'
+import {ChallengeModule} from '@wepublish/challenge/api'
+import {MemberPlanModule} from '@wepublish/member-plan/api'
+import {SessionModule} from '@wepublish/session/api'
+import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
+import {PaymentMethodModule} from '@wepublish/payment-method/api'
 
 @Global()
 @Module({
@@ -91,6 +101,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
         } as ApolloDriverConfig
       }
     }),
+    AuthorModule,
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
@@ -198,6 +209,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
       },
       inject: [ConfigService, HttpService]
     }),
+    PaymentMethodModule,
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
       useFactory: async (config: ConfigService, prisma: PrismaClient) => {
@@ -323,17 +335,79 @@ import {MediaAdapterModule} from '@wepublish/image/api'
       inject: [ConfigService, PrismaClient],
       global: true
     }),
+    MemberPlanModule,
     ApiModule,
     MembershipModule,
+    InvoiceModule,
     DashboardModule,
     AuthenticationModule,
+
+    // Register SessionModule after AuthenticationModule but before AuthProviderModule
+    // to ensure proper order of dependencies
+    SessionModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const sessionTTL = parseInt(config.get('SESSION_TTL') || '0', 10) || 7 * 24 * 60 * 60 * 1000
+        const jwtSecretKey = config.get('JWT_SECRET_KEY') || 'development-secret-key'
+        const hostURL = config.get('HOST_URL') || 'http://localhost:4000'
+        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000'
+
+        if (process.env.NODE_ENV === 'production' && jwtSecretKey === 'development-secret-key') {
+          console.warn('WARNING: Using default JWT secret key in production environment!')
+        }
+
+        return {
+          sessionTTL,
+          jwtSecretKey,
+          hostURL,
+          websiteURL
+        }
+      }
+    }),
+
+    AuthProviderModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        const oauth2Providers = configFile.OAuthProviders || []
+
+        return {
+          oauth2Clients: await Promise.all(
+            oauth2Providers.map(async provider => {
+              const issuer = await Issuer.discover(provider.discoverUrl)
+              return {
+                name: provider.name,
+                provider,
+                client: new issuer.Client({
+                  client_id: provider.clientId,
+                  client_secret: provider.clientKey,
+                  redirect_uris: provider.redirectUri,
+                  response_types: ['code']
+                })
+              } as OAuth2Client
+            })
+          )
+        }
+      }
+    }),
     PermissionModule,
     ConsentModule,
     StatsModule,
     SettingModule,
     EventModule,
     PageModule,
-    PeerModule,
+    PeerModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        return {
+          hostURL: config.get('HOST_URL') || 'http://localhost:4000',
+          websiteURL: config.get('WEBSITE_URL') || 'http://localhost:3000'
+        }
+      }
+    }),
     CommentModule,
     ArticleModule,
     BlockContentModule,
@@ -341,8 +415,35 @@ import {MediaAdapterModule} from '@wepublish/image/api'
     PhraseModule,
     ActionModule,
     UserModule,
+    UserSubscriptionModule,
+    ChallengeModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        return {
+          challenge: configFile.challenge || {
+            type: 'algebraic',
+            secret: 'default-challenge-secret',
+            validTime: 600,
+            width: 300,
+            height: 100,
+            background: '#ffffff',
+            noise: 1,
+            minValue: 1,
+            maxValue: 10,
+            operandAmount: 2,
+            operandTypes: ['+'],
+            mode: 'formula',
+            targetSymbol: '?'
+          }
+        }
+      },
+      inject: [ConfigService]
+    }),
     SubscriptionModule,
     NavigationModule,
+    TagModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,
@@ -418,6 +519,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
       },
       inject: [ConfigService]
     }
+    // System info key provider
   ]
 })
 export class AppModule {}

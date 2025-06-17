@@ -2,12 +2,9 @@ import {
   MemberPlan,
   PaymentState,
   Subscription,
-  SubscriptionDeactivationReason,
-  UserEvent
+  SubscriptionDeactivationReason
 } from '@prisma/client'
-import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/authentication/api'
-import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
   GraphQLInt,
@@ -20,8 +17,6 @@ import {Context} from '../context'
 import {SubscriptionWithRelations} from '../db/subscription'
 import {
   AlreadyUnpaidInvoices,
-  CommentAuthenticationError,
-  EmailAlreadyInUseError,
   InternalError,
   InvoiceAlreadyPaidOrCanceled,
   MonthlyAmountNotEnough,
@@ -36,404 +31,19 @@ import {
   UserSubscriptionAlreadyDeactivated
 } from '../error'
 import {GraphQLSlug, logger} from '@wepublish/utils/api'
-import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
-import {Validator} from '../validator'
-import {rateComment} from './comment-rating/comment-rating.public-mutation'
-import {
-  GraphQLChallengeInput,
-  GraphQLPublicComment,
-  GraphQLPublicCommentInput,
-  GraphQLPublicCommentUpdateInput
-} from './comment/comment'
-import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
 import {GraphQLMetadataPropertyPublicInput} from './common'
 import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
-import {GraphQLPollVote} from './poll/poll'
-import {voteOnPoll} from './poll/poll.public-mutation'
-import {GraphQLPublicSessionWithToken} from './session'
-import {
-  createJWTSession,
-  createOAuth2Session,
-  createSession,
-  createUserSession,
-  revokeSessionByToken
-} from './session/session.mutation'
-import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
-import {updatePublicSubscription} from './subscription/subscription.public-mutation'
-import {
-  GraphQLMemberRegistration,
-  GraphQLMemberRegistrationAndPayment,
-  GraphQLPaymentProviderCustomer,
-  GraphQLPaymentProviderCustomerInput,
-  GraphQLPublicUser,
-  GraphQLPublicUserInput,
-  GraphQLUserAddressInput
-} from './user'
-import {createUser} from './user/user.mutation'
-import {
-  updatePaymentProviderCustomers,
-  updatePublicUser,
-  updateUserPassword,
-  uploadPublicUserProfileImage
-} from './user/user.public-mutation'
-
-import {mailLogType} from '@wepublish/mail/api'
+import {GraphQLPublicSubscription} from './subscription-public'
+import {GraphQLPublicUser, GraphQLPublicUserInput} from './user'
+import {updatePublicUser, uploadPublicUserProfileImage} from './user/user.public-mutation'
 import {sub} from 'date-fns'
-import {GraphQLDateTime} from 'graphql-scalars'
+import {getMemberPlanByIDOrSlug, getPaymentMethodByIDOrSlug} from '../memberContext'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    // Session
-    // =======
-
-    createSession: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        password: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {email, password}, {sessionTTL, prisma}) =>
-        createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithJWT: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        jwt: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
-        createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithOAuth2Code: {
-      type: new GraphQLNonNull(GraphQLPublicSessionWithToken),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        code: {type: new GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
-    },
-
-    revokeActiveSession: {
-      type: new GraphQLNonNull(GraphQLBoolean),
-      args: {},
-      description: 'This mutation revokes and deletes the active session.',
-      resolve: (root, _, {authenticateUser, prisma: {session}}) =>
-        revokeSessionByToken(authenticateUser, session)
-    },
-
-    // Comment
-    // =======
-    addComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {input: {type: new GraphQLNonNull(GraphQLPublicCommentInput)}},
-      description: 'This mutation allows to add a comment. The input is of type CommentInput.',
-      resolve: (_, {input}, {optionalAuthenticateUser, prisma: {comment, setting}, challenge}) =>
-        addPublicComment(input, optionalAuthenticateUser, challenge, setting, comment)
-    },
-
-    updateComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {
-        input: {type: new GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
-      },
-      description:
-        'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
-      resolve: (_, {input}, {prisma: {comment, setting}, authenticateUser}) =>
-        updatePublicComment(input, authenticateUser, comment, setting)
-    },
-
-    rateComment: {
-      type: new GraphQLNonNull(GraphQLPublicComment),
-      args: {
-        commentId: {type: new GraphQLNonNull(GraphQLString)},
-        answerId: {type: new GraphQLNonNull(GraphQLString)},
-        value: {type: new GraphQLNonNull(GraphQLInt)}
-      },
-      description: 'This mutation allows to rate a comment. Supports logged in and anonymous',
-      resolve: (
-        root,
-        {commentId, answerId, value},
-        {
-          optionalAuthenticateUser,
-          prisma: {comment, commentRating, commentRatingSystemAnswer, setting}
-        }
-      ) =>
-        rateComment(
-          commentId,
-          answerId,
-          value,
-          undefined,
-          optionalAuthenticateUser,
-          commentRatingSystemAnswer,
-          commentRating,
-          comment,
-          setting
-        )
-    },
-
-    registerMember: {
-      type: new GraphQLNonNull(GraphQLMemberRegistration),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        firstName: {type: GraphQLString},
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        address: {type: GraphQLUserAddressInput},
-        password: {type: GraphQLString},
-        birthday: {
-          type: GraphQLDateTime
-        },
-        challengeAnswer: {
-          type: new GraphQLNonNull(GraphQLChallengeInput)
-        }
-      },
-      description: 'This mutation allows to register a new member,',
-      async resolve(
-        root,
-        {name, firstName, email, address, birthday, password, challengeAnswer},
-        {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
-      ) {
-        email = email.toLowerCase()
-        await Validator.createUser.parse({name, email, firstName})
-
-        const challengeValidationResult = await challenge.validateChallenge({
-          challengeID: challengeAnswer.challengeID,
-          solution: challengeAnswer.challengeSolution
-        })
-
-        if (!challengeValidationResult.valid) {
-          throw new CommentAuthenticationError(challengeValidationResult.message)
-        }
-
-        const userExists = await prisma.user.findUnique({
-          where: {
-            email
-          },
-          select: unselectPassword
-        })
-
-        if (userExists) {
-          throw new EmailAlreadyInUseError()
-        }
-
-        if (!password) {
-          password = crypto.randomBytes(48).toString('base64')
-        }
-
-        const user = await createUser(
-          {
-            name,
-            firstName,
-            email,
-            birthday,
-            address,
-            emailVerifiedAt: null,
-            active: true,
-            roleIDs: [],
-            password
-          },
-          hashCostFactor,
-          prisma,
-          mailContext
-        )
-
-        if (!user) {
-          logger('mutation.public').error('Could not create new user for email "%s"', email)
-          throw new InternalError()
-        }
-
-        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
-
-        return {
-          user,
-          session
-        }
-      }
-    },
-
-    registerMemberAndReceivePayment: {
-      type: new GraphQLNonNull(GraphQLMemberRegistrationAndPayment),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        birthday: {
-          type: GraphQLDateTime
-        },
-        firstName: {type: GraphQLString},
-        email: {type: new GraphQLNonNull(GraphQLString)},
-        address: {type: GraphQLUserAddressInput},
-        password: {type: GraphQLString},
-        memberPlanID: {type: GraphQLString},
-        memberPlanSlug: {type: GraphQLSlug},
-        autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
-        paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLString},
-        paymentMethodSlug: {type: GraphQLSlug},
-        subscriptionProperties: {
-          type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
-        },
-        successURL: {type: GraphQLString},
-        failureURL: {type: GraphQLString},
-        challengeAnswer: {
-          type: new GraphQLNonNull(GraphQLChallengeInput)
-        }
-      },
-      description:
-        'This mutation allows to register a new member, select a member plan, payment method and create an invoice. ',
-      async resolve(
-        root,
-        {
-          name,
-          firstName,
-          email,
-          address,
-          password,
-          birthday,
-          memberPlanID,
-          memberPlanSlug,
-          autoRenew,
-          paymentPeriodicity,
-          monthlyAmount,
-          paymentMethodID,
-          paymentMethodSlug,
-          subscriptionProperties,
-          successURL,
-          failureURL,
-          challengeAnswer
-        },
-        {
-          sessionTTL,
-          hashCostFactor,
-          prisma,
-          loaders,
-          memberContext,
-          challenge,
-          createPaymentWithProvider,
-          mailContext
-        }
-      ) {
-        email = email.toLowerCase()
-        await Validator.createUser.parse({name, email, firstName})
-        const challengeValidationResult = await challenge.validateChallenge({
-          challengeID: challengeAnswer.challengeID,
-          solution: challengeAnswer.challengeSolution
-        })
-        if (!challengeValidationResult.valid)
-          throw new CommentAuthenticationError(challengeValidationResult.message)
-
-        await memberContext.validateInputParamsCreateSubscription(
-          memberPlanID,
-          memberPlanSlug,
-          paymentMethodID,
-          paymentMethodSlug
-        )
-
-        const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
-          loaders,
-          memberPlanSlug,
-          memberPlanID
-        )
-
-        const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
-          loaders,
-          paymentMethodSlug,
-          paymentMethodID
-        )
-
-        // Check that monthly amount not
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
-
-        await memberContext.validateSubscriptionPaymentConfiguration(
-          memberPlan,
-          autoRenew,
-          paymentPeriodicity,
-          paymentMethod
-        )
-
-        const userExists = await prisma.user.findUnique({
-          where: {
-            email
-          },
-          select: unselectPassword
-        })
-
-        if (userExists) throw new EmailAlreadyInUseError()
-
-        if (!password) password = crypto.randomBytes(48).toString('base64')
-
-        const user = await createUser(
-          {
-            name,
-            firstName,
-            email,
-            address,
-            birthday,
-            emailVerifiedAt: null,
-            active: true,
-            roleIDs: [],
-            password
-          },
-          hashCostFactor,
-          prisma,
-          mailContext
-        )
-
-        if (!user) {
-          logger('mutation.public').error('Could not create new user for email "%s"', email)
-          throw new InternalError()
-        }
-
-        const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
-        const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
-
-        const {subscription, invoice} = await memberContext.createSubscription(
-          prisma,
-          user.id,
-          paymentMethod.id,
-          paymentPeriodicity,
-          monthlyAmount,
-          memberPlan.id,
-          properties,
-          autoRenew,
-          memberPlan.extendable
-        )
-
-        if (!invoice) {
-          logger('mutation.public').error(
-            'Could not create new invoice for subscription with ID "%s"',
-            subscription.id
-          )
-          throw new InternalError()
-        }
-
-        return {
-          payment: await createPaymentWithProvider({
-            invoice,
-            saveCustomer: true,
-            paymentMethodID: paymentMethod.id,
-            successURL,
-            failureURL
-          }),
-          user,
-          session
-        }
-      }
-    },
-
     createSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
@@ -478,12 +88,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodSlug
         )
 
-        const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
-          loaders,
-          memberPlanSlug,
-          memberPlanID
-        )
-        const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+        const memberPlan = await getMemberPlanByIDOrSlug(loaders, memberPlanSlug, memberPlanID)
+        const paymentMethod = await getPaymentMethodByIDOrSlug(
           loaders,
           paymentMethodSlug,
           paymentMethodID
@@ -609,12 +215,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentMethodSlug
           )
 
-          const memberPlan = await memberContext.getMemberPlanByIDOrSlug(
-            loaders,
-            memberPlanSlug,
-            memberPlanID
-          )
-          const paymentMethod = await memberContext.getPaymentMethodByIDOrSlug(
+          const memberPlan = await getMemberPlanByIDOrSlug(loaders, memberPlanSlug, memberPlanID)
+          const paymentMethod = await getPaymentMethodByIDOrSlug(
             loaders,
             paymentMethodSlug,
             paymentMethodID
@@ -812,82 +414,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    sendWebsiteLogin: {
-      type: new GraphQLNonNull(GraphQLString),
-      args: {
-        email: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        'This mutation sends a login link to the email if the user exists. Method will always return email address',
-      async resolve(root, {email}, {prisma, generateJWT, mailContext, urlAdapter}) {
-        email = email.toLowerCase()
-        await Validator.login.parse({email})
-
-        const user = await prisma.user.findUnique({
-          where: {email},
-          select: unselectPassword
-        })
-
-        if (!user) return email
-
-        const lastSendTimeStamp = user.properties.find(
-          property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
-        )
-
-        if (
-          lastSendTimeStamp &&
-          parseInt(lastSendTimeStamp.value) > Date.now() - FIFTEEN_MINUTES_IN_MILLISECONDS
-        ) {
-          logger('mutation.public').warn(
-            'User with ID %s requested Login Link multiple times in 15 min time window',
-            user.id
-          )
-          return email
-        }
-
-        const resetPwdSetting = await prisma.setting.findUnique({
-          where: {name: SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN}
-        })
-        const resetPwd =
-          (resetPwdSetting?.value as number) ??
-          parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '')
-
-        if (!resetPwd) {
-          throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
-        }
-
-        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
-        await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow
-        })
-
-        try {
-          await prisma.user.update({
-            where: {id: user.id},
-            data: {
-              properties: {
-                deleteMany: {
-                  key: USER_PROPERTY_LAST_LOGIN_LINK_SEND
-                },
-                create: {
-                  key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-                  public: false,
-                  value: `${Date.now()}`
-                }
-              }
-            }
-          })
-        } catch (error) {
-          logger('mutation.public').warn(error as Error, 'Updating User with ID %s failed', user.id)
-        }
-
-        return email
-      }
-    },
-
     updateUser: {
       type: GraphQLPublicUser,
       args: {
@@ -911,46 +437,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         {authenticateUser, mediaAdapter, prisma: {image, user}}
       ) =>
         uploadPublicUserProfileImage(uploadImageInput, authenticateUser, mediaAdapter, image, user)
-    },
-
-    updatePassword: {
-      type: GraphQLPublicUser,
-      args: {
-        password: {type: new GraphQLNonNull(GraphQLString)},
-        passwordRepeated: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        "This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.",
-      resolve: (
-        root,
-        {password, passwordRepeated},
-        {authenticateUser, prisma: {user}, hashCostFactor}
-      ) => updateUserPassword(password, passwordRepeated, hashCostFactor, authenticateUser, user)
-    },
-
-    updateUserSubscription: {
-      type: GraphQLPublicSubscription,
-      args: {
-        id: {type: new GraphQLNonNull(GraphQLString)},
-        input: {type: new GraphQLNonNull(GraphQLPublicSubscriptionInput)}
-      },
-      description:
-        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null",
-      resolve: (
-        root,
-        {id, input},
-        {authenticateUser, prisma: {subscription}, loaders, memberContext, paymentProviders}
-      ) =>
-        updatePublicSubscription(
-          id,
-          input,
-          authenticateUser,
-          memberContext,
-          loaders.activeMemberPlansByID,
-          loaders.activePaymentMethodsByID,
-          subscription,
-          paymentProviders
-        )
     },
 
     cancelUserSubscription: {
@@ -996,20 +482,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         return updatedSubscription
       }
-    },
-
-    updatePaymentProviderCustomers: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer))),
-      args: {
-        input: {
-          type: new GraphQLNonNull(
-            new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomerInput))
-          )
-        }
-      },
-      description: 'This mutation allows to update the Payment Provider Customers',
-      resolve: (root, {input}, {authenticateUser, prisma: {user}}) =>
-        updatePaymentProviderCustomers(input, authenticateUser, user)
     },
 
     createPaymentFromInvoice: {
@@ -1142,21 +614,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
         })
       }
-    },
-
-    voteOnPoll: {
-      type: GraphQLPollVote,
-      args: {
-        answerId: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      description:
-        "This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous",
-      resolve: (
-        root,
-        {answerId},
-        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}, fingerprint}
-      ) =>
-        voteOnPoll(answerId, fingerprint, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })

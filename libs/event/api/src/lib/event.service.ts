@@ -1,10 +1,10 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common'
 import {Event, Prisma, PrismaClient} from '@prisma/client'
 import {
-  PrimeDataLoader,
-  SortOrder,
   getMaxTake,
-  graphQLSortOrderToPrisma
+  graphQLSortOrderToPrisma,
+  PrimeDataLoader,
+  SortOrder
 } from '@wepublish/utils/api'
 import {EventDataloaderService} from './event-dataloader.service'
 import {
@@ -146,21 +146,6 @@ export class EventService {
     return this.prisma.event.delete({
       where: {
         id
-      }
-    })
-  }
-
-  async getEventTagIds(eventId: string) {
-    return this.prisma.tag.findMany({
-      select: {
-        id: true
-      },
-      where: {
-        events: {
-          some: {
-            eventId
-          }
-        }
       }
     })
   }

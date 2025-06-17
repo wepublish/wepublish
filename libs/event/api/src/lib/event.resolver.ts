@@ -11,7 +11,7 @@ import {
 import {EventService} from './event.service'
 import {Image} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagService} from '@wepublish/tag/api'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Event as PEvent} from '@prisma/client'
 import {Permissions} from '@wepublish/permissions/api'
@@ -21,7 +21,8 @@ export class EventResolver {
   constructor(
     private eventService: EventService,
     private eventDataloader: EventDataloaderService,
-    private urlAdapter: URLAdapter
+    private urlAdapter: URLAdapter,
+    private tagService: TagService
   ) {}
 
   @Public()
@@ -73,8 +74,7 @@ export class EventResolver {
   @ResolveField(() => [Tag], {nullable: true})
   async tags(@Parent() parent: Event) {
     const {id: eventId} = parent
-    const tagIds = await this.eventService.getEventTagIds(eventId)
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    return this.tagService.getTagsByEventId(eventId)
   }
 
   @ResolveField(() => String, {nullable: true})

@@ -1,0 +1,6 @@
+export * from './tag.model'
+export * from './tag.module'
+export * from './tag.resolver'
+export * from './tag.service'
+export * from './tag.types'
+export * from './tags.query'

@@ -2,10 +2,30 @@ import {Prisma, PrismaClient} from '@prisma/client'
 import {PoleVoteByIdArgs, PoleVoteListArgs, PollVoteFilter, PollVoteSort} from './poll-vote.model'
 import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
 import {Injectable} from '@nestjs/common'
+import {
+  AnonymousPollVotingDisabledError,
+  NotFound,
+  PollClosedError,
+  PollNotOpenError
+} from '@wepublish/api'
+import {SettingName, SettingsService} from '@wepublish/settings/api'
 
 @Injectable()
 export class PollVoteService {
-  constructor(readonly prisma: PrismaClient) {}
+  constructor(readonly settings: SettingsService, readonly prisma: PrismaClient) {}
+
+  async userPollVote(pollId: string, userId: string): Promise<string | null> {
+    const vote = await this.prisma.pollVote.findUnique({
+      where: {
+        pollId_userId: {
+          pollId,
+          userId
+        }
+      }
+    })
+
+    return vote?.answerId || null
+  }
 
   async getPollVotes({
     filter,
@@ -60,6 +80,61 @@ export class PollVoteService {
         id: {
           in: ids
         }
+      }
+    })
+  }
+
+  async voteOnPoll(answerId: string, fingerprint: string | undefined, userId: string | undefined) {
+    const guestVotingSetting = await this.settings.settingByName(
+      SettingName.ALLOW_GUEST_POLL_VOTING
+    )
+
+    if (!userId && !guestVotingSetting?.value) {
+      throw new AnonymousPollVotingDisabledError()
+    }
+
+    const answer = await this.prisma.pollAnswer.findUnique({
+      where: {
+        id: answerId
+      },
+      include: {
+        poll: true
+      }
+    })
+
+    if (!answer) {
+      throw new NotFound('PollAnswer', answerId)
+    }
+
+    const {poll} = answer
+
+    if (poll.opensAt > new Date()) {
+      throw new PollNotOpenError()
+    }
+
+    if (poll.closedAt && poll.closedAt < new Date()) {
+      throw new PollClosedError()
+    }
+
+    return this.prisma.pollVote.upsert({
+      where: {
+        pollId_userId: {
+          pollId: poll.id,
+          userId: userId ?? ''
+        }
+      },
+      update: {
+        answerId,
+        fingerprint
+      },
+      create: {
+        answerId,
+        fingerprint,
+        pollId: poll.id,
+        userId
+      },
+      include: {
+        answer: true
       }
     })
   }
