@@ -1,10 +1,11 @@
 import {useUser} from '@wepublish/authentication/website'
 import {
   FullMemberPlanFragment,
+  RegisterMutationVariables,
+  SubscribeMutationVariables,
   useChallengeLazyQuery,
   useInvoicesLazyQuery,
   useMemberPlanListQuery,
-  usePageLazyQuery,
   useRegisterMutation,
   useResubscribeMutation,
   useSubscribeMutation,
@@ -17,8 +18,15 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
-import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {useEffect, useMemo, useState} from 'react'
+import {SubscribeResponseHandler} from './subscribe-response-handler'
+import {useSubscribe} from './useSubscribe'
+import styled from '@emotion/styled'
+
+const SubscribeContainerStyled = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+`
 
 /**
  * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
@@ -36,6 +44,7 @@ export type SubscribeContainerProps<
     | 'defaults'
     | 'termsOfServiceUrl'
     | 'donate'
+    | 'trial'
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'
@@ -53,6 +62,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
+  trial,
   transactionFee,
   transactionFeeText,
   returningUserId
@@ -63,9 +73,11 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const [fetchUserSubscriptions, userSubscriptions] = useSubscriptionsLazyQuery()
   const [fetchUserInvoices, userInvoices] = useInvoicesLazyQuery()
+  const {fetchRedirectPageUrls, handleSubscribeResponse} = useSubscribe()
 
-  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
+  const [selectedMemberPlan, setSelectedMemberPlan] = useState<FullMemberPlanFragment | undefined>()
+  const [errors, setErrors] = useState<string[] | undefined>(undefined)
+  const [stripeIntent, setStripeIntent] = useState<string | undefined>(undefined)
 
   const memberPlanList = useMemberPlanListQuery({
     variables: {
@@ -73,28 +85,26 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
     }
   })
 
+  // @todo > handle error & completed
   const [resubscribe] = useResubscribeMutation({})
 
   const [subscribe] = useSubscribeMutation({
-    onError() {
+    onError: async errors => {
+      setErrors([errors.message])
       fetchUserSubscriptions()
       fetchUserInvoices()
     },
-    onCompleted(data) {
-      if (!data.createSubscription?.intentSecret) {
-        return
-      }
-
-      if (data.createSubscription.paymentMethod.paymentProviderID === 'stripe') {
-        setStripeClientSecret(data.createSubscription.intentSecret)
-      }
-
-      if (data.createSubscription.intentSecret.startsWith('http')) {
-        window.location.href = data.createSubscription.intentSecret
-      }
+    onCompleted: async data => {
+      await handleSubscribeResponse({
+        subscribeResponse: data,
+        memberPlan: selectedMemberPlan,
+        onStripeIntent: intentSecret => setStripeIntent(intentSecret),
+        onError: errors => setErrors(errors)
+      })
     }
   })
 
+  // @todo > handle error & completed properly
   const [register] = useRegisterMutation({
     onError: () => challenge.refetch(),
     onCompleted(data) {
@@ -104,9 +114,80 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
     }
   })
 
-  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
-  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
-  const [fetchPage] = usePageLazyQuery()
+  // todo > can we move it into useSubscribeResponse ?
+  async function onSubscribe(
+    formData: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) {
+    const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+      mb => mb.id === formData.memberPlanId
+    )
+    setSelectedMemberPlan(selectedMemberplan)
+
+    const {successURL, failureURL} = await fetchRedirectPageUrls({
+      successPageId: selectedMemberplan?.successPageId,
+      failPageId: selectedMemberplan?.failPageId
+    })
+
+    await subscribe({
+      variables: {
+        ...formData,
+        successURL,
+        failureURL,
+        deactivateSubscriptionId
+      }
+    })
+  }
+
+  async function onSubscribeWithRegister(formData: {
+    subscribe: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+    register: RegisterMutationVariables
+  }) {
+    const {errors: registerErrors} = await register({
+      variables: formData.register
+    })
+
+    if (registerErrors) {
+      throw registerErrors
+    }
+
+    const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+      mb => mb.id === formData.subscribe.memberPlanId
+    )
+
+    setSelectedMemberPlan(selectedMemberplan)
+
+    const {successURL, failureURL} = await fetchRedirectPageUrls({
+      successPageId: selectedMemberplan?.successPageId,
+      failPageId: selectedMemberPlan?.failPageId
+    })
+
+    await subscribe({
+      variables: {
+        ...formData.subscribe,
+        successURL,
+        failureURL
+      }
+    })
+  }
+
+  async function onResubscribe(
+    formData: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) {
+    const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+      mb => mb.id === formData.memberPlanId
+    )
+
+    const {confirmationURL} = await fetchRedirectPageUrls({
+      confirmationPageId: selectedMemberplan?.confirmationPageId
+    })
+
+    await resubscribe({
+      variables: formData,
+      async onCompleted() {
+        window.location.href = confirmationURL
+      }
+    })
+  }
 
   useEffect(() => {
     if (!hasUser) {
@@ -128,29 +209,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   }, [memberPlanList, filter])
 
   return (
-    <>
-      {stripeClientSecret && (
-        <StripeElement clientSecret={stripeClientSecret}>
-          <StripePayment
-            onClose={async success => {
-              if (stripeMemberPlan) {
-                const page = await fetchPage({
-                  variables: {
-                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
-                  }
-                })
-
-                window.location.href = page.data?.page.url ?? ''
-
-                // window.location.href = success
-                //   ? stripeMemberPlan.successPage?.url ?? ''
-                //   : stripeMemberPlan.failPage?.url ?? ''
-              }
-            }}
-          />
-        </StripeElement>
-      )}
-
+    <SubscribeContainerStyled>
       <Subscribe
         className={className}
         defaults={defaults}
@@ -162,105 +221,20 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        trial={trial}
         transactionFee={transactionFee}
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}
-        onSubscribe={async formData => {
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === formData.memberPlanId
-          )
-          setStripeMemberPlan(selectedMemberplan)
-
-          const [successPage, failPage] = await Promise.all([
-            fetchPage({
-              variables: {
-                id: selectedMemberplan?.successPageId
-              }
-            }),
-            fetchPage({
-              variables: {
-                id: selectedMemberplan?.successPageId
-              }
-            })
-          ])
-
-          const result = await subscribe({
-            variables: {
-              ...formData,
-              successURL: successPage.data?.page.url,
-              failureURL: failPage.data?.page.url,
-              // successURL: selectedMemberplan?.successPage?.url,
-              // failureURL: selectedMemberplan?.failPage?.url,
-              deactivateSubscriptionId
-            }
-          })
-
-          if (result.errors) {
-            throw result.errors
-          }
-        }}
-        onSubscribeWithRegister={async formData => {
-          const {errors: registerErrors} = await register({
-            variables: formData.register
-          })
-
-          if (registerErrors) {
-            throw registerErrors
-          }
-
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === formData.subscribe.memberPlanId
-          )
-
-          setStripeMemberPlan(selectedMemberplan)
-
-          const [successPage, failPage] = await Promise.all([
-            fetchPage({
-              variables: {
-                id: selectedMemberplan?.successPageId
-              }
-            }),
-            fetchPage({
-              variables: {
-                id: selectedMemberplan?.successPageId
-              }
-            })
-          ])
-
-          const result = await subscribe({
-            variables: {
-              ...formData.subscribe,
-              successURL: successPage.data?.page.url,
-              failureURL: failPage.data?.page.url
-              // successURL: selectedMemberplan?.successPage?.url,
-              // failureURL: selectedMemberplan?.failPage?.url
-            }
-          })
-
-          if (result.errors) {
-            throw result.errors
-          }
-        }}
-        onResubscribe={async formData => {
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === formData.memberPlanId
-          )
-          const page = await fetchPage({
-            variables: {
-              id: selectedMemberplan?.confirmationPageId
-            }
-          })
-
-          await resubscribe({
-            variables: formData,
-            async onCompleted() {
-              window.location.href = page.data?.page.url ?? ''
-              // window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
-            }
-          })
-        }}
+        onSubscribe={async formData => await onSubscribe(formData)}
+        onSubscribeWithRegister={async formData => await onSubscribeWithRegister(formData)}
+        onResubscribe={async formData => await onResubscribe(formData)}
         deactivateSubscriptionId={deactivateSubscriptionId}
       />
-    </>
+      <SubscribeResponseHandler
+        errors={errors}
+        memberPlan={selectedMemberPlan}
+        stripeClientSecret={stripeIntent}
+      />
+    </SubscribeContainerStyled>
   )
 }
