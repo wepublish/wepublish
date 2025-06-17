@@ -3,7 +3,7 @@ import {createContext, useContext, useMemo} from 'react'
 import {useActiveSubscriptions} from '@wepublish/membership/website'
 import {useUser} from '@wepublish/authentication/website'
 import {CanGetArticle} from '@wepublish/permissions'
-import {PaywallBypassService} from './paywall-bypass'
+import {hasValidBypass} from './paywall-bypass'
 
 export const ShowPaywallContext = createContext<{showPaywall?: boolean; hideContent?: boolean}>({})
 
@@ -30,7 +30,7 @@ export const useShowPaywall = (
     }
 
     const validTokens = paywall.bypasses?.map(bypass => bypass.token) ?? []
-    const hasBypass = PaywallBypassService.hasValidBypass(validTokens)
+    const hasBypass = hasValidBypass(validTokens)
 
     if (hasBypass) {
       return {hideContent: false, showPaywall: false}

@@ -63,7 +63,7 @@ import {PrintLogo} from '../src/components/print-logo'
 import {printStyles} from '../src/print-styles'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
-import {usePaywallBypassToken} from '@wepublish/paywall/website'
+import {handlePaywallBypassToken} from '@wepublish/paywall/website'
 
 setDefaultOptions({
   locale: de
@@ -110,7 +110,7 @@ type CustomAppProps = AppProps<{
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Hauptstadt'
 
-  usePaywallBypassToken()
+  handlePaywallBypassToken()
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
