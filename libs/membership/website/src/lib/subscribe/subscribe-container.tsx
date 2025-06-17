@@ -19,6 +19,7 @@ import {
 import {produce} from 'immer'
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {useEffect, useMemo, useState} from 'react'
+import {sortBy} from 'ramda'
 
 /**
  * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
@@ -40,6 +41,7 @@ export type SubscribeContainerProps<
     | 'transactionFeeText'
     | 'returningUserId'
   > & {
+    sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
   }
@@ -49,7 +51,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   defaults,
   fields,
   schema,
-  filter,
+  filter = memberPlan => memberPlan,
+  sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
@@ -125,11 +128,11 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
-      if (filter && draftList.data?.memberPlans) {
-        draftList.data.memberPlans.nodes = filter(draftList.data.memberPlans.nodes)
+      if (draftList.data?.memberPlans) {
+        draftList.data.memberPlans.nodes = filter(sort(draftList.data.memberPlans.nodes))
       }
     })
-  }, [memberPlanList, filter])
+  }, [memberPlanList, filter, sort])
 
   return (
     <>
@@ -170,7 +173,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}
         onSubscribe={async formData => {
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
+          const selectedMemberplan = sortedMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId
           )
           setStripeMemberPlan(selectedMemberplan)

@@ -11,7 +11,6 @@ import {
 } from '@wepublish/authentication/website'
 import {
   Currency,
-  FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
@@ -31,7 +30,7 @@ import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
-import {replace, sortBy, toLower} from 'ramda'
+import {replace, toLower} from 'ramda'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
 import {Modal} from '@wepublish/website/builder'
@@ -227,15 +226,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     (payTransactionFee ? transactionFee(watch<'monthlyAmount'>('monthlyAmount')) : 0)
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
-  const sortedMemberPlans = useMemo(
-    () =>
-      sortBy(
-        (memberPlan: FullMemberPlanFragment) => memberPlan.amountPerMonthMin,
-        memberPlans.data?.memberPlans.nodes ?? []
-      ),
-    [memberPlans.data?.memberPlans.nodes]
-  )
-
   const selectedMemberPlan = useMemo(
     () =>
       memberPlans.data?.memberPlans.nodes.find(
@@ -424,7 +414,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <MemberPlanPicker
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={sortedMemberPlans}
+              memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
             />
           )}
         />
