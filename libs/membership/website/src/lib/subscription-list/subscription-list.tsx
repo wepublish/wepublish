@@ -15,7 +15,8 @@ export const SubscriptionList = ({
   onCancel,
   onExtend,
   className,
-  subscribeUrl
+  subscribeUrl,
+  trial
 }: BuilderSubscriptionListProps) => {
   const {
     SubscriptionListItem,
@@ -42,6 +43,7 @@ export const SubscriptionList = ({
           {...subscription}
           extend={async () => await onExtend?.(subscription.id)}
           cancel={async () => await onCancel?.(subscription.id)}
+          trial={trial}
         />
       ))}
     </SubscriptionListWrapper>

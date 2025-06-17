@@ -7,7 +7,7 @@ import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {FullMemberPlanFragment, UserSession} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {
@@ -69,7 +69,9 @@ const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, ''>
+type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, ''> & {
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
+}
 
 function ProfilePage(props: ProfilePageProps) {
   const {
@@ -110,6 +112,7 @@ function ProfilePage(props: ProfilePageProps) {
             filter={subscriptions =>
               subscriptions.filter(subscription => !subscription.deactivation)
             }
+            trial={props.trial}
           />
 
           {hasDeactivatedSubscriptions && (

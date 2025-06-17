@@ -23,6 +23,7 @@ export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   canExtend: boolean
   cancel?: () => Promise<void>
   extend?: () => Promise<void>
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
 }
 
 export type BuilderSubscriptionListProps = Pick<
@@ -34,6 +35,7 @@ export type BuilderSubscriptionListProps = Pick<
   subscribeUrl: string
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
 }
 
 export type BuilderInvoiceListItemProps = {

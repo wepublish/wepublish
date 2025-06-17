@@ -59,6 +59,7 @@ export const SubscriptionListItemActions = styled('div')`
 `
 
 export function SubscriptionListItem({
+  id,
   autoRenew,
   startsAt,
   paidUntil,
@@ -70,6 +71,7 @@ export function SubscriptionListItem({
   cancel,
   canExtend,
   extend,
+  trial,
   className
 }: BuilderSubscriptionListItemProps) {
   const {
@@ -190,7 +192,11 @@ export function SubscriptionListItem({
               </Button>
             )}
 
-            {}
+            {trial && (
+              <Link href={`/mitmachen?deactivateSubscriptionId=${id}`}>
+                <Button disabled={loading}>Reguläres Abo lösen</Button>
+              </Link>
+            )}
           </SubscriptionListItemActions>
         )}
       </SubscriptionListItemContent>
