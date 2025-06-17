@@ -273,7 +273,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     monthlyAmount,
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
-    !!trial
+    !!trial?.(selectedMemberPlan)
   )
 
   const monthlyPaymentText = getPaymentText(
@@ -283,7 +283,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'monthlyAmount'>('monthlyAmount'),
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
-    !!trial
+    !!trial?.(selectedMemberPlan)
   )
 
   const onSubmit = handleSubmit(data => {
@@ -570,7 +570,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}>
           {`${paymentText} ${
-            donate?.(selectedMemberPlan) ? 'spenden' : trial ? 'lösen' : 'abonnieren'
+            donate?.(selectedMemberPlan)
+              ? 'spenden'
+              : trial?.(selectedMemberPlan)
+              ? 'lösen'
+              : 'abonnieren'
           }`}
         </Button>
 
