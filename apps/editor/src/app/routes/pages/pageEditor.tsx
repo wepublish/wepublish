@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useCreateJwtForUserLazyQuery, useMeQuery} from '@wepublish/editor/api'
 import {
   CreatePageMutationVariables,
   getApiClientV2,
@@ -125,6 +126,15 @@ function PageEditor() {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     variables: {id: pageID!}
+  })
+  const {data: user} = useMeQuery({
+    fetchPolicy: 'cache-only'
+  })
+  const [createJWT] = useCreateJwtForUserLazyQuery({
+    errorPolicy: 'none',
+    variables: {
+      userId: user?.me?.id ?? ''
+    }
   })
 
   const {t} = useTranslation()
@@ -391,15 +401,23 @@ function PageEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={pageData?.page.previewUrl ?? ''} target="_blank">
-                    <IconButtonMTop
-                      className="actionButton"
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('pageEditor.overview.preview')}
-                    </IconButtonMTop>
-                  </Link>
+                  <IconButtonMTop
+                    className="actionButton"
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForUser?.token}`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('pageEditor.overview.preview')}
+                  </IconButtonMTop>
                 </PermissionControl>
               }
             />

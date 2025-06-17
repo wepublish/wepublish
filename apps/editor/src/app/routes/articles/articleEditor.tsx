@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment} from '@wepublish/editor/api'
+import {AuthorRefFragment, useCreateJwtForUserLazyQuery, useMeQuery} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
@@ -171,6 +171,16 @@ function ArticleEditor() {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     variables: {id: articleID!}
+  })
+
+  const {data: user} = useMeQuery({
+    fetchPolicy: 'cache-only'
+  })
+  const [createJWT] = useCreateJwtForUserLazyQuery({
+    errorPolicy: 'none',
+    variables: {
+      userId: user?.me?.id ?? ''
+    }
   })
 
   const isNotFound = articleData && !articleData.article
@@ -569,17 +579,21 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link
-                    to={articleData?.article.previewUrl ?? ''}
-                    className="actionButton"
-                    target="_blank">
-                    <IconButtonMarginTop
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('articleEditor.overview.preview')}
-                    </IconButtonMarginTop>
-                  </Link>
+                  <IconButtonMarginTop
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${articleData!.article.previewUrl}&jwt=${jwt?.createJWTForUser?.token}`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('articleEditor.overview.preview')}
+                  </IconButtonMarginTop>
                 </PermissionControl>
               }
             />

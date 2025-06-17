@@ -45,6 +45,12 @@ const Divider = styled(ToolbarDivider)`
   height: 1.8em;
 `
 
+const SlateWrapper = styled.div`
+  [contenteditable] {
+    padding: 8px;
+  }
+`
+
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue['richText']> {
   displayOnly?: boolean
   showCharCount?: boolean
@@ -135,97 +141,105 @@ export const RichTextBlock = memo(function RichTextBlock({
   }
 
   return (
-    <Slate
-      key={editorKey}
-      editor={editor}
-      initialValue={value?.length ? value : WepublishEditor.createDefaultValue()}
-      onChange={newValue => {
-        setFocus(ReactEditor.isFocused(editor))
-        if (value !== newValue) {
-          onChange(newValue)
-        }
-      }}>
-      {!displayOnly && (
-        <>
-          <Toolbar
-            fadeOut={!hasFocus}
-            onMouseDown={() => {
-              if (!hasFocus && location) focusAtPreviousLocation(location)
-            }}>
-            <FormatButton format={BlockFormat.H1}>
-              <H1Icon />
-            </FormatButton>
-            <FormatButton format={BlockFormat.H2}>
-              <H2Icon />
-            </FormatButton>
-            <FormatButton format={BlockFormat.H3}>
-              <H3Icon />
-            </FormatButton>
+    <SlateWrapper>
+      <Slate
+        key={editorKey}
+        editor={editor}
+        initialValue={value?.length ? value : WepublishEditor.createDefaultValue()}
+        onChange={newValue => {
+          setFocus(ReactEditor.isFocused(editor))
+          if (value !== newValue) {
+            onChange(newValue)
+          }
+        }}>
+        {!displayOnly && (
+          <>
+            <Toolbar
+              fadeOut={!hasFocus}
+              onMouseDown={() => {
+                if (!hasFocus && location) focusAtPreviousLocation(location)
+              }}>
+              <FormatButton format={BlockFormat.H1}>
+                <H1Icon />
+              </FormatButton>
+              <FormatButton format={BlockFormat.H2}>
+                <H2Icon />
+              </FormatButton>
+              <FormatButton format={BlockFormat.H3}>
+                <H3Icon />
+              </FormatButton>
 
-            <Divider />
+              <Divider />
 
-            <FormatIconButton icon={<MdFormatListBulleted />} format={BlockFormat.UnorderedList} />
-            <FormatIconButton icon={<MdFormatListNumbered />} format={BlockFormat.OrderedList} />
-
-            <Divider />
-
-            <EditorSubMenuButton icon={<MdTableChart />} editorHasFocus={hasFocus}>
-              <TableMenu />
-            </EditorSubMenuButton>
-
-            <Divider />
-
-            <FormatIconButton icon={<MdFormatBold />} format={TextFormat.Bold} />
-            <FormatIconButton icon={<MdFormatItalic />} format={TextFormat.Italic} />
-            <FormatIconButton icon={<MdFormatUnderlined />} format={TextFormat.Underline} />
-            <FormatIconButton icon={<MdFormatStrikethrough />} format={TextFormat.Strikethrough} />
-            <FormatIconButton icon={<MdSuperscript />} format={TextFormat.Superscript} />
-            <FormatIconButton icon={<MdSubscript />} format={TextFormat.Subscript} />
-
-            <Divider />
-
-            <SubMenuButton icon={<MdLink />} format={InlineFormat.Link}>
-              <LinkMenu />
-            </SubMenuButton>
-
-            <Divider />
-
-            <SubMenuButton icon={<MdMood />}>
-              <EmojiPicker
-                setEmoji={emoji => {
-                  editor.insertText(emoji)
-                }}
+              <FormatIconButton
+                icon={<MdFormatListBulleted />}
+                format={BlockFormat.UnorderedList}
               />
-            </SubMenuButton>
-          </Toolbar>
-          {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
-            <AltPlaceholder onClick={() => ReactEditor.focus(editor)}>
-              {t('blocks.richText.startWriting')}
-            </AltPlaceholder>
-          )}
-        </>
-      )}
+              <FormatIconButton icon={<MdFormatListNumbered />} format={BlockFormat.OrderedList} />
 
-      <Editable
-        style={
-          displayOneLine
-            ? {
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }
-            : undefined
-        }
-        readOnly={disabled || displayOnly}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onBlur={() => {
-          setLocation(editor.selection)
-        }}
-        onKeyDown={activateHotkey}
-      />
-      {showCharCount && <CharCount>{t('blocks.richText.charCount', {charCount})}</CharCount>}
-    </Slate>
+              <Divider />
+
+              <EditorSubMenuButton icon={<MdTableChart />} editorHasFocus={hasFocus}>
+                <TableMenu />
+              </EditorSubMenuButton>
+
+              <Divider />
+
+              <FormatIconButton icon={<MdFormatBold />} format={TextFormat.Bold} />
+              <FormatIconButton icon={<MdFormatItalic />} format={TextFormat.Italic} />
+              <FormatIconButton icon={<MdFormatUnderlined />} format={TextFormat.Underline} />
+              <FormatIconButton
+                icon={<MdFormatStrikethrough />}
+                format={TextFormat.Strikethrough}
+              />
+              <FormatIconButton icon={<MdSuperscript />} format={TextFormat.Superscript} />
+              <FormatIconButton icon={<MdSubscript />} format={TextFormat.Subscript} />
+
+              <Divider />
+
+              <SubMenuButton icon={<MdLink />} format={InlineFormat.Link}>
+                <LinkMenu />
+              </SubMenuButton>
+
+              <Divider />
+
+              <SubMenuButton icon={<MdMood />}>
+                <EmojiPicker
+                  setEmoji={emoji => {
+                    editor.insertText(emoji)
+                  }}
+                />
+              </SubMenuButton>
+            </Toolbar>
+            {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
+              <AltPlaceholder onClick={() => ReactEditor.focus(editor)}>
+                {t('blocks.richText.startWriting')}
+              </AltPlaceholder>
+            )}
+          </>
+        )}
+
+        <Editable
+          style={
+            displayOneLine
+              ? {
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }
+              : undefined
+          }
+          readOnly={disabled || displayOnly}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          onBlur={() => {
+            setLocation(editor.selection)
+          }}
+          onKeyDown={activateHotkey}
+        />
+        {showCharCount && <CharCount>{t('blocks.richText.charCount', {charCount})}</CharCount>}
+      </Slate>
+    </SlateWrapper>
   )
 })
 
