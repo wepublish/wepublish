@@ -55,7 +55,8 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
           }
         })
       }
-    }
+    },
+    fetchPolicy: 'cache-first'
   })
 
   const [pay] = usePayInvoiceMutation({

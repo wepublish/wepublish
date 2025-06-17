@@ -106,6 +106,9 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
+export const isTrialMemberPlan = (memberPlan?: FullMemberPlanFragment | undefined | null) =>
+  !!memberPlan?.tags?.find(tag => tag === 'trial-subscription')
+
 export const getPaymentText = (
   autoRenew: boolean,
   extendable: boolean,
@@ -559,7 +562,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               setOpenConfirm(true)
             }
           }}>
-          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {isTrialMemberPlan(selectedMemberPlan)
+            ? 'Gratis Probe-Abo lösen'
+            : `${paymentText} ${donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}`}
         </Button>
 
         {autoRenew && termsOfServiceUrl ? (

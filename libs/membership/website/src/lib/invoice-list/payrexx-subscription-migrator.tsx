@@ -27,7 +27,7 @@ export function PayrexxSubscriptionMigrator({invoice}: PayrexxSubscriptionMigrat
 
   function handleError(errorMessage: string) {
     setErrors([errorMessage])
-    // refetchInvoiceList?.()
+    refetchInvoiceList?.()
     setLoading(false)
   }
 
