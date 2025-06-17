@@ -589,7 +589,10 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={articleData?.article.previewUrl ?? ''} className="actionButton">
+                  <Link
+                    to={articleData?.article.previewUrl ?? ''}
+                    className="actionButton"
+                    target="_blank">
                     <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}
                       size="lg"
