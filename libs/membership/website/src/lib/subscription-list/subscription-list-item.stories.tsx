@@ -203,6 +203,15 @@ export const DeactivatedUnknown: StoryObj = {
   }
 }
 
+export const TrialSubscription: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    trial: true,
+    canExtend: false
+  }
+}
+
 export const WithCancelLoading: StoryObj = {
   args: {
     ...Unpaid.args,
