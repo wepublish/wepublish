@@ -173,7 +173,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}
         onSubscribe={async formData => {
-          const selectedMemberplan = sortedMemberPlans.data?.memberPlans.nodes.find(
+          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId
           )
           setStripeMemberPlan(selectedMemberplan)

@@ -9,6 +9,7 @@ import {
   TeaserAuthors,
   TeaserContentWrapper,
   TeaserGridBlock,
+  TeaserImage,
   TeaserImageWrapper,
   TeaserLead,
   TeaserListBlock,
@@ -120,7 +121,7 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
     margin-bottom: 0;
   }
 
-  ${ImageWrapper} {
+  ${TeaserImage} {
     aspect-ratio: 3/2;
     max-height: unset;
   }
