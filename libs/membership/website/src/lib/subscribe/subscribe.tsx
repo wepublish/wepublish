@@ -189,6 +189,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       })
     }
 
+    if (fieldsToDisplay.emailRepeated) {
+      return zodAlwaysRefine(result).refine(data => data.email === data.emailRepeated, {
+        message: 'E-Mailadressen stimmen nicht überein.',
+        path: ['emailRepeated']
+      })
+    }
+
     return result
   }, [fieldsToDisplay, schema])
 

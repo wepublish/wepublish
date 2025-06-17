@@ -17,6 +17,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {HauptstadtContentFullWidth} from '../src/components/hauptstadt-content-wrapper'
+import {HAS_FORM_FIELDS} from './mitmachen'
 
 export default function SignUp() {
   const {hasUser} = useUser()
@@ -33,7 +34,7 @@ export default function SignUp() {
   return (
     <PageContainer slug="signup">
       <HauptstadtContentFullWidth>
-        <RegistrationFormContainer />
+        <RegistrationFormContainer fields={HAS_FORM_FIELDS} />
       </HauptstadtContentFullWidth>
     </PageContainer>
   )
