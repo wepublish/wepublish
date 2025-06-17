@@ -1,8 +1,8 @@
-import {Chip, css, SxProps, Theme, Typography} from '@mui/material'
+import {Chip, css, SxProps, Typography} from '@mui/material'
 import styled from '@emotion/styled'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
-import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderTeaserProps, Image, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
 import {PropsWithChildren} from 'react'
@@ -105,6 +105,14 @@ export const selectTeaserImage = (teaser: TeaserType) => {
   }
 }
 
+export const selectTeaserPeerImage = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'ArticleTeaser': {
+      return teaser?.article?.peer?.profile?.squareLogo ?? teaser?.article?.peer?.profile?.logo
+    }
+  }
+}
+
 export const selectTeaserDate = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
@@ -199,13 +207,21 @@ export const TeaserImageWrapper = styled('div')`
   height: 100%;
   overflow: hidden;
   grid-area: image;
+  position: relative;
 
   &:empty {
     min-height: ${({theme}) => theme.spacing(4)};
   }
 `
 
-const imageStyles = (theme: Theme) => css`
+// InnerWrapper exists because inside a grid,
+// vertical margin is added to the height of the elemement.
+// This causes the TeaserLogo to not be properly positioned if a margin exists
+export const TeaserImageInnerWrapper = styled('div')`
+  position: relative;
+`
+
+export const TeaserImage = styled(Image)`
   max-height: 400px;
   width: 100%;
   object-fit: cover;
@@ -217,9 +233,18 @@ const imageStyles = (theme: Theme) => css`
     transform: scale(1.1);
   }
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     aspect-ratio: 1;
   }
+`
+
+export const TeaserPeerLogo = styled(Image)`
+  border-radius: 50%;
+  position: absolute;
+  bottom: ${({theme}) => theme.spacing(2)};
+  right: ${({theme}) => theme.spacing(2)};
+  width: 50px;
+  height: 50px;
 `
 
 export const TeaserContentWrapper = styled('div')`
@@ -336,21 +361,22 @@ export const BaseTeaser = ({teaser, alignment, className}: BuilderTeaserProps) =
   const lead = teaser && selectTeaserLead(teaser)
   const href = (teaser && selectTeaserUrl(teaser)) ?? ''
   const image = teaser && selectTeaserImage(teaser)
+  const peerLogo = teaser && selectTeaserPeerImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
   const tags = teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle)
 
   const {t} = useTranslation()
-  const {
-    date,
-    elements: {Image}
-  } = useWebsiteBuilder()
+  const {date} = useWebsiteBuilder()
 
   return (
     <TeaserWrapper {...alignment}>
       <TeaserContent href={href} className={className}>
         <TeaserImageWrapper>
-          {image && <Image image={image} css={imageStyles} />}
+          <TeaserImageInnerWrapper>
+            {image && <TeaserImage image={image} />}
+            {peerLogo && <TeaserPeerLogo image={peerLogo} maxWidth={200} square />}
+          </TeaserImageInnerWrapper>
         </TeaserImageWrapper>
 
         {preTitle && (
