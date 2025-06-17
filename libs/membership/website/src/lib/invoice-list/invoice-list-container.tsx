@@ -1,23 +1,18 @@
-import {StripeElement, StripePayment} from '@wepublish/payment/website'
+import {PaymentForm, usePayInvoice} from '@wepublish/payment/website'
 import {
   FullInvoiceFragment,
-  FullMemberPlanFragment,
   useCheckInvoiceStatusLazyQuery,
-  useInvoicesQuery,
-  usePageLazyQuery,
-  usePayInvoiceMutation
+  useInvoicesQuery
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {produce} from 'immer'
-import {useMemo, useState} from 'react'
+import {useMemo} from 'react'
 
 export type InvoiceListContainerProps = {
   filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[]
 } & BuilderContainerProps
 
 export function InvoiceListContainer({filter, className}: InvoiceListContainerProps) {
-  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
   const {InvoiceList} = useWebsiteBuilder()
   const [checkInvoice, {loading: loadingCheckInvoice}] = useCheckInvoiceStatusLazyQuery()
   const {
@@ -40,25 +35,7 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
     }
   })
 
-  const [pay] = usePayInvoiceMutation({
-    onCompleted(data) {
-      if (!data.createPaymentFromInvoice?.intentSecret) {
-        return
-      }
-
-      if (data.createPaymentFromInvoice.paymentMethod.paymentProviderID === 'stripe') {
-        setStripeClientSecret(data.createPaymentFromInvoice.intentSecret)
-      }
-
-      if (data.createPaymentFromInvoice.intentSecret.startsWith('http')) {
-        window.location.href = data.createPaymentFromInvoice.intentSecret
-      }
-    }
-  })
-
-  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
-  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
-  const [fetchPage] = usePageLazyQuery()
+  const [pay, redirectPages, stripeClientSecret] = usePayInvoice()
 
   const filteredInvoices = useMemo(
     () =>
@@ -77,27 +54,7 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
 
   return (
     <>
-      {stripeClientSecret && (
-        <StripeElement clientSecret={stripeClientSecret}>
-          <StripePayment
-            onClose={async success => {
-              if (stripeMemberPlan) {
-                const page = await fetchPage({
-                  variables: {
-                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
-                  }
-                })
-
-                window.location.href = page.data?.page.url ?? ''
-
-                // window.location.href = success
-                //   ? stripeMemberPlan.successPage?.url ?? ''
-                //   : stripeMemberPlan.failPage?.url ?? ''
-              }
-            }}
-          />
-        </StripeElement>
-      )}
+      <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
 
       <InvoiceList
         data={filteredInvoices}
@@ -107,29 +64,11 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
         onPay={async (invoiceId, paymentMethodId) => {
           const memberPlan = filteredInvoices?.invoices?.find(invoice => invoice.id === invoiceId)
             ?.subscription?.memberPlan
-          setStripeMemberPlan(memberPlan)
 
-          const [successPage, failPage] = await Promise.all([
-            fetchPage({
-              variables: {
-                id: memberPlan?.successPageId
-              }
-            }),
-            fetchPage({
-              variables: {
-                id: memberPlan?.successPageId
-              }
-            })
-          ])
-
-          await pay({
+          await pay(memberPlan, {
             variables: {
               invoiceId,
-              paymentMethodId,
-              successURL: successPage.data?.page.url,
-              failureURL: failPage.data?.page.url
-              // failureURL: memberPlan?.failPage?.url,
-              // successURL: memberPlan?.successPage?.url
+              paymentMethodId
             }
           })
         }}
