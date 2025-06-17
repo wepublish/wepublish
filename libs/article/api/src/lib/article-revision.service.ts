@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {AuthorDataloaderService} from '@wepublish/author/api'
 import {PrimeDataLoader} from '@wepublish/utils/api'
+import {AuthorDataloader} from '@wepublish/author/api'
 
 @Injectable()
 export class ArticleRevisionService {
@@ -16,7 +16,7 @@ export class ArticleRevisionService {
     })
   }
 
-  @PrimeDataLoader(AuthorDataloaderService)
+  @PrimeDataLoader(AuthorDataloader)
   async getSocialMediaAuthors(revisionId: string) {
     return this.prisma.author.findMany({
       where: {
@@ -29,7 +29,7 @@ export class ArticleRevisionService {
     })
   }
 
-  @PrimeDataLoader(AuthorDataloaderService)
+  @PrimeDataLoader(AuthorDataloader)
   async getAuthors(revisionId: string) {
     return this.prisma.author.findMany({
       where: {
