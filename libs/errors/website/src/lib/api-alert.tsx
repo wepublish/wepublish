@@ -25,6 +25,10 @@ export function ApiAlert({error, ...props}: BuilderApiAlertProps) {
   } = useWebsiteBuilder()
 
   const apolloErrorCode = useMemo<ErrorCode | undefined>(() => {
+    if (!('graphQLErrors' in error)) {
+      return
+    }
+
     return error.graphQLErrors?.at(0)?.extensions?.code as ErrorCode
   }, [error])
 

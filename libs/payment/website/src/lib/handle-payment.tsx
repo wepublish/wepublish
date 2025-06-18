@@ -26,14 +26,14 @@ export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>)
       ...callbackParams: Parameters<typeof result>
     ) => {
       const [{data: successPage}, {data: failPage}] = await Promise.all([
-        memberPlan
+        memberPlan?.successPageId
           ? fetchPage({
               variables: {
                 id: memberPlan.successPageId
               }
             })
           : {data: undefined},
-        memberPlan
+        memberPlan?.failPageId
           ? fetchPage({
               variables: {
                 id: memberPlan.failPageId
@@ -67,7 +67,8 @@ export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>)
             failUrl,
             setStripeClientSecret
           })
-        }
+        },
+        onError: () => (window.location.href = failUrl)
       })
     },
     [fetchPage, result]
@@ -94,14 +95,14 @@ export const usePayInvoice = (...params: Parameters<typeof usePayInvoiceMutation
       ...callbackParams: Parameters<typeof result>
     ) => {
       const [{data: successPage}, {data: failPage}] = await Promise.all([
-        memberPlan
+        memberPlan?.successPageId
           ? fetchPage({
               variables: {
                 id: memberPlan.successPageId
               }
             })
           : {data: undefined},
-        memberPlan
+        memberPlan?.failPageId
           ? fetchPage({
               variables: {
                 id: memberPlan.failPageId
@@ -135,7 +136,8 @@ export const usePayInvoice = (...params: Parameters<typeof usePayInvoiceMutation
             failUrl,
             setStripeClientSecret
           })
-        }
+        },
+        onError: () => (window.location.href = failUrl)
       })
     },
     [fetchPage, result]

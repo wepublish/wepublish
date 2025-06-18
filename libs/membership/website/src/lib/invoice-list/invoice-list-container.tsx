@@ -1,4 +1,4 @@
-import {PaymentForm, usePayInvoice} from '@wepublish/payment/website'
+import {PaymentForm, usePayInvoice, useSubscribe} from '@wepublish/payment/website'
 import {
   FullInvoiceFragment,
   useCheckInvoiceStatusLazyQuery,
@@ -6,7 +6,26 @@ import {
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {produce} from 'immer'
-import {useMemo} from 'react'
+import {anyPass} from 'ramda'
+import {useCallback, useMemo} from 'react'
+import {isPayrexxSubscription} from './invoice-list'
+
+const isInNeedOfMigration = anyPass([
+  // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
+  isPayrexxSubscription
+])
+
+const mapMigratePaymentMethod = (invoice: FullInvoiceFragment) => {
+  if (!invoice.subscription?.paymentMethod) {
+    return
+  }
+
+  switch (invoice.subscription.paymentMethod.paymentProviderID) {
+    case 'payrexx-subscription': {
+      return 'payrexx'
+    }
+  }
+}
 
 export type InvoiceListContainerProps = {
   filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[]
@@ -35,7 +54,8 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
     }
   })
 
-  const [pay, redirectPages, stripeClientSecret] = usePayInvoice()
+  const [pay, redirectPages1, stripeClientSecret1] = usePayInvoice()
+  const [migrate, redirectPages2, stripeClientSecret2] = useSubscribe()
 
   const filteredInvoices = useMemo(
     () =>
@@ -52,25 +72,64 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
     [loadingInvoices, loadingCheckInvoice]
   )
 
+  const handlePay = useCallback(
+    async (invoice: FullInvoiceFragment) => {
+      const subscription = invoice.subscription!
+      const memberPlan = subscription?.memberPlan
+      const needsMigration = isInNeedOfMigration(invoice)
+
+      if (needsMigration) {
+        const newPaymentProviderID = mapMigratePaymentMethod(invoice)
+        const newPaymentMethodId = memberPlan.availablePaymentMethods
+          .flatMap(({paymentMethods}) => paymentMethods)
+          .find(({paymentProviderID}) => paymentProviderID === newPaymentProviderID)?.id
+
+        if (!newPaymentMethodId) {
+          throw new Error('Der benötigte Payment-Adapter konnte nicht gefunden werden.')
+        }
+
+        return migrate(memberPlan, {
+          variables: {
+            deactivateSubscriptionId: subscription.id,
+            memberPlanId: memberPlan?.id,
+            paymentPeriodicity: subscription?.paymentPeriodicity,
+            paymentMethodId: newPaymentMethodId,
+            // What if forceAutoRenew is now enabled?
+            autoRenew: subscription.autoRenew,
+            // What if monthlyAmount is now higher?
+            monthlyAmount: subscription?.monthlyAmount
+          }
+        })
+      }
+
+      return pay(memberPlan, {
+        variables: {
+          invoiceId: invoice.id,
+          paymentMethodId: subscription.paymentMethod.id
+        }
+      })
+    },
+    [migrate, pay]
+  )
+
   return (
     <>
-      <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
+      <PaymentForm
+        stripeClientSecret={stripeClientSecret1 ?? stripeClientSecret2}
+        redirectPages={redirectPages1 ?? redirectPages2}
+      />
 
       <InvoiceList
         data={filteredInvoices}
         loading={loading}
         error={error}
         className={className}
-        onPay={async (invoiceId, paymentMethodId) => {
-          const memberPlan = filteredInvoices?.invoices?.find(invoice => invoice.id === invoiceId)
-            ?.subscription?.memberPlan
+        onPay={async invoiceId => {
+          const invoice = filteredInvoices?.invoices?.find(invoice => invoice.id === invoiceId)
 
-          await pay(memberPlan, {
-            variables: {
-              invoiceId,
-              paymentMethodId
-            }
-          })
+          if (invoice) {
+            await handlePay(invoice)
+          }
         }}
       />
     </>
