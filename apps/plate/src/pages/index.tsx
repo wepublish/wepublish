@@ -561,4 +561,6 @@ export function Index() {
   )
 }
 
+Index.getInitialProps = () => ({})
+
 export default Index
