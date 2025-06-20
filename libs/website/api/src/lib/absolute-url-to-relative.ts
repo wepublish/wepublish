@@ -4,7 +4,7 @@ const absoluteToRelative = (url: string) => {
   try {
     const urlObj = new URL(url)
 
-    return urlObj.pathname
+    return `${urlObj.pathname}${urlObj.search}`
   } catch {
     // url already is relative
     return url

@@ -11,7 +11,6 @@ import {
 } from '@wepublish/authentication/website'
 import {
   Currency,
-  FullMemberPlanFragment,
   PaymentPeriodicity,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
@@ -31,10 +30,10 @@ import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
-import {replace, sortBy, toLower} from 'ramda'
-import {MembershipModal} from '../membership-modal/membership-modal'
+import {replace, toLower} from 'ramda'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
+import {Modal} from '@wepublish/website/builder'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -190,6 +189,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       })
     }
 
+    if (fieldsToDisplay.emailRepeated) {
+      return zodAlwaysRefine(result).refine(data => data.email === data.emailRepeated, {
+        message: 'E-Mailadressen stimmen nicht überein.',
+        path: ['emailRepeated']
+      })
+    }
+
     return result
   }, [fieldsToDisplay, schema])
 
@@ -226,15 +232,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'monthlyAmount'>('monthlyAmount') +
     (payTransactionFee ? transactionFee(watch<'monthlyAmount'>('monthlyAmount')) : 0)
   const autoRenew = watch<'autoRenew'>('autoRenew')
-
-  const sortedMemberPlans = useMemo(
-    () =>
-      sortBy(
-        (memberPlan: FullMemberPlanFragment) => memberPlan.amountPerMonthMin,
-        memberPlans.data?.memberPlans.nodes ?? []
-      ),
-    [memberPlans.data?.memberPlans.nodes]
-  )
 
   const selectedMemberPlan = useMemo(
     () =>
@@ -424,7 +421,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <MemberPlanPicker
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={sortedMemberPlans}
+              memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
             />
           )}
         />
@@ -569,7 +566,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         )}
       </SubscribeNarrowSection>
 
-      <MembershipModal
+      <Modal
         open={openConfirm}
         onSubmit={() => {
           onSubmit()
@@ -594,7 +591,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
-      </MembershipModal>
+      </Modal>
     </SubscribeWrapper>
   )
 }

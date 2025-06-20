@@ -1,11 +1,17 @@
 import {FullTagFragment, TagType} from '@wepublish/website/api'
 import nanoid from 'nanoid'
+import {mockRichText} from './richtext'
 
-export const mockTag = ({main = false}: Partial<FullTagFragment> = {}): FullTagFragment => ({
+export const mockTag = ({
+  tag = 'Concert',
+  main = false,
+  description = mockRichText()
+}: Partial<FullTagFragment> = {}): FullTagFragment => ({
+  __typename: 'Tag',
   id: nanoid(),
-  tag: 'Concert',
+  tag,
+  description,
   main,
   url: 'https://example.com',
-  __typename: 'Tag',
   type: TagType.Article
 })

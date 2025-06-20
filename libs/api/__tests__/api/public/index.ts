@@ -51,7 +51,7 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
-export type Article = HasOptionalPeerLc & {
+export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
   disableComments: Scalars['Boolean'];
@@ -61,6 +61,8 @@ export type Article = HasOptionalPeerLc & {
   latest: ArticleRevision;
   likes: Scalars['Int'];
   modifiedAt: Scalars['DateTime'];
+  paywall?: Maybe<Paywall>;
+  paywallId?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
   peerArticleId?: Maybe<Scalars['String']>;
   peerId?: Maybe<Scalars['String']>;
@@ -161,12 +163,6 @@ export type ArticleTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
 };
 
 export type Author = {
@@ -1075,6 +1071,11 @@ export type HasOptionalPage = {
   pageID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalPaywall = {
+  paywall?: Maybe<Paywall>;
+  paywallId?: Maybe<Scalars['String']>;
+};
+
 export type HasOptionalPeerLc = {
   peer?: Maybe<Peer>;
   peerId?: Maybe<Scalars['String']>;
@@ -1355,7 +1356,9 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -1446,9 +1449,10 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
   createPaymentFromSubscription?: Maybe<Payment>;
+  /** Creates a paywall. */
+  createPaywall: Paywall;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createSessionWithOAuth2Code: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
   createSubscription: Payment;
   /** Create a new subscription flow */
@@ -1482,6 +1486,8 @@ export type Mutation = {
   deleteNavigation: Navigation;
   /** Deletes an page. */
   deletePage: Scalars['String'];
+  /** Deletes a paywall. */
+  deletePaywall: Paywall;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -1560,6 +1566,8 @@ export type Mutation = {
   updatePassword?: Maybe<User>;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
+  /** Updates a paywall. */
+  updatePaywall: Paywall;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1607,6 +1615,7 @@ export type MutationCreateArticleArgs = {
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<Scalars['Int']>;
+  paywallId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   seoTitle?: InputMaybe<Scalars['String']>;
@@ -1690,6 +1699,16 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
 };
 
 
+export type MutationCreatePaywallArgs = {
+  active: Scalars['Boolean'];
+  anyMemberPlan: Scalars['Boolean'];
+  circumventDescription?: InputMaybe<Scalars['RichText']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  memberPlanIds?: Array<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1698,13 +1717,6 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
-};
-
-
-export type MutationCreateSessionWithOAuth2CodeArgs = {
-  code: Scalars['String'];
-  name: Scalars['String'];
-  redirectUri: Scalars['String'];
 };
 
 
@@ -1795,6 +1807,11 @@ export type MutationDeleteNavigationArgs = {
 
 
 export type MutationDeletePageArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePaywallArgs = {
   id: Scalars['String'];
 };
 
@@ -1942,6 +1959,7 @@ export type MutationUpdateArticleArgs = {
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<Scalars['Int']>;
+  paywallId?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   seoTitle?: InputMaybe<Scalars['String']>;
@@ -2031,6 +2049,17 @@ export type MutationUpdatePasswordArgs = {
 
 export type MutationUpdatePaymentProviderCustomersArgs = {
   input: Array<PaymentProviderCustomerInput>;
+};
+
+
+export type MutationUpdatePaywallArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
+  circumventDescription?: InputMaybe<Scalars['RichText']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2321,6 +2350,19 @@ export enum PaymentState {
   Submitted = 'submitted'
 }
 
+export type Paywall = {
+  __typename?: 'Paywall';
+  active: Scalars['Boolean'];
+  anyMemberPlan: Scalars['Boolean'];
+  circumventDescription?: Maybe<Scalars['RichText']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  memberPlans: Array<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+};
+
 export type Peer = {
   __typename?: 'Peer';
   createdAt: Scalars['DateTime'];
@@ -2565,8 +2607,6 @@ export type Query = {
   article: Article;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
-  /** This query returns the redirect Uri. */
-  authProviders: Array<AuthProvider>;
   /** This query takes either the ID or the slug and returns the author. */
   author?: Maybe<Author>;
   /** This query is to get the authors. */
@@ -2680,6 +2720,10 @@ export type Query = {
   pages: PaginatedPages;
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>;
+  /** Returns an paywall by id. */
+  paywall: Paywall;
+  /** Returns a list of paywalls based on the filters given. */
+  paywalls: Array<Paywall>;
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -2772,11 +2816,6 @@ export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ArticleSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2936,6 +2975,11 @@ export type QueryPagesArgs = {
 };
 
 
+export type QueryPaywallArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
@@ -2985,6 +3029,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
 };
 
@@ -3131,6 +3176,8 @@ export enum SettingName {
   MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
   MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
+  NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
@@ -3257,6 +3304,7 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag';
+  description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
@@ -3452,6 +3500,7 @@ export type TitleBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -3460,6 +3509,7 @@ export type TitleBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
+  preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
 

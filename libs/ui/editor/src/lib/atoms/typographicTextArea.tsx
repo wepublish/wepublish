@@ -20,7 +20,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
   ({variant = 'body1', align = 'left', onChange, ...props}, forwardRef) => {
     const ref = useRef<HTMLTextAreaElement>(null)
 
-    useImperativeHandle(forwardRef, () => ref.current!, [ref.current])
+    useImperativeHandle(forwardRef, () => ref.current!, [])
 
     useLayoutEffect(() => {
       handleResize()
@@ -31,13 +31,18 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         const observer = new ResizeObserver(() => {
           handleResize()
         })
-        if (!ref.current) return
+
+        if (!ref.current) {
+          return
+        }
+
         observer.observe(ref.current)
         return () => (ref?.current ? observer.unobserve(ref.current) : undefined)
-      } else {
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
       }
+
+      window.addEventListener('resize', handleResize)
+
+      return () => window.removeEventListener('resize', handleResize)
     }, [ref])
 
     function handleChange(e: ChangeEvent<HTMLTextAreaElement>) {

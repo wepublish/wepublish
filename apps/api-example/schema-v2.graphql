@@ -40,7 +40,7 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
-type Article implements HasOptionalPeerLc {
+type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -49,6 +49,8 @@ type Article implements HasOptionalPeerLc {
   latest: ArticleRevision!
   likes: Int!
   modifiedAt: DateTime!
+  paywall: Paywall
+  paywallId: String
   peer: Peer
   peerArticleId: String
   peerId: String
@@ -862,6 +864,11 @@ interface HasOptionalPage {
   pageID: String
 }
 
+interface HasOptionalPaywall {
+  paywall: Paywall
+  paywallId: String
+}
+
 interface HasOptionalPeerLc {
   peer: Peer
   peerId: String
@@ -1099,7 +1106,7 @@ type MemberPlan {
 
 type Mutation {
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -1119,6 +1126,9 @@ type Mutation {
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """Creates a paywall."""
+  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -1148,6 +1158,9 @@ type Mutation {
 
   """Deletes an page."""
   deletePage(id: String!): String!
+
+  """Deletes a paywall."""
+  deletePaywall(id: String!): Paywall!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
@@ -1196,7 +1209,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -1216,6 +1229,9 @@ type Mutation {
 
   """Updates an page."""
   updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """Updates a paywall."""
+  updatePaywall(active: Boolean, anyMemberPlan: Boolean, circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1406,6 +1422,18 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
+}
+
+type Paywall {
+  active: Boolean!
+  anyMemberPlan: Boolean!
+  circumventDescription: RichText
+  createdAt: DateTime!
+  description: RichText
+  id: String!
+  memberPlans: [MemberPlan!]!
+  modifiedAt: DateTime!
+  name: String
 }
 
 type Peer {
@@ -1638,6 +1666,12 @@ type Query {
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
 
+  """Returns an paywall by id."""
+  paywall(id: String!): Paywall!
+
+  """Returns a list of paywalls based on the filters given."""
+  paywalls: [Paywall!]!
+
   """Returns a paginated list of peer articles based on the filters given."""
   peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
@@ -1649,7 +1683,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
+  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
@@ -1739,6 +1773,8 @@ enum SettingName {
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC
   MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
   MAKE_REVENUE_API_PUBLIC
+  NEW_ARTICLE_PAYWALL
+  NEW_ARTICLE_PEERING
   PEERING_TIMEOUT_MS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
@@ -1999,6 +2035,7 @@ type TitleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   lead: String
+  preTitle: String
   title: String
   type: BlockType!
 }
@@ -2007,6 +2044,7 @@ input TitleBlockInput {
   blockStyle: String
   blockStyleName: String
   lead: String
+  preTitle: String
   title: String
 }
 

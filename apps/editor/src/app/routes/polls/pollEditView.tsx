@@ -147,8 +147,6 @@ function PollEditView() {
     }
   }
 
-  console.log(poll)
-
   return (
     <Form
       onSubmit={validationPassed => validationPassed && saveOrUpdate()}
