@@ -9,20 +9,79 @@ import {
   Navbar,
   NavbarIconButtonWrapper,
   NavbarInnerWrapper,
+  NavbarLogoWrapper,
   NavPaperCategoryLinks,
   NavPaperMainLinks,
   NavPaperName
 } from '@wepublish/navigation/website'
+import {BuilderNavbarProps} from '@wepublish/website/builder'
+import {forwardRef, useEffect, useState} from 'react'
 
 import {Tiempos} from '../theme'
 
-export const HauptstadtNavbar = styled(Navbar)`
+const ScrollAwareNavbar = forwardRef<HTMLElement, BuilderNavbarProps & {isScrolled?: boolean}>(
+  (props, ref) => {
+    const [isScrolled, setIsScrolled] = useState(false)
+
+    useEffect(() => {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50)
+      }
+
+      window.addEventListener('scroll', handleScroll)
+      return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    return (
+      <Navbar
+        {...props}
+        ref={ref}
+        className={`${props.className || ''} ${isScrolled ? 'scrolled' : ''}`}
+      />
+    )
+  }
+)
+
+export const HauptstadtNavbar = styled(ScrollAwareNavbar)`
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transition: clip-path 500ms ease-out;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: ${({theme}) => theme.palette.primary.main};
+    transition: clip-path 500ms ease-out;
+    clip-path: polygon(0 99%, 100% 99%, 100% 100%, 0 100%);
+  }
+
+  &.scrolled {
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &::after {
+      clip-path: polygon(0 99%, 100% 49%, 100% 50%, 0 100%);
+    }
+
+    ${NavbarLogoWrapper} {
+      transform: scale(0.8);
+    }
+  }
+
+  ${NavbarLogoWrapper} {
+    transition: transform 400ms ease-out;
+    transform: scale(1);
+    transform-origin: top center;
+  }
+
   ${NavbarInnerWrapper} {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
     max-width: ${({theme}) => theme.breakpoints.values.lg}px;
-    border-bottom: 1px solid ${({theme}) => theme.palette.primary.main};
 
     ${({theme}) => theme.breakpoints.up('lg')} {
       padding-left: ${({theme}) => theme.spacing(3)};
