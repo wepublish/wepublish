@@ -21,7 +21,7 @@ import {
   Tag,
   useArticleQuery
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {usePathname, useSearchParams} from 'next/navigation'
@@ -100,9 +100,17 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && !data.article.disableComments && (
         <ArticleWrapperComments>
-          <H4 component={'h2'} id="comments">
-            Diskussion
-          </H4>
+          <div>
+            <H4 component={'h2'} id="comments">
+              Diskussion
+            </H4>
+
+            <small>
+              <Link href="/unsere-etikette" target="_blank">
+                Unsere Etikette
+              </Link>
+            </small>
+          </div>
 
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapperComments>
