@@ -8,7 +8,7 @@ export type RedirectPages = {
 
 type PaymentFormProps = {
   stripeClientSecret?: string | null
-  redirectPages: RedirectPages
+  redirectPages?: RedirectPages | null
 }
 
 export const PaymentForm = ({redirectPages, stripeClientSecret}: PaymentFormProps) => {
@@ -20,7 +20,9 @@ export const PaymentForm = ({redirectPages, stripeClientSecret}: PaymentFormProp
     <StripeElement clientSecret={stripeClientSecret}>
       <StripePayment
         onClose={async success => {
-          window.location.href = success ? redirectPages.successUrl : redirectPages.failUrl
+          if (redirectPages) {
+            window.location.href = success ? redirectPages.successUrl : redirectPages.failUrl
+          }
         }}
       />
     </StripeElement>

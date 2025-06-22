@@ -10,10 +10,7 @@ import {RedirectPages} from './payment-form'
 
 export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [redirectPages, setRedirectPages] = useState<RedirectPages>({
-    successUrl: '',
-    failUrl: ''
-  })
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>()
 
   const [fetchPage] = usePageLazyQuery()
   const [result] = useSubscribeMutation({
@@ -79,10 +76,7 @@ export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>)
 
 export const usePayInvoice = (...params: Parameters<typeof usePayInvoiceMutation>) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [redirectPages, setRedirectPages] = useState({
-    successUrl: '',
-    failUrl: ''
-  })
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>()
   const [fetchPage] = usePageLazyQuery()
 
   const [result] = usePayInvoiceMutation({

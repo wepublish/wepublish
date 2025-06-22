@@ -44,17 +44,18 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {data?.invoices?.map(invoice => (
-        <InvoiceListItem
-          key={invoice.id}
-          {...invoice}
-          isSepa={isSepa(invoice)}
-          isBexio={isBexio(invoice)}
-          isPayrexxSubscription={isPayrexxSubscription(invoice)}
-          canPay={canPayInvoice(invoice)}
-          pay={async () => onPay?.(invoice.id, invoice.subscription!.paymentMethod.id)}
-        />
-      ))}
+      {!loading &&
+        data?.invoices?.map(invoice => (
+          <InvoiceListItem
+            key={invoice.id}
+            {...invoice}
+            isSepa={isSepa(invoice)}
+            isBexio={isBexio(invoice)}
+            isPayrexxSubscription={isPayrexxSubscription(invoice)}
+            canPay={canPayInvoice(invoice)}
+            pay={async () => onPay?.(invoice.id, invoice.subscription!.paymentMethod.id)}
+          />
+        ))}
     </InvoiceListWrapper>
   )
 }

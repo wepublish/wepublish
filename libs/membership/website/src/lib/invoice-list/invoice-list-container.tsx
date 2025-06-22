@@ -92,12 +92,13 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
           variables: {
             deactivateSubscriptionId: subscription.id,
             memberPlanId: memberPlan?.id,
-            paymentPeriodicity: subscription?.paymentPeriodicity,
             paymentMethodId: newPaymentMethodId,
-            // What if forceAutoRenew is now enabled?
+            // What if forceAutoRenew is now enabled and autoRenew is false?
             autoRenew: subscription.autoRenew,
             // What if monthlyAmount is now higher?
-            monthlyAmount: subscription?.monthlyAmount
+            monthlyAmount: subscription?.monthlyAmount,
+            // What if paymentPeriodicity is now not allowed?
+            paymentPeriodicity: subscription?.paymentPeriodicity
           }
         })
       }
