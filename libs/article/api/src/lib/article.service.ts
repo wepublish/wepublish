@@ -327,7 +327,7 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
-    return this.prisma.article.update({
+    const updatedArticle = await this.prisma.article.update({
       where: {
         id
       },
@@ -341,12 +341,35 @@ export class ArticleService {
               }
             },
             data: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: new Date()
             }
+          }
+        }
+      },
+      include: {
+        revisions: {
+          take: 1,
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
     })
+
+    if (updatedArticle.revisions[0]) {
+      // Latest revision should not be archived
+      await this.prisma.articleRevision.update({
+        where: {
+          id: updatedArticle.revisions[0].id
+        },
+        data: {
+          archivedAt: null
+        }
+      })
+    }
+
+    return updatedArticle
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
