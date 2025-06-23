@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common'
 import {unselectPassword} from './unselect-password'
 import {ImageService, UploadImageInput} from '@wepublish/image/api'
-import {PrismaClient, User} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {UserInputError} from '@nestjs/apollo'
-import {UserInput} from '@wepublish/user/api'
+import {PaymentProviderCustomerInput, User, UserInput} from './user.model'
 import {Validator} from '@wepublish/user'
 
 @Injectable()
@@ -80,6 +80,26 @@ export class ProfileService {
             }
           : undefined,
         flair
+      },
+      select: unselectPassword
+    })
+  }
+
+  async updatePaymentProviderCustomers(
+    userId: string,
+    paymentProviderCustomers: PaymentProviderCustomerInput[]
+  ): Promise<User> {
+    return this.prisma.user.update({
+      where: {id: userId},
+      data: {
+        paymentProviderCustomers: {
+          deleteMany: {
+            userId: userId
+          },
+          createMany: {
+            data: paymentProviderCustomers
+          }
+        }
       },
       select: unselectPassword
     })

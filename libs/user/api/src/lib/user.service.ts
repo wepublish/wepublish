@@ -3,7 +3,6 @@ import {PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {unselectPassword} from './unselect-password'
 import {CreateUserInput} from './user.input'
-import {PaymentProviderCustomerInput} from './user.model'
 import {UserInputError} from '@nestjs/apollo'
 import {Validator} from '@wepublish/user'
 
@@ -70,26 +69,6 @@ export class UserService {
         },
         address: {
           create: address ?? {}
-        }
-      },
-      select: unselectPassword
-    })
-  }
-
-  async updatePaymentProviderCustomers(
-    userId: string,
-    paymentProviderCustomers: PaymentProviderCustomerInput[]
-  ) {
-    return this.prisma.user.update({
-      where: {id: userId},
-      data: {
-        paymentProviderCustomers: {
-          deleteMany: {
-            userId: userId
-          },
-          createMany: {
-            data: paymentProviderCustomers
-          }
         }
       },
       select: unselectPassword

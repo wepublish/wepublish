@@ -1,10 +1,5 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {
-  HasOptionalPaymentMethod,
-  HasOptionalPaymentMethodLc,
-  HasPaymentMethod,
-  HasPaymentMethodLc
-} from './has-payment-method.model'
+import {HasPaymentMethod} from './has-payment-method.model'
 import {PaymentMethod} from '../payment-method.model'
 import {PaymentMethodDataloader} from '../payment-method.dataloader'
 
@@ -15,18 +10,9 @@ export class HasPaymentMethodResolver {
   @ResolveField(() => PaymentMethod, {nullable: true})
   public paymentMethod(
     @Parent()
-    block:
-      | HasOptionalPaymentMethod
-      | HasPaymentMethod
-      | HasOptionalPaymentMethodLc
-      | HasPaymentMethodLc
+    parent: HasPaymentMethod
   ) {
-    const id =
-      'paymentMethodId' in block
-        ? block.paymentMethodId
-        : 'paymentMethodID' in block
-        ? block.paymentMethodID
-        : null
+    const id = 'paymentMethodID' in parent ? parent.paymentMethodID : null
 
     if (!id) {
       return null
@@ -35,12 +21,3 @@ export class HasPaymentMethodResolver {
     return this.dataloader.load(id)
   }
 }
-
-@Resolver(() => HasPaymentMethodLc)
-export class HasPaymentMethodLcResolver extends HasPaymentMethodResolver {}
-
-@Resolver(() => HasOptionalPaymentMethod)
-export class HasOptionalPaymentMethodResolver extends HasPaymentMethodResolver {}
-
-@Resolver(() => HasOptionalPaymentMethodLc)
-export class HasOptionalPaymentMethodLcResolver extends HasPaymentMethodResolver {}

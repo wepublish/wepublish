@@ -55,7 +55,7 @@ export class PaymentsService {
 
     const paymentMethod = paymentMethodID
       ? await this.paymentMethodsService.findActivePaymentMethodById(paymentMethodID)
-      : await this.paymentMethodsService.findActivePaymentMethodBySlug(paymentMethodSlug)
+      : await this.paymentMethodsService.findActivePaymentMethodBySlug(paymentMethodSlug || '')
     if (!paymentMethod) {
       throw new UserInputError(`PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`)
     }
@@ -79,7 +79,7 @@ export class PaymentsService {
 
     const subscription = await this.prisma.subscription.findUnique({
       where: {
-        id: invoice.subscriptionID
+        id: invoice.subscriptionID || undefined
       },
       include: {
         deactivation: true,
@@ -172,9 +172,13 @@ export class PaymentsService {
     const paymentMethod = await this.paymentMethodsService.findActivePaymentMethodById(
       migrateToTargetPaymentMethodID || paymentMethodID
     )
-    return
+
+    if (!paymentMethod) {
+      throw new Error('Payment method not found')
+    }
+
     const paymentProvider = this.paymentProviders.find(
-      pp => pp.id === paymentMethod?.paymentProviderID
+      pp => pp.id === paymentMethod.paymentProviderID
     )
 
     if (!paymentProvider) {
@@ -193,10 +197,10 @@ export class PaymentsService {
     if (migrateToTargetPaymentMethodID) {
       await this.prisma.subscription.update({
         data: {
-          paymentMethodID: migrateToTargetPaymentMethodID
+          paymentMethodID: migrateToTargetPaymentMethodID || ''
         },
         where: {
-          id: invoice.subscriptionID
+          id: invoice.subscriptionID || undefined
         }
       })
     }
@@ -205,7 +209,7 @@ export class PaymentsService {
         confirmed: true
       },
       where: {
-        id: invoice.subscriptionID
+        id: invoice.subscriptionID || undefined
       }
     })
 
@@ -221,10 +225,14 @@ export class PaymentsService {
       ? await this.prisma.paymentProviderCustomer.findFirst({
           where: {
             userId: userId,
-            paymentProviderID: paymentMethod?.paymentProviderID
+            paymentProviderID: paymentMethod.paymentProviderID
           }
         })
       : null
+
+    if (!paymentProvider) {
+      throw new Error('Payment provider is undefined')
+    }
 
     const intent = await paymentProvider.createIntent({
       paymentID: payment.id,
@@ -250,19 +258,21 @@ export class PaymentsService {
     })
 
     // Mark invoice as paid
-    if (intent.state === PaymentState.paid) {
+    if (intent.state === PaymentState.paid && paymentProvider) {
       const intentState = await paymentProvider.checkIntentStatus({
         intentID: updatedPayment.intentID ?? '',
         paymentID: updatedPayment.id
       })
 
-      await paymentProvider.updatePaymentWithIntentState({
-        intentState
-      })
+      if (paymentProvider) {
+        await paymentProvider.updatePaymentWithIntentState({
+          intentState
+        })
+      }
     }
 
     if (intent.errorCode) {
-      throw new GraphQLError(intent.errorCode)
+      throw new GraphQLError(intent.errorCode || 'Unknown error')
     }
 
     return updatedPayment as Payment

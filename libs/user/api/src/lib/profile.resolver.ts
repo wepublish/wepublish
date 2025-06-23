@@ -55,11 +55,12 @@ export class ProfileResolver {
     input: PaymentProviderCustomerInput[],
     @CurrentUser() session: UserSession
   ) {
-    const user = await this.userService.updatePaymentProviderCustomers(session.user.id, input)
+    const user = await this.profileService.updatePaymentProviderCustomers(session.user.id, input)
 
     if (!user) {
       throw new UserInputError(`User not found ${session.user.id}`)
     }
+    console.log({user})
     return user.paymentProviderCustomers
   }
 
