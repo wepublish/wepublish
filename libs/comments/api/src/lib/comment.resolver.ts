@@ -1,5 +1,5 @@
 import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {Comment, CommentRating, FullCommentRatingSystem, PublicCommentSort} from './comment.model'
+import {Comment, CommentRating, PublicCommentSort} from './comment.model'
 import {CommentService} from './comment.service'
 import {SortOrder} from '@wepublish/utils/api'
 import {
@@ -66,12 +66,6 @@ export class CommentResolver {
     @CurrentUser() session: UserSession
   ) {
     return this.commentService.updatePublicComment(input, session)
-  }
-
-  @Query(() => FullCommentRatingSystem)
-  @Public()
-  async ratingSystem() {
-    return this.ratingSystemService.getRatingSystem()
   }
 
   @Public()

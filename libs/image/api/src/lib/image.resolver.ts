@@ -26,9 +26,9 @@ export class ImageResolver {
     return this.mediaAdapter.getImageURL(imageWithFocalPoint)
   }
 
-  @ResolveField(() => String)
+  @ResolveField(() => String, {nullable: true})
   public async transformURL(
-    @Args('input') transformation: ImageTransformation,
+    @Args('input', {nullable: true}) transformation: ImageTransformation,
     @Parent() image: Image
   ) {
     const imageWithFocalPoint = await this.imageService.ensureImageHasFocalPoint(image)

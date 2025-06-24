@@ -198,8 +198,8 @@ export class Comment {
   @Field(() => Date)
   modifiedAt!: Date
 
-  @Field(() => [overriddenRating], {nullable: true})
-  overriddenRatings?: overriddenRating[] | null
+  @Field(() => [overriddenRating])
+  overriddenRatings!: overriddenRating[]
 
   @Field(() => [Comment])
   children!: Comment[]
@@ -216,9 +216,9 @@ export class Comment {
   @Field(() => String)
   url?: string
 
-  @Field(() => [CalculatedRating], {nullable: true})
-  calculatedRatings?: CalculatedRating[] | null
+  @Field(() => [CalculatedRating])
+  calculatedRatings!: CalculatedRating[]
 
-  @Field(() => [CommentRating], {nullable: true})
-  userRatings?: CommentRating[] | null
+  @Field(() => [CommentRating])
+  userRatings!: CommentRating[]
 }

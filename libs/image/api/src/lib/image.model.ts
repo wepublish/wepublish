@@ -71,7 +71,7 @@ export class Image {
   @Field(type => FocalPoint, {nullable: true})
   focalPoint?: FocalPoint | null
 
-  @Field(() => String)
+  @Field(() => String, {nullable: true})
   transformURL?: string
 }
 

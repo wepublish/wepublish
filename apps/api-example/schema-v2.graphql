@@ -392,7 +392,7 @@ scalar Color
 
 type Comment {
   authorType: CommentAuthorType!
-  calculatedRatings: [CalculatedRating!]
+  calculatedRatings: [CalculatedRating!]!
   children: [Comment!]!
   createdAt: DateTime!
   featured: Boolean
@@ -403,7 +403,7 @@ type Comment {
   itemType: CommentItemType!
   lead: String
   modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]
+  overriddenRatings: [overriddenRating!]!
   parentComment: Comment
   parentID: String
   rejectionReason: String
@@ -414,7 +414,7 @@ type Comment {
   title: String
   url: String!
   user: User
-  userRatings: [CommentRating!]
+  userRatings: [CommentRating!]!
 }
 
 enum CommentAuthorType {
@@ -1107,7 +1107,7 @@ type Image {
   source: String
   tags: [String!]!
   title: String
-  transformURL(input: ImageTransformation!): String!
+  transformURL(input: ImageTransformation): String
   url: String!
   width: Int!
 }
@@ -1280,8 +1280,6 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
-  SUBSCRIBED
-  UNSUBSCRIBED
 }
 
 type MailProviderModel {
@@ -2130,7 +2128,7 @@ type Query {
   provider: MailProviderModel!
 
   """This query returns the comment rating system."""
-  ratingSystem: FullCommentRatingSystem
+  ratingSystem: FullCommentRatingSystem!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!

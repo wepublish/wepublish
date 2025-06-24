@@ -9,8 +9,7 @@ export class RatingSystemResolver {
 
   @Public()
   @Query(() => FullCommentRatingSystem, {
-    description: 'This query returns the comment rating system.',
-    nullable: true
+    description: 'This query returns the comment rating system.'
   })
   async ratingSystem() {
     return this.ratingSystemService.getRatingSystem()

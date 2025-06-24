@@ -438,7 +438,7 @@ export type ChallengeInput = {
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
-  calculatedRatings?: Maybe<Array<CalculatedRating>>;
+  calculatedRatings: Array<CalculatedRating>;
   children: Array<Comment>;
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
@@ -449,7 +449,7 @@ export type Comment = {
   itemType: CommentItemType;
   lead?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
-  overriddenRatings?: Maybe<Array<OverriddenRating>>;
+  overriddenRatings: Array<OverriddenRating>;
   parentComment?: Maybe<Comment>;
   parentID?: Maybe<Scalars['String']>;
   rejectionReason?: Maybe<Scalars['String']>;
@@ -460,7 +460,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
-  userRatings?: Maybe<Array<CommentRating>>;
+  userRatings: Array<CommentRating>;
 };
 
 export enum CommentAuthorType {
@@ -1175,14 +1175,14 @@ export type Image = {
   source?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  transformURL: Scalars['String'];
+  transformURL?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   width: Scalars['Int'];
 };
 
 
 export type ImageTransformUrlArgs = {
-  input: ImageTransformation;
+  input?: InputMaybe<ImageTransformation>;
 };
 
 export type ImageBlock = BaseBlock & HasImage & {
@@ -1361,9 +1361,7 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT',
-  Subscribed = 'SUBSCRIBED',
-  Unsubscribed = 'UNSUBSCRIBED'
+  LoggedOut = 'LOGGED_OUT'
 }
 
 export type MailProviderModel = {
@@ -2691,7 +2689,7 @@ export type Query = {
   primaryBanner?: Maybe<Banner>;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
-  ratingSystem?: Maybe<FullCommentRatingSystem>;
+  ratingSystem: FullCommentRatingSystem;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.

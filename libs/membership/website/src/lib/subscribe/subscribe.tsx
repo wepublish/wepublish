@@ -12,6 +12,7 @@ import {
 import {
   Currency,
   FullMemberPlanFragment,
+  PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
@@ -254,7 +255,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const allPaymentMethods = useMemo(
     () =>
-      selectedMemberPlan?.availablePaymentMethods?.flatMap(({paymentMethods}) => paymentMethods),
+      (selectedMemberPlan?.availablePaymentMethods?.flatMap(
+        ({paymentMethods}) => paymentMethods
+      ) as PaymentMethod[]) ?? [],
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
@@ -462,7 +465,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {allPaymentMethods && allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
-
         <SubscribePayment>
           <Controller
             name={'paymentMethodId'}

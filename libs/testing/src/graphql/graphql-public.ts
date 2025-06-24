@@ -479,7 +479,7 @@ export type ChallengeInput = {
 export type Comment = {
   __typename?: 'Comment'
   authorType: CommentAuthorType
-  calculatedRatings?: Maybe<Array<CalculatedRating>>
+  calculatedRatings: Array<CalculatedRating>
   children: Array<Comment>
   createdAt: Scalars['DateTime']
   featured?: Maybe<Scalars['Boolean']>
@@ -490,7 +490,7 @@ export type Comment = {
   itemType: CommentItemType
   lead?: Maybe<Scalars['String']>
   modifiedAt: Scalars['DateTime']
-  overriddenRatings?: Maybe<Array<OverriddenRating>>
+  overriddenRatings: Array<OverriddenRating>
   parentComment?: Maybe<Comment>
   parentID?: Maybe<Scalars['String']>
   rejectionReason?: Maybe<Scalars['String']>
@@ -501,7 +501,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>
   url: Scalars['String']
   user?: Maybe<User>
-  userRatings?: Maybe<Array<CommentRating>>
+  userRatings: Array<CommentRating>
 }
 
 export enum CommentAuthorType {
@@ -1222,13 +1222,13 @@ export type Image = {
   source?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  transformURL: Scalars['String']
+  transformURL?: Maybe<Scalars['String']>
   url: Scalars['String']
   width: Scalars['Int']
 }
 
 export type ImageTransformUrlArgs = {
-  input: ImageTransformation
+  input?: InputMaybe<ImageTransformation>
 }
 
 export type ImageBlock = BaseBlock &
@@ -1408,9 +1408,7 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT',
-  Subscribed = 'SUBSCRIBED',
-  Unsubscribed = 'UNSUBSCRIBED'
+  LoggedOut = 'LOGGED_OUT'
 }
 
 export type MailProviderModel = {
@@ -2675,7 +2673,7 @@ export type Query = {
   primaryBanner?: Maybe<Banner>
   provider: MailProviderModel
   /** This query returns the comment rating system. */
-  ratingSystem?: Maybe<FullCommentRatingSystem>
+  ratingSystem: FullCommentRatingSystem
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -3601,13 +3599,13 @@ export type AuthorRefFragment = {
     width: number
     height: number
     url: string
-    largeURL: string
-    mediumURL: string
-    thumbURL: string
-    squareURL: string
-    previewURL: string
-    column1URL: string
-    column6URL: string
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
   } | null
 }
 
@@ -3632,13 +3630,13 @@ export type FullAuthorFragment = {
     width: number
     height: number
     url: string
-    largeURL: string
-    mediumURL: string
-    thumbURL: string
-    squareURL: string
-    previewURL: string
-    column1URL: string
-    column6URL: string
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
   } | null
 }
 
@@ -3675,13 +3673,13 @@ export type AuthorListQuery = {
         width: number
         height: number
         url: string
-        largeURL: string
-        mediumURL: string
-        thumbURL: string
-        squareURL: string
-        previewURL: string
-        column1URL: string
-        column6URL: string
+        largeURL?: string | null
+        mediumURL?: string | null
+        thumbURL?: string | null
+        squareURL?: string | null
+        previewURL?: string | null
+        column1URL?: string | null
+        column6URL?: string | null
       } | null
     }>
     pageInfo: {
@@ -3721,13 +3719,13 @@ export type AuthorQuery = {
       width: number
       height: number
       url: string
-      largeURL: string
-      mediumURL: string
-      thumbURL: string
-      squareURL: string
-      previewURL: string
-      column1URL: string
-      column6URL: string
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
     } | null
   } | null
 }
@@ -3768,13 +3766,13 @@ export type FullCommentUserFragment = {
     license?: string | null
     title?: string | null
     url: string
-    largeURL: string
-    mediumURL: string
-    thumbURL: string
-    squareURL: string
-    previewURL: string
-    column1URL: string
-    column6URL: string
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
     focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
   } | null
 }
@@ -3821,13 +3819,13 @@ export type FullCommentFragment = {
       license?: string | null
       title?: string | null
       url: string
-      largeURL: string
-      mediumURL: string
-      thumbURL: string
-      squareURL: string
-      previewURL: string
-      column1URL: string
-      column6URL: string
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
       focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
     } | null
   } | null
@@ -3890,13 +3888,13 @@ export type CommentsQuery = {
         license?: string | null
         title?: string | null
         url: string
-        largeURL: string
-        mediumURL: string
-        thumbURL: string
-        squareURL: string
-        previewURL: string
-        column1URL: string
-        column6URL: string
+        largeURL?: string | null
+        mediumURL?: string | null
+        thumbURL?: string | null
+        squareURL?: string | null
+        previewURL?: string | null
+        column1URL?: string | null
+        column6URL?: string | null
         focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
       } | null
     } | null
@@ -3906,13 +3904,13 @@ export type CommentsQuery = {
 export type ImageUrLsFragment = {
   __typename?: 'Image'
   url: string
-  largeURL: string
-  mediumURL: string
-  thumbURL: string
-  squareURL: string
-  previewURL: string
-  column1URL: string
-  column6URL: string
+  largeURL?: string | null
+  mediumURL?: string | null
+  thumbURL?: string | null
+  squareURL?: string | null
+  previewURL?: string | null
+  column1URL?: string | null
+  column6URL?: string | null
 }
 
 export type ImageRefFragment = {
@@ -3926,13 +3924,13 @@ export type ImageRefFragment = {
   width: number
   height: number
   url: string
-  largeURL: string
-  mediumURL: string
-  thumbURL: string
-  squareURL: string
-  previewURL: string
-  column1URL: string
-  column6URL: string
+  largeURL?: string | null
+  mediumURL?: string | null
+  thumbURL?: string | null
+  squareURL?: string | null
+  previewURL?: string | null
+  column1URL?: string | null
+  column6URL?: string | null
 }
 
 export type FullImageFragment = {
@@ -3952,13 +3950,13 @@ export type FullImageFragment = {
   license?: string | null
   title?: string | null
   url: string
-  largeURL: string
-  mediumURL: string
-  thumbURL: string
-  squareURL: string
-  previewURL: string
-  column1URL: string
-  column6URL: string
+  largeURL?: string | null
+  mediumURL?: string | null
+  thumbURL?: string | null
+  squareURL?: string | null
+  previewURL?: string | null
+  column1URL?: string | null
+  column6URL?: string | null
   focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
 }
 
@@ -3979,13 +3977,13 @@ export type FullPeerProfileFragment = {
     width: number
     height: number
     url: string
-    largeURL: string
-    mediumURL: string
-    thumbURL: string
-    squareURL: string
-    previewURL: string
-    column1URL: string
-    column6URL: string
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
   } | null
   squareLogo?: {
     __typename?: 'Image'
@@ -3998,13 +3996,13 @@ export type FullPeerProfileFragment = {
     width: number
     height: number
     url: string
-    largeURL: string
-    mediumURL: string
-    thumbURL: string
-    squareURL: string
-    previewURL: string
-    column1URL: string
-    column6URL: string
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
   } | null
 }
 
@@ -4039,13 +4037,13 @@ export type PeerWithProfileFragment = {
       width: number
       height: number
       url: string
-      largeURL: string
-      mediumURL: string
-      thumbURL: string
-      squareURL: string
-      previewURL: string
-      column1URL: string
-      column6URL: string
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
     } | null
     squareLogo?: {
       __typename?: 'Image'
@@ -4058,13 +4056,13 @@ export type PeerWithProfileFragment = {
       width: number
       height: number
       url: string
-      largeURL: string
-      mediumURL: string
-      thumbURL: string
-      squareURL: string
-      previewURL: string
-      column1URL: string
-      column6URL: string
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
     } | null
   } | null
 }
@@ -4090,13 +4088,13 @@ export type PeerProfileQuery = {
       width: number
       height: number
       url: string
-      largeURL: string
-      mediumURL: string
-      thumbURL: string
-      squareURL: string
-      previewURL: string
-      column1URL: string
-      column6URL: string
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
     } | null
     squareLogo?: {
       __typename?: 'Image'
@@ -4109,13 +4107,13 @@ export type PeerProfileQuery = {
       width: number
       height: number
       url: string
-      largeURL: string
-      mediumURL: string
-      thumbURL: string
-      squareURL: string
-      previewURL: string
-      column1URL: string
-      column6URL: string
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
     } | null
   }
 }
