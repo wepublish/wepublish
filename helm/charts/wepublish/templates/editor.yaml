@@ -62,7 +62,7 @@ spec:
               cpu: { { .Values.editor.resources.requests.cpu } }
             limits:
               memory: { { .Values.editor.resources.limits.memory } }
-              cpu: { { .Values.editor.limits.requests.cpu } }
+              cpu: { { .Values.editor.resources.limits.cpu } }
           ports:
             - name: http
               containerPort: 3000

@@ -62,7 +62,7 @@ spec:
               cpu: { { .Values.website.resources.requests.cpu } }
             limits:
               memory: { { .Values.website.resources.limits.memory } }
-              cpu: { { .Values.website.limits.requests.cpu } }
+              cpu: { { .Values.website.resources.limits.cpu } }
           ports:
             - name: http
               containerPort: 4000

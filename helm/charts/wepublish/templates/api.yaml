@@ -62,7 +62,7 @@ spec:
               cpu: {{ .Values.api.resources.requests.cpu }}
             limits:
               memory: {{ .Values.api.resources.limits.memory }}
-              cpu: {{ .Values.api.limits.requests.cpu }}
+              cpu: {{ .Values.api.resources.limits.cpu }}
           ports:
             - name: http
               containerPort: 4000
