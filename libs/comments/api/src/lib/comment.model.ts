@@ -213,8 +213,8 @@ export class Comment {
   @Field(() => GraphQLRichText, {nullable: true})
   text?: Node[] | null
 
-  @Field()
-  url!: string
+  @Field(() => String)
+  url?: string
 
   @Field(() => [CalculatedRating], {nullable: true})
   calculatedRatings?: CalculatedRating[] | null

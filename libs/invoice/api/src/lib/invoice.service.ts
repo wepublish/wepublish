@@ -1,17 +1,11 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {NotFound, PaymentDataloader} from '@wepublish/api'
+import {NotFound} from '@wepublish/api'
 import {PaymentsService} from '@wepublish/payment/api'
-import {InvoiceDataloader} from './invoice.dataloader'
 
 @Injectable()
 export class InvoiceService {
-  constructor(
-    private readonly prisma: PrismaClient,
-    private paymentsService: PaymentsService,
-    private invoiceDataloader: InvoiceDataloader,
-    private paymentDataloader: PaymentDataloader
-  ) {}
+  constructor(private readonly prisma: PrismaClient, private paymentsService: PaymentsService) {}
 
   async getInvoicesByUser(userId: string) {
     return this.prisma.invoice.findMany({
@@ -80,15 +74,7 @@ export class InvoiceService {
         paymentID: payment.id
       })
       await paymentProvider.updatePaymentWithIntentState({
-        intentState,
-        paymentClient: this.prisma.payment,
-        paymentsByID: this.paymentDataloader.dataloader,
-        invoicesByID: this.invoiceDataloader.dataloader,
-        subscriptionClient: this.prisma.subscription,
-        userClient: this.prisma.user,
-        invoiceClient: this.prisma.invoice,
-        subscriptionPeriodClient: this.prisma.subscriptionPeriod,
-        invoiceItemClient: this.prisma.invoiceItem
+        intentState
       })
     }
 

@@ -18,7 +18,6 @@ import {
 } from '../../src/lib/challenges/algebraicCaptchaChallenge'
 
 let testServerPrivate: ApolloServer
-let testServerPublic: ApolloServer
 let prisma: PrismaClient
 let challenge: AlgebraicCaptchaChallenge
 
@@ -34,7 +33,6 @@ beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
     testServerPrivate = setupClient.testServerPrivate
-    testServerPublic = setupClient.testServerPublic
 
     prisma = setupClient.prisma
     challenge = setupClient.challenge

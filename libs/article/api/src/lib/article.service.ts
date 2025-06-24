@@ -27,6 +27,9 @@ export class ArticleService {
     return this.prisma.article.findFirst({
       where: {
         slug
+      },
+      orderBy: {
+        publishedAt: 'asc' // there might be an unpublished article with the same slug
       }
     })
   }
@@ -190,6 +193,15 @@ export class ArticleService {
         hidden,
         disableComments,
         revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null
+            },
+            data: {
+              archivedAt: new Date()
+            }
+          },
           create: {
             ...revision,
             blocks: mappedBlocks as any[],
@@ -270,7 +282,8 @@ export class ArticleService {
     // Unpublish existing pending revisions
     await this.prisma.articleRevision.updateMany({
       data: {
-        publishedAt: null
+        publishedAt: null,
+        archivedAt: new Date()
       },
       where: {
         articleId: id,
@@ -314,7 +327,7 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
-    return this.prisma.article.update({
+    const updatedArticle = await this.prisma.article.update({
       where: {
         id
       },
@@ -328,12 +341,35 @@ export class ArticleService {
               }
             },
             data: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: new Date()
             }
+          }
+        }
+      },
+      include: {
+        revisions: {
+          take: 1,
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
     })
+
+    if (updatedArticle.revisions[0]) {
+      // Latest revision should not be archived
+      await this.prisma.articleRevision.update({
+        where: {
+          id: updatedArticle.revisions[0].id
+        },
+        data: {
+          archivedAt: null
+        }
+      })
+    }
+
+    return updatedArticle
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -633,7 +669,8 @@ const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
     return {
       revisions: {
         some: {
-          publishedAt: filter.draft ? null : {not: null}
+          publishedAt: filter.draft ? null : {not: null},
+          archivedAt: null
         }
       }
     }

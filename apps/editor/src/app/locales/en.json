@@ -221,9 +221,9 @@
       },
       "form": {
         "displayOptions": "Display Options",
-        "title": "Title (maximized only)",
-        "text": "Text (maximized only)",
-        "cta": "Call to action (minimized only)",
+        "title": "Title",
+        "text": "Text",
+        "cta": "Call to action",
         "delay": "Delay in seconds",
         "active": "Active",
         "showOnArticles": "Display on articles",

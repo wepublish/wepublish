@@ -52,11 +52,6 @@ export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
   const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
 
-  const handleChange = (value: unknown, event: React.SyntheticEvent) => {
-    const name = (event.target as HTMLInputElement).name
-    props.onChange({...props.banner, [name]: value})
-  }
-
   const client = getApiClientV2()
   const {data: pageData} = usePageListQuery({
     client,
@@ -83,7 +78,7 @@ export const BannerForm = (props: BannerFormProps) => {
           <Form.Control
             name="active"
             value={props.banner.active}
-            onChange={handleChange}
+            onChange={value => props.onChange({...props.banner, active: value})}
             accepter={Toggle}
           />
         </Form.Group>
@@ -94,7 +89,7 @@ export const BannerForm = (props: BannerFormProps) => {
             name="delay"
             accepter={InputNumber}
             value={props.banner.delay}
-            onChange={(v, e) => handleChange(parseInt(v, 10), e)}
+            onChange={v => props.onChange({...props.banner, delay: parseInt(v, 10)})}
           />
         </Form.Group>
 
@@ -103,9 +98,13 @@ export const BannerForm = (props: BannerFormProps) => {
           <RadioGroup
             name="showForLoginStatus"
             value={props.banner.showForLoginStatus}
-            onChange={handleChange}>
+            onChange={value =>
+              props.onChange({...props.banner, showForLoginStatus: value as LoginStatus})
+            }>
             {Object.values(LoginStatus).map((status: LoginStatus) => (
-              <Radio value={status}>{t(`banner.form.loginStatus.${status}`)}</Radio>
+              <Radio key={status} value={status}>
+                {t(`banner.form.loginStatus.${status}`)}
+              </Radio>
             ))}
           </RadioGroup>
         </Form.Group>
@@ -114,7 +113,7 @@ export const BannerForm = (props: BannerFormProps) => {
           <Form.Control
             name="showOnArticles"
             value={props.banner.showOnArticles}
-            onChange={handleChange}
+            onChange={value => props.onChange({...props.banner, showOnArticles: value})}
             accepter={Toggle}
           />
         </Form.Group>
@@ -145,23 +144,31 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="title">
           <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
-          <Form.Control name="title" value={props.banner.title} onChange={handleChange} />
+          <Form.Control
+            name="title"
+            value={props.banner.title}
+            onChange={value => props.onChange({...props.banner, title: value})}
+          />
         </Form.Group>
 
         <Form.Group controlId="text">
           <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
-          <Input
+          <Form.Control
             name="text"
-            as="textarea"
+            componentClass="textarea"
             rows={5}
             value={props.banner.text}
-            onChange={handleChange}
+            onChange={value => props.onChange({...props.banner, text: value})}
           />
         </Form.Group>
 
         <Form.Group controlId="cta">
           <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
-          <Form.Control name="cta" value={props.banner.cta} onChange={handleChange} />
+          <Form.Control
+            name="cta"
+            value={props.banner.cta}
+            onChange={value => props.onChange({...props.banner, cta: value})}
+          />
         </Form.Group>
 
         <Form.Group controlId="images">
@@ -189,7 +196,7 @@ export const BannerForm = (props: BannerFormProps) => {
             as="textarea"
             rows={5}
             value={props.banner.html ?? undefined}
-            onChange={handleChange}
+            onChange={value => props.onChange({...props.banner, html: value})}
           />
         </Form.Group>
       </Panel>

@@ -3,11 +3,6 @@ generator client {
   previewFeatures = ["fullTextSearch"]
 }
 
-generator fabbrica {
-  provider = "prisma-fabbrica"
-  output   = "../../testing/src/__generated__/fabbrica"
-}
-
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -54,6 +49,7 @@ model ArticleRevision {
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
   publishedAt            DateTime?
+  archivedAt             DateTime?
 
   image   Image?  @relation("articleRevisionImage", fields: [imageID], references: [id])
   imageID String?
@@ -606,6 +602,7 @@ model PageRevision {
   createdAt DateTime @default(now())
 
   publishedAt            DateTime?
+  archivedAt             DateTime?
   title                  String?
   description            String?
   properties             MetadataProperty[]

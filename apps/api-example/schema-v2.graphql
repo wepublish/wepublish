@@ -2,26 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-directive @extends on INTERFACE | OBJECT
-
-directive @external on FIELD_DEFINITION | OBJECT
-
-directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
-directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
-
-directive @link(import: [link__Import], url: String!) on SCHEMA
-
-directive @override(from: String!) on FIELD_DEFINITION
-
-directive @provides(fields: String!) on FIELD_DEFINITION
-
-directive @requires(fields: String!) on FIELD_DEFINITION
-
-directive @shareable on FIELD_DEFINITION | OBJECT
-
-directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 enum ActionType {
@@ -201,6 +181,12 @@ enum AuthorSort {
   CreatedAt
   ModifiedAt
   Name
+}
+
+type AvailablePaymentMethod {
+  forceAutoRenewal: Boolean!
+  paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
 }
 
 type Banner {
@@ -574,7 +560,7 @@ input CreateCrowdfundingInput {
 }
 
 input CreateCrowdfundingMemberPlan {
-  id: ID!
+  id: String!
 }
 
 type Crowdfunding {
@@ -583,7 +569,7 @@ type Crowdfunding {
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
-  id: ID!
+  id: String!
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
@@ -624,7 +610,7 @@ type CrowdfundingGoalWithProgress {
 }
 
 type CrowdfundingMemberPlan {
-  id: ID!
+  id: String!
   name: String!
 }
 
@@ -635,11 +621,16 @@ type CrowdfundingWithActiveGoal {
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
-  id: ID!
+  id: String!
   memberPlans: [CrowdfundingMemberPlan!]!
   modifiedAt: DateTime!
   name: String!
   revenue: Float
+}
+
+enum Currency {
+  CHF
+  EUR
 }
 
 type CustomTeaser implements BaseTeaser & HasImage {
@@ -931,8 +922,8 @@ input FlexTeaserInput {
 }
 
 type FocalPoint {
-  x: Float!
-  y: Float!
+  x: Float
+  y: Float
 }
 
 type FullCommentRatingSystem {
@@ -1001,6 +992,11 @@ interface HasImage {
   imageID: String
 }
 
+interface HasImageLc {
+  image: Image
+  imageId: String
+}
+
 interface HasOptionalArticle {
   article: Article
   articleID: String
@@ -1031,6 +1027,11 @@ interface HasOptionalPoll {
   pollId: String
 }
 
+interface HasOptionalSubscription {
+  subscription: PublicSubscription
+  subscriptionID: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -1041,14 +1042,24 @@ interface HasPageLc {
   pageId: String!
 }
 
+interface HasPaymentMethod {
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+}
+
 interface HasPoll {
   poll: FullPoll!
   pollId: String!
 }
 
-interface HasSubscription {
+interface HasSubscriptionLc {
   subscription: PublicSubscription!
   subscriptionId: String!
+}
+
+interface HasUser {
+  user: User!
+  userID: String!
 }
 
 interface HasUserLc {
@@ -1080,7 +1091,25 @@ input IFrameBlockInput {
 }
 
 type Image {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  focalPoint: FocalPoint
+  format: String!
+  height: Int!
   id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  tags: [String!]!
+  title: String
+  transformURL(input: ImageTransformation!): String!
+  url: String!
+  width: Int!
 }
 
 type ImageBlock implements BaseBlock & HasImage {
@@ -1125,24 +1154,30 @@ input ImageGalleryImageInput {
   imageID: String
 }
 
-type ImageV2 {
-  createdAt: DateTime!
-  description: RichText
-  extension: String!
-  fileSize: Int!
-  filename: String
-  focalPoint: FocalPoint
-  format: String!
-  height: Int!
-  id: String!
-  license: String
-  link: String
-  mimeType: String!
-  modifiedAt: DateTime!
-  source: String
-  tags: [String!]!
-  title: String
-  width: Int!
+enum ImageOutput {
+  jpeg
+  png
+  webp
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+input ImageTransformation {
+  blur: Boolean
+  grayscale: Boolean
+  height: Int
+  negate: Boolean
+  output: ImageOutput
+  quality: Float
+  rotation: ImageRotation
+  sharpen: Boolean
+  width: Int
 }
 
 input ImportArticleOptions {
@@ -1172,6 +1207,11 @@ type ImportedEventsDocument {
   totalCount: Int!
 }
 
+input InputPoint {
+  x: Float
+  y: Float
+}
+
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1185,7 +1225,7 @@ input InstagramPostBlockInput {
   postID: String
 }
 
-type Invoice {
+type Invoice implements HasOptionalSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
   description: String
@@ -1196,7 +1236,7 @@ type Invoice {
   modifiedAt: DateTime!
   paidAt: DateTime
   subscription: PublicSubscription
-  subscriptionID: String!
+  subscriptionID: String
   total: Int!
 }
 
@@ -1240,6 +1280,8 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
+  SUBSCRIBED
+  UNSUBSCRIBED
 }
 
 type MailProviderModel {
@@ -1261,8 +1303,23 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
-type MemberPlan {
+type MemberPlan implements HasImage {
+  amountPerMonthMin: Int!
+  amountPerMonthTarget: Int
+  availablePaymentMethods: [AvailablePaymentMethod!]!
+  confirmationPageId: String
+  currency: Currency!
+  description: RichText
+  extendable: Boolean!
+  failPageId: String
   id: String!
+  image: Image
+  imageID: String
+  maxCount: Int
+  name: String!
+  slug: String!
+  successPageId: String
+  tags: [String!]
 }
 
 type MemberPlanConnection {
@@ -1286,6 +1343,11 @@ type Mutation {
   """Create a new comment"""
   addComment(input: CommentInput!): Comment!
 
+  """
+  This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
+  """
+  cancelUserSubscription(id: String!): PublicSubscription
+
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
@@ -1307,15 +1369,31 @@ type Mutation {
 
   """Creates an page."""
   createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """
+  This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
+  """
+  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
+
+  """This mutation allows to create payment by referencing a subscription."""
+  createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
   createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
+
+  """Allows authenticated users to create additional subscriptions"""
+  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], successURL: String): Payment!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  """
+  Allows guests and authenticated users to create additional subscriptions
+  """
+  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], userId: String): Boolean!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1329,7 +1407,7 @@ type Mutation {
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
-  deleteCrowdfunding(id: ID!): Boolean
+  deleteCrowdfunding(id: String!): Boolean
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
@@ -1360,6 +1438,9 @@ type Mutation {
 
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
+
+  """Allows authenticated users to extend existing subscriptions"""
+  extendSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -1449,6 +1530,11 @@ type Mutation {
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
+  """
+  This mutation allows to update the user's data by taking an input of type UserInput.
+  """
+  updateUser(input: UserInput!): User
+
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 
@@ -1456,6 +1542,9 @@ type Mutation {
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
+
+  """This mutation allows to upload and update the user's profile image."""
+  uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -1490,6 +1579,12 @@ type NonDbProperty {
   key: String!
   public: Boolean!
   value: String!
+}
+
+type OAuth2Account {
+  provider: String!
+  scope: String!
+  type: String!
 }
 
 type Page {
@@ -1621,11 +1716,30 @@ type PaginatedPollVotes {
   totalCount: Int!
 }
 
-type PaymentMethod {
+type Payment implements HasPaymentMethod {
+  id: String!
+  intentSecret: String!
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  state: PaymentState!
+}
+
+input PaymentFromInvoiceInput {
+  failureURL: String
+  invoiceID: String!
+  paymentMethodID: String
+  paymentMethodSlug: Slug
+  successURL: String
+}
+
+type PaymentMethod implements HasImageLc {
+  active: Boolean!
+  createdAt: DateTime!
   description: String!
   id: String!
   image: Image
   imageId: String
+  modifiedAt: DateTime!
   name: String!
   paymentProviderID: String!
   slug: Slug!
@@ -1646,6 +1760,16 @@ type PaymentProviderCustomer {
 input PaymentProviderCustomerInput {
   customerID: String!
   paymentProviderID: String!
+}
+
+enum PaymentState {
+  canceled
+  created
+  declined
+  paid
+  processing
+  requiresUserAction
+  submitted
 }
 
 type Peer {
@@ -1833,8 +1957,33 @@ input PropertyInput {
   value: String!
 }
 
-type PublicSubscription {
+type PublicProperties {
+  key: String!
+  value: String!
+}
+
+input PublicPropertiesInput {
+  key: String!
+  value: String!
+}
+
+type PublicSubscription implements HasPaymentMethod & HasUser {
+  autoRenew: Boolean!
+  canExtend: Boolean!
+  deactivation: SubscriptionDeactivation
+  extendable: Boolean!
   id: String!
+  memberPlan: MemberPlan!
+  monthlyAmount: Int!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
+  properties: [PublicProperties!]!
+  startsAt: DateTime!
+  url: String!
+  user: User!
+  userID: String!
 }
 
 type Query {
@@ -1886,7 +2035,7 @@ type Query {
   consents(filter: ConsentFilter): [Consent!]!
 
   """Get a single crowdfunding by id with calculated progress"""
-  crowdfunding(id: ID!): CrowdfundingWithActiveGoal!
+  crowdfunding(id: String!): CrowdfundingWithActiveGoal!
 
   """Returns a paginated list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
@@ -1907,7 +2056,7 @@ type Query {
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """Returns an image by id."""
-  getImage(id: String!): ImageV2!
+  getImage(id: String!): Image!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
@@ -2017,7 +2166,7 @@ type Query {
     filter: TagFilter
 
     """Sort order"""
-    order: SortOrder! = Descending
+    order: SortOrder = Descending
 
     """Number of items to skip"""
     skip: Int! = 0
@@ -2166,11 +2315,16 @@ input SubscribeBlockInput {
   blockStyleName: String
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscription {
+type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
   actionType: ActionType!
   date: DateTime!
   subscription: PublicSubscription!
   subscriptionId: String!
+}
+
+type SubscriptionDeactivation {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
 }
 
 enum SubscriptionDeactivationReason {
@@ -2480,13 +2634,48 @@ input UpdateCrowdfundingInput {
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
   goals: [CreateCrowdfundingGoalInput!]
-  id: ID!
+  id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
 }
 
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UploadImageInput {
+  description: String
+  file: Upload!
+  filename: String
+  focalPoint: InputPoint
+  license: String
+  link: String
+  source: String
+  tags: [String!]
+  title: String
+}
+
 type User {
+  address: UserAddress
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
   id: String!
+  image: Image
+  name: String!
+  oauth2Accounts: [OAuth2Account!]!
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  permissions: [String!]!
+  properties: [PublicProperties!]!
+}
+
+type UserAddress {
+  city: String
+  company: String
+  country: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
 }
 
 input UserAddressInput {
@@ -2519,6 +2708,16 @@ enum UserEvent {
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL
+}
+
+input UserInput {
+  address: UserAddressInput
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
+  name: String!
+  uploadImageInput: UploadImageInput
 }
 
 type UserSession {
@@ -2559,8 +2758,6 @@ input YouTubeVideoBlockInput {
   blockStyleName: String
   videoID: String
 }
-
-scalar link__Import
 
 type overriddenRating {
   answerId: String!

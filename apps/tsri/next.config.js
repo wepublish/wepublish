@@ -15,6 +15,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
+      GTM_ID: process.env.GTM_ID || '',
       GA_ID: process.env.GA_ID || '',
       SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || ''

@@ -15,6 +15,7 @@ import {Tag, TagService} from '@wepublish/tag/api'
 import {CommentDataloaderService} from './comment-dataloader.service'
 import {RatingSystemService} from './rating-system'
 import {CommentInput, CommentUpdateInput} from './comment.input'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -22,7 +23,8 @@ export class CommentResolver {
     private readonly commentService: CommentService,
     private readonly commentDataloader: CommentDataloaderService,
     private readonly tagService: TagService,
-    private readonly ratingSystemService: RatingSystemService
+    private readonly ratingSystemService: RatingSystemService,
+    private readonly urlAdapter: URLAdapter
   ) {}
 
   @Query(() => [Comment], {

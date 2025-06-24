@@ -9,9 +9,11 @@ import {
 } from './payments-module-options'
 import {PrismaClient} from '@prisma/client'
 import {PaymentDataloader} from './payment.dataloader'
+import {PaymentMethodModule, PaymentMethodService} from '@wepublish/payment-method/api'
+import {PaymentsResolver} from './payments.resolver'
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, PaymentMethodModule],
   exports: [PaymentsService, PaymentDataloader]
 })
 export class PaymentsModule {
@@ -27,12 +29,16 @@ export class PaymentsModule {
   private static createAsyncProviders(options: PaymentsModuleAsyncOptions): Provider[] {
     return [
       PaymentDataloader,
+      PaymentsResolver,
       createAsyncOptionsProvider<PaymentsModuleOptions>(PAYMENTS_MODULE_OPTIONS, options),
       {
         provide: PaymentsService,
-        useFactory: (prisma: PrismaClient, {paymentProviders}: PaymentsModuleOptions) =>
-          new PaymentsService(prisma, paymentProviders),
-        inject: [PrismaClient, PAYMENTS_MODULE_OPTIONS]
+        useFactory: (
+          prisma: PrismaClient,
+          {paymentProviders}: PaymentsModuleOptions,
+          paymentMethodService: PaymentMethodService
+        ) => new PaymentsService(prisma, paymentProviders, paymentMethodService),
+        inject: [PrismaClient, PAYMENTS_MODULE_OPTIONS, PaymentMethodService]
       }
     ]
   }

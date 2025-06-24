@@ -6,7 +6,10 @@ import {PrismaClient} from '@prisma/client'
 
 @Injectable()
 export class PaymentMethodService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly paymentMethodDataloader: PaymentMethodDataloader
+  ) {}
 
   @PrimeDataLoader(PaymentMethodDataloader)
   async getPaymentMethods() {
@@ -33,6 +36,33 @@ export class PaymentMethodService {
   async deletePaymentMethodById(id: string) {
     return this.prisma.paymentMethod.delete({
       where: {id}
+    })
+  }
+
+  async findActivePaymentMethodById(id: string) {
+    const paymentMethod = await this.paymentMethodDataloader.load(id)
+    if (!paymentMethod?.active) {
+      return null
+    }
+    return paymentMethod
+  }
+
+  async findActivePaymentMethodBySlug(slug: string) {
+    return this.prisma.paymentMethod.findFirst({
+      where: {slug, active: true}
+    })
+  }
+
+  async getAvailablePaymentMethodsByIds(paymentMethodIds: string[]) {
+    return this.prisma.paymentMethod.findMany({
+      where: {
+        id: {
+          in: paymentMethodIds
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
     })
   }
 }

@@ -1,4 +1,4 @@
-import {ArgsType, Directive, Field, ID, InputType, ObjectType, PickType} from '@nestjs/graphql'
+import {ArgsType, Directive, Field, InputType, ObjectType, PickType} from '@nestjs/graphql'
 import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoal,
@@ -11,7 +11,7 @@ import {
  */
 @ObjectType()
 class CrowdfundingMemberPlan {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -28,7 +28,7 @@ export class CreateCrowdfundingMemberPlan extends PickType(
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class Crowdfunding {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -67,7 +67,7 @@ export class CrowdfundingWithActiveGoal extends Crowdfunding {
 
 @ArgsType()
 export class CrowdfundingId {
-  @Field(() => ID)
+  @Field()
   id!: string
 }
 

@@ -560,10 +560,10 @@ export class MemberContext implements MemberContextInterface {
    */
 
   async validateInputParamsCreateSubscription(
-    memberPlanID: string | null,
-    memberPlanSlug: string | null,
-    paymentMethodID: string | null,
-    paymentMethodSlug: string | null
+    memberPlanID: string | null | undefined,
+    memberPlanSlug: string | null | undefined,
+    paymentMethodID: string | null | undefined,
+    paymentMethodSlug: string | null | undefined
   ) {
     if (
       (memberPlanID == null && memberPlanSlug == null) ||
@@ -615,7 +615,7 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async processSubscriptionProperties(
-    subscriptionProperties: Omit<MetadataProperty, 'public'>[]
+    subscriptionProperties: Pick<MetadataProperty, 'key' | 'value'>[]
   ): Promise<Pick<MetadataProperty, 'public' | 'key' | 'value'>[]> {
     return Array.isArray(subscriptionProperties)
       ? subscriptionProperties.map(property => {
@@ -629,7 +629,6 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async createSubscription(
-    prisma: PrismaClient,
     userID: string,
     paymentMethodId: string,
     paymentPeriodicity: PaymentPeriodicity,
@@ -646,13 +645,13 @@ export class MemberContext implements MemberContextInterface {
       throw new Error("You can't create a non extendable subscription that is autoRenew!")
     }
 
-    const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+    const memberPlan = await this.prisma.memberPlan.findUnique({where: {id: memberPlanId}})
 
     if (!memberPlan) {
       throw new Error('Memberplan not found')
     }
 
-    const memberPlanSubscriptionCount = await prisma.subscription.count({
+    const memberPlanSubscriptionCount = await this.prisma.subscription.count({
       where: {
         userID,
         memberPlanID: memberPlanId
@@ -667,7 +666,7 @@ export class MemberContext implements MemberContextInterface {
       )
     }
 
-    const subscription = await prisma.subscription.create({
+    const subscription = await this.prisma.subscription.create({
       data: {
         userID,
         startsAt: startsAt ? startsAt : new Date(),

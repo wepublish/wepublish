@@ -120,16 +120,3 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     }
   }
 })
-
-export const GraphQLPeerResolver = {
-  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
-    const {id} = reference
-    const peer = await loaders.peer.load(id)
-
-    if (!peer) {
-      throw new Error('Peer not found')
-    }
-
-    return peer
-  }
-}

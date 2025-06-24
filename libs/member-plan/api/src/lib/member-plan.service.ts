@@ -1,12 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
-import {
-  MemberPlan,
-  MemberPlanConnection,
-  MemberPlanFilter,
-  MemberPlanSort
-} from './member-plan.model'
+import {MemberPlanFilter, MemberPlanSort} from './member-plan.model'
 
 @Injectable()
 export class MemberPlanService {
@@ -24,7 +19,7 @@ export class MemberPlanService {
     })
   }
 
-  async getMemberPlanBySlug(slug: string): Promise<MemberPlan | null> {
+  async getMemberPlanBySlug(slug: string) {
     return this.prisma.memberPlan.findFirst({
       where: {
         slug,
@@ -43,7 +38,7 @@ export class MemberPlanService {
     cursorId?: string,
     skip = 0,
     take = 10
-  ): Promise<MemberPlanConnection> {
+  ) {
     const orderBy = createMemberPlanOrder(sortedField, order)
     const where = createMemberPlanFilter(filter)
 

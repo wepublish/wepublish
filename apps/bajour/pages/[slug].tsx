@@ -11,17 +11,23 @@ import {
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
 import {Container} from '../src/components/layout/container'
 
 export default function PageBySlug() {
   const {
-    query: {slug}
+    query: {slug, id}
   } = useRouter()
+
+  const containerProps = {
+    slug,
+    id
+  } as ComponentProps<typeof PageContainer>
 
   return (
     <Container>
-      <PageContainer slug={slug as string} />
+      <PageContainer {...containerProps} />
     </Container>
   )
 }
@@ -29,7 +35,7 @@ export default function PageBySlug() {
 export const getStaticPaths = getPagePathsBasedOnPage('home')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {slug, id} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -37,7 +43,8 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug
+        slug,
+        id
       }
     }),
     client.query({

@@ -13,6 +13,7 @@ import {PeerResolver} from './peer.resolver'
 import {PeerProfileResolver} from './peer-profile.resolver'
 import {PEER_MODULE_OPTIONS, PeerModuleOptions} from './peer.constants'
 import {ColorScalar} from './scalars/color.scalar'
+import {ImageModule} from '@wepublish/image/api'
 
 export interface PeerModuleAsyncOptions {
   imports?: Array<Type<any> | DynamicModule | Promise<DynamicModule>>
@@ -21,7 +22,7 @@ export interface PeerModuleAsyncOptions {
 }
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, ImageModule],
   providers: [
     {
       provide: PEER_MODULE_OPTIONS,

@@ -88,7 +88,7 @@ export const CreateBannerForm = () => {
       formValue={banner}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => /*validationPassed &&*/ onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}>
       <SingleViewTitle
         loading={loading}
         title={t('banner.create.title')}

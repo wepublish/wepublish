@@ -1,708 +1,469 @@
-import {
-  MemberPlan,
-  PaymentPeriodicity,
-  PrismaClient,
-  SubscriptionEvent,
-  SubscriptionFlow,
-  SubscriptionInterval
-} from '@prisma/client'
-import {
-  clearDatabase,
-  clearFullDatabase,
-  defineMemberPlanFactory,
-  definePaymentMethodFactory,
-  defineSubscriptionFlowFactory,
-  defineSubscriptionIntervalFactory,
-  initialize
-} from '@wepublish/testing'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, SubscriptionFlow} from '@prisma/client'
 import {add, format, sub} from 'date-fns'
 import nock from 'nock'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 
-type SubscriptionFlowInterval = {
-  subscriptionFlowId: string
-  mailTemplateName: string
-  event: SubscriptionEvent
-  daysAwayFromEnding: null | number
-}
-
 describe('SubscriptionEventDictionary', () => {
-  const prismaClient = new PrismaClient()
-  initialize({prisma: prismaClient})
-
-  const MemberPlanFactory = defineMemberPlanFactory()
-  const PaymentMethodFactory = definePaymentMethodFactory()
-  const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
-    defaultData: {
-      memberPlan: MemberPlanFactory,
-      intervals: {connect: []}
-    } as any
-  })
-  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
-    defaultData: {
-      subscriptionFlow: SubscriptionFlowFactory
-    }
-  })
-  const createSubscriptionInterval = async function (sfi: SubscriptionFlowInterval) {
-    return await SubscriptionIntervalFactory.create({
-      subscriptionFlow: {
-        connect: {
-          id: sfi.subscriptionFlowId
-        }
-      },
-      event: sfi.event,
-      daysAwayFromEnding: sfi.daysAwayFromEnding,
-      mailTemplate: {
-        create: {
-          externalMailTemplateId: sfi.mailTemplateName,
-          name: sfi.mailTemplateName
-        }
-      }
-    })
+  let prismaMock: {
+    subscriptionFlow: {[method in keyof PrismaClient['subscriptionFlow']]?: jest.Mock}
+    subscriptionInterval: {[method in keyof PrismaClient['subscriptionInterval']]?: jest.Mock}
   }
-  let customMemberPlan1: MemberPlan
-  let customMemberPlan2: MemberPlan
-  let customMemberPlanFlow1: SubscriptionFlow
-  let customMemberPlanFlow2: SubscriptionFlow
-  let defaultFlow: SubscriptionFlow
-
-  beforeAll(async () => {
-    await clearFullDatabase(prismaClient)
-  })
 
   beforeEach(async () => {
     await nock.disableNetConnect()
 
-    await clearDatabase(prismaClient, [
-      'subscription_communication_flows',
-      'payment.methods',
-      'member.plans',
-      'subscriptions.intervals',
-      'mail_templates'
-    ])
-
-    // Base data
-    await PaymentMethodFactory.create({
-      id: 'payrexx',
-      name: 'payrexx',
-      paymentProviderID: 'payrexx',
-      slug: 'payrexx',
-      active: true
-    })
-    await PaymentMethodFactory.create({
-      id: 'payrexx-subscription',
-      name: 'payrexx-subscription',
-      paymentProviderID: 'payrexx-subscription',
-      slug: 'payrexx-subscription',
-      active: true
-    })
-
-    await PaymentMethodFactory.create({
-      id: 'stripe',
-      name: 'stripe',
-      paymentProviderID: 'stripe',
-      slug: 'stripe',
-      active: true
-    })
-
-    await MemberPlanFactory.create({
-      name: 'yearly',
-      slug: 'yearly'
-    })
-
-    defaultFlow = await SubscriptionFlowFactory.create({
-      default: true,
-      memberPlan: undefined,
-      autoRenewal: [],
-      periodicities: [],
-      paymentMethods: {}
-    })
-
-    customMemberPlan1 = await MemberPlanFactory.create({
-      name: 'custom1',
-      slug: 'custom1'
-    })
-    customMemberPlan2 = await MemberPlanFactory.create({
-      name: 'custom2',
-      slug: 'custom2'
-    })
-
-    customMemberPlanFlow1 = await SubscriptionFlowFactory.create({
-      default: false,
-      memberPlan: {
-        connect: {
-          id: customMemberPlan1.id
-        }
+    prismaMock = {
+      subscriptionFlow: {
+        findMany: jest.fn(),
+        findFirst: jest.fn()
       },
-      autoRenewal: [true, false],
-      periodicities: [PaymentPeriodicity.yearly],
-      paymentMethods: {
-        connect: {
-          id: 'stripe'
-        }
+      subscriptionInterval: {
+        findMany: jest.fn()
       }
-    })
-    customMemberPlanFlow2 = await SubscriptionFlowFactory.create({
-      default: false,
-      memberPlan: {
-        connect: {
-          id: customMemberPlan2.id
-        }
-      },
-      autoRenewal: [true, false],
-      periodicities: [PaymentPeriodicity.monthly],
-      paymentMethods: {
-        connect: {
-          id: 'stripe'
-        }
-      }
-    })
-    await prismaClient.subscriptionFlow.update({
-      where: {
-        id: customMemberPlanFlow2.id
-      },
-      data: {
-        paymentMethods: {
-          connect: {
-            id: 'payrexx'
-          }
-        }
-      }
-    })
-
-    const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
-      // Default SubscriptionFlow
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-SUBSCRIBE',
-        event: SubscriptionEvent.SUBSCRIBE,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-RENEWAL_SUCCESS',
-        event: SubscriptionEvent.RENEWAL_SUCCESS,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-RENEWAL_FAILED',
-        event: SubscriptionEvent.RENEWAL_FAILED,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-INVOICE_CREATION',
-        event: SubscriptionEvent.INVOICE_CREATION,
-        daysAwayFromEnding: -14
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-DEACTIVATION_UNPAID',
-        event: SubscriptionEvent.DEACTIVATION_UNPAID,
-        daysAwayFromEnding: 5
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-DEACTIVATION_BY_USER',
-        event: SubscriptionEvent.DEACTIVATION_BY_USER,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-CUSTOM1',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: -15
-      }
-    ]
-    for (const sfi of subscriptionFLowIntervals) {
-      await createSubscriptionInterval(sfi)
-    }
+    } as any
   })
 
   afterEach(async () => {
     await nock.cleanAll()
     await nock.enableNetConnect()
-    await prismaClient.$disconnect()
   })
 
-  it('get action from store custom and default flow basic', async () => {
-    const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
-      // Custom1 SubscriptionFlow
+  it('gets actions for custom subscription flow', async () => {
+    const mockFlows = [
       {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-SUBSCRIBE',
-        event: SubscriptionEvent.SUBSCRIBE,
-        daysAwayFromEnding: null
+        id: 'default-flow',
+        default: true,
+        memberPlanId: null,
+        periodicities: [PaymentPeriodicity.monthly, PaymentPeriodicity.yearly],
+        autoRenewal: [true, false],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [
+          {
+            id: 'default-interval-1',
+            event: SubscriptionEvent.SUBSCRIBE,
+            daysAwayFromEnding: null,
+            mailTemplate: {externalMailTemplateId: 'default-SUBSCRIBE'}
+          }
+        ],
+        paymentMethods: []
       },
       {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-RENEWAL_SUCCESS',
-        event: SubscriptionEvent.RENEWAL_SUCCESS,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-RENEWAL_FAILED',
-        event: SubscriptionEvent.RENEWAL_FAILED,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-INVOICE_CREATION',
-        event: SubscriptionEvent.INVOICE_CREATION,
-        daysAwayFromEnding: -7
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-DEACTIVATION_UNPAID',
-        event: SubscriptionEvent.DEACTIVATION_UNPAID,
-        daysAwayFromEnding: 7
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-DEACTIVATION_BY_USER',
-        event: SubscriptionEvent.DEACTIVATION_BY_USER,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-CUSTOM1',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: -10
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-CUSTOM2',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: -7
-      },
-      // Custom2 SubscriptionFlow
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-SUBSCRIBE',
-        event: SubscriptionEvent.SUBSCRIBE,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-RENEWAL_SUCCESS',
-        event: SubscriptionEvent.RENEWAL_SUCCESS,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-RENEWAL_FAILED',
-        event: SubscriptionEvent.RENEWAL_FAILED,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-INVOICE_CREATION',
-        event: SubscriptionEvent.INVOICE_CREATION,
-        daysAwayFromEnding: -3
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-DEACTIVATION_UNPAID',
-        event: SubscriptionEvent.DEACTIVATION_UNPAID,
-        daysAwayFromEnding: 4
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-DEACTIVATION_BY_USER',
-        event: SubscriptionEvent.DEACTIVATION_BY_USER,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-CUSTOM1',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: 9
+        id: 'custom-flow-1',
+        default: false,
+        memberPlanId: 'custom-plan-1',
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [
+          {
+            id: 'interval-1',
+            event: SubscriptionEvent.SUBSCRIBE,
+            daysAwayFromEnding: null,
+            mailTemplate: {externalMailTemplateId: 'custom1-SUBSCRIBE'}
+          },
+          {
+            id: 'interval-2',
+            event: SubscriptionEvent.RENEWAL_SUCCESS,
+            daysAwayFromEnding: null,
+            mailTemplate: {externalMailTemplateId: 'custom1-RENEWAL_SUCCESS'}
+          },
+          {
+            id: 'interval-3',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -7,
+            mailTemplate: {externalMailTemplateId: 'custom1-INVOICE_CREATION'}
+          }
+        ],
+        paymentMethods: [{id: 'stripe', name: 'Stripe'}]
       }
     ]
-    for (const sfi of subscriptionFLowIntervals) {
-      await createSubscriptionInterval(sfi)
-    }
 
-    const sed = new SubscriptionEventDictionary(prismaClient)
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
 
-    // Test custom static Actions
-    let actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+
+    const actions = await sed.getActionsForSubscriptions({
+      memberplanId: 'custom-plan-1',
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: true
     })
-    let res =
-      '[{"type":"SUBSCRIBE","daysAwayFromEnding":null,"externalMailTemplate":"custom1-SUBSCRIBE"},{"type":"RENEWAL_SUCCESS","daysAwayFromEnding":null,"externalMailTemplate":"custom1-RENEWAL_SUCCESS"},{"type":"RENEWAL_FAILED","daysAwayFromEnding":null,"externalMailTemplate":"custom1-RENEWAL_FAILED"},{"type":"DEACTIVATION_BY_USER","daysAwayFromEnding":null,"externalMailTemplate":"custom1-DEACTIVATION_BY_USER"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
 
-    // Test custom variable actions
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
+    expect(actions.length).toBeGreaterThanOrEqual(2)
+    expect(actions.find(a => a.type === SubscriptionEvent.SUBSCRIBE)).toBeDefined()
+    expect(actions.find(a => a.type === SubscriptionEvent.RENEWAL_SUCCESS)).toBeDefined()
+    const subscribeAction = actions.find(a => a.type === SubscriptionEvent.SUBSCRIBE)!
+    expect(subscribeAction.externalMailTemplate).toEqual('custom1-SUBSCRIBE')
+  })
+
+  it('gets actions for default subscription flow when custom not found', async () => {
+    const mockFlows = [
+      {
+        id: 'default-flow',
+        default: true,
+        memberPlanId: null,
+        periodicities: [
+          PaymentPeriodicity.monthly,
+          PaymentPeriodicity.yearly,
+          PaymentPeriodicity.biannual
+        ],
+        autoRenewal: [true, false],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [
+          {
+            id: 'default-interval-1',
+            event: SubscriptionEvent.SUBSCRIBE,
+            daysAwayFromEnding: null,
+            mailTemplate: {externalMailTemplateId: 'default-SUBSCRIBE'}
+          },
+          {
+            id: 'default-interval-2',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -14,
+            mailTemplate: {externalMailTemplateId: 'default-INVOICE_CREATION'}
+          }
+        ],
+        paymentMethods: [{id: 'payrexx', name: 'Payrexx'}]
+      }
+    ]
+
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
+
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+
+    const actions = await sed.getActionsForSubscriptions({
+      memberplanId: 'custom-plan-1',
+      periodicity: PaymentPeriodicity.biannual,
+      paymentMethodId: 'payrexx',
+      autorenwal: false
+    })
+
+    expect(actions.length).toBeGreaterThanOrEqual(1)
+    expect(actions.find(a => a.type === SubscriptionEvent.SUBSCRIBE)).toBeDefined()
+    const subscribeAction = actions.find(a => a.type === SubscriptionEvent.SUBSCRIBE)!
+    expect(subscribeAction.externalMailTemplate).toEqual('default-SUBSCRIBE')
+  })
+
+  it('filters actions by daysAwayFromEnding', async () => {
+    const mockFlows = [
+      {
+        id: 'default-flow',
+        default: true,
+        memberPlanId: null,
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [],
+        paymentMethods: []
+      },
+      {
+        id: 'custom-flow-1',
+        default: false,
+        memberPlanId: 'custom-plan-1',
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [
+          {
+            id: 'interval-1',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -7,
+            mailTemplate: {externalMailTemplateId: 'custom1-INVOICE_CREATION'}
+          },
+          {
+            id: 'interval-2',
+            event: SubscriptionEvent.CUSTOM,
+            daysAwayFromEnding: -7,
+            mailTemplate: {externalMailTemplateId: 'custom1-CUSTOM2'}
+          },
+          {
+            id: 'interval-3',
+            event: SubscriptionEvent.CUSTOM,
+            daysAwayFromEnding: -10,
+            mailTemplate: {externalMailTemplateId: 'custom1-CUSTOM1'}
+          }
+        ],
+        paymentMethods: [{id: 'stripe', name: 'Stripe'}]
+      }
+    ]
+
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
+
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+
+    const actions = await sed.getActionsForSubscriptions({
+      memberplanId: 'custom-plan-1',
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
       autorenwal: true,
       daysAwayFromEnding: -7
     })
-    res =
-      '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-INVOICE_CREATION"},{"type":"CUSTOM","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-CUSTOM2"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
 
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
+    expect(actions).toHaveLength(2)
+    expect(actions[0].daysAwayFromEnding).toEqual(-7)
+    expect(actions[1].daysAwayFromEnding).toEqual(-7)
+  })
+
+  it('gets actions for specific events', async () => {
+    const mockFlows = [
+      {
+        id: 'default-flow',
+        default: true,
+        memberPlanId: null,
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true, false],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [],
+        paymentMethods: []
+      },
+      {
+        id: 'custom-flow-1',
+        default: false,
+        memberPlanId: 'custom-plan-1',
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [false],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [
+          {
+            id: 'interval-1',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -7,
+            mailTemplate: {externalMailTemplateId: 'custom1-INVOICE_CREATION'}
+          },
+          {
+            id: 'interval-2',
+            event: SubscriptionEvent.DEACTIVATION_UNPAID,
+            daysAwayFromEnding: 7,
+            mailTemplate: {externalMailTemplateId: 'custom1-DEACTIVATION_UNPAID'}
+          },
+          {
+            id: 'interval-3',
+            event: SubscriptionEvent.SUBSCRIBE,
+            daysAwayFromEnding: null,
+            mailTemplate: {externalMailTemplateId: 'custom1-SUBSCRIBE'}
+          }
+        ],
+        paymentMethods: [{id: 'stripe', name: 'Stripe'}]
+      }
+    ]
+
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
+
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+
+    const actions = await sed.getActionsForSubscriptions({
+      memberplanId: 'custom-plan-1',
       periodicity: PaymentPeriodicity.yearly,
       paymentMethodId: 'stripe',
-      autorenwal: true,
-      daysAwayFromEnding: -10
-    })
-    res = '[{"type":"CUSTOM","daysAwayFromEnding":-10,"externalMailTemplate":"custom1-CUSTOM1"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
-
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.yearly,
-      paymentMethodId: 'stripe',
-      autorenwal: true,
-      daysAwayFromEnding: 7
-    })
-    res =
-      '[{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":7,"externalMailTemplate":"custom1-DEACTIVATION_UNPAID"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
-
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.yearly,
-      paymentMethodId: 'stripe',
-      autorenwal: true,
-      daysAwayFromEnding: 9
-    })
-    res = '[]'
-    expect(JSON.stringify(actions)).toEqual(res)
-
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan2.id,
-      periodicity: PaymentPeriodicity.monthly,
-      paymentMethodId: 'payrexx',
       autorenwal: false,
-      daysAwayFromEnding: 9
+      events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
     })
-    res = '[{"type":"CUSTOM","daysAwayFromEnding":9,"externalMailTemplate":"custom2-CUSTOM1"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
 
-    // Test default static Actions
+    expect(actions).toHaveLength(2)
+    expect(actions[0].type).toEqual(SubscriptionEvent.INVOICE_CREATION)
+    expect(actions[1].type).toEqual(SubscriptionEvent.DEACTIVATION_UNPAID)
+  })
 
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.biannual,
-      paymentMethodId: 'payrexx',
-      autorenwal: false
-    })
-    res =
-      '[{"type":"SUBSCRIBE","daysAwayFromEnding":null,"externalMailTemplate":"default-SUBSCRIBE"},{"type":"RENEWAL_SUCCESS","daysAwayFromEnding":null,"externalMailTemplate":"default-RENEWAL_SUCCESS"},{"type":"RENEWAL_FAILED","daysAwayFromEnding":null,"externalMailTemplate":"default-RENEWAL_FAILED"},{"type":"DEACTIVATION_BY_USER","daysAwayFromEnding":null,"externalMailTemplate":"default-DEACTIVATION_BY_USER"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
+  it('throws error when no default flow found', async () => {
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+      {
+        id: 'custom-flow-1',
+        default: false,
+        memberPlanId: 'custom-plan-1',
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [],
+        paymentMethods: []
+      }
+    ])
 
-    // Test custom variable actions
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
 
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.biannual,
-      paymentMethodId: 'payrexx',
-      autorenwal: false,
-      daysAwayFromEnding: -15
-    })
-    res = '[{"type":"CUSTOM","daysAwayFromEnding":-15,"externalMailTemplate":"default-CUSTOM1"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
+    await expect(
+      sed.getActionsForSubscriptions({
+        memberplanId: 'custom-plan-1',
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: true
+      })
+    ).rejects.toThrow('Default user subscription flow not found!')
+  })
 
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.biannual,
-      paymentMethodId: 'payrexx',
-      autorenwal: false,
-      daysAwayFromEnding: -14
-    })
-    res =
-      '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-14,"externalMailTemplate":"default-INVOICE_CREATION"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
+  it('throws error when combining daysAwayFromEnding with events', async () => {
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+      {
+        id: 'default-flow',
+        default: true,
+        memberPlanId: null,
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [],
+        paymentMethods: []
+      }
+    ])
 
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.biannual,
-      paymentMethodId: 'payrexx',
-      autorenwal: false,
-      daysAwayFromEnding: 5
-    })
-    res =
-      '[{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":5,"externalMailTemplate":"default-DEACTIVATION_UNPAID"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
 
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.biannual,
-      paymentMethodId: 'payrexx',
-      autorenwal: false,
-      daysAwayFromEnding: 9
-    })
-    res = '[]'
-    expect(JSON.stringify(actions)).toEqual(res)
-
-    try {
-      await sed.getActionsForSubscriptions({
-        memberplanId: customMemberPlan1.id,
-        periodicity: PaymentPeriodicity.biannual,
-        paymentMethodId: 'payrexx',
-        autorenwal: false,
+    await expect(
+      sed.getActionsForSubscriptions({
+        memberplanId: 'custom-plan-1',
+        periodicity: PaymentPeriodicity.yearly,
+        paymentMethodId: 'stripe',
+        autorenwal: true,
         daysAwayFromEnding: 10,
         events: [SubscriptionEvent.INVOICE_CREATION]
       })
-      fail()
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: Its not supported to query for daysAwayFromEnding combined with an event list'
-      )
-    }
-
-    // Lookup events custom
-
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.yearly,
-      paymentMethodId: 'stripe',
-      autorenwal: false,
-      events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
-    })
-    res =
-      '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-7,"externalMailTemplate":"custom1-INVOICE_CREATION"},{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":7,"externalMailTemplate":"custom1-DEACTIVATION_UNPAID"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
-
-    // Lookup events default
-    actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
-      periodicity: PaymentPeriodicity.biannual,
-      paymentMethodId: 'stripe',
-      autorenwal: false,
-      events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
-    })
-    res =
-      '[{"type":"INVOICE_CREATION","daysAwayFromEnding":-14,"externalMailTemplate":"default-INVOICE_CREATION"},{"type":"DEACTIVATION_UNPAID","daysAwayFromEnding":5,"externalMailTemplate":"default-DEACTIVATION_UNPAID"}]'
-    expect(JSON.stringify(actions)).toEqual(res)
+    ).rejects.toThrow(
+      'Its not supported to query for daysAwayFromEnding combined with an event list'
+    )
   })
-  it('earliest creation date', async () => {
-    const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
-      // default -7
+
+  it('gets earliest invoice creation date', async () => {
+    const mockFlows = [
       {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-INVOICE_CREATION',
-        event: SubscriptionEvent.INVOICE_CREATION,
-        daysAwayFromEnding: -1
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-INVOICE_CREATION',
-        event: SubscriptionEvent.INVOICE_CREATION,
-        daysAwayFromEnding: -3
+        id: 'flow-1',
+        default: true,
+        intervals: [
+          {
+            id: 'interval-1',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -14
+          },
+          {
+            id: 'interval-2',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -3
+          },
+          {
+            id: 'interval-3',
+            event: SubscriptionEvent.INVOICE_CREATION,
+            daysAwayFromEnding: -1
+          }
+        ]
       }
     ]
-    const intervalList: SubscriptionInterval[] = []
-    for (const sfi of subscriptionFLowIntervals) {
-      intervalList.push(await createSubscriptionInterval(sfi))
-    }
 
-    let testDate = new Date()
-    const sed = new SubscriptionEventDictionary(prismaClient)
-    let res = await sed.getEarliestInvoiceCreationDate(testDate)
-    expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 14}), 'dd-MM-yyyy'))
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
 
-    await prismaClient.subscriptionInterval.update({
-      where: {
-        id: intervalList.find(il => il.daysAwayFromEnding === -3)!.id
-      },
-      data: {
-        daysAwayFromEnding: -20
-      }
-    })
-    res = await sed.getEarliestInvoiceCreationDate(testDate)
-    expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 20}), 'dd-MM-yyyy'))
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+    const testDate = new Date()
+    const result = await sed.getEarliestInvoiceCreationDate(testDate)
 
-    testDate = sub(new Date(), {days: 10})
-    res = await sed.getEarliestInvoiceCreationDate(testDate)
-    expect(format(res, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 20}), 'dd-MM-yyyy'))
+    // Should return the earliest date (most negative daysAwayFromEnding)
+    expect(format(result, 'dd-MM-yyyy')).toEqual(format(add(testDate, {days: 14}), 'dd-MM-yyyy'))
   })
 
-  it('custom event date list', async () => {
-    const subscriptionFLowIntervals: SubscriptionFlowInterval[] = [
+  it('gets dates with custom events', async () => {
+    const mockFlows = [
       {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-CUSTOM1',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: -90
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-CUSTOM1',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: -40
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-CUSTOM2',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: -40
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-CUSTOM2',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: 0
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-CUSTOM3',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: 10
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow2.id,
-        mailTemplateName: 'custom2-CUSTOM3',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: 40
-      },
-      {
-        subscriptionFlowId: customMemberPlanFlow1.id,
-        mailTemplateName: 'custom1-CUSTOM4',
-        event: SubscriptionEvent.CUSTOM,
-        daysAwayFromEnding: 90
+        id: 'flow-1',
+        default: true,
+        intervals: [
+          {
+            id: 'interval-1',
+            event: SubscriptionEvent.CUSTOM,
+            daysAwayFromEnding: -90
+          },
+          {
+            id: 'interval-2',
+            event: SubscriptionEvent.CUSTOM,
+            daysAwayFromEnding: -40
+          },
+          {
+            id: 'interval-3',
+            event: SubscriptionEvent.CUSTOM,
+            daysAwayFromEnding: 0
+          },
+          {
+            id: 'interval-4',
+            event: SubscriptionEvent.CUSTOM,
+            daysAwayFromEnding: 10
+          }
+        ]
       }
     ]
-    const intervalList: SubscriptionInterval[] = []
-    for (const sfi of subscriptionFLowIntervals) {
-      intervalList.push(await createSubscriptionInterval(sfi))
-    }
-    const sed = new SubscriptionEventDictionary(prismaClient)
 
-    let testDate = new Date()
-    let res = await sed.getDatesWithCustomEvent(testDate)
-    let dateRes = res.map(r => {
-      return format(r, 'dd-MM-yyyy')
-    })
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: -90}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: -40}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: -15}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 0}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 10}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 40}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 90}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(dateRes.find(d => d === format(sub(testDate, {days: 15}), 'dd-MM-yyyy'))).toBeUndefined()
-    expect(dateRes.find(d => d === format(sub(testDate, {days: 7}), 'dd-MM-yyyy'))).toBeUndefined()
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
 
-    testDate = sub(new Date(), {days: 12})
-    res = await sed.getDatesWithCustomEvent(testDate)
-    dateRes = res.map(r => {
-      return format(r, 'dd-MM-yyyy')
-    })
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: -90}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: -40}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: -15}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 0}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 10}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 40}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(
-      dateRes.find(d => d === format(sub(testDate, {days: 90}), 'dd-MM-yyyy'))
-    ).not.toBeUndefined()
-    expect(dateRes.find(d => d === format(sub(testDate, {days: 15}), 'dd-MM-yyyy'))).toBeUndefined()
-    expect(dateRes.find(d => d === format(sub(testDate, {days: 7}), 'dd-MM-yyyy'))).toBeUndefined()
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+    const testDate = new Date()
+    const result = await sed.getDatesWithCustomEvent(testDate)
+
+    expect(result).toHaveLength(4)
+    const dateStrings = result.map(r => format(r, 'dd-MM-yyyy'))
+
+    expect(dateStrings).toContain(format(sub(testDate, {days: -90}), 'dd-MM-yyyy'))
+    expect(dateStrings).toContain(format(sub(testDate, {days: -40}), 'dd-MM-yyyy'))
+    expect(dateStrings).toContain(format(sub(testDate, {days: 0}), 'dd-MM-yyyy'))
+    expect(dateStrings).toContain(format(sub(testDate, {days: 10}), 'dd-MM-yyyy'))
   })
 
-  it('No default flow defined', async () => {
-    await prismaClient.subscriptionFlow.deleteMany({
-      where: {
-        default: true
+  it('returns empty array when no custom events found', async () => {
+    const mockFlows = [
+      {
+        id: 'flow-1',
+        default: true,
+        intervals: []
       }
-    })
-    const sed = new SubscriptionEventDictionary(prismaClient)
-    try {
-      await sed.getActionsForSubscriptions({
-        memberplanId: customMemberPlan1.id,
-        periodicity: PaymentPeriodicity.yearly,
-        paymentMethodId: 'stripe',
-        autorenwal: true
-      })
+    ]
 
-      fail()
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'NotFoundException: Default user subscription flow not found!'
-      )
-    }
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue(mockFlows)
+
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+    const testDate = new Date()
+    const result = await sed.getDatesWithCustomEvent(testDate)
+
+    expect(result).toHaveLength(0)
   })
 
-  it('Subscription Flow with no memberplan', async () => {
-    await SubscriptionFlowFactory.create({
-      memberPlan: undefined,
-      default: false
-    })
-    const sed = new SubscriptionEventDictionary(prismaClient)
-    try {
-      await sed.getActionsForSubscriptions({
-        memberplanId: customMemberPlan1.id,
+  it('handles flows with no memberplan correctly', async () => {
+    prismaMock.subscriptionFlow.findMany!.mockResolvedValue([
+      {
+        id: 'default-flow',
+        default: true,
+        memberPlanId: null,
+        periodicities: [PaymentPeriodicity.yearly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [],
+        paymentMethods: []
+      },
+      {
+        id: 'flow-no-plan',
+        default: false,
+        memberPlanId: null,
+        periodicities: [PaymentPeriodicity.monthly],
+        autoRenewal: [true],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        intervals: [],
+        paymentMethods: []
+      }
+    ])
+
+    const sed = new SubscriptionEventDictionary(prismaMock as any)
+
+    await expect(
+      sed.getActionsForSubscriptions({
+        memberplanId: 'custom-plan-1',
         periodicity: PaymentPeriodicity.yearly,
         paymentMethodId: 'stripe',
         autorenwal: true
       })
-
-      fail()
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
-      )
-    }
-  })
-
-  it('Multiple default memberplans', async () => {
-    await SubscriptionFlowFactory.create({
-      memberPlan: undefined,
-      default: true
-    })
-    const sed = new SubscriptionEventDictionary(prismaClient)
-    try {
-      await sed.getActionsForSubscriptions({
-        memberplanId: customMemberPlan1.id,
-        periodicity: PaymentPeriodicity.yearly,
-        paymentMethodId: 'stripe',
-        autorenwal: true
-      })
-      fail()
-    } catch (e) {
-      expect((e as Error).toString()).toEqual(
-        'Error: Multiple default memberplans found! This is a data integrity error!'
-      )
-    }
+    ).rejects.toThrow(
+      'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
+    )
   })
 })

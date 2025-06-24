@@ -257,7 +257,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         })
         const jwtExpires =
           (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '')
 
         if (!jwtExpires) {
           throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
@@ -294,7 +294,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         })
         const jwtExpires =
           (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '')
 
         if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
 

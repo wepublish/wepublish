@@ -42,6 +42,10 @@ export class TagsArgs {
   @Field(() => TagSort, {defaultValue: TagSort.CreatedAt, description: 'Field to sort by'})
   sort?: TagSort
 
-  @Field(() => SortOrder, {defaultValue: SortOrder.Descending, description: 'Sort order'})
+  @Field(() => SortOrder, {
+    defaultValue: SortOrder.Descending,
+    description: 'Sort order',
+    nullable: true
+  })
   order?: SortOrder
 }

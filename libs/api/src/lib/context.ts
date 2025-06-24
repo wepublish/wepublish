@@ -353,7 +353,7 @@ export async function contextFromRequest(
                   where: {name: SettingName.PEERING_TIMEOUT_MS}
                 })
               )?.value as number) ||
-              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              parseInt(process.env['PEERING_TIMEOUT_IN_MS'] as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(
               createSafeHostUrl(peer.hostURL, 'v1'),
@@ -391,7 +391,7 @@ export async function contextFromRequest(
                   where: {name: SettingName.PEERING_TIMEOUT_MS}
                 })
               )?.value as number) ||
-              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              parseInt(process.env['PEERING_TIMEOUT_IN_MS'] as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
 
             const fetcher = createFetcher(
@@ -614,11 +614,11 @@ export async function contextFromRequest(
   })
 
   const generateJWTWrapper: Context['generateJWT'] = ({expiresInMinutes, audience, id}): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
 
     return generateJWT({
       id,
-      secret: process.env.JWT_SECRET_KEY,
+      secret: process.env['JWT_SECRET_KEY'],
       issuer: hostURL,
       audience: audience ?? websiteURL,
       expiresInMinutes
@@ -626,9 +626,9 @@ export async function contextFromRequest(
   }
 
   const verifyJWT = (token: string): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
+    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    const ver = jwt.verify(token, process.env['JWT_SECRET_KEY'])
+    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>)['sub'] : ''
   }
 
   const memberContext = new MemberContext({
@@ -812,17 +812,7 @@ export async function contextFromRequest(
           paymentID: updatedPayment.id
         })
 
-        await paymentProvider.updatePaymentWithIntentState({
-          intentState,
-          paymentClient: prisma.payment,
-          paymentsByID: loaders.paymentsByID,
-          invoicesByID: loaders.invoicesByID,
-          subscriptionClient: prisma.subscription,
-          userClient: prisma.user,
-          invoiceClient: prisma.invoice,
-          subscriptionPeriodClient: prisma.subscriptionPeriod,
-          invoiceItemClient: prisma.invoiceItem
-        })
+        await paymentProvider.updatePaymentWithIntentState({intentState})
       }
 
       if (intent.errorCode) {

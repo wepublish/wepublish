@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserConsentResolver Public: comment from a user with approval permission is approved 1`] = `
+{
+  "addComment": {
+    "id": "",
+    "itemID": "",
+    "itemType": "article",
+    "parentID": null,
+    "state": "approved",
+    "text": null,
+    "user": null,
+  },
+}
+`;

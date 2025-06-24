@@ -1,7 +1,7 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {ArticleRevision} from './article.model'
 import {ArticleAuthorsService, Author} from '@wepublish/author/api'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {ArticleRevisionService} from './article-revision.service'
 import {Property} from '@wepublish/utils/api'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
@@ -12,7 +12,8 @@ import {hasPermission} from '@wepublish/permissions/api'
 export class ArticleRevisionResolver {
   constructor(
     private revisionService: ArticleRevisionService,
-    private articleAuthors: ArticleAuthorsService
+    private articleAuthors: ArticleAuthorsService,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => [Property])
@@ -44,7 +45,7 @@ export class ArticleRevisionResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageID}
+    return this.imageDataloaderService.load(imageID)
   }
 
   @ResolveField(() => Image, {nullable: true})
@@ -55,6 +56,6 @@ export class ArticleRevisionResolver {
       return null
     }
 
-    return {__typename: 'Image', id: socialMediaImageID}
+    return this.imageDataloaderService.load(socialMediaImageID)
   }
 }
