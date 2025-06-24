@@ -299,7 +299,7 @@ jobs:
             cpu: 50m
           limits:
             memory: 192Mi
-            cpu: 300m
+            cpu: 200m
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
