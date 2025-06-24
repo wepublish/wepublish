@@ -612,7 +612,7 @@ export type CreateCrowdfundingInput = {
 };
 
 export type CreateCrowdfundingMemberPlan = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type Crowdfunding = {
@@ -622,7 +622,7 @@ export type Crowdfunding = {
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   goals: Array<CrowdfundingGoal>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlans: Array<CrowdfundingMemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -667,7 +667,7 @@ export type CrowdfundingGoalWithProgress = {
 
 export type CrowdfundingMemberPlan = {
   __typename?: 'CrowdfundingMemberPlan';
-  id: Scalars['ID'];
+  id: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -679,7 +679,7 @@ export type CrowdfundingWithActiveGoal = {
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   goals: Array<CrowdfundingGoal>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlans: Array<CrowdfundingMemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -1785,7 +1785,7 @@ export type MutationDeleteConsentArgs = {
 
 
 export type MutationDeleteCrowdfundingArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -2817,7 +2817,7 @@ export type QueryConsentsArgs = {
 
 
 export type QueryCrowdfundingArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -3507,7 +3507,7 @@ export type UpdateCrowdfundingInput = {
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name: Scalars['String'];
 };

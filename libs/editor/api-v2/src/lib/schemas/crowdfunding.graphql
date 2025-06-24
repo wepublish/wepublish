@@ -4,7 +4,7 @@ query Crowdfundings {
   }
 }
 
-query Crowdfunding($id: ID!) {
+query Crowdfunding($id: String!) {
   crowdfunding(id: $id) {
     ...FullCrowdfundingWithActiveGoal
   }
@@ -22,7 +22,7 @@ mutation UpdateCrowdfunding($input: UpdateCrowdfundingInput!) {
   }
 }
 
-mutation DeleteCrowdfunding($id: ID!) {
+mutation DeleteCrowdfunding($id: String!) {
   deleteCrowdfunding(id: $id)
 }
 
@@ -41,7 +41,7 @@ input CreateCrowdfundingGoalInput {
 }
 
 input UpdateCrowdfundingInput {
-  id: ID!
+  id: String!
   name: String!
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime

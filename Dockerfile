@@ -36,7 +36,7 @@ FROM ${BUILD_IMAGE} AS  build-website
 
 COPY . .
 RUN npx prisma generate && \
-    npx nx build ${NEXT_PROJECT} --skip-nx-cache && \
+    npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
     bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website
