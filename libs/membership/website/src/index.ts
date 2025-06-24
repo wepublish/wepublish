@@ -15,7 +15,6 @@ export * from './lib/subscribe/subscribe-container'
 
 export * from './lib/memberplan-picker/memberplan-picker'
 export * from './lib/memberplan-picker/memberplan-picker-item'
-export * from './lib/memberplan-picker/yearly-memberplan-picker-item'
 export * from './lib/periodicity-picker/periodicity-picker'
 export * from './lib/payment-method-picker/payment-method-picker'
 export * from './lib/transaction-fee/transaction-fee'

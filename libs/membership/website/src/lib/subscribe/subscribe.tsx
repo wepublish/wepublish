@@ -34,6 +34,7 @@ import {replace, toLower} from 'ramda'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
 import {Modal} from '@wepublish/website/builder'
+import {useTranslation} from 'react-i18next'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -99,6 +100,8 @@ const buttonStyles = css`
 export const SubscribeCancelable = styled('div')`
   text-align: center;
   color: ${({theme}) => theme.palette.grey[500]};
+  max-width: 35ch;
+  justify-self: center;
 `
 
 export const SubscribeNarrowSection = styled(SubscribeSection)`
@@ -159,6 +162,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     PaymentAmount,
     TransactionFee
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
   const {hasUser} = useUser()
   const [openConfirm, setOpenConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -559,10 +563,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
         {autoRenew && termsOfServiceUrl ? (
           <Link underline={'hover'} href={termsOfServiceUrl}>
-            <SubscribeCancelable>Jederzeit kündbar</SubscribeCancelable>
+            <SubscribeCancelable>{t('subscribe.cancellable')}</SubscribeCancelable>
           </Link>
         ) : (
-          autoRenew && <SubscribeCancelable>Jederzeit kündbar</SubscribeCancelable>
+          autoRenew && <SubscribeCancelable>{t('subscribe.cancellable')}</SubscribeCancelable>
         )}
       </SubscribeNarrowSection>
 

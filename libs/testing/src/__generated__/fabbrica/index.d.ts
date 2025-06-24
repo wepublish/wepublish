@@ -1252,6 +1252,7 @@ type MemberPlanFactoryDefineInput = {
     name?: string;
     slug?: string;
     tags?: Prisma.MemberPlanCreatetagsInput | Prisma.Enumerable<string>;
+    shortDescription?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
     description?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     active?: boolean;
     currency?: Currency;

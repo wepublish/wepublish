@@ -248,6 +248,7 @@ type MemberPlan {
   slug: String!
   image: Image
   description: RichText
+  shortDescription: RichText
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
@@ -978,6 +979,7 @@ input MemberPlanInput {
   slug: String!
   imageID: String
   description: RichText
+  shortDescription: RichText
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!

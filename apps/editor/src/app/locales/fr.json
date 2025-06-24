@@ -707,6 +707,7 @@
       "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
+      "shortDescription": "Brève description",
       "editPaymentSetting": "Modifier les paramètres de paiement",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",

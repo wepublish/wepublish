@@ -20,6 +20,7 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -48,8 +49,8 @@ import {
   HauptstadtImageGalleryBlock
 } from '../src/components/hauptstadt-image-block'
 import {
-  HauptstadtMemberPlanPicker,
-  HauptstadtYearlyMemberPlanItem
+  HauptstadtMemberPlanItem,
+  HauptstadtMemberPlanPicker
 } from '../src/components/hauptstadt-memberplan-picker'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
 import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
@@ -73,6 +74,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
@@ -81,6 +83,9 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
       de: {zod: translation}
     }
@@ -132,7 +137,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Banner={HauptstadtBanner}
             Paywall={HauptstadtPaywall}
             MemberPlanPicker={HauptstadtMemberPlanPicker}
-            MemberPlanItem={HauptstadtYearlyMemberPlanItem}
+            MemberPlanItem={HauptstadtMemberPlanItem}
             blocks={{
               Subscribe: Mitmachen,
               Quote: HauptstadtQuoteBlock,

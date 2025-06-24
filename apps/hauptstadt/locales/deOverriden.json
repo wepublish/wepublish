@@ -9,5 +9,11 @@
     "meta": {
       "seperator": ", "
     }
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
+    },
+    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
   }
 }

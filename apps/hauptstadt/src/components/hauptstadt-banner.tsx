@@ -23,7 +23,7 @@ export const HauptstadtBanner = styled(Banner)`
   }
 
   ${BannerContent} {
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({theme}) => theme.breakpoints.up('lg')} {
       border-right: 1px solid ${({theme}) => theme.palette.common.white};
       padding-right: ${({theme}) => theme.spacing(6)};
     }
@@ -45,7 +45,7 @@ export const HauptstadtBanner = styled(Banner)`
       row-gap: ${({theme}) => theme.spacing(4)};
       padding: ${({theme}) => theme.spacing(2)};
 
-      ${({theme}) => theme.breakpoints.up('md')} {
+      ${({theme}) => theme.breakpoints.up('lg')} {
         grid-template-columns: 1fr 1fr;
         align-items: center;
         padding: ${({theme}) => theme.spacing(6)};
@@ -71,7 +71,7 @@ export const HauptstadtBanner = styled(Banner)`
     max-width: ${370 / 16}rem;
 
     ${({theme}) => theme.breakpoints.up('sm')} {
-      bottom: ${({theme}) => theme.spacing(6)};
+      bottom: ${({theme}) => theme.spacing(1)};
     }
 
     ${BannerImage}, ${BannerTitle}, ${BannerText}, ${BannerCloseButton}, [data-role='CANCEL'], ${BannerCtaText} {

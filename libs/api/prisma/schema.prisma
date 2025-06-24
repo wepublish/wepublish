@@ -537,6 +537,7 @@ model MemberPlan {
   name                           String
   slug                           String                   @unique
   tags                           String[]
+  shortDescription               Json?
   description                    Json
   active                         Boolean
   currency                       Currency
