@@ -41,8 +41,8 @@ mutation CreateSessionWithJWT($jwt: String!) {
   }
 }
 
-query CreateJWTForUser($userId: String!) {
-  createJWTForUser(userId: $userId, expiresInMinutes: 1) {
+query CreateJWTForWebsiteLogin {
+  createJWTForWebsiteLogin {
     token
     expiresAt
   }

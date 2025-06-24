@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {useCreateJwtForUserLazyQuery, useMeQuery} from '@wepublish/editor/api'
+import {useCreateJwtForWebsiteLoginLazyQuery, useMeQuery} from '@wepublish/editor/api'
 import {
   CreatePageMutationVariables,
   getApiClientV2,
@@ -130,11 +130,8 @@ function PageEditor() {
   const {data: user} = useMeQuery({
     fetchPolicy: 'cache-only'
   })
-  const [createJWT] = useCreateJwtForUserLazyQuery({
-    errorPolicy: 'none',
-    variables: {
-      userId: user?.me?.id ?? ''
-    }
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const {t} = useTranslation()
@@ -412,7 +409,7 @@ function PageEditor() {
                       const {data: jwt} = await createJWT()
 
                       window.open(
-                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForUser?.token}`,
+                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForWebsiteLogin?.token}`,
                         '_blank'
                       )
                     }}>

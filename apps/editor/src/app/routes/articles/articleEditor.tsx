@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment, useCreateJwtForUserLazyQuery, useMeQuery} from '@wepublish/editor/api'
+import {AuthorRefFragment, useCreateJwtForWebsiteLoginLazyQuery} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
@@ -173,14 +173,8 @@ function ArticleEditor() {
     variables: {id: articleID!}
   })
 
-  const {data: user} = useMeQuery({
-    fetchPolicy: 'cache-only'
-  })
-  const [createJWT] = useCreateJwtForUserLazyQuery({
-    errorPolicy: 'none',
-    variables: {
-      userId: user?.me?.id ?? ''
-    }
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const isNotFound = articleData && !articleData.article
@@ -483,7 +477,7 @@ function ArticleEditor() {
         </Message>
       )
     }
-  }, [isNotFound])
+  }, [isNotFound, t])
 
   const [infoData, setInfoData] = useState<InfoData>({
     charCount: 0
@@ -588,7 +582,9 @@ function ArticleEditor() {
                       const {data: jwt} = await createJWT()
 
                       window.open(
-                        `${articleData!.article.previewUrl}&jwt=${jwt?.createJWTForUser?.token}`,
+                        `${articleData!.article.previewUrl}&jwt=${
+                          jwt?.createJWTForWebsiteLogin?.token
+                        }`,
                         '_blank'
                       )
                     }}>
