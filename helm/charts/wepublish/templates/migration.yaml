@@ -27,6 +27,13 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.migration.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ .Values.migration.resources.requests.memory | default "200Mi" }}
+              cpu: {{ .Values.migration.resources.requests.cpu | default "200m" }}
+            limits:
+              memory: {{ .Values.migration.resources.limits.memory | default "512Mi" }}
+              cpu: {{ .Values.migration.resources.limits.cpu | default "400m" }}
           env:
             {{- if .Values.migration.dynamicEnv }}
             {{- range $key, $value := .Values.migration.dynamicEnv }}
