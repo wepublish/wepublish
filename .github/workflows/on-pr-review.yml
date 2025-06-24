@@ -157,6 +157,13 @@ jobs:
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
+            resources:
+              requests:
+                memory: 100Mi
+                cpu: 200m
+              limits:
+                memory: 256Mi
+                cpu: 300m
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
             resources:
@@ -285,6 +292,13 @@ jobs:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
+            resources:
+              requests:
+                memory: 8Mi
+                cpu: 1m
+              limits:
+                memory: 16Mi
+                cpu: 20m
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:

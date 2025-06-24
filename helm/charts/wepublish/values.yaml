@@ -128,6 +128,13 @@ migration:
   dynamicEnv: {}
   properties: {}
   replicaCount: 1
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 200m
+    limits:
+      memory: 512Mi
+      cpu: 300m
 
 editor:
   image: ghcr.io/wepublish/editor
@@ -163,6 +170,13 @@ storybook:
   imagePullSecret:
   url: https://storybook
   env: {}
+  resources:
+    requests:
+      memory: 8Mi
+      cpu: 1m
+    limits:
+      memory: 16Mi
+      cpu: 20m
 
 media:
   image: ghcr.io/wepublish/media
