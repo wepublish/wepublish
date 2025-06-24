@@ -56,6 +56,13 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.editor.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          resources:
+            requests:
+              memory: { { .Values.editor.resources.requests.memory } }
+              cpu: { { .Values.editor.resources.requests.cpu } }
+            limits:
+              memory: { { .Values.editor.resources.limits.memory } }
+              cpu: { { .Values.editor.limits.requests.cpu } }
           ports:
             - name: http
               containerPort: 3000

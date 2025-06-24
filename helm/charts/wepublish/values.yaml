@@ -9,6 +9,13 @@ deployment:
 
 api:
   image: ghcr.io/wepublish/api
+  resources:
+    requests:
+      memory: '512Mi'
+      cpu: '100m'
+    limits:
+      memory: '1024Mi'
+      cpu: '500m'
   env:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
@@ -130,6 +137,13 @@ editor:
   dynamicEnv: {}
   properties: {}
   replicaCount: 1
+  resources:
+    requests:
+      memory: 32Mi
+      cpu: 25m
+    limits:
+      memory: 64Mi
+      cpu: 100m
 
 website:
   enabled: false
@@ -157,5 +171,12 @@ media:
   envFromSecretRefName:
   properties: {}
   replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
 
 labels: {}
