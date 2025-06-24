@@ -54,7 +54,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {Descendant, Element, type Node, Text} from 'slate'
+import {type Node, Descendant, Element, Text} from 'slate'
 
 import {ClientSettings} from '../../../shared/types'
 
@@ -569,7 +569,10 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={articleData?.article.previewUrl ?? ''} className="actionButton">
+                  <Link
+                    to={articleData?.article.previewUrl ?? ''}
+                    className="actionButton"
+                    target="_blank">
                     <IconButtonMarginTop
                       disabled={hasChanged || !id || !canPreview}
                       size="lg"
