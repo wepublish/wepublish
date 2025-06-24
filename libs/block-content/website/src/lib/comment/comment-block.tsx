@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {BlockContent, CommentBlock as CommentBlockType} from '@wepublish/website/api'
 import {BuilderCommentBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
@@ -15,9 +16,10 @@ export const CommentBlockActions = styled('div')``
 
 export const CommentBlock = ({className, comments}: BuilderCommentBlockProps) => {
   const {Comment: BuilderComment} = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   return (
-    <CommentBlockWrapper className={className}>
+    <CommentBlockWrapper className={className} {...readingListProps}>
       {comments?.map(({children, ...comment}) => (
         <BuilderComment key={comment.id} includeAnchor={false} {...comment} />
       ))}

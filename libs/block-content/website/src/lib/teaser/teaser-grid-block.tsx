@@ -7,6 +7,7 @@ import {
   TeaserGridBlock as TeaserGridBlockType
 } from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isTeaserGridBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -80,11 +81,11 @@ export const TeaserGridBlock = ({
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
-
+  const [readingListProps] = useReadingList()
   const filledTeasers = teasers.filter(isFilledTeaser)
 
   return (
-    <TeaserGridBlockWrapper className={className} numColumns={numColumns}>
+    <TeaserGridBlockWrapper className={className} numColumns={numColumns} {...readingListProps}>
       {filledTeasers.map((teaser, index) => (
         <Teaser
           key={index}

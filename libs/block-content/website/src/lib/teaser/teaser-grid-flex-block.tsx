@@ -9,6 +9,7 @@ import {BuilderTeaserGridFlexBlockProps, useWebsiteBuilder} from '@wepublish/web
 import {ascend, compose, filter, sortWith} from 'ramda'
 import {useMemo} from 'react'
 import {isFilledTeaser} from './teaser-grid-block'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isTeaserGridFlexBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -49,6 +50,7 @@ export const TeaserGridFlexBlock = ({
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   const sortedTeasers = useMemo(
     () => (flexTeasers ? fixFlexTeasers(flexTeasers) : []),
@@ -56,7 +58,7 @@ export const TeaserGridFlexBlock = ({
   )
 
   return (
-    <TeaserGridFlexBlockWrapper className={className}>
+    <TeaserGridFlexBlockWrapper className={className} {...readingListProps}>
       {sortedTeasers.map((teaser, index) => (
         <Teaser key={index} {...teaser} blockStyle={blockStyle} />
       ))}

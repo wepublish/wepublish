@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {BlockContent, FacebookPostBlock as FacebookPostBlockType} from '@wepublish/website/api'
 import {BuilderFacebookPostBlockProps} from '@wepublish/website/builder'
 
@@ -9,5 +10,11 @@ export const isFacebookPostBlock = (
 export const FacebookPostBlockWrapper = styled('div')``
 
 export function FacebookPostBlock({userID, postID, className}: BuilderFacebookPostBlockProps) {
-  return <FacebookPostBlockWrapper className={className}></FacebookPostBlockWrapper>
+  const [readingListProps] = useReadingList()
+
+  return (
+    <FacebookPostBlockWrapper
+      className={className}
+      {...readingListProps}></FacebookPostBlockWrapper>
+  )
 }

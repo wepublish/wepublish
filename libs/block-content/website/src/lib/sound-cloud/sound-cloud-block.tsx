@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {
   BlockContent,
   SoundCloudTrackBlock as SoundCloudTrackBlockType
@@ -17,13 +18,17 @@ export const SoundCloudTrackBlockPlayer = styled(ReactPlayer)`
   aspect-ratio: 16/9;
 `
 
-export const SoundCloudTrackBlock = ({trackID, className}: BuilderSoundCloudTrackBlockProps) => (
-  <SoundCloudTrackBlockWrapper className={className}>
-    <SoundCloudTrackBlockPlayer
-      width={'auto'}
-      height={'auto'}
-      url={`https://api.soundcloud.com/tracks/${trackID}`}
-      controls={true}
-    />
-  </SoundCloudTrackBlockWrapper>
-)
+export const SoundCloudTrackBlock = ({trackID, className}: BuilderSoundCloudTrackBlockProps) => {
+  const [readingListProps] = useReadingList()
+
+  return (
+    <SoundCloudTrackBlockWrapper className={className} {...readingListProps}>
+      <SoundCloudTrackBlockPlayer
+        width={'auto'}
+        height={'auto'}
+        url={`https://api.soundcloud.com/tracks/${trackID}`}
+        controls={true}
+      />
+    </SoundCloudTrackBlockWrapper>
+  )
+}

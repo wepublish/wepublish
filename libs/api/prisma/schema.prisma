@@ -114,6 +114,7 @@ model Article {
   tags           TaggedArticles[]
   revisions      ArticleRevision[]
   trackingPixels ArticleTrackingPixels[]
+  readers        ReadingList[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -939,6 +940,7 @@ model User {
   consents         UserConsent[]
   articleRevisions ArticleRevision[]
   pageRevisions    PageRevision[]
+  readArticles     ReadingList[]
 
   @@map("users")
 }
@@ -1371,4 +1373,20 @@ model CrowdfundingGoal {
   crowdfundingId String       @db.Uuid
 
   @@map("crowdfunding_goals")
+}
+
+model ReadingList {
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  blockIndex Int     @default(0)
+  completed  Boolean @default(false)
+
+  @@id([articleId, userId])
+  @@map("reading-list")
 }

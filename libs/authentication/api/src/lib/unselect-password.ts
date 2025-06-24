@@ -36,5 +36,6 @@ export const unselectPassword: Record<
   password: false,
   active: true,
   lastLogin: true,
-  roleIDs: true
+  roleIDs: true,
+  readArticles: true
 } as const

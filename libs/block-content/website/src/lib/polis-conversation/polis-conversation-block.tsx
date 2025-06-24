@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {
   BlockContent,
   PolisConversationBlock as PolisConversationBlockType
@@ -15,5 +16,11 @@ export function PolisConversationBlock({
   conversationID,
   className
 }: BuilderPolisConversationBlockProps) {
-  return <PolisConversationBlockWrapper className={className}></PolisConversationBlockWrapper>
+  const [readingListProps] = useReadingList()
+
+  return (
+    <PolisConversationBlockWrapper
+      className={className}
+      {...readingListProps}></PolisConversationBlockWrapper>
+  )
 }

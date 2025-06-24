@@ -1,3 +1,4 @@
+export * from './lib/reading-list.interface'
 export * from './lib/article.interface'
 export * from './lib/authentication.interface'
 export * from './lib/author.interface'

@@ -5,6 +5,7 @@ import {useWebsiteBuilder, BuilderBlockStyleProps} from '@wepublish/website/buil
 import {isBreakBlock} from '../../break/break-block'
 import {hasBlockStyle} from '../../blocks'
 import {allPass} from 'ramda'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const BannerWrapper = styled('a')`
   aspect-ratio: 2.7/1;
@@ -23,9 +24,10 @@ export const Banner = ({image, linkURL, linkTarget}: BuilderBlockStyleProps['Ban
   const {
     elements: {Image}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   return (
-    <BannerWrapper href={linkURL ?? ''} target={linkTarget ?? '_blank'}>
+    <BannerWrapper href={linkURL ?? ''} target={linkTarget ?? '_blank'} {...readingListProps}>
       {image && <Image image={image} css={imageStyles} />}
     </BannerWrapper>
   )

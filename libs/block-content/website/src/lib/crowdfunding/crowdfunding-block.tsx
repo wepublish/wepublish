@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import {Alert, AlertTitle, css, IconButton, LinearProgress, Theme, Tooltip} from '@mui/material'
+import {css, IconButton, LinearProgress, Theme, Tooltip} from '@mui/material'
 import {formatCurrency} from '@wepublish/membership/website'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {
   BlockContent,
   CrowdfundingBlock as CrowdfundingBlockType,
@@ -67,6 +68,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
   const {
     elements: {H5}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   const activeCrowdfunding = crowdfunding?.activeCrowdfundingGoal
   const progress = activeCrowdfunding?.progress ?? 0
@@ -75,15 +77,11 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
   const goalDescription = activeCrowdfunding?.description
 
   if (!crowdfunding) {
-    return (
-      <Alert severity="error">
-        <AlertTitle>Crowdfunding nicht verfügbar.</AlertTitle>
-      </Alert>
-    )
+    return null
   }
 
   return (
-    <CrowdfundingContainer>
+    <CrowdfundingContainer {...readingListProps}>
       <CfInner>
         <H5 component="div" css={titleStyles}>
           Bereits <strong css={noWrap}>{formatCurrency(revenue / 100, Currency.Chf)}</strong>{' '}

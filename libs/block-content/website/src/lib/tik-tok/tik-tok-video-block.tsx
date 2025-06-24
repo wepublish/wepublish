@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {BuilderTikTokVideoBlockProps} from '@wepublish/website/builder'
 import {BlockContent, TikTokVideoBlock as TikTokVideoBlockType} from '@wepublish/website/api'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isTikTokVideoBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -20,8 +21,10 @@ export const TikTokVideoBlockPlayer = styled('iframe')`
 `
 
 export function TikTokVideoBlock({videoID, className}: BuilderTikTokVideoBlockProps) {
+  const [readingListProps] = useReadingList()
+
   return (
-    <TikTokVideoBlockWrapper className={className}>
+    <TikTokVideoBlockWrapper className={className} {...readingListProps}>
       <TikTokVideoBlockPlayer
         src={`https://www.tiktok.com/embed/v2/${videoID}`}
         allowFullScreen
