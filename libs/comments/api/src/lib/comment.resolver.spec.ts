@@ -63,7 +63,10 @@ const mockComment: Comment = {
   state: CommentState.approved,
   createdAt: new Date('2002-12-29'),
   modifiedAt: new Date('2002-12-29'),
-  children: []
+  children: [],
+  calculatedRatings: [],
+  overriddenRatings: [],
+  userRatings: []
 }
 
 describe('UserConsentResolver', () => {
