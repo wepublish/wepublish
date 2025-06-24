@@ -207,6 +207,7 @@ import {GoogleAnalyticsModule, GoogleAnalyticsService} from '@wepublish/google-a
         const paymentProviders: PaymentProvider[] = []
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const paymentProvidersRaw = configFile.paymentProviders
+
         if (paymentProvidersRaw) {
           for (const paymentProvider of paymentProvidersRaw) {
             if (paymentProvider.type === 'stripe-checkout') {
