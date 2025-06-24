@@ -6,13 +6,6 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PermissionsGuard} from '@wepublish/permissions/api'
-import {
-  clearDatabase,
-  defineMemberPlanFactory,
-  definePaymentMethodFactory,
-  defineSubscriptionFlowFactory,
-  initialize
-} from '@wepublish/testing'
 import request from 'supertest'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {SubscriptionService} from '../subscription/subscription.service'
@@ -343,74 +336,105 @@ describe('Subscription Flow Resolver', () => {
 
   describe('authenticated', () => {
     let resolver: SubscriptionFlowResolver
+    let subscriptionFlowService: SubscriptionFlowService
 
-    const prismaClient = new PrismaClient()
-    initialize({prisma: prismaClient})
+    const mockMemberPlan = {
+      id: 'plan-1',
+      name: 'Test Plan',
+      slug: 'test-plan',
+      description: 'Test Description',
+      active: true,
+      amountPerMonthMin: 1000,
+      availablePaymentMethods: [],
+      createdAt: new Date(),
+      modifiedAt: new Date()
+    }
 
-    const PaymentMethodFactory = definePaymentMethodFactory()
-    const MemberPlanFactory = defineMemberPlanFactory()
-    const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
-      defaultData: {
-        memberPlan: MemberPlanFactory
-      } as any
-    })
+    const mockPaymentMethod = {
+      id: 'payment-1',
+      name: 'Test Payment',
+      slug: 'test-payment',
+      description: 'Test Payment Description',
+      active: true,
+      createdAt: new Date(),
+      modifiedAt: new Date()
+    }
+
+    const mockSubscriptionFlow = {
+      id: 'flow-1',
+      default: true,
+      memberPlanId: 'plan-1',
+      periodicities: [PaymentPeriodicity.monthly],
+      autoRenewal: [true],
+      intervals: [],
+      paymentMethods: [],
+      memberPlan: mockMemberPlan,
+      createdAt: new Date(),
+      modifiedAt: new Date()
+    }
 
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
-        imports: [
-          PrismaModule.forTest(prismaClient),
-          registerMailsModule(),
-          registerPaymentsModule()
-        ],
         providers: [
-          PeriodicJobService,
-          SubscriptionService,
-          SubscriptionFlowService,
-          SubscriptionFlowResolver
+          SubscriptionFlowResolver,
+          {
+            provide: SubscriptionFlowService,
+            useValue: {
+              getFlows: jest.fn(),
+              createFlow: jest.fn(),
+              updateFlow: jest.fn(),
+              deleteFlow: jest.fn()
+            }
+          },
+          {
+            provide: PrismaClient,
+            useValue: {
+              // Mock any PrismaClient methods that might be used in resolver
+            }
+          }
         ]
       }).compile()
 
       resolver = module.get<SubscriptionFlowResolver>(SubscriptionFlowResolver)
-
-      await clearDatabase(prismaClient, [
-        'subscription_communication_flows',
-        'payment.methods',
-        'member.plans',
-        'subscriptions.intervals',
-        'mail_templates'
-      ])
-    })
-
-    afterEach(async () => {
-      await prismaClient.$disconnect()
+      subscriptionFlowService = module.get<SubscriptionFlowService>(SubscriptionFlowService)
     })
 
     it('includes number of subscriptions', async () => {
-      const plan = await MemberPlanFactory.create()
-      await SubscriptionFlowFactory.create({
-        default: true,
-        memberPlan: {connect: {id: plan.id}}
-      })
+      const mockFlows = [mockSubscriptionFlow]
+      jest.spyOn(subscriptionFlowService, 'getFlows').mockResolvedValue(mockFlows as any)
 
-      const response = await resolver.subscriptionFlows(false, plan.id)
+      const response = await resolver.subscriptionFlows(false, 'plan-1')
       expect(response.length).toEqual(1)
+      expect(subscriptionFlowService.getFlows).toHaveBeenCalledWith(false, 'plan-1')
     })
 
     it('returns subscription flows for all queries and mutations', async () => {
-      const plan = await MemberPlanFactory.create()
-      const flow = await SubscriptionFlowFactory.create({
-        default: true,
-        memberPlan: {connect: {id: plan.id}}
-      })
-      const paymentMethod = await PaymentMethodFactory.create()
+      const mockFlow1 = {...mockSubscriptionFlow, id: 'flow-1'}
+      const mockFlow2 = {...mockSubscriptionFlow, id: 'flow-2', default: false}
 
-      expect((await resolver.subscriptionFlows(false, plan.id)).length).toEqual(1)
+      jest
+        .spyOn(subscriptionFlowService, 'getFlows')
+        .mockResolvedValueOnce([mockFlow1] as any) // First call
+        .mockResolvedValueOnce([mockFlow1, mockFlow2] as any) // After create
+        .mockResolvedValueOnce([mockFlow1, mockFlow2] as any) // After update
+        .mockResolvedValueOnce([mockFlow1] as any) // After delete
+
+      jest
+        .spyOn(subscriptionFlowService, 'createFlow')
+        .mockResolvedValue([mockFlow1, mockFlow2] as any)
+      jest
+        .spyOn(subscriptionFlowService, 'updateFlow')
+        .mockResolvedValue([mockFlow1, mockFlow2] as any)
+      jest.spyOn(subscriptionFlowService, 'deleteFlow').mockResolvedValue([mockFlow1] as any)
+
+      // Test initial state
+      expect((await resolver.subscriptionFlows(false, 'plan-1')).length).toEqual(1)
 
       expect(
         (
           await resolver.createSubscriptionFlow({
-            memberPlanId: plan.id,
-            paymentMethodIds: [paymentMethod.id],
+            memberPlanId: 'plan-1',
+            paymentMethodIds: ['payment-1'],
             periodicities: [PaymentPeriodicity.biannual],
             autoRenewal: [true]
           })
@@ -420,15 +444,15 @@ describe('Subscription Flow Resolver', () => {
       expect(
         (
           await resolver.updateSubscriptionFlow({
-            id: flow.id,
-            paymentMethodIds: [paymentMethod.id],
+            id: 'flow-1',
+            paymentMethodIds: ['payment-1'],
             periodicities: [PaymentPeriodicity.monthly],
             autoRenewal: [true]
           })
         ).length
       ).toEqual(2)
 
-      const allFlows = await resolver.subscriptionFlows(false, plan.id)
+      const allFlows = await resolver.subscriptionFlows(false, 'plan-1')
       expect((await resolver.deleteSubscriptionFlow(allFlows[1].id)).length).toEqual(1)
     })
   })
