@@ -654,7 +654,7 @@ export type CreateCrowdfundingInput = {
 }
 
 export type CreateCrowdfundingMemberPlan = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type Crowdfunding = {
@@ -664,7 +664,7 @@ export type Crowdfunding = {
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>
   createdAt: Scalars['DateTime']
   goals: Array<CrowdfundingGoal>
-  id: Scalars['ID']
+  id: Scalars['String']
   memberPlans: Array<CrowdfundingMemberPlan>
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
@@ -710,7 +710,7 @@ export type CrowdfundingGoalWithProgress = {
 
 export type CrowdfundingMemberPlan = {
   __typename?: 'CrowdfundingMemberPlan'
-  id: Scalars['ID']
+  id: Scalars['String']
   name: Scalars['String']
 }
 
@@ -722,7 +722,7 @@ export type CrowdfundingWithActiveGoal = {
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>
   createdAt: Scalars['DateTime']
   goals: Array<CrowdfundingGoal>
-  id: Scalars['ID']
+  id: Scalars['String']
   memberPlans: Array<CrowdfundingMemberPlan>
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
@@ -1408,7 +1408,9 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -1807,7 +1809,7 @@ export type MutationDeleteConsentArgs = {
 }
 
 export type MutationDeleteCrowdfundingArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type MutationDeleteEventArgs = {
@@ -2507,24 +2509,26 @@ export type PublicPropertiesInput = {
   value: Scalars['String']
 }
 
-export type PublicSubscription = HasUser & {
-  __typename?: 'PublicSubscription'
-  autoRenew: Scalars['Boolean']
-  canExtend: Scalars['Boolean']
-  deactivation?: Maybe<SubscriptionDeactivation>
-  extendable: Scalars['Boolean']
-  id: Scalars['String']
-  memberPlan: MemberPlan
-  monthlyAmount: Scalars['Int']
-  paidUntil?: Maybe<Scalars['DateTime']>
-  paymentMethod: PaymentMethod
-  paymentPeriodicity: PaymentPeriodicity
-  properties: Array<PublicProperties>
-  startsAt: Scalars['DateTime']
-  url: Scalars['String']
-  user: User
-  userID: Scalars['String']
-}
+export type PublicSubscription = HasPaymentMethod &
+  HasUser & {
+    __typename?: 'PublicSubscription'
+    autoRenew: Scalars['Boolean']
+    canExtend: Scalars['Boolean']
+    deactivation?: Maybe<SubscriptionDeactivation>
+    extendable: Scalars['Boolean']
+    id: Scalars['String']
+    memberPlan: MemberPlan
+    monthlyAmount: Scalars['Int']
+    paidUntil?: Maybe<Scalars['DateTime']>
+    paymentMethod: PaymentMethod
+    paymentMethodID: Scalars['String']
+    paymentPeriodicity: PaymentPeriodicity
+    properties: Array<PublicProperties>
+    startsAt: Scalars['DateTime']
+    url: Scalars['String']
+    user: User
+    userID: Scalars['String']
+  }
 
 export type Query = {
   __typename?: 'Query'
@@ -2788,7 +2792,7 @@ export type QueryConsentsArgs = {
 }
 
 export type QueryCrowdfundingArgs = {
-  id: Scalars['ID']
+  id: Scalars['String']
 }
 
 export type QueryDailySubscriptionStatsArgs = {
@@ -2954,7 +2958,7 @@ export type QuerySubscriptionFlowsArgs = {
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['String']>
   filter?: InputMaybe<TagFilter>
-  order?: SortOrder
+  order?: InputMaybe<SortOrder>
   skip?: Scalars['Int']
   sort?: TagSort
   take?: Scalars['Int']
@@ -3448,7 +3452,7 @@ export type UpdateCrowdfundingInput = {
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>
-  id: Scalars['ID']
+  id: Scalars['String']
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>
   name: Scalars['String']
 }

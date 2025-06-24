@@ -1363,7 +1363,9 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -2523,7 +2525,7 @@ export type PublicPropertiesInput = {
   value: Scalars['String'];
 };
 
-export type PublicSubscription = HasUser & {
+export type PublicSubscription = HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
   canExtend: Scalars['Boolean'];
@@ -2534,6 +2536,7 @@ export type PublicSubscription = HasUser & {
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
+  paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PublicProperties>;
   startsAt: Scalars['DateTime'];
@@ -3014,7 +3017,7 @@ export type QuerySubscriptionFlowsArgs = {
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
-  order?: SortOrder;
+  order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: TagSort;
   take?: Scalars['Int'];
@@ -8853,7 +8856,8 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "PageCreatedAction"
     ],
     "HasPaymentMethod": [
-      "Payment"
+      "Payment",
+      "PublicSubscription"
     ],
     "HasPoll": [
       "PollStartedAction"
