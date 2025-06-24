@@ -38,31 +38,30 @@ export class ChallengeModule {
 }
 
 const createChallengeProviderFromConfig = (challenge: ChallengeModuleOptions['challenge']) => {
-  switch (challenge.type) {
-    case 'turnstile':
-      return new CFTurnstileProvider(challenge.secret, challenge.siteKey)
-
-    case 'algebraic':
-      const algebraicConfig = challenge
-      return new AlgebraicCaptchaChallenge(
-        algebraicConfig.secret,
-        algebraicConfig.validTime || 600, // default 10 minutes
-        {
-          width: algebraicConfig.width,
-          height: algebraicConfig.height,
-          background: algebraicConfig.background,
-          noise: algebraicConfig.noise,
-          minValue: algebraicConfig.minValue,
-          maxValue: algebraicConfig.maxValue,
-          operandAmount: algebraicConfig.operandAmount,
-          operandTypes: algebraicConfig.operandTypes,
-          mode: algebraicConfig.mode,
-          targetSymbol: algebraicConfig.targetSymbol
-        }
-      )
-
-    default:
-      const exhaustiveCheck: never = challenge
-      throw new Error(`Unsupported challenge type: ${(exhaustiveCheck as any).type}`)
+  if (challenge.type === 'turnstile') {
+    return new CFTurnstileProvider(challenge.secret, challenge.siteKey)
   }
+
+  if (challenge.type === 'algebraic') {
+    const algebraicConfig = challenge
+    return new AlgebraicCaptchaChallenge(
+      algebraicConfig.secret,
+      algebraicConfig.validTime || 600, // default 10 minutes
+      {
+        width: algebraicConfig.width,
+        height: algebraicConfig.height,
+        background: algebraicConfig.background,
+        noise: algebraicConfig.noise,
+        minValue: algebraicConfig.minValue,
+        maxValue: algebraicConfig.maxValue,
+        operandAmount: algebraicConfig.operandAmount,
+        operandTypes: algebraicConfig.operandTypes,
+        mode: algebraicConfig.mode,
+        targetSymbol: algebraicConfig.targetSymbol
+      }
+    )
+  }
+
+  const exhaustiveCheck: never = challenge
+  throw new Error(`Unsupported challenge type: ${(exhaustiveCheck as any).type}`)
 }

@@ -350,16 +350,6 @@ describe('Subscription Flow Resolver', () => {
       modifiedAt: new Date()
     }
 
-    const mockPaymentMethod = {
-      id: 'payment-1',
-      name: 'Test Payment',
-      slug: 'test-payment',
-      description: 'Test Payment Description',
-      active: true,
-      createdAt: new Date(),
-      modifiedAt: new Date()
-    }
-
     const mockSubscriptionFlow = {
       id: 'flow-1',
       default: true,

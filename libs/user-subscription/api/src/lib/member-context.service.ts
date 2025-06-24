@@ -1,4 +1,4 @@
-import {MemberContext} from 'libs/api/src/lib/memberContext'
+import {MemberContext} from '@wepublish/api'
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {PaymentsService} from '@wepublish/payment/api'

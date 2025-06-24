@@ -1,8 +1,6 @@
 import nock from 'nock'
 import {MailTemplate, PrismaClient} from '@prisma/client'
 import {Test, TestingModule} from '@nestjs/testing'
-import {forwardRef} from '@nestjs/common'
-import {PrismaModule} from '@wepublish/nest-modules'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 import Mailgun from 'mailgun.js'

@@ -1,7 +1,7 @@
 import {ArgsType, Field, ObjectType} from '@nestjs/graphql'
 import {ChallengeInput} from '@wepublish/challenge/api'
 import {User, UserAddressInput} from '@wepublish/user/api'
-import {SessionWithTokenWithoutUser} from '@wepublish/session/api'
+import {SessionWithTokenWithoutUser} from './session.model'
 
 @ObjectType()
 export class Registration {

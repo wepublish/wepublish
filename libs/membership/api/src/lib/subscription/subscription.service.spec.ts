@@ -1,17 +1,13 @@
 import {
   Currency,
-  Invoice,
   PaymentPeriodicity,
   PrismaClient,
-  Subscription,
   SubscriptionDeactivationReason,
   SubscriptionEvent
 } from '@prisma/client'
 import nock from 'nock'
-
-import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
-import {PrismaModule} from '@wepublish/nest-modules'
+
 import {PaymentsService} from '@wepublish/payment/api'
 import {add, sub} from 'date-fns'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
@@ -40,17 +36,6 @@ describe('SubscriptionPaymentsService', () => {
     active: true,
     amountPerMonthMin: 100,
     currency: Currency.CHF,
-    createdAt: new Date(),
-    modifiedAt: new Date()
-  }
-
-  const mockPaymentMethod = {
-    id: 'payment-1',
-    name: 'Test Payment',
-    slug: 'test-payment',
-    description: 'Test Payment Method',
-    paymentProviderID: 'stripe',
-    active: true,
     createdAt: new Date(),
     modifiedAt: new Date()
   }
@@ -148,7 +133,7 @@ describe('SubscriptionPaymentsService', () => {
 
     prismaMock.subscription.findMany!.mockResolvedValue(mockSubscriptions)
 
-    let subscriptionsToExtend = await subscriptionService.getActiveSubscriptionsWithoutInvoice(
+    const subscriptionsToExtend = await subscriptionService.getActiveSubscriptionsWithoutInvoice(
       new Date(),
       add(new Date(), {days: 200})
     )
@@ -180,7 +165,7 @@ describe('SubscriptionPaymentsService', () => {
 
     prismaMock.invoice.findMany!.mockResolvedValue(mockInvoices)
 
-    let invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
+    const invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(2)
     expect(prismaMock.invoice.findMany).toHaveBeenCalled()
   })
@@ -211,7 +196,7 @@ describe('SubscriptionPaymentsService', () => {
       mockInvoices.filter(inv => inv.subscription.confirmed)
     )
 
-    let invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
+    const invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(1)
     expect(prismaMock.invoice.findMany).toHaveBeenCalled()
   })
@@ -232,7 +217,7 @@ describe('SubscriptionPaymentsService', () => {
 
     prismaMock.invoice.findMany!.mockResolvedValue(mockInvoices)
 
-    let invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
+    const invoicesToCharge = await subscriptionService.findUnpaidDueInvoices(new Date())
     expect(invoicesToCharge.length).toEqual(1)
     expect(invoicesToCharge[0].id).toEqual('invoice-1')
     expect(prismaMock.invoice.findMany).toHaveBeenCalled()
@@ -250,9 +235,8 @@ describe('SubscriptionPaymentsService', () => {
 
     prismaMock.invoice.findMany!.mockResolvedValue(mockInvoices)
 
-    let invoicesToDeactivate = await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
-      new Date()
-    )
+    const invoicesToDeactivate =
+      await subscriptionService.findUnpaidScheduledForDeactivationInvoices(new Date())
     expect(invoicesToDeactivate.length).toEqual(1)
     expect(prismaMock.invoice.findMany).toHaveBeenCalled()
   })

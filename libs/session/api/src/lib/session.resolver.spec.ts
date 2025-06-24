@@ -4,7 +4,8 @@ import {GraphQLModule} from '@nestjs/graphql'
 import {Test, TestingModule} from '@nestjs/testing'
 import request from 'supertest'
 import {createMock, PartialMocked, TestQueryResolver} from '@wepublish/testing'
-import {SessionResolver, SessionService} from '@wepublish/session/api'
+import {SessionResolver} from './session.resolver'
+import {SessionService} from './session.service'
 
 export const CreateSession = `
   mutation CreateSession($email: String!, $password: String!) {

@@ -36,7 +36,7 @@ export class SessionResolver {
   @Mutation(() => Boolean, {
     description: 'This mutation revokes and deletes the active session.'
   })
-  async revokeActiveSession(@CurrentUser() session: UserSession | null): Promise<Boolean> {
+  async revokeActiveSession(@CurrentUser() session: UserSession | null): Promise<boolean> {
     return await this.sessionService.revokeSession(session)
   }
 

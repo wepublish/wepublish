@@ -1,5 +1,6 @@
-import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, SubscriptionFlow} from '@prisma/client'
+import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {add, format, sub} from 'date-fns'
+
 import nock from 'nock'
 import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 
