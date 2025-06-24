@@ -988,8 +988,8 @@ export type FlexTeaserInput = {
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
-  x?: Maybe<Scalars['Float']>;
-  y?: Maybe<Scalars['Float']>;
+  x: Scalars['Float'];
+  y: Scalars['Float'];
 };
 
 export type FullCommentRatingSystem = {
@@ -1176,7 +1176,7 @@ export type Image = {
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   transformURL?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   width: Scalars['Int'];
 };
 
@@ -1285,8 +1285,8 @@ export type ImportedEventsDocument = {
 };
 
 export type InputPoint = {
-  x?: InputMaybe<Scalars['Float']>;
-  y?: InputMaybe<Scalars['Float']>;
+  x: Scalars['Float'];
+  y: Scalars['Float'];
 };
 
 export type InstagramPostBlock = BaseBlock & {
@@ -2269,13 +2269,10 @@ export type PaymentFromInvoiceInput = {
 
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -3646,11 +3643,11 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>;
 };
 
-export type FullImageFragment = { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null };
+export type FullImageFragment = { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null };
 
 type ImportBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock' };
 
-type ImportBlock_BreakBlock_Fragment = { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText: Descendant[], hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null };
+type ImportBlock_BreakBlock_Fragment = { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText: Descendant[], hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null };
 
 type ImportBlock_CommentBlock_Fragment = { __typename: 'CommentBlock' };
 
@@ -3666,19 +3663,19 @@ type ImportBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock' };
 
 type ImportBlock_IFrameBlock_Fragment = { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null };
 
-type ImportBlock_ImageBlock_Fragment = { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null };
+type ImportBlock_ImageBlock_Fragment = { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null };
 
-type ImportBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }> };
+type ImportBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }> };
 
 type ImportBlock_InstagramPostBlock_Fragment = { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null };
 
-type ImportBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText: Descendant[], image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }> };
+type ImportBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText: Descendant[], image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }> };
 
 type ImportBlock_PolisConversationBlock_Fragment = { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null };
 
 type ImportBlock_PollBlock_Fragment = { __typename: 'PollBlock' };
 
-type ImportBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null };
+type ImportBlock_QuoteBlock_Fragment = { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null };
 
 type ImportBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText: Descendant[] };
 
@@ -3708,9 +3705,9 @@ type ImportBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock',
 
 export type ImportBlockFragment = ImportBlock_BildwurfAdBlock_Fragment | ImportBlock_BreakBlock_Fragment | ImportBlock_CommentBlock_Fragment | ImportBlock_CrowdfundingBlock_Fragment | ImportBlock_EventBlock_Fragment | ImportBlock_FacebookPostBlock_Fragment | ImportBlock_FacebookVideoBlock_Fragment | ImportBlock_HtmlBlock_Fragment | ImportBlock_IFrameBlock_Fragment | ImportBlock_ImageBlock_Fragment | ImportBlock_ImageGalleryBlock_Fragment | ImportBlock_InstagramPostBlock_Fragment | ImportBlock_ListicleBlock_Fragment | ImportBlock_PolisConversationBlock_Fragment | ImportBlock_PollBlock_Fragment | ImportBlock_QuoteBlock_Fragment | ImportBlock_RichTextBlock_Fragment | ImportBlock_SoundCloudTrackBlock_Fragment | ImportBlock_SubscribeBlock_Fragment | ImportBlock_TeaserGridBlock_Fragment | ImportBlock_TeaserGridFlexBlock_Fragment | ImportBlock_TeaserListBlock_Fragment | ImportBlock_TeaserSlotsBlock_Fragment | ImportBlock_TikTokVideoBlock_Fragment | ImportBlock_TitleBlock_Fragment | ImportBlock_TwitterTweetBlock_Fragment | ImportBlock_UnknownBlock_Fragment | ImportBlock_VimeoVideoBlock_Fragment | ImportBlock_YouTubeVideoBlock_Fragment;
 
-export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null };
+export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null };
 
-export type SlimArticleFragment = { __typename?: 'Article', id: string, publishedAt?: string | null, createdAt: string, modifiedAt: string, slug?: string | null, url: string, latest: { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }> };
+export type SlimArticleFragment = { __typename?: 'Article', id: string, publishedAt?: string | null, createdAt: string, modifiedAt: string, slug?: string | null, url: string, latest: { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }> };
 
 export type ArticleListQueryVariables = Exact<{
   filter?: InputMaybe<ArticleFilter>;
@@ -3721,14 +3718,14 @@ export type ArticleListQueryVariables = Exact<{
 }>;
 
 
-export type ArticleListQuery = { __typename?: 'Query', articles: { __typename?: 'PaginatedArticles', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, publishedAt?: string | null, createdAt: string, modifiedAt: string, slug?: string | null, url: string, latest: { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ArticleListQuery = { __typename?: 'Query', articles: { __typename?: 'PaginatedArticles', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, publishedAt?: string | null, createdAt: string, modifiedAt: string, slug?: string | null, url: string, latest: { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ArticleQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText: Descendant[], hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText: Descendant[], image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: Descendant[] | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, url: string, license?: string | null, source?: string | null } | null }> } | null } };
+export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText: Descendant[], hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText: Descendant[], image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: Descendant[] | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, url?: string | null, license?: string | null, source?: string | null } | null }> } | null } };
 
 export const FullImage = gql`
     fragment FullImage on Image {

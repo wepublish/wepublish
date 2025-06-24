@@ -922,8 +922,8 @@ input FlexTeaserInput {
 }
 
 type FocalPoint {
-  x: Float
-  y: Float
+  x: Float!
+  y: Float!
 }
 
 type FullCommentRatingSystem {
@@ -1108,7 +1108,7 @@ type Image {
   tags: [String!]!
   title: String
   transformURL(input: ImageTransformation): String
-  url: String!
+  url: String
   width: Int!
 }
 
@@ -1208,8 +1208,8 @@ type ImportedEventsDocument {
 }
 
 input InputPoint {
-  x: Float
-  y: Float
+  x: Float!
+  y: Float!
 }
 
 type InstagramPostBlock implements BaseBlock {
@@ -1731,13 +1731,10 @@ input PaymentFromInvoiceInput {
 }
 
 type PaymentMethod implements HasImageLc {
-  active: Boolean!
-  createdAt: DateTime!
   description: String!
   id: String!
   image: Image
   imageId: String
-  modifiedAt: DateTime!
   name: String!
   paymentProviderID: String!
   slug: Slug!

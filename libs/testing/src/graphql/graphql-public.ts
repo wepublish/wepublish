@@ -1035,8 +1035,8 @@ export type FlexTeaserInput = {
 
 export type FocalPoint = {
   __typename?: 'FocalPoint'
-  x?: Maybe<Scalars['Float']>
-  y?: Maybe<Scalars['Float']>
+  x: Scalars['Float']
+  y: Scalars['Float']
 }
 
 export type FullCommentRatingSystem = {
@@ -1223,7 +1223,7 @@ export type Image = {
   tags: Array<Scalars['String']>
   title?: Maybe<Scalars['String']>
   transformURL?: Maybe<Scalars['String']>
-  url: Scalars['String']
+  url?: Maybe<Scalars['String']>
   width: Scalars['Int']
 }
 
@@ -1332,8 +1332,8 @@ export type ImportedEventsDocument = {
 }
 
 export type InputPoint = {
-  x?: InputMaybe<Scalars['Float']>
-  y?: InputMaybe<Scalars['Float']>
+  x: Scalars['Float']
+  y: Scalars['Float']
 }
 
 export type InstagramPostBlock = BaseBlock & {
@@ -2253,13 +2253,10 @@ export type PaymentFromInvoiceInput = {
 
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod'
-  active: Scalars['Boolean']
-  createdAt: Scalars['DateTime']
   description: Scalars['String']
   id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
-  modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   paymentProviderID: Scalars['String']
   slug: Scalars['Slug']
@@ -3598,7 +3595,7 @@ export type AuthorRefFragment = {
     description?: string | null
     width: number
     height: number
-    url: string
+    url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
     thumbURL?: string | null
@@ -3629,7 +3626,7 @@ export type FullAuthorFragment = {
     description?: string | null
     width: number
     height: number
-    url: string
+    url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
     thumbURL?: string | null
@@ -3672,7 +3669,7 @@ export type AuthorListQuery = {
         description?: string | null
         width: number
         height: number
-        url: string
+        url?: string | null
         largeURL?: string | null
         mediumURL?: string | null
         thumbURL?: string | null
@@ -3718,7 +3715,7 @@ export type AuthorQuery = {
       description?: string | null
       width: number
       height: number
-      url: string
+      url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
       thumbURL?: string | null
@@ -3765,7 +3762,7 @@ export type FullCommentUserFragment = {
     link?: string | null
     license?: string | null
     title?: string | null
-    url: string
+    url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
     thumbURL?: string | null
@@ -3773,7 +3770,7 @@ export type FullCommentUserFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
-    focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
 }
 
@@ -3818,7 +3815,7 @@ export type FullCommentFragment = {
       link?: string | null
       license?: string | null
       title?: string | null
-      url: string
+      url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
       thumbURL?: string | null
@@ -3826,7 +3823,7 @@ export type FullCommentFragment = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
-      focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   } | null
 }
@@ -3887,7 +3884,7 @@ export type CommentsQuery = {
         link?: string | null
         license?: string | null
         title?: string | null
-        url: string
+        url?: string | null
         largeURL?: string | null
         mediumURL?: string | null
         thumbURL?: string | null
@@ -3895,7 +3892,7 @@ export type CommentsQuery = {
         previewURL?: string | null
         column1URL?: string | null
         column6URL?: string | null
-        focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
+        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
       } | null
     } | null
   }>
@@ -3903,7 +3900,7 @@ export type CommentsQuery = {
 
 export type ImageUrLsFragment = {
   __typename?: 'Image'
-  url: string
+  url?: string | null
   largeURL?: string | null
   mediumURL?: string | null
   thumbURL?: string | null
@@ -3923,7 +3920,7 @@ export type ImageRefFragment = {
   description?: string | null
   width: number
   height: number
-  url: string
+  url?: string | null
   largeURL?: string | null
   mediumURL?: string | null
   thumbURL?: string | null
@@ -3949,7 +3946,7 @@ export type FullImageFragment = {
   link?: string | null
   license?: string | null
   title?: string | null
-  url: string
+  url?: string | null
   largeURL?: string | null
   mediumURL?: string | null
   thumbURL?: string | null
@@ -3957,7 +3954,7 @@ export type FullImageFragment = {
   previewURL?: string | null
   column1URL?: string | null
   column6URL?: string | null
-  focalPoint?: {__typename?: 'FocalPoint'; x?: number | null; y?: number | null} | null
+  focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
 }
 
 export type FullPeerProfileFragment = {
@@ -3976,7 +3973,7 @@ export type FullPeerProfileFragment = {
     description?: string | null
     width: number
     height: number
-    url: string
+    url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
     thumbURL?: string | null
@@ -3995,7 +3992,7 @@ export type FullPeerProfileFragment = {
     description?: string | null
     width: number
     height: number
-    url: string
+    url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
     thumbURL?: string | null
@@ -4036,7 +4033,7 @@ export type PeerWithProfileFragment = {
       description?: string | null
       width: number
       height: number
-      url: string
+      url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
       thumbURL?: string | null
@@ -4055,7 +4052,7 @@ export type PeerWithProfileFragment = {
       description?: string | null
       width: number
       height: number
-      url: string
+      url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
       thumbURL?: string | null
@@ -4087,7 +4084,7 @@ export type PeerProfileQuery = {
       description?: string | null
       width: number
       height: number
-      url: string
+      url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
       thumbURL?: string | null
@@ -4106,7 +4103,7 @@ export type PeerProfileQuery = {
       description?: string | null
       width: number
       height: number
-      url: string
+      url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
       thumbURL?: string | null

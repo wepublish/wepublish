@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment} from '@wepublish/editor/api'
+import {AuthorRefFragment, FullImageFragment} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
@@ -54,7 +54,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {type Node, Descendant, Element, Text} from 'slate'
+import {Descendant, Element, type Node, Text} from 'slate'
 
 import {ClientSettings} from '../../../shared/types'
 
@@ -240,14 +240,14 @@ function ArticleEditor() {
         disableComments,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image || undefined,
+        image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],
-        socialMediaImage: socialMediaImage || undefined,
+        socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
         likes: likes ?? 0,
         trackingPixels: trackingPixels || undefined
       })

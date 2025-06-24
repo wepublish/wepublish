@@ -9,10 +9,8 @@ export class PaymentMethod {
   @Field()
   id!: string
 
-  @Field()
   createdAt!: Date
 
-  @Field()
   modifiedAt!: Date
 
   @Field()
@@ -27,7 +25,6 @@ export class PaymentMethod {
   @Field()
   paymentProviderID!: string
 
-  @Field()
   active!: boolean
 
   imageId!: string | null

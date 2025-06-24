@@ -4,10 +4,10 @@ import {RequireProperties} from '@wepublish/utils/api'
 
 @ObjectType()
 export class FocalPoint {
-  @Field(type => Float, {nullable: true})
+  @Field(type => Float)
   x!: number | null
 
-  @Field(type => Float, {nullable: true})
+  @Field(type => Float)
   y!: number | null
 
   imageId!: string
@@ -56,7 +56,7 @@ export class Image {
   @Field()
   mimeType!: string
 
-  @Field(() => String)
+  @Field(() => String, {nullable: true})
   url?: string
 
   @Field()
