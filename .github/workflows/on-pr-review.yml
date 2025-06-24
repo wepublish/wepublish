@@ -308,12 +308,12 @@ jobs:
               S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
               S3_PORT: '9000'
             resources:
-          requests:
-            memory: 96Mi
-            cpu: 50m
-          limits:
-            memory: 192Mi
-            cpu: 200m
+              requests:
+                memory: 96Mi
+                cpu: 50m
+              limits:
+                memory: 192Mi
+                cpu: 200m
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
