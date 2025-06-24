@@ -108,7 +108,7 @@ export const HauptstadtFooter = styled(Footer)`
   display: grid;
   justify-content: center;
   grid-template-columns: minmax(0, 492px);
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(6)};
   padding-top: ${({theme}) => theme.spacing(6)};
   padding-bottom: ${({theme}) => theme.spacing(6)};
 

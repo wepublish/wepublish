@@ -47,6 +47,10 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock
 } from '../src/components/hauptstadt-image-block'
+import {
+  HauptstadtMemberPlanPicker,
+  HauptstadtYearlyMemberPlanItem
+} from '../src/components/hauptstadt-memberplan-picker'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
 import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
 import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
@@ -127,6 +131,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Event={HauptstadtEvent}
             Banner={HauptstadtBanner}
             Paywall={HauptstadtPaywall}
+            MemberPlanPicker={HauptstadtMemberPlanPicker}
+            MemberPlanItem={HauptstadtYearlyMemberPlanItem}
             blocks={{
               Subscribe: Mitmachen,
               Quote: HauptstadtQuoteBlock,

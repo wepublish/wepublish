@@ -57,7 +57,11 @@ export const FooterIcons = styled.div`
   gap: ${({theme}) => theme.spacing(3)};
   grid-auto-flow: column;
   grid-auto-columns: max-content;
-  justify-self: end;
+  justify-self: center;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    justify-self: end;
+  }
 `
 
 export function Footer({

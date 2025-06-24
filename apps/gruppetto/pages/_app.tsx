@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {YearlyMemberPlanItem} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {theme} from '@wepublish/ui'
 import {
@@ -43,7 +44,6 @@ import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 import Mitmachen from './mitmachen'
 
 setDefaultOptions({
