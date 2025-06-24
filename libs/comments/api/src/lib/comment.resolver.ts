@@ -1,5 +1,5 @@
 import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {Comment, CommentRating, PublicCommentSort} from './comment.model'
+import {Comment, CommentRating, CommentSort} from './comment.model'
 import {CommentService} from './comment.service'
 import {SortOrder} from '@wepublish/utils/api'
 import {
@@ -9,8 +9,8 @@ import {
   RequestFingerprint,
   UserSession
 } from '@wepublish/authentication/api'
-import {Image} from '@wepublish/image/api'
-import {User} from '@wepublish/user/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
+import {User, UserDataloaderService} from '@wepublish/user/api'
 import {Tag, TagService} from '@wepublish/tag/api'
 import {CommentDataloaderService} from './comment-dataloader.service'
 import {RatingSystemService} from './rating-system'
@@ -24,6 +24,8 @@ export class CommentResolver {
     private readonly commentDataloader: CommentDataloaderService,
     private readonly tagService: TagService,
     private readonly ratingSystemService: RatingSystemService,
+    private readonly imageDataloaderService: ImageDataloaderService,
+    private readonly userDataloaderService: UserDataloaderService,
     private readonly urlAdapter: URLAdapter
   ) {}
 
@@ -33,8 +35,9 @@ export class CommentResolver {
   @Public()
   async comments(
     @Args('itemId') itemId: string,
-    @Args('sort', {nullable: true}) sort?: PublicCommentSort,
-    @Args('order', {nullable: true, defaultValue: SortOrder.Descending}) order?: SortOrder,
+    @Args('sort', {type: () => CommentSort, nullable: true}) sort?: CommentSort,
+    @Args('order', {type: () => SortOrder, nullable: true, defaultValue: SortOrder.Descending})
+    order?: SortOrder,
     @CurrentUser() session?: UserSession | null
   ) {
     const userId = session?.user?.id || null
@@ -94,7 +97,7 @@ export class CommentResolver {
     if (!comment.guestUserImageID) {
       return null
     }
-    return {id: comment.guestUserImageID}
+    return this.imageDataloaderService.load(comment.guestUserImageID)
   }
 
   @ResolveField(() => User, {nullable: true})
@@ -102,7 +105,7 @@ export class CommentResolver {
     if (!comment.userID) {
       return null
     }
-    return {id: comment.userID}
+    return this.userDataloaderService.load(comment.userID)
   }
 
   @ResolveField(() => [Tag])

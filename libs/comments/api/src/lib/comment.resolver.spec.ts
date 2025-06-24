@@ -7,6 +7,7 @@ import {
   AddComment,
   CommentInput,
   CommentItemType,
+  Comments,
   createMock,
   PartialMocked
 } from '@wepublish/testing'
@@ -23,6 +24,8 @@ import {
   CommentItemType as CommentModelItemType,
   CommentState
 } from './comment.model'
+import {ImageDataloaderService} from '@wepublish/image/api'
+import {UserDataloaderService} from '@wepublish/user/api'
 
 const mockUser = {
   id: 'userId',
@@ -55,10 +58,10 @@ const richTextNodes = [
 ] as Descendant[]
 
 const mockComment: Comment = {
-  id: '',
+  id: 'id',
   tags: [],
   authorType: CommentAuthorType.author,
-  itemID: '',
+  itemID: 'item-id',
   itemType: CommentModelItemType.article,
   state: CommentState.approved,
   createdAt: new Date('2002-12-29'),
@@ -75,12 +78,16 @@ describe('UserConsentResolver', () => {
   let commentDataloader: PartialMocked<CommentDataloaderService>
   let tagService: PartialMocked<TagService>
   let ratingSystemService: PartialMocked<RatingSystemService>
+  let imageDataloaderService: PartialMocked<ImageDataloaderService>
+  let userDataloaderService: PartialMocked<UserDataloaderService>
 
   beforeEach(async () => {
     commentService = createMock(CommentService)
     commentDataloader = createMock(CommentDataloaderService)
     tagService = createMock(TagService)
     ratingSystemService = createMock(RatingSystemService)
+    imageDataloaderService = createMock(ImageDataloaderService)
+    userDataloaderService = createMock(UserDataloaderService)
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -114,6 +121,14 @@ describe('UserConsentResolver', () => {
         {
           provide: RatingSystemService,
           useValue: ratingSystemService
+        },
+        {
+          provide: ImageDataloaderService,
+          useValue: imageDataloaderService
+        },
+        {
+          provide: UserDataloaderService,
+          useValue: userDataloaderService
         }
       ]
     }).compile()
@@ -146,7 +161,19 @@ describe('UserConsentResolver', () => {
         }
       })
 
-    expect(res.body.data).toMatchSnapshot()
+    expect(res.body.data).toMatchInlineSnapshot(`
+      {
+        "addComment": {
+          "id": "id",
+          "itemID": "item-id",
+          "itemType": "article",
+          "parentID": null,
+          "state": "approved",
+          "text": null,
+          "user": null,
+        },
+      }
+    `)
     expect(res.body.data.addComment.state).toMatchInlineSnapshot(`"approved"`)
   })
 
@@ -170,7 +197,7 @@ describe('UserConsentResolver', () => {
         [
           {
             "itemID": "item-id",
-            "itemType": 0,
+            "itemType": "article",
             "text": [
               {
                 "children": [
@@ -205,8 +232,8 @@ describe('UserConsentResolver', () => {
     expect(res.body.data).toMatchInlineSnapshot(`
       {
         "addComment": {
-          "id": "",
-          "itemID": "",
+          "id": "id",
+          "itemID": "item-id",
           "itemType": "article",
           "parentID": null,
           "state": "approved",
@@ -215,5 +242,92 @@ describe('UserConsentResolver', () => {
         },
       }
     `)
+  })
+
+  test('get comments', async () => {
+    commentService.getPublicCommentsForItemById?.mockResolvedValue([
+      {
+        calculatedRatings: [],
+        tags: [],
+        featured: false,
+        title: 'title',
+        lead: null,
+        text: null,
+        revisions: [],
+        id: 'id',
+        createdAt: new Date('2022-12-29'),
+        modifiedAt: new Date('2022-12-29'),
+        itemID: 'item-id',
+        itemType: CommentItemType.Article,
+        parentID: null,
+        state: 'approved',
+        source: null,
+        authorType: 'team',
+        guestUserImageID: 'guestUserImageID',
+        userID: 'user-id',
+        rejectionReason: null,
+        guestUsername: null
+      }
+    ])
+
+    imageDataloaderService.load?.mockResolvedValue({
+      id: 'guestUserImageID',
+      filename: 'image.png'
+    })
+
+    userDataloaderService.load?.mockResolvedValue({
+      id: 'user-id',
+      name: 'name'
+    })
+
+    await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: Comments,
+        variables: {
+          itemID: 'item-id'
+        }
+      })
+      .expect(res => {
+        expect(commentService.getPublicCommentsForItemById?.mock.calls).toMatchInlineSnapshot(`
+          [
+            [
+              "item-id",
+              "userId",
+              null,
+              "Descending",
+            ],
+          ]
+        `)
+        expect(imageDataloaderService.load?.mock.calls).toMatchInlineSnapshot(`
+          [
+            [
+              "guestUserImageID",
+            ],
+          ]
+        `)
+        expect(res.body.errors).toBeUndefined()
+        expect(res.body.data).toMatchInlineSnapshot(`
+          {
+            "comments": [
+              {
+                "createdAt": "2022-12-29T00:00:00.000Z",
+                "guestUserImage": {
+                  "filename": "image.png",
+                  "id": "guestUserImageID",
+                },
+                "id": "id",
+                "itemID": "item-id",
+                "itemType": "article",
+                "modifiedAt": "2022-12-29T00:00:00.000Z",
+                "user": {
+                  "id": "user-id",
+                  "name": "name",
+                },
+              },
+            ],
+          }
+        `)
+      })
   })
 })

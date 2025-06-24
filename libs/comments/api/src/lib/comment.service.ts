@@ -4,8 +4,8 @@ import {SortOrder} from '@wepublish/utils/api'
 import {
   CalculatedRating,
   CommentRatingSystemAnswer,
+  CommentSort,
   CommentState,
-  PublicCommentSort,
   RatingSystemType
 } from './comment.model'
 import {RatingSystemService} from './rating-system'
@@ -113,7 +113,7 @@ export class CommentService {
   async getPublicCommentsForItemById(
     itemId: string,
     userId: string | null,
-    sort: PublicCommentSort | null,
+    sort: CommentSort | null,
     order: SortOrder
   ) {
     const ratingSystem = await this.ratingSystem.getRatingSystem()
@@ -155,7 +155,7 @@ export class CommentService {
     const topComments = commentsWithRating.filter(comment => comment.featured)
     let otherComments = commentsWithRating.filter(comment => !comment.featured)
 
-    if (sort === PublicCommentSort.rating) {
+    if (sort === CommentSort.rating) {
       const isAscending = order === SortOrder.Ascending
       otherComments = this.sortCommentsByRating(isAscending)(otherComments)
     }

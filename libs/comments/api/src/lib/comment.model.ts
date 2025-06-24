@@ -17,8 +17,8 @@ registerEnumType(CommentAuthorType, {
 })
 
 export enum CommentItemType {
-  article,
-  page
+  article = 'article',
+  page = 'page'
 }
 
 registerEnumType(CommentItemType, {
@@ -44,11 +44,11 @@ registerEnumType(RatingSystemType, {
   name: 'RatingSystemType'
 })
 
-export enum PublicCommentSort {
+export enum CommentSort {
   rating = 'rating'
 }
 
-registerEnumType(PublicCommentSort, {
+registerEnumType(CommentSort, {
   name: 'CommentSort'
 })
 

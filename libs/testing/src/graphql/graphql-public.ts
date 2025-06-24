@@ -3746,32 +3746,7 @@ export type FullCommentUserFragment = {
   firstName?: string | null
   flair?: string | null
   email: string
-  image?: {
-    __typename?: 'Image'
-    id: string
-    createdAt: string
-    modifiedAt: string
-    filename?: string | null
-    extension: string
-    width: number
-    height: number
-    fileSize: number
-    description?: string | null
-    tags: Array<string>
-    source?: string | null
-    link?: string | null
-    license?: string | null
-    title?: string | null
-    url?: string | null
-    largeURL?: string | null
-    mediumURL?: string | null
-    thumbURL?: string | null
-    squareURL?: string | null
-    previewURL?: string | null
-    column1URL?: string | null
-    column6URL?: string | null
-    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
-  } | null
+  image?: {__typename?: 'Image'; id: string; filename?: string | null} | null
 }
 
 export type MutationCommentFragment = {
@@ -3792,40 +3767,6 @@ export type FullCommentFragment = {
   modifiedAt: string
   itemID: string
   itemType: CommentItemType
-  user?: {
-    __typename?: 'User'
-    id: string
-    name: string
-    firstName?: string | null
-    flair?: string | null
-    email: string
-    image?: {
-      __typename?: 'Image'
-      id: string
-      createdAt: string
-      modifiedAt: string
-      filename?: string | null
-      extension: string
-      width: number
-      height: number
-      fileSize: number
-      description?: string | null
-      tags: Array<string>
-      source?: string | null
-      link?: string | null
-      license?: string | null
-      title?: string | null
-      url?: string | null
-      largeURL?: string | null
-      mediumURL?: string | null
-      thumbURL?: string | null
-      squareURL?: string | null
-      previewURL?: string | null
-      column1URL?: string | null
-      column6URL?: string | null
-      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
-    } | null
-  } | null
 }
 
 export type AddCommentMutationVariables = Exact<{
@@ -3861,40 +3802,8 @@ export type CommentsQuery = {
     modifiedAt: string
     itemID: string
     itemType: CommentItemType
-    user?: {
-      __typename?: 'User'
-      id: string
-      name: string
-      firstName?: string | null
-      flair?: string | null
-      email: string
-      image?: {
-        __typename?: 'Image'
-        id: string
-        createdAt: string
-        modifiedAt: string
-        filename?: string | null
-        extension: string
-        width: number
-        height: number
-        fileSize: number
-        description?: string | null
-        tags: Array<string>
-        source?: string | null
-        link?: string | null
-        license?: string | null
-        title?: string | null
-        url?: string | null
-        largeURL?: string | null
-        mediumURL?: string | null
-        thumbURL?: string | null
-        squareURL?: string | null
-        previewURL?: string | null
-        column1URL?: string | null
-        column6URL?: string | null
-        focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
-      } | null
-    } | null
+    guestUserImage?: {__typename?: 'Image'; id: string; filename?: string | null} | null
+    user?: {__typename?: 'User'; id: string; name: string} | null
   }>
 }
 
@@ -4239,6 +4148,19 @@ export const FullAuthor = `
   ...AuthorRef
 }
     ${AuthorRef}`
+export const FullCommentUser = `
+    fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  flair
+  email
+  image {
+    id
+    filename
+  }
+}
+    `
 export const MutationComment = `
     fragment MutationComment on Comment {
   id
@@ -4250,6 +4172,15 @@ export const MutationComment = `
   }
   text
   parentID
+}
+    `
+export const FullComment = `
+    fragment FullComment on Comment {
+  id
+  createdAt
+  modifiedAt
+  itemID
+  itemType
 }
     `
 export const FullImage = `
@@ -4274,30 +4205,6 @@ export const FullImage = `
   ...ImageRef
 }
     ${ImageRef}`
-export const FullCommentUser = `
-    fragment FullCommentUser on User {
-  id
-  name
-  firstName
-  flair
-  email
-  image {
-    ...FullImage
-  }
-}
-    ${FullImage}`
-export const FullComment = `
-    fragment FullComment on Comment {
-  id
-  user {
-    ...FullCommentUser
-  }
-  createdAt
-  modifiedAt
-  itemID
-  itemType
-}
-    ${FullCommentUser}`
 export const PeerRef = `
     fragment PeerRef on Peer {
   id
@@ -4378,6 +4285,14 @@ export const Comments = `
     query Comments($itemID: String!, $order: SortOrder, $sort: CommentSort) {
   comments(itemId: $itemID, order: $order, sort: $sort) {
     ...FullComment
+    guestUserImage {
+      id
+      filename
+    }
+    user {
+      id
+      name
+    }
   }
 }
     ${FullComment}`

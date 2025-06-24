@@ -12,7 +12,9 @@ export type DeepMocked<T> = Partial<{
 
 export type Mocked<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any
-    ? jest.Mock<ReturnType<T[K]>, Parameters<T[K]>>
+    ? T[K] extends (...args: any[]) => Promise<infer R>
+      ? jest.Mock<Promise<Partial<R>>, Parameters<T[K]>>
+      : jest.Mock<Partial<ReturnType<T[K]>>, Parameters<T[K]>>
     : T[K]
 }
 

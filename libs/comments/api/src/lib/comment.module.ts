@@ -7,9 +7,11 @@ import {PrismaModule, URLAdapterModule} from '@wepublish/nest-modules'
 import {TagModule} from '@wepublish/tag/api'
 import {RatingSystemResolver, RatingSystemService} from './rating-system'
 import {SettingModule} from '@wepublish/settings/api'
+import {ImageModule} from '@wepublish/image/api'
+import {UserModule} from '@wepublish/user/api'
 
 @Module({
-  imports: [PrismaModule, TagModule, SettingModule, URLAdapterModule],
+  imports: [PrismaModule, TagModule, SettingModule, URLAdapterModule, ImageModule, UserModule],
   providers: [
     CommentDataloaderService,
     HasCommentResolver,

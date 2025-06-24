@@ -13,6 +13,12 @@ projects:
     documents:
       - 'libs/website/api/**/*.graphql'
       - 'libs/website/api/**/graphql.ts'
+  testing:
+    schema:
+      - 'apps/api-example/schema-v2.graphql'
+    documents:
+      - 'libs/testing/src/graphql/public/graphql-public.ts'
+      - 'libs/testing/src/graphql/public/**/*.graphql'
   migration-v1:
     schema:
       - 'apps/api-example/schema-v2.graphql'
