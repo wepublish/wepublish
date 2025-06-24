@@ -215,8 +215,13 @@ export class PageService {
       }
     })
 
+    const pagePublishedAtInTheFuture = page.publishedAt && page.publishedAt > new Date()
+    const newPublishedAtEarlier = page.publishedAt && page.publishedAt > publishedAt
+
     const pagePublishedAt =
-      !page.publishedAt || page.publishedAt > publishedAt ? publishedAt : page.publishedAt
+      pagePublishedAtInTheFuture || newPublishedAtEarlier
+        ? publishedAt
+        : page.publishedAt ?? publishedAt
 
     return this.prisma.page.update({
       where: {
