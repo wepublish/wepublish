@@ -1,11 +1,21 @@
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {INestApplication} from '@nestjs/common'
-import {GraphQLModule} from '@nestjs/graphql'
+import {GraphQLModule, Query, Resolver} from '@nestjs/graphql'
 import {Test, TestingModule} from '@nestjs/testing'
 import request from 'supertest'
-import {createMock, PartialMocked, TestQueryResolver} from '@wepublish/testing'
+import {createMock, PartialMocked} from '@wepublish/testing'
 import {SessionResolver} from './session.resolver'
 import {SessionService} from './session.service'
+
+@Resolver()
+export class ObligatoryQueryResolver {
+  @Query(() => Boolean, {
+    description: `This is test query used when testing mutation-only resolver.`
+  })
+  async testQuery() {
+    return true
+  }
+}
 
 export const CreateSession = `
   mutation CreateSession($email: String!, $password: String!) {
@@ -72,7 +82,7 @@ describe('SessionResolver', () => {
       ],
       providers: [
         SessionResolver,
-        TestQueryResolver,
+        ObligatoryQueryResolver,
         {
           provide: SessionService,
           useValue: sessionService
