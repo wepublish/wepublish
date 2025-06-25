@@ -160,7 +160,13 @@ jobs:
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
-            resources: {}
+            resources:
+              requests:
+                memory: null
+                cpu: null
+              limits:
+                memory: null
+                cpu: null
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
             resources:
