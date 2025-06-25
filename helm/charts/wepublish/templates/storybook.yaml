@@ -56,13 +56,28 @@ spec:
       containers:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.storybook.image }}
+          {{- $res := .Values.storybook.resources }}
+          {{- if or (and $res.requests (or $res.requests.cpu $res.requests.memory)) (and $res.limits (or $res.limits.cpu $res.limits.memory)) }}
           resources:
+            {{- if and $res.requests (or $res.requests.cpu $res.requests.memory) }}
             requests:
-              memory: {{ .Values.storybook.resources.requests.memory }}
-              cpu: {{ .Values.storybook.resources.requests.cpu }}
+              {{- if $res.requests.cpu }}
+              cpu: {{ $res.requests.cpu }}
+              {{- end }}
+              {{- if $res.requests.memory }}
+              memory: {{ $res.requests.memory }}
+              {{- end }}
+            {{- end }}
+            {{- if and $res.limits (or $res.limits.cpu $res.limits.memory) }}
             limits:
-              memory: {{ .Values.storybook.resources.limits.memory }}
-              cpu: {{ .Values.storybook.resources.limits.cpu }}
+              {{- if $res.limits.cpu }}
+              cpu: {{ $res.limits.cpu }}
+              {{- end }}
+              {{- if $res.limits.memory }}
+              memory: {{ $res.limits.memory }}
+              {{- end }}
+          {{- end }}
+          {{- end }}
           imagePullPolicy: {{ .Values.storybook.imagePullPolicy }}
           ports:
             - name: http

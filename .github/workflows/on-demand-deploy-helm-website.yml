@@ -57,6 +57,13 @@ jobs:
             image: ghcr.io/wepublish/website-${{ inputs.website_project }}:${{ github.sha }}
             env:
               NODE_ENV: production
+            resources:
+              requests:
+                memory: null
+                cpu: null
+              limits:
+                memory: null
+                cpu: null
           EOF
           cat values.yaml
           export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.website_project }}-website
