@@ -92,6 +92,13 @@ jobs:
           persistence:
             enabled: false
           resourcesPreset: "none"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
           service:
             type: LoadBalancer
             port: 9000
@@ -112,6 +119,13 @@ jobs:
                 database: wepublish
           primary:
             resourcesPreset: "none"
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "30m"
+              limits:
+                memory: "128Mi"
+                cpu: "100m"
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
@@ -160,22 +174,21 @@ jobs:
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
-            resources:
-              requests:
-                memory: null
-                cpu: null
-              limits:
-                memory: null
-                cpu: null
+            requests:
+              memory: "64Mi"
+              cpu: "30m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
             resources:
               requests:
-                memory: null
-                cpu: null
+                memory: "96Mi"
+                cpu: "50m"
               limits:
-                memory: null
-                cpu: null
+                memory: "256Mi"
+                cpu: "250m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -286,22 +299,22 @@ jobs:
               PEER_BY_DEFAULT: "true"
             resources:
               requests:
-                memory: null
-                cpu: null
+                memory: "32Mi"
+                cpu: "20m"
               limits:
-                memory: null
-                cpu: null
+                memory: "64Mi"
+                cpu: "100m"
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
             resources:
               requests:
-                memory: null
-                cpu: null
+                memory: "8Mi"
+                cpu: "5m"
               limits:
-                memory: null
-                cpu: null
+                memory: "32Mi"
+                cpu: "50m"
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
@@ -312,11 +325,11 @@ jobs:
               S3_PORT: '9000'
             resources:
               requests:
-                memory: null
-                cpu: null
+                memory: "64Mi"
+                cpu: "50m"
               limits:
-                memory: null
-                cpu: null
+                memory: "128Mi"
+                cpu: "150m"
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
