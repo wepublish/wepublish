@@ -175,10 +175,10 @@ jobs:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
             requests:
-              memory: "64Mi"
+              memory: "200Mi"
               cpu: "30m"
             limits:
-              memory: "128Mi"
+              memory: "500Mi"
               cpu: "200m"
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
