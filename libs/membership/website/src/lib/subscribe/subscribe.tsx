@@ -435,16 +435,16 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       <SubscribeSection>
-        <Controller
-          name={'monthlyAmount'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <SubscribeAmount>
-              <Paragraph component={SubscribeAmountText} gutterBottom={false}>
-                Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
-              </Paragraph>
+        {!hidePaymentAmount(selectedMemberPlan) && (
+          <Controller
+            name={'monthlyAmount'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <SubscribeAmount>
+                <Paragraph component={SubscribeAmountText} gutterBottom={false}>
+                  Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
+                </Paragraph>
 
-              {!hidePaymentAmount(selectedMemberPlan) && (
                 <PaymentAmount
                   {...field}
                   error={error}
@@ -454,10 +454,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
                 />
-              )}
-            </SubscribeAmount>
-          )}
-        />
+              </SubscribeAmount>
+            )}
+          />
+        )}
 
         {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
