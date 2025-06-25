@@ -58,11 +58,11 @@ spec:
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
           resources:
             requests:
-              memory: {{ .Values.website.resources.requests.memory | default "512Mi" }}
-              cpu: {{ .Values.website.resources.requests.cpu | default "200m" }}
+              memory: {{ .Values.website.resources.requests.memory }}
+              cpu: {{ .Values.website.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.website.resources.limits.memory | default "768Mi" }}
-              cpu: {{ .Values.website.resources.limits.cpu  | default "500m" }}
+              memory: {{ .Values.website.resources.limits.memory }}
+              cpu: {{ .Values.website.resources.limits.cpu }}
           ports:
             - name: http
               containerPort: 4000

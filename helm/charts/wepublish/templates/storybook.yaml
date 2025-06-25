@@ -58,11 +58,11 @@ spec:
           image: {{ .Values.storybook.image }}
           resources:
             requests:
-              memory: {{ .Values.storybook.resources.requests.memory | default "8Mi" }}
-              cpu: {{ .Values.storybook.resources.requests.cpu | default "1m" }}
+              memory: {{ .Values.storybook.resources.requests.memory }}
+              cpu: {{ .Values.storybook.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.storybook.resources.limits.memory | default "16Mi" }}
-              cpu: {{ .Values.storybook.resources.limits.cpu | default "20m" }}
+              memory: {{ .Values.storybook.resources.limits.memory }}
+              cpu: {{ .Values.storybook.resources.limits.cpu }}
           imagePullPolicy: {{ .Values.storybook.imagePullPolicy }}
           ports:
             - name: http
