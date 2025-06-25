@@ -293,8 +293,13 @@ export class ArticleService {
       }
     })
 
+    const articlePublishedAtInTheFuture = article.publishedAt && article.publishedAt > new Date()
+    const newPublishedAtEarlier = article.publishedAt && article.publishedAt > publishedAt
+
     const articlePublishedAt =
-      !article.publishedAt || article.publishedAt > publishedAt ? publishedAt : article.publishedAt
+      articlePublishedAtInTheFuture || newPublishedAtEarlier
+        ? publishedAt
+        : article.publishedAt ?? publishedAt
 
     return this.prisma.article.update({
       where: {
