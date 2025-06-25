@@ -91,10 +91,7 @@ jobs:
           defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
+          resources: {}
           service:
             type: LoadBalancer
             port: 9000

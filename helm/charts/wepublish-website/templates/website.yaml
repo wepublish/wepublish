@@ -56,13 +56,27 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.website.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          {{- with .Values.website.resources }}
           resources:
+            {{- if .requests }}
             requests:
-              memory: {{ .Values.website.resources.requests.memory }}
-              cpu: {{ .Values.website.resources.requests.cpu }}
+              {{- if .requests.memory }}
+              memory: {{ .requests.memory }}
+              {{- end }}
+              {{- if .requests.cpu }}
+              cpu: {{ .requests.cpu }}
+              {{- end }}
+            {{- end }}
+            {{- if .limits }}
             limits:
-              memory: {{ .Values.website.resources.limits.memory }}
-              cpu: {{ .Values.website.resources.limits.cpu }}
+              {{- if .limits.memory }}
+              memory: {{ .limits.memory }}
+              {{- end }}
+              {{- if .limits.cpu }}
+              cpu: {{ .limits.cpu }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 4000
