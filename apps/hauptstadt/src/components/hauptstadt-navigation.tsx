@@ -148,6 +148,10 @@ export const HauptstadtFooter = styled(Footer)`
     font-weight: 400;
   }
 
+  ${FooterMainLinks} {
+    gap: 0;
+  }
+
   ${FooterMainLinks} span {
     font-family: ${Tiempos.style.fontFamily};
   }
