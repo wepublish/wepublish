@@ -29,9 +29,13 @@ const onErrorToast = (error: ApolloError) => {
   )
 }
 
-const mapApiDataToInput = (paywall: FullPaywallFragment): MutationUpdatePaywallArgs => ({
+const mapApiDataToInput = (
+  paywall: FullPaywallFragment
+): MutationUpdatePaywallArgs & {bypasses?: Array<{id?: string; token: string}>} => ({
   ...paywall,
-  memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id)
+  memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id),
+  bypassTokens: paywall.bypasses?.map(bypass => bypass.token) || undefined,
+  bypasses: paywall.bypasses?.map(bypass => ({id: bypass.id, token: bypass.token}))
 })
 
 const P = styled.p`
@@ -42,7 +46,9 @@ const P = styled.p`
 
 const PaywallEditView = () => {
   const {t} = useTranslation()
-  const [paywall, setPaywall] = useState<MutationUpdatePaywallArgs>()
+  const [paywall, setPaywall] = useState<
+    MutationUpdatePaywallArgs & {bypasses?: Array<{id?: string; token: string}>}
+  >()
 
   const client = getApiClientV2()
   const {loading: dataLoading} = usePaywallListQuery({

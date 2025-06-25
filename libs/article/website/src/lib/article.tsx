@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useEffect, useState} from 'react'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
@@ -42,6 +43,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{hideContent?: boolean}>`
 `
 
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
+  const [isClient, setIsClient] = useState(false)
   const {
     ArticleSEO,
     ArticleAuthors,
@@ -52,8 +54,12 @@ export function Article({className, data, children, loading, error}: BuilderArti
   const article = data?.article as ArticleType | undefined
   const {showPaywall, hideContent} = useShowPaywall(article?.paywall)
 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   return (
-    <ArticleWrapper className={className} hideContent={hideContent}>
+    <ArticleWrapper className={className} hideContent={isClient && hideContent}>
       {article && <ArticleSEO article={article} />}
 
       {article && (
@@ -69,7 +75,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
         {article && <ArticleMeta article={article} />}
       </ArticleInfoWrapper>
 
-      {showPaywall && article?.paywall && (
+      {isClient && showPaywall && article?.paywall && (
         <Paywall {...article.paywall} hideContent={hideContent} />
       )}
 

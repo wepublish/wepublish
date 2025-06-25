@@ -1603,7 +1603,13 @@
         "active": "Aktiv",
         "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
         "anyMemberPlan": "Die Paywall entfällt für alle Abos",
-        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos"
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass-Token",
+        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
+        "newBypassToken": "Neuen Bypass-Token erstellen",
+        "addBypass": "hinzufügen",
+        "qrCodeTitle": "QR-Code für Bypass-Token",
+        "downloadSvg": "SVG herunterladen"
       }
     }
   }

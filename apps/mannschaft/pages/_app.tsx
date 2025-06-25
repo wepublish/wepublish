@@ -4,6 +4,7 @@ import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleTagManager} from '@next/third-parties/google'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {RoutedAdminBar} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
@@ -251,6 +252,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(CustomApp)
+])(withPaywallBypassToken(CustomApp))
 
 export {ConnectedApp as default}
