@@ -47,19 +47,10 @@ export type SubscribeContainerProps<
   }
 
 export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
-  className,
-  defaults,
-  fields,
-  schema,
   filter = memberPlan => memberPlan,
   sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
-  hidePaymentAmount,
   deactivateSubscriptionId,
-  termsOfServiceUrl,
-  donate,
-  transactionFee,
-  transactionFeeText,
-  returningUserId
+  ...props
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -110,20 +101,11 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
       <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
 
       <Subscribe
-        className={className}
-        defaults={defaults}
-        fields={fields}
-        schema={schema}
         challenge={challenge}
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
-        termsOfServiceUrl={termsOfServiceUrl}
-        donate={donate}
-        hidePaymentAmount={hidePaymentAmount}
-        transactionFee={transactionFee}
-        transactionFeeText={transactionFeeText}
-        returningUserId={returningUserId}
+        {...props}
         onSubscribe={async formData => {
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId

@@ -21,6 +21,7 @@ import {
   BuilderSubscribeProps,
   BuilderUserFormFields,
   Button,
+  Link,
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
@@ -115,24 +116,33 @@ export const getPaymentText = (
   monthlyAmount: number,
   currency: Currency,
   locale: string
-) =>
-  autoRenew && extendable
-    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
-    : extendable
-    ? `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
-    : `Für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
+) => {
+  if (!monthlyAmount) {
+    return 'Gratis'
+  }
+
+  if (autoRenew && extendable) {
+    return `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+      currency,
+      locale
+    )}`
+  }
+
+  if (extendable) {
+    return `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+      currency,
+      locale
+    )}`
+  }
+
+  return `Für ${formatCurrency(
+    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+    currency,
+    locale
+  )}`
+}
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
@@ -156,7 +166,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
-    elements: {Alert, Button, H5, Link, Paragraph},
+    elements: {Alert, H5, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
@@ -512,6 +522,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           )}
         </SubscribePayment>
       </SubscribeSection>
+
       {!hasUserContext && (
         <SubscribeSection>
           <H5 component="h2">Spam-Schutz</H5>
@@ -539,13 +550,17 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
       {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
-      <SubscribeSection>
-        <Controller
-          name={'payTransactionFee'}
-          control={control}
-          render={({field: feeField}) => <TransactionFee text={transactionFeeText} {...feeField} />}
-        />
-      </SubscribeSection>
+      {!!watch<'monthlyAmount'>('monthlyAmount') && (
+        <SubscribeSection>
+          <Controller
+            name={'payTransactionFee'}
+            control={control}
+            render={({field: feeField}) => (
+              <TransactionFee text={transactionFeeText} {...feeField} />
+            )}
+          />
+        </SubscribeSection>
+      )}
 
       <SubscribeNarrowSection>
         <SubscribeButton

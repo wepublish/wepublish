@@ -2,11 +2,9 @@ import {SubscribePage} from '@wepublish/utils/website'
 import {sortBy} from 'ramda'
 import {ComponentProps} from 'react'
 
-export const HAS_FORM_FIELDS: ComponentProps<typeof SubscribePage>['fields'] = [
-  'firstName',
-  'address',
-  'emailRepeated'
-]
+export const HAS_FORM_FIELDS = ['firstName', 'address', 'emailRepeated'] satisfies ComponentProps<
+  typeof SubscribePage
+>['fields']
 
 export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
   return (

@@ -63,7 +63,7 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
-  'amountPerMonthMin' | 'currency' | 'extendable' | 'shortDescription'
+  'amountPerMonthMin' | 'currency' | 'extendable' | 'shortDescription' | 'tags'
 > &
   Omit<RadioProps, 'ref'> & {className?: string} & {slug: string}
 

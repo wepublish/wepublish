@@ -6,6 +6,7 @@ import {formatCurrency} from '../formatters/format-currency'
 import {useTranslation} from 'react-i18next'
 
 export const MemberPlanItemWrapper = styled('div')`
+  --memberplan-item-picker-checked-bg: ${({theme}) => lighten(theme.palette.primary.main, 0.85)};
   display: flex;
   flex-flow: column;
   gap: ${({theme}) => theme.spacing(2)};
@@ -25,7 +26,7 @@ export const MemberPlanItemPicker = styled('div')<{isChecked: boolean}>`
     isChecked &&
     css`
       border-color: ${theme.palette.primary.main};
-      background-color: ${lighten(theme.palette.primary.main, 0.85)};
+      background-color: var(--memberplan-item-picker-checked-bg);
     `}
 `
 
@@ -67,8 +68,8 @@ export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanIte
     const {t} = useTranslation()
 
     return (
-      <MemberPlanItemWrapper>
-        <MemberPlanItemPicker className={className} isChecked={isChecked}>
+      <MemberPlanItemWrapper className={className}>
+        <MemberPlanItemPicker isChecked={isChecked}>
           <MemberPlanItemContent>
             <MemberPlanItemName>{name}</MemberPlanItemName>
 

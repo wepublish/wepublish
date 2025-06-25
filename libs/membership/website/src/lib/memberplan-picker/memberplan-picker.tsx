@@ -72,6 +72,7 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
                       amountPerMonthMin={memberPlan.amountPerMonthMin}
                       extendable={memberPlan.extendable}
                       shortDescription={memberPlan.shortDescription}
+                      tags={memberPlan.tags}
                     />
                   }
                   label={memberPlan.name}
