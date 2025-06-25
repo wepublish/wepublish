@@ -97,7 +97,7 @@ jobs:
               memory: "64Mi"
               cpu: "50m"
             limits:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "200m"
           service:
             type: LoadBalancer
