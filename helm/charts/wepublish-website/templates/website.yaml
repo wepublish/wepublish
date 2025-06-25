@@ -56,26 +56,27 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.website.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          {{- with .Values.website.resources }}
+          {{- $res := .Values.website.resources }}
+          {{- if or (and $res.requests (or $res.requests.cpu $res.requests.memory)) (and $res.limits (or $res.limits.cpu $res.limits.memory)) }}
           resources:
-            {{- if .requests }}
+            {{- if and $res.requests (or $res.requests.cpu $res.requests.memory) }}
             requests:
-              {{- if .requests.memory }}
-              memory: {{ .requests.memory }}
+              {{- if $res.requests.cpu }}
+              cpu: {{ $res.requests.cpu }}
               {{- end }}
-              {{- if .requests.cpu }}
-              cpu: {{ .requests.cpu }}
+              {{- if $res.requests.memory }}
+              memory: {{ $res.requests.memory }}
               {{- end }}
             {{- end }}
-            {{- if .limits }}
+            {{- if and $res.limits (or $res.limits.cpu $res.limits.memory) }}
             limits:
-              {{- if .limits.memory }}
-              memory: {{ .limits.memory }}
+              {{- if $res.limits.cpu }}
+              cpu: {{ $res.limits.cpu }}
               {{- end }}
-              {{- if .limits.cpu }}
-              cpu: {{ .limits.cpu }}
+              {{- if $res.limits.memory }}
+              memory: {{ $res.limits.memory }}
               {{- end }}
-            {{- end }}
+          {{- end }}
           {{- end }}
           ports:
             - name: http
