@@ -56,6 +56,13 @@ spec:
       containers:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.storybook.image }}
+          resources:
+            requests:
+              memory: {{ .Values.storybook.resources.requests.memory }}
+              cpu: {{ .Values.storybook.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.storybook.resources.limits.memory }}
+              cpu: {{ .Values.storybook.resources.limits.cpu }}
           imagePullPolicy: {{ .Values.storybook.imagePullPolicy }}
           ports:
             - name: http
