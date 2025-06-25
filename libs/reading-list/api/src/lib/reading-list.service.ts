@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common'
+import {Injectable, NotFoundException} from '@nestjs/common'
 import {PrismaClient, User} from '@prisma/client'
 import {ReadingListProgressArgs} from './reading-list.model'
 
@@ -6,56 +6,36 @@ import {ReadingListProgressArgs} from './reading-list.model'
 export class ReadingListService {
   constructor(private prisma: PrismaClient) {}
 
-  async saveProgress(user: User, {articleId, blockIndex}: ReadingListProgressArgs) {
+  async saveProgress(user: User, {articleId, blockIndex, completed}: ReadingListProgressArgs) {
     const article = await this.prisma.article.findUnique({
       where: {
         id: articleId
-      },
-      include: {
-        revisions: {
-          select: {
-            blocks: true
-          },
-          take: 1,
-          orderBy: [
-            {
-              publishedAt: 'desc'
-            },
-            {
-              createdAt: 'desc'
-            }
-          ],
-          where: {
-            AND: [
-              {
-                publishedAt: {
-                  not: null
-                }
-              },
-              {
-                publishedAt: {
-                  lte: new Date()
-                }
-              }
-            ]
-          }
+      }
+    })
+
+    if (!article) {
+      throw new NotFoundException()
+    }
+
+    const progress = await this.prisma.readingList.findUnique({
+      where: {
+        articleId_userId: {
+          articleId,
+          userId: user.id
         }
       }
     })
 
-    if (!article?.revisions[0]) {
-      throw new BadRequestException()
+    if (progress?.completed) {
+      return false
     }
-
-    const completed = blockIndex >= (article.revisions[0].blocks as any[]).length
 
     return this.prisma.readingList.upsert({
       where: {
         articleId_userId: {
           articleId,
           userId: user.id
-        },
-        completed: false
+        }
       },
       create: {
         articleId,

@@ -7,7 +7,6 @@ import {BlockContent, TeaserListBlock} from '@wepublish/website/api'
 import {hasBlockStyle} from '../../blocks'
 import {selectTeaserTags} from '../../teaser/teaser'
 import {ImageWrapper} from '@wepublish/image/website'
-import {useReadingList} from '@wepublish/reading-list/website'
 
 export const FocusTeaserWrapper = styled('section')`
   grid-column: -1/1;
@@ -67,8 +66,6 @@ export const FocusTeaser = ({
     blocks: {Teaser},
     elements: {Link, H3}
   } = useWebsiteBuilder()
-  const [readingListProps] = useReadingList()
-
   const [focusedTeaser, ...restTeasers] = teasers
 
   const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>
@@ -76,7 +73,7 @@ export const FocusTeaser = ({
     focusedTeaser && selectTeaserTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
 
   return (
-    <FocusTeaserWrapper className={className} {...readingListProps}>
+    <FocusTeaserWrapper className={className}>
       <FocusedTeaserContent>
         <FocusedTeaserTitle>
           {tags?.length === 1 && tags[0].url ? (

@@ -3,7 +3,6 @@ import {BuilderTeaserSlotsBlockProps, useWebsiteBuilder} from '@wepublish/websit
 import {alignmentForTeaserBlock} from './teaser-grid-block'
 import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isTeaserSlotsBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -44,10 +43,9 @@ export const TeaserSlotsBlock = ({
     elements: {H5},
     blocks: {Teaser}
   } = useWebsiteBuilder()
-  const [readingListProps] = useReadingList()
 
   return (
-    <TeaserSlotsBlockWrapper className={className} {...readingListProps}>
+    <TeaserSlotsBlockWrapper className={className}>
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserSlotsBlockTeasers>

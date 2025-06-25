@@ -3,7 +3,6 @@ import {BildwurfAdBlock as BildwurfAdBlockType, BlockContent} from '@wepublish/w
 
 import styled from '@emotion/styled'
 import {BuilderBildwurfAdBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isBildwurfAdBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -30,7 +29,6 @@ export interface BildwurfAdEmbedProps {
 
 export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps) {
   const {Script} = useWebsiteBuilder()
-  const [readingListProps] = useReadingList()
 
   const loadAd = useCallback(() => {
     try {
@@ -50,7 +48,6 @@ export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps
 
       <BildwurfBlockWrapper
         className={className}
-        {...readingListProps}
         dangerouslySetInnerHTML={{
           // Inject it dynamically so that React does not track it.
           // Bildwurf will dynamically change the DOM which can break the application on navigation

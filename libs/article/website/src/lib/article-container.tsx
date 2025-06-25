@@ -21,7 +21,7 @@ export function ArticleContainer({id, slug, className, children}: ArticleContain
   return (
     <PollBlockProvider>
       <BannerContainer documentId={data?.article?.id} documentType={BannerDocumentType.Article} />
-      <ReadingListContainer />
+      {data?.article.id && <ReadingListContainer articleId={data.article.id} />}
 
       {data?.article?.peer && (
         <PeerInformation

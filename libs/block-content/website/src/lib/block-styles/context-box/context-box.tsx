@@ -8,7 +8,6 @@ import {hasBlockStyle} from '../../blocks'
 import {isBreakBlock} from '../../break/break-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, BreakBlock} from '@wepublish/website/api'
-import {useReadingList} from '@wepublish/reading-list/website'
 
 export const ContextBoxWrapper = styled('aside')`
   display: grid;
@@ -63,10 +62,9 @@ export const ContextBox = ({className, richText, text}: BuilderBlockStyleProps['
   const {
     elements: {Button}
   } = useWebsiteBuilder()
-  const [readingListProps] = useReadingList()
 
   return (
-    <ContextBoxWrapper className={className} {...readingListProps}>
+    <ContextBoxWrapper className={className}>
       <ContextBoxIcon size="36" />
 
       <ContextBoxTitle>{text || `Darum geht's`}</ContextBoxTitle>

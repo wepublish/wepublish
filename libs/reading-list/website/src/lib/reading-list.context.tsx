@@ -5,7 +5,7 @@ export const ReadingListIndexContext = createContext(0)
 
 export const useReadingList = () => {
   const index = useContext(ReadingListIndexContext)
-  const props = useMemo(() => ({'data-reading-list-index': index}), [index])
+  const props = useMemo(() => (index ? {'data-reading-list-index': index} : {}), [index])
 
   return [props, index] as const
 }

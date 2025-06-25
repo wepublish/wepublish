@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {css, IconButton, LinearProgress, Theme, Tooltip} from '@mui/material'
 import {formatCurrency} from '@wepublish/membership/website'
-import {useReadingList} from '@wepublish/reading-list/website'
 import {
   BlockContent,
   CrowdfundingBlock as CrowdfundingBlockType,
@@ -64,11 +63,10 @@ const noWrap = css`
   text-wrap: nowrap;
 `
 
-export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps) => {
+export const CrowdfundingBlock = ({crowdfunding, className}: BuilderCrowdfundingBlockProps) => {
   const {
     elements: {H5}
   } = useWebsiteBuilder()
-  const [readingListProps] = useReadingList()
 
   const activeCrowdfunding = crowdfunding?.activeCrowdfundingGoal
   const progress = activeCrowdfunding?.progress ?? 0
@@ -81,7 +79,7 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
   }
 
   return (
-    <CrowdfundingContainer {...readingListProps}>
+    <CrowdfundingContainer className={className}>
       <CfInner>
         <H5 component="div" css={titleStyles}>
           Bereits <strong css={noWrap}>{formatCurrency(revenue / 100, Currency.Chf)}</strong>{' '}

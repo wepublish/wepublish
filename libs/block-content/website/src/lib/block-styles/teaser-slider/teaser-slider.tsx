@@ -19,7 +19,6 @@ import {
   BuilderTeaserListBlockProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useReadingList} from '@wepublish/reading-list/website'
 
 export const SliderWrapper = styled('section')`
   display: grid;
@@ -131,7 +130,6 @@ export const TeaserSlider = ({
     elements: {H5},
     blocks: {Teaser}
   } = useWebsiteBuilder()
-  const [readingListProps] = useReadingList()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
@@ -157,7 +155,7 @@ export const TeaserSlider = ({
 
   return (
     !!filledTeasers.length && (
-      <SliderWrapper className={className} {...readingListProps}>
+      <SliderWrapper className={className}>
         <SliderTitle>
           {(props as BuilderTeaserListBlockProps).title && (
             <H5 component={'h1'}>{(props as BuilderTeaserListBlockProps).title}</H5>

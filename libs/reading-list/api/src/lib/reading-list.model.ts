@@ -7,4 +7,7 @@ export class ReadingListProgressArgs {
 
   @Field(() => Int)
   blockIndex!: number
+
+  @Field()
+  completed?: boolean
 }
