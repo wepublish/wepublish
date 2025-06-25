@@ -2,7 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ok} from 'assert'
 import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
-import {differenceInDays, endOfDay, startOfDay, format} from 'date-fns'
+import {differenceInDays, endOfDay, startOfDay, format, subDays} from 'date-fns'
 import NodeCache from 'node-cache'
 import {createHash} from 'crypto'
 
@@ -245,41 +245,6 @@ export class DashboardSubscriptionService {
     })
   }
 
-  private async getDailyRevenue(date: Date, memberPlanIds: string[] = []) {
-    const start = startOfDay(date)
-    const end = endOfDay(date)
-    let memberPlanFilter: Prisma.InvoiceWhereInput = {}
-    if (memberPlanIds.length > 0) {
-      memberPlanFilter = {
-        subscription: {
-          memberPlanID: {
-            in: memberPlanIds
-          }
-        }
-      }
-    }
-    const invoices = await this.prisma.invoice.findMany({
-      select: {
-        items: {
-          select: {
-            amount: true
-          }
-        }
-      },
-      where: {
-        paidAt: {
-          gte: start,
-          lte: end
-        },
-        ...memberPlanFilter
-      }
-    })
-    return invoices.reduce((invoiceSum, invoice) => {
-      const itemsSum = invoice.items.reduce((itemSum, item) => itemSum + item.amount, 0)
-      return invoiceSum + itemsSum
-    }, 0)
-  }
-
   private async getDailyDeactivatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
     // Since the subscription is running until end of paidUntil; we need to subtract one day to ensure to count the ones who have been deactivated and paid until is yesterday
     const start = startOfDay(date)
@@ -320,9 +285,10 @@ export class DashboardSubscriptionService {
     })
   }
 
-  private getUnpaidCreatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
-    const start = startOfDay(date)
-    const end = endOfDay(date)
+  private getDailyOverdueSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    const yesterday = subDays(date, 1)
+    const startYesterday = startOfDay(yesterday)
+    const endYesterday = endOfDay(yesterday)
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
     if (memberPlanIds.length > 0) {
       memberPlanFilter = {
@@ -343,11 +309,12 @@ export class DashboardSubscriptionService {
         }
       },
       where: {
-        paidUntil: null,
-        createdAt: {
-          gte: start,
-          lte: end
+        paidUntil: {
+          not: null,
+          lte: endYesterday,
+          gte: startYesterday
         },
+        deactivation: null,
         ...memberPlanFilter
       }
     })
@@ -377,7 +344,8 @@ export class DashboardSubscriptionService {
       },
       where: {
         paidUntil: {
-          not: null
+          not: null,
+          gte: end
         },
         // Ensure that it is not the initial creation
         createdAt: {
@@ -399,8 +367,8 @@ export class DashboardSubscriptionService {
     })
   }
 
-  private async getDailyTotalActiveSubscriptions(date: Date, memberPlanIds: string[] = []) {
-    const end = endOfDay(date)
+  private async getDailyTotalActiveSubscriptionCount(date: Date, memberPlanIds: string[] = []) {
+    const start = startOfDay(date)
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
     if (memberPlanIds.length > 0) {
       memberPlanFilter = {
@@ -409,39 +377,11 @@ export class DashboardSubscriptionService {
         }
       }
     }
-    return this.prisma.subscription.findMany({
-      select: {
-        monthlyAmount: true,
-        startsAt: true,
-        paidUntil: true
-      },
+    return this.prisma.subscription.count({
       where: {
-        OR: [
-          {
-            createdAt: {
-              lte: end
-            },
-            paidUntil: {
-              not: null
-            },
-            deactivation: {
-              is: null
-            }
-          },
-          {
-            createdAt: {
-              lte: end
-            },
-            paidUntil: {
-              not: null
-            },
-            deactivation: {
-              date: {
-                gte: end
-              }
-            }
-          }
-        ],
+        paidUntil: {
+          gte: start
+        },
         ...memberPlanFilter
       }
     })
@@ -454,69 +394,40 @@ export class DashboardSubscriptionService {
     // 14 Tage max cache duration 14 * 24h
     const cappedDays = Math.min(daysBetween, 336)
 
-    // +1 to ensure its never 0 this means cache for ever
+    // +1 to ensure its never 0 this getDailyOverdueSubscriptionmeans cache for ever
     // First day is cached for 1 sec (min) every day (live); In the past every day is cached for 60 min longer than the previous limited by 14 days
     // eg. 3 day in the past (3 * 3600) + 1 sec
     return cappedDays * ONE_HOUR_IN_SEC + 1
   }
 
-  private calculateDailyActiveSubscriptionStats(
-    activeSubscriptions: {monthlyAmount: number; startsAt: Date; paidUntil: Date | null}[]
-  ) {
-    let subscriptionMonthlyRevenueSum = 0
-    let subscriptionDurationInDaysSum = 0
-    for (const activeSubscription of activeSubscriptions) {
-      subscriptionMonthlyRevenueSum += activeSubscription.monthlyAmount
-      if (activeSubscription.paidUntil) {
-        subscriptionDurationInDaysSum += differenceInDays(
-          activeSubscription.paidUntil,
-          activeSubscription.startsAt
-        )
-      }
-    }
-    const subscriptionCount = activeSubscriptions.length
-    return {
-      subscriptionMonthlyRevenueSum,
-      subscriptionMonthlyRevenueAvg:
-        subscriptionCount > 0 ? Math.ceil(subscriptionMonthlyRevenueSum / subscriptionCount) : 0,
-      subscriptionDurationAvg:
-        subscriptionCount > 0 ? Math.ceil(subscriptionDurationInDaysSum / subscriptionCount) : 0
-    }
-  }
-
   async generateDailyData(current: Date, sortedPlanIds: string[]): Promise<DailySubscriptionStats> {
     const [
-      totalActiveSubscriptions,
+      totalActiveSubscriptionCount,
       createdSubscriptions,
       renewedSubscriptions,
       deactivatedSubscriptions,
-      createdUnpaidSubscriptions,
-      subscriptionDailyRevenue
+      dailyOverdueSubscriptions
     ] = await Promise.all([
-      this.getDailyTotalActiveSubscriptions(current, sortedPlanIds),
+      this.getDailyTotalActiveSubscriptionCount(current, sortedPlanIds),
       this.getDailyCreatedSubscriptions(current, sortedPlanIds),
       this.getDailyRenewedSubscriptions(current, sortedPlanIds),
       this.getDailyDeactivatedSubscriptions(current, sortedPlanIds),
-      this.getUnpaidCreatedSubscriptions(current, sortedPlanIds),
-      this.getDailyRevenue(current, sortedPlanIds)
+      this.getDailyOverdueSubscriptions(current, sortedPlanIds)
     ])
 
     const replacedSubscriptions = createdSubscriptions.filter(
       createdSubscription => createdSubscription.replacesSubscriptionID
     )
 
-    const {subscriptionMonthlyRevenueAvg, subscriptionMonthlyRevenueSum, subscriptionDurationAvg} =
-      this.calculateDailyActiveSubscriptionStats(totalActiveSubscriptions)
-
     return {
       date: format(current, 'yyyy-MM-dd'),
-      totalActiveSubscriptionCount: totalActiveSubscriptions.length,
+      totalActiveSubscriptionCount,
       createdSubscriptionCount: createdSubscriptions.length,
       createdSubscriptionUsers: createdSubscriptions.map(
         createdSubscription => createdSubscription.user
       ),
-      createdUnpaidSubscriptionCount: createdUnpaidSubscriptions.length,
-      createdUnpaidSubscriptionUsers: createdUnpaidSubscriptions.map(
+      overdueSubscriptionCount: dailyOverdueSubscriptions.length,
+      overdueSubscriptionUsers: dailyOverdueSubscriptions.map(
         createdSubscription => createdSubscription.user
       ),
 
@@ -533,11 +444,7 @@ export class DashboardSubscriptionService {
       deactivatedSubscriptionCount: deactivatedSubscriptions.length,
       deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
         deactivatedSubscription => deactivatedSubscription.user
-      ),
-      subscriptionMonthlyRevenueAvg,
-      subscriptionMonthlyRevenueSum,
-      subscriptionDailyRevenue,
-      subscriptionDurationAvg
+      )
     }
   }
 

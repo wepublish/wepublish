@@ -523,19 +523,15 @@ input CustomTeaserInput {
 type DailySubscriptionStats {
   createdSubscriptionCount: Float!
   createdSubscriptionUsers: [DailySubscriptionStatsUser!]!
-  createdUnpaidSubscriptionCount: Float!
-  createdUnpaidSubscriptionUsers: [DailySubscriptionStatsUser!]!
   date: String!
   deactivatedSubscriptionCount: Float!
   deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  overdueSubscriptionCount: Float!
+  overdueSubscriptionUsers: [DailySubscriptionStatsUser!]!
   renewedSubscriptionCount: Float!
   renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
   replacedSubscriptionCount: Float!
   replacedSubscriptionUsers: [DailySubscriptionStatsUser!]!
-  subscriptionDailyRevenue: Float!
-  subscriptionDurationAvg: Float!
-  subscriptionMonthlyRevenueAvg: Float!
-  subscriptionMonthlyRevenueSum: Float!
   totalActiveSubscriptionCount: Float!
 }
 
@@ -1056,8 +1052,6 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
-  SUBSCRIBED
-  UNSUBSCRIBED
 }
 
 type MailProviderModel {
