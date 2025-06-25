@@ -771,6 +771,7 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "createMemberPlanHeader": "Create Memberplan",
       "description": "Description",
+      "shortDescription": "Short description",
       "editPaymentSetting": "Edit payment setting",
       "forceAutoRenewal": "Force Auto Renew",
       "loadingTitle": "Loading",

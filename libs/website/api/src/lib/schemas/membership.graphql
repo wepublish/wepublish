@@ -24,6 +24,7 @@ fragment FullMemberPlan on MemberPlan {
   name
   tags
   description
+  shortDescription
   image {
     ...FullImage
   }

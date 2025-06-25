@@ -1397,6 +1397,7 @@ export type MemberPlan = {
   image?: Maybe<Image>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
+  shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;

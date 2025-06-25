@@ -741,6 +741,7 @@ export async function contextFromRequest(
           }
         })
       }
+
       await prisma.subscription.update({
         data: {
           confirmed: true

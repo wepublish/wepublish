@@ -512,7 +512,7 @@ const theme = createTheme(variablesTheme, {
         unit: 'rem',
         breakpoints: variablesTheme.breakpoints.values,
         values: {
-          xs: 20,
+          xs: 18,
           md: 20, // to override base theme
           lg: 22,
           xl: 24,
@@ -640,7 +640,8 @@ export const contentTheme = createTheme(theme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
     },
     h2: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 800
     },
     h3: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')

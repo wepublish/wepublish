@@ -1,11 +1,10 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {RegisterMutationVariables} from '@wepublish/website/api'
 import {
   BuilderRegistrationFormProps,
   BuilderUserFormFields,
-  useWebsiteBuilder
+  Button
 } from '@wepublish/website/builder'
 import {useEffect, useMemo} from 'react'
 import {Controller, useForm} from 'react-hook-form'
@@ -20,7 +19,7 @@ export const RegistrationFormWrapper = styled('form')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-const buttonStyles = css`
+export const RegistrationFormButton = styled(Button)`
   justify-self: flex-end;
 `
 
@@ -108,10 +107,6 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
     reValidateMode: 'onChange'
   })
 
-  const {
-    elements: {Button}
-  } = useWebsiteBuilder()
-
   const onSubmit = handleSubmit(data => onRegister?.(data))
 
   useEffect(() => {
@@ -142,9 +137,9 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
       {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
       {register.error && <ApiAlert error={register.error} severity="error" />}
 
-      <Button css={buttonStyles} disabled={register.loading || challenge.loading} type="submit">
+      <RegistrationFormButton disabled={register.loading || challenge.loading} type="submit">
         Registrieren
-      </Button>
+      </RegistrationFormButton>
     </RegistrationFormWrapper>
   )
 }

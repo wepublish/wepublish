@@ -468,7 +468,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodID
         )
 
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (monthlyAmount < memberPlan.amountPerMonthMin) {
+          throw new MonthlyAmountNotEnough()
+        }
 
         await memberContext.validateSubscriptionPaymentConfiguration(
           memberPlan,
@@ -494,8 +496,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
               properties: true
             }
           })
-          if (!subscriptionToDeactivate)
+
+          if (!subscriptionToDeactivate) {
             throw new SubscriptionToDeactivateDoesNotExist(deactivateSubscriptionId)
+          }
         }
 
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)

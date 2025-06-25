@@ -762,6 +762,7 @@
       "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createMemberPlanHeader": "Erstelle Memberplan",
       "description": "Beschreibung",
+      "shortDescription": "Kurze Beschreibung",
       "editPaymentSetting": "Zahlungseinstellung bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Lade",

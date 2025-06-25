@@ -15,32 +15,23 @@ import {
   NavPaperName
 } from '@wepublish/navigation/website'
 import {BuilderNavbarProps} from '@wepublish/website/builder'
-import {forwardRef, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 
 import {Tiempos} from '../theme'
 
-const ScrollAwareNavbar = forwardRef<HTMLElement, BuilderNavbarProps & {isScrolled?: boolean}>(
-  (props, ref) => {
-    const [isScrolled, setIsScrolled] = useState(false)
+const ScrollAwareNavbar = (props: BuilderNavbarProps) => {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 50), [])
 
-    useEffect(() => {
-      const handleScroll = () => {
-        setIsScrolled(window.scrollY > 50)
-      }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
 
-      window.addEventListener('scroll', handleScroll)
-      return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
-
-    return (
-      <Navbar
-        {...props}
-        ref={ref}
-        className={`${props.className || ''} ${isScrolled ? 'scrolled' : ''}`}
-      />
-    )
-  }
-)
+  return (
+    <Navbar {...props} className={`${props.className || ''} ${isScrolled ? 'scrolled' : ''}`} />
+  )
+}
 
 export const HauptstadtNavbar = styled(ScrollAwareNavbar)`
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
@@ -117,7 +108,7 @@ export const HauptstadtFooter = styled(Footer)`
   display: grid;
   justify-content: center;
   grid-template-columns: minmax(0, 492px);
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(6)};
   padding-top: ${({theme}) => theme.spacing(6)};
   padding-bottom: ${({theme}) => theme.spacing(6)};
 
