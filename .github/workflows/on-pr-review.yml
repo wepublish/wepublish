@@ -115,11 +115,6 @@ jobs:
                 database: wepublish
           primary:
             resourcesPreset: "none"
-            resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
