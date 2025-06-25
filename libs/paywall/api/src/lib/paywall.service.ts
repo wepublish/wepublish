@@ -68,8 +68,13 @@ export class PaywallService {
           : undefined,
         bypasses: bypassTokens
           ? {
-              deleteMany: {},
+              deleteMany: {
+                token: {
+                  notIn: bypassTokens
+                }
+              },
               createMany: {
+                skipDuplicates: true,
                 data: bypassTokens.map(token => ({
                   token
                 }))
