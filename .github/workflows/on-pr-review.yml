@@ -86,9 +86,12 @@ jobs:
             rootUser: ${S3_ACCESS_KEY_ID}
             rootPassword: ${S3_SECRET_ACCESS_KEY}
           disableWebUI: true
+          console:
+            enabled: false
           defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
+          resourcesPreset: "none"
           service:
             type: LoadBalancer
             port: 9000
@@ -159,20 +162,20 @@ jobs:
               OVERRIDE_ADMIN_PW: '123'
             resources:
               requests:
-                memory: 100Mi
-                cpu: 200m
+                memory: null
+                cpu: null
               limits:
-                memory: 256Mi
-                cpu: 300m
+                memory: null
+                cpu: null
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
             resources:
               requests:
-                memory: 192Mi
-                cpu: 100m
+                memory: null
+                cpu: null
               limits:
-                memory: 384Mi
-                cpu: 200m
+                memory: null
+                cpu: null
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -283,22 +286,22 @@ jobs:
               PEER_BY_DEFAULT: "true"
             resources:
               requests:
-                memory: 32Mi
-                cpu: 25m
+                memory: null
+                cpu: null
               limits:
-                memory: 64Mi
-                cpu: 100m
+                memory: null
+                cpu: null
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
             resources:
               requests:
-                memory: 8Mi
-                cpu: 1m
+                memory: null
+                cpu: null
               limits:
-                memory: 16Mi
-                cpu: 20m
+                memory: null
+                cpu: null
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
@@ -309,11 +312,11 @@ jobs:
               S3_PORT: '9000'
             resources:
               requests:
-                memory: 96Mi
-                cpu: 50m
+                memory: null
+                cpu: null
               limits:
-                memory: 192Mi
-                cpu: 200m
+                memory: null
+                cpu: null
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
