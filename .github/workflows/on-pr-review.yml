@@ -94,7 +94,6 @@ jobs:
           resources:
             requests:
               memory: 64Mi
-              cpu: 0m
           service:
             type: LoadBalancer
             port: 9000
@@ -118,7 +117,7 @@ jobs:
             resources:
               requests:
                 memory: 64Mi
-                cpu: 0m
+
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
@@ -170,7 +169,7 @@ jobs:
             resources:
               requests:
                 memory: 100Mi
-                cpu: 0m
+                cpu: 50m
               limits:
                 memory: 256Mi
                 cpu: 300m
@@ -179,7 +178,7 @@ jobs:
             resources:
               requests:
                 memory: 192Mi
-                cpu: 0m
+                cpu: 50m
               limits:
                 memory: 384Mi
                 cpu: 200m
@@ -294,7 +293,7 @@ jobs:
             resources:
               requests:
                 memory: 32Mi
-                cpu: 0m
+                cpu: 50m
               limits:
                 memory: 64Mi
                 cpu: 100m
@@ -305,7 +304,7 @@ jobs:
             resources:
               requests:
                 memory: 8Mi
-                cpu: 0m
+                cpu: 50m
               limits:
                 memory: 16Mi
                 cpu: 20m
@@ -320,7 +319,7 @@ jobs:
             resources:
               requests:
                 memory: 96Mi
-                cpu: 0m
+                cpu: 50m
               limits:
                 memory: 192Mi
                 cpu: 200m
