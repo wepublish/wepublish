@@ -149,6 +149,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
+  hidePaymentAmount = memberPlan => !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId
@@ -443,15 +444,17 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                 Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
-              <PaymentAmount
-                {...field}
-                error={error}
-                slug={selectedMemberPlan?.slug}
-                donate={!!donate?.(selectedMemberPlan)}
-                amountPerMonthMin={amountPerMonthMin}
-                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
-                currency={selectedMemberPlan?.currency ?? Currency.Chf}
-              />
+              {!hidePaymentAmount(selectedMemberPlan) && (
+                <PaymentAmount
+                  {...field}
+                  error={error}
+                  slug={selectedMemberPlan?.slug}
+                  donate={!!donate?.(selectedMemberPlan)}
+                  amountPerMonthMin={amountPerMonthMin}
+                  amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
+                  currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                />
+              )}
             </SubscribeAmount>
           )}
         />
