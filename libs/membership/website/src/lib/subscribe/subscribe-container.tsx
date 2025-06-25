@@ -39,6 +39,7 @@ export type SubscribeContainerProps<
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'
+    | 'hidePaymentAmount'
   > & {
     sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
@@ -52,6 +53,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
   schema,
   filter = memberPlan => memberPlan,
   sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
+  hidePaymentAmount,
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
@@ -118,6 +120,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donate}
+        hidePaymentAmount={hidePaymentAmount}
         transactionFee={transactionFee}
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}

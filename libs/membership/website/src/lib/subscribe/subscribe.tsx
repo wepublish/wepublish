@@ -149,6 +149,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
+  hidePaymentAmount = memberPlan => !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId
@@ -434,27 +435,29 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       <SubscribeSection>
-        <Controller
-          name={'monthlyAmount'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <SubscribeAmount>
-              <Paragraph component={SubscribeAmountText} gutterBottom={false}>
-                Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
-              </Paragraph>
+        {!hidePaymentAmount(selectedMemberPlan) && (
+          <Controller
+            name={'monthlyAmount'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <SubscribeAmount>
+                <Paragraph component={SubscribeAmountText} gutterBottom={false}>
+                  Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
+                </Paragraph>
 
-              <PaymentAmount
-                {...field}
-                error={error}
-                slug={selectedMemberPlan?.slug}
-                donate={!!donate?.(selectedMemberPlan)}
-                amountPerMonthMin={amountPerMonthMin}
-                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
-                currency={selectedMemberPlan?.currency ?? Currency.Chf}
-              />
-            </SubscribeAmount>
-          )}
-        />
+                <PaymentAmount
+                  {...field}
+                  error={error}
+                  slug={selectedMemberPlan?.slug}
+                  donate={!!donate?.(selectedMemberPlan)}
+                  amountPerMonthMin={amountPerMonthMin}
+                  amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
+                  currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                />
+              </SubscribeAmount>
+            )}
+          />
+        )}
 
         {!hasUserContext && <UserForm control={control} fields={fields} />}
       </SubscribeSection>
