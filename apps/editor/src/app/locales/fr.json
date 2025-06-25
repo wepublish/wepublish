@@ -1492,7 +1492,13 @@
         "active": "Actif",
         "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
         "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
-        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall"
+        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
+        "bypasses": "Contournements",
+        "bypassToken": "Token de contournement",
+        "newBypassToken": "Créer un nouveau token de contournement",
+        "addBypass": "Ajouter",
+        "qrCodeTitle": "Code QR pour le token de contournement",
+        "downloadSvg": "Télécharger SVG"
       }
     }
   }

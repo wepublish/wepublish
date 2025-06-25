@@ -5,6 +5,7 @@ import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {RichTextBlockWrapper, TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
@@ -207,6 +208,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
+  withPaywallBypassToken(CustomApp)
+)
 
 export {ConnectedApp as default}

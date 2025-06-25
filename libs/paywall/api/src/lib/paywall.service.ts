@@ -41,7 +41,7 @@ export class PaywallService {
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public updatePaywall({id, memberPlanIds, ...input}: UpdatePaywallInput) {
+  public updatePaywall({id, memberPlanIds, bypassTokens, ...input}: UpdatePaywallInput) {
     return this.prisma.paywall.update({
       where: {
         id
@@ -63,6 +63,21 @@ export class PaywallService {
                   memberPlanIds?.map(memberPlanId => ({
                     memberPlanId
                   })) ?? []
+              }
+            }
+          : undefined,
+        bypasses: bypassTokens
+          ? {
+              deleteMany: {
+                token: {
+                  notIn: bypassTokens
+                }
+              },
+              createMany: {
+                skipDuplicates: true,
+                data: bypassTokens.map(token => ({
+                  token
+                }))
               }
             }
           : undefined
@@ -89,6 +104,32 @@ export class PaywallService {
       },
       include: {
         availablePaymentMethods: true
+      }
+    })
+  }
+
+  public getPaywallBypasses(id: string) {
+    return this.prisma.paywallBypass.findMany({
+      where: {
+        paywallId: id
+      }
+    })
+  }
+
+  @PrimeDataLoader(PaywallDataloaderService)
+  public createPaywallBypass(paywallId: string, token: string) {
+    return this.prisma.paywallBypass.create({
+      data: {
+        paywallId,
+        token
+      }
+    })
+  }
+
+  public deletePaywallBypass(id: string) {
+    return this.prisma.paywallBypass.delete({
+      where: {
+        id
       }
     })
   }

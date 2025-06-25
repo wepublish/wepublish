@@ -4,6 +4,7 @@ import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -189,6 +190,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
-const ConnectedApp = withApollo(CustomApp)
+const ConnectedApp = withApollo(withPaywallBypassToken(CustomApp))
 
 export {ConnectedApp as default}

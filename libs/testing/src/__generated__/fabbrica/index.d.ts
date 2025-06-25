@@ -65,6 +65,7 @@ import type { Crowdfunding } from "@prisma/client";
 import type { CrowdfundingGoal } from "@prisma/client";
 import type { Paywall } from "@prisma/client";
 import type { PaywallMemberplan } from "@prisma/client";
+import type { PaywallBypass } from "@prisma/client";
 import type { TrackingPixelProviderType } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
@@ -3110,6 +3111,7 @@ type PaywallFactoryDefineInput = {
     active?: boolean;
     memberPlans?: Prisma.PaywallMemberplanCreateNestedManyWithoutPaywallInput;
     articles?: Prisma.ArticleCreateNestedManyWithoutPaywallInput;
+    bypasses?: Prisma.PaywallBypassCreateNestedManyWithoutPaywallInput;
 };
 type PaywallFactoryDefineOptions = {
     defaultData?: Resolver<PaywallFactoryDefineInput, BuildDataOptions>;
@@ -3183,3 +3185,43 @@ export interface PaywallMemberplanFactoryInterface<TOptions extends PaywallMembe
  * @returns factory {@link PaywallMemberplanFactoryInterface}
  */
 export declare function definePaywallMemberplanFactory<TOptions extends PaywallMemberplanFactoryDefineOptions>(options: TOptions): PaywallMemberplanFactoryInterface<TOptions>;
+type PaywallBypasspaywallFactory = {
+    _factoryFor: "Paywall";
+    build: () => PromiseLike<Prisma.PaywallCreateNestedOneWithoutBypassesInput["create"]>;
+};
+type PaywallBypassFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    token?: string;
+    paywall: PaywallBypasspaywallFactory | Prisma.PaywallCreateNestedOneWithoutBypassesInput;
+};
+type PaywallBypassFactoryDefineOptions = {
+    defaultData: Resolver<PaywallBypassFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<PaywallBypassFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type PaywallBypassTraitKeys<TOptions extends PaywallBypassFactoryDefineOptions> = keyof TOptions["traits"];
+export interface PaywallBypassFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "PaywallBypass";
+    build(inputData?: Partial<Prisma.PaywallBypassCreateInput>): PromiseLike<Prisma.PaywallBypassCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.PaywallBypassCreateInput>): PromiseLike<Prisma.PaywallBypassCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.PaywallBypassCreateInput>[]): PromiseLike<Prisma.PaywallBypassCreateInput[]>;
+    pickForConnect(inputData: PaywallBypass): Pick<PaywallBypass, "id">;
+    create(inputData?: Partial<Prisma.PaywallBypassCreateInput>): PromiseLike<PaywallBypass>;
+    createList(inputData: number | readonly Partial<Prisma.PaywallBypassCreateInput>[]): PromiseLike<PaywallBypass[]>;
+    createForConnect(inputData?: Partial<Prisma.PaywallBypassCreateInput>): PromiseLike<Pick<PaywallBypass, "id">>;
+}
+export interface PaywallBypassFactoryInterface<TOptions extends PaywallBypassFactoryDefineOptions = PaywallBypassFactoryDefineOptions> extends PaywallBypassFactoryInterfaceWithoutTraits {
+    use(name: PaywallBypassTraitKeys<TOptions>, ...names: readonly PaywallBypassTraitKeys<TOptions>[]): PaywallBypassFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link PaywallBypass} model.
+ *
+ * @param options
+ * @returns factory {@link PaywallBypassFactoryInterface}
+ */
+export declare function definePaywallBypassFactory<TOptions extends PaywallBypassFactoryDefineOptions>(options: TOptions): PaywallBypassFactoryInterface<TOptions>;

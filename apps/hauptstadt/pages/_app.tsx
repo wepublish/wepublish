@@ -4,6 +4,7 @@ import {Container, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   AsyncSessionProvider,
   authLink,
@@ -12,8 +13,7 @@ import {
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
-import {UserSession} from '@wepublish/website/api'
-import {createWithV1ApiClient} from '@wepublish/website/api'
+import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
@@ -219,6 +219,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(CustomApp)
+])(withPaywallBypassToken(CustomApp))
 
 export {ConnectedApp as default}
