@@ -368,7 +368,7 @@ export class DashboardSubscriptionService {
   }
 
   private async getDailyTotalActiveSubscriptionCount(date: Date, memberPlanIds: string[] = []) {
-    const start = startOfDay(date)
+    const end = endOfDay(date)
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
     if (memberPlanIds.length > 0) {
       memberPlanFilter = {
@@ -380,7 +380,7 @@ export class DashboardSubscriptionService {
     return this.prisma.subscription.count({
       where: {
         paidUntil: {
-          gte: start
+          gte: end
         },
         ...memberPlanFilter
       }
@@ -394,7 +394,7 @@ export class DashboardSubscriptionService {
     // 14 Tage max cache duration 14 * 24h
     const cappedDays = Math.min(daysBetween, 336)
 
-    // +1 to ensure its never 0 this getDailyOverdueSubscriptionmeans cache for ever
+    // +1 to ensure its never 0 this means cache for ever
     // First day is cached for 1 sec (min) every day (live); In the past every day is cached for 60 min longer than the previous limited by 14 days
     // eg. 3 day in the past (3 * 3600) + 1 sec
     return cappedDays * ONE_HOUR_IN_SEC + 1
