@@ -8,13 +8,12 @@ export function storeBypassToken(token: string): void {
 
   setCookie(BYPASS_COOKIE_KEY, token, {
     maxAge,
-    httpOnly: false,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax'
+    httpOnly: false
   })
 }
 
 export function hasValidBypass(validTokens: string[]): boolean {
   const token = getCookie(BYPASS_COOKIE_KEY)
+
   return token ? validTokens.includes(token as string) : false
 }
