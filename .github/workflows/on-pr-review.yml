@@ -163,7 +163,13 @@ jobs:
             resources: {}
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
-            resources: {}
+            resources:
+              requests:
+                memory: null
+                cpu: null
+              limits:
+                memory: null
+                cpu: null
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -272,12 +278,24 @@ jobs:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
               PEER_BY_DEFAULT: "true"
-            resources: {}
+            resources:
+              requests:
+                memory: null
+                cpu: null
+              limits:
+                memory: null
+                cpu: null
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
-            resources: {}
+            resources:
+              requests:
+                memory: null
+                cpu: null
+              limits:
+                memory: null
+                cpu: null
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
@@ -286,7 +304,13 @@ jobs:
               S3_SECRET_KEY: secretKey
               S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
               S3_PORT: '9000'
-            resources: {}
+            resources:
+              requests:
+                memory: null
+                cpu: null
+              limits:
+                memory: null
+                cpu: null
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
