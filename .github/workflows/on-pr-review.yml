@@ -184,10 +184,10 @@ jobs:
             image: ghcr.io/wepublish/api:${{ github.sha }}
             resources:
               requests:
-                memory: "96Mi"
+                memory: "200Mi"
                 cpu: "50m"
               limits:
-                memory: "256Mi"
+                memory: "512Mi"
                 cpu: "250m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
