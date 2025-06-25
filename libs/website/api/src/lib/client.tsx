@@ -4,12 +4,12 @@ import {
   ApolloProvider,
   DefaultOptions,
   from,
+  HttpLink,
   InMemoryCache,
   InMemoryCacheConfig,
   NormalizedCacheObject,
   split
 } from '@apollo/client'
-import {BatchHttpLink} from '@apollo/client/link/batch-http'
 import {mergeDeepRight} from 'ramda'
 import possibleTypes from './graphql'
 
@@ -40,7 +40,7 @@ const createV1ApiClient = (
     createUploadLink({
       uri: `${apiUrl}/v1`
     }),
-    new BatchHttpLink({uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20})
+    new HttpLink({uri: `${apiUrl}/v1`})
   )
 
   const link = from([...links, httpLink])
