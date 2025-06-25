@@ -94,10 +94,10 @@ jobs:
           resourcesPreset: "none"
           resources:
             requests:
-              memory: "64Mi"
+              memory: "200Mi"
               cpu: "50m"
             limits:
-              memory: "256Mi"
+              memory: "400Mi"
               cpu: "200m"
           service:
             type: LoadBalancer
