@@ -207,9 +207,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               )}
 
               {publicRuntimeConfig.env.GTM_ID && (
-                <>
-                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-                </>
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
 
               {publicRuntimeConfig.env.SPARKLOOP_ID && (

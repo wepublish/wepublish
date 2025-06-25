@@ -1,7 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, css} from '@mui/material'
+import {Checkbox, FormControlLabel} from '@mui/material'
 import styled from '@emotion/styled'
-import {BuilderLoginFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderLoginFormProps, Button, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
 
@@ -18,7 +18,7 @@ export const LoginFormForm = styled('form')`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-const buttonStyles = css`
+export const LoginFormButton = styled(Button)`
   justify-self: flex-end;
 `
 
@@ -52,7 +52,7 @@ export function LoginForm({
   className
 }: BuilderLoginFormProps) {
   const {
-    elements: {Alert, Button, TextField}
+    elements: {Alert, TextField}
   } = useWebsiteBuilder()
 
   type FormInput = z.infer<typeof loginFormSchema>
@@ -145,15 +145,11 @@ export function LoginForm({
           </Alert>
         )}
 
-        <Button
-          css={buttonStyles}
-          disabled={loading || loginLinkSent}
-          type="submit"
-          onClick={onSubmit}>
+        <LoginFormButton disabled={loading || loginLinkSent} type="submit" onClick={onSubmit}>
           {!loginWithPassword && (loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern')}
 
           {loginWithPassword && 'Login'}
-        </Button>
+        </LoginFormButton>
       </LoginFormForm>
     </LoginFormWrapper>
   )

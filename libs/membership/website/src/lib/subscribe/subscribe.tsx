@@ -20,6 +20,7 @@ import {
 import {
   BuilderSubscribeProps,
   BuilderUserFormFields,
+  Button,
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
@@ -29,7 +30,6 @@ import {z} from 'zod'
 import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
-import {css} from '@emotion/react'
 import {replace, toLower} from 'ramda'
 import {ApolloError} from '@apollo/client'
 import {ApiAlert} from '@wepublish/errors/website'
@@ -93,7 +93,7 @@ export const SubscribePayment = styled('div')`
   }
 `
 
-const buttonStyles = css`
+export const SubscribeButton = styled(Button)`
   justify-self: center;
 `
 
@@ -545,13 +545,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       <SubscribeNarrowSection>
-        <Button
+        <SubscribeButton
           size={'large'}
           disabled={
             challenge.loading || userInvoices.loading || userSubscriptions.loading || loading
           }
           type="submit"
-          css={buttonStyles}
           onClick={e => {
             if (hasOpenInvoices || alreadyHasSubscription) {
               e.preventDefault()
@@ -559,7 +558,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}>
           {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
-        </Button>
+        </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ? (
           <Link underline={'hover'} href={termsOfServiceUrl}>

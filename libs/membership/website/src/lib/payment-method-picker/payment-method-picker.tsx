@@ -28,7 +28,7 @@ const icon = css`
   height: 40px;
 `
 
-const hiddenRadio = css`
+const HiddenRadio = styled(Radio)`
   visibility: hidden;
   width: 0;
   height: 0;
@@ -42,7 +42,7 @@ export function PaymentRadio({
 
   return (
     <>
-      <Radio {...props} css={hiddenRadio} />
+      <HiddenRadio {...props} />
       <PaymentRadioWrapper active={radio?.value === props.value}>{children}</PaymentRadioWrapper>
     </>
   )
