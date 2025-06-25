@@ -27,13 +27,28 @@ spec:
         - name: {{ include "helm.fullname" . }}
           image: {{ .Values.migration.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          {{- $res := .Values.migration.resources }}
+          {{- if or (and $res.requests (or $res.requests.cpu $res.requests.memory)) (and $res.limits (or $res.limits.cpu $res.limits.memory)) }}
           resources:
+            {{- if and $res.requests (or $res.requests.cpu $res.requests.memory) }}
             requests:
-              memory: {{ .Values.migration.resources.requests.memory }}
-              cpu: {{ .Values.migration.resources.requests.cpu }}
+              {{- if $res.requests.cpu }}
+              cpu: {{ $res.requests.cpu }}
+              {{- end }}
+              {{- if $res.requests.memory }}
+              memory: {{ $res.requests.memory }}
+              {{- end }}
+            {{- end }}
+            {{- if and $res.limits (or $res.limits.cpu $res.limits.memory) }}
             limits:
-              memory: {{ .Values.migration.resources.limits.memory }}
-              cpu: {{ .Values.migration.resources.limits.cpu }}
+              {{- if $res.limits.cpu }}
+              cpu: {{ $res.limits.cpu }}
+              {{- end }}
+              {{- if $res.limits.memory }}
+              memory: {{ $res.limits.memory }}
+              {{- end }}
+          {{- end }}
+          {{- end }}
           env:
             {{- if .Values.migration.dynamicEnv }}
             {{- range $key, $value := .Values.migration.dynamicEnv }}
