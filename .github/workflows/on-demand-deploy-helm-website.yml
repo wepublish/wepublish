@@ -60,7 +60,7 @@ jobs:
             resources:
               requests:
                 memory: 100Mi
-                cpu: 50m
+                cpu: 0m
               limits:
                 memory: 512Mi
                 cpu: 300m

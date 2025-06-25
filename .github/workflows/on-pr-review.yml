@@ -94,7 +94,7 @@ jobs:
           resources:
             requests:
               memory: 64Mi
-              cpu: 50m
+              cpu: 0m
           service:
             type: LoadBalancer
             port: 9000
@@ -170,7 +170,7 @@ jobs:
             resources:
               requests:
                 memory: 100Mi
-                cpu: 50m
+                cpu: 0m
               limits:
                 memory: 256Mi
                 cpu: 300m
@@ -179,7 +179,7 @@ jobs:
             resources:
               requests:
                 memory: 192Mi
-                cpu: 50m
+                cpu: 0m
               limits:
                 memory: 384Mi
                 cpu: 200m
@@ -294,7 +294,7 @@ jobs:
             resources:
               requests:
                 memory: 32Mi
-                cpu: 25m
+                cpu: 0m
               limits:
                 memory: 64Mi
                 cpu: 100m
@@ -305,7 +305,7 @@ jobs:
             resources:
               requests:
                 memory: 8Mi
-                cpu: 1m
+                cpu: 0m
               limits:
                 memory: 16Mi
                 cpu: 20m
@@ -320,7 +320,7 @@ jobs:
             resources:
               requests:
                 memory: 96Mi
-                cpu: 50m
+                cpu: 0m
               limits:
                 memory: 192Mi
                 cpu: 200m
