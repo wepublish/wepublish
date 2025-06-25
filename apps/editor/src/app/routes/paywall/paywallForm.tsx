@@ -266,7 +266,8 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
         </Modal.Header>
         <Modal.Body style={{textAlign: 'center'}}>
           <TokenUrl>
-            {process.env.REACT_APP_WEBSITE_URL || 'https://example.com'}/?paywallToken=
+            {process.env.REACT_APP_WEBSITE_URL || 'https://example.com'}
+            {'/?paywallToken='}
             {selectedToken}
           </TokenUrl>
           <QRCodeContainer>
