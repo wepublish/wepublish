@@ -304,10 +304,10 @@ jobs:
             resources:
               requests:
                 memory: 8Mi
-                cpu: 50m
+                cpu: 1m
               limits:
-                memory: 16Mi
-                cpu: 20m
+                memory: 100Mi
+                cpu: 100m
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
