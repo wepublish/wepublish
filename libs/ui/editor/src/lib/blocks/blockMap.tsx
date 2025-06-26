@@ -238,6 +238,33 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdViewQuilt />
   },
 
+  [EditorBlockType.TeaserSlots]: {
+    field: props => <TeaserSlotsBlock {...props} />,
+    defaultValue: {
+      title: null,
+      blockStyle: undefined,
+      autofillConfig: {
+        enabled: false,
+        filter: {
+          tags: []
+        },
+        sort: TeaserListBlockSort.PublishedAt,
+        teaserType: TeaserType.Article
+      },
+      slots: [
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual}
+      ],
+      teasers: []
+    },
+    label: 'blocks.teaserSlots.label',
+    icon: <MdFilter6 />
+  },
+
   [EditorBlockType.Html]: {
     field: props => <HTMLBlock {...props} />,
     defaultValue: {html: '', blockStyle: undefined},
