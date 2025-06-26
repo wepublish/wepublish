@@ -1056,8 +1056,6 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
-  SUBSCRIBED
-  UNSUBSCRIBED
 }
 
 type MailProviderModel {
@@ -1184,6 +1182,9 @@ type Mutation {
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
+
+  """Saves the reading progress of the current user for a given article"""
+  saveReadingListProgress(articleId: String!, blockIndex: Int!, completed: Boolean!): Boolean!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""

@@ -67,6 +67,7 @@ import {
 } from '@wepublish/tracking-pixel/api'
 import {HttpModule, HttpService} from '@nestjs/axios'
 import {MediaAdapterModule} from '@wepublish/image/api'
+import {ReadingListModule} from '@wepublish/reading-list/api'
 
 @Global()
 @Module({
@@ -354,6 +355,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
     ConfigModule.forRoot(),
     HealthModule,
     SystemInfoModule,
+    ReadingListModule,
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({

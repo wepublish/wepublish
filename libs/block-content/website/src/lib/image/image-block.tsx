@@ -2,6 +2,7 @@ import {Link, css} from '@mui/material'
 import styled from '@emotion/styled'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, ImageBlock as ImageBlockType} from '@wepublish/website/api'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,11 +36,12 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
   const {
     elements: {Image}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   const img = image && <Image image={image} fetchPriority="high" css={imageStyles} />
 
   return (
-    <ImageBlockWrapper className={className}>
+    <ImageBlockWrapper className={className} {...readingListProps}>
       <ImageBlockInnerWrapper>
         {linkUrl ? (
           <Link href={linkUrl} target="_blank">

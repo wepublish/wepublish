@@ -50,6 +50,7 @@ import {isBannerBlockStyle} from './block-styles/banner/banner'
 import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
 import {ImageContext} from '@wepublish/image/website'
 import {isTeaserSlotsBlock} from './teaser/teaser-slots-block'
+import {ReadingListProvider} from '@wepublish/reading-list/website'
 
 export const hasBlockStyle =
   (blockStyle: string) =>
@@ -96,28 +97,30 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
     [isImageGalleryBlock, block => <blocks.ImageGallery {...block} />]
   ])
 
+  const otherCond = cond([
+    [
+      isCrowdfundingBlock,
+      block => <blocks.Crowdfunding {...(block as BuilderCrowdfundingBlockProps)} />
+    ],
+    [isTitleBlock, block => <blocks.Title {...(block as BuilderTitleBlockProps)} />],
+    [isQuoteBlock, block => <blocks.Quote {...(block as BuilderQuoteBlockProps)} />],
+    [isBreakBlock, block => <blocks.Break {...(block as BuilderBreakBlockProps)} />],
+    [isRichTextBlock, block => <blocks.RichText {...(block as BuilderRichTextBlockProps)} />],
+    [isHtmlBlock, block => <blocks.HTML {...(block as BuilderHTMLBlockProps)} />],
+    [isSubscribeBlock, block => <blocks.Subscribe {...(block as BuilderSubscribeBlockProps)} />],
+    [isEventBlock, block => <blocks.Event {...(block as BuilderEventBlockProps)} />],
+    [isPollBlock, block => <blocks.Poll {...(block as BuilderPollBlockProps)} />],
+    [isListicleBlock, block => <blocks.Listicle {...(block as BuilderListicleBlockProps)} />],
+    [isCommentBlock, block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />]
+  ])
+
   return (
     blockStylesCond(block) ??
     facebookEmbedCond(block) ??
     embedCond(block) ??
     teaserCond(block) ??
     imageCond(block) ??
-    cond([
-      [
-        isCrowdfundingBlock,
-        block => <blocks.Crowdfunding {...(block as BuilderCrowdfundingBlockProps)} />
-      ],
-      [isTitleBlock, block => <blocks.Title {...(block as BuilderTitleBlockProps)} />],
-      [isQuoteBlock, block => <blocks.Quote {...(block as BuilderQuoteBlockProps)} />],
-      [isBreakBlock, block => <blocks.Break {...(block as BuilderBreakBlockProps)} />],
-      [isRichTextBlock, block => <blocks.RichText {...(block as BuilderRichTextBlockProps)} />],
-      [isHtmlBlock, block => <blocks.HTML {...(block as BuilderHTMLBlockProps)} />],
-      [isSubscribeBlock, block => <blocks.Subscribe {...(block as BuilderSubscribeBlockProps)} />],
-      [isEventBlock, block => <blocks.Event {...(block as BuilderEventBlockProps)} />],
-      [isPollBlock, block => <blocks.Poll {...(block as BuilderPollBlockProps)} />],
-      [isListicleBlock, block => <blocks.Listicle {...(block as BuilderListicleBlockProps)} />],
-      [isCommentBlock, block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />]
-    ])(block)
+    otherCond(block)
   )
 })
 
@@ -129,19 +132,20 @@ export const Blocks = memo(({blocks, type}: BuilderBlocksProps) => {
   return (
     <>
       {blocks.map((block, index) => (
-        <ImageContext.Provider
-          key={index}
-          value={
-            // Above the fold images should be loaded with a high priority
-            3 > index
-              ? {
-                  fetchPriority: 'high',
-                  loading: 'eager'
-                }
-              : {}
-          }>
-          <Renderer block={block} index={index} count={blocks.length} type={type} />
-        </ImageContext.Provider>
+        <ReadingListProvider key={index} index={index}>
+          <ImageContext.Provider
+            value={
+              // Above the fold images should be loaded with a high priority
+              3 > index
+                ? {
+                    fetchPriority: 'high',
+                    loading: 'eager'
+                  }
+                : {}
+            }>
+            <Renderer block={block} count={blocks.length} type={type} index={index} />
+          </ImageContext.Provider>
+        </ReadingListProvider>
       ))}
     </>
   )

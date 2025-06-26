@@ -11,6 +11,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {PollBlockResult} from './poll-block-result'
 import {usePollBlock} from './poll-block.context'
 import {H4} from '@wepublish/ui'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isPollBlock = (block: Pick<BlockContent, '__typename'>): block is PollBlockType =>
   block.__typename === 'PollBlock'
@@ -39,6 +40,7 @@ export const PollBlockMeta = styled('div')`
 
 export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
   const {vote, fetchUserVote, canVoteAnonymously, getAnonymousVote} = usePollBlock()
+  const [readingListProps] = useReadingList()
 
   const [voteResult, setVoteResult] = useState<
     Pick<PollVoteMutationResult, 'loading' | 'data' | 'error'>
@@ -54,7 +56,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
 
   const {hasUser} = useUser()
   const {
-    elements: {Button, H4, Alert},
+    elements: {Button, Alert},
     blocks: {RichText},
     date
   } = useWebsiteBuilder()
@@ -117,7 +119,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
   )
 
   return (
-    <PollBlockWrapper className={className}>
+    <PollBlockWrapper className={className} {...readingListProps}>
       {poll.question && <PollBlockTitle component={'h1'}>{poll.question}</PollBlockTitle>}
       {poll.infoText && <RichText richText={poll.infoText} />}
 

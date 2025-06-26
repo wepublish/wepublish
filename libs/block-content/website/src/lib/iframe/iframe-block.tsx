@@ -4,6 +4,7 @@ import {BuilderIFrameBlockProps} from '@wepublish/website/builder'
 import {css} from '@emotion/react'
 import {useMemo} from 'react'
 import IframeResizer from 'iframe-resizer-react'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isIFrameBlock = (block: Pick<BlockContent, '__typename'>): block is IFrameBlockType =>
   block.__typename === 'IFrameBlock'
@@ -32,6 +33,7 @@ export function IFrameBlock({
   sandbox,
   className
 }: BuilderIFrameBlockProps) {
+  const [readingListProps] = useReadingList()
   const ratio = width && height ? width / height : null
 
   const styleCustomCss = useMemo(
@@ -42,7 +44,7 @@ export function IFrameBlock({
   )
 
   return url ? (
-    <IFrameBlockWrapper className={className}>
+    <IFrameBlockWrapper className={className} {...readingListProps}>
       <IFrameBlockIframe
         aspectRatio={ratio}
         css={styleCustomCss}

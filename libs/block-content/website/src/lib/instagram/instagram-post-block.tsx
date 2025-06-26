@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {BlockContent, InstagramPostBlock as InstagramPostBlockType} from '@wepublish/website/api'
 import {BuilderInstagramPostBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useCallback, useEffect} from 'react'
@@ -24,6 +25,7 @@ export const InstagramBlockWrapper = styled('div')`
 
 export function InstagramPostBlock({postID, className}: BuilderInstagramPostBlockProps) {
   const {Script} = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   const loadAd = useCallback(() => {
     try {
@@ -42,7 +44,7 @@ export function InstagramPostBlock({postID, className}: BuilderInstagramPostBloc
   }
 
   return (
-    <InstagramBlockWrapper className={className}>
+    <InstagramBlockWrapper className={className} {...readingListProps}>
       <blockquote
         className="instagram-media"
         data-instgrm-captioned
