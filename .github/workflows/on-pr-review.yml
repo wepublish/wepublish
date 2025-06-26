@@ -328,7 +328,7 @@ jobs:
                 memory: "64Mi"
                 cpu: "50m"
               limits:
-                memory: "128Mi"
+                memory: "512Mi"
                 cpu: "150m"
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
