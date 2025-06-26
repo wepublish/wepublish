@@ -12,6 +12,8 @@ import {
   BannerTitle
 } from '@wepublish/banner/website'
 
+import {breakoutContainerOnXs} from '../utils/breakout-container'
+
 export const HauptstadtBanner = styled(Banner)`
   background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
@@ -29,17 +31,9 @@ export const HauptstadtBanner = styled(Banner)`
     }
   }
 
-  &[data-collapsed='false'] ${BannerCta} {
-    ${({theme}) => theme.breakpoints.up('md')} {
-      padding-left: ${({theme}) => theme.spacing(6)};
-    }
-  }
-
-  ${BannerCtaText} {
-    text-align: unset;
-  }
-
   &[data-collapsed='false'] {
+    ${breakoutContainerOnXs}
+
     ${BannerContentWrapper} {
       display: grid;
       row-gap: ${({theme}) => theme.spacing(4)};
@@ -55,6 +49,16 @@ export const HauptstadtBanner = styled(Banner)`
 
     ${BannerActions} {
       justify-content: unset;
+    }
+
+    ${BannerCta} {
+      ${({theme}) => theme.breakpoints.up('md')} {
+        padding-left: ${({theme}) => theme.spacing(6)};
+      }
+    }
+
+    ${BannerCtaText} {
+      text-align: unset;
     }
   }
 

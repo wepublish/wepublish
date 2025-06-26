@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {NoSsr, Typography} from '@mui/material'
 import {Article, ArticleInfoWrapper} from '@wepublish/article/website'
-import {TitleBlockWrapper} from '@wepublish/block-content/website'
+import {ImageBlockWrapper, TitleBlockWrapper} from '@wepublish/block-content/website'
 import {useShowPaywall} from '@wepublish/paywall/website'
 import {createWithTheme} from '@wepublish/ui'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
@@ -16,11 +16,17 @@ import {FaCommentSlash, FaRegComment, FaShare} from 'react-icons/fa6'
 import {MdFormatSize, MdPrint} from 'react-icons/md'
 
 import {contentTheme} from '../theme'
+import {breakoutContainerOnXs} from '../utils/breakout-container'
 import {FontSizePicker} from './font-size-picker'
 
 export const HauptstadtArticle = createWithTheme(
   styled(Article)`
     row-gap: ${({theme}) => theme.spacing(3.5)};
+
+    > ${ImageBlockWrapper}:first-of-type img {
+      // only breakout the image so that the caption is still aligned
+      ${breakoutContainerOnXs}
+    }
 
     > ${TitleBlockWrapper}:first-of-type {
       grid-row-start: 2;

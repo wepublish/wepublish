@@ -83,7 +83,6 @@ export const BannerWrapper = styled('div')<BannerWrapperProps>(
   grid-template-columns: 1fr;
   background-color: ${theme.palette.secondary.main};
   color: ${theme.palette.secondary.contrastText};
-  width: 100%;
 
   &[data-collapsed='true'] {
     display: none;
