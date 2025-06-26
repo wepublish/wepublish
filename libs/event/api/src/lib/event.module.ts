@@ -10,9 +10,10 @@ import {
   HasOptionalEventResolver
 } from './has-event/has-event.resolver'
 import {EventResolver} from './event.resolver'
+import {TagModule} from '@wepublish/tag/api'
 
 @Module({
-  imports: [PrismaModule, ImageModule],
+  imports: [PrismaModule, ImageModule, TagModule],
   providers: [
     EventDataloaderService,
     EventService,

@@ -1,11 +1,4 @@
-import {
-  Poll,
-  PollAnswer,
-  PollExternalVote,
-  PollExternalVoteSource,
-  PollVote,
-  Prisma
-} from '@prisma/client'
+import {Poll, PollAnswer, PollExternalVote, PollExternalVoteSource, Prisma} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
@@ -88,17 +81,6 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
       type: new GraphQLNonNull(GraphQLInt),
       resolve: pollAnswer => pollAnswer._count.votes
     }
-  }
-})
-
-export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
-  name: 'PollVote',
-  fields: {
-    id: {type: new GraphQLNonNull(GraphQLString)},
-    answerId: {type: new GraphQLNonNull(GraphQLString)},
-    pollId: {type: new GraphQLNonNull(GraphQLString)},
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    disabled: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
@@ -205,16 +187,3 @@ export const GraphQLUpdatePollExternalVoteSources = new GraphQLInputObjectType({
     voteAmounts: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollExternalVote))}
   }
 })
-
-export const GraphQLPollResolver = {
-  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
-    const {id} = reference
-    const poll = await loaders.pollById.load(id)
-
-    if (!poll) {
-      throw new Error('Poll not found')
-    }
-
-    return poll
-  }
-}

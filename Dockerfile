@@ -152,7 +152,6 @@ RUN groupadd -r wepublish && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install prisma bcrypt && \
-    perl -i -0777 -pe 's/generator fabbrica \{\n  provider = "prisma-fabbrica"\n  output   = "\.\.\/\.\.\/testing\/src\/__generated__\/fabbrica"\n\}//gs' prisma/schema.prisma && \
     npx prisma generate \
     USER wepublish
 CMD ["bash", "./start.sh"]

@@ -1,15 +1,17 @@
 import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {UserConsent, UserConsentInput, UserConsentFilter} from './user-consent.model'
+import {UserConsent, UserConsentFilter, UserConsentInput} from './user-consent.model'
 import {UserConsentService} from './user-consent.service'
 
 import {ForbiddenException} from '@nestjs/common'
-import {UserSession, CurrentUser} from '@wepublish/authentication/api'
-import {User} from '@wepublish/user/api'
-import {Public, Authenticated} from '@wepublish/authentication/api'
+import {Authenticated, CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
+import {User, UserDataloaderService} from '@wepublish/user/api'
 
 @Resolver(() => UserConsent)
 export class UserConsentResolver {
-  constructor(private userConsents: UserConsentService) {}
+  constructor(
+    private userConsents: UserConsentService,
+    private userDataloaderService: UserDataloaderService
+  ) {}
 
   @Public()
   @Query(returns => [UserConsent], {
@@ -43,7 +45,6 @@ export class UserConsentResolver {
   })
   createUserConsent(@CurrentUser() user: UserSession, @Args() userConsent: UserConsentInput) {
     // only allow creating for admin or affected user
-    console.log({user})
     if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
       throw new ForbiddenException(`Unauthorized`)
     }
@@ -81,6 +82,6 @@ export class UserConsentResolver {
 
   @ResolveField(returns => User)
   user(@Parent() userConsent: UserConsent) {
-    return {__typename: 'User', id: userConsent.userId}
+    return this.userDataloaderService.load(userConsent.userId)
   }
 }

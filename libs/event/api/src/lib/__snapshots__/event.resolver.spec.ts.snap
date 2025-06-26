@@ -2,29 +2,34 @@
 
 exports[`EventResolver create 1`] = `
 [
-  {
-    "description": [],
-    "endsAt": 2023-01-01T00:00:00.000Z,
-    "imageId": "123",
-    "location": "Foobar",
-    "name": "Foo",
-    "startsAt": 2023-01-01T00:00:00.000Z,
-    "status": "Scheduled",
-    "tagIds": [
-      "1234",
-    ],
-  },
+  [
+    {
+      "description": [],
+      "endsAt": 2023-01-01T00:00:00.000Z,
+      "imageId": "123",
+      "location": "Foobar",
+      "name": "Foo",
+      "startsAt": 2023-01-01T00:00:00.000Z,
+      "status": "Scheduled",
+      "tagIds": [
+        "1234",
+      ],
+    },
+  ],
 ]
 `;
 
 exports[`EventResolver create 2`] = `
 {
-  "id": "1234",
-  "image": {
-    "id": "123",
+  "createEvent": {
+    "id": "1234",
+    "image": {
+      "filename": "123.webp",
+      "id": "123",
+    },
+    "imageId": "123",
+    "name": "Foo",
   },
-  "imageId": "123",
-  "name": "Foo",
 }
 `;
 
@@ -38,6 +43,7 @@ exports[`EventResolver delete 2`] = `
 {
   "id": "1234",
   "image": {
+    "filename": "123.webp",
     "id": "123",
   },
   "imageId": "123",
@@ -45,83 +51,95 @@ exports[`EventResolver delete 2`] = `
 }
 `;
 
-exports[`EventResolver event 1`] = `undefined`;
-
-exports[`EventResolver event 2`] = `
+exports[`EventResolver event 1`] = `
 [
-  "1234",
+  [
+    "123",
+  ],
 ]
 `;
 
-exports[`EventResolver event 3`] = `
+exports[`EventResolver event 2`] = `
 {
-  "id": "1234",
-  "image": {
-    "id": "123",
+  "event": {
+    "id": "1234",
+    "image": {
+      "filename": "123.webp",
+      "id": "123",
+    },
+    "imageId": "123",
+    "name": "name",
   },
-  "imageId": "123",
-  "name": "name",
 }
 `;
 
 exports[`EventResolver events 1`] = `
 [
-  {
-    "filter": {
-      "from": 2023-01-01T00:00:00.000Z,
-      "location": "Foobar",
-      "name": "Foo",
-      "tags": [
-        "123",
-      ],
-      "to": 2023-01-01T00:00:00.000Z,
-      "upcomingOnly": true,
+  [
+    {
+      "filter": {
+        "from": 2023-01-01T00:00:00.000Z,
+        "location": "Foobar",
+        "name": "Foo",
+        "tags": [
+          "123",
+        ],
+        "to": 2023-01-01T00:00:00.000Z,
+        "upcomingOnly": true,
+      },
+      "order": "Ascending",
+      "skip": 1,
+      "sort": "EndsAt",
+      "take": 5,
     },
-    "order": "Ascending",
-    "skip": 1,
-    "sort": "EndsAt",
-    "take": 5,
-  },
+  ],
 ]
 `;
 
 exports[`EventResolver events 2`] = `
 {
-  "nodes": [
-    {
-      "id": "1234",
-      "image": null,
-      "imageId": null,
-      "name": "Foo",
+  "events": {
+    "nodes": [
+      {
+        "id": "1234",
+        "image": null,
+        "imageId": null,
+        "name": "Foo",
+      },
+    ],
+    "pageInfo": {
+      "endCursor": "1234",
+      "hasNextPage": true,
+      "hasPreviousPage": false,
+      "startCursor": "123",
     },
-  ],
-  "pageInfo": {
-    "endCursor": "1234",
-    "hasNextPage": true,
-    "hasPreviousPage": false,
-    "startCursor": "123",
+    "totalCount": 100,
   },
-  "totalCount": 100,
 }
 `;
 
 exports[`EventResolver update 1`] = `
 [
-  {
-    "id": "1234",
-    "name": "Bar",
-    "status": "Scheduled",
-  },
+  [
+    {
+      "id": "1234",
+      "name": "Bar",
+      "status": "Scheduled",
+    },
+  ],
 ]
 `;
 
 exports[`EventResolver update 2`] = `
 {
-  "id": "1234",
-  "image": {
-    "id": "123",
+  "updateEvent": {
+    "id": "1234",
+    "image": {
+      "filename": "123.webp",
+      "id": "123",
+    },
+    "imageId": "123",
+    "name": "Bar",
   },
-  "imageId": "123",
-  "name": "Bar",
 }
 `;

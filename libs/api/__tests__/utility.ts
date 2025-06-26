@@ -128,7 +128,8 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
     psp: [14],
     offSessionPayments: true,
     webhookApiKey: 'secret',
-    pm: ['foo']
+    pm: ['foo'],
+    prisma: prisma
   })
 
   const testServerPublic = new ApolloServer({

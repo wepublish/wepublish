@@ -1,7 +1,8 @@
 import {Injectable, Scope} from '@nestjs/common'
-import {User, PrismaClient} from '@prisma/client'
-import {Primeable, createOptionalsArray} from '@wepublish/utils/api'
+import {PrismaClient} from '@prisma/client'
+import {createOptionalsArray, Primeable} from '@wepublish/utils/api'
 import DataLoader from 'dataloader'
+import {User} from './user.model'
 
 @Injectable({
   scope: Scope.REQUEST

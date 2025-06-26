@@ -1,13 +1,13 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLScalarType,
-  GraphQLInputObjectType,
-  GraphQLList,
+  GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLString
 } from 'graphql'
 
 import {Context} from '../context'
@@ -60,14 +60,6 @@ export const GraphQLAllowedSettingVals = new GraphQLObjectType({
   }
 })
 
-export const GraphQLInputAllowedSettingVals = new GraphQLInputObjectType({
-  name: 'AllowedSettingValsInput',
-  fields: {
-    stringChoice: {type: new GraphQLList(GraphQLString)},
-    boolChoice: {type: GraphQLBoolean}
-  }
-})
-
 export const GraphQLSettingRestriction = new GraphQLObjectType({
   name: 'SettingRestriction',
   fields: {
@@ -78,35 +70,11 @@ export const GraphQLSettingRestriction = new GraphQLObjectType({
   }
 })
 
-export const GraphQLSettingRestrictionInput = new GraphQLInputObjectType({
-  name: 'SettingRestrictionInput',
-  fields: {
-    maxValue: {type: GraphQLInt},
-    minValue: {type: GraphQLInt},
-    inputLength: {type: GraphQLInt},
-    allowedValues: {type: new GraphQLList(GraphQLInputAllowedSettingVals)}
-  }
-})
-
-export const GraphQLSettingInput = new GraphQLInputObjectType({
-  name: 'SettingInput',
-  fields: {
-    value: {type: GraphQLSettingValueType}
-  }
-})
-
 export const GraphQLUpdateSettingArgs = new GraphQLInputObjectType({
   name: 'UpdateSettingArgs',
   fields: {
     name: {type: new GraphQLNonNull(GraphQLSettingName)},
     value: {type: new GraphQLNonNull(GraphQLSettingValueType)}
-  }
-})
-
-export const GraphQLSettingsInput = new GraphQLInputObjectType({
-  name: 'SettingsInput',
-  fields: {
-    value: {type: new GraphQLList(GraphQLUpdateSettingArgs)}
   }
 })
 

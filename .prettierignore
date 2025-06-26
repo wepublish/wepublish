@@ -8,9 +8,5 @@ libs/website/api/src/lib/graphql.ts
 libs/website/api-v2/src/lib/graphql.ts
 libs/peering/api/import/src/lib/import-peer-article/graphql.ts
 
-libs/testing/src/__generated__/fabbrica/index.ts
-libs/testing/src/__generated__/fabbrica/index.d.ts
-libs/testing/src/__generated__/fabbrica/index.js
-
 /.nx/cache
 /.nx/workspace-data

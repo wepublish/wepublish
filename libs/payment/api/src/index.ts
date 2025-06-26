@@ -8,6 +8,8 @@ export * from './lib/payment-provider/never-charge-payment-provider'
 export * from './lib/payment-provider/mollie-payment-provider'
 
 export * from './lib/payments.service'
+export * from './lib/payment.dataloader'
 export * from './lib/payments.module'
 export * from './lib/payments-module-options'
+export * from './lib/payment.model'
 export * from './lib/payrexx'

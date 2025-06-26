@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserConsentResolver create user consent mutation 1`] = `
+[
+  [
+    {
+      "consentId": "consentId",
+      "userId": "userId",
+      "value": true,
+    },
+  ],
+]
+`;
+
+exports[`UserConsentResolver create user consent mutation 2`] = `
+{
+  "data": {
+    "createUserConsent": {
+      "id": "userConsentId",
+      "value": false,
+    },
+  },
+}
+`;
+
+exports[`UserConsentResolver delete user consent mutation 1`] = `
+[
+  [
+    "userConsentId",
+    {
+      "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
+      "token": "some-token",
+      "type": "user",
+      "user": {
+        "active": true,
+        "birthday": null,
+        "email": "email",
+        "firstName": "firstName",
+        "flair": "flair",
+        "id": "userId",
+        "name": "name",
+        "roleIDs": [],
+        "userImageID": "userImageId",
+      },
+    },
+  ],
+]
+`;
+
+exports[`UserConsentResolver delete user consent mutation 2`] = `
+{
+  "data": {
+    "deleteUserConsent": {
+      "id": "userConsentId",
+    },
+  },
+}
+`;
+
+exports[`UserConsentResolver update user consent mutation 1`] = `
+[
+  [
+    "userConsentId",
+    false,
+    {
+      "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
+      "token": "some-token",
+      "type": "user",
+      "user": {
+        "active": true,
+        "birthday": null,
+        "email": "email",
+        "firstName": "firstName",
+        "flair": "flair",
+        "id": "userId",
+        "name": "name",
+        "roleIDs": [],
+        "userImageID": "userImageId",
+      },
+    },
+  ],
+]
+`;
+
+exports[`UserConsentResolver update user consent mutation 2`] = `
+{
+  "data": {
+    "updateUserConsent": {
+      "consent": {
+        "id": "consentId",
+        "name": "name",
+        "slug": "slug",
+      },
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "id": "userConsentId",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "user": {
+        "__typename": "User",
+        "id": "userId",
+      },
+      "value": false,
+    },
+  },
+}
+`;
+
+exports[`UserConsentResolver user consent query 1`] = `
+{
+  "data": {
+    "userConsent": {
+      "consent": {
+        "id": "consentId",
+        "name": "name",
+        "slug": "slug",
+      },
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "id": "userConsentId",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "user": {
+        "__typename": "User",
+        "id": "userId",
+      },
+      "value": false,
+    },
+  },
+}
+`;

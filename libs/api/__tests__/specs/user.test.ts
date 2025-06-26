@@ -11,17 +11,13 @@ import {
 } from '../api/private'
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
-import {UpdatePaymentProviderCustomers} from '../api/public'
-import snapshotDiff from 'snapshot-diff'
 
 let testServerPrivate: ApolloServer
-let testServerPublic: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
     testServerPrivate = setupClient.testServerPrivate
-    testServerPublic = setupClient.testServerPublic
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -50,68 +46,6 @@ describe('Users', () => {
       })
 
       ids.unshift(res.data?.createUser.id)
-    })
-
-    describe('public', () => {
-      describe('updatePaymentProviderCustomers', () => {
-        test('can add payment provider customers', async () => {
-          const addPaymentProviderCustomers = await testServerPublic.executeOperation({
-            query: UpdatePaymentProviderCustomers,
-            variables: {
-              customers: [
-                {
-                  paymentProviderID: '123-123',
-                  customerID: '1234-1234'
-                },
-                {
-                  paymentProviderID: '122-122',
-                  customerID: '1233-1233'
-                }
-              ]
-            }
-          })
-
-          expect(addPaymentProviderCustomers).toMatchSnapshot()
-        })
-
-        test('can update payment provider customers', async () => {
-          const addPaymentProviderCustomers = await testServerPublic.executeOperation({
-            query: UpdatePaymentProviderCustomers,
-            variables: {
-              customers: [
-                {
-                  paymentProviderID: '123-123',
-                  customerID: '1234-1234'
-                },
-                {
-                  paymentProviderID: '122-122',
-                  customerID: '1233-1233'
-                }
-              ]
-            }
-          })
-
-          const updatePaymentProviderCustomers = await testServerPublic.executeOperation({
-            query: UpdatePaymentProviderCustomers,
-            variables: {
-              customers: [
-                {
-                  paymentProviderID: '123-123',
-                  customerID: '1234-1234'
-                },
-                {
-                  paymentProviderID: '121-121',
-                  customerID: '1222-1222'
-                }
-              ]
-            }
-          })
-
-          expect(
-            snapshotDiff(addPaymentProviderCustomers, updatePaymentProviderCustomers)
-          ).toMatchSnapshot()
-        })
-      })
     })
 
     describe('private', () => {

@@ -1,0 +1,38 @@
+fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...ImageRef
+  }
+  squareLogo {
+    ...ImageRef
+  }
+}
+
+fragment PeerRef on Peer {
+  id
+  name
+  slug
+  hostURL
+}
+
+fragment PeerWithProfile on Peer {
+  ...PeerRef
+  profile {
+    ...FullPeerProfile
+  }
+}
+
+query PeerProfile {
+  peerProfile {
+    ...FullPeerProfile
+  }
+}
+
+query Peer($id: String!) {
+  peer(id: $id) {
+    ...PeerRef
+  }
+}

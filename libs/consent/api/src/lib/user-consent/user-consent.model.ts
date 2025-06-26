@@ -19,7 +19,7 @@ export class UserConsent {
   userId!: string
 
   @Field(type => User)
-  user!: User
+  user?: User
 
   @Field()
   value!: boolean

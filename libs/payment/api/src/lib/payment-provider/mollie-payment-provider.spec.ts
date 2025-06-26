@@ -8,6 +8,7 @@ import {
 import bodyParser from 'body-parser'
 import {PaymentState} from '@prisma/client'
 import {PaymentMethod} from '@mollie/api-client'
+import {PrismaClient} from '@prisma/client'
 
 const mollieApiPaymentGet = {
   status: 'paid',
@@ -86,6 +87,8 @@ describe('MolliePaymentProvider', () => {
   let mollieOnSession: MolliePaymentProvider
 
   beforeEach(() => {
+    const mockPrisma = {} as PrismaClient
+
     mollieOffSession = new MolliePaymentProvider({
       id: 'mollie',
       name: 'Mollie',
@@ -93,7 +96,8 @@ describe('MolliePaymentProvider', () => {
       webhookEndpointSecret: 'secret',
       apiBaseUrl: 'https://api.wepublish.dev',
       apiKey: 'secret',
-      incomingRequestHandler: bodyParser.urlencoded({extended: true})
+      incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+      prisma: mockPrisma
     })
 
     mollieOnSession = new MolliePaymentProvider({
@@ -103,7 +107,8 @@ describe('MolliePaymentProvider', () => {
       webhookEndpointSecret: 'secret',
       apiBaseUrl: 'https://api.wepublish.dev',
       apiKey: 'secret',
-      incomingRequestHandler: bodyParser.urlencoded({extended: true})
+      incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+      prisma: mockPrisma
     })
   })
 
