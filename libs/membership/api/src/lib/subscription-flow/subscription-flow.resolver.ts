@@ -16,6 +16,7 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {PrismaClient} from '@prisma/client'
+import {PaymentMethod} from '@wepublish/payment-method/api'
 import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => SubscriptionFlowModel)
