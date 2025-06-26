@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthorService should create an author 1`] = `
+[
+  {
+    "data": {
+      "links": {
+        "create": [],
+      },
+      "name": "testAuthor",
+      "slug": "test-author",
+      "tags": {
+        "create": [],
+      },
+    },
+    "include": {
+      "links": true,
+    },
+  },
+]
+`;
+
+exports[`AuthorService should delete an author by id 1`] = `
+[
+  {
+    "include": {
+      "links": true,
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`AuthorService should get an author by id 1`] = `
+[
+  {
+    "include": {
+      "links": true,
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`AuthorService should get an author by slug 1`] = `
+[
+  {
+    "include": {
+      "links": true,
+    },
+    "where": {
+      "slug": "test-author",
+    },
+  },
+]
+`;
+
+exports[`AuthorService should get authors with pagination 1`] = `
+[
+  {
+    "cursor": undefined,
+    "include": {
+      "links": true,
+    },
+    "orderBy": {
+      "name": "asc",
+    },
+    "skip": 0,
+    "take": 3,
+    "where": {
+      "AND": [
+        {
+          "name": {
+            "contains": "test",
+            "mode": "insensitive",
+          },
+        },
+        {},
+      ],
+    },
+  },
+]
+`;
+
+exports[`AuthorService should update an author 1`] = `
+[
+  {
+    "data": {
+      "links": {
+        "create": [],
+        "deleteMany": {
+          "authorId": "123",
+        },
+      },
+      "name": "updatedAuthor",
+      "slug": "updated-author",
+      "tags": {
+        "connectOrCreate": [],
+        "deleteMany": {
+          "authorId": "123",
+          "tagId": {
+            "notIn": [],
+          },
+        },
+      },
+    },
+    "include": {
+      "links": true,
+      "tags": true,
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
