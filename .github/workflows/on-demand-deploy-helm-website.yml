@@ -59,11 +59,11 @@ jobs:
               NODE_ENV: production
             resources:
               requests:
-                memory: null
-                cpu: null
+                memory: "128Mi"
+                cpu: "100m"
               limits:
-                memory: null
-                cpu: null
+                memory: "384Mi"
+                cpu: "500m"
           EOF
           cat values.yaml
           export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.website_project }}-website
