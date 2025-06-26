@@ -164,6 +164,26 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createJWTForWebsiteLogin: {
+      type: GraphQLJWTToken,
+      args: {},
+      async resolve(root, _, {authenticateUser, generateJWT}) {
+        const expiresInMinutes = 1
+        const {user} = authenticateUser()
+
+        const expiresAt = new Date(
+          new Date().getTime() + expiresInMinutes * 60 * 1000
+        ).toISOString()
+
+        const token = generateJWT({id: user.id, expiresInMinutes})
+
+        return {
+          token,
+          expiresAt
+        }
+      }
+    },
+
     peerProfile: {
       type: new GraphQLNonNull(GraphQLPeerProfile),
       resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {peerProfile}}) =>

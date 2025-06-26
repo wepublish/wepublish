@@ -1,6 +1,7 @@
 type Query {
   remotePeerProfile(hostURL: String!, token: String!): PeerProfile
   createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
+  createJWTForWebsiteLogin: JWTToken
   peerProfile: PeerProfile!
   peers: [Peer!]
   peer(id: String!): Peer
