@@ -713,22 +713,18 @@ export type CustomTeaserInput = {
 
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
-  createdSubscriptionCount: Scalars['Float'];
+  createdSubscriptionCount: Scalars['Int'];
   createdSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  createdUnpaidSubscriptionCount: Scalars['Float'];
-  createdUnpaidSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   date: Scalars['String'];
-  deactivatedSubscriptionCount: Scalars['Float'];
+  deactivatedSubscriptionCount: Scalars['Int'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  renewedSubscriptionCount: Scalars['Float'];
+  overdueSubscriptionCount: Scalars['Int'];
+  overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  replacedSubscriptionCount: Scalars['Float'];
+  replacedSubscriptionCount: Scalars['Int'];
   replacedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
-  subscriptionDailyRevenue: Scalars['Float'];
-  subscriptionDurationAvg: Scalars['Float'];
-  subscriptionMonthlyRevenueAvg: Scalars['Float'];
-  subscriptionMonthlyRevenueSum: Scalars['Float'];
-  totalActiveSubscriptionCount: Scalars['Float'];
+  totalActiveSubscriptionCount: Scalars['Int'];
 };
 
 export type DailySubscriptionStatsUser = {
@@ -4138,7 +4134,7 @@ export type DailySubscriptionStatsQueryVariables = Exact<{
 }>;
 
 
-export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, createdUnpaidSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, subscriptionMonthlyRevenueAvg: number, subscriptionMonthlyRevenueSum: number, subscriptionDailyRevenue: number, subscriptionDurationAvg: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, createdUnpaidSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
+export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
 
 export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }> | null };
 
@@ -6933,13 +6929,6 @@ export const DailySubscriptionStatsDocument = gql`
       firstName
       email
     }
-    createdUnpaidSubscriptionCount
-    createdUnpaidSubscriptionUsers {
-      id
-      name
-      firstName
-      email
-    }
     replacedSubscriptionCount
     replacedSubscriptionUsers {
       id
@@ -6961,10 +6950,13 @@ export const DailySubscriptionStatsDocument = gql`
       firstName
       email
     }
-    subscriptionMonthlyRevenueAvg
-    subscriptionMonthlyRevenueSum
-    subscriptionDailyRevenue
-    subscriptionDurationAvg
+    overdueSubscriptionCount
+    overdueSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
   }
 }
     `;

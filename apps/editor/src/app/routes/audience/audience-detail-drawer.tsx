@@ -19,7 +19,7 @@ const {Body, Header} = Sidenav
 
 const availableStats: AggregatedUsers[] = [
   'createdSubscriptionUsers',
-  'createdUnpaidSubscriptionUsers',
+  'overdueSubscriptionUsers',
   'deactivatedSubscriptionUsers',
   'renewedSubscriptionUsers',
   'replacedSubscriptionUsers'
@@ -29,7 +29,7 @@ function getIconByUserFilter(filterProp: AggregatedUsers) {
   switch (filterProp) {
     case 'createdSubscriptionUsers':
       return <MdLibraryAdd />
-    case 'createdUnpaidSubscriptionUsers':
+    case 'overdueSubscriptionUsers':
       return <MdCreditCardOff />
     case 'deactivatedSubscriptionUsers':
       return <MdCancel />

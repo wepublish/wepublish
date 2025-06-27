@@ -1436,25 +1436,25 @@
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence.",
-          "createdUnpaidSubscriptionCount": "Nouveaux abonnements créés mais non payés à ce jour.",
-          "renewedSubscriptionCount": "Abonnements renouvelés pour une nouvelle période.",
-          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période jusqu'à présent.",
+          "overdueSubscriptionCount": "Abonnements renouvelés dont le paiement est dû. Ne sont pas inclus les abonnements achetés pour la première fois et qui n'ont pas été payés.",
+          "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
+          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
           "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai)."
         },
-        "totalActiveSubscriptionCount": "Total des abonnements actifs",
-        "createdUnpaidSubscriptionCount": "Nouveaux abonnements non payés",
-        "renewedSubscriptionCount": "Abonnements renouvelés",
-        "createdSubscriptionCount": "Nouveaux abonnements",
+        "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
+        "overdueSubscriptionCount": "Abonnements renouvelés et non payés",
+        "renewedSubscriptionCount": "Abonnements renouvelés et payés",
+        "createdSubscriptionCount": "Nouveaux abonnements payés",
         "deactivatedSubscriptionCount": "Abonnements désactivés",
         "replacedSubscriptionCount": "Abonnements remplacés",
-        "totalNewSubscriptions": "Total des nouveaux abonnements",
+        "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
         "renewalRate": "Taux de renouvellement",
         "cancellationRate": "Taux de résiliation",
-        "createdSubscriptionUsers": "Nouveaux abonnements",
-        "createdUnpaidSubscriptionUsers": "Nouveaux abonnements non payés",
+        "createdSubscriptionUsers": "Nouveaux abonnements payés",
+        "overdueSubscriptionUsers": "Abonnements renouvelés et non payés",
         "deactivatedSubscriptionUsers": "Abonnements désactivés",
-        "renewedSubscriptionUsers": "Abonnements renouvelés",
+        "renewedSubscriptionUsers": "Abonnements renouvelés payés",
         "replacedSubscriptionUsers": "Abonnements remplacés"
       }
     },
@@ -1476,8 +1476,8 @@
       "showUsers": "Afficher les détails",
       "byDate": "Par",
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
-      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte.",
-      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte."
+      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
+      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés."
     }
   }
 }

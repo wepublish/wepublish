@@ -9,13 +9,6 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
       firstName
       email
     }
-    createdUnpaidSubscriptionCount
-    createdUnpaidSubscriptionUsers {
-      id
-      name
-      firstName
-      email
-    }
     replacedSubscriptionCount
     replacedSubscriptionUsers {
       id
@@ -37,9 +30,12 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
       firstName
       email
     }
-    subscriptionMonthlyRevenueAvg
-    subscriptionMonthlyRevenueSum
-    subscriptionDailyRevenue
-    subscriptionDurationAvg
+    overdueSubscriptionCount
+    overdueSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
   }
 }
