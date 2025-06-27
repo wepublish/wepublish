@@ -204,6 +204,12 @@ const imageStyles = (theme: Theme) => css`
   }
 `
 
+export interface ExtendedNavbarProps extends BuilderNavbarProps {
+  isMenuOpen?: boolean
+  onMenuToggle?: (isOpen: boolean) => void
+  navPaperClassName?: string
+}
+
 export function Navbar({
   className,
   children,
@@ -217,10 +223,22 @@ export function Navbar({
   hasUnpaidInvoices,
   loginBtn = {href: '/login'},
   profileBtn = {href: '/profile'},
-  subscribeBtn = {href: '/mitmachen'}
-}: BuilderNavbarProps) {
-  const [isMenuOpen, setMenuOpen] = useState(false)
-  const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
+  subscribeBtn = {href: '/mitmachen'},
+  isMenuOpen: controlledIsMenuOpen,
+  onMenuToggle,
+  navPaperClassName
+}: ExtendedNavbarProps) {
+  const [internalIsMenuOpen, setInternalMenuOpen] = useState(false)
+
+  const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
+
+  const toggleMenu = useCallback(() => {
+    const newState = !isMenuOpen
+    if (controlledIsMenuOpen === undefined) {
+      setInternalMenuOpen(newState)
+    }
+    onMenuToggle?.(newState)
+  }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle])
 
   const {t} = useTranslation()
 
@@ -309,7 +327,7 @@ export function Navbar({
         </NavbarInnerWrapper>
       </AppBar>
 
-      {isMenuOpen && Boolean(mainItems || categories?.length) && (
+      {Boolean(mainItems || categories?.length) && (
         <NavPaper
           hasRunningSubscription={hasRunningSubscription}
           hasUnpaidInvoices={hasUnpaidInvoices}
@@ -318,12 +336,19 @@ export function Navbar({
           loginBtn={loginBtn}
           main={mainItems}
           categories={categories}
-          closeMenu={toggleMenu}>
+          closeMenu={toggleMenu}
+          isMenuOpen={isMenuOpen}
+          className={navPaperClassName}>
           {iconItems?.links.map((link, index) => (
             <Link
               key={index}
               href={navigationLinkToUrl(link)}
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {
+                if (controlledIsMenuOpen === undefined) {
+                  setInternalMenuOpen(false)
+                }
+                onMenuToggle?.(false)
+              }}
               color="inherit">
               <TextToIcon title={link.label} size={32} />
             </Link>
@@ -451,6 +476,8 @@ const NavPaper = ({
   closeMenu,
   hasRunningSubscription,
   hasUnpaidInvoices,
+  isMenuOpen,
+  className,
   children
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null
@@ -461,6 +488,8 @@ const NavPaper = ({
   closeMenu: () => void
   hasRunningSubscription: boolean
   hasUnpaidInvoices: boolean
+  isMenuOpen: boolean
+  className?: string
 }>) => {
   const {
     elements: {Link, Button, H4, H6}
@@ -469,8 +498,14 @@ const NavPaper = ({
   const {hasUser, logout} = useUser()
   const theme = useTheme()
 
+  const showMenu = className ? true : isMenuOpen // For custom styling (like Hauptstadt), always show. For default, show when open.
+
+  if (!showMenu) {
+    return null
+  }
+
   return (
-    <NavPaperWrapper>
+    <NavPaperWrapper className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
 
       <NavPaperMainLinks>

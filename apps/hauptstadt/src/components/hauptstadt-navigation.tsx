@@ -12,7 +12,8 @@ import {
   NavbarLogoWrapper,
   NavPaperCategoryLinks,
   NavPaperMainLinks,
-  NavPaperName
+  NavPaperName,
+  NavPaperWrapper
 } from '@wepublish/navigation/website'
 import {BuilderNavbarProps} from '@wepublish/website/builder'
 import {useCallback, useEffect, useState} from 'react'
@@ -21,6 +22,8 @@ import {Tiempos} from '../theme'
 
 const ScrollAwareNavbar = (props: BuilderNavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
   const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 50), [])
 
   useEffect(() => {
@@ -28,8 +31,27 @@ const ScrollAwareNavbar = (props: BuilderNavbarProps) => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
+  const handleMenuToggle = useCallback((menuOpen: boolean) => {
+    if (menuOpen) {
+      setIsMenuOpen(true)
+      setIsAnimating(true)
+    } else {
+      setIsAnimating(false)
+      // Delay hiding the menu to allow slide-out animation
+      setTimeout(() => setIsMenuOpen(false), 300)
+    }
+  }, [])
+
   return (
-    <Navbar {...props} className={`${props.className || ''} ${isScrolled ? 'scrolled' : ''}`} />
+    <Navbar
+      {...props}
+      isMenuOpen={isMenuOpen}
+      onMenuToggle={handleMenuToggle}
+      navPaperClassName="hauptstadt-nav-paper"
+      className={`${props.className || ''} ${isScrolled ? 'scrolled' : ''} ${
+        isMenuOpen ? 'menu-open' : ''
+      } ${isAnimating ? 'animating' : ''}`}
+    />
   )
 }
 
@@ -59,6 +81,14 @@ export const HauptstadtNavbar = styled(ScrollAwareNavbar)`
 
     ${NavbarLogoWrapper} {
       transform: scale(0.8);
+    }
+  }
+
+  &.menu-open {
+    clip-path: unset;
+
+    &::after {
+      clip-path: unset;
     }
   }
 
@@ -101,6 +131,26 @@ export const HauptstadtNavbar = styled(ScrollAwareNavbar)`
 
   ${NavPaperMainLinks} span {
     font-family: ${Tiempos.style.fontFamily};
+  }
+
+  ${NavPaperWrapper}.hauptstadt-nav-paper {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-height: unset;
+    transform: translateX(-100%);
+    transition: transform 300ms ease-out;
+  }
+
+  &.animating ${NavPaperWrapper}.hauptstadt-nav-paper {
+    transform: translateX(0);
+  }
+
+  header {
+    position: sticky;
+    z-index: 12;
   }
 `
 
