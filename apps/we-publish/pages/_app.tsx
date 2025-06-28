@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {RoutedAdminBar} from '@wepublish/utils/website'
@@ -166,6 +167,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(CustomApp)
+])(withErrorSnackbar(CustomApp))
 
 export {ConnectedApp as default}
