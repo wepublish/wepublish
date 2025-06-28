@@ -39,6 +39,8 @@ export type BuilderSubscriptionListProps = Pick<
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
   className?: string
   isSepa?: boolean
+  isBexio?: boolean
+  isPayrexxSubscription?: boolean
   canPay: boolean
   pay?: () => Promise<void>
 }

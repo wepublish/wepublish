@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {RichTextBlockWrapper, TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
@@ -202,6 +203,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
+  withErrorSnackbar(CustomApp)
+)
 
 export {ConnectedApp as default}

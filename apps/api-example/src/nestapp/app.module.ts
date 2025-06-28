@@ -204,6 +204,7 @@ import {MediaAdapterModule} from '@wepublish/image/api'
         const paymentProviders: PaymentProvider[] = []
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const paymentProvidersRaw = configFile.paymentProviders
+
         if (paymentProvidersRaw) {
           for (const paymentProvider of paymentProvidersRaw) {
             if (paymentProvider.type === 'stripe-checkout') {

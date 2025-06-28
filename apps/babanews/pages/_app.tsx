@@ -148,6 +148,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(CustomApp)
+])(withErrorSnackbar(CustomApp))
 
 export {ConnectedApp as default}
