@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
@@ -172,6 +173,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(withPaywallBypassToken(CustomApp))
+])(withErrorSnackbar(withPaywallBypassToken(CustomApp)))
 
 export {ConnectedApp as default}

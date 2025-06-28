@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import {Container, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
@@ -219,6 +220,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(withPaywallBypassToken(CustomApp))
+])(withErrorSnackbar(withPaywallBypassToken(CustomApp)))
 
 export {ConnectedApp as default}

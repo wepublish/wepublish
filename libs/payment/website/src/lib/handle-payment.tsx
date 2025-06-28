@@ -8,6 +8,15 @@ import {
 import {useCallback, useState} from 'react'
 import {RedirectPages} from './payment-form'
 
+// relative urls are not allowed by some payment providers
+const relativeToAbsolute = (url: string) => {
+  if (url.startsWith('http')) {
+    return url
+  }
+
+  return `${window.location.origin}${url}`
+}
+
 export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
   const [redirectPages, setRedirectPages] = useState<RedirectPages>()
@@ -39,8 +48,8 @@ export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>)
           : {data: undefined}
       ])
 
-      const successUrl = successPage?.page?.url ?? window.location.origin + '/profile'
-      const failUrl = failPage?.page?.url ?? window.location.origin + '/profile'
+      const successUrl = relativeToAbsolute(successPage?.page?.url ?? '/profile')
+      const failUrl = relativeToAbsolute(failPage?.page?.url ?? '/profile')
 
       setRedirectPages({
         successUrl,
@@ -65,7 +74,8 @@ export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>)
             setStripeClientSecret
           })
         },
-        onError: () => (window.location.href = failUrl)
+        onError: error =>
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`)
       })
     },
     [fetchPage, result]
@@ -131,7 +141,8 @@ export const usePayInvoice = (...params: Parameters<typeof usePayInvoiceMutation
             setStripeClientSecret
           })
         },
-        onError: () => (window.location.href = failUrl)
+        onError: error =>
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`)
       })
     },
     [fetchPage, result]
@@ -152,7 +163,9 @@ const handlePayment = ({
   setStripeClientSecret?: (secret: string | undefined) => void
 }) => {
   if (!intent) {
-    window.location.href = failUrl
+    window.location.href = `${failUrl}?error=${encodeURIComponent(
+      'Intent konnte nicht gefunden werden.'
+    )}`
     return
   }
 
@@ -173,7 +186,7 @@ const handlePayment = ({
     return
   }
 
-  if (intent.intentSecret?.startsWith('http')) {
+  if (intent.intentSecret.startsWith('http')) {
     window.location.href = intent.intentSecret
     return
   }

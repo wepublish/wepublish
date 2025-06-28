@@ -154,6 +154,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(withPaywallBypassToken(CustomApp))
+])(withErrorSnackbar(withPaywallBypassToken(CustomApp)))
 
 export {ConnectedApp as default}

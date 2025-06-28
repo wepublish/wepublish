@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
@@ -190,6 +191,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
-const ConnectedApp = withApollo(withPaywallBypassToken(CustomApp))
+const ConnectedApp = withApollo(withErrorSnackbar(withPaywallBypassToken(CustomApp)))
 
 export {ConnectedApp as default}
