@@ -141,6 +141,108 @@ const navigations = [
         }
       }
     ]
+  },
+  {
+    id: '123456-123456',
+    key: 'test',
+    name: 'Über Uns',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Team',
+        page: {
+          url: '/team/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Über Uns',
+        page: {
+          url: '/about-us/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Kontakt',
+        article: {
+          url: '/contact/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Jobs',
+        article: {
+          url: '/jobs/'
+        }
+      }
+    ]
+  },
+  {
+    id: '1234567-1234567',
+    key: 'test',
+    name: 'Über Uns',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Team',
+        page: {
+          url: '/team/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Über Uns',
+        page: {
+          url: '/about-us/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Kontakt',
+        article: {
+          url: '/contact/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Jobs',
+        article: {
+          url: '/jobs/'
+        }
+      }
+    ]
+  },
+  {
+    id: '1234567-1234567',
+    key: 'icons',
+    name: 'Social Media Icons',
+    links: [
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'twitter',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'facebook',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'reddit',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'youtube',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'tiktok',
+        url: 'https://google.com'
+      }
+    ]
   }
 ] as Navigation[]
 
@@ -156,7 +258,8 @@ export const Default = {
     },
     loading: false,
     slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    categorySlugs: [['guides', 'fokusthema', 'test'], ['about']],
+    iconSlug: 'icons'
   }
 }
 

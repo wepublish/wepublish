@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {
-  Teaser,
+  BaseTeaser,
   TeaserImageWrapper,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
@@ -19,7 +19,7 @@ export const TeaserImgStyled = styled(Image)`
   }
 `
 
-export const ListTeaser = styled(Teaser)`
+export const ListTeaser = styled(BaseTeaser)`
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-template-areas:
       'image pretitle'

@@ -19,25 +19,12 @@ export type Scalars = {
   Date: string;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
-  GraphQLSettingValueType: any;
   RichText: Descendant[];
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
   /** A valid vote value */
   VoteValue: number;
-};
-
-export type AllowedSettingVals = {
-  __typename?: 'AllowedSettingVals';
-  boolChoice?: Maybe<Scalars['Boolean']>;
-  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export type AuthProvider = {
-  __typename?: 'AuthProvider';
-  name: Scalars['String'];
-  url: Scalars['String'];
 };
 
 export type Author = {
@@ -425,6 +412,7 @@ export type MemberPlan = {
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -484,7 +472,6 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createSessionWithOAuth2Code: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
@@ -527,7 +514,6 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
-  updateSettingList?: Maybe<Array<Maybe<Setting>>>;
   updateSubscription?: Maybe<Subscription>;
   updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
@@ -623,19 +609,13 @@ export type MutationCreateSessionWithJwtArgs = {
 };
 
 
-export type MutationCreateSessionWithOAuth2CodeArgs = {
-  code: Scalars['String'];
-  name: Scalars['String'];
-  redirectUri: Scalars['String'];
-};
-
-
 export type MutationCreateSubscriptionArgs = {
   input: SubscriptionInput;
 };
 
 
 export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
@@ -860,11 +840,6 @@ export type MutationUpdateRatingSystemArgs = {
 };
 
 
-export type MutationUpdateSettingListArgs = {
-  value?: InputMaybe<Array<InputMaybe<UpdateSettingArgs>>>;
-};
-
-
 export type MutationUpdateSubscriptionArgs = {
   id: Scalars['String'];
   input: SubscriptionInput;
@@ -872,6 +847,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -1123,7 +1099,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  authProviders: Array<AuthProvider>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   comment?: Maybe<Comment>;
@@ -1151,22 +1126,16 @@ export type Query = {
   ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
-  setting?: Maybe<Setting>;
-  settings: Array<Setting>;
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
+  tag?: Maybe<Tag>;
   tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
   users: UserConnection;
-};
-
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1304,11 +1273,6 @@ export type QueryRemotePeerProfileArgs = {
 };
 
 
-export type QuerySettingArgs = {
-  name: Scalars['String'];
-};
-
-
 export type QuerySubscriptionArgs = {
   id: Scalars['String'];
 };
@@ -1326,6 +1290,11 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
+};
+
+
+export type QueryTagArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1387,39 +1356,6 @@ export type SessionWithToken = {
   id: Scalars['String'];
   token: Scalars['String'];
   user: User;
-};
-
-export type Setting = {
-  __typename?: 'Setting';
-  id: Scalars['String'];
-  name: SettingName;
-  settingRestriction?: Maybe<SettingRestriction>;
-  value: Scalars['GraphQLSettingValueType'];
-};
-
-export enum SettingName {
-  AllowCommentEditing = 'allowCommentEditing',
-  AllowGuestCommentRating = 'allowGuestCommentRating',
-  AllowGuestCommenting = 'allowGuestCommenting',
-  AllowGuestPollVoting = 'allowGuestPollVoting',
-  CommentCharLimit = 'commentCharLimit',
-  MakeActiveSubscribersApiPublic = 'makeActiveSubscribersApiPublic',
-  MakeExpectedRevenueApiPublic = 'makeExpectedRevenueApiPublic',
-  MakeNewDeactivationsApiPublic = 'makeNewDeactivationsApiPublic',
-  MakeNewSubscribersApiPublic = 'makeNewSubscribersApiPublic',
-  MakeRenewingSubscribersApiPublic = 'makeRenewingSubscribersApiPublic',
-  MakeRevenueApiPublic = 'makeRevenueApiPublic',
-  PeeringTimeoutInMs = 'peeringTimeoutInMs',
-  ResetPasswordJwtExpiresMin = 'resetPasswordJwtExpiresMin',
-  SendLoginJwtExpiresMin = 'sendLoginJwtExpiresMin'
-}
-
-export type SettingRestriction = {
-  __typename?: 'SettingRestriction';
-  allowedValues?: Maybe<AllowedSettingVals>;
-  inputLength?: Maybe<Scalars['Int']>;
-  maxValue?: Maybe<Scalars['Int']>;
-  minValue?: Maybe<Scalars['Int']>;
 };
 
 export enum SortOrder {
@@ -1530,6 +1466,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
+  description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
@@ -1614,11 +1551,6 @@ export type UpdatePollExternalVoteSources = {
   id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
-};
-
-export type UpdateSettingArgs = {
-  name: SettingName;
-  value: Scalars['GraphQLSettingValueType'];
 };
 
 export type UploadImageInput = {
@@ -2011,30 +1943,32 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
   tag?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['RichText']>;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null } | null };
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
 
@@ -2629,6 +2563,7 @@ export const TagList = gql`
     nodes {
       id
       tag
+      description
     }
     pageInfo {
       startCursor
@@ -2641,18 +2576,20 @@ export const TagList = gql`
 }
     `;
 export const CreateTag = gql`
-    mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
     id
     tag
+    description
   }
 }
     `;
 export const UpdateTag = gql`
-    mutation UpdateTag($id: String!, $tag: String) {
-  updateTag(id: $id, tag: $tag) {
+    mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
+  updateTag(id: $id, tag: $tag, description: $description) {
     id
     tag
+    description
   }
 }
     `;
@@ -2661,6 +2598,7 @@ export const DeleteTag = gql`
   deleteTag(id: $id) {
     id
     tag
+    description
   }
 }
     `;

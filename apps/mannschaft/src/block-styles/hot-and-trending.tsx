@@ -55,6 +55,7 @@ export const HotAndTrendingBlockStyle = ({
           key={index}
           teaser={teaser}
           numColumns={2}
+          index={index}
           alignment={alignmentForTeaserBlock(index, 2)}
           blockStyle={blockStyle}
         />

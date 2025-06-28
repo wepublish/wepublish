@@ -120,22 +120,42 @@ export function UserForm<T extends BuilderUserFormFields>({
       />
 
       {!hideEmail && (
-        <Controller
-          name={'email'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              value={field.value ?? ''}
-              autoComplete="email"
-              type={'email'}
-              fullWidth
-              label={'Email'}
-              error={!!error}
-              helperText={error?.message}
+        <>
+          <Controller
+            name={'email'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <TextField
+                {...field}
+                value={field.value ?? ''}
+                autoComplete="email"
+                type={'email'}
+                fullWidth
+                label={'Email'}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          {fieldsToDisplay.emailRepeated && (
+            <Controller
+              name={'emailRepeated'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  type={'email'}
+                  fullWidth
+                  label={'Email wiederholen'}
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
             />
           )}
-        />
+        </>
       )}
 
       {fieldsToDisplay.birthday && (

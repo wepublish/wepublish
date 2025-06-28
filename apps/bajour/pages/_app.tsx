@@ -3,7 +3,9 @@ import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -19,6 +21,7 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -30,6 +33,7 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {BajourArticleDateWithShare} from '../src/bajour-article-date-with-share'
 import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourBanner} from '../src/components/website-builder-overwrites/banner/bajour-banner'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
@@ -44,13 +48,13 @@ import {
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
 import Mitmachen from './mitmachen'
-import {BajourArticleDateWithShare} from '../src/bajour-article-date-with-share'
 
 setDefaultOptions({
   locale: de
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
@@ -59,6 +63,9 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
       de: {zod: translation}
     }
@@ -129,7 +136,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             date={{format: dateFormatter}}
             blocks={{
               Renderer: BajourBlockRenderer,
-              Teaser: BajourTeaser,
+              BaseTeaser: BajourTeaser,
               TeaserGrid: BajourTeaserGrid,
               TeaserList: BajourTeaserList,
               Break: BajourBreakBlock,
@@ -184,6 +191,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
-const ConnectedApp = withApollo(CustomApp)
+const ConnectedApp = withApollo(withErrorSnackbar(withPaywallBypassToken(CustomApp)))
 
 export {ConnectedApp as default}

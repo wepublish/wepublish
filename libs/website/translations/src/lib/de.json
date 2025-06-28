@@ -1,5 +1,23 @@
 {
   "navbar": {
     "subscribe": "Member werden"
+  },
+  "paywall": {
+    "subscribe": "Abonnent*in werden",
+    "login": "Login"
+  },
+  "teaser": {
+    "author": {
+      "seperator": ", "
+    },
+    "meta": {
+      "seperator": " | "
+    }
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+    },
+    "cancellable": "Jederzeit kündbar"
   }
 }

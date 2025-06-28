@@ -54,7 +54,7 @@ export default function Mitmachen() {
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -73,7 +73,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     })
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   const dataPromises = [
     client.query({

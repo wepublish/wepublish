@@ -1,6 +1,7 @@
 import {BannerDocumentType, usePrimaryBannerQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useUser} from '@wepublish/authentication/website'
+import {useHasActiveSubscription} from '@wepublish/membership/website'
 
 export type BannerContainerProps = {
   documentType: BannerDocumentType
@@ -10,12 +11,15 @@ export type BannerContainerProps = {
 export function BannerContainer({documentType, documentId, className}: BannerContainerProps) {
   const {Banner} = useWebsiteBuilder()
   const {hasUser} = useUser()
+  const hasSubscription = useHasActiveSubscription()
 
   const {data, loading, error} = usePrimaryBannerQuery({
+    skip: hasSubscription == null,
     variables: {
       documentId: documentId ?? '',
       documentType,
-      loggedIn: hasUser
+      loggedIn: hasUser,
+      hasSubscription
     }
   })
 

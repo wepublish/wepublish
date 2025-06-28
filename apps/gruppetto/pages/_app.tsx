@@ -11,7 +11,9 @@ import {
 } from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {theme} from '@wepublish/ui'
 import {
   authLink,
@@ -28,22 +30,24 @@ import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import deOverriden from '../locales/deOverriden.json'
 import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 import Mitmachen from './mitmachen'
 
 setDefaultOptions({
@@ -51,14 +55,18 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
       de: {zod: translation}
     }
@@ -145,7 +153,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             Head={Head}
             Script={Script}
             Footer={Footer}
-            MemberPlanItem={YearlyMemberPlanItem}
             elements={{Link: NextWepublishLink}}
             blocks={{Break: GruppettoBreakBlock, Subscribe: Mitmachen}}>
             <ThemeProvider theme={gruppettoTheme}>
@@ -242,6 +249,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   )
 }
 
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
+  withErrorSnackbar(withPaywallBypassToken(CustomApp))
+)
 
 export {ConnectedApp as default}

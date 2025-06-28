@@ -3,8 +3,10 @@ import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {RichTextBlockWrapper, TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
@@ -14,6 +16,7 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -39,6 +42,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
@@ -47,6 +51,9 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
       de: {zod: translation}
     }
@@ -134,7 +141,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             PaymentAmount={PaymentAmountPicker}
             elements={{Link: NextWepublishLink}}
             blocks={{
-              Teaser: FlimmerTeaser,
+              BaseTeaser: FlimmerTeaser,
               Break: FlimmerBreakBlock,
               RichText: FlimmerRichText,
               Title: FlimmerTitle,
@@ -202,6 +209,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(CustomApp)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
+  withErrorSnackbar(withPaywallBypassToken(CustomApp))
+)
 
 export {ConnectedApp as default}

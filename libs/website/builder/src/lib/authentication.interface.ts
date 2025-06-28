@@ -47,6 +47,7 @@ export type BuilderRegistrationFormProps<
       firstName: z.ZodString | z.ZodOptional<z.ZodString>
       address: AddressShape | z.ZodOptional<AddressShape>
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>
+      emailRepeated: z.ZodString | z.ZodOptional<z.ZodString>
     }>
   >
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
