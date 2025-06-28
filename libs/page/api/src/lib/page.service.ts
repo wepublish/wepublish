@@ -215,8 +215,13 @@ export class PageService {
       }
     })
 
+    const pagePublishedAtInTheFuture = page.publishedAt && page.publishedAt > new Date()
+    const newPublishedAtEarlier = page.publishedAt && page.publishedAt > publishedAt
+
     const pagePublishedAt =
-      !page.publishedAt || page.publishedAt > publishedAt ? publishedAt : page.publishedAt
+      pagePublishedAtInTheFuture || newPublishedAtEarlier
+        ? publishedAt
+        : page.publishedAt ?? publishedAt
 
     return this.prisma.page.update({
       where: {
@@ -249,7 +254,7 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`)
     }
 
-    return this.prisma.page.update({
+    const updatedPage = await this.prisma.page.update({
       where: {
         id
       },
@@ -263,12 +268,35 @@ export class PageService {
               }
             },
             data: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: new Date()
             }
+          }
+        }
+      },
+      include: {
+        revisions: {
+          take: 1,
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
     })
+
+    if (updatedPage.revisions[0]) {
+      // Latest revision should not be archived
+      await this.prisma.pageRevision.update({
+        where: {
+          id: updatedPage.revisions[0].id
+        },
+        data: {
+          archivedAt: null
+        }
+      })
+    }
+
+    return updatedPage
   }
 
   @PrimeDataLoader(PageDataloaderService)
