@@ -1056,8 +1056,6 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
-  SUBSCRIBED
-  UNSUBSCRIBED
 }
 
 type MailProviderModel {
