@@ -1,5 +1,4 @@
-import {gql, useQuery} from '@apollo/client'
-import {UserRole} from '@wepublish/editor/api'
+import {useMeQuery, UserRole} from '@wepublish/editor/api'
 import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {createContext, Dispatch, ReactNode, useEffect, useReducer} from 'react'
 import {usePageVisibility} from 'react-page-visibility'
@@ -54,33 +53,19 @@ export function authReducer(
   }
 }
 
-const MeQuery = gql`
-  {
-    me {
-      email
-      roles {
-        id
-        permissions {
-          id
-        }
-      }
-    }
-  }
-`
-
 export interface AuthProviderProps {
   readonly children?: ReactNode
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
-  const {data, loading, fetchMore: fetchAgainQuery, error} = useQuery(MeQuery)
+  const {data, loading, refetch, error} = useMeQuery()
   const [state, dispatch] = useReducer(authReducer, {})
 
   const isPageActive = usePageVisibility()
 
   // when it gets active, fetch the Me query again to know if user still logged in.
   useEffect(() => {
-    fetchAgainQuery({query: MeQuery}).catch(() => {
+    refetch().catch(() => {
       dispatch({
         type: AuthDispatchActionType.Logout
       })
