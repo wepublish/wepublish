@@ -22,7 +22,7 @@ export type AudienceClientFilter = Pick<
   },
   | 'totalActiveSubscriptionCount'
   | 'createdSubscriptionCount'
-  | 'createdUnpaidSubscriptionCount'
+  | 'overdueSubscriptionCount'
   | 'deactivatedSubscriptionCount'
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
@@ -50,7 +50,7 @@ export function useAudienceFilter({fetchStats}: UseAudienceFilterProps) {
   const [audienceClientFilter, setAudienceClientFilter] = useState<AudienceClientFilter>({
     totalActiveSubscriptionCount: false,
     createdSubscriptionCount: true,
-    createdUnpaidSubscriptionCount: false,
+    overdueSubscriptionCount: true,
     deactivatedSubscriptionCount: true,
     renewedSubscriptionCount: true,
     replacedSubscriptionCount: true
