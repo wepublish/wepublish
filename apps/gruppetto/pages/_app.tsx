@@ -41,7 +41,6 @@ import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import deOverriden from '../locales/deOverriden.json'
 import background from '../src/background.svg'
@@ -66,9 +65,6 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
-    },
-    resources: {
-      de: {zod: translation}
     }
   })
 z.setErrorMap(zodI18nMap)

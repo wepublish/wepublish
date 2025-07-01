@@ -32,7 +32,6 @@ import {MdFacebook, MdSearch} from 'react-icons/md'
 import OneSignal from 'react-onesignal'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {PURModel} from '../src/cookie-or-pay/pur-model'
 import {ReactComponent as Logo} from '../src/logo.svg'
@@ -67,9 +66,6 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
-    },
-    resources: {
-      de: {zod: translation}
     }
   })
 z.setErrorMap(zodI18nMap)

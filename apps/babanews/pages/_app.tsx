@@ -28,7 +28,6 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
@@ -51,9 +50,6 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
-    },
-    resources: {
-      de: {zod: translation}
     }
   })
 z.setErrorMap(zodI18nMap)

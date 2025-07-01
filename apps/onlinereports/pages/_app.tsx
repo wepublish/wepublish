@@ -29,7 +29,6 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
@@ -51,9 +50,6 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
-    },
-    resources: {
-      de: {zod: translation}
     }
   })
 z.setErrorMap(zodI18nMap)

@@ -31,7 +31,6 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {BajourArticleDateWithShare} from '../src/bajour-article-date-with-share'
 import {MainGrid} from '../src/components/layout/main-grid'
@@ -65,9 +64,6 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
-    },
-    resources: {
-      de: {zod: translation}
     }
   })
 z.setErrorMap(zodI18nMap)

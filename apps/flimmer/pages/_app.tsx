@@ -27,7 +27,6 @@ import {ComponentProps} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import deOverriden from '../locales/deOverriden.json'
 import {FlimmerBreakBlock} from '../src/components/flimmer-break-block'
@@ -53,9 +52,6 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
-    },
-    resources: {
-      de: {zod: translation}
     }
   })
 z.setErrorMap(zodI18nMap)
