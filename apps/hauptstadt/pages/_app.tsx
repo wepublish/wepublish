@@ -10,7 +10,9 @@ import {
   AsyncSessionProvider,
   authLink,
   NextWepublishLink,
-  RoutedAdminBar
+  RoutedAdminBar,
+  withJwtHandler,
+  withSessionProvider
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -85,6 +87,9 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
+    },
+    resources: {
+      de: {zod: deTranlations.zod}
     }
   })
 
@@ -117,105 +122,105 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <AsyncSessionProvider sessionToken={pageProps.sessionToken ?? null}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            elements={{Link: NextWepublishLink}}
-            Footer={HauptstadtFooter}
-            Navbar={HauptstadtNavbar}
-            ContentWrapper={HauptstadtContentWrapper}
-            AuthorChip={HauptstadtAuthorChip}
-            Article={HauptstadtArticle}
-            ArticleAuthors={HauptstadtArticleAuthors}
-            ArticleMeta={HauptstadtArticleMeta}
-            Event={HauptstadtEvent}
-            Banner={HauptstadtBanner}
-            Paywall={HauptstadtPaywall}
-            MemberPlanPicker={HauptstadtMemberPlanPicker}
-            MemberPlanItem={HauptstadtMemberPlanItem}
-            blocks={{
-              Subscribe: Mitmachen,
-              Quote: HauptstadtQuoteBlock,
-              BaseTeaser: HauptstadtTeaser,
-              TeaserList: HauptstadtTeaserList,
-              TeaserGrid: HauptstadtTeaserGrid,
-              TeaserSlots: HauptstadtTeaserSlots,
-              Image: HauptstadtImageBlock,
-              ImageGallery: HauptstadtImageGalleryBlock,
-              Break: HauptstadtBreakBlock
-            }}
-            blockStyles={{
-              FocusTeaser: HauptstadtFocusTeaser,
-              AlternatingTeaser: HauptstadtAlternatingTeaser,
-              TeaserSlider: HauptstadtTeaserSlider
-            }}
-            date={{format: dateFormatter}}
-            meta={{siteTitle}}>
-            <ThemeProvider theme={theme}>
-              <FontSizeProvider>
-                <CssBaseline />
-                {printStyles}
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          elements={{Link: NextWepublishLink}}
+          Footer={HauptstadtFooter}
+          Navbar={HauptstadtNavbar}
+          ContentWrapper={HauptstadtContentWrapper}
+          AuthorChip={HauptstadtAuthorChip}
+          Article={HauptstadtArticle}
+          ArticleAuthors={HauptstadtArticleAuthors}
+          ArticleMeta={HauptstadtArticleMeta}
+          Event={HauptstadtEvent}
+          Banner={HauptstadtBanner}
+          Paywall={HauptstadtPaywall}
+          MemberPlanPicker={HauptstadtMemberPlanPicker}
+          MemberPlanItem={HauptstadtMemberPlanItem}
+          blocks={{
+            Subscribe: Mitmachen,
+            Quote: HauptstadtQuoteBlock,
+            BaseTeaser: HauptstadtTeaser,
+            TeaserList: HauptstadtTeaserList,
+            TeaserGrid: HauptstadtTeaserGrid,
+            TeaserSlots: HauptstadtTeaserSlots,
+            Image: HauptstadtImageBlock,
+            ImageGallery: HauptstadtImageGalleryBlock,
+            Break: HauptstadtBreakBlock
+          }}
+          blockStyles={{
+            FocusTeaser: HauptstadtFocusTeaser,
+            AlternatingTeaser: HauptstadtAlternatingTeaser,
+            TeaserSlider: HauptstadtTeaserSlider
+          }}
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}>
+          <ThemeProvider theme={theme}>
+            <FontSizeProvider>
+              <CssBaseline />
+              {printStyles}
 
-                <Head>
-                  <title key="title">{siteTitle}</title>
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                  {/* Feeds */}
-                  <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                  <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                  <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-                  {/* Sitemap */}
-                  <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-                  {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                  <link rel="manifest" href="/site.webmanifest" />
-                  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                  <meta name="msapplication-TileColor" content="#ffffff" />
-                  <meta name="theme-color" content="#ffffff" />
-                </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
+              </Head>
 
-                <Spacer>
-                  <NavBar
-                    categorySlugs={[['pages']]}
-                    slug="main"
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['pages']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                />
 
-                  <main>
-                    <Container maxWidth="lg">
-                      <PrintLogo />
-                      <Component {...pageProps} />
-                    </Container>
-                  </main>
+                <main>
+                  <Container maxWidth="lg">
+                    <PrintLogo />
+                    <Component {...pageProps} />
+                  </Container>
+                </main>
 
-                  <FooterContainer slug="main" categorySlugs={[['pages']]} iconSlug="icons" />
-                </Spacer>
+                <FooterContainer slug="main" categorySlugs={[['pages']]} iconSlug="icons" />
+              </Spacer>
 
-                <RoutedAdminBar />
+              <RoutedAdminBar />
 
-                {publicRuntimeConfig.env.GA_ID && (
-                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-                )}
-              </FontSizeProvider>
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </AsyncSessionProvider>
+              {publicRuntimeConfig.env.GA_ID && (
+                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
+            </FontSizeProvider>
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
     </AppCacheProvider>
   )
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withErrorSnackbar(withPaywallBypassToken(CustomApp)))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(
+    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider))
+  )
+)
 
 export {ConnectedApp as default}

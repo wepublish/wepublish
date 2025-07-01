@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useCreateJwtForWebsiteLoginLazyQuery, useMeQuery} from '@wepublish/editor/api'
 import {
   CreatePageMutationVariables,
   getApiClientV2,
@@ -126,6 +127,12 @@ function PageEditor() {
     fetchPolicy: 'cache-and-network',
     variables: {id: pageID!},
     skip: !pageID
+  })
+  const {data: user} = useMeQuery({
+    fetchPolicy: 'cache-only'
+  })
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const {t} = useTranslation()
@@ -392,15 +399,23 @@ function PageEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={pageData?.page.previewUrl ?? ''} target="_blank">
-                    <IconButtonMTop
-                      className="actionButton"
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('pageEditor.overview.preview')}
-                    </IconButtonMTop>
-                  </Link>
+                  <IconButtonMTop
+                    className="actionButton"
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForWebsiteLogin?.token}`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('pageEditor.overview.preview')}
+                  </IconButtonMTop>
                 </PermissionControl>
               }
             />

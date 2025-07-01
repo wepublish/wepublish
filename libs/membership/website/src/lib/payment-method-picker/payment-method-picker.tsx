@@ -26,6 +26,7 @@ export const PaymentRadioWrapper = styled('div')<{active?: boolean}>`
 
 const icon = css`
   height: 40px;
+  width: auto;
 `
 
 const HiddenRadio = styled(Radio)`
@@ -72,6 +73,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
           name={name}
           value={value ? value : ''}
           onChange={event => onChange(event.target.value as string)}
+          sx={{flexWrap: 'nowrap'}}
           row>
           {filteredPaymentMethods.map(method => (
             <FormControlLabel

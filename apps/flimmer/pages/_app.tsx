@@ -7,8 +7,15 @@ import {withErrorSnackbar} from '@wepublish/errors/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
-import {authLink, NextWepublishLink, SessionProvider, SubscribePage} from '@wepublish/utils/website'
+import {
+  authLink,
+  NextWepublishLink,
+  SubscribePage,
+  withJwtHandler,
+  withSessionProvider
+} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
 import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
@@ -52,6 +59,9 @@ i18next
     supportedLngs: ['de'],
     interpolation: {
       escapeValue: false
+    },
+    resources: {
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -128,85 +138,84 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Navbar={FlimmerNavbar}
-            PaymentAmount={PaymentAmountPicker}
-            elements={{Link: NextWepublishLink}}
-            blocks={{
-              BaseTeaser: FlimmerTeaser,
-              Break: FlimmerBreakBlock,
-              RichText: FlimmerRichText,
-              Title: FlimmerTitle,
-              Subscribe: MitmachenInnerStyled
-            }}
-            date={{format: dateFormatter}}
-            meta={{siteTitle}}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          Navbar={FlimmerNavbar}
+          PaymentAmount={PaymentAmountPicker}
+          elements={{Link: NextWepublishLink}}
+          blocks={{
+            Teaser: FlimmerTeaser,
+            Break: FlimmerBreakBlock,
+            RichText: FlimmerRichText,
+            Title: FlimmerTitle,
+            Subscribe: MitmachenInnerStyled
+          }}
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}
+          thirdParty={{
+            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+          }}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <Head>
+              <title key="title">{siteTitle}</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                {/* Feeds */}
-                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-                {/* Sitemap */}
-                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
-                <meta name="theme-color" content="#ffffff" />
-              </Head>
+              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+              <link rel="manifest" href="/site.webmanifest" />
+              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+              <meta name="msapplication-TileColor" content="#ffffff" />
+              <meta name="theme-color" content="#ffffff" />
+            </Head>
 
-              <Spacer>
-                <NavbarContainer
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+            <Spacer>
+              <NavbarContainer
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+              />
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+              <main>
+                <MainSpacer maxWidth="lg">
+                  <Component {...pageProps} />
+                </MainSpacer>
+              </main>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                  <LogoLink href="/" aria-label="Startseite">
-                    <LogoWrapper />
-                  </LogoLink>
-                </FooterContainer>
-              </Spacer>
-              <Script id="piwik-pro">
-                {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '12ae360b-6011-4db9-bf9f-f4ade84f8a6e');`}
-              </Script>
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </SessionProvider>
+              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <LogoLink href="/" aria-label="Startseite">
+                  <LogoWrapper />
+                </LogoLink>
+              </FooterContainer>
+            </Spacer>
+            <Script id="piwik-pro">
+              {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '12ae360b-6011-4db9-bf9f-f4ade84f8a6e');`}
+            </Script>
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
     </AppCacheProvider>
   )
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  withErrorSnackbar(withPaywallBypassToken(CustomApp))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
 )
 
 export {ConnectedApp as default}

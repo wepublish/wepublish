@@ -21,3 +21,10 @@ mutation CreateSessionWithJWT($jwt: String!) {
     token
   }
 }
+
+query CreateJWTForWebsiteLogin {
+  createJWTForWebsiteLogin {
+    token
+    expiresAt
+  }
+}

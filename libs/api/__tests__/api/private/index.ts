@@ -1104,6 +1104,7 @@ export type Query = {
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
+  createJWTForWebsiteLogin?: Maybe<JwtToken>;
   image?: Maybe<Image>;
   images: ImageConnection;
   invoice?: Maybe<Invoice>;
