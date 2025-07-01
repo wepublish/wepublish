@@ -4,8 +4,10 @@ import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -23,6 +25,7 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -31,7 +34,6 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {TsriArticleDate} from '../src/components/tsri-article-date'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
@@ -51,6 +53,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
@@ -59,8 +62,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
-      de: {zod: translation}
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -202,9 +208,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             )}
 
             {publicRuntimeConfig.env.GTM_ID && (
-              <>
-                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-              </>
+              <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
             )}
 
             {publicRuntimeConfig.env.SPARKLOOP_ID && (
@@ -222,9 +226,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withSessionProvider(withJwtHandler(CustomApp)))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
+)
 
 export {ConnectedApp as default}

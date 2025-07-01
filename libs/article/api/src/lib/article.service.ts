@@ -97,6 +97,7 @@ export class ArticleService {
       tagIds,
       properties,
       blocks,
+      paywallId,
       ...revision
     }: CreateArticleInput,
     userId: string | null | undefined
@@ -105,6 +106,7 @@ export class ArticleService {
 
     const article = await this.prisma.article.create({
       data: {
+        paywallId,
         likes,
         slug,
         shared,
@@ -160,6 +162,7 @@ export class ArticleService {
       likes,
       slug,
       shared,
+      paywallId,
       hidden,
       disableComments,
       authorIds,
@@ -189,6 +192,7 @@ export class ArticleService {
       data: {
         likes,
         slug,
+        paywallId,
         shared,
         hidden,
         disableComments,
@@ -419,6 +423,7 @@ export class ArticleService {
 
     return this.prisma.article.create({
       data: {
+        paywallId: article.paywallId,
         shared: article.shared,
         hidden: article.hidden,
         disableComments: article.disableComments,

@@ -2,7 +2,9 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -19,6 +21,7 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -27,7 +30,6 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BabanewsBanner} from '../src/components/website-builder-overwrites/blocks/banner'
@@ -39,6 +41,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
@@ -47,8 +50,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
-      de: {zod: translation}
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -144,9 +150,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withSessionProvider(withJwtHandler(CustomApp)))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
+)
 
 export {ConnectedApp as default}

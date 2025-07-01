@@ -13,6 +13,7 @@ import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
 import {TagSort} from './tag.query'
 import {createProxyingResolver} from '../../utility'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
@@ -32,6 +33,7 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
     tag: {type: GraphQLString},
     type: {type: GraphQLTagType},
     main: {type: new GraphQLNonNull(GraphQLBoolean)},
+    description: {type: GraphQLRichText},
     url: {
       type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(async (tag, _, {urlAdapter}) => {

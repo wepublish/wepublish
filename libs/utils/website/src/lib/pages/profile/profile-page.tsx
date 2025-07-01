@@ -14,7 +14,7 @@ import {
   useHasUnpaidInvoices,
   InvoiceListContainer,
   SubscriptionListContainer,
-  InvoiceListItemContent
+  InvoiceListItemWrapper
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
@@ -54,9 +54,9 @@ const SubscriptionListWrapper = styled('div')`
 `
 
 const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemContent} {
-    border: 8px solid ${({theme}) => theme.palette.primary.main};
-    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  ${InvoiceListItemWrapper} {
+    border-width: 4px;
+    border-color: ${({theme}) => theme.palette.error.main};
   }
 `
 
@@ -137,7 +137,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -152,11 +152,12 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       req: ctx.req,
       res: ctx.res,
       expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
+      sameSite: 'strict',
+      httpOnly: true // @TODO: Config
     })
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([
