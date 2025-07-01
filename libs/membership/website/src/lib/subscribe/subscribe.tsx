@@ -359,7 +359,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (
       !selectedAvailablePaymentMethod?.paymentPeriodicities.includes(selectedPaymentPeriodicity)
     ) {
-      resetField('paymentPeriodicity')
+      resetField('paymentPeriodicity', {
+        defaultValue: selectedAvailablePaymentMethod?.paymentPeriodicities?.[0] as undefined // wrong undefined typing by react-hook: https://react-hook-form.com/docs/useform/resetfield
+      })
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
