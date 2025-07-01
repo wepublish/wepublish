@@ -122,10 +122,10 @@ jobs:
             resources:
               requests:
                 memory: "64Mi"
-                cpu: "30m"
+                cpu: "50m"
               limits:
                 memory: "128Mi"
-                cpu: "100m"
+                cpu: "200m"
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
