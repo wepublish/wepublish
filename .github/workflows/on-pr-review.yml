@@ -125,7 +125,7 @@ jobs:
                 cpu: "100m"
               limits:
                 memory: "512Mi"
-                cpu: "250m"
+                cpu: "500m"
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
@@ -188,7 +188,7 @@ jobs:
                 cpu: "100m"
               limits:
                 memory: "1024Mi"
-                cpu: "1500m"
+                cpu: "1000m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
