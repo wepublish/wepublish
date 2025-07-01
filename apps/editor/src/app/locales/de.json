@@ -1457,10 +1457,10 @@
     },
     "resources": {
       "teaserType": {
-        "Article": "Artikel",
-        "Page": "Seite",
-        "Event": "Event",
-        "Custom": "Benutzerdefinierte"
+        "article": "Artikel",
+        "page": "Seite",
+        "event": "Event",
+        "custom": "Benutzerdefinierte"
       },
       "teaserSort": {
         "HotAndTrending": "Beliebtheit",
