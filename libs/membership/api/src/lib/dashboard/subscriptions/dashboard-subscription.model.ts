@@ -56,48 +56,36 @@ export class DailySubscriptionStats {
   @Field()
   date!: string
 
-  @Field()
+  @Field(() => Int)
   totalActiveSubscriptionCount!: number
 
-  @Field()
+  @Field(() => Int)
   createdSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
   createdSubscriptionUsers!: DailySubscriptionStatsUser[]
 
-  @Field()
-  createdUnpaidSubscriptionCount!: number
+  @Field(() => Int)
+  overdueSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
-  createdUnpaidSubscriptionUsers!: DailySubscriptionStatsUser[]
+  overdueSubscriptionUsers!: DailySubscriptionStatsUser[]
 
-  @Field()
+  @Field(() => Int)
   replacedSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
   replacedSubscriptionUsers!: DailySubscriptionStatsUser[]
 
-  @Field()
+  @Field(() => Int)
   renewedSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
   renewedSubscriptionUsers!: DailySubscriptionStatsUser[]
 
-  @Field()
+  @Field(() => Int)
   deactivatedSubscriptionCount!: number
 
   @Field(type => [DailySubscriptionStatsUser])
   deactivatedSubscriptionUsers!: DailySubscriptionStatsUser[]
-
-  @Field()
-  subscriptionMonthlyRevenueAvg!: number
-
-  @Field()
-  subscriptionMonthlyRevenueSum!: number
-
-  @Field()
-  subscriptionDailyRevenue!: number
-
-  @Field()
-  subscriptionDurationAvg!: number
 }

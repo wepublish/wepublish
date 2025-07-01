@@ -1538,25 +1538,25 @@
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",
-          "createdUnpaidSubscriptionCount": "Neu gelöste aber bis dato unbezahlte Abos.",
-          "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert wurden.",
-          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode.",
+          "overdueSubscriptionCount": "Erneuerte Abos, deren Bezahlung fällig und offen ist. Nicht eingerechnet sind erstmalig gelöste Abos, die nicht bezahlt wurden.",
+          "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
           "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
         },
-        "totalActiveSubscriptionCount": "Total aktive Abos",
-        "createdUnpaidSubscriptionCount": "Neue unbezahlte Abos",
-        "renewedSubscriptionCount": "Erneuerte Abos",
-        "createdSubscriptionCount": "Neue Abos",
+        "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
+        "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
+        "renewedSubscriptionCount": "Erneuerte bezahlte Abos",
+        "createdSubscriptionCount": "Neue bezahlte Abos",
         "deactivatedSubscriptionCount": "Deaktivierte Abos",
         "replacedSubscriptionCount": "Ersetzte Abos",
-        "totalNewSubscriptions": "Total neue Abos",
+        "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
         "renewalRate": "Erneuerungsrate",
         "cancellationRate": "Kündigungsrate",
-        "createdSubscriptionUsers": "Neue Abos",
-        "createdUnpaidSubscriptionUsers": "Neue unbezahlte Abos",
+        "createdSubscriptionUsers": "Neue bezahlte Abos",
+        "overdueSubscriptionUsers": "Erneuerte nicht bezahlte Abos",
         "deactivatedSubscriptionUsers": "Deaktivierte Abos",
-        "renewedSubscriptionUsers": "Erneuerte Abos",
+        "renewedSubscriptionUsers": "Erneuerte bezahlte Abos",
         "replacedSubscriptionUsers": "Ersetzte Abos"
       }
     },
@@ -1578,8 +1578,8 @@
       "showUsers": "Details anzeigen",
       "byDate": "Per",
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
-      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos.",
-      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos."
+      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
     }
   }
 }

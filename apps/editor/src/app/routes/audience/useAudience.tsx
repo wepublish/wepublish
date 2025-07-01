@@ -23,7 +23,7 @@ export interface AudienceStatsComputed extends DailySubscriptionStats, RenewalFi
 type SumUpCount = Pick<
   AudienceStatsComputed,
   | 'createdSubscriptionCount'
-  | 'createdUnpaidSubscriptionCount'
+  | 'overdueSubscriptionCount'
   | 'deactivatedSubscriptionCount'
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
@@ -34,7 +34,7 @@ type SumUpCountKeys = keyof SumUpCount
 export type AggregatedUsers = keyof Pick<
   AudienceStatsComputed,
   | 'createdSubscriptionUsers'
-  | 'createdUnpaidSubscriptionUsers'
+  | 'overdueSubscriptionUsers'
   | 'deactivatedSubscriptionUsers'
   | 'renewedSubscriptionUsers'
   | 'replacedSubscriptionUsers'
@@ -52,9 +52,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
       if (audienceClientFilter.createdSubscriptionCount) {
         totalNew += dailyStat?.createdSubscriptionCount || 0
       }
-      if (audienceClientFilter.createdUnpaidSubscriptionCount) {
-        totalNew += dailyStat?.createdUnpaidSubscriptionCount || 0
-      }
+
       if (audienceClientFilter.renewedSubscriptionCount) {
         totalNew += dailyStat?.renewedSubscriptionCount || 0
       }
@@ -71,15 +69,21 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
       const totalToBeRenewed = dailyStat
         ? (dailyStat.renewedSubscriptionCount || 0) +
           (dailyStat.replacedSubscriptionCount || 0) +
-          (dailyStat.deactivatedSubscriptionCount || 0)
+          (dailyStat.deactivatedSubscriptionCount || 0) +
+          (dailyStat.overdueSubscriptionCount || 0)
         : 0
 
       const renewedAndReplaced = dailyStat
-        ? totalToBeRenewed - (dailyStat.deactivatedSubscriptionCount || 0)
+        ? totalToBeRenewed -
+          (dailyStat.deactivatedSubscriptionCount || 0) -
+          (dailyStat.overdueSubscriptionCount || 0)
         : 0
 
       const cancellationRate = Math.round(
-        ((dailyStat?.deactivatedSubscriptionCount || 0) * 100) / totalToBeRenewed || 0
+        (((dailyStat?.deactivatedSubscriptionCount || 0) +
+          (dailyStat?.overdueSubscriptionCount || 0)) *
+          100) /
+          totalToBeRenewed || 0
       )
 
       const renewalRate = totalToBeRenewed === 0 ? 0 : 100 - cancellationRate
@@ -103,6 +107,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
         return {
           ...dailyStat,
           deactivatedSubscriptionCount: -dailyStat.deactivatedSubscriptionCount,
+          overdueSubscriptionCount: -dailyStat.overdueSubscriptionCount,
           totalNewSubscriptions,
           ...renewalFigures
         }
@@ -154,7 +159,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
       return (
         [
           'createdSubscriptionCount',
-          'createdUnpaidSubscriptionCount',
+          'overdueSubscriptionCount',
           'deactivatedSubscriptionCount',
           'renewedSubscriptionCount',
           'replacedSubscriptionCount'
@@ -169,7 +174,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
       return (
         [
           'createdSubscriptionUsers',
-          'createdUnpaidSubscriptionUsers',
+          'overdueSubscriptionUsers',
           'deactivatedSubscriptionUsers',
           'renewedSubscriptionUsers',
           'replacedSubscriptionUsers'
@@ -197,7 +202,8 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
       const renewalFigures = getRenewalFigures({
         ...countsByMonth,
         deactivatedSubscriptionCount:
-          (countsByMonth as SumUpCount).deactivatedSubscriptionCount * -1
+          (countsByMonth as SumUpCount).deactivatedSubscriptionCount * -1,
+        overdueSubscriptionCount: (countsByMonth as SumUpCount).overdueSubscriptionCount * -1
       })
 
       aggregatedStats.push({
