@@ -1360,10 +1360,10 @@
     },
     "resources": {
       "teaserType": {
-        "Article": "Article",
-        "Page": "Page",
-        "Event": "Event",
-        "Custom": "Custom"
+        "article": "Article",
+        "page": "Page",
+        "event": "Event",
+        "custom": "Custom"
       },
       "teaserSort": {
         "HotAndTrending": "Hot & Trending",
