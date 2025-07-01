@@ -185,10 +185,10 @@ jobs:
             resources:
               requests:
                 memory: "200Mi"
-                cpu: "200m"
+                cpu: "100m"
               limits:
                 memory: "1024Mi"
-                cpu: "1000m"
+                cpu: "1500m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
