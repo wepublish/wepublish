@@ -80,7 +80,6 @@ export const TeaserGridBlock = ({
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
-
   const filledTeasers = teasers.filter(isFilledTeaser)
 
   return (

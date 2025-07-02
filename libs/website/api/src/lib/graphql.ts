@@ -1524,6 +1524,8 @@ export type Mutation = {
   registerMemberAndReceivePayment: RegistrationAndPayment;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
+  /** Saves the reading progress of the current user for a given article */
+  saveReadingListProgress: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
@@ -1905,6 +1907,13 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationSaveReadingListProgressArgs = {
+  articleId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  completed: Scalars['Boolean'];
 };
 
 
@@ -4201,6 +4210,15 @@ export type PollVoteMutationVariables = Exact<{
 export type PollVoteMutation = { __typename?: 'Mutation', voteOnPoll?: { __typename?: 'PollVote', answerId: string, pollId: string } | null };
 
 export type FullPropertyFragment = { __typename?: 'Property', key: string, value: string };
+
+export type SaveReadingProgressMutationVariables = Exact<{
+  completed: Scalars['Boolean'];
+  blockIndex: Scalars['Int'];
+  articleId: Scalars['String'];
+}>;
+
+
+export type SaveReadingProgressMutation = { __typename?: 'Mutation', saveReadingListProgress: boolean };
 
 export type FullSettingFragment = { __typename?: 'Setting', id: string, name: SettingName, value?: any | null };
 
@@ -6819,6 +6837,43 @@ export function usePollVoteMutation(baseOptions?: Apollo.MutationHookOptions<Pol
 export type PollVoteMutationHookResult = ReturnType<typeof usePollVoteMutation>;
 export type PollVoteMutationResult = Apollo.MutationResult<PollVoteMutation>;
 export type PollVoteMutationOptions = Apollo.BaseMutationOptions<PollVoteMutation, PollVoteMutationVariables>;
+export const SaveReadingProgressDocument = gql`
+    mutation SaveReadingProgress($completed: Boolean!, $blockIndex: Int!, $articleId: String!) {
+  saveReadingListProgress(
+    completed: $completed
+    blockIndex: $blockIndex
+    articleId: $articleId
+  )
+}
+    `;
+export type SaveReadingProgressMutationFn = Apollo.MutationFunction<SaveReadingProgressMutation, SaveReadingProgressMutationVariables>;
+
+/**
+ * __useSaveReadingProgressMutation__
+ *
+ * To run a mutation, you first call `useSaveReadingProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveReadingProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveReadingProgressMutation, { data, loading, error }] = useSaveReadingProgressMutation({
+ *   variables: {
+ *      completed: // value for 'completed'
+ *      blockIndex: // value for 'blockIndex'
+ *      articleId: // value for 'articleId'
+ *   },
+ * });
+ */
+export function useSaveReadingProgressMutation(baseOptions?: Apollo.MutationHookOptions<SaveReadingProgressMutation, SaveReadingProgressMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveReadingProgressMutation, SaveReadingProgressMutationVariables>(SaveReadingProgressDocument, options);
+      }
+export type SaveReadingProgressMutationHookResult = ReturnType<typeof useSaveReadingProgressMutation>;
+export type SaveReadingProgressMutationResult = Apollo.MutationResult<SaveReadingProgressMutation>;
+export type SaveReadingProgressMutationOptions = Apollo.BaseMutationOptions<SaveReadingProgressMutation, SaveReadingProgressMutationVariables>;
 export const SettingListDocument = gql`
     query SettingList {
   settings {

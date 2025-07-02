@@ -95,6 +95,10 @@ const modelFieldDefinitions = [{
                 name: "trackingPixels",
                 type: "ArticleTrackingPixels",
                 relationName: "ArticleToArticleTrackingPixels"
+            }, {
+                name: "readers",
+                type: "ReadingList",
+                relationName: "ArticleToReadingList"
             }]
     }, {
         name: "ArticleTrackingPixels",
@@ -705,6 +709,10 @@ const modelFieldDefinitions = [{
                 name: "pageRevisions",
                 type: "PageRevision",
                 relationName: "PageRevisionToUser"
+            }, {
+                name: "readArticles",
+                type: "ReadingList",
+                relationName: "ReadingListToUser"
             }]
     }, {
         name: "UserRole",
@@ -939,6 +947,17 @@ const modelFieldDefinitions = [{
                 name: "Crowdfunding",
                 type: "Crowdfunding",
                 relationName: "CrowdfundingToCrowdfundingGoal"
+            }]
+    }, {
+        name: "ReadingList",
+        fields: [{
+                name: "article",
+                type: "Article",
+                relationName: "ArticleToReadingList"
+            }, {
+                name: "user",
+                type: "User",
+                relationName: "ReadingListToUser"
             }]
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
@@ -5556,4 +5575,77 @@ function defineCrowdfundingGoalFactoryInternal({ defaultData: defaultDataResolve
  */
 export function defineCrowdfundingGoalFactory(options) {
     return defineCrowdfundingGoalFactoryInternal(options);
+}
+function isReadingListarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function isReadingListuserFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "User";
+}
+function autoGenerateReadingListScalarsOrEnums({ seq }) {
+    return {};
+}
+function defineReadingListFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("ReadingList", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateReadingListScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                article: isReadingListarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                user: isReadingListuserFactory(defaultData.user) ? {
+                    create: yield defaultData.user.build()
+                } : defaultData.user
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            articleId: inputData.articleId,
+            userId: inputData.userId
+        });
+        const create = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().readingList.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "ReadingList",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link ReadingList} model.
+ *
+ * @param options
+ * @returns factory {@link ReadingListFactoryInterface}
+ */
+export function defineReadingListFactory(options) {
+    return defineReadingListFactoryInternal(options);
 }

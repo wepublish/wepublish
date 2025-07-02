@@ -3,6 +3,7 @@ import {BlockContent, FacebookVideoBlock as FacebookVideoBlockType} from '@wepub
 import {BuilderFacebookVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
 import {useId} from 'react'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isFacebookVideoBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -21,8 +22,10 @@ export const FacebookVideoBlock = ({
   className
 }: BuilderFacebookVideoBlockProps) => {
   const id = useId()
+  const [readingListProps] = useReadingList()
+
   return (
-    <FacebookVideoBlockWrapper className={className}>
+    <FacebookVideoBlockWrapper className={className} {...readingListProps}>
       <FacebookVideoBlockPlayer
         width={'auto'}
         height={'auto'}
