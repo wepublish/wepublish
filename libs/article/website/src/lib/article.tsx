@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import {useEffect, useState} from 'react'
-import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderArticleProps, PeerInformation, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
 import {CommentListWrapper} from '@wepublish/comments/website'
@@ -73,6 +73,13 @@ export function Article({className, data, children, loading, error}: BuilderArti
       <ArticleInfoWrapper>
         {article && <ArticleAuthors article={article} />}
         {article && <ArticleMeta article={article} />}
+
+        {data?.article?.peer && (
+          <PeerInformation
+            {...data.article.peer}
+            originUrl={data.article.latest.canonicalUrl ?? undefined}
+          />
+        )}
       </ArticleInfoWrapper>
 
       {isClient && showPaywall && article?.paywall && (

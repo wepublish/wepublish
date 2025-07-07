@@ -125,6 +125,7 @@ type Peer {
   slug: String!
   isDisabled: Boolean
   hostURL: String!
+  information: RichText
   profile: PeerProfile
 }
 
@@ -841,6 +842,7 @@ input CreatePeerInput {
   name: String!
   slug: String!
   hostURL: String!
+  information: RichText
   token: String!
 }
 
@@ -849,6 +851,7 @@ input UpdatePeerInput {
   slug: String
   hostURL: String
   isDisabled: Boolean
+  information: RichText
   token: String
 }
 

@@ -22,6 +22,7 @@ export const SubscriptionList = ({
     elements: {Alert, Link}
   } = useWebsiteBuilder()
 
+  // @TODO: also show box when you already have an active abo
   return (
     <SubscriptionListWrapper className={className}>
       {!loading && !error && !data?.subscriptions?.length && (

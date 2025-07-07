@@ -118,7 +118,7 @@ export const getPaymentText = (
   locale: string
 ) => {
   if (!monthlyAmount) {
-    return 'Gratis'
+    return 'Kostenlos'
   }
 
   if (autoRenew && extendable) {

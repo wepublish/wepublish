@@ -186,6 +186,7 @@ const caption = {
 const body = {
   ...variablesTheme.typography.body1,
   fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+  fontWeight: 200,
   lineHeight: 1.6,
   ...responsiveProperty({
     cssProperty: 'fontSize',
@@ -656,7 +657,8 @@ export const contentTheme = createTheme(theme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
     },
     body1: {
-      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 400
     },
     body2: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
@@ -725,7 +727,8 @@ export const alternatingTeaserTheme = createTheme(contentTheme, {
           xl: 15,
           xxl: 20
         }
-      })
+      }),
+      lineHeight: 1.3
     },
     teaserPretitle: {
       ...responsiveProperty({

@@ -743,11 +743,12 @@ model Peer {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name       String
-  slug       String  @unique
-  hostURL    String
-  token      String
-  isDisabled Boolean @default(false)
+  name        String
+  slug        String  @unique
+  hostURL     String
+  token       String
+  isDisabled  Boolean @default(false)
+  information Json?
 
   articles Article[]
   images   Image[]
@@ -1418,7 +1419,7 @@ model PaywallBypass {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  token     String @unique
+  token String @unique
 
   paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
   paywallId String  @db.Uuid

@@ -1,4 +1,3 @@
-export * from './lib/article.interface'
 export * from './lib/authentication.interface'
 export * from './lib/author.interface'
 export * from './lib/banner.interface'
@@ -11,7 +10,6 @@ export * from './lib/footer.interface'
 export * from './lib/membership.interface'
 export * from './lib/navbar.interface'
 export * from './lib/page.interface'
-export * from './lib/peer.interface'
 export * from './lib/richText.interface'
 export * from './lib/user.interface'
 export * from './lib/website-builder.context'
@@ -38,3 +36,9 @@ export * from './lib/tag.components'
 
 export * from './lib/image.interface'
 export * from './lib/image.components'
+
+export * from './lib/article.interface'
+export * from './lib/article.components'
+
+export * from './lib/peer.interface'
+export * from './lib/peer.components'

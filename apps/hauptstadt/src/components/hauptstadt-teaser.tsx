@@ -1,3 +1,5 @@
+// @todo: if teaser is not on page, add border above
+
 import {css} from '@emotion/react'
 import styled from '@emotion/styled'
 import {Theme} from '@mui/material'
@@ -119,6 +121,8 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
   ${TeaserImageWrapper} {
     margin-bottom: 0;
+    display: grid;
+    align-items: center;
   }
 
   ${TeaserImage} {

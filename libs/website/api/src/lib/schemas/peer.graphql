@@ -30,6 +30,7 @@ fragment FullPeer on Peer {
   slug
   isDisabled
   hostURL
+  information
 
   profile {
     ...FullPeerProfile

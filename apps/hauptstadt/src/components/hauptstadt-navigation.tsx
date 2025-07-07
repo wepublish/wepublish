@@ -129,6 +129,10 @@ export const HauptstadtNavbar = styled(ScrollAwareNavbar)`
     font-weight: 400;
   }
 
+  ${NavPaperMainLinks} {
+    gap: 0;
+  }
+
   ${NavPaperMainLinks} span {
     font-family: ${Tiempos.style.fontFamily};
   }

@@ -1688,6 +1688,7 @@ type PeerFactoryDefineInput = {
     hostURL?: string;
     token?: string;
     isDisabled?: boolean;
+    information?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
     articles?: Prisma.ArticleCreateNestedManyWithoutPeerInput;
     images?: Prisma.ImageCreateNestedManyWithoutPeerInput;
     tags?: Prisma.TagCreateNestedManyWithoutPeerInput;

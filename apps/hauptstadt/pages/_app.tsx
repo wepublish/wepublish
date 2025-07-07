@@ -55,6 +55,7 @@ import {
   HauptstadtMemberPlanPicker
 } from '../src/components/hauptstadt-memberplan-picker'
 import {HauptstadtFooter, HauptstadtNavbar} from '../src/components/hauptstadt-navigation'
+import {HauptstadtPage} from '../src/components/hauptstadt-page'
 import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
 import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
 import {
@@ -131,6 +132,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           Navbar={HauptstadtNavbar}
           ContentWrapper={HauptstadtContentWrapper}
           AuthorChip={HauptstadtAuthorChip}
+          Page={HauptstadtPage}
           Article={HauptstadtArticle}
           ArticleAuthors={HauptstadtArticleAuthors}
           ArticleMeta={HauptstadtArticleMeta}

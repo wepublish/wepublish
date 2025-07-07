@@ -196,6 +196,7 @@ export enum CommentState {
 
 export type CreatePeerInput = {
   hostURL: Scalars['String'];
+  information?: InputMaybe<Scalars['RichText']>;
   name: Scalars['String'];
   slug: Scalars['String'];
   token: Scalars['String'];
@@ -445,6 +446,7 @@ export type MemberPlanInput = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  shortDescription?: InputMaybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
@@ -980,6 +982,7 @@ export type Peer = {
   createdAt: Scalars['DateTime'];
   hostURL: Scalars['String'];
   id: Scalars['String'];
+  information?: Maybe<Scalars['RichText']>;
   isDisabled?: Maybe<Scalars['Boolean']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
@@ -1532,6 +1535,7 @@ export type UpdateImageInput = {
 
 export type UpdatePeerInput = {
   hostURL?: InputMaybe<Scalars['String']>;
+  information?: InputMaybe<Scalars['RichText']>;
   isDisabled?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;

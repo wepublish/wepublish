@@ -2391,6 +2391,7 @@ export type Peer = {
   createdAt: Scalars['DateTime'];
   hostURL: Scalars['String'];
   id: Scalars['String'];
+  information?: Maybe<Scalars['RichText']>;
   isDisabled?: Maybe<Scalars['Boolean']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];

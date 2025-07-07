@@ -13,8 +13,6 @@ export default styled(TagPage)`
     grid-column: -1/1;
     grid-template-columns: minmax(0, 680px);
     justify-content: center;
-    padding-bottom: ${({theme}) => theme.spacing(3.5)};
-    border-bottom: 1px solid ${({theme}) => theme.palette.primary.main};
   }
 
   ${TagTitleWrapper} p {

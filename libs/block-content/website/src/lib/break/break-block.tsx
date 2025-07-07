@@ -72,7 +72,7 @@ export const BreakBlock = ({
   return (
     <BreakBlockWrapper className={className}>
       <BreakBlockSegment>
-        {!image && (
+        {!image && text && (
           <Typography variant="blockBreakTitle" component={BreakBlockHeading}>
             {text}
           </Typography>
@@ -82,7 +82,7 @@ export const BreakBlock = ({
       </BreakBlockSegment>
 
       <BreakBlockSegment>
-        {image && (
+        {image && text && (
           <Typography variant="blockBreakTitle" component={BreakBlockHeading}>
             {text}
           </Typography>

@@ -155,6 +155,7 @@ type Peer {
   slug: String!
   isDisabled: Boolean
   hostURL: String!
+  information: RichText
   profile: PeerProfile
 }
 
