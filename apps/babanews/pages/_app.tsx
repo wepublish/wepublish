@@ -2,12 +2,14 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, FooterPaperWrapper, NavbarContainer} from '@wepublish/navigation/website'
 import {
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
-  SessionProvider
+  withJwtHandler,
+  withSessionProvider
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -83,63 +85,61 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            elements={{Link: NextWepublishLink}}
-            date={{format: dateFormatter}}
-            blocks={{
-              Renderer: BabanewsBlockRenderer,
-              TeaserGrid: BabanewsTeaserGrid
-            }}
-            blockStyles={{
-              Banner: BabanewsBanner
-            }}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <Head>
-                <title key="title">{siteTitle}</title>
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          elements={{Link: NextWepublishLink}}
+          date={{format: dateFormatter}}
+          blocks={{
+            Renderer: BabanewsBlockRenderer,
+            TeaserGrid: BabanewsTeaserGrid
+          }}
+          blockStyles={{
+            Banner: BabanewsBanner
+          }}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Head>
+              <title key="title">{siteTitle}</title>
 
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                {/* Feeds */}
-                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-                {/* Sitemap */}
-                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
-                <meta name="theme-color" content="#ffffff" />
-              </Head>
+              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+              <link rel="manifest" href="/site.webmanifest" />
+              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+              <meta name="msapplication-TileColor" content="#ffffff" />
+              <meta name="theme-color" content="#ffffff" />
+            </Head>
 
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
+            <NavBar
+              categorySlugs={[['categories', 'about-us']]}
+              slug="main"
+              headerSlug="header"
+              iconSlug="icons"
+            />
 
-              <ContentSpacer>
-                <Component {...pageProps} />
-              </ContentSpacer>
+            <ContentSpacer>
+              <Component {...pageProps} />
+            </ContentSpacer>
 
-              <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
+            <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
-              <RoutedAdminBar />
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </SessionProvider>
+            <RoutedAdminBar />
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
     </AppCacheProvider>
   )
 }
@@ -148,6 +148,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(withErrorSnackbar(CustomApp))
+])(withErrorSnackbar(withSessionProvider(withJwtHandler(CustomApp))))
 
 export {ConnectedApp as default}

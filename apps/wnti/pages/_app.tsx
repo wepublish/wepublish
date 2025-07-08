@@ -11,7 +11,8 @@ import {
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
-  SessionProvider
+  withJwtHandler,
+  withSessionProvider
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -123,93 +124,91 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Navbar={TsriNavbar}
-            ArticleMeta={TsriArticleMeta}
-            PaymentAmount={PaymentAmountPicker}
-            elements={{Link: NextWepublishLink}}
-            blocks={{
-              Teaser: TsriTeaser,
-              Break: TsriBreakBlock,
-              Quote: TsriQuoteBlock,
-              RichText: TsriRichText,
-              Title: TsriTitle,
-              Subscribe: MitmachenInner
-            }}
-            blockStyles={{
-              ContextBox: TsriContextBox
-            }}
-            date={{format: dateFormatter}}
-            meta={{siteTitle}}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          Navbar={TsriNavbar}
+          ArticleMeta={TsriArticleMeta}
+          PaymentAmount={PaymentAmountPicker}
+          elements={{Link: NextWepublishLink}}
+          blocks={{
+            Teaser: TsriTeaser,
+            Break: TsriBreakBlock,
+            Quote: TsriQuoteBlock,
+            RichText: TsriRichText,
+            Title: TsriTitle,
+            Subscribe: MitmachenInner
+          }}
+          blockStyles={{
+            ContextBox: TsriContextBox
+          }}
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}
+          thirdParty={{
+            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+          }}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <Head>
+              <title key="title">{siteTitle}</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                {/* Feeds */}
-                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-                {/* Sitemap */}
-                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-                <link rel="shortcut icon" href="/favicon.ico" />
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <meta name="apple-mobile-web-app-title" content="WNTI" />
-                <link rel="manifest" href="/site.webmanifest" />
-              </Head>
+              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+              <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+              <link rel="shortcut icon" href="/favicon.ico" />
+              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+              <meta name="apple-mobile-web-app-title" content="WNTI" />
+              <link rel="manifest" href="/site.webmanifest" />
+            </Head>
 
-              <Spacer>
-                <NavbarContainer
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                />
+            <Spacer>
+              <NavbarContainer
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+              />
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+              <main>
+                <MainSpacer maxWidth="lg">
+                  <Component {...pageProps} />
+                </MainSpacer>
+              </main>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                  <LogoLink href="/" aria-label="Startseite">
-                    <LogoWrapper />
-                  </LogoLink>
-                </FooterContainer>
-              </Spacer>
+              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <LogoLink href="/" aria-label="Startseite">
+                  <LogoWrapper />
+                </LogoLink>
+              </FooterContainer>
+            </Spacer>
 
-              <RoutedAdminBar />
+            <RoutedAdminBar />
 
-              {publicRuntimeConfig.env.GTM_ID && (
-                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-              )}
+            {publicRuntimeConfig.env.GTM_ID && (
+              <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+            )}
 
-              {publicRuntimeConfig.env.SPARKLOOP_ID && (
-                <Script
-                  src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
-                  strategy="lazyOnload"
-                  data-sparkloop
-                />
-              )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </SessionProvider>
+            {publicRuntimeConfig.env.SPARKLOOP_ID && (
+              <Script
+                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                strategy="lazyOnload"
+                data-sparkloop
+              />
+            )}
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
     </AppCacheProvider>
   )
 }
@@ -218,6 +217,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(withErrorSnackbar(CustomApp))
+])(withErrorSnackbar(withSessionProvider(withJwtHandler(CustomApp))))
 
 export {ConnectedApp as default}
