@@ -11,8 +11,6 @@ export class FocalPoint {
 }
 
 @ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
 export class Image {
   @Field()
   @Directive('@external')
