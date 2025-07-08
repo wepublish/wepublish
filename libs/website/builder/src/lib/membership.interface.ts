@@ -23,6 +23,7 @@ export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   canExtend: boolean
   cancel?: () => Promise<void>
   extend?: () => Promise<void>
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
 }
 
 export type BuilderSubscriptionListProps = Pick<
@@ -34,12 +35,12 @@ export type BuilderSubscriptionListProps = Pick<
   subscribeUrl: string
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
 }
 
-export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
+export type BuilderInvoiceListItemProps = {
   className?: string
-  isSepa?: boolean
-  canPay: boolean
+  invoice: FullInvoiceFragment
   pay?: () => Promise<void>
 }
 
@@ -128,6 +129,7 @@ export type BuilderSubscribeProps<
   }>
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
+  trial?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
   transactionFee?: (monthlyAmount: number) => number
   transactionFeeText?: string
