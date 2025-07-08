@@ -286,6 +286,8 @@ const subtitle1 = {
   })
 }
 
+// @TODO: Headings padding top
+
 const theme = createTheme(variablesTheme, {
   components: {
     MuiButton: {
@@ -505,6 +507,20 @@ const theme = createTheme(variablesTheme, {
         }
       })
     },
+    blockQuote: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 800,
+      lineHeight: 1.2,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 24,
+          md: 30
+        }
+      })
+    },
     // Teaser
     teaserTitle: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
@@ -667,6 +683,9 @@ export const contentTheme = createTheme(theme, {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
+      fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    },
+    blockQuote: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
     }
   }

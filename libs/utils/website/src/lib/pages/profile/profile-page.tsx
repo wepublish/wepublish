@@ -111,6 +111,12 @@ function ProfilePage(props: ProfilePageProps) {
         <SubscriptionListWrapper>
           <H4 component={'h1'}>Aktive Abos</H4>
 
+          <SubscriptionListContainer
+            filter={subscriptions =>
+              subscriptions.filter(subscription => !subscription.deactivation)
+            }
+          />
+
           {hasActiveSubscriptions && (
             <SubscriptionListItemWrapper>
               <SubscriptionListItemContent>
@@ -120,12 +126,6 @@ function ProfilePage(props: ProfilePageProps) {
               </SubscriptionListItemContent>
             </SubscriptionListItemWrapper>
           )}
-
-          <SubscriptionListContainer
-            filter={subscriptions =>
-              subscriptions.filter(subscription => !subscription.deactivation)
-            }
-          />
 
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>

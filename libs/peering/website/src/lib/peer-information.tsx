@@ -1,12 +1,18 @@
 import styled from '@emotion/styled'
 import {BuilderPeerProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {toPlaintext} from '@wepublish/richtext'
+import {ImageWrapper} from '@wepublish/image/website'
 
 export const PeerInformationWrapper = styled('aside')`
   margin-top: var(--article-content-row-gap);
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
   justify-items: center;
+
+  ${ImageWrapper} {
+    max-height: 65px;
+    object-fit: contain;
+  }
 `
 
 export const PeerInformationLink = styled(Link)`

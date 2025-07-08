@@ -44,6 +44,7 @@ import {
 import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
 import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
 import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
+import {HauptstadtCommentList} from '../src/components/hauptstadt-comment'
 import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
 import {HauptstadtEvent} from '../src/components/hauptstadt-event'
 import {
@@ -141,6 +142,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           Paywall={HauptstadtPaywall}
           MemberPlanPicker={HauptstadtMemberPlanPicker}
           MemberPlanItem={HauptstadtMemberPlanItem}
+          CommentList={HauptstadtCommentList}
           blocks={{
             Subscribe: Mitmachen,
             Quote: HauptstadtQuoteBlock,

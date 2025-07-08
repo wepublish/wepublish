@@ -10,7 +10,7 @@ export const HauptstadtBreakBlock = styled(BreakBlock)`
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-template-columns: 1fr;
     padding: ${({theme}) => theme.spacing(2)} ${({theme}) => theme.spacing(3)};
-    gap: ${({theme}) => theme.spacing(1)};
+    gap: ${({theme}) => theme.spacing(2)};
   }
 
   ${RichTextBlockWrapper} {
