@@ -6,7 +6,11 @@ import {
 } from '@wepublish/authentication/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps} from '@wepublish/utils/website'
-import {addClientCacheToV1Props, PageDocument, UserSession} from '@wepublish/website/api'
+import {
+  addClientCacheToV1Props,
+  PageDocument,
+  SessionWithTokenWithoutUser
+} from '@wepublish/website/api'
 import {getV1ApiClient, LoginWithJwtDocument} from '@wepublish/website/api'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
@@ -16,7 +20,7 @@ import {useEffect, useRef} from 'react'
 
 import {HauptstadtContentFullWidth} from '../src/components/hauptstadt-content-wrapper'
 
-type LoginProps = {sessionToken?: UserSession}
+type LoginProps = {sessionToken?: SessionWithTokenWithoutUser}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
@@ -70,13 +74,17 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict',
-      httpOnly: true
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: true
+      }
+    )
 
     return await getSessionTokenProps(ctx)
   }

@@ -7,7 +7,7 @@ import {
   RateCommentMutationResult,
   User,
   UserPollVoteQueryResult,
-  UserSession
+  SessionWithTokenWithoutUser
 } from '@wepublish/website/api'
 import {action} from '@storybook/addon-actions'
 import {SessionTokenContext} from '@wepublish/authentication/website'
@@ -17,10 +17,10 @@ import {WebsiteProvider} from '@wepublish/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 
 const SessionProvider = memo<PropsWithChildren>(({children}) => {
-  const [token, setToken] = useState<UserSession | null>()
+  const [token, setToken] = useState<SessionWithTokenWithoutUser | null>()
   const [user, setUser] = useState<User | null>(null)
 
-  const setTokenAndGetMe = useCallback((newToken: UserSession | null) => {
+  const setTokenAndGetMe = useCallback((newToken: SessionWithTokenWithoutUser | null) => {
     setToken(newToken)
 
     if (newToken) {

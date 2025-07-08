@@ -18,7 +18,7 @@ export class PeerResolver {
   async peer(
     @Args('id', {nullable: true}) id?: string,
     @Args('slug', {type: () => GraphQLSlug, nullable: true}) slug?: string
-  ): Promise<Peer | null> {
+  ) {
     return this.peerService.getPeerByIdOrSlug(id, slug)
   }
 

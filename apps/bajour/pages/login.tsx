@@ -8,7 +8,11 @@ import {
 } from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {getSessionTokenProps} from '@wepublish/utils/website'
-import {getV1ApiClient, LoginWithJwtDocument, UserSession} from '@wepublish/website/api'
+import {
+  getV1ApiClient,
+  LoginWithJwtDocument,
+  SessionWithTokenWithoutUser
+} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
@@ -22,7 +26,7 @@ const LoginWrapper = styled(ContentWrapper)`
   justify-content: center;
 `
 
-type LoginProps = {sessionToken?: UserSession}
+type LoginProps = {sessionToken?: SessionWithTokenWithoutUser}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
@@ -99,12 +103,16 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict'
+      }
+    )
 
     return await getSessionTokenProps(ctx)
   }

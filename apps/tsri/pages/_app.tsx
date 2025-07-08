@@ -17,7 +17,7 @@ import {
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {createWithV1ApiClient} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
@@ -121,7 +121,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {

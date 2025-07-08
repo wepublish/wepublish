@@ -16,7 +16,7 @@ import {
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
-import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient, SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
@@ -130,7 +130,7 @@ const MitmachenInnerStyled = styled(MitmachenInner)`
 `
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
