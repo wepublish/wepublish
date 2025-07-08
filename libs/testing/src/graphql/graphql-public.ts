@@ -758,22 +758,18 @@ export type CustomTeaserInput = {
 
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats'
-  createdSubscriptionCount: Scalars['Float']
+  createdSubscriptionCount: Scalars['Int']
   createdSubscriptionUsers: Array<DailySubscriptionStatsUser>
-  createdUnpaidSubscriptionCount: Scalars['Float']
-  createdUnpaidSubscriptionUsers: Array<DailySubscriptionStatsUser>
   date: Scalars['String']
-  deactivatedSubscriptionCount: Scalars['Float']
+  deactivatedSubscriptionCount: Scalars['Int']
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>
-  renewedSubscriptionCount: Scalars['Float']
+  overdueSubscriptionCount: Scalars['Int']
+  overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>
+  renewedSubscriptionCount: Scalars['Int']
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>
-  replacedSubscriptionCount: Scalars['Float']
+  replacedSubscriptionCount: Scalars['Int']
   replacedSubscriptionUsers: Array<DailySubscriptionStatsUser>
-  subscriptionDailyRevenue: Scalars['Float']
-  subscriptionDurationAvg: Scalars['Float']
-  subscriptionMonthlyRevenueAvg: Scalars['Float']
-  subscriptionMonthlyRevenueSum: Scalars['Float']
-  totalActiveSubscriptionCount: Scalars['Float']
+  totalActiveSubscriptionCount: Scalars['Int']
 }
 
 export type DailySubscriptionStatsUser = {
