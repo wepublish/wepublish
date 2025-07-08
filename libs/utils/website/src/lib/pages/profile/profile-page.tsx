@@ -14,7 +14,9 @@ import {
   useHasUnpaidInvoices,
   InvoiceListContainer,
   SubscriptionListContainer,
-  InvoiceListItemWrapper
+  InvoiceListItemWrapper,
+  SubscriptionListItemContent,
+  SubscriptionListItemWrapper
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
@@ -25,7 +27,7 @@ import {
   NavigationListDocument,
   addClientCacheToV1Props
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Button, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -73,7 +75,7 @@ type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, '
 
 function ProfilePage(props: ProfilePageProps) {
   const {
-    elements: {Link, H4}
+    elements: {H4}
   } = useWebsiteBuilder()
 
   const {data: subscriptonData} = useSubscriptionsQuery({
@@ -82,6 +84,9 @@ function ProfilePage(props: ProfilePageProps) {
 
   const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
+  )
+  const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
+    subscription => !subscription.deactivation
   )
 
   const hasUnpaidInvoices = useHasUnpaidInvoices()
@@ -105,6 +110,16 @@ function ProfilePage(props: ProfilePageProps) {
 
         <SubscriptionListWrapper>
           <H4 component={'h1'}>Aktive Abos</H4>
+
+          {hasActiveSubscriptions && (
+            <SubscriptionListItemWrapper>
+              <SubscriptionListItemContent>
+                <Button LinkComponent={Link} href={'/mitmachen'}>
+                  Anderes Abo lösen.
+                </Button>
+              </SubscriptionListItemContent>
+            </SubscriptionListItemWrapper>
+          )}
 
           <SubscriptionListContainer
             filter={subscriptions =>

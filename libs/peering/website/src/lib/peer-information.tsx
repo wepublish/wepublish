@@ -30,6 +30,7 @@ export function PeerInformation({profile, information, originUrl, className}: Bu
         linkText={toPlaintext(profile.callToActionText ?? [])}
         linkURL={profile?.callToActionURL ?? profile?.websiteURL}
         image={profile.callToActionImage}
+        css={{width: '100%'}}
       />
 
       {originUrl && <PeerInformationLink href={originUrl}>Zum Originalartikel</PeerInformationLink>}
