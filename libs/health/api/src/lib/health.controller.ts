@@ -46,16 +46,14 @@ export class HealthController {
     return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
   }
 
-  @Get('livenessProbe')
-  @HealthCheck()
-  livenessProbe() {
-    return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
+  @Get('startupProbe')
+  startupProbe() {
+    return {status: 'ok'}
   }
 
-  @Get('startupProbe')
-  @HealthCheck()
-  startupProbe() {
-    return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
+  @Get('livenessProbe')
+  livenessProbe() {
+    return {status: 'ok'}
   }
 
   @Get('version')
