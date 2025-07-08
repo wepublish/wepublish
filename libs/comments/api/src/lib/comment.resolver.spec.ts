@@ -26,6 +26,8 @@ import {
 } from './comment.model'
 import {ImageDataloaderService} from '@wepublish/image/api'
 import {UserDataloaderService} from '@wepublish/user/api'
+import {ArticleDataloaderService} from '@wepublish/article/api'
+import {PageDataloaderService} from '@wepublish/page/api'
 
 const mockUser = {
   id: 'userId',
@@ -80,6 +82,8 @@ describe('UserConsentResolver', () => {
   let ratingSystemService: PartialMocked<RatingSystemService>
   let imageDataloaderService: PartialMocked<ImageDataloaderService>
   let userDataloaderService: PartialMocked<UserDataloaderService>
+  let articleDataloaderService: PartialMocked<ArticleDataloaderService>
+  let pageDataloaderService: PartialMocked<PageDataloaderService>
 
   beforeEach(async () => {
     commentService = createMock(CommentService)
@@ -88,6 +92,8 @@ describe('UserConsentResolver', () => {
     ratingSystemService = createMock(RatingSystemService)
     imageDataloaderService = createMock(ImageDataloaderService)
     userDataloaderService = createMock(UserDataloaderService)
+    articleDataloaderService = createMock(ArticleDataloaderService)
+    pageDataloaderService = createMock(PageDataloaderService)
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -129,6 +135,14 @@ describe('UserConsentResolver', () => {
         {
           provide: UserDataloaderService,
           useValue: userDataloaderService
+        },
+        {
+          provide: ArticleDataloaderService,
+          useValue: articleDataloaderService
+        },
+        {
+          provide: PageDataloaderService,
+          useValue: pageDataloaderService
         }
       ]
     }).compile()
