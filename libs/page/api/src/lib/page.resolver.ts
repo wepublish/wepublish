@@ -16,7 +16,7 @@ import {Page as PPage} from '@prisma/client'
 import {BadRequestException} from '@nestjs/common'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {CanCreatePage, CanDeletePage, CanGetPage, CanPublishPage} from '@wepublish/permissions'
-import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
+import {Permissions, PreviewMode} from '@wepublish/permissions/api'
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -49,8 +49,8 @@ export class PageResolver {
   @Query(() => PaginatedPages, {
     description: `Returns a paginated list of pages based on the filters given.`
   })
-  public pages(@Args() args: PageListArgs, @CurrentUser() user: UserSession | undefined) {
-    if (!hasPermission(CanGetPage, user?.roles ?? [])) {
+  public pages(@Args() args: PageListArgs, @PreviewMode() isPreview: boolean) {
+    if (!isPreview) {
       args.filter = {
         ...args.filter,
         draft: undefined,
@@ -111,15 +111,11 @@ export class PageResolver {
   }
 
   @ResolveField(() => PageRevision)
-  async latest(
-    @Parent() parent: PPage,
-    @CurrentUser() user: UserSession | undefined,
-    @PreviewMode() isPreview: boolean
-  ) {
+  async latest(@Parent() parent: PPage, @PreviewMode() isPreview: boolean) {
     const {id: pageId} = parent
     const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
 
-    if (!isPreview || !hasPermission(CanGetPage, user?.roles ?? [])) {
+    if (!isPreview) {
       return published
     }
 

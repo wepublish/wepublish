@@ -20,7 +20,7 @@ import {
   CanGetArticle,
   CanPublishArticle
 } from '@wepublish/permissions'
-import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
+import {Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
 import {SettingDataloaderService, SettingName} from '@wepublish/settings/api'
@@ -70,8 +70,8 @@ export class ArticleResolver {
   @Query(() => PaginatedArticles, {
     description: `Returns a paginated list of articles based on the filters given.`
   })
-  public articles(@Args() args: ArticleListArgs, @CurrentUser() user: UserSession | undefined) {
-    if (!hasPermission(CanGetArticle, user?.roles ?? [])) {
+  public articles(@Args() args: ArticleListArgs, @PreviewMode() isPreview: boolean) {
+    if (!isPreview) {
       args.filter = {
         ...args.filter,
         draft: undefined,
@@ -154,15 +154,11 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => ArticleRevision)
-  async latest(
-    @Parent() parent: PArticle,
-    @CurrentUser() user: UserSession | undefined,
-    @PreviewMode() isPreview: boolean
-  ) {
+  async latest(@Parent() parent: PArticle, @PreviewMode() isPreview: boolean) {
     const {id: articleId} = parent
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
-    if (!isPreview || !hasPermission(CanGetArticle, user?.roles ?? [])) {
+    if (!isPreview) {
       if (published) {
         return published
       }

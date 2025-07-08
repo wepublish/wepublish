@@ -49,7 +49,7 @@ export function AudienceTable({
     totalActiveSubscriptionCount,
     createdSubscriptionCount,
     renewedSubscriptionCount,
-    createdUnpaidSubscriptionCount,
+    overdueSubscriptionCount,
     replacedSubscriptionCount,
     deactivatedSubscriptionCount
   } = clientFilter
@@ -92,13 +92,6 @@ export function AudienceTable({
           </Column>
         )}
 
-        {createdUnpaidSubscriptionCount && (
-          <Column resizable width={150}>
-            <HeaderCell>{t('audience.legend.createdUnpaidSubscriptionCount')}</HeaderCell>
-            <Cell dataKey="createdUnpaidSubscriptionCount" />
-          </Column>
-        )}
-
         {renewedSubscriptionCount && (
           <Column resizable width={120}>
             <HeaderCell>{t('audience.legend.renewedSubscriptionCount')}</HeaderCell>
@@ -117,6 +110,13 @@ export function AudienceTable({
             )}
           </Cell>
         </Column>
+
+        {overdueSubscriptionCount && (
+          <Column resizable width={150}>
+            <HeaderCell>{t('audience.legend.overdueSubscriptionCount')}</HeaderCell>
+            <Cell dataKey="overdueSubscriptionCount" />
+          </Column>
+        )}
 
         {deactivatedSubscriptionCount && (
           <Column resizable width={120}>
@@ -156,7 +156,10 @@ export function AudienceTable({
             {(rowData: RowDataType<AudienceStatsComputed>) => (
               <>
                 <span>
-                  ({rowData.deactivatedSubscriptionCount * -1} / {rowData.totalToBeRenewed})
+                  (
+                  {rowData.deactivatedSubscriptionCount * -1 +
+                    rowData.overdueSubscriptionCount * -1}{' '}
+                  / {rowData.totalToBeRenewed})
                 </span>{' '}
                 <b>{rowData.cancellationRate}%</b>
               </>

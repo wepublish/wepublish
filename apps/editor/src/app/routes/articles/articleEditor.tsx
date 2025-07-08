@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment, FullImageFragment} from '@wepublish/editor/api'
+import {
+  AuthorRefFragment,
+  FullImageFragment,
+  useCreateJwtForWebsiteLoginLazyQuery
+} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
@@ -171,6 +175,10 @@ function ArticleEditor() {
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
     variables: {id: articleID!}
+  })
+
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const isNotFound = articleData && !articleData.article
@@ -473,7 +481,7 @@ function ArticleEditor() {
         </Message>
       )
     }
-  }, [isNotFound])
+  }, [isNotFound, t])
 
   const [infoData, setInfoData] = useState<InfoData>({
     charCount: 0
@@ -569,17 +577,23 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link
-                    to={articleData?.article.previewUrl ?? ''}
-                    className="actionButton"
-                    target="_blank">
-                    <IconButtonMarginTop
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('articleEditor.overview.preview')}
-                    </IconButtonMarginTop>
-                  </Link>
+                  <IconButtonMarginTop
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${articleData!.article.previewUrl}&jwt=${
+                          jwt?.createJWTForWebsiteLogin?.token
+                        }`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('articleEditor.overview.preview')}
+                  </IconButtonMarginTop>
                 </PermissionControl>
               }
             />

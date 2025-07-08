@@ -1136,6 +1136,7 @@ export type Query = {
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
+  createJWTForWebsiteLogin?: Maybe<JwtToken>;
   image?: Maybe<Image>;
   images: ImageConnection;
   invoice?: Maybe<Invoice>;
@@ -1801,6 +1802,11 @@ export type CreateSessionWithJwtMutationVariables = Exact<{
 
 
 export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
+
+export type CreateJwtForWebsiteLoginQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateJwtForWebsiteLoginQuery = { __typename?: 'Query', createJWTForWebsiteLogin?: { __typename?: 'JWTToken', token: string, expiresAt: string } | null };
 
 export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
 
@@ -3098,6 +3104,41 @@ export function useCreateSessionWithJwtMutation(baseOptions?: Apollo.MutationHoo
 export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
+export const CreateJwtForWebsiteLoginDocument = gql`
+    query CreateJWTForWebsiteLogin {
+  createJWTForWebsiteLogin {
+    token
+    expiresAt
+  }
+}
+    `;
+
+/**
+ * __useCreateJwtForWebsiteLoginQuery__
+ *
+ * To run a query within a React component, call `useCreateJwtForWebsiteLoginQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCreateJwtForWebsiteLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCreateJwtForWebsiteLoginQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateJwtForWebsiteLoginQuery(baseOptions?: Apollo.QueryHookOptions<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>(CreateJwtForWebsiteLoginDocument, options);
+      }
+export function useCreateJwtForWebsiteLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>(CreateJwtForWebsiteLoginDocument, options);
+        }
+export type CreateJwtForWebsiteLoginQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginQuery>;
+export type CreateJwtForWebsiteLoginLazyQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginLazyQuery>;
+export type CreateJwtForWebsiteLoginQueryResult = Apollo.QueryResult<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
   authors(

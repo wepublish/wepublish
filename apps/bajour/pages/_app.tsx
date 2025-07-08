@@ -8,7 +8,8 @@ import {
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
-  SessionProvider
+  withJwtHandler,
+  withSessionProvider
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -30,6 +31,7 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {BajourArticleDateWithShare} from '../src/bajour-article-date-with-share'
 import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourBanner} from '../src/components/website-builder-overwrites/banner/bajour-banner'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
@@ -44,7 +46,6 @@ import {
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
 import Mitmachen from './mitmachen'
-import {BajourArticleDateWithShare} from '../src/bajour-article-date-with-share'
 
 setDefaultOptions({
   locale: de
@@ -119,71 +120,69 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            meta={{siteTitle}}
-            Head={Head}
-            Script={Script}
-            elements={{Link: NextWepublishLink}}
-            date={{format: dateFormatter}}
-            blocks={{
-              Renderer: BajourBlockRenderer,
-              Teaser: BajourTeaser,
-              TeaserGrid: BajourTeaserGrid,
-              TeaserList: BajourTeaserList,
-              Break: BajourBreakBlock,
-              Quote: BajourQuoteBlock,
-              Subscribe: Mitmachen
-            }}
-            blockStyles={{
-              ContextBox: BajourContextBox,
-              TeaserSlider: BajourTeaserSlider
-            }}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}
-            ArticleDate={BajourArticleDateWithShare}
-            Banner={BajourBanner}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          meta={{siteTitle}}
+          Head={Head}
+          Script={Script}
+          elements={{Link: NextWepublishLink}}
+          date={{format: dateFormatter}}
+          blocks={{
+            Renderer: BajourBlockRenderer,
+            Teaser: BajourTeaser,
+            TeaserGrid: BajourTeaserGrid,
+            TeaserList: BajourTeaserList,
+            Break: BajourBreakBlock,
+            Quote: BajourQuoteBlock,
+            Subscribe: Mitmachen
+          }}
+          blockStyles={{
+            ContextBox: BajourContextBox,
+            TeaserSlider: BajourTeaserSlider
+          }}
+          thirdParty={{
+            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+          }}
+          ArticleDate={BajourArticleDateWithShare}
+          Banner={BajourBanner}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-              <MainGrid>
-                <ThemeProvider theme={navbarTheme}>
-                  <NavBar
-                    slug="main"
-                    categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                    headerSlug="header"
-                    iconSlug="icons"
-                  />
-                </ThemeProvider>
-
-                <Component {...pageProps} />
-
-                <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
-              </MainGrid>
-
-              <RoutedAdminBar />
-
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
-
-              {popup && (
-                <Script
-                  src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
-                  strategy="afterInteractive"
+            <MainGrid>
+              <ThemeProvider theme={navbarTheme}>
+                <NavBar
+                  slug="main"
+                  categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+                  headerSlug="header"
+                  iconSlug="icons"
                 />
-              )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </SessionProvider>
+              </ThemeProvider>
+
+              <Component {...pageProps} />
+
+              <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
+            </MainGrid>
+
+            <RoutedAdminBar />
+
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
+
+            {popup && (
+              <Script
+                src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
+                strategy="afterInteractive"
+              />
+            )}
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
     </AppCacheProvider>
   )
 }
 
 const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
-const ConnectedApp = withApollo(CustomApp)
+const ConnectedApp = withApollo(withSessionProvider(withJwtHandler(CustomApp)))
 
 export {ConnectedApp as default}

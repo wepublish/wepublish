@@ -17,7 +17,7 @@ import {AudienceClientFilter} from './useAudienceFilter'
 
 export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
   createdSubscriptionCount: 'var(--rs-green-900)',
-  createdUnpaidSubscriptionCount: 'var(--rs-violet-900)',
+  overdueSubscriptionCount: 'var(--rs-violet-900)',
   deactivatedSubscriptionCount: 'var(--rs-orange-900)',
   renewedSubscriptionCount: 'var(--rs-blue-900)',
   replacedSubscriptionCount: 'var(--rs-cyan-900)',
@@ -40,7 +40,7 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
     totalActiveSubscriptionCount,
     createdSubscriptionCount,
     renewedSubscriptionCount,
-    createdUnpaidSubscriptionCount,
+    overdueSubscriptionCount,
     replacedSubscriptionCount,
     deactivatedSubscriptionCount
   } = clientFilter
@@ -54,7 +54,7 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
         {loading ? (
           <Placeholder.Graph active />
         ) : (
-          <ComposedChart data={audienceStats} reverseStackOrder>
+          <ComposedChart data={audienceStats}>
             <XAxis
               dataKey={'date'}
               tick={({x, y, payload}) => (
@@ -88,26 +88,11 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
                 fill={chartColors.totalActiveSubscriptionCount}
               />
             )}
-
-            {createdSubscriptionCount && (
-              <Bar
-                stackId="created"
-                dataKey={'createdSubscriptionCount'}
-                fill={chartColors.createdSubscriptionCount}
-              />
-            )}
             {renewedSubscriptionCount && (
               <Bar
                 stackId="created"
                 dataKey={'renewedSubscriptionCount'}
                 fill={chartColors.renewedSubscriptionCount}
-              />
-            )}
-            {createdUnpaidSubscriptionCount && (
-              <Bar
-                stackId="created"
-                dataKey={'createdUnpaidSubscriptionCount'}
-                fill={chartColors.createdUnpaidSubscriptionCount}
               />
             )}
             {replacedSubscriptionCount && (
@@ -117,9 +102,23 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
                 fill={chartColors.replacedSubscriptionCount}
               />
             )}
-            {deactivatedSubscriptionCount && (
+            {createdSubscriptionCount && (
               <Bar
                 stackId="created"
+                dataKey={'createdSubscriptionCount'}
+                fill={chartColors.createdSubscriptionCount}
+              />
+            )}
+            {overdueSubscriptionCount && (
+              <Bar
+                stackId="deactivated"
+                dataKey={'overdueSubscriptionCount'}
+                fill={chartColors.overdueSubscriptionCount}
+              />
+            )}
+            {deactivatedSubscriptionCount && (
+              <Bar
+                stackId="deactivated"
                 dataKey={'deactivatedSubscriptionCount'}
                 fill={chartColors.deactivatedSubscriptionCount}
               />
