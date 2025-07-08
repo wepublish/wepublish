@@ -27,8 +27,6 @@ export type Scalars = {
   Upload: File;
   /** A valid vote value */
   VoteValue: number;
-  _Any: any;
-  _FieldSet: any;
 };
 
 export type Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction;
@@ -2536,7 +2534,6 @@ export type PublicSubscription = HasPaymentMethod & HasUser & {
 
 export type Query = {
   __typename?: 'Query';
-  _service: _Service;
   /** Returns latest actions */
   actions: Array<Action>;
   /**
@@ -2588,8 +2585,6 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
-  /** Dummy */
-  dummy?: Maybe<Scalars['String']>;
   /** Returns a event by id. */
   event: Event;
   /**
@@ -3626,11 +3621,6 @@ export type YouTubeVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   videoID?: InputMaybe<Scalars['String']>;
-};
-
-export type _Service = {
-  __typename?: '_Service';
-  sdl?: Maybe<Scalars['String']>;
 };
 
 export type OverriddenRating = {
