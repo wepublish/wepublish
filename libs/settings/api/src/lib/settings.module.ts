@@ -16,6 +16,6 @@ import {SettingDataloaderService} from './setting-dataloader.service'
     SettingDataloaderService,
     GraphQLSettingValueType
   ],
-  exports: [SettingsGuard, SettingDataloaderService]
+  exports: [SettingsGuard, SettingDataloaderService, SettingsService]
 })
 export class SettingModule {}

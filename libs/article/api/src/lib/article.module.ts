@@ -16,6 +16,7 @@ import {
 } from './has-article/has-article.resolver'
 import {BlockContentModule} from '@wepublish/block-content/api'
 import {SettingModule} from '@wepublish/settings/api'
+import {TagModule} from '@wepublish/tag/api'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import {SettingModule} from '@wepublish/settings/api'
     ImageModule,
     AuthorModule,
     SettingModule,
+    TagModule,
     forwardRef(() => BlockContentModule)
   ],
   providers: [

@@ -14,7 +14,6 @@ import {InvoiceSort} from '../db/invoice'
 import {InvoiceWithItems} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
-import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLSupportedCurrency} from './memberPlan'
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
@@ -50,39 +49,6 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
     canceledAt: {type: GraphQLDateTime},
     currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
-    total: {
-      type: new GraphQLNonNull(GraphQLInt),
-      resolve: createProxyingResolver(({items}) => {
-        return (items || []).reduce((previousValue, currentValue) => {
-          return previousValue + currentValue.quantity * currentValue.amount
-        }, 0)
-      })
-    }
-  }
-})
-
-export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
-  name: 'Invoice',
-  fields: {
-    id: {type: new GraphQLNonNull(GraphQLString)},
-
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-
-    mail: {type: new GraphQLNonNull(GraphQLString)},
-
-    description: {type: GraphQLString},
-    paidAt: {type: GraphQLDateTime},
-    dueAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    canceledAt: {type: GraphQLDateTime},
-    items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
-    subscriptionID: {type: new GraphQLNonNull(GraphQLString)},
-    subscription: {
-      type: GraphQLPublicSubscription,
-      resolve({subscriptionID}, args, {loaders}) {
-        return subscriptionID ? loaders.subscriptionsById.load(subscriptionID) : null
-      }
-    },
     total: {
       type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
