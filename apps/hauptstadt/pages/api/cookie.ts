@@ -1,5 +1,5 @@
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextApiRequest, NextApiResponse} from 'next'
 
@@ -7,7 +7,7 @@ async function writeCookie(req: NextApiRequest, res: NextApiResponse) {
   await setCookie(AuthTokenStorageKey, JSON.stringify(req.body), {
     req,
     res,
-    expires: new Date((req.body as UserSession).expiresAt),
+    expires: new Date((req.body as SessionWithTokenWithoutUser).expiresAt),
     sameSite: 'strict',
     httpOnly: true
   })
@@ -17,7 +17,7 @@ async function writeCookie(req: NextApiRequest, res: NextApiResponse) {
 
 async function readCookie(req: NextApiRequest, res: NextApiResponse) {
   const token = await getCookie(AuthTokenStorageKey, {req})
-  const sessionToken = token ? (JSON.parse(token.toString()) as UserSession) : null
+  const sessionToken = token ? (JSON.parse(token.toString()) as SessionWithTokenWithoutUser) : null
 
   return res.send({sessionToken})
 }

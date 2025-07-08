@@ -11,6 +11,7 @@ import {
 } from '@wepublish/authentication/website'
 import {
   Currency,
+  PaymentMethod,
   PaymentPeriodicity,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
@@ -266,7 +267,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const allPaymentMethods = useMemo(
     () =>
-      selectedMemberPlan?.availablePaymentMethods?.flatMap(({paymentMethods}) => paymentMethods),
+      (selectedMemberPlan?.availablePaymentMethods?.flatMap(
+        ({paymentMethods}) => paymentMethods
+      ) as PaymentMethod[]) ?? [],
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
@@ -371,7 +374,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (
       !selectedAvailablePaymentMethod?.paymentPeriodicities.includes(selectedPaymentPeriodicity)
     ) {
-      resetField('paymentPeriodicity')
+      resetField('paymentPeriodicity', {
+        defaultValue: selectedAvailablePaymentMethod?.paymentPeriodicities?.[0] as undefined // wrong undefined typing by react-hook: https://react-hook-form.com/docs/useform/resetfield
+      })
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
@@ -476,7 +481,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         {allPaymentMethods && allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
-
         <SubscribePayment>
           <Controller
             name={'paymentMethodId'}

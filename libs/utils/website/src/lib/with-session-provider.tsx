@@ -1,8 +1,10 @@
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {ComponentType, memo} from 'react'
 import {SessionProvider} from './session.provider'
 
-export const withSessionProvider = <P extends {pageProps: {sessionToken?: UserSession}}>(
+export const withSessionProvider = <
+  P extends {pageProps: {sessionToken?: SessionWithTokenWithoutUser}}
+>(
   ControlledComponent: ComponentType<P>,
   Provider: typeof SessionProvider = SessionProvider
 ) =>

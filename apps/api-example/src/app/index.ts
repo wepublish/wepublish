@@ -1,8 +1,8 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  ChallengeProvider,
   CfTurnstile,
+  ChallengeProvider,
   WepublishServer
 } from '@wepublish/api'
 import pinoMultiStream from 'pino-multi-stream'
@@ -20,7 +20,6 @@ import {PaymentProvider} from '@wepublish/payment/api'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
-  privateExpressApp?: Application
   publicExpressApp?: Application
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
@@ -29,7 +28,6 @@ type RunServerProps = {
 }
 
 export async function runServer({
-  privateExpressApp,
   publicExpressApp,
   mediaAdapter,
   mailProvider,
@@ -152,7 +150,6 @@ export async function runServer({
       logger,
       challenge
     },
-    privateExpressApp,
     publicExpressApp
   )
 

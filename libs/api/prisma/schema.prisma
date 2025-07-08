@@ -3,11 +3,6 @@ generator client {
   previewFeatures = ["fullTextSearch"]
 }
 
-generator fabbrica {
-  provider = "prisma-fabbrica"
-  output   = "../../testing/src/__generated__/fabbrica"
-}
-
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -876,30 +871,6 @@ model UserAddress {
   @@map("users.addresses")
 }
 
-model UserOAuth2Account {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-
-  type              String
-  provider          String
-  providerAccountId String
-  refreshToken      String?
-  accessToken       String
-  expiresAt         Int
-  tokenType         String
-  scope             String
-  idToken           String
-  oauthTokenSecret  String?
-  oauthToken        String?
-  sessionState      String?
-
-  userId String?
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("users.oauth2-accounts")
-}
-
 model PaymentProviderCustomer {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -933,7 +904,6 @@ model User {
 
   address                  UserAddress?
   properties               MetadataProperty[]
-  oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
   comments         Comment[]

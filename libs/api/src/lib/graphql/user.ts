@@ -18,7 +18,6 @@ import {
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
-import {GraphQLPublicPayment} from './payment'
 import {Subscription, User} from '@prisma/client'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLSupportedCurrency} from './memberPlan'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
@@ -46,15 +45,6 @@ export const GraphQLPaymentProviderCustomer = new GraphQLObjectType({
   fields: {
     paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
     customerID: {type: new GraphQLNonNull(GraphQLString)}
-  }
-})
-
-export const GraphQLOAuth2Account = new GraphQLObjectType({
-  name: 'OAuth2Account',
-  fields: {
-    type: {type: new GraphQLNonNull(GraphQLString)},
-    provider: {type: new GraphQLNonNull(GraphQLString)},
-    scope: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -150,9 +140,6 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     paymentProviderCustomers: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer)))
     },
-    oauth2Accounts: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLOAuth2Account)))
-    },
     subscriptions: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLUserSubscription))),
       resolve: createProxyingResolver(({id: userId}, _, {prisma}) => {
@@ -200,12 +187,6 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer))),
       resolve: createProxyingResolver(({id, paymentProviderCustomers}, _, {session}) =>
         id && isMeBySession(id, session) ? paymentProviderCustomers : []
-      )
-    },
-    oauth2Accounts: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLOAuth2Account))),
-      resolve: createProxyingResolver(({id, oauth2Accounts}, _, {session}) =>
-        id && isMeBySession(id, session) ? oauth2Accounts : []
       )
     },
     image: {
@@ -316,40 +297,6 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
       type: GraphQLDateTime
     },
     uploadImageInput: {type: GraphQLUploadImageInput}
-  }
-})
-
-export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
-  name: 'PaymentProviderCustomerInput',
-  fields: {
-    paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
-    customerID: {type: new GraphQLNonNull(GraphQLString)}
-  }
-})
-
-export const GraphQLUserSession = new GraphQLObjectType({
-  name: 'UserSession',
-  fields: {
-    token: {type: new GraphQLNonNull(GraphQLString)},
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    expiresAt: {type: new GraphQLNonNull(GraphQLDateTime)}
-  }
-})
-
-export const GraphQLMemberRegistration = new GraphQLObjectType({
-  name: 'Registration',
-  fields: {
-    user: {type: new GraphQLNonNull(GraphQLPublicUser)},
-    session: {type: new GraphQLNonNull(GraphQLUserSession)}
-  }
-})
-
-export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
-  name: 'RegistrationAndPayment',
-  fields: {
-    payment: {type: new GraphQLNonNull(GraphQLPublicPayment)},
-    user: {type: new GraphQLNonNull(GraphQLPublicUser)},
-    session: {type: new GraphQLNonNull(GraphQLUserSession)}
   }
 })
 

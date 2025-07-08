@@ -1,12 +1,12 @@
 import {
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLObjectType,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLInputObjectType,
+  GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {Author, AuthorSort} from '../db/author'
@@ -48,6 +48,7 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLink))},
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
+    imageID: {type: GraphQLString},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
@@ -73,6 +74,7 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     hideOnArticle: {type: GraphQLBoolean},
     hideOnTeaser: {type: GraphQLBoolean},
     hideOnTeam: {type: GraphQLBoolean},
+    peerId: {type: GraphQLString},
     peer: {
       type: GraphQLPeer,
       resolve: createProxyingResolver(({peerId}, args, {loaders}) => {
@@ -132,16 +134,3 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     hideOnTeam: {type: GraphQLBoolean}
   }
 })
-
-export const GraphQLAuthorResolver = {
-  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
-    const {id} = reference
-    const author = await loaders.authorsByID.load(id)
-
-    if (!author) {
-      throw new Error('Author not found')
-    }
-
-    return author
-  }
-}

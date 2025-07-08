@@ -3,7 +3,6 @@ import {GraphQLSchema} from 'graphql'
 import {GraphQLQuery} from './query.private'
 import {GraphQLPublicQuery} from './query.public'
 import {GraphQLAdminMutation} from './mutation.private'
-import {GraphQLPublicMutation} from './mutation.public'
 
 export const GraphQLWepublishSchema = new GraphQLSchema({
   query: GraphQLQuery,
@@ -11,6 +10,6 @@ export const GraphQLWepublishSchema = new GraphQLSchema({
 })
 
 export const GraphQLWepublishPublicSchema = new GraphQLSchema({
-  query: GraphQLPublicQuery,
-  mutation: GraphQLPublicMutation
+  query: GraphQLPublicQuery
+  // mutation: GraphQLPublicMutation
 })

@@ -128,7 +128,8 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
     psp: [14],
     offSessionPayments: true,
     webhookApiKey: 'secret',
-    pm: ['foo']
+    pm: ['foo'],
+    prisma
   })
 
   const testServerPublic = new ApolloServer({
@@ -146,7 +147,6 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
           defaultReplyToAddress: 'reply-to@fake.org'
         },
         urlAdapter: new URLAdapter(''),
-        oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
         challenge
       })
@@ -167,7 +167,6 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
           defaultReplyToAddress: 'reply-to@fake.org'
         },
         urlAdapter: new URLAdapter(''),
-        oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
         challenge
       })

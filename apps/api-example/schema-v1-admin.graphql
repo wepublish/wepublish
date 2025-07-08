@@ -17,7 +17,7 @@ type Query {
   permissions: [Permission!]
   tokens: [Token!]!
   author(id: String, slug: Slug): Author
-  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = modifiedAt, order: SortOrder = Descending): AuthorConnection!
+  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!
   image(id: String): Image
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
@@ -41,7 +41,9 @@ type Query {
 
 type PeerProfile {
   name: String!
+  logoID: String
   logo: Image
+  squareLogoId: String
   squareLogo: Image
   themeColor: Color!
   themeFontColor: Color!
@@ -50,6 +52,7 @@ type PeerProfile {
   callToActionText: RichText!
   callToActionURL: String!
   callToActionImageURL: String
+  callToActionImageID: String
   callToActionImage: Image
 }
 
@@ -146,7 +149,6 @@ type User {
   properties: [Properties!]!
   roles: [UserRole!]!
   paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
   subscriptions: [UserSubscription!]!
 }
 
@@ -182,12 +184,6 @@ type Permission {
 type PaymentProviderCustomer {
   paymentProviderID: String!
   customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
 }
 
 type UserSubscription {
@@ -448,11 +444,13 @@ type Author {
   links: [AuthorLink!]
   bio: RichText
   jobTitle: String
+  imageID: String
   image: Image
   tags: [Tag!]!
   hideOnArticle: Boolean
   hideOnTeaser: Boolean
   hideOnTeam: Boolean
+  peerId: String
   peer: Peer
 }
 
@@ -491,8 +489,8 @@ input AuthorFilter {
 }
 
 enum AuthorSort {
-  createdAt
-  modifiedAt
+  CreatedAt
+  ModifiedAt
   NAME
 }
 

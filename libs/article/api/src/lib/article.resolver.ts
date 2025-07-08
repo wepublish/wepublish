@@ -8,7 +8,7 @@ import {
   PaginatedArticles,
   UpdateArticleInput
 } from './article.model'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagService} from '@wepublish/tag/api'
 import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
@@ -17,8 +17,8 @@ import {BadRequestException} from '@nestjs/common'
 import {
   CanCreateArticle,
   CanDeleteArticle,
-  CanPublishArticle,
-  CanGetArticle
+  CanGetArticle,
+  CanPublishArticle
 } from '@wepublish/permissions'
 import {Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
@@ -33,7 +33,8 @@ export class ArticleResolver {
     private articleService: ArticleService,
     private trackingPixelService: TrackingPixelService,
     private urlAdapter: URLAdapter,
-    private settings: SettingDataloaderService
+    private settings: SettingDataloaderService,
+    private tagService: TagService
   ) {}
 
   @Public()
@@ -210,9 +211,7 @@ export class ArticleResolver {
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PArticle) {
     const {id: articleId} = parent
-    const tagIds = await this.articleService.getTagIds(articleId)
-
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    return this.tagService.getTagsByArticleId(articleId)
   }
 
   @ResolveField(() => String, {nullable: true})

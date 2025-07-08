@@ -7,7 +7,7 @@ import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {
@@ -163,13 +163,17 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict',
-      httpOnly: true // @TODO: Config
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: true // @TODO: Config
+      }
+    )
   }
 
   const sessionProps = await getSessionTokenProps(ctx)

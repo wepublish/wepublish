@@ -6,7 +6,7 @@ import {Paywall as PPaywall} from '@prisma/client'
 import {CanCreatePaywall, CanDeletePaywall, CanUpdatePaywall} from '@wepublish/permissions'
 import {Permissions} from '@wepublish/permissions/api'
 import {Public} from '@wepublish/authentication/api'
-import {MemberPlan} from '@wepublish/membership/api'
+import {MemberPlan} from '@wepublish/member-plan/api'
 
 @Resolver(() => Paywall)
 export class PaywallResolver {

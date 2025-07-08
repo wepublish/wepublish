@@ -29,7 +29,6 @@ const SessionProvider = memo<PropsWithChildren>(({children}) => {
         firstName: 'Foo',
         name: 'Bar',
         email: 'foobar@example.com',
-        oauth2Accounts: [],
         paymentProviderCustomers: [],
         properties: [],
         permissions: []

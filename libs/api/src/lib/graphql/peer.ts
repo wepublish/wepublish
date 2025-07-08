@@ -1,9 +1,9 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
+  GraphQLBoolean,
   GraphQLInputObjectType,
-  GraphQLBoolean
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {PeerProfile} from '../db/peer'
@@ -35,6 +35,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
   fields: {
     name: {type: new GraphQLNonNull(GraphQLString)},
 
+    logoID: {type: GraphQLString},
     logo: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}) => {
@@ -42,6 +43,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
       })
     },
 
+    squareLogoId: {type: GraphQLString},
     squareLogo: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}) => {
@@ -61,6 +63,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
     callToActionURL: {type: new GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLString},
     callToActionImage: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}) => {
@@ -120,16 +123,3 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     }
   }
 })
-
-export const GraphQLPeerResolver = {
-  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
-    const {id} = reference
-    const peer = await loaders.peer.load(id)
-
-    if (!peer) {
-      throw new Error('Peer not found')
-    }
-
-    return peer
-  }
-}

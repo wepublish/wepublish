@@ -247,7 +247,6 @@
     "@nestjs/terminus": "^10.2.3",
     "@next/third-parties": "^15.1.5",
     "@prisma/client": "^5.0.0",
-    "@quramy/prisma-fabbrica": "^1.0.2",
     "@sentry/nestjs": "^8.34.0",
     "@sentry/nextjs": "^8.34.0",
     "@sentry/profiling-node": "^8.34.0",

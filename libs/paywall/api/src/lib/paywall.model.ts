@@ -1,5 +1,5 @@
 import {ArgsType, Field, ObjectType, OmitType, PartialType, InputType} from '@nestjs/graphql'
-import {MemberPlan} from '@wepublish/membership/api'
+import {MemberPlan} from '@wepublish/member-plan/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Descendant} from 'slate'
 

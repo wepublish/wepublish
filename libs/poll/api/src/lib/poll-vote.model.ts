@@ -1,12 +1,4 @@
-import {
-  ArgsType,
-  Field,
-  InputType,
-  Int,
-  ObjectType,
-  registerEnumType,
-  Directive
-} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
 
 @ObjectType()
@@ -19,7 +11,6 @@ export class PollAnswerInVote {
 }
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class PollVote {
   @Field()
   id!: string
