@@ -8,6 +8,7 @@ import {Controller, Get, NotFoundException} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import * as process from 'process'
 import {promises as fs} from 'fs'
+import {Public} from '@wepublish/authentication/api'
 
 @Controller('health')
 export class HealthController {
@@ -29,6 +30,7 @@ export class HealthController {
     }
   }
 
+  @Public()
   @Get()
   @HealthCheck()
   readiness() {
@@ -40,22 +42,26 @@ export class HealthController {
     ])
   }
 
+  @Public()
   @Get('readinessProbe')
   @HealthCheck()
   readinessProbe() {
     return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
   }
 
+  @Public()
   @Get('startupProbe')
   startupProbe() {
     return {status: 'ok'}
   }
 
+  @Public()
   @Get('livenessProbe')
   livenessProbe() {
     return {status: 'ok'}
   }
 
+  @Public()
   @Get('version')
   version() {
     if (!this.versionString) {
