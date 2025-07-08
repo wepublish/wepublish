@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Alert, AlertTitle, css, IconButton, LinearProgress, Theme, Tooltip} from '@mui/material'
+import {css, IconButton, LinearProgress, Theme, Tooltip} from '@mui/material'
 import {formatCurrency} from '@wepublish/membership/website'
 import {
   BlockContent,
@@ -63,7 +63,7 @@ const noWrap = css`
   text-wrap: nowrap;
 `
 
-export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps) => {
+export const CrowdfundingBlock = ({crowdfunding, className}: BuilderCrowdfundingBlockProps) => {
   const {
     elements: {H5}
   } = useWebsiteBuilder()
@@ -75,15 +75,11 @@ export const CrowdfundingBlock = ({crowdfunding}: BuilderCrowdfundingBlockProps)
   const goalDescription = activeCrowdfunding?.description
 
   if (!crowdfunding) {
-    return (
-      <Alert severity="error">
-        <AlertTitle>Crowdfunding nicht verfügbar.</AlertTitle>
-      </Alert>
-    )
+    return null
   }
 
   return (
-    <CrowdfundingContainer>
+    <CrowdfundingContainer className={className}>
       <CfInner>
         <H5 component="div" css={titleStyles}>
           Bereits <strong css={noWrap}>{formatCurrency(revenue / 100, Currency.Chf)}</strong>{' '}

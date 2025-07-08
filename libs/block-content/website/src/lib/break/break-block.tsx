@@ -2,6 +2,7 @@ import {Theme, css, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
 import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isBreakBlock = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
   block.__typename === 'BreakBlock'
@@ -100,11 +101,12 @@ export const BreakBlock = ({
     elements: {H2, H4, Image, Button, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   const theme = useTheme()
 
   return (
-    <BreakBlockWrapper className={className}>
+    <BreakBlockWrapper className={className} {...readingListProps}>
       <BreakBlockSegment>
         {!image && <H2 component={HeadingWithoutImage}>{text}</H2>}
         {image && <Image image={image} css={imageStyles(theme)} />}

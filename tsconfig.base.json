@@ -23,6 +23,8 @@
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
+      "@wepublish/reading-list/api": ["libs/reading-list/api/src/index.ts"],
+      "@wepublish/reading-list/website": ["libs/reading-list/website/src/index.ts"],
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
       "@wepublish/author/api": ["libs/author/api/src/index.ts"],

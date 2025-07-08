@@ -1522,6 +1522,8 @@ export type Mutation = {
   registerMemberAndReceivePayment: RegistrationAndPayment;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
+  /** Saves the reading progress of the current user for a given article */
+  saveReadingListProgress: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
@@ -1903,6 +1905,13 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationSaveReadingListProgressArgs = {
+  articleId: Scalars['String'];
+  blockIndex: Scalars['Int'];
+  completed: Scalars['Boolean'];
 };
 
 

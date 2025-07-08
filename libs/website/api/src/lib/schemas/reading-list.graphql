@@ -1,0 +1,3 @@
+mutation SaveReadingProgress($completed: Boolean!, $blockIndex: Int!, $articleId: String!) {
+  saveReadingListProgress(completed: $completed, blockIndex: $blockIndex, articleId: $articleId)
+}

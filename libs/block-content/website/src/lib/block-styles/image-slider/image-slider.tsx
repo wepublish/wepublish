@@ -16,11 +16,13 @@ import {
   SliderBallFill
 } from '../teaser-slider/teaser-slider'
 import {BlockContent, ImageGalleryBlock} from '@wepublish/website/api'
+import {useReadingList} from '@wepublish/reading-list/website'
 
-export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => {
+export const ImageSlider = ({images, className}: BuilderBlockStyleProps['ImageSlider']) => {
   const {
     blocks: {Image}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
@@ -44,7 +46,7 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
 
   return (
     !!images.length && (
-      <SliderWrapper>
+      <SliderWrapper className={className} {...readingListProps}>
         <SliderInnerContainer>
           <SlidesContainer ref={ref} className="keen-slider">
             {images.map((image, index) => (

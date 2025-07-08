@@ -66,7 +66,6 @@ export const FocusTeaser = ({
     blocks: {Teaser},
     elements: {Link, H3}
   } = useWebsiteBuilder()
-
   const [focusedTeaser, ...restTeasers] = teasers
 
   const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>

@@ -2,6 +2,7 @@ import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
+import {useReadingList} from '@wepublish/reading-list/website'
 
 export const isQuoteBlock = (block: Pick<BlockContent, '__typename'>): block is QuoteBlockType =>
   block.__typename === 'QuoteBlock'
@@ -48,9 +49,10 @@ export const QuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockP
   const {
     elements: {H4, Image, Paragraph}
   } = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   return (
-    <QuoteBlockWrapper className={className} withImage={!!image}>
+    <QuoteBlockWrapper className={className} withImage={!!image} {...readingListProps}>
       {image && <Image image={image} square css={imageStyles} />}
 
       <QuoteContent>

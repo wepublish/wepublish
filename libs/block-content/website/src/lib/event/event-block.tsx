@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {truncateFirstParagraph} from '@wepublish/richtext'
 import {BlockContent, EventBlock as EventBlockType} from '@wepublish/website/api'
 import {BuilderEventBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -17,9 +18,10 @@ const truncate = truncateFirstParagraph(255)
 
 export const EventBlock = ({events, className}: BuilderEventBlockProps) => {
   const {EventListItem} = useWebsiteBuilder()
+  const [readingListProps] = useReadingList()
 
   return (
-    <EventBlockWrapper className={className}>
+    <EventBlockWrapper className={className} {...readingListProps}>
       {events.map(event => (
         <EventListItem key={event.id} {...event} description={truncate(event.description)} />
       ))}

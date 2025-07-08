@@ -63,6 +63,7 @@ import type { Banner } from "@prisma/client";
 import type { BannerAction } from "@prisma/client";
 import type { Crowdfunding } from "@prisma/client";
 import type { CrowdfundingGoal } from "@prisma/client";
+import type { ReadingList } from "@prisma/client";
 import type { TrackingPixelProviderType } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
@@ -314,6 +315,7 @@ type ArticleFactoryDefineInput = {
     tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
     revisions?: Prisma.ArticleRevisionCreateNestedManyWithoutArticleInput;
     trackingPixels?: Prisma.ArticleTrackingPixelsCreateNestedManyWithoutArticleInput;
+    readers?: Prisma.ReadingListCreateNestedManyWithoutArticleInput;
 };
 type ArticleFactoryDefineOptions = {
     defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>;
@@ -2121,6 +2123,7 @@ type UserFactoryDefineInput = {
     consents?: Prisma.UserConsentCreateNestedManyWithoutUserInput;
     articleRevisions?: Prisma.ArticleRevisionCreateNestedManyWithoutUserInput;
     pageRevisions?: Prisma.PageRevisionCreateNestedManyWithoutUserInput;
+    readArticles?: Prisma.ReadingListCreateNestedManyWithoutUserInput;
 };
 type UserFactoryDefineOptions = {
     defaultData?: Resolver<UserFactoryDefineInput, BuildDataOptions>;
@@ -3089,3 +3092,48 @@ export interface CrowdfundingGoalFactoryInterface<TOptions extends CrowdfundingG
  * @returns factory {@link CrowdfundingGoalFactoryInterface}
  */
 export declare function defineCrowdfundingGoalFactory<TOptions extends CrowdfundingGoalFactoryDefineOptions>(options: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;
+type ReadingListarticleFactory = {
+    _factoryFor: "Article";
+    build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutReadersInput["create"]>;
+};
+type ReadingListuserFactory = {
+    _factoryFor: "User";
+    build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutReadArticlesInput["create"]>;
+};
+type ReadingListFactoryDefineInput = {
+    createdAt?: Date;
+    modifiedAt?: Date;
+    blockIndex?: number;
+    completed?: boolean;
+    article: ReadingListarticleFactory | Prisma.ArticleCreateNestedOneWithoutReadersInput;
+    user: ReadingListuserFactory | Prisma.UserCreateNestedOneWithoutReadArticlesInput;
+};
+type ReadingListFactoryDefineOptions = {
+    defaultData: Resolver<ReadingListFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<ReadingListFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type ReadingListTraitKeys<TOptions extends ReadingListFactoryDefineOptions> = keyof TOptions["traits"];
+export interface ReadingListFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "ReadingList";
+    build(inputData?: Partial<Prisma.ReadingListCreateInput>): PromiseLike<Prisma.ReadingListCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.ReadingListCreateInput>): PromiseLike<Prisma.ReadingListCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.ReadingListCreateInput>[]): PromiseLike<Prisma.ReadingListCreateInput[]>;
+    pickForConnect(inputData: ReadingList): Pick<ReadingList, "articleId" | "userId">;
+    create(inputData?: Partial<Prisma.ReadingListCreateInput>): PromiseLike<ReadingList>;
+    createList(inputData: number | readonly Partial<Prisma.ReadingListCreateInput>[]): PromiseLike<ReadingList[]>;
+    createForConnect(inputData?: Partial<Prisma.ReadingListCreateInput>): PromiseLike<Pick<ReadingList, "articleId" | "userId">>;
+}
+export interface ReadingListFactoryInterface<TOptions extends ReadingListFactoryDefineOptions = ReadingListFactoryDefineOptions> extends ReadingListFactoryInterfaceWithoutTraits {
+    use(name: ReadingListTraitKeys<TOptions>, ...names: readonly ReadingListTraitKeys<TOptions>[]): ReadingListFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link ReadingList} model.
+ *
+ * @param options
+ * @returns factory {@link ReadingListFactoryInterface}
+ */
+export declare function defineReadingListFactory<TOptions extends ReadingListFactoryDefineOptions>(options: TOptions): ReadingListFactoryInterface<TOptions>;

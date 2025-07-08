@@ -3,6 +3,7 @@ import {BannerDocumentType, useArticleQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BannerContainer} from '@wepublish/banner/website'
 import {PropsWithChildren} from 'react'
+import {ReadingListContainer} from '@wepublish/reading-list/website'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
@@ -20,6 +21,7 @@ export function ArticleContainer({id, slug, className, children}: ArticleContain
   return (
     <PollBlockProvider>
       <BannerContainer documentId={data?.article?.id} documentType={BannerDocumentType.Article} />
+      {data?.article.id && <ReadingListContainer articleId={data.article.id} />}
 
       {data?.article?.peer && (
         <PeerInformation

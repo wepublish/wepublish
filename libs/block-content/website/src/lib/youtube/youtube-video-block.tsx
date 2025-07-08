@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useReadingList} from '@wepublish/reading-list/website'
 import {BlockContent, YouTubeVideoBlock as YouTubeVideoBlockType} from '@wepublish/website/api'
 import {BuilderYouTubeVideoBlockProps} from '@wepublish/website/builder'
 import ReactPlayer from 'react-player'
@@ -15,8 +16,10 @@ export const YouTubeVideoBlockPlayer = styled(ReactPlayer)`
 `
 
 export function YouTubeVideoBlock({videoID, className}: BuilderYouTubeVideoBlockProps) {
+  const [readingListProps] = useReadingList()
+
   return (
-    <YouTubeVideoBlockWrapper className={className}>
+    <YouTubeVideoBlockWrapper className={className} {...readingListProps}>
       <YouTubeVideoBlockPlayer
         width={'auto'}
         height={'auto'}
