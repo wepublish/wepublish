@@ -86,7 +86,11 @@ export const Comment = ({
 
   const flair = user?.flair || source
   const image = user?.image ?? guestUserImage
-  const name = user ? `${user.firstName} ${user.name}` : guestUsername
+  const name = user
+    ? user.firstName
+      ? `${user.firstName} ${user.name}`
+      : user.name
+    : guestUsername
 
   return (
     <CommentWrapper className={className} id={includeAnchor ? id : undefined}>
