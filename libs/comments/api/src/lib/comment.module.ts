@@ -9,9 +9,20 @@ import {RatingSystemResolver, RatingSystemService} from './rating-system'
 import {SettingModule} from '@wepublish/settings/api'
 import {ImageModule} from '@wepublish/image/api'
 import {UserModule} from '@wepublish/user/api'
+import {ArticleModule} from '@wepublish/article/api'
+import {PageModule} from '@wepublish/page/api'
 
 @Module({
-  imports: [PrismaModule, TagModule, SettingModule, URLAdapterModule, ImageModule, UserModule],
+  imports: [
+    PrismaModule,
+    TagModule,
+    SettingModule,
+    URLAdapterModule,
+    ImageModule,
+    UserModule,
+    ArticleModule,
+    PageModule
+  ],
   providers: [
     CommentDataloaderService,
     HasCommentResolver,

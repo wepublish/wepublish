@@ -4,6 +4,7 @@ import {User} from '@wepublish/user/api'
 import {Image} from '@wepublish/image/api'
 import {Node} from 'slate'
 import {GraphQLRichText} from '@wepublish/richtext/api'
+import {RatingSystemType as PrismaRatingSystemType} from '@prisma/client'
 
 export enum CommentAuthorType {
   author = 'author',
@@ -64,7 +65,7 @@ export class CommentRatingSystemAnswer {
   answer?: string | null
 
   @Field(() => RatingSystemType)
-  type!: RatingSystemType
+  type!: PrismaRatingSystemType
 }
 
 @ObjectType()

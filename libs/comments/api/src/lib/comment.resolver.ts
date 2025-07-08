@@ -16,6 +16,8 @@ import {CommentDataloaderService} from './comment-dataloader.service'
 import {RatingSystemService} from './rating-system'
 import {CommentInput, CommentUpdateInput} from './comment.input'
 import {URLAdapter} from '@wepublish/nest-modules'
+import {ArticleDataloaderService} from '@wepublish/article/api'
+import {PageDataloaderService} from '@wepublish/page/api'
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -26,7 +28,9 @@ export class CommentResolver {
     private readonly ratingSystemService: RatingSystemService,
     private readonly imageDataloaderService: ImageDataloaderService,
     private readonly userDataloaderService: UserDataloaderService,
-    private readonly urlAdapter: URLAdapter
+    private readonly urlAdapter: URLAdapter,
+    private readonly articleDataloader: ArticleDataloaderService,
+    private readonly pageDataloader: PageDataloaderService
   ) {}
 
   @Query(() => [Comment], {
@@ -92,6 +96,16 @@ export class CommentResolver {
     return this.ratingSystemService.getUserCommentRatings(comment.id, userId)
   }
 
+  @ResolveField(() => [CommentRating])
+  @Public()
+  async calculatedRatings(@Parent() comment: Comment) {
+    const [answers, ratings] = await Promise.all([
+      this.ratingSystemService.getRatingSystemAnswers(),
+      this.ratingSystemService.getCommentRatings(comment.id)
+    ])
+    return this.commentService.getCalculatedRatingsForComment(answers, ratings)
+  }
+
   @ResolveField(() => Image, {nullable: true})
   async guestUserImage(@Parent() comment: Comment) {
     if (!comment.guestUserImageID) {
@@ -119,6 +133,21 @@ export class CommentResolver {
       return null
     }
     return this.commentDataloader.load(comment.parentID)
+  }
+
+  @ResolveField(() => Comment, {nullable: true})
+  async url(@Parent() comment: Comment) {
+    let item
+    if (comment.itemType === 'article') {
+      item = await this.articleDataloader.load(comment.itemID)
+    }
+    if (comment.itemType === 'page') {
+      item = await this.pageDataloader.load(comment.itemID)
+    }
+    if (!item) {
+      return null
+    }
+    return this.urlAdapter.getCommentURL(item, comment)
   }
 
   @ResolveField(() => [Comment])

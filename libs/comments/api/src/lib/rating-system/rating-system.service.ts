@@ -13,6 +13,10 @@ export class RatingSystemService {
     })
   }
 
+  async getRatingSystemAnswers() {
+    return this.prisma.commentRatingSystemAnswer.findMany()
+  }
+
   async getUserCommentRatings(commentId: string, userId: string | null) {
     if (!userId) {
       return []
@@ -25,6 +29,14 @@ export class RatingSystemService {
       },
       include: {
         answer: true
+      }
+    })
+  }
+
+  async getCommentRatings(commentId: string) {
+    return this.prisma.commentRating.findMany({
+      where: {
+        commentId
       }
     })
   }
