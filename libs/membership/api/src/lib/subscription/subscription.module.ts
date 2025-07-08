@@ -1,13 +1,24 @@
 import {Module} from '@nestjs/common'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {
-  HasSubscriptionResolver,
-  HasOptionalSubscriptionResolver
+  HasOptionalSubscriptionLcResolver,
+  HasOptionalSubscriptionResolver,
+  HasSubscriptionLcResolver,
+  HasSubscriptionResolver
 } from './has-subscription/has-subscription.resolver'
+import {SubscriptionService} from './subscription.service'
+import {SubscriptionDataloader} from './subscription.dataloader'
 
 @Module({
   imports: [PrismaModule],
-  providers: [HasSubscriptionResolver, HasOptionalSubscriptionResolver],
+  providers: [
+    HasSubscriptionResolver,
+    HasOptionalSubscriptionResolver,
+    HasSubscriptionLcResolver,
+    HasOptionalSubscriptionLcResolver,
+    SubscriptionService,
+    SubscriptionDataloader
+  ],
   exports: []
 })
 export class SubscriptionModule {}

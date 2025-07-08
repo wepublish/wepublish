@@ -9,3 +9,12 @@ export abstract class HasImage {
   @Field(() => Image, {nullable: true})
   image?: Image
 }
+
+@InterfaceType()
+export abstract class HasImageLc {
+  @Field({nullable: true})
+  imageId?: string
+
+  @Field(() => Image, {nullable: true})
+  image?: Image
+}
