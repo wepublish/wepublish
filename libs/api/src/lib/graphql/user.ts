@@ -18,7 +18,6 @@ import {
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
-import {GraphQLPublicPayment} from './payment'
 import {Subscription, User} from '@prisma/client'
 import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLSupportedCurrency} from './memberPlan'
 import {GraphQLSubscriptionDeactivation} from './subscriptionDeactivation'
@@ -316,40 +315,6 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
       type: GraphQLDateTime
     },
     uploadImageInput: {type: GraphQLUploadImageInput}
-  }
-})
-
-export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
-  name: 'PaymentProviderCustomerInput',
-  fields: {
-    paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
-    customerID: {type: new GraphQLNonNull(GraphQLString)}
-  }
-})
-
-export const GraphQLUserSession = new GraphQLObjectType({
-  name: 'UserSession',
-  fields: {
-    token: {type: new GraphQLNonNull(GraphQLString)},
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    expiresAt: {type: new GraphQLNonNull(GraphQLDateTime)}
-  }
-})
-
-export const GraphQLMemberRegistration = new GraphQLObjectType({
-  name: 'Registration',
-  fields: {
-    user: {type: new GraphQLNonNull(GraphQLPublicUser)},
-    session: {type: new GraphQLNonNull(GraphQLUserSession)}
-  }
-})
-
-export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
-  name: 'RegistrationAndPayment',
-  fields: {
-    payment: {type: new GraphQLNonNull(GraphQLPublicPayment)},
-    user: {type: new GraphQLNonNull(GraphQLPublicUser)},
-    session: {type: new GraphQLNonNull(GraphQLUserSession)}
   }
 })
 

@@ -1,13 +1,14 @@
 import {
   HealthCheck,
   HealthCheckService,
-  PrismaHealthIndicator,
-  HttpHealthIndicator
+  HttpHealthIndicator,
+  PrismaHealthIndicator
 } from '@nestjs/terminus'
 import {Controller, Get, NotFoundException} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import * as process from 'process'
 import {promises as fs} from 'fs'
+import {Public} from '@wepublish/authentication/api'
 
 @Controller('health')
 export class HealthController {
@@ -29,33 +30,38 @@ export class HealthController {
     }
   }
 
+  @Public()
   @Get()
   @HealthCheck()
   readiness() {
     return this.health.check([
       async () => this.db.pingCheck('database', this.prisma),
-      async () => this.http.pingCheck('editor', `${process.env.EDITOR_URL}`),
-      async () => this.http.pingCheck('website', `${process.env.WEBSITE_URL}`),
-      async () => this.http.pingCheck('media-server', `${process.env.MEDIA_SERVER_URL}/health`)
+      async () => this.http.pingCheck('editor', `${process.env['EDITOR_URL']}`),
+      async () => this.http.pingCheck('website', `${process.env['WEBSITE_URL']}`),
+      async () => this.http.pingCheck('media-server', `${process.env['MEDIA_SERVER_URL']}/health`)
     ])
   }
 
+  @Public()
   @Get('readinessProbe')
   @HealthCheck()
   readinessProbe() {
     return this.health.check([async () => this.db.pingCheck('database', this.prisma)])
   }
 
+  @Public()
   @Get('startupProbe')
   startupProbe() {
     return {status: 'ok'}
   }
 
+  @Public()
   @Get('livenessProbe')
   livenessProbe() {
     return {status: 'ok'}
   }
 
+  @Public()
   @Get('version')
   version() {
     if (!this.versionString) {
