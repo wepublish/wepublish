@@ -1,8 +1,14 @@
 import styled from '@emotion/styled'
 import {NoSsr, Typography} from '@mui/material'
 import {Article, ArticleInfoWrapper} from '@wepublish/article/website'
-import {ImageBlockWrapper, TitleBlockWrapper} from '@wepublish/block-content/website'
-import {useShowPaywall} from '@wepublish/paywall/website'
+import {
+  ImageBlockWrapper,
+  TeaserGridBlockWrapper,
+  TeaserGridFlexBlockWrapper,
+  TeaserListBlockWrapper,
+  TeaserSlotsBlockWrapper,
+  TitleBlockWrapper
+} from '@wepublish/block-content/website'
 import {createWithTheme} from '@wepublish/ui'
 import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
 import {Button} from '@wepublish/website/builder'
@@ -35,6 +41,14 @@ export const HauptstadtArticle = createWithTheme(
     ${ArticleInfoWrapper} {
       grid-row-start: 3;
       gap: ${({theme}) => theme.spacing(1)};
+    }
+
+    ${TeaserListBlockWrapper},
+    ${TeaserGridBlockWrapper},
+    ${TeaserSlotsBlockWrapper},
+    ${TeaserGridFlexBlockWrapper} {
+      padding-top: var(--article-content-row-gap);
+      border-top: 1px solid ${({theme}) => theme.palette.primary.main};
     }
   `,
   contentTheme
@@ -104,7 +118,6 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
       itemId: article.id
     }
   })
-  const includeIdInUrl = !useShowPaywall(article.paywall)
 
   const commentCount = data?.comments.length
   const canShare = typeof window !== 'undefined' && 'share' in navigator
