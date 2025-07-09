@@ -63,6 +63,19 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   transition: clip-path 500ms ease-out;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: ${({theme}) => theme.palette.background.paper};
+    transition: clip-path 500ms ease-out;
+    clip-path: polygon(0 95%, 100% 95%, 100% 99%, 0 99%);
+    z-index: 2;
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -73,6 +86,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     background-color: ${({theme}) => theme.palette.primary.main};
     transition: clip-path 500ms ease-out;
     clip-path: polygon(0 99%, 100% 99%, 100% 100%, 0 100%);
+    z-index: 3;
   }
 
   ${({isScrolled, isMenuOpen}) =>
@@ -81,6 +95,10 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     css`
       clip-path: polygon(0 0, 100% 0, 100% 40%, 0 90%);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &::before {
+        clip-path: polygon(0 85%, 100% 35%, 100% 39%, 0 89%);
+      }
 
       &::after {
         clip-path: polygon(0 89%, 100% 39%, 100% 40%, 0 90%);
