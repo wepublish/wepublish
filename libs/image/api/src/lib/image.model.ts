@@ -1,6 +1,5 @@
 import {Field, Float, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
 import {FileUpload, GraphQLUpload} from 'graphql-upload'
-import {RequireProperties} from '@wepublish/utils/api'
 
 @ObjectType()
 export class FocalPoint {
@@ -73,12 +72,6 @@ export class Image {
 
   @Field(() => String, {nullable: true})
   transformURL?: string
-}
-
-export type ImageWithFocalPoint = RequireProperties<Image, 'focalPoint'>
-
-export function isImageWithFocalPoint(image: Image): image is ImageWithFocalPoint {
-  return image.focalPoint !== undefined
 }
 
 @InputType()
