@@ -60,7 +60,7 @@ export class ProfileResolver {
     if (!user) {
       throw new UserInputError(`User not found ${session.user.id}`)
     }
-    console.log({user})
+
     return user.paymentProviderCustomers
   }
 

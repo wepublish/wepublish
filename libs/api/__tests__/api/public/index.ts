@@ -975,6 +975,11 @@ export type FocalPoint = {
   y: Scalars['Float'];
 };
 
+export type FocalPointInput = {
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem';
   answers: Array<CommentRatingSystemAnswer>;
@@ -1270,11 +1275,6 @@ export type ImportedEventsDocument = {
   nodes: Array<EventFromSource>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
-};
-
-export type InputPoint = {
-  x: Scalars['Float'];
-  y: Scalars['Float'];
 };
 
 export type InstagramPostBlock = BaseBlock & {
@@ -2091,7 +2091,7 @@ export type MutationUpdateUserConsentArgs = {
 
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
-  input: SubscriptionInput;
+  input: UserSubscriptionInput;
 };
 
 
@@ -3265,15 +3265,6 @@ export type SubscriptionFlowModel = {
   periodicities: Array<PaymentPeriodicity>;
 };
 
-export type SubscriptionInput = {
-  autoRenew: Scalars['Boolean'];
-  id: Scalars['String'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  paymentMethodID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-};
-
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
   daysAwayFromEnding?: Maybe<Scalars['Int']>;
@@ -3572,7 +3563,7 @@ export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<InputPoint>;
+  focalPoint?: InputMaybe<FocalPointInput>;
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;
@@ -3647,6 +3638,15 @@ export type UserInput = {
   flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   uploadImageInput?: InputMaybe<UploadImageInput>;
+};
+
+export type UserSubscriptionInput = {
+  autoRenew: Scalars['Boolean'];
+  id: Scalars['String'];
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
 };
 
 export type VersionInformation = {

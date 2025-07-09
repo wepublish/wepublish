@@ -81,7 +81,7 @@ export function isImageWithFocalPoint(image: Image): image is ImageWithFocalPoin
   return image.focalPoint !== undefined
 }
 
-@InputType('InputPoint')
+@InputType()
 export class FocalPointInput extends OmitType(FocalPoint, [] as const, InputType) {}
 
 @InputType()

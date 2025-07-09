@@ -1,3 +1,4 @@
+import {ContentWidthProvider} from '@wepublish/content/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps, ProfilePage, ssrAuthLink} from '@wepublish/utils/website'
 import {getV1ApiClient, PageDocument} from '@wepublish/website/api'
@@ -10,7 +11,9 @@ export default function Profile() {
   return (
     <PageContainer slug="profile">
       <HauptstadtContentFullWidth>
-        <ProfilePage mediaEmail="info@wepublish.dev" />
+        <ContentWidthProvider fullWidth>
+          <ProfilePage mediaEmail="info@wepublish.dev" />
+        </ContentWidthProvider>
       </HauptstadtContentFullWidth>
     </PageContainer>
   )

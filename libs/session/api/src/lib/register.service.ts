@@ -36,7 +36,6 @@ export class RegisterService {
       password,
       active: true
     })
-    console.log({user})
 
     if (!user) {
       logger('mutation.public').error('Could not create new user for email "%s"', email)

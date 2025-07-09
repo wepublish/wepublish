@@ -6,6 +6,8 @@ import getConfig from 'next/config'
 import {sortBy} from 'ramda'
 import {ComponentProps} from 'react'
 
+import {HauptstadtContentFullWidth} from '../src/components/hauptstadt-content-wrapper'
+
 export const HAS_FORM_FIELDS = ['firstName', 'address', 'emailRepeated'] satisfies ComponentProps<
   typeof SubscribePage
 >['fields']
@@ -13,17 +15,19 @@ export const HAS_FORM_FIELDS = ['firstName', 'address', 'emailRepeated'] satisfi
 export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
   return (
     <PageContainer slug="mitmachen">
-      <SubscribePage
-        {...props}
-        sort={sortBy(memberPlan => {
-          const tag = memberPlan.tags
-            ?.find(tag => tag.startsWith('sort-order:'))
-            ?.replace('sort-order:', '')
+      <HauptstadtContentFullWidth>
+        <SubscribePage
+          {...props}
+          sort={sortBy(memberPlan => {
+            const tag = memberPlan.tags
+              ?.find(tag => tag.startsWith('sort-order:'))
+              ?.replace('sort-order:', '')
 
-          return tag ? +tag : 0
-        })}
-        fields={HAS_FORM_FIELDS}
-      />
+            return tag ? +tag : 0
+          })}
+          fields={HAS_FORM_FIELDS}
+        />
+      </HauptstadtContentFullWidth>
     </PageContainer>
   )
 }

@@ -10,6 +10,10 @@ registerEnumType(SubscriptionDeactivationReason, {
   name: 'SubscriptionDeactivationReason'
 })
 
+registerEnumType(PaymentPeriodicity, {
+  name: 'PaymentPeriodicity'
+})
+
 @ObjectType()
 export class SubscriptionDeactivation {
   @Field()

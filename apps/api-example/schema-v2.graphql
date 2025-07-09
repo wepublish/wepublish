@@ -913,6 +913,11 @@ type FocalPoint {
   y: Float!
 }
 
+input FocalPointInput {
+  x: Float!
+  y: Float!
+}
+
 type FullCommentRatingSystem {
   answers: [CommentRatingSystemAnswer!]!
   id: String!
@@ -1197,11 +1202,6 @@ type ImportedEventsDocument {
   nodes: [EventFromSource!]!
   pageInfo: PageInfo!
   totalCount: Int!
-}
-
-input InputPoint {
-  x: Float!
-  y: Float!
 }
 
 type InstagramPostBlock implements BaseBlock {
@@ -1548,7 +1548,7 @@ type Mutation {
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
+  updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
@@ -2381,15 +2381,6 @@ type SubscriptionFlowModel {
   periodicities: [PaymentPeriodicity!]!
 }
 
-input SubscriptionInput {
-  autoRenew: Boolean!
-  id: String!
-  memberPlanID: String!
-  monthlyAmount: Int!
-  paymentMethodID: String!
-  paymentPeriodicity: PaymentPeriodicity!
-}
-
 type SubscriptionInterval {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
@@ -2674,7 +2665,7 @@ input UploadImageInput {
   description: String
   file: Upload!
   filename: String
-  focalPoint: InputPoint
+  focalPoint: FocalPointInput
   license: String
   link: String
   source: String
@@ -2745,6 +2736,15 @@ input UserInput {
   flair: String
   name: String!
   uploadImageInput: UploadImageInput
+}
+
+input UserSubscriptionInput {
+  autoRenew: Boolean!
+  id: String!
+  memberPlanID: String!
+  monthlyAmount: Int!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
 }
 
 type VersionInformation {
