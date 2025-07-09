@@ -52,6 +52,9 @@ export class UserSubscriptionService {
     return this.prisma.subscription.findMany({
       where: {
         userID: userId
+      },
+      include: {
+        deactivation: true
       }
     })
   }

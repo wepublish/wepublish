@@ -48,7 +48,7 @@ export class PeerProfileService {
       name: profile.name,
       themeColor: profile.themeColor,
       themeFontColor: profile.themeFontColor,
-      callToActionText: profile.callToActionText as unknown as Descendant[],
+      callToActionText: profile.callToActionText as Descendant[],
       callToActionURL: profile.callToActionURL,
       callToActionImageURL: profile.callToActionImageURL ?? undefined,
       logoID: profile.logoID ?? undefined,

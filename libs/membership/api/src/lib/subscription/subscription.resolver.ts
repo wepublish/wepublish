@@ -46,6 +46,7 @@ export class PublicSubscriptionResolver {
   async canExtend(
     @Parent() subscription: Subscription & {deactivation?: SubscriptionDeactivation}
   ) {
+    console.log(subscription)
     const [paymentMethod, unpaidAndUncanceledInvoice] = await Promise.all([
       this.paymentMethodDataloader.load(subscription.paymentMethodID),
       this.prisma.invoice.findFirst({
