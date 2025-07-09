@@ -1,4 +1,4 @@
-import {Args, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
+import {Args, Int, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {Public} from '@wepublish/authentication/api'
 import {FullPoll, PollAnswerWithVoteCount} from './poll.model'
 import {PollDataloaderService, PrismaFullPoll} from './poll-dataloader.service'
@@ -12,17 +12,19 @@ export class PollResolver {
   @Public()
   async poll(@Args('id') id: string) {
     const poll = await this.pollDataloader.load(id)
-    if (null == poll) {
+
+    if (!poll) {
       throw new UserInputError('Poll not found')
     }
+
     return poll
   }
 }
 
 @Resolver(() => PollAnswerWithVoteCount)
 export class PollAnswerWithVoteCountResolver {
-  @ResolveField()
-  async votes(@Parent() pollAnswer: PrismaFullPoll['answers'][number]): Promise<number> {
+  @ResolveField(() => Int)
+  async votes(@Parent() pollAnswer: PrismaFullPoll['answers'][number]) {
     return pollAnswer._count.votes
   }
 }

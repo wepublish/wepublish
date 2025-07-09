@@ -5,6 +5,7 @@ import {PrismaClient, Subscription} from '@prisma/client'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {MemberPlan, MemberPlanService} from '@wepublish/member-plan/api'
 import {PaymentMethod, PaymentMethodDataloader} from '@wepublish/payment-method/api'
+import {Property} from '@wepublish/utils/api'
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -25,20 +26,18 @@ export class PublicSubscriptionResolver {
     return this.paymentMethodDataloader.load(subscription.paymentMethodID)
   }
 
-  @ResolveField()
+  @ResolveField(() => [Property])
   properties(@Parent() subscription: any) {
-    return subscription.properties
-      .filter((p: any) => p.public)
-      .map(({key, value}: any) => ({key, value}))
+    return subscription.properties.filter((p: any) => p.public)
   }
 
-  @ResolveField()
+  @ResolveField(() => String)
   async url(@Parent() subscription: Subscription) {
     return this.urlAdapter.getSubscriptionURL(subscription)
   }
 
-  @ResolveField()
-  async canExtend(@Parent() subscription: PublicSubscription): Promise<boolean> {
+  @ResolveField(() => Boolean)
+  async canExtend(@Parent() subscription: Subscription) {
     const [paymentMethod, unpaidAndUncanceledInvoice] = await Promise.all([
       this.paymentMethodDataloader.load(subscription.paymentMethodID),
       this.prisma.invoice.findFirst({

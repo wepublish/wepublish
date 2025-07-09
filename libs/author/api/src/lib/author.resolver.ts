@@ -32,9 +32,10 @@ export class AuthorResolver {
       throw new UserInputError('You must provide either `id` or `slug`.')
     }
 
-    if (null === author) {
+    if (!author) {
       throw new UserInputError('Author not found')
     }
+
     return author
   }
 
