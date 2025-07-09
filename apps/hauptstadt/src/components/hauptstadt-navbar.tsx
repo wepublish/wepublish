@@ -4,11 +4,10 @@ import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
-import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
+import {MdClose, MdMenu, MdSearch, MdWarning} from 'react-icons/md'
 import {useTranslation} from 'react-i18next'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {navigationLinkToUrl} from 'libs/navigation/website/src/lib/link-to-url'
-import {GoSearch} from 'react-icons/go'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -251,7 +250,7 @@ const HauptstadtClaim = styled('img', {
     `}
 `
 
-const SearchButton = styled(GoSearch)`
+const SearchButton = styled(MdSearch)`
   color: ${({theme}) => theme.palette.text.primary};
 `
 
@@ -382,9 +381,13 @@ export function HauptstadtNavbar({
               </Button>
             )}
 
-            <Button LinkComponent={Link} variant="text" href={'/suche'}>
-              <SearchButton size={28} />
-            </Button>
+            <Button LinkComponent={Link} variant="text" href={'/suche'}></Button>
+
+            <Link href="/search">
+              <IconButton aria-label="Suche" color="inherit" size="large">
+                <SearchButton size={28} />
+              </IconButton>
+            </Link>
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
               <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
