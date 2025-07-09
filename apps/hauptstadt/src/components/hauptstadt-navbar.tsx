@@ -6,10 +6,8 @@ import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/bu
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {useTranslation} from 'react-i18next'
-import {ButtonProps, TextToIcon, theme} from '@wepublish/ui'
+import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {navigationLinkToUrl} from 'libs/navigation/website/src/lib/link-to-url'
-import {ImageWrapper} from '@wepublish/image/website'
-import {prop} from 'ramda'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,6 +58,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   min-height: unset;
   padding: 0;
   margin: 0 auto;
+  width: 100%;
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   transition: clip-path 500ms ease-out;
