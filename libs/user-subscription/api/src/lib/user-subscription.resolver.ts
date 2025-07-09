@@ -12,7 +12,7 @@ import {Payment} from '@wepublish/payment/api'
 import {UserDataloaderService} from '@wepublish/user/api'
 import {UserInputError} from '@nestjs/apollo'
 
-@Resolver(() => PublicSubscription)
+@Resolver()
 export class UserSubscriptionResolver {
   constructor(
     private readonly userSubscriptionService: UserSubscriptionService,
@@ -75,7 +75,7 @@ export class UserSubscriptionResolver {
     @Args('input') input: UserSubscriptionInput,
     @CurrentUser() {user}: UserSession
   ) {
-    return this.userSubscriptionService.updatePublicSubscription(id, {
+    return this.userSubscriptionService.updateSubscription(id, {
       ...input,
       userID: user.id
     })

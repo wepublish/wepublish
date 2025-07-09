@@ -16,6 +16,10 @@ const tableCellStyles = (theme: Theme, borderColor?: string) => css`
 `
 
 const lastChildNoGutter = css`
+  &&:first-child {
+    padding-top: 0;
+  }
+
   &&:last-child {
     margin-bottom: 0;
   }

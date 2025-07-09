@@ -33,8 +33,8 @@ export class PublicSubscriptionResolver {
   }
 
   @ResolveField()
-  async url(@Parent() subscription: PublicSubscription) {
-    return this.urlAdapter.getSubscriptionURL(subscription as any as Subscription)
+  async url(@Parent() subscription: Subscription) {
+    return this.urlAdapter.getSubscriptionURL(subscription)
   }
 
   @ResolveField()

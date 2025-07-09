@@ -260,6 +260,7 @@ export class UserSubscriptionService {
         where: {id: subscription.userID},
         select: unselectPassword
       })
+
       if (!fullUser) {
         logger('extendSubscription').warn('user %s not found', subscription.userID)
         throw new InternalError()
@@ -268,6 +269,7 @@ export class UserSubscriptionService {
       const customer = fullUser.paymentProviderCustomers.find(
         ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
       )
+
       if (!customer) {
         logger('extendSubscription').warn('customer %s not found', paymentMethod.paymentProviderID)
       } else {
@@ -294,7 +296,7 @@ export class UserSubscriptionService {
     }
   }
 
-  async updatePublicSubscription(
+  async updateSubscription(
     id: string,
     input: Pick<
       Prisma.SubscriptionUncheckedUpdateInput,
@@ -327,6 +329,7 @@ export class UserSubscriptionService {
     const paymentMethod = await this.prisma.paymentMethod.findUnique({
       where: {id: paymentMethodID as string, active: true}
     })
+
     if (!paymentMethod) {
       throw new NotFound('PaymentMethod', paymentMethodID as string)
     }
@@ -364,6 +367,7 @@ export class UserSubscriptionService {
     const paymentProvider = this.payments
       .getProviders()
       .find(paymentProvider => paymentProvider.id === paymentMethodRemote?.paymentProviderID)
+
     if (paymentProvider?.remoteManagedSubscription) {
       await this.remoteSubscriptionsService.updateSubscription({
         paymentProvider,

@@ -233,7 +233,8 @@ const h3 = {
     }
   }),
   ['&.MuiTypography-gutterBottom']: {
-    marginBottom: variablesTheme.spacing(3.5)
+    marginBottom: variablesTheme.spacing(3.5),
+    paddingTop: variablesTheme.spacing(3.5)
   }
 }
 
@@ -250,7 +251,8 @@ const h4 = {
     }
   }),
   ['&.MuiTypography-gutterBottom']: {
-    marginBottom: variablesTheme.spacing(3)
+    marginBottom: variablesTheme.spacing(3),
+    paddingTop: variablesTheme.spacing(3)
   }
 }
 
@@ -267,7 +269,8 @@ const h5 = {
     }
   }),
   ['&.MuiTypography-gutterBottom']: {
-    marginBottom: variablesTheme.spacing(2)
+    marginBottom: variablesTheme.spacing(2),
+    paddingTop: variablesTheme.spacing(2)
   }
 }
 
