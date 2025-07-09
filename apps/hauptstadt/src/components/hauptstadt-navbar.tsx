@@ -36,7 +36,6 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: ${({theme}) => theme.palette.background.default};
 `
 
 const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
@@ -59,6 +58,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   padding: 0;
   margin: 0 auto;
   width: 100%;
+  background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   transition: clip-path 500ms ease-out;
