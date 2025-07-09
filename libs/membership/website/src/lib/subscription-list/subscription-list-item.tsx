@@ -52,7 +52,7 @@ export const SubscriptionListItemActions = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 
-  @container (min-width: 45ch) {
+  @container (min-width: 35ch) {
     display: flex;
     justify-content: space-between;
   }

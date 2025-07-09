@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {BuilderPeerProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {toPlaintext} from '@wepublish/richtext'
-import {ImageWrapper} from '@wepublish/image/website'
+import {ImageContext, ImageWrapper} from '@wepublish/image/website'
 
 export const PeerInformationWrapper = styled('aside')`
   margin-top: var(--article-content-row-gap);
@@ -30,14 +30,16 @@ export function PeerInformation({profile, information, originUrl, className}: Bu
 
   return (
     <PeerInformationWrapper className={className}>
-      <Break
-        richText={information ?? []}
-        linkTarget={'_blank'}
-        linkText={toPlaintext(profile.callToActionText ?? [])}
-        linkURL={profile?.callToActionURL ?? profile?.websiteURL}
-        image={profile.callToActionImage}
-        css={{width: '100%'}}
-      />
+      <ImageContext.Provider value={{maxWidth: 500}}>
+        <Break
+          richText={information ?? []}
+          linkTarget={'_blank'}
+          linkText={toPlaintext(profile.callToActionText ?? [])}
+          linkURL={profile?.callToActionURL ?? profile?.websiteURL}
+          image={profile.callToActionImage}
+          css={{width: '100%'}}
+        />
+      </ImageContext.Provider>
 
       {originUrl && <PeerInformationLink href={originUrl}>Zum Originalartikel</PeerInformationLink>}
     </PeerInformationWrapper>

@@ -6,7 +6,10 @@ import {EventBlockWrapper, ImageBlockWrapper, SliderWrapper} from '@wepublish/bl
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapperStyled} from '@wepublish/content/website'
 
-export const HauptstadtContentFullWidth = styled.div``
+export const HauptstadtContentFullWidth = styled.div`
+  display: grid;
+  row-gap: var(--page-content-row-gap);
+`
 
 export const HauptstadtContentWrapper = styled(ContentWrapperStyled)`
   display: grid;

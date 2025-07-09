@@ -8,17 +8,21 @@ import {
 } from './has-subscription/has-subscription.resolver'
 import {SubscriptionService} from './subscription.service'
 import {SubscriptionDataloader} from './subscription.dataloader'
+import {PublicSubscriptionResolver} from './subscription.resolver'
+import {MemberPlanModule} from '@wepublish/member-plan/api'
+import {PaymentMethodModule} from '@wepublish/payment-method/api'
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, MemberPlanModule, PaymentMethodModule],
   providers: [
     HasSubscriptionResolver,
     HasOptionalSubscriptionResolver,
     HasSubscriptionLcResolver,
     HasOptionalSubscriptionLcResolver,
     SubscriptionService,
-    SubscriptionDataloader
+    SubscriptionDataloader,
+    PublicSubscriptionResolver
   ],
-  exports: []
+  exports: [SubscriptionService, SubscriptionDataloader]
 })
 export class SubscriptionModule {}

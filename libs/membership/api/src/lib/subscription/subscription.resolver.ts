@@ -1,7 +1,7 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {add} from 'date-fns'
 import {PublicSubscription} from './subscription.model'
-import {PrismaClient, Subscription} from '@prisma/client'
+import {PrismaClient, Subscription, SubscriptionDeactivation} from '@prisma/client'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {MemberPlan, MemberPlanService} from '@wepublish/member-plan/api'
 import {PaymentMethod, PaymentMethodDataloader} from '@wepublish/payment-method/api'
@@ -27,8 +27,14 @@ export class PublicSubscriptionResolver {
   }
 
   @ResolveField(() => [Property])
-  properties(@Parent() subscription: any) {
-    return subscription.properties.filter((p: any) => p.public)
+  async properties(@Parent() subscription: Subscription) {
+    const properties = await this.prisma.metadataProperty.findMany({
+      where: {
+        subscriptionId: subscription.id
+      }
+    })
+
+    return properties.filter(p => p.public)
   }
 
   @ResolveField(() => String)
@@ -37,7 +43,9 @@ export class PublicSubscriptionResolver {
   }
 
   @ResolveField(() => Boolean)
-  async canExtend(@Parent() subscription: Subscription) {
+  async canExtend(
+    @Parent() subscription: Subscription & {deactivation?: SubscriptionDeactivation}
+  ) {
     const [paymentMethod, unpaidAndUncanceledInvoice] = await Promise.all([
       this.paymentMethodDataloader.load(subscription.paymentMethodID),
       this.prisma.invoice.findFirst({

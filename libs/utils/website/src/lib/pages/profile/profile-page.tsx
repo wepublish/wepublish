@@ -67,7 +67,7 @@ const DeactivatedSubscriptions = styled('div')`
   justify-content: center;
 `
 
-const ProfileWrapper = styled(ContentWrapper)`
+export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 

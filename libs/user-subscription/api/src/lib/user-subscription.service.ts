@@ -52,9 +52,6 @@ export class UserSubscriptionService {
     return this.prisma.subscription.findMany({
       where: {
         userID: userId
-      },
-      select: {
-        id: true
       }
     })
   }

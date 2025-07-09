@@ -65,7 +65,6 @@ export class MemberPlanService {
 
     const hasPreviousPage = Boolean(skip)
     const hasNextPage = memberplans.length > nodes.length
-    console.log(nodes)
 
     return {
       nodes,

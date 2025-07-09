@@ -7,7 +7,7 @@ registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
 })
 
-@InputType('SubscriptionInput')
+@InputType()
 export class UserSubscriptionInput {
   @Field()
   id!: string
