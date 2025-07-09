@@ -164,6 +164,9 @@ const variablesTheme = createTheme(WePTheme, {
     warning: augmentColor({color: {main: '#f4e7bd'}}),
     text: {
       primary: '#000'
+    },
+    background: {
+      paper: '#fff'
     }
   }
 } as PartialDeep<Theme> | ThemeOptions)
