@@ -8,6 +8,7 @@ import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {useTranslation} from 'react-i18next'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {navigationLinkToUrl} from 'libs/navigation/website/src/lib/link-to-url'
+import {GoSearch} from 'react-icons/go'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -250,6 +251,10 @@ const HauptstadtClaim = styled('img', {
     `}
 `
 
+const SearchButton = styled(GoSearch)`
+  color: ${({theme}) => theme.palette.text.primary};
+`
+
 export const NavbarSpacer = styled('div')``
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
@@ -312,7 +317,7 @@ export function HauptstadtNavbar({
   )
 
   const {
-    elements: {IconButton, Image, Button}
+    elements: {IconButton, Button}
   } = useWebsiteBuilder()
 
   useEffect(() => {
@@ -377,11 +382,9 @@ export function HauptstadtNavbar({
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...subscribeBtn}>
-                {t('navbar.subscribe')}
-              </Button>
-            )}
+            <Button LinkComponent={Link} variant="text" href={'/suche'}>
+              <SearchButton size={28} />
+            </Button>
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
               <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
