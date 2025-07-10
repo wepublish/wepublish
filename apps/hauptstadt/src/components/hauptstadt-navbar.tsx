@@ -50,7 +50,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   display: grid;
-  grid-template-columns: max-content max-content 1fr;
+  grid-template-columns: 1fr max-content 1fr;
   align-items: center;
   grid-auto-flow: column;
   justify-items: center;
@@ -107,7 +107,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr max-content 1fr;
       min-height: unset;
       padding: 0;
     }
@@ -236,14 +235,31 @@ export const NavbarLogoWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 440px;
+  width: 220px;
   gap: ${({theme}) => theme.spacing(1.5)};
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    width: 350px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    width: 440px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xl')} {
+  }
+
+  ${({theme}) => theme.breakpoints.up('xxl')} {
+  }
 `
 
 const HauptstadtLogo = styled('img', {
   shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
-  width: 440px;
+  width: 100%;
   transition: width 0.3s ease-out;
 
   ${({isScrolled, isMenuOpen}) =>
@@ -257,7 +273,7 @@ const HauptstadtLogo = styled('img', {
 const HauptstadtClaim = styled('img', {
   shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
-  width: 440px;
+  width: 100%;
   transition: width 0.3s ease-out;
 
   ${({isScrolled, isMenuOpen}) =>
@@ -393,7 +409,7 @@ export function HauptstadtNavbar({
               </Button>
             )}
 
-            <Link href="/search">
+            <Link href="/search" color="inherit">
               <IconButton color="inherit" size="large">
                 <MdSearch size={28} aria-label="Suche" />
               </IconButton>
@@ -441,7 +457,7 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen'
 })<{isMenuOpen: boolean}>`
   padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.background.paper};
+  background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
@@ -515,7 +531,7 @@ export const NavPaperCategoryLinks = styled('div')`
 `
 
 export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: 0;
 `
 
 export const NavPaperChildrenWrapper = styled('div')`
