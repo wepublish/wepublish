@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import {AppBar, Box, css, GlobalStyles, SxProps, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
+import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {navigationLinkToUrl} from 'libs/navigation/website/src/lib/link-to-url'
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdMenu, MdSearch, MdWarning} from 'react-icons/md'
@@ -18,14 +18,14 @@ declare module 'react' {
 
 const cssVariables = (theme: Theme) => css`
   :root {
-    --navbar-height: ${theme.spacing(6.5)};
+    --navbar-height: 80px;
 
     ${theme.breakpoints.up('md')} {
-      --navbar-height: ${theme.spacing(7.5)};
+      --navbar-height: 101px;
     }
 
     ${theme.breakpoints.up('lg')} {
-      --navbar-height: ${theme.spacing(16.5)};
+      --navbar-height: 128px;
     }
   }
 `
@@ -238,21 +238,12 @@ export const NavbarLogoWrapper = styled('div')`
   width: 220px;
   gap: ${({theme}) => theme.spacing(1.5)};
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
-  }
-
   ${({theme}) => theme.breakpoints.up('md')} {
     width: 350px;
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     width: 440px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-  }
-
-  ${({theme}) => theme.breakpoints.up('xxl')} {
   }
 `
 
@@ -383,14 +374,13 @@ export function HauptstadtNavbar({
                 src="/logo.svg"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
-                loading="eager"
                 fetchPriority="high"
               />
+
               <HauptstadtClaim
                 src="/logo-claim.svg"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
-                loading="eager"
                 fetchPriority="high"
               />
             </NavbarLogoWrapper>
@@ -462,7 +452,7 @@ export const NavPaperWrapper = styled('div', {
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   position: absolute;
-  top: var(--navbar-height);
+  top: calc(var(--navbar-height) - 2px);
   left: 0;
   right: 0;
   transform: translateX(${({isMenuOpen}) => (isMenuOpen ? '0' : '-100%')});
