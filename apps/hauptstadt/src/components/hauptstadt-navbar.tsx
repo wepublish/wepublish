@@ -1,13 +1,13 @@
-import {AppBar, Box, GlobalStyles, SxProps, Theme, Toolbar, css, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
+import {AppBar, Box, css, GlobalStyles, SxProps, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
+import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
-import {MdClose, MdMenu, MdSearch, MdWarning} from 'react-icons/md'
-import {useTranslation} from 'react-i18next'
-import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {navigationLinkToUrl} from 'libs/navigation/website/src/lib/link-to-url'
+import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdClose, MdMenu, MdSearch, MdWarning} from 'react-icons/md'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -268,12 +268,6 @@ const HauptstadtClaim = styled('img', {
     `}
 `
 
-const SearchButton = styled(MdSearch)`
-  color: ${({theme}) => theme.palette.text.primary};
-`
-
-export const NavbarSpacer = styled('div')``
-
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean
   onMenuToggle?: (isOpen: boolean) => void
@@ -305,13 +299,13 @@ export function HauptstadtNavbar({
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen
+
     if (controlledIsMenuOpen === undefined) {
       setInternalMenuOpen(newState)
     }
+
     onMenuToggle?.(newState)
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle])
-
-  const {t} = useTranslation()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
@@ -399,19 +393,11 @@ export function HauptstadtNavbar({
               </Button>
             )}
 
-            <Button LinkComponent={Link} variant="text" href={'/suche'}></Button>
-
             <Link href="/search">
-              <IconButton aria-label="Suche" color="inherit" size="large">
-                <SearchButton size={28} />
+              <IconButton color="inherit" size="large">
+                <MdSearch size={28} aria-label="Suche" />
               </IconButton>
             </Link>
-
-            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
-                Mein Konto
-              </Button>
-            )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
@@ -436,6 +422,7 @@ export function HauptstadtNavbar({
                 if (controlledIsMenuOpen === undefined) {
                   setInternalMenuOpen(false)
                 }
+
                 onMenuToggle?.(false)
               }}
               color="inherit">
@@ -682,8 +669,6 @@ const NavPaper = ({
 
             {categoryArray.map(nav => (
               <NavPaperCategory key={nav.id}>
-                <NavPaperName>{nav.name}</NavPaperName>
-
                 <NavPaperCategoryLinks>
                   {nav.links?.map((link, index) => {
                     const url = navigationLinkToUrl(link)

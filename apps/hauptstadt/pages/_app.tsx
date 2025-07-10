@@ -55,6 +55,7 @@ import {
   HauptstadtMemberPlanItem,
   HauptstadtMemberPlanPicker
 } from '../src/components/hauptstadt-memberplan-picker'
+import {HauptstadtNavbar} from '../src/components/hauptstadt-navbar'
 import {HauptstadtFooter} from '../src/components/hauptstadt-navigation'
 import {HauptstadtPage} from '../src/components/hauptstadt-page'
 import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
@@ -72,7 +73,6 @@ import {PrintLogo} from '../src/components/print-logo'
 import {printStyles} from '../src/print-styles'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
-import {HauptstadtNavbar} from '../src/components/hauptstadt-navbar'
 
 setDefaultOptions({
   locale: de
