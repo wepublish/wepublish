@@ -9,7 +9,7 @@ export type ImageWithFocalPoint = Image & {focalPoint: FocalPoint | null}
   scope: Scope.REQUEST
 })
 export class ImageDataloaderService implements Primeable<ImageWithFocalPoint> {
-  private readonly dataloader = new DataLoader<string, ImageWithFocalPoint | null>(
+  private dataloader = new DataLoader<string, ImageWithFocalPoint | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
         ids as string[],

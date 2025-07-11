@@ -40,21 +40,18 @@ export type SubscriptionWithRelations = Subscription & {
 @Injectable()
 export class UserSubscriptionService {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly payments: PaymentsService,
-    private readonly memberPlanService: MemberPlanService,
-    private readonly paymentMethodService: PaymentMethodService,
-    private readonly remoteSubscriptionsService: RemoteSubscriptionsService,
-    private readonly memberContext: MemberContextService
+    private prisma: PrismaClient,
+    private payments: PaymentsService,
+    private memberPlanService: MemberPlanService,
+    private paymentMethodService: PaymentMethodService,
+    private remoteSubscriptionsService: RemoteSubscriptionsService,
+    private memberContext: MemberContextService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
     return this.prisma.subscription.findMany({
       where: {
         userID: userId
-      },
-      include: {
-        deactivation: true
       }
     })
   }

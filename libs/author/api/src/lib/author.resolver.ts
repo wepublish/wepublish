@@ -12,7 +12,7 @@ import {Tag, TagService} from '@wepublish/tag/api'
 export class AuthorResolver {
   constructor(
     private authorService: AuthorService,
-    private readonly authorDataloader: AuthorDataloaderService,
+    private authorDataloader: AuthorDataloaderService,
     private tagService: TagService,
     private urlAdapter: URLAdapter
   ) {}

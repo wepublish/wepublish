@@ -1,12 +1,19 @@
 import {Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
-import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
+import {
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+  PrimeDataLoader,
+  SortOrder
+} from '@wepublish/utils/api'
 import {MemberPlanFilter, MemberPlanSort} from './member-plan.model'
+import {MemberPlanDataloader} from './member-plan.dataloader'
 
 @Injectable()
 export class MemberPlanService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) {}
 
+  @PrimeDataLoader(MemberPlanDataloader)
   async getMemberPlanById(id: string) {
     return this.prisma.memberPlan.findFirst({
       where: {
@@ -19,6 +26,7 @@ export class MemberPlanService {
     })
   }
 
+  @PrimeDataLoader(MemberPlanDataloader)
   async getMemberPlanBySlug(slug: string) {
     return this.prisma.memberPlan.findFirst({
       where: {
@@ -31,6 +39,7 @@ export class MemberPlanService {
     })
   }
 
+  @PrimeDataLoader(MemberPlanDataloader)
   async getMemberPlans(
     filter?: MemberPlanFilter,
     sortedField: MemberPlanSort = MemberPlanSort.createdAt,

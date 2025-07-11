@@ -17,7 +17,7 @@ const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90
 
 @Injectable()
 export class SubscriptionFlowService {
-  constructor(private readonly prismaService: PrismaClient) {}
+  constructor(private prismaService: PrismaClient) {}
 
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {}

@@ -161,7 +161,7 @@ const variablesTheme = createTheme(WePTheme, {
     secondary: augmentColor({color: {main: '#272727'}}),
     accent: augmentColor({color: {main: '#f3ded0'}}),
     success: augmentColor({color: {main: '#abd8da'}}),
-    warning: augmentColor({color: {main: '#f4e7bd'}}),
+    // warning: augmentColor({color: {main: '#f4e7bd'}}),
     text: {
       primary: '#000'
     },
@@ -191,15 +191,7 @@ const body = {
   fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
   fontWeight: 200,
   lineHeight: 1.6,
-  ...responsiveProperty({
-    cssProperty: 'fontSize',
-    unit: 'rem',
-    breakpoints: variablesTheme.breakpoints.values,
-    values: {
-      xs: 17,
-      md: 18
-    }
-  }),
+  fontSize: '1rem',
   ['&.MuiTypography-gutterBottom']: {
     marginBottom: variablesTheme.spacing(2)
   },
@@ -680,7 +672,16 @@ export const contentTheme = createTheme(theme, {
     },
     body1: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(','),
-      fontWeight: 400
+      fontWeight: 400,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 17,
+          md: 18
+        }
+      })
     },
     body2: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')

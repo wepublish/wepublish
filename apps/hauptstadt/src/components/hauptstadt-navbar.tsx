@@ -1,3 +1,20 @@
+/*
+  @TODO: Menu left Tiempost, right side font weight change
+  Hamburger menu maybe reduce stroke width
+  clip path with shadow
+  open invoices integration
+  when scrolled hide search icon
+  break block check image width
+
+  double check desktop boxing
+
+
+  pages body text always 16px, double check font weights (also blocks) on pages only
+
+  @Lukas: when subscription exists on article pages, hide menu when scrolling down and show diagonal again on any scroll up event
+  Animation okay :thumbsup:
+*/
+
 import styled from '@emotion/styled'
 import {AppBar, Box, css, GlobalStyles, SxProps, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
@@ -8,13 +25,6 @@ import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/bu
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdMenu, MdSearch, MdWarning} from 'react-icons/md'
-
-declare module 'react' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface HTMLAttributes<T> {
-    fetchPriority?: 'high' | 'low' | 'auto'
-  }
-}
 
 const cssVariables = (theme: Theme) => css`
   :root {
@@ -253,11 +263,17 @@ const HauptstadtLogo = styled('img', {
   width: 100%;
   transition: width 0.3s ease-out;
 
-  ${({isScrolled, isMenuOpen}) =>
+  ${({theme, isScrolled, isMenuOpen}) =>
     isScrolled &&
     !isMenuOpen &&
     css`
-      width: 330px;
+      ${theme.breakpoints.up('md')} {
+        width: 220px;
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        width: 330px;
+      }
     `}
 `
 
@@ -370,18 +386,12 @@ export function HauptstadtNavbar({
 
           <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
             <NavbarLogoWrapper>
-              <HauptstadtLogo
-                src="/logo.svg"
-                isScrolled={isScrolled}
-                isMenuOpen={isMenuOpen}
-                fetchPriority="high"
-              />
+              <HauptstadtLogo src="/logo.svg" isScrolled={isScrolled} isMenuOpen={isMenuOpen} />
 
               <HauptstadtClaim
                 src="/logo-claim.svg"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
-                fetchPriority="high"
               />
             </NavbarLogoWrapper>
           </NavbarLoginLink>
@@ -399,11 +409,13 @@ export function HauptstadtNavbar({
               </Button>
             )}
 
-            <Link href="/search" color="inherit">
-              <IconButton color="inherit" size="large">
-                <MdSearch size={28} aria-label="Suche" />
-              </IconButton>
-            </Link>
+            {(!isScrolled || isMenuOpen) && (
+              <Link href="/search" color="inherit">
+                <IconButton color="inherit" size="large">
+                  <MdSearch size={28} aria-label="Suche" />
+                </IconButton>
+              </Link>
+            )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>

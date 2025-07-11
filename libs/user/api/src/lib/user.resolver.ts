@@ -7,8 +7,8 @@ import {Image, ImageDataloaderService} from '@wepublish/image/api'
 @Resolver(() => User)
 export class UserResolver {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly imageDataloaderService: ImageDataloaderService
+    private prisma: PrismaClient,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => Image)

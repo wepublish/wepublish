@@ -5,7 +5,7 @@ import {Injectable} from '@nestjs/common'
 
 @Injectable()
 export class PaymentMethodDataloader extends DataLoaderService<PaymentMethod> {
-  constructor(protected readonly prisma: PrismaClient) {
+  constructor(protected prisma: PrismaClient) {
     super()
   }
 

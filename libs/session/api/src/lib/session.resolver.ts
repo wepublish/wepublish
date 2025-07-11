@@ -5,7 +5,7 @@ import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 
 @Resolver()
 export class SessionResolver {
-  constructor(private readonly sessionService: SessionService) {}
+  constructor(private sessionService: SessionService) {}
 
   @Public()
   @Mutation(() => SessionWithToken)

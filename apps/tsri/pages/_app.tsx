@@ -1,7 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
 import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
 import {withErrorSnackbar} from '@wepublish/errors/website'
@@ -127,8 +127,13 @@ type CustomAppProps = AppProps<{
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Tsri'
 
+  // Emotion cache from _document is not supplied when client side rendering
+  // Compat removes certain warnings that are irrelevant to us
+  const cache = emotionCache ?? createEmotionCache()
+  cache.compat = true
+
   return (
-    <AppCacheProvider emotionCache={emotionCache}>
+    <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}

@@ -41,10 +41,10 @@ export interface CommentWithRevisions {
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly ratingSystem: RatingSystemService,
-    private readonly settingsService: SettingsService,
-    private readonly challengeService: ChallengeService
+    private prisma: PrismaClient,
+    private ratingSystem: RatingSystemService,
+    private settingsService: SettingsService,
+    private challengeService: ChallengeService
   ) {}
 
   async getPublicChildrenCommentsByParentId(parentId: string, userId: string | null) {

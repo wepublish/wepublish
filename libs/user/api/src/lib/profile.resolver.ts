@@ -14,10 +14,7 @@ import {ProfileService} from './profile.service'
 
 @Resolver(() => User)
 export class ProfileResolver {
-  constructor(
-    private readonly userService: UserService,
-    private readonly profileService: ProfileService
-  ) {}
+  constructor(private userService: UserService, private profileService: ProfileService) {}
 
   @Public()
   @Query(() => User, {

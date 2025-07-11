@@ -20,8 +20,8 @@ export const SESSION_TTL_TOKEN = 'SESSION_TTL_TOKEN'
 @Injectable()
 export class SessionService {
   constructor(
-    private readonly prisma: PrismaClient,
-    @Inject(SESSION_TTL_TOKEN) private readonly sessionTTL: number,
+    private prisma: PrismaClient,
+    @Inject(SESSION_TTL_TOKEN) private sessionTTL: number,
     private userAuthenticationService: UserAuthenticationService,
     private jwtAuthenticationService: JwtAuthenticationService,
     private settingsService: SettingsService,

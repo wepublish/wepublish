@@ -15,8 +15,8 @@ import {UserInputError} from '@nestjs/apollo'
 @Resolver()
 export class UserSubscriptionResolver {
   constructor(
-    private readonly userSubscriptionService: UserSubscriptionService,
-    private readonly userDataloader: UserDataloaderService
+    private userSubscriptionService: UserSubscriptionService,
+    private userDataloader: UserDataloaderService
   ) {}
 
   @Authenticated()

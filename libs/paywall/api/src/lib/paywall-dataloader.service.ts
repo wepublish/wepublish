@@ -7,7 +7,7 @@ import DataLoader from 'dataloader'
   scope: Scope.REQUEST
 })
 export class PaywallDataloaderService implements Primeable<Paywall> {
-  private readonly dataloader = new DataLoader<string, Paywall | null>(
+  private dataloader = new DataLoader<string, Paywall | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
         ids as string[],

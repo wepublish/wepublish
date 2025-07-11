@@ -30,10 +30,7 @@ import {ImageCacheService} from './imageCache.service'
   version: '1'
 })
 export class AppController {
-  constructor(
-    private readonly media: MediaService,
-    private readonly imageCacheService: ImageCacheService
-  ) {}
+  constructor(private media: MediaService, private imageCacheService: ImageCacheService) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {

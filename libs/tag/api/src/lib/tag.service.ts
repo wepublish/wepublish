@@ -17,8 +17,8 @@ export class TagService {
     skip = 0,
     take = 10
   ) {
-    const where = this.createTagFilter(filter)
-    const orderBy = this.createTagOrder(sort, order)
+    const where = createTagFilter(filter)
+    const orderBy = createTagOrder(sort, order)
 
     const [totalCount, tags] = await Promise.all([
       this.prisma.tag.count({
@@ -117,48 +117,48 @@ export class TagService {
       }
     })
   }
+}
 
-  private createTagOrder(
-    field: TagSort,
-    sortOrder: SortOrder
-  ): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
-    switch (field) {
-      case TagSort.Tag:
-        return {
-          tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-        }
+function createTagOrder(
+  field: TagSort,
+  sortOrder: SortOrder
+): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
+  switch (field) {
+    case TagSort.Tag:
+      return {
+        tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+      }
 
-      case TagSort.ModifiedAt:
-        return {
-          modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-        }
+    case TagSort.ModifiedAt:
+      return {
+        modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+      }
 
-      case TagSort.CreatedAt:
-      default:
-        return {
-          createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-        }
-    }
+    case TagSort.CreatedAt:
+    default:
+      return {
+        createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+      }
+  }
+}
+
+function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
+  const conditions: Prisma.TagWhereInput[] = []
+
+  if (filter?.type) {
+    conditions.push({
+      type: filter.type
+    })
   }
 
-  private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
-    const conditions: Prisma.TagWhereInput[] = []
-
-    if (filter?.type) {
-      conditions.push({
-        type: filter.type
-      })
-    }
-
-    if (filter?.tag) {
-      conditions.push({
-        tag: {
-          mode: 'insensitive',
-          equals: filter.tag
-        }
-      })
-    }
-
-    return conditions.length ? {AND: conditions} : {}
+  if (filter?.tag) {
+    conditions.push({
+      tag: {
+        mode: 'insensitive',
+        equals: filter.tag
+      }
+    })
   }
+
+  return conditions.length ? {AND: conditions} : {}
 }

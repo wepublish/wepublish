@@ -6,7 +6,7 @@ import {UserInputError} from '@nestjs/apollo'
 
 @Resolver(() => FullPoll)
 export class PollResolver {
-  constructor(private readonly pollDataloader: PollDataloaderService) {}
+  constructor(private pollDataloader: PollDataloaderService) {}
 
   @Query(() => FullPoll)
   @Public()

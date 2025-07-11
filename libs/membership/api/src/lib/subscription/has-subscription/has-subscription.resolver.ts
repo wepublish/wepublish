@@ -17,6 +17,7 @@ export class HasSubscriptionResolver {
     if (!subscriptionID) {
       return null
     }
+
     return this.subscriptionDataloader.load(subscriptionID)
   }
 }

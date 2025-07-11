@@ -13,7 +13,7 @@ type RevisionMap = Partial<{
   scope: Scope.REQUEST
 })
 export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> {
-  private readonly dataloader = new DataLoader<string, RevisionMap>(
+  private dataloader = new DataLoader<string, RevisionMap>(
     async (articleIds: readonly string[]) => {
       const revisionPromises = []
 
