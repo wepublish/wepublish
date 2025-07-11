@@ -118,4 +118,7 @@ export class PrimaryBannerArgs {
 
   @Field()
   loggedIn!: boolean
+
+  @Field()
+  hasSubscription!: boolean
 }

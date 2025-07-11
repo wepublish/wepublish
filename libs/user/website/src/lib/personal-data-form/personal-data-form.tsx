@@ -49,7 +49,7 @@ export const PersonalDataImageInputWrapper = styled('div')`
 
 export const PersonalDataPasswordWrapper = styled('div')`
   position: relative;
-  padding-top: ${({theme}) => theme.spacing(3)};
+  padding-top: ${({theme}) => theme.spacing(6)};
   margin-top: -${({theme}) => theme.spacing(2)};
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -62,8 +62,7 @@ export const PersonalDataPasswordWrapper = styled('div')`
 
 const passwordNoteStyles = (theme: Theme) => css`
   font-size: ${theme.typography.caption.fontSize};
-  position: absolute;
-  top: 0;
+  grid-column: -1/1;
 `
 
 export const PersonalDataEmailWrapper = styled('div')`
@@ -189,7 +188,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
               control={control}
               render={({field, fieldState: {error}}) => (
                 <>
-                  <Paragraph css={passwordNoteStyles(theme)}>
+                  <Paragraph css={passwordNoteStyles(theme)} gutterBottom={false}>
                     Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.
                   </Paragraph>
 

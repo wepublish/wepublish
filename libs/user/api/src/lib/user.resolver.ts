@@ -1,14 +1,14 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {OAuth2Account, PaymentProviderCustomer, User, UserAddress} from './user.model'
+import {PaymentProviderCustomer, User, UserAddress} from './user.model'
 import {PrismaClient} from '@prisma/client'
-import {PublicProperty} from '@wepublish/utils/api'
+import {Property} from '@wepublish/utils/api'
 import {Image, ImageDataloaderService} from '@wepublish/image/api'
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly imageDataloaderService: ImageDataloaderService
+    private prisma: PrismaClient,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => Image)
@@ -43,17 +43,7 @@ export class UserResolver {
     })
   }
 
-  @ResolveField(() => [OAuth2Account])
-  public async oauth2Accounts(@Parent() {id: userId, oauth2Accounts}: User) {
-    if (oauth2Accounts !== undefined) {
-      return oauth2Accounts
-    }
-    return this.prisma.userOAuth2Account.findMany({
-      where: {userId}
-    })
-  }
-
-  @ResolveField(() => [PublicProperty])
+  @ResolveField(() => [Property])
   public async properties(@Parent() {id: userId, properties}: User) {
     if (properties !== undefined) {
       return properties

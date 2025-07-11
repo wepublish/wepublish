@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
-import {CanGetTags} from '@wepublish/permissions'
+import {CanGetTags, CanUpdateTag} from '@wepublish/permissions'
 import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
@@ -112,4 +112,17 @@ export const getTags = async (
       endCursor: lastTag?.id
     }
   }
+}
+
+export const getTag = async (
+  id: string,
+  authenticate: Context['authenticate'],
+  tag: PrismaClient['tag']
+) => {
+  const {roles} = authenticate()
+  authorise(CanUpdateTag, roles)
+
+  return tag.findUnique({
+    where: {id}
+  })
 }

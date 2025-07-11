@@ -1,14 +1,15 @@
 import {Injectable, Scope} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import {FocalPoint, Image, PrismaClient} from '@prisma/client'
 import {createOptionalsArray, Primeable} from '@wepublish/utils/api'
 import DataLoader from 'dataloader'
-import {ImageWithFocalPoint} from './image.model'
+
+export type ImageWithFocalPoint = Image & {focalPoint: FocalPoint | null}
 
 @Injectable({
   scope: Scope.REQUEST
 })
 export class ImageDataloaderService implements Primeable<ImageWithFocalPoint> {
-  private readonly dataloader = new DataLoader<string, ImageWithFocalPoint | null>(
+  private dataloader = new DataLoader<string, ImageWithFocalPoint | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
         ids as string[],

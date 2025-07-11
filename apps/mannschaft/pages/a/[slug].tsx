@@ -35,7 +35,6 @@ const paywallCss = css`
 
   // fade out the third block (usually richtext) to indicate the user that a paywall is hitting.
   & > :nth-child(3) {
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
     mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
   }
 `
@@ -81,7 +80,9 @@ export default function ArticleBySlugOrId() {
 
             <ArticleListContainer
               variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-              filter={articles => articles.filter(article => article.id !== data.article?.id)}
+              filter={articles =>
+                articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+              }
             />
           </ArticleWrapper>
 

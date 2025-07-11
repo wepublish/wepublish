@@ -5,7 +5,7 @@ import {Public} from '@wepublish/authentication/api'
 
 @Resolver(() => Challenge)
 export class ChallengeResolver {
-  constructor(private readonly challengeService: ChallengeService) {}
+  constructor(private challengeService: ChallengeService) {}
 
   @Query(() => Challenge, {
     description: 'This query generates a challenge which can be used to access protected endpoints.'

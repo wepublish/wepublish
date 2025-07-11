@@ -43,7 +43,7 @@ type CreateGatewayResponseData = Array<Gateway>
 type GetGatewayResponseData = Array<Gateway>
 
 export class GatewayClient {
-  constructor(private readonly client: PayrexxClient) {}
+  constructor(private client: PayrexxClient) {}
 
   async createGateway(requestData: CreateGatewayRequestData) {
     const response = await this.client.post<CreateGatewayResponseData>('Gateway', requestData)

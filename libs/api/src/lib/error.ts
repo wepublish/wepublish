@@ -19,18 +19,6 @@ export class UserNotFoundError extends ApolloError {
   }
 }
 
-export class InvalidOAuth2TokenError extends ApolloError {
-  constructor() {
-    super('OAuth2 Token from provider is invalid', ErrorCode.InvalidOAuth2Token)
-  }
-}
-
-export class OAuth2ProviderNotFoundError extends ApolloError {
-  constructor() {
-    super('OAuth2 Provider not found', ErrorCode.OAuth2ProviderNotFound)
-  }
-}
-
 export class NotAuthorisedError extends ApolloError {
   constructor() {
     super('User is not authorised', ErrorCode.NotAuthorised)

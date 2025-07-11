@@ -2,7 +2,6 @@ import {Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {TagFilter, TagSort} from './tags.query'
 import {getMaxTake, PrimeDataLoader, SortOrder} from '@wepublish/utils/api'
-import {TagFields} from './tag.model'
 import {TagDataloader} from './tag.dataloader'
 
 @Injectable()
@@ -18,8 +17,8 @@ export class TagService {
     skip = 0,
     take = 10
   ) {
-    const where = this.createTagFilter(filter)
-    const orderBy = this.createTagOrder(sort, order)
+    const where = createTagFilter(filter)
+    const orderBy = createTagOrder(sort, order)
 
     const [totalCount, tags] = await Promise.all([
       this.prisma.tag.count({
@@ -55,7 +54,7 @@ export class TagService {
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByAuthorId(authorId: string): Promise<TagFields[]> {
+  async getTagsByAuthorId(authorId: string) {
     return this.prisma.tag.findMany({
       where: {
         authors: {
@@ -68,7 +67,7 @@ export class TagService {
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByEventId(eventId: string): Promise<TagFields[]> {
+  async getTagsByEventId(eventId: string) {
     return this.prisma.tag.findMany({
       where: {
         events: {
@@ -81,7 +80,7 @@ export class TagService {
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByArticleId(articleId: string): Promise<TagFields[]> {
+  async getTagsByArticleId(articleId: string) {
     return this.prisma.tag.findMany({
       where: {
         articles: {
@@ -94,7 +93,7 @@ export class TagService {
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByPageId(pageId: string): Promise<TagFields[]> {
+  async getTagsByPageId(pageId: string) {
     return this.prisma.tag.findMany({
       where: {
         pages: {
@@ -107,7 +106,7 @@ export class TagService {
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByCommentId(commentId: string): Promise<TagFields[]> {
+  async getTagsByCommentId(commentId: string) {
     return this.prisma.tag.findMany({
       where: {
         comments: {
@@ -118,48 +117,48 @@ export class TagService {
       }
     })
   }
+}
 
-  private createTagOrder(
-    field: TagSort,
-    sortOrder: SortOrder
-  ): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
-    switch (field) {
-      case TagSort.Tag:
-        return {
-          tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-        }
+function createTagOrder(
+  field: TagSort,
+  sortOrder: SortOrder
+): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
+  switch (field) {
+    case TagSort.Tag:
+      return {
+        tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+      }
 
-      case TagSort.ModifiedAt:
-        return {
-          modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-        }
+    case TagSort.ModifiedAt:
+      return {
+        modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+      }
 
-      case TagSort.CreatedAt:
-      default:
-        return {
-          createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-        }
-    }
+    case TagSort.CreatedAt:
+    default:
+      return {
+        createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+      }
+  }
+}
+
+function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
+  const conditions: Prisma.TagWhereInput[] = []
+
+  if (filter?.type) {
+    conditions.push({
+      type: filter.type
+    })
   }
 
-  private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
-    const conditions: Prisma.TagWhereInput[] = []
-
-    if (filter?.type) {
-      conditions.push({
-        type: filter.type
-      })
-    }
-
-    if (filter?.tag) {
-      conditions.push({
-        tag: {
-          mode: 'insensitive',
-          equals: filter.tag
-        }
-      })
-    }
-
-    return conditions.length ? {AND: conditions} : {}
+  if (filter?.tag) {
+    conditions.push({
+      tag: {
+        mode: 'insensitive',
+        equals: filter.tag
+      }
+    })
   }
+
+  return conditions.length ? {AND: conditions} : {}
 }

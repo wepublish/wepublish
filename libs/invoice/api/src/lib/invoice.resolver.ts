@@ -6,7 +6,7 @@ import {Session} from '@wepublish/editor/api'
 
 @Resolver(() => Invoice)
 export class InvoiceResolver {
-  constructor(private readonly invoiceService: InvoiceService) {}
+  constructor(private invoiceService: InvoiceService) {}
 
   @Query(() => [Invoice], {
     description: 'Get all invoices for the authenticated user'

@@ -7,6 +7,9 @@ import {BlockType} from '../block-type.model'
 })
 export class TitleBlock extends BaseBlock<typeof BlockType.Title> {
   @Field({nullable: true})
+  preTitle?: string
+
+  @Field({nullable: true})
   title?: string
 
   @Field({nullable: true})

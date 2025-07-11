@@ -14,10 +14,7 @@ import {ProfileService} from './profile.service'
 
 @Resolver(() => User)
 export class ProfileResolver {
-  constructor(
-    private readonly userService: UserService,
-    private readonly profileService: ProfileService
-  ) {}
+  constructor(private userService: UserService, private profileService: ProfileService) {}
 
   @Public()
   @Query(() => User, {
@@ -60,7 +57,7 @@ export class ProfileResolver {
     if (!user) {
       throw new UserInputError(`User not found ${session.user.id}`)
     }
-    console.log({user})
+
     return user.paymentProviderCustomers
   }
 

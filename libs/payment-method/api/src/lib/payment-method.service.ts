@@ -7,8 +7,8 @@ import {PrismaClient} from '@prisma/client'
 @Injectable()
 export class PaymentMethodService {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly paymentMethodDataloader: PaymentMethodDataloader
+    private prisma: PrismaClient,
+    private paymentMethodDataloader: PaymentMethodDataloader
   ) {}
 
   @PrimeDataLoader(PaymentMethodDataloader)

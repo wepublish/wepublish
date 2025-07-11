@@ -20,15 +20,3 @@ export class PropertyInput extends OmitType(Property, ['id'] as const, InputType
   @Field({nullable: true})
   id?: string
 }
-
-@ObjectType('PublicProperties')
-export class PublicProperty {
-  @Field()
-  key!: string
-
-  @Field()
-  value!: string
-}
-
-@InputType('PublicPropertiesInput')
-export class PublicPropertyInput extends OmitType(PublicProperty, [] as const, InputType) {}

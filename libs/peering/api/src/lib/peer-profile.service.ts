@@ -3,7 +3,7 @@ import {PrismaClient} from '@prisma/client'
 import {PeerProfile} from './peer-profile.model'
 import {Image} from '@wepublish/image/api'
 import {PEER_MODULE_OPTIONS, PeerModuleOptions} from './peer.constants'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
 @Injectable()
 export class PeerProfileService {
@@ -48,7 +48,7 @@ export class PeerProfileService {
       name: profile.name,
       themeColor: profile.themeColor,
       themeFontColor: profile.themeFontColor,
-      callToActionText: profile.callToActionText as unknown as Node[],
+      callToActionText: profile.callToActionText as Descendant[],
       callToActionURL: profile.callToActionURL,
       callToActionImageURL: profile.callToActionImageURL ?? undefined,
       logoID: profile.logoID ?? undefined,

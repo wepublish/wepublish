@@ -1,4 +1,4 @@
-import {Link, css} from '@mui/material'
+import {Link, Typography, css} from '@mui/material'
 import styled from '@emotion/styled'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, ImageBlock as ImageBlockType} from '@wepublish/website/api'
@@ -21,7 +21,7 @@ export const ImageBlockWrapper = styled('figure')`
 
 export const ImageBlockInnerWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-template-columns: auto;
 `
 
@@ -30,6 +30,8 @@ const imageStyles = css`
 `
 
 export const ImageBlockCaption = styled('figcaption')``
+
+export const ImageBlockSource = styled('span')``
 
 export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlockProps) => {
   const {
@@ -50,9 +52,10 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
         )}
 
         {(caption || image?.source) && (
-          <ImageBlockCaption>
-            {caption} {image?.source ? <>(Bild: {image?.source})</> : null}
-          </ImageBlockCaption>
+          <Typography variant="caption" component={ImageBlockCaption}>
+            {caption}
+            {image?.source ? <ImageBlockSource> (Bild: {image?.source})</ImageBlockSource> : null}
+          </Typography>
         )}
       </ImageBlockInnerWrapper>
     </ImageBlockWrapper>
