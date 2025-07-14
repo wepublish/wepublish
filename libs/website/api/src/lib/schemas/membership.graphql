@@ -92,7 +92,7 @@ fragment FullSubscription on PublicSubscription {
   }
 
   properties {
-    ...FullPublicProperty
+    ...FullProperty
   }
 
   canExtend
@@ -140,7 +140,7 @@ mutation Subscribe(
   $monthlyAmount: Int!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
-  $subscriptionProperties: [PublicPropertiesInput!]
+  $subscriptionProperties: [PropertyInput!]
   $successURL: String
   $failureURL: String
   $deactivateSubscriptionId: String
@@ -171,7 +171,7 @@ mutation Resubscribe(
   $monthlyAmount: Int!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
-  $subscriptionProperties: [PublicPropertiesInput!]
+  $subscriptionProperties: [PropertyInput!]
 ) {
   createSubscriptionWithConfirmation(
     userId: $userId

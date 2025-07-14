@@ -1376,7 +1376,7 @@ type Mutation {
   createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
 
   """Allows authenticated users to create additional subscriptions"""
-  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], successURL: String): Payment!
+  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -1387,7 +1387,7 @@ type Mutation {
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], userId: String): Boolean!
+  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1535,7 +1535,7 @@ type Mutation {
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
+  updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
@@ -1948,16 +1948,6 @@ input PropertyInput {
   value: String!
 }
 
-type PublicProperties {
-  key: String!
-  value: String!
-}
-
-input PublicPropertiesInput {
-  key: String!
-  value: String!
-}
-
 type PublicSubscription implements HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
@@ -1970,7 +1960,7 @@ type PublicSubscription implements HasPaymentMethod & HasUser {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
-  properties: [PublicProperties!]!
+  properties: [Property!]!
   startsAt: DateTime!
   url: String!
   user: User!
@@ -2347,15 +2337,6 @@ type SubscriptionFlowModel {
   periodicities: [PaymentPeriodicity!]!
 }
 
-input SubscriptionInput {
-  autoRenew: Boolean!
-  id: String!
-  memberPlanID: String!
-  monthlyAmount: Int!
-  paymentMethodID: String!
-  paymentPeriodicity: PaymentPeriodicity!
-}
-
 type SubscriptionInterval {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
@@ -2657,7 +2638,7 @@ type User {
   oauth2Accounts: [OAuth2Account!]!
   paymentProviderCustomers: [PaymentProviderCustomer!]!
   permissions: [String!]!
-  properties: [PublicProperties!]!
+  properties: [Property!]!
 }
 
 type UserAddress {
@@ -2715,6 +2696,15 @@ type UserSession {
   createdAt: DateTime!
   expiresAt: DateTime!
   token: String!
+}
+
+input UserSubscriptionInput {
+  autoRenew: Boolean!
+  id: String!
+  memberPlanID: String!
+  monthlyAmount: Int!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
 }
 
 type VersionInformation {
