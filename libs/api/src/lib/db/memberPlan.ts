@@ -9,7 +9,9 @@ export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
   PaymentPeriodicity.monthly,
   PaymentPeriodicity.quarterly,
   PaymentPeriodicity.biannual,
-  PaymentPeriodicity.yearly
+  PaymentPeriodicity.yearly,
+  PaymentPeriodicity.biennial,
+  PaymentPeriodicity.lifetime
 ]
 
 export interface MemberPlan extends Omit<PrismaMemberPlan, 'description'> {
