@@ -1,18 +1,11 @@
 /*
   @TODO: Menu left Tiempost, right side font weight change
-  Hamburger menu maybe reduce stroke width
-  clip path with shadow
   open invoices integration
-  when scrolled hide search icon
-  break block check image width
 
   double check desktop boxing
-
-
-  pages body text always 16px, double check font weights (also blocks) on pages only
+  double check font weights (also blocks) on pages only
 
   @Lukas: when subscription exists on article pages, hide menu when scrolling down and show diagonal again on any scroll up event
-  Animation okay :thumbsup:
 */
 
 import styled from '@emotion/styled'
@@ -24,7 +17,9 @@ import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdClose, MdMenu, MdSearch, MdWarning} from 'react-icons/md'
+// Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
+import {FiMenu, FiPlus} from 'react-icons/fi'
+import {MdSearch, MdWarning} from 'react-icons/md'
 
 const cssVariables = (theme: Theme) => css`
   :root {
@@ -35,7 +30,7 @@ const cssVariables = (theme: Theme) => css`
     }
 
     ${theme.breakpoints.up('lg')} {
-      --navbar-height: 128px;
+      --navbar-height: 145px;
     }
   }
 `
@@ -61,6 +56,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
+  row-gap: ${({theme}) => theme.spacing(0.5)};
+  align-content: center;
   align-items: center;
   grid-auto-flow: column;
   justify-items: center;
@@ -68,6 +65,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   padding: 0;
   margin: 0 auto;
   width: 100%;
+  height: var(--navbar-height);
   background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
@@ -82,7 +80,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     height: 100%;
     background-color: ${({theme}) => theme.palette.background.paper};
     transition: clip-path 500ms ease-out;
-    clip-path: polygon(0 95%, 100% 95%, 100% 99%, 0 99%);
+    clip-path: polygon(0 95%, 100% 95%, 100% calc(100% - 1px), 0 calc(100% - 1px));
     z-index: 2;
   }
 
@@ -95,8 +93,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     height: 100%;
     background-color: ${({theme}) => theme.palette.primary.main};
     transition: clip-path 500ms ease-out;
-    clip-path: polygon(0 99%, 100% 99%, 100% 100%, 0 100%);
-    z-index: 3;
+    clip-path: polygon(0 calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 0 100%);
+    z-index: 10;
   }
 
   ${({isScrolled, isMenuOpen}) =>
@@ -104,7 +102,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     !isMenuOpen &&
     css`
       clip-path: polygon(0 0, 100% 0, 100% 40%, 0 90%);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
 
       &::before {
         clip-path: polygon(0 85%, 100% 35%, 100% 39%, 0 89%);
@@ -115,17 +113,16 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       }
     `}
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      min-height: unset;
-      padding: 0;
-    }
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    min-height: unset;
+    padding: 0;
+  }
 
-    ${theme.breakpoints.up('md')} {
-      min-height: unset;
-      padding: 0;
-    }
-  `}
+  ${({theme}) => theme.breakpoints.up('md')} {
+    min-height: unset;
+    padding: 0;
+    row-gap: ${({theme}) => theme.spacing(1.5)};
+  }
 `
 
 export const NavbarLinks = styled('div', {
@@ -199,20 +196,30 @@ export const NavbarIconButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: var(--navbar-height);
   aspect-ratio: 1;
-  color: ${({theme}) => theme.palette.text.primary};
+  padding-left: ${({theme}) => theme.spacing(1)};
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    svg {
-      font-size: ${({theme}) => theme.spacing(4.5)};
-    }
+  button {
+    padding: 0;
+  }
+
+  svg {
+    font-size: 28px;
+    stroke-width: 1.25px;
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     svg {
-      font-size: ${({theme}) => theme.spacing(6.5)};
+      font-size: 35px;
     }
+  }
+`
+
+export const NavbarSearchIconButtonWrapper = styled(NavbarIconButtonWrapper)`
+  padding-left: 0;
+
+  svg {
+    stroke-width: 0;
   }
 `
 
@@ -240,13 +247,10 @@ const buttonStyles: SxProps<Theme> = theme => ({
 })
 
 export const NavbarLogoWrapper = styled('div')`
-  fill: currentColor;
-  width: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 220px;
-  gap: ${({theme}) => theme.spacing(1.5)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     width: 350px;
@@ -254,6 +258,20 @@ export const NavbarLogoWrapper = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     width: 440px;
+  }
+`
+
+export const HauptstadtClaimWrapper = styled(NavbarLogoWrapper)`
+  grid-row: 2;
+  grid-column: -1/1;
+  height: 9px;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    height: 14px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    height: 18px;
   }
 `
 
@@ -367,9 +385,9 @@ export function HauptstadtNavbar({
         <NavbarInnerWrapper isScrolled={isScrolled} isMenuOpen={isMenuOpen}>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton size="large" aria-label="Menu" onClick={toggleMenu} color={'inherit'}>
-                {!isMenuOpen && <MdMenu />}
-                {isMenuOpen && <MdClose />}
+              <IconButton size="small" aria-label="Menu" onClick={toggleMenu} color={'inherit'}>
+                {!isMenuOpen && <FiMenu />}
+                {isMenuOpen && <FiPlus css={{transform: 'rotate(45deg)'}} />}
               </IconButton>
             </NavbarIconButtonWrapper>
 
@@ -387,12 +405,6 @@ export function HauptstadtNavbar({
           <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
             <NavbarLogoWrapper>
               <HauptstadtLogo src="/logo.svg" isScrolled={isScrolled} isMenuOpen={isMenuOpen} />
-
-              <HauptstadtClaim
-                src="/logo-claim.svg"
-                isScrolled={isScrolled}
-                isMenuOpen={isMenuOpen}
-              />
             </NavbarLogoWrapper>
           </NavbarLoginLink>
 
@@ -411,12 +423,22 @@ export function HauptstadtNavbar({
 
             {(!isScrolled || isMenuOpen) && (
               <Link href="/search" color="inherit">
-                <IconButton color="inherit" size="large">
-                  <MdSearch size={28} aria-label="Suche" />
-                </IconButton>
+                <NavbarSearchIconButtonWrapper>
+                  <IconButton color="inherit" size="small">
+                    <MdSearch aria-label="Suche" />
+                  </IconButton>
+                </NavbarSearchIconButtonWrapper>
               </Link>
             )}
           </NavbarActions>
+
+          <HauptstadtClaimWrapper>
+            <HauptstadtClaim
+              src="/logo-claim.svg"
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+            />
+          </HauptstadtClaimWrapper>
         </NavbarInnerWrapper>
       </AppBar>
 
@@ -544,17 +566,15 @@ export const NavPaperChildrenWrapper = styled('div')`
   justify-items: center;
   width: 100%;
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      position: absolute;
-      grid-template-columns: auto;
-      justify-items: start;
-      width: calc(100% / 6);
-      gap: ${theme.spacing(3)};
-      padding-top: ${theme.spacing(10)};
-      padding-left: ${theme.spacing(2)};
-    }
-  `}
+  ${({theme}) => theme.breakpoints.up('md')} {
+    position: absolute;
+    grid-template-columns: auto;
+    justify-items: start;
+    width: calc(100% / 6);
+    gap: ${({theme}) => theme.spacing(3)};
+    padding-top: ${({theme}) => theme.spacing(10)};
+    padding-left: ${({theme}) => theme.spacing(2)};
+  }
 `
 
 export const NavPaperActions = styled('div')`

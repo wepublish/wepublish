@@ -284,8 +284,6 @@ const subtitle1 = {
   })
 }
 
-// @TODO: Headings padding top
-
 const theme = createTheme(variablesTheme, {
   components: {
     MuiButton: {

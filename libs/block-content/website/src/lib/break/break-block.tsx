@@ -1,7 +1,7 @@
 import {Theme, Typography, css, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
-import {BuilderBreakBlockProps, Button, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderBreakBlockProps, Button, Image, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const isBreakBlock = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
   block.__typename === 'BreakBlock'
@@ -26,13 +26,13 @@ export const BreakBlockSegment = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-const imageStyles = (theme: Theme) => css`
+export const BreakBlockImage = styled(Image)`
   object-fit: cover;
   width: 100%;
-  max-width: ${theme.spacing(60)};
+  max-width: ${({theme}) => theme.spacing(60)};
   margin: 0 auto;
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     width: 80%;
   }
 `
@@ -78,7 +78,7 @@ export const BreakBlock = ({
           </Typography>
         )}
 
-        {image && <Image image={image} css={imageStyles(theme)} />}
+        {image && <BreakBlockImage image={image} />}
       </BreakBlockSegment>
 
       <BreakBlockSegment>

@@ -1,5 +1,10 @@
 import styled from '@emotion/styled'
-import {BreakBlock, BreakBlockButton, RichTextBlockWrapper} from '@wepublish/block-content/website'
+import {
+  BreakBlock,
+  BreakBlockButton,
+  BreakBlockImage,
+  RichTextBlockWrapper
+} from '@wepublish/block-content/website'
 
 export const HauptstadtBreakBlock = styled(BreakBlock)`
   padding: ${({theme}) => theme.spacing(2)} ${({theme}) => theme.spacing(2.5)};
@@ -19,5 +24,11 @@ export const HauptstadtBreakBlock = styled(BreakBlock)`
 
   ${BreakBlockButton} {
     justify-self: center;
+  }
+
+  ${BreakBlockImage} {
+    ${({theme}) => theme.breakpoints.up('md')} {
+      width: 100%;
+    }
   }
 `
