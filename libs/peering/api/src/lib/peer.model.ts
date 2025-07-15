@@ -1,7 +1,9 @@
 import {Field, ObjectType} from '@nestjs/graphql'
 import {PeerProfile} from './peer-profile.model.js'
+import {GraphQLRichText} from '@wepublish/richtext/api'
+import {Descendant} from 'slate'
 
-@ObjectType('Peer')
+@ObjectType()
 export class Peer {
   @Field()
   id!: string
@@ -23,6 +25,9 @@ export class Peer {
 
   @Field()
   hostURL!: string
+
+  @Field(() => GraphQLRichText, {nullable: true})
+  information?: Descendant[]
 
   @Field(() => PeerProfile, {nullable: true})
   profile?: PeerProfile

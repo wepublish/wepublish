@@ -1,4 +1,4 @@
-import {css, GlobalStyles, TextField, Theme, ThemeProvider} from '@mui/material'
+import {css, GlobalStyles, TextField, ThemeProvider} from '@mui/material'
 import {
   Article,
   ArticleAuthors,
@@ -40,6 +40,7 @@ import {
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
+  BaseTeaser,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
@@ -50,7 +51,11 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock
+  YouTubeVideoBlock,
+  AlternatingTeaserGridBlock,
+  AlternatingTeaserListBlock,
+  AlternatingTeaser,
+  AlternatingTeaserSlotsBlock
 } from '@wepublish/block-content/website'
 import {
   Comment,
@@ -93,6 +98,7 @@ import {
   IconButton,
   Link,
   ListItem,
+  Modal,
   OrderedList,
   Pagination,
   Paragraph,
@@ -107,43 +113,50 @@ import {memo, PropsWithChildren} from 'react'
 import {IconContext} from 'react-icons'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LocalizationProvider} from '@mui/x-date-pickers'
+import {ContentWrapperStyled} from '@wepublish/content/website'
+import {Paywall} from '@wepublish/paywall/website'
+import {Tag, TagSEO} from '@wepublish/tag/website'
 
 export type WebsiteProps = PropsWithChildren
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy')
 
-const styles = (theme: Theme) => css`
-  html {
-    scroll-padding-top: ${theme.spacing(7)};
-    font-family: ${theme.typography.fontFamily};
-    hyphens: auto;
-    word-break: break-word;
+const globalStyles = (
+  <GlobalStyles
+    styles={theme => css`
+      html {
+        scroll-padding-top: ${theme.spacing(7)};
+        font-family: ${theme.typography.fontFamily};
+        hyphens: auto;
+        word-break: break-word;
 
-    ${theme.breakpoints.up('lg')} {
-      scroll-padding-top: ${theme.spacing(12.5)};
-    }
-  }
+        ${theme.breakpoints.up('lg')} {
+          scroll-padding-top: ${theme.spacing(12.5)};
+        }
+      }
 
-  * {
-    text-wrap: pretty;
-  }
+      * {
+        text-wrap: pretty;
+      }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    text-wrap: balance;
-  }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        text-wrap: balance;
+      }
 
-  img,
-  iframe {
-    // fixes taking up more space than needed in 'display: block' wrappers
-    vertical-align: bottom;
-  }
-`
+      img,
+      iframe {
+        // fixes taking up more space than needed in 'display: block' wrappers
+        vertical-align: bottom;
+      }
+    `}
+  />
+)
 
 export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
   <ThemeProvider theme={theme}>
@@ -194,6 +207,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           PaymentMethodPicker={PaymentMethodPicker}
           TransactionFee={TransactionFee}
           Subscribe={Subscribe}
+          ContentWrapper={ContentWrapperStyled}
+          Paywall={Paywall}
+          Tag={Tag}
+          TagSEO={TagSEO}
           elements={{
             TextField,
             Rating,
@@ -213,7 +230,8 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ImageUpload,
             OrderedList,
             ListItem,
-            Image
+            Image,
+            Modal
           }}
           blocks={{
             Blocks,
@@ -233,6 +251,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             TeaserGridFlex: TeaserGridFlexBlock,
             TeaserGrid: TeaserGridBlock,
             TeaserList: TeaserListBlock,
+            BaseTeaser,
             TeaserSlots: TeaserSlotsBlock,
             Teaser,
             BildwurfAd: BildwurfAdBlock,
@@ -252,13 +271,17 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             ContextBox,
             FocusTeaser,
             ImageSlider,
-            TeaserSlider
+            TeaserSlider,
+            AlternatingTeaser,
+            AlternatingTeaserGrid: AlternatingTeaserGridBlock,
+            AlternatingTeaserList: AlternatingTeaserListBlock,
+            AlternatingTeaserSlots: AlternatingTeaserSlotsBlock
           }}
           richtext={{RenderElement, RenderLeaf, RenderRichtext}}
           date={{
             format: dateFormatter
           }}>
-          <GlobalStyles styles={styles} />
+          {globalStyles}
           {children}
         </WebsiteBuilderProvider>
       </LocalizationProvider>

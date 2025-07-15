@@ -39,7 +39,7 @@ type ChargeTransactionResponseData = Array<Transaction>
 type RetrieveTransactionResponseData = Array<Transaction>
 
 export class TransactionClient {
-  constructor(private readonly client: PayrexxClient) {}
+  constructor(private client: PayrexxClient) {}
 
   async chargePreAuthorizedTransaction(
     preAuthorizedTransactionId: number,

@@ -24,9 +24,9 @@ import {Permissions} from '@wepublish/permissions/api'
 @Resolver(() => Banner)
 export class BannerResolver {
   constructor(
-    private readonly bannerService: BannerService,
-    private readonly bannerActionService: BannerActionService,
-    private readonly imageDataloaderService: ImageDataloaderService
+    private bannerService: BannerService,
+    private bannerActionService: BannerActionService,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @Permissions(CanGetBanner)

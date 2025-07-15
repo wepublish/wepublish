@@ -1,18 +1,6 @@
 import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image, UploadImageInput} from '@wepublish/image/api'
-import {PublicProperty} from '@wepublish/utils/api'
-
-@ObjectType()
-export class OAuth2Account {
-  @Field()
-  type!: string
-
-  @Field()
-  provider!: string
-
-  @Field()
-  scope!: string
-}
+import {Property} from '@wepublish/utils/api'
 
 @ObjectType()
 export class UserAddress {
@@ -72,16 +60,13 @@ export class User {
   @Field(() => [PaymentProviderCustomer])
   paymentProviderCustomers?: PaymentProviderCustomer[]
 
-  @Field(() => [OAuth2Account])
-  oauth2Accounts?: OAuth2Account[]
-
   userImageID!: string | null
 
   @Field(() => Image, {nullable: true})
   image?: Image | null
 
-  @Field(() => [PublicProperty])
-  properties?: PublicProperty[]
+  @Field(() => [Property])
+  properties?: Property[]
 
   roleIDs!: string[]
 

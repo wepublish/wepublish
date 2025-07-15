@@ -90,6 +90,7 @@ export const TeaserGridBlock = ({
           key={index}
           teaser={teaser}
           numColumns={numColumns}
+          index={index}
           alignment={alignmentForTeaserBlock(index, numColumns)}
           blockStyle={blockStyle}
         />

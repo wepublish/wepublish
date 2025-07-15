@@ -72,7 +72,6 @@ const verifiedUserComment = mockComment({
     paymentProviderCustomers: [],
     image: mockImage(),
     properties: [],
-    oauth2Accounts: [],
     permissions: []
   },
   guestUsername: null,

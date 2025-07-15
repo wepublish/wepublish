@@ -3,7 +3,8 @@ export * from './comment'
 export * from './dashboard'
 export * from './poll'
 export * from './searchAndFilter'
-export * from './tag'
+export * from './tag/selectTags'
+export * from './memberPlan/selectMemberPlan'
 export * from './user'
 
 // files

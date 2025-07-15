@@ -62,7 +62,5 @@ describe('Sessions', () => {
       expect(session.user.email).toBe('dev@wepublish.ch')
       expect(session.token).toBeDefined()
     })
-
-    // TODO: write test for oauth auth
   })
 })

@@ -1,7 +1,7 @@
 import {css, GlobalStyles, Theme, useTheme} from '@mui/material'
 import {BuilderTeaserProps} from '@wepublish/website/builder'
 import {allPass, anyPass} from 'ramda'
-import {useId, useMemo} from 'react'
+import {memo, useId, useMemo} from 'react'
 import {Ad} from 'react-ad-manager'
 import {AdSizeType} from 'react-ad-manager/dist/types'
 
@@ -32,7 +32,7 @@ const adCss = (theme: Theme, id: string, showMobile: boolean) => css`
   }
 `
 
-export const AdTeaser = ({teaser}: BuilderTeaserProps) => {
+export const AdTeaser = memo<BuilderTeaserProps>(function AdTeaser({teaser}) {
   const id = useId()
   const cssId = useMemo(() => id.replace(/:/g, ''), [id])
   const theme = useTheme()
@@ -85,4 +85,4 @@ export const AdTeaser = ({teaser}: BuilderTeaserProps) => {
       <Ad adUnit={`/22170513353`} name={cssId} size={size} />
     </>
   )
-}
+})

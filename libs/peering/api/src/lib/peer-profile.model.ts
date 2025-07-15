@@ -2,9 +2,9 @@ import {Field, ObjectType} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {ColorScalar} from './scalars/color.scalar'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
-@ObjectType('PeerProfile')
+@ObjectType()
 export class PeerProfile {
   @Field()
   name!: string
@@ -34,7 +34,7 @@ export class PeerProfile {
   websiteURL!: string
 
   @Field(() => GraphQLRichText)
-  callToActionText!: Node[]
+  callToActionText!: Descendant[]
 
   @Field()
   callToActionURL!: string

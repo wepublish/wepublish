@@ -20,7 +20,7 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
-type Article implements HasOptionalPeerLc {
+type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -29,6 +29,8 @@ type Article implements HasOptionalPeerLc {
   latest: ArticleRevision!
   likes: Int!
   modifiedAt: DateTime!
+  paywall: Paywall
+  paywallId: String
   peer: Peer
   peerArticleId: String
   peerId: String
@@ -127,11 +129,6 @@ input ArticleTeaserInput {
   title: String
 }
 
-type AuthProvider {
-  name: String!
-  url: String!
-}
-
 type Author implements HasImage & HasOptionalPeerLc {
   bio: RichText
   createdAt: DateTime!
@@ -150,12 +147,6 @@ type Author implements HasImage & HasOptionalPeerLc {
   slug: Slug!
   tags: [Tag!]!
   url: String!
-}
-
-type AuthorConnection {
-  nodes: [Author!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
 }
 
 type AuthorCreatedAction implements BaseAction & HasAuthor {
@@ -922,6 +913,11 @@ type FocalPoint {
   y: Float!
 }
 
+input FocalPointInput {
+  x: Float!
+  y: Float!
+}
+
 type FullCommentRatingSystem {
   answers: [CommentRatingSystemAnswer!]!
   id: String!
@@ -1011,6 +1007,11 @@ interface HasOptionalEvent {
 interface HasOptionalPage {
   page: Page
   pageID: String
+}
+
+interface HasOptionalPaywall {
+  paywall: Paywall
+  paywallId: String
 }
 
 interface HasOptionalPeerLc {
@@ -1203,11 +1204,6 @@ type ImportedEventsDocument {
   totalCount: Int!
 }
 
-input InputPoint {
-  x: Float!
-  y: Float!
-}
-
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1276,6 +1272,8 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
+  SUBSCRIBED
+  UNSUBSCRIBED
 }
 
 type MailProviderModel {
@@ -1311,6 +1309,7 @@ type MemberPlan implements HasImage {
   imageID: String
   maxCount: Int
   name: String!
+  shortDescription: RichText
   slug: String!
   successPageId: String
   tags: [String!]
@@ -1343,7 +1342,7 @@ type Mutation {
   cancelUserSubscription(id: String!): PublicSubscription
 
   """Creates an article."""
-  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -1371,12 +1370,17 @@ type Mutation {
 
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
+
+  """Creates a paywall."""
+  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
+
+  """Creates a paywall bypass token."""
+  createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
 
   """Allows authenticated users to create additional subscriptions"""
-  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], successURL: String): Payment!
+  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -1387,7 +1391,7 @@ type Mutation {
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PublicPropertiesInput!], userId: String): Boolean!
+  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1411,6 +1415,12 @@ type Mutation {
 
   """Deletes an page."""
   deletePage(id: String!): String!
+
+  """Deletes a paywall."""
+  deletePaywall(id: String!): Paywall!
+
+  """Deletes a paywall bypass token."""
+  deletePaywallBypass(id: String!): String!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
@@ -1480,7 +1490,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an article."""
-  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+  updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -1512,6 +1522,9 @@ type Mutation {
   """This mutation allows to update the Payment Provider Customers"""
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
+  """Updates a paywall."""
+  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
@@ -1535,7 +1548,7 @@ type Mutation {
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: String!, input: SubscriptionInput!): PublicSubscription
+  updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
@@ -1573,12 +1586,6 @@ type NonDbProperty {
   key: String!
   public: Boolean!
   value: String!
-}
-
-type OAuth2Account {
-  provider: String!
-  scope: String!
-  type: String!
 }
 
 type Page {
@@ -1686,6 +1693,12 @@ type PaginatedArticles {
   totalCount: Int!
 }
 
+type PaginatedAuthors {
+  nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedEvents {
   nodes: [Event!]!
   pageInfo: PageInfo!
@@ -1763,10 +1776,32 @@ enum PaymentState {
   submitted
 }
 
+type Paywall {
+  active: Boolean!
+  anyMemberPlan: Boolean!
+  bypasses: [PaywallBypass!]!
+  circumventDescription: RichText
+  createdAt: DateTime!
+  description: RichText
+  id: String!
+  memberPlans: [MemberPlan!]!
+  modifiedAt: DateTime!
+  name: String
+}
+
+type PaywallBypass {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  paywallId: String!
+  token: String!
+}
+
 type Peer {
   createdAt: DateTime!
   hostURL: String!
   id: String!
+  information: RichText
   isDisabled: Boolean
   modifiedAt: DateTime!
   name: String!
@@ -1948,16 +1983,6 @@ input PropertyInput {
   value: String!
 }
 
-type PublicProperties {
-  key: String!
-  value: String!
-}
-
-input PublicPropertiesInput {
-  key: String!
-  value: String!
-}
-
 type PublicSubscription implements HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
@@ -1970,7 +1995,7 @@ type PublicSubscription implements HasPaymentMethod & HasUser {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
-  properties: [PublicProperties!]!
+  properties: [Property!]!
   startsAt: DateTime!
   url: String!
   user: User!
@@ -1990,16 +2015,11 @@ type Query {
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
-  """
-  This query returns available OAuth providers with their authorization URLs.
-  """
-  authProviders(redirectUri: String): [AuthProvider!]!
-
   """Get an author by ID or slug"""
   author(id: String, slug: Slug): Author
 
   """Get a paginated list of authors with optional filtering and sorting"""
-  authors(cursor: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): AuthorConnection!
+  authors(cursor: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
@@ -2097,6 +2117,12 @@ type Query {
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
 
+  """Returns an paywall by id."""
+  paywall(id: String!): Paywall!
+
+  """Returns a list of paywalls based on the filters given."""
+  paywalls: [Paywall!]!
+
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
@@ -2117,7 +2143,7 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
+  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
 
   """This query returns the comment rating system."""
@@ -2201,7 +2227,7 @@ enum RatingSystemType {
 }
 
 type Registration {
-  session: UserSession!
+  session: SessionWithTokenWithoutUser!
   user: User!
 }
 
@@ -2225,6 +2251,12 @@ type SessionWithToken {
   expiresAt: DateTime!
   token: String!
   user: User!
+}
+
+type SessionWithTokenWithoutUser {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  token: String!
 }
 
 type Setting {
@@ -2251,6 +2283,8 @@ enum SettingName {
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC
   MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
   MAKE_REVENUE_API_PUBLIC
+  NEW_ARTICLE_PAYWALL
+  NEW_ARTICLE_PEERING
   PEERING_TIMEOUT_MS
   RESET_PASSWORD_JWT_EXPIRES_MIN
   SEND_LOGIN_JWT_EXPIRES_MIN
@@ -2347,15 +2381,6 @@ type SubscriptionFlowModel {
   periodicities: [PaymentPeriodicity!]!
 }
 
-input SubscriptionInput {
-  autoRenew: Boolean!
-  id: String!
-  memberPlanID: String!
-  monthlyAmount: Int!
-  paymentMethodID: String!
-  paymentPeriodicity: PaymentPeriodicity!
-}
-
 type SubscriptionInterval {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
@@ -2369,6 +2394,7 @@ type SystemMailModel {
 }
 
 type Tag {
+  description: RichText
   id: String!
   main: Boolean!
   tag: String
@@ -2555,6 +2581,7 @@ type TitleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   lead: String
+  preTitle: String
   title: String
   type: BlockType!
 }
@@ -2563,6 +2590,7 @@ input TitleBlockInput {
   blockStyle: String
   blockStyleName: String
   lead: String
+  preTitle: String
   title: String
 }
 
@@ -2637,7 +2665,7 @@ input UploadImageInput {
   description: String
   file: Upload!
   filename: String
-  focalPoint: InputPoint
+  focalPoint: FocalPointInput
   license: String
   link: String
   source: String
@@ -2654,10 +2682,9 @@ type User {
   id: String!
   image: Image
   name: String!
-  oauth2Accounts: [OAuth2Account!]!
   paymentProviderCustomers: [PaymentProviderCustomer!]!
   permissions: [String!]!
-  properties: [PublicProperties!]!
+  properties: [Property!]!
 }
 
 type UserAddress {
@@ -2711,10 +2738,13 @@ input UserInput {
   uploadImageInput: UploadImageInput
 }
 
-type UserSession {
-  createdAt: DateTime!
-  expiresAt: DateTime!
-  token: String!
+input UserSubscriptionInput {
+  autoRenew: Boolean!
+  id: String!
+  memberPlanID: String!
+  monthlyAmount: Int!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
 }
 
 type VersionInformation {

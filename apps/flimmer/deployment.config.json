@@ -3,17 +3,23 @@
     "production": {
       "deployment": true,
       "custom_domain": "https://flimmer.media",
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "production"
+      },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
       "secret_env": []
     }
   }

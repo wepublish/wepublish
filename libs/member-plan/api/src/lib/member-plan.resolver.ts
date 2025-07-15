@@ -9,13 +9,13 @@ import {
 } from './member-plan.model'
 import {MemberPlanService} from './member-plan.service'
 import {UserInputError} from '@nestjs/apollo'
-import {PaymentMethodService} from '@wepublish/payment-method/api'
+import {MemberPlanDataloader} from './member-plan.dataloader'
 
 @Resolver(() => MemberPlan)
 export class MemberPlanResolver {
   constructor(
-    private readonly memberPlanService: MemberPlanService,
-    private readonly paymentMethodService: PaymentMethodService
+    private memberPlanService: MemberPlanService,
+    private memberPlanDataloader: MemberPlanDataloader
   ) {}
 
   @Public()
@@ -32,7 +32,7 @@ export class MemberPlanResolver {
     }
 
     return id
-      ? this.memberPlanService.getMemberPlanById(id)
+      ? this.memberPlanDataloader.load(id)
       : this.memberPlanService.getMemberPlanBySlug(slug!)
   }
 

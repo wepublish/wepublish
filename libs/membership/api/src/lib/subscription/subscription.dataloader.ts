@@ -6,16 +6,16 @@ import {Injectable, Scope} from '@nestjs/common'
   scope: Scope.REQUEST
 })
 export class SubscriptionDataloader extends DataLoaderService<Subscription> {
-  constructor(protected readonly prisma: PrismaClient) {
+  constructor(protected prisma: PrismaClient) {
     super()
   }
 
   protected async loadByKeys(ids: string[]) {
     return createOptionalsArray(
       ids,
-      (await this.prisma.subscription.findMany({
+      await this.prisma.subscription.findMany({
         where: {id: {in: ids}}
-      })) as Subscription[],
+      }),
       'id'
     )
   }
