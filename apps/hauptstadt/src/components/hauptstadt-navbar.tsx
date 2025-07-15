@@ -1,5 +1,5 @@
 /*
-  @TODO: Menu left Tiempost, right side font weight change
+  @TODO:
   open invoices integration
 
   double check desktop boxing
@@ -21,16 +21,26 @@ import {useTranslation} from 'react-i18next'
 import {FiMenu, FiPlus} from 'react-icons/fi'
 import {MdSearch, MdWarning} from 'react-icons/md'
 
+import {Tiempos} from '../theme'
+
 const cssVariables = (theme: Theme) => css`
   :root {
     --navbar-height: 80px;
 
     ${theme.breakpoints.up('md')} {
-      --navbar-height: 101px;
+      --navbar-height: 145px;
     }
 
     ${theme.breakpoints.up('lg')} {
-      --navbar-height: 145px;
+      --navbar-height: 180px;
+    }
+
+    ${theme.breakpoints.up('xl')} {
+      --navbar-height: 220px;
+    }
+
+    ${theme.breakpoints.up('xxl')} {
+      --navbar-height: 260px;
     }
   }
 `
@@ -259,6 +269,14 @@ export const NavbarLogoWrapper = styled('div')`
   ${({theme}) => theme.breakpoints.up('lg')} {
     width: 440px;
   }
+
+  ${({theme}) => theme.breakpoints.up('xl')} {
+    width: 550px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xxl')} {
+    width: 700px;
+  }
 `
 
 export const HauptstadtClaimWrapper = styled(NavbarLogoWrapper)`
@@ -272,6 +290,14 @@ export const HauptstadtClaimWrapper = styled(NavbarLogoWrapper)`
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     height: 18px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xl')} {
+    height: 22px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xxl')} {
+    height: 29px;
   }
 `
 
@@ -291,6 +317,18 @@ const HauptstadtLogo = styled('img', {
 
       ${theme.breakpoints.up('lg')} {
         width: 330px;
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        width: 440px;
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        width: 550px;
+      }
+
+      ${theme.breakpoints.up('xxl')} {
+        width: 700px;
       }
     `}
 `
@@ -389,6 +427,18 @@ export function HauptstadtNavbar({
                 {!isMenuOpen && <FiMenu />}
                 {isMenuOpen && <FiPlus css={{transform: 'rotate(45deg)'}} />}
               </IconButton>
+
+              {hasUnpaidInvoices && profileBtn && (
+                <Button
+                  LinkComponent={Link}
+                  color="error"
+                  startIcon={<MdWarning />}
+                  sx={buttonStyles}
+                  size="medium"
+                  {...profileBtn}>
+                  <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
+                </Button>
+              )}
             </NavbarIconButtonWrapper>
 
             {!!headerItems?.links.length && (
@@ -409,18 +459,6 @@ export function HauptstadtNavbar({
           </NavbarLoginLink>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUnpaidInvoices && profileBtn && (
-              <Button
-                LinkComponent={Link}
-                color="warning"
-                startIcon={<MdWarning />}
-                sx={buttonStyles}
-                size="medium"
-                {...profileBtn}>
-                <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
-              </Button>
-            )}
-
             {(!isScrolled || isMenuOpen) && (
               <Link href="/search" color="inherit">
                 <NavbarSearchIconButtonWrapper>
@@ -556,6 +594,10 @@ export const NavPaperCategoryLinks = styled('div')`
 
 export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
   gap: 0;
+
+  span {
+    font-family: ${Tiempos.style.fontFamily};
+  }
 `
 
 export const NavPaperChildrenWrapper = styled('div')`
@@ -719,7 +761,7 @@ const NavPaper = ({
                         underline="none"
                         css={navPaperLinkStyling(theme)}
                         onClick={closeMenu}>
-                        <H6 component="span" css={{fontWeight: '700'}}>
+                        <H6 component="span" css={{fontWeight: '400'}}>
                           {link.label}
                         </H6>
                       </Link>
