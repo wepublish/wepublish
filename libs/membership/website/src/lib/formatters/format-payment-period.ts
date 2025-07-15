@@ -6,8 +6,8 @@ export const formatPaymentPeriod = cond([
   [period => period === PaymentPeriodicity.Quarterly, () => '3 Monate'],
   [period => period === PaymentPeriodicity.Biannual, () => '6 Monate'],
   [period => period === PaymentPeriodicity.Biannual, () => '6 Monate'],
-  [period => period === PaymentPeriodicity.Biennial, () => '24 Monate'],
-  [period => period === PaymentPeriodicity.Lifetime, () => '1200 Monate'],
+  [period => period === PaymentPeriodicity.Biennial, () => '2 Jahre'],
+  [period => period === PaymentPeriodicity.Lifetime, () => 'Lebenslang'],
   [(period: PaymentPeriodicity) => true, () => '1 Jahr']
 ])
 
