@@ -1,6 +1,6 @@
 import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image, UploadImageInput} from '@wepublish/image/api'
-import {PublicProperty} from '@wepublish/utils/api'
+import {Property} from '@wepublish/utils/api'
 
 @ObjectType()
 export class OAuth2Account {
@@ -80,8 +80,8 @@ export class User {
   @Field(() => Image, {nullable: true})
   image?: Image | null
 
-  @Field(() => [PublicProperty])
-  properties?: PublicProperty[]
+  @Field(() => [Property])
+  properties?: Property[]
 
   roleIDs!: string[]
 

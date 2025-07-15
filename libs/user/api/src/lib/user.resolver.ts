@@ -1,7 +1,7 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {OAuth2Account, PaymentProviderCustomer, User, UserAddress} from './user.model'
 import {PrismaClient} from '@prisma/client'
-import {PublicProperty} from '@wepublish/utils/api'
+import {Property} from '@wepublish/utils/api'
 import {Image, ImageDataloaderService} from '@wepublish/image/api'
 
 @Resolver(() => User)
@@ -53,7 +53,7 @@ export class UserResolver {
     })
   }
 
-  @ResolveField(() => [PublicProperty])
+  @ResolveField(() => [Property])
   public async properties(@Parent() {id: userId, properties}: User) {
     if (properties !== undefined) {
       return properties

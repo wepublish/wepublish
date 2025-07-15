@@ -4,10 +4,16 @@ import {MemberPlanService} from './member-plan.service'
 import {MemberPlanResolver} from './member-plan.resolver'
 import {PaymentMethodModule} from '@wepublish/payment-method/api'
 import {AvailablePaymentMethodResolver} from './available-payment-method.resolver'
+import {MemberPlanDataloader} from './member-plan.dataloader'
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule],
-  providers: [MemberPlanService, MemberPlanResolver, AvailablePaymentMethodResolver],
-  exports: [MemberPlanService]
+  providers: [
+    MemberPlanService,
+    MemberPlanResolver,
+    AvailablePaymentMethodResolver,
+    MemberPlanDataloader
+  ],
+  exports: [MemberPlanService, MemberPlanDataloader]
 })
 export class MemberPlanModule {}

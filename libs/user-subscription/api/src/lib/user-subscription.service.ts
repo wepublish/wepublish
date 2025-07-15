@@ -12,14 +12,10 @@ import {
 } from '@prisma/client'
 import {
   InternalError,
-  logger,
-  MailContext,
   MonthlyAmountNotEnough,
   NotFound,
   PaymentConfigurationNotAllowed,
-  PaymentsService,
-  SubscriptionToDeactivateDoesNotExist,
-  unselectPassword
+  SubscriptionToDeactivateDoesNotExist
 } from '@wepublish/api'
 import {RemoteSubscriptionsService} from './remote-subscriptions.service'
 import {UserInputError} from '@nestjs/apollo'
@@ -31,6 +27,9 @@ import {
 } from './subscription.model'
 import {PaymentMethodService} from '@wepublish/payment-method/api'
 import {MemberContextService} from './member-context.service'
+import {PaymentsService} from '@wepublish/payment/api'
+import {logger} from '@wepublish/utils/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[]
@@ -41,22 +40,18 @@ export type SubscriptionWithRelations = Subscription & {
 @Injectable()
 export class UserSubscriptionService {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly payments: PaymentsService,
-    private readonly memberPlanService: MemberPlanService,
-    private readonly paymentMethodService: PaymentMethodService,
-    private readonly remoteSubscriptionsService: RemoteSubscriptionsService,
-    private readonly mailContext: MailContext,
-    private readonly memberContext: MemberContextService
+    private prisma: PrismaClient,
+    private payments: PaymentsService,
+    private memberPlanService: MemberPlanService,
+    private paymentMethodService: PaymentMethodService,
+    private remoteSubscriptionsService: RemoteSubscriptionsService,
+    private memberContext: MemberContextService
   ) {}
 
   public async getUserSubscriptions(userId: string) {
     return this.prisma.subscription.findMany({
       where: {
         userID: userId
-      },
-      select: {
-        id: true
       }
     })
   }
@@ -262,6 +257,7 @@ export class UserSubscriptionService {
         where: {id: subscription.userID},
         select: unselectPassword
       })
+
       if (!fullUser) {
         logger('extendSubscription').warn('user %s not found', subscription.userID)
         throw new InternalError()
@@ -270,6 +266,7 @@ export class UserSubscriptionService {
       const customer = fullUser.paymentProviderCustomers.find(
         ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
       )
+
       if (!customer) {
         logger('extendSubscription').warn('customer %s not found', paymentMethod.paymentProviderID)
       } else {
@@ -296,7 +293,7 @@ export class UserSubscriptionService {
     }
   }
 
-  async updatePublicSubscription(
+  async updateSubscription(
     id: string,
     input: Pick<
       Prisma.SubscriptionUncheckedUpdateInput,
@@ -329,6 +326,7 @@ export class UserSubscriptionService {
     const paymentMethod = await this.prisma.paymentMethod.findUnique({
       where: {id: paymentMethodID as string, active: true}
     })
+
     if (!paymentMethod) {
       throw new NotFound('PaymentMethod', paymentMethodID as string)
     }
@@ -366,6 +364,7 @@ export class UserSubscriptionService {
     const paymentProvider = this.payments
       .getProviders()
       .find(paymentProvider => paymentProvider.id === paymentMethodRemote?.paymentProviderID)
+
     if (paymentProvider?.remoteManagedSubscription) {
       await this.remoteSubscriptionsService.updateSubscription({
         paymentProvider,

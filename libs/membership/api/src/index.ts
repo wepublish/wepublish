@@ -6,6 +6,7 @@ export * from './lib/subscription/subscription.service'
 export * from './lib/subscription/subscription.dataloader'
 export * from './lib/subscription-event-dictionary/subscription-event-dictionary.type'
 
+export * from './lib/subscription-flow/subscription-flow.model'
 export * from './lib/subscription/subscription.model'
 export * from './lib/subscription/subscription.module'
 export * from './lib/subscription/has-subscription/has-subscription.model'

@@ -2,12 +2,16 @@ import {Field, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaymentPeriodicity} from '@prisma/client'
 import {MemberPlan} from '@wepublish/member-plan/api'
 import {HasPaymentMethod, PaymentMethod} from '@wepublish/payment-method/api'
-import {PublicProperty} from '@wepublish/utils/api'
+import {Property} from '@wepublish/utils/api'
 import {SubscriptionDeactivationReason} from '.prisma/client'
 import {HasUser, User} from '@wepublish/user/api'
 
 registerEnumType(SubscriptionDeactivationReason, {
   name: 'SubscriptionDeactivationReason'
+})
+
+registerEnumType(PaymentPeriodicity, {
+  name: 'PaymentPeriodicity'
 })
 
 @ObjectType()
@@ -52,8 +56,8 @@ export class PublicSubscription {
   @Field(() => Boolean)
   extendable!: boolean
 
-  @Field(() => [PublicProperty])
-  properties!: PublicProperty[]
+  @Field(() => [Property])
+  properties!: Property[]
 
   @Field(() => SubscriptionDeactivation, {nullable: true})
   deactivation?: SubscriptionDeactivation
