@@ -1,13 +1,13 @@
 import {ArgsType, Field, InputType, Int, OmitType, registerEnumType} from '@nestjs/graphql'
 import type {PaymentPeriodicity as PaymentPeriodicityType} from '@prisma/client'
 import {PaymentPeriodicity} from '@prisma/client'
-import {GraphQLSlug, PublicPropertyInput} from '@wepublish/utils/api'
+import {GraphQLSlug, PropertyInput} from '@wepublish/utils/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
 })
 
-@InputType('SubscriptionInput')
+@InputType()
 export class UserSubscriptionInput {
   @Field()
   id!: string
@@ -51,8 +51,8 @@ export class CreateSubscriptionArgs {
   @Field(() => GraphQLSlug, {nullable: true})
   paymentMethodSlug?: string
 
-  @Field(() => [PublicPropertyInput], {nullable: true})
-  subscriptionProperties?: PublicPropertyInput[]
+  @Field(() => [PropertyInput], {nullable: true})
+  subscriptionProperties?: PropertyInput[]
 
   @Field({nullable: true})
   successURL?: string

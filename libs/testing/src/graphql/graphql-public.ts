@@ -1750,7 +1750,7 @@ export type MutationCreateSubscriptionArgs = {
   paymentMethodID?: InputMaybe<Scalars['String']>
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>
   paymentPeriodicity: PaymentPeriodicity
-  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
+  subscriptionProperties?: InputMaybe<Array<PropertyInput>>
   successURL?: InputMaybe<Scalars['String']>
 }
 
@@ -1776,7 +1776,7 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
   paymentMethodID?: InputMaybe<Scalars['String']>
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>
   paymentPeriodicity: PaymentPeriodicity
-  subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput>>
+  subscriptionProperties?: InputMaybe<Array<PropertyInput>>
   userId?: InputMaybe<Scalars['String']>
 }
 
@@ -2036,7 +2036,7 @@ export type MutationUpdateUserConsentArgs = {
 
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String']
-  input: SubscriptionInput
+  input: UserSubscriptionInput
 }
 
 export type MutationUploadUserProfileImageArgs = {
@@ -2489,17 +2489,6 @@ export type PropertyInput = {
   value: Scalars['String']
 }
 
-export type PublicProperties = {
-  __typename?: 'PublicProperties'
-  key: Scalars['String']
-  value: Scalars['String']
-}
-
-export type PublicPropertiesInput = {
-  key: Scalars['String']
-  value: Scalars['String']
-}
-
 export type PublicSubscription = HasPaymentMethod &
   HasUser & {
     __typename?: 'PublicSubscription'
@@ -2514,7 +2503,7 @@ export type PublicSubscription = HasPaymentMethod &
     paymentMethod: PaymentMethod
     paymentMethodID: Scalars['String']
     paymentPeriodicity: PaymentPeriodicity
-    properties: Array<PublicProperties>
+    properties: Array<Property>
     startsAt: Scalars['DateTime']
     url: Scalars['String']
     user: User
@@ -3148,15 +3137,6 @@ export type SubscriptionFlowModel = {
   periodicities: Array<PaymentPeriodicity>
 }
 
-export type SubscriptionInput = {
-  autoRenew: Scalars['Boolean']
-  id: Scalars['String']
-  memberPlanID: Scalars['String']
-  monthlyAmount: Scalars['Int']
-  paymentMethodID: Scalars['String']
-  paymentPeriodicity: PaymentPeriodicity
-}
-
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval'
   daysAwayFromEnding?: Maybe<Scalars['Int']>
@@ -3473,7 +3453,7 @@ export type User = {
   oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   permissions: Array<Scalars['String']>
-  properties: Array<PublicProperties>
+  properties: Array<Property>
 }
 
 export type UserAddress = {
@@ -3536,6 +3516,15 @@ export type UserSession = {
   createdAt: Scalars['DateTime']
   expiresAt: Scalars['DateTime']
   token: Scalars['String']
+}
+
+export type UserSubscriptionInput = {
+  autoRenew: Scalars['Boolean']
+  id: Scalars['String']
+  memberPlanID: Scalars['String']
+  monthlyAmount: Scalars['Int']
+  paymentMethodID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
 }
 
 export type VersionInformation = {
