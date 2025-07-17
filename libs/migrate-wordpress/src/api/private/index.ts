@@ -1738,7 +1738,9 @@ export enum PaymentPeriodicity {
   Biannual = 'biannual',
   Monthly = 'monthly',
   Quarterly = 'quarterly',
-  Yearly = 'yearly'
+  Yearly = 'yearly',
+  Biennial = 'biennial',
+  Lifetime = 'lifetime'
 }
 
 export type PaymentProvider = {

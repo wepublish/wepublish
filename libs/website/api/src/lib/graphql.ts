@@ -1357,7 +1357,9 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -2276,6 +2278,8 @@ export type PaymentMethod = HasImageLc & {
 
 export enum PaymentPeriodicity {
   Biannual = 'biannual',
+  Biennial = 'biennial',
+  Lifetime = 'lifetime',
   Monthly = 'monthly',
   Quarterly = 'quarterly',
   Yearly = 'yearly'

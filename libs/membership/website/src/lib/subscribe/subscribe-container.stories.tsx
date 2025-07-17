@@ -39,7 +39,9 @@ const memberPlan = {
         PaymentPeriodicity.Monthly,
         PaymentPeriodicity.Quarterly,
         PaymentPeriodicity.Biannual,
-        PaymentPeriodicity.Yearly
+        PaymentPeriodicity.Yearly,
+        PaymentPeriodicity.Biennial,
+        PaymentPeriodicity.Lifetime
       ],
       paymentMethods: [
         {

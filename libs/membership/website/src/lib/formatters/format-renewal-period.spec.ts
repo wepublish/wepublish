@@ -6,7 +6,9 @@ describe('formatRenewalPeriod', () => {
     PaymentPeriodicity.Monthly,
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
-    PaymentPeriodicity.Yearly
+    PaymentPeriodicity.Yearly,
+    PaymentPeriodicity.Biennial,
+    PaymentPeriodicity.Lifetime
   ])('should format renewal period for %s', periodicity => {
     expect(formatRenewalPeriod(periodicity)).toMatchSnapshot()
   })

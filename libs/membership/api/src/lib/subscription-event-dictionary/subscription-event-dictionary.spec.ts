@@ -108,7 +108,9 @@ describe('SubscriptionEventDictionary', () => {
         periodicities: [
           PaymentPeriodicity.monthly,
           PaymentPeriodicity.yearly,
-          PaymentPeriodicity.biannual
+          PaymentPeriodicity.biannual,
+          PaymentPeriodicity.biennial,
+          PaymentPeriodicity.lifetime
         ],
         autoRenewal: [true, false],
         createdAt: new Date(),

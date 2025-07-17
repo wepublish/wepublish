@@ -6,7 +6,9 @@ describe('mapPaymentPeriodToMonths', () => {
     PaymentPeriodicity.monthly,
     PaymentPeriodicity.quarterly,
     PaymentPeriodicity.biannual,
-    PaymentPeriodicity.yearly
+    PaymentPeriodicity.yearly,
+    PaymentPeriodicity.biennial,
+    PaymentPeriodicity.lifetime
   ])('should format payment period for %s', periodicity => {
     expect(mapPaymentPeriodToMonths(periodicity)).toMatchSnapshot()
   })

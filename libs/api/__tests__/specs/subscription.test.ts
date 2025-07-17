@@ -64,7 +64,14 @@ beforeAll(async () => {
           create: {
             forceAutoRenewal: false,
             paymentMethodIDs: [paymentMethod.id],
-            paymentPeriodicities: ['biannual', 'monthly', 'quarterly', 'yearly']
+            paymentPeriodicities: [
+              'biannual',
+              'monthly',
+              'quarterly',
+              'yearly',
+              'biennial',
+              'lifetime'
+            ]
           }
         },
         currency: Currency.CHF

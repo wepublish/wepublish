@@ -138,6 +138,10 @@ export class CrowdfundingService {
         return 6
       case 'yearly':
         return 12
+      case 'biennial':
+        return 24
+      case 'lifetime':
+        return 1200
       default:
         return 0
     }

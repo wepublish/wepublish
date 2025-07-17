@@ -176,6 +176,10 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
         return t('memberPlanList.paymentPeriodicity.biannual')
       case PaymentPeriodicity.Yearly:
         return t('memberPlanList.paymentPeriodicity.yearly')
+      case PaymentPeriodicity.Biennial:
+        return t('memberPlanList.paymentPeriodicity.biennial')
+      case PaymentPeriodicity.Lifetime:
+        return t('memberPlanList.paymentPeriodicity.lifetime')
       default:
         return 'Unknown Error'
     }

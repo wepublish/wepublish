@@ -73,9 +73,23 @@ function extractPeriodicityAndMonthlyAmount(row: Row): {
       monthlyAmount: +periodAmount / 6
     }
   }
+  if (differenceInMonths(endDate, startDate) < 13) {
+    return {
+      paymentPeriodicity: PaymentPeriodicity.Yearly,
+      monthlyAmount: +periodAmount / 12
+    }
+  }
+
+  if (differenceInMonths(endDate, startDate) < 30) {
+    return {
+      paymentPeriodicity: PaymentPeriodicity.Biennial,
+      monthlyAmount: +periodAmount / 24
+    }
+  }
+
   return {
-    paymentPeriodicity: PaymentPeriodicity.Yearly,
-    monthlyAmount: +periodAmount / 12
+    paymentPeriodicity: PaymentPeriodicity.Lifetime,
+    monthlyAmount: +periodAmount / 1200
   }
 }
 

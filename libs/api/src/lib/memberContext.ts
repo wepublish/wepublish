@@ -81,6 +81,10 @@ export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPerio
       return new Date(start.setMonth(start.getMonth() + 6))
     case PaymentPeriodicity.yearly:
       return new Date(start.setMonth(start.getMonth() + 12))
+    case PaymentPeriodicity.biennial:
+      return new Date(start.setMonth(start.getMonth() + 24))
+    case PaymentPeriodicity.lifetime:
+      return new Date(start.setMonth(start.getMonth() + 1200))
   }
 }
 
@@ -97,6 +101,10 @@ export function calculateAmountForPeriodicity(
       return monthlyAmount * 6
     case PaymentPeriodicity.yearly:
       return monthlyAmount * 12
+    case PaymentPeriodicity.biennial:
+      return monthlyAmount * 24
+    case PaymentPeriodicity.lifetime:
+      return monthlyAmount * 1200
   }
 }
 

@@ -46,7 +46,9 @@ const subscribeSchema = z.object({
     PaymentPeriodicity.Monthly,
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
-    PaymentPeriodicity.Yearly
+    PaymentPeriodicity.Yearly,
+    PaymentPeriodicity.Biennial,
+    PaymentPeriodicity.Lifetime
   ]),
   payTransactionFee: z.boolean()
 })
