@@ -154,7 +154,8 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     <BannerWrapper
       hasImage={!!data?.primaryBanner.image}
       className={className}
-      data-collapsed={collapsed}>
+      data-collapsed={collapsed}
+      data-banner>
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
 
       {data?.primaryBanner.image && (
@@ -206,7 +207,7 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
 export const forceHideBanner = (
   <GlobalStyles
     styles={css`
-      ${BannerWrapper} {
+      [data-banner] {
         display: none !important;
       }
     `}

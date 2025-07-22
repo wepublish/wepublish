@@ -1,20 +1,17 @@
 /*
   @TODO:
-  open invoices integration
+  banner integration
 
-  double check desktop boxing
   double check font weights (also blocks) on pages only
-
-  @Lukas: when subscription exists on article pages, hide menu when scrolling down and show diagonal again on any scroll up event
 */
 
 import styled from '@emotion/styled'
-import {AppBar, Box, css, GlobalStyles, SxProps, Theme, Toolbar, useTheme} from '@mui/material'
+import {AppBar, Box, css, GlobalStyles, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderNavbarProps, IconButton, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 // Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
@@ -27,20 +24,20 @@ const cssVariables = (theme: Theme) => css`
   :root {
     --navbar-height: 80px;
 
-    ${theme.breakpoints.up('md')} {
-      --navbar-height: 145px;
+    ${theme.breakpoints.up('sm')} {
+      --navbar-height: 109px;
     }
 
     ${theme.breakpoints.up('lg')} {
-      --navbar-height: 180px;
+      --navbar-height: 145px;
     }
 
     ${theme.breakpoints.up('xl')} {
-      --navbar-height: 220px;
+      --navbar-height: 173px;
     }
 
     ${theme.breakpoints.up('xxl')} {
-      --navbar-height: 260px;
+      --navbar-height: 208px;
     }
   }
 `
@@ -53,14 +50,6 @@ export const NavbarWrapper = styled('nav')`
   z-index: 10;
 `
 
-const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
-  isMenuOpen
-    ? css`
-        background-color: ${theme.palette.background.paper};
-        color: ${theme.palette.primary.contrastText};
-      `
-    : null
-
 export const NavbarInnerWrapper = styled(Toolbar, {
   shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
@@ -69,7 +58,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   row-gap: ${({theme}) => theme.spacing(0.5)};
   align-content: center;
   align-items: center;
-  grid-auto-flow: column;
   justify-items: center;
   min-height: unset;
   padding: 0;
@@ -79,7 +67,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  transition: clip-path 500ms ease-out;
+  transition: clip-path 300ms ease-out;
 
   &::before {
     content: '';
@@ -89,7 +77,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     width: 100%;
     height: 100%;
     background-color: ${({theme}) => theme.palette.background.paper};
-    transition: clip-path 500ms ease-out;
+    transition: clip-path 300ms ease-out;
     clip-path: polygon(0 95%, 100% 95%, 100% calc(100% - 1px), 0 calc(100% - 1px));
     z-index: 2;
   }
@@ -102,7 +90,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     width: 100%;
     height: 100%;
     background-color: ${({theme}) => theme.palette.primary.main};
-    transition: clip-path 500ms ease-out;
+    transition: clip-path 300ms ease-out;
     clip-path: polygon(0 calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 0 100%);
     z-index: 10;
   }
@@ -126,6 +114,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   ${({theme}) => theme.breakpoints.up('sm')} {
     min-height: unset;
     padding: 0;
+    row-gap: ${({theme}) => theme.spacing(1)};
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -202,27 +191,30 @@ export const NavbarActions = styled('div', {
   }
 `
 
+export const NavbarMenuButton = styled(IconButton)`
+  position: relative;
+  padding: 0;
+
+  > svg {
+    font-size: 28px;
+    stroke-width: 1.25px;
+
+    ${({theme}) => theme.breakpoints.up('lg')} {
+      font-size: 35px;
+    }
+
+    ${({theme}) => theme.breakpoints.up('xxl')} {
+      font-size: 45px;
+    }
+  }
+`
+
 export const NavbarIconButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
   aspect-ratio: 1;
   padding-left: ${({theme}) => theme.spacing(1)};
-
-  button {
-    padding: 0;
-  }
-
-  svg {
-    font-size: 28px;
-    stroke-width: 1.25px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    svg {
-      font-size: 35px;
-    }
-  }
 `
 
 export const NavbarSearchIconButtonWrapper = styled(NavbarIconButtonWrapper)`
@@ -249,20 +241,13 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `
 
-const buttonStyles: SxProps<Theme> = theme => ({
-  [theme.breakpoints.up('sm')]: {
-    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
-  }
-})
-
 export const NavbarLogoWrapper = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 220px;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('sm')} {
     width: 350px;
   }
 
@@ -284,7 +269,7 @@ export const HauptstadtClaimWrapper = styled(NavbarLogoWrapper)`
   grid-column: -1/1;
   height: 9px;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('sm')} {
     height: 14px;
   }
 
@@ -305,18 +290,14 @@ const HauptstadtLogo = styled('img', {
   shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   width: 100%;
-  transition: width 0.3s ease-out;
+  transition: width 300ms ease-out;
 
   ${({theme, isScrolled, isMenuOpen}) =>
     isScrolled &&
     !isMenuOpen &&
     css`
-      ${theme.breakpoints.up('md')} {
-        width: 220px;
-      }
-
-      ${theme.breakpoints.up('lg')} {
-        width: 330px;
+      ${theme.breakpoints.up('sm')} {
+        width: 350px;
       }
 
       ${theme.breakpoints.up('lg')} {
@@ -337,7 +318,7 @@ const HauptstadtClaim = styled('img', {
   shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   width: 100%;
-  transition: width 0.3s ease-out;
+  transition: width 300ms ease-out;
 
   ${({isScrolled, isMenuOpen}) =>
     isScrolled &&
@@ -345,6 +326,20 @@ const HauptstadtClaim = styled('img', {
     css`
       width: 0px;
     `}
+`
+
+const HauptstadtOpenInvoices = styled('div')`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  transform: translateX(100%);
+  display: grid;
+  gap: ${({theme}) => theme.spacing(0.5)};
+  grid-template-columns: max-content max-content;
+  align-items: center;
+  color: ${({theme}) => theme.palette.error.main};
+  font-size: 0.875em;
+  font-weight: 600;
 `
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
@@ -406,10 +401,6 @@ export function HauptstadtNavbar({
     [categorySlugs, data?.navigations]
   )
 
-  const {
-    elements: {IconButton, Button}
-  } = useWebsiteBuilder()
-
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -419,26 +410,26 @@ export function HauptstadtNavbar({
     <NavbarWrapper className={className}>
       <GlobalStyles styles={theme => cssVariables(theme)} />
 
-      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles(isMenuOpen)}>
+      <AppBar position="static" elevation={0} color={'transparent'}>
         <NavbarInnerWrapper isScrolled={isScrolled} isMenuOpen={isMenuOpen}>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton size="small" aria-label="Menu" onClick={toggleMenu} color={'inherit'}>
+              <NavbarMenuButton
+                size="small"
+                aria-label="Menu"
+                onClick={toggleMenu}
+                color={'inherit'}>
                 {!isMenuOpen && <FiMenu />}
                 {isMenuOpen && <FiPlus css={{transform: 'rotate(45deg)'}} />}
-              </IconButton>
 
-              {hasUnpaidInvoices && profileBtn && (
-                <Button
-                  LinkComponent={Link}
-                  color="error"
-                  startIcon={<MdWarning />}
-                  sx={buttonStyles}
-                  size="medium"
-                  {...profileBtn}>
-                  <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
-                </Button>
-              )}
+                {hasUnpaidInvoices && profileBtn && (
+                  <HauptstadtOpenInvoices>
+                    <MdWarning size={24} />
+
+                    <Box sx={{display: {xs: 'none', md: 'unset'}}}>Abo Jetzt Bezahlen</Box>
+                  </HauptstadtOpenInvoices>
+                )}
+              </NavbarMenuButton>
             </NavbarIconButtonWrapper>
 
             {!!headerItems?.links.length && (
@@ -462,9 +453,9 @@ export function HauptstadtNavbar({
             {(!isScrolled || isMenuOpen) && (
               <Link href="/search" color="inherit">
                 <NavbarSearchIconButtonWrapper>
-                  <IconButton color="inherit" size="small">
+                  <NavbarMenuButton color="inherit" size="small">
                     <MdSearch aria-label="Suche" />
-                  </IconButton>
+                  </NavbarMenuButton>
                 </NavbarSearchIconButtonWrapper>
               </Link>
             )}
@@ -528,7 +519,7 @@ export const NavPaperWrapper = styled('div', {
   left: 0;
   right: 0;
   transform: translateX(${({isMenuOpen}) => (isMenuOpen ? '0' : '-100%')});
-  transition: transform 0.3s ease-in-out;
+  transition: transform 300ms ease-in-out;
   overflow-y: scroll;
   max-height: 100vh;
   padding-bottom: ${({theme}) => theme.spacing(10)};

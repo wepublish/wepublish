@@ -1,4 +1,9 @@
-import {BuilderAlertProps, BuilderButtonProps, BuilderModalProps} from './ui.interface'
+import {
+  BuilderAlertProps,
+  BuilderButtonProps,
+  BuilderIconButtonProps,
+  BuilderModalProps
+} from './ui.interface'
 import {useWebsiteBuilder} from './website-builder.context'
 
 export const Button = (props: BuilderButtonProps) => {
@@ -7,6 +12,14 @@ export const Button = (props: BuilderButtonProps) => {
   } = useWebsiteBuilder()
 
   return <Button {...props} />
+}
+
+export const IconButton = (props: BuilderIconButtonProps) => {
+  const {
+    elements: {IconButton}
+  } = useWebsiteBuilder()
+
+  return <IconButton {...props} />
 }
 
 export const Modal = (props: BuilderModalProps) => {

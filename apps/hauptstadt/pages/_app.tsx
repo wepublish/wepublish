@@ -209,7 +209,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   </Container>
                 </main>
 
-                <FooterContainer slug="main" categorySlugs={[['pages']]} iconSlug="icons" />
+                <FooterContainer
+                  slug="main"
+                  categorySlugs={[['pages']]}
+                  iconSlug="icons"
+                  hideBannerOnIntersecting={false}
+                />
               </Spacer>
 
               <RoutedAdminBar />

@@ -8,5 +8,6 @@ export type BuilderFooterProps = PropsWithChildren<
     slug: string
     iconSlug?: string
     categorySlugs: string[][]
+    hideBannerOnIntersecting?: boolean
   }
 >

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {Container} from '@mui/material'
 import {
   Banner,
   BannerActions,
@@ -11,10 +12,13 @@ import {
   BannerText,
   BannerTitle
 } from '@wepublish/banner/website'
+import {BuilderBannerProps} from '@wepublish/website/builder'
+import {useCallback, useEffect, useState} from 'react'
 
-import {breakoutContainerOnXs} from '../utils/breakout-container'
-
-export const HauptstadtBanner = styled(Banner)`
+const StyledBanner = styled(Banner)`
+  z-index: unset;
+  position: unset;
+  top: unset;
   background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
 
@@ -32,8 +36,6 @@ export const HauptstadtBanner = styled(Banner)`
   }
 
   &[data-collapsed='false'] {
-    ${breakoutContainerOnXs}
-
     ${BannerContentWrapper} {
       display: grid;
       row-gap: ${({theme}) => theme.spacing(4)};
@@ -63,16 +65,9 @@ export const HauptstadtBanner = styled(Banner)`
   }
 
   &[data-collapsed='true'] {
-    top: unset;
     display: block;
     border-radius: 4px;
     grid-template-columns: 1fr;
-    position: fixed;
-    bottom: ${({theme}) => theme.spacing(2)};
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90vw;
-    max-width: ${370 / 16}rem;
 
     ${({theme}) => theme.breakpoints.up('sm')} {
       bottom: ${({theme}) => theme.spacing(1)};
@@ -87,3 +82,63 @@ export const HauptstadtBanner = styled(Banner)`
     }
   }
 `
+
+const HauptstadtBannerContainer = styled(Container, {
+  shouldForwardProp: propName => propName !== 'isScrolled'
+})<{isScrolled: boolean}>`
+  padding: 0 !important;
+  position: fixed;
+  top: var(--navbar-height);
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 300ms ease-out;
+
+  &:empty {
+    display: none;
+  }
+
+  ::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 0;
+    right: 0;
+    transform: translateY(-100%);
+    background: ${({theme}) => theme.palette.primary.main};
+    height: calc(var(--navbar-height) * 0.66);
+  }
+
+  :has([data-collapsed='true']) {
+    transform: translateX(-50%) ${({isScrolled}) => isScrolled && `translateY(-35%)`};
+
+    ${({theme}) => theme.breakpoints.up('sm')} {
+      transform: translateX(-50%);
+
+      &::before {
+        display: none;
+      }
+
+      width: 90vw;
+      max-width: ${370 / 16}rem;
+      top: unset;
+      bottom: ${({theme}) => theme.spacing(1)};
+    }
+  }
+`
+
+export const HauptstadtBanner = (props: BuilderBannerProps) => {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 50), [])
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
+
+  return (
+    <HauptstadtBannerContainer maxWidth="lg" isScrolled={isScrolled} data-banner>
+      <StyledBanner {...props} />
+    </HauptstadtBannerContainer>
+  )
+}

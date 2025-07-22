@@ -71,7 +71,8 @@ export function Footer({
   iconSlug,
   data,
   loading,
-  error
+  error,
+  hideBannerOnIntersecting
 }: BuilderFooterProps) {
   const {isIntersecting, ref} = useIntersectionObserver({
     initialIsIntersecting: false,
@@ -108,7 +109,7 @@ export function Footer({
         </FooterIcons>
       </FooterIconsWrapper>
 
-      {isIntersecting && forceHideBanner}
+      {isIntersecting && hideBannerOnIntersecting && forceHideBanner}
     </FooterWrapper>
   )
 }

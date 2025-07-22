@@ -6,6 +6,7 @@ export type FooterContainerProps = PropsWithChildren<{
   slug: string
   categorySlugs: string[][]
   iconSlug?: string
+  hideBannerOnIntersecting?: boolean
 }> &
   BuilderContainerProps
 
@@ -14,7 +15,8 @@ export function FooterContainer({
   iconSlug,
   categorySlugs,
   children,
-  className
+  className,
+  hideBannerOnIntersecting = true
 }: FooterContainerProps) {
   const {Footer} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
@@ -27,7 +29,8 @@ export function FooterContainer({
       slug={slug}
       className={className}
       iconSlug={iconSlug}
-      categorySlugs={categorySlugs}>
+      categorySlugs={categorySlugs}
+      hideBannerOnIntersecting={hideBannerOnIntersecting}>
       {children}
     </Footer>
   )

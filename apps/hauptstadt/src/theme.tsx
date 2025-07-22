@@ -161,7 +161,7 @@ const variablesTheme = createTheme(WePTheme, {
     secondary: augmentColor({color: {main: '#272727'}}),
     accent: augmentColor({color: {main: '#f3ded0'}}),
     success: augmentColor({color: {main: '#abd8da'}}),
-    // warning: augmentColor({color: {main: '#f4e7bd'}}),
+    error: augmentColor({color: {main: '#ff5252'}}),
     text: {
       primary: '#000'
     },
@@ -692,6 +692,16 @@ export const contentTheme = createTheme(theme, {
     },
     blockQuote: {
       fontFamily: [Tiempos.style.fontFamily, 'sans-serif'].join(',')
+    }
+  }
+})
+
+export const pageTheme = createTheme(theme, {
+  typography: {
+    body1: {
+      ['& strong']: {
+        fontWeight: 400
+      }
     }
   }
 })
