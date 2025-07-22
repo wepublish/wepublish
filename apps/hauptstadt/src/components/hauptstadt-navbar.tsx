@@ -41,11 +41,50 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
+  transition: transform 500ms ease-out;
 `
 
+enum NavbarState {
+  Hidden,
+  Diagonal,
+  Regular
+}
+
+enum ScrollDirection {
+  Up,
+  Down
+}
+
+const getNavbarState = (
+  isScrolled: boolean,
+  scrollDirection: ScrollDirection,
+  isMenuOpen: boolean,
+  hasRunningSubscription: boolean
+): NavbarState => {
+  // When menu is open or scrolled to top, always show regular
+  if (isMenuOpen) {
+    return NavbarState.Regular
+  }
+  if (!isScrolled) {
+    return NavbarState.Regular
+  }
+
+  if (hasRunningSubscription) {
+    if (scrollDirection === ScrollDirection.Down) {
+      return NavbarState.Hidden
+    } else {
+      return NavbarState.Diagonal
+    }
+  } else {
+    return NavbarState.Diagonal
+  }
+}
+
 export const NavbarInnerWrapper = styled(Toolbar, {
-  shouldForwardProp: propName => propName !== 'isScrolled' && propName !== 'isMenuOpen'
-})<{isScrolled?: boolean; isMenuOpen?: boolean}>`
+  shouldForwardProp: propName => propName !== 'navbarState'
+})<{
+  navbarState: NavbarState
+}>`
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
   row-gap: ${({theme}) => theme.spacing(0.5)};
@@ -60,7 +99,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  transition: clip-path 300ms ease-out;
+  transition: clip-path 300ms ease-out, transform 300ms ease-out;
 
   &::before {
     content: '';
@@ -88,9 +127,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     z-index: 10;
   }
 
-  ${({isScrolled, isMenuOpen}) =>
-    isScrolled &&
-    !isMenuOpen &&
+  ${({navbarState}) =>
+    navbarState === NavbarState.Diagonal &&
     css`
       clip-path: polygon(0 0, 100% 0, 100% 40%, 0 90%);
       box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
@@ -102,6 +140,12 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       &::after {
         clip-path: polygon(0 89%, 100% 39%, 100% 40%, 0 90%);
       }
+    `}
+
+  ${({navbarState}) =>
+    navbarState === NavbarState.Hidden &&
+    css`
+      transform: translateY(-100%);
     `}
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -361,8 +405,24 @@ export function HauptstadtNavbar({
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false)
 
   const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(ScrollDirection.Down)
+  const [lastScrollY, setLastScrollY] = useState(0)
+
   const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
-  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 50), [])
+
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY
+
+    if (currentScrollY > lastScrollY) {
+      setScrollDirection(ScrollDirection.Down)
+    } else if (currentScrollY < lastScrollY) {
+      setScrollDirection(ScrollDirection.Up)
+    }
+
+    setIsScrolled(currentScrollY > 50)
+
+    setLastScrollY(currentScrollY)
+  }, [lastScrollY, scrollDirection])
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen
@@ -395,6 +455,8 @@ export function HauptstadtNavbar({
   )
 
   useEffect(() => {
+    setLastScrollY(window.scrollY)
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
@@ -404,7 +466,13 @@ export function HauptstadtNavbar({
       <GlobalStyles styles={theme => cssVariables(theme)} />
 
       <AppBar position="static" elevation={0} color={'transparent'}>
-        <NavbarInnerWrapper isScrolled={isScrolled} isMenuOpen={isMenuOpen}>
+        <NavbarInnerWrapper
+          navbarState={getNavbarState(
+            isScrolled,
+            scrollDirection,
+            isMenuOpen,
+            hasRunningSubscription
+          )}>
           <NavbarMain>
             <NavbarIconButtonWrapper>
               <NavbarMenuButton
