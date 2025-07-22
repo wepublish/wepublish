@@ -1,21 +1,29 @@
 import {EmotionCache} from '@emotion/cache'
-import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import styled from '@emotion/styled'
+import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
+import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {PaymentAmountPicker} from '@wepublish/membership/website'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  TitleBlock,
-  TitleBlockTitle,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  withJwtHandler,
+  withSessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -25,15 +33,18 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {Paywall} from '../src/components/paywall'
+import {TsriArticleDate} from '../src/components/tsri-article-date'
+import {TsriArticleMeta} from '../src/components/tsri-article-meta'
+import {TsriBanner} from '../src/components/tsri-banner'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriContextBox} from '../src/components/tsri-context-box'
-import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
+import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -42,7 +53,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -102,7 +115,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
+  sessionToken?: UserSession
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
@@ -110,101 +123,108 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            Navbar={TsriNavbar}
-            elements={{Link: NextWepublishLink}}
-            blocks={{
-              Teaser: TsriTeaser,
-              Break: TsriBreakBlock,
-              Quote: TsriQuoteBlock,
-              RichText: TsriRichText,
-              Title: TsriTitle
-            }}
-            blockStyles={{
-              ContextBox: TsriContextBox
-            }}
-            date={{format: dateFormatter}}
-            meta={{siteTitle}}
-            thirdParty={{
-              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
-            }}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          Navbar={TsriNavbar}
+          ArticleDate={TsriArticleDate}
+          ArticleMeta={TsriArticleMeta}
+          PaymentAmount={PaymentAmountPicker}
+          elements={{Link: NextWepublishLink}}
+          blocks={{
+            Teaser: TsriTeaser,
+            Break: TsriBreakBlock,
+            Quote: TsriQuoteBlock,
+            RichText: TsriRichText,
+            Title: TsriTitle,
+            Subscribe: MitmachenInner
+          }}
+          blockStyles={{
+            ContextBox: TsriContextBox
+          }}
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}
+          thirdParty={{
+            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+          }}
+          Banner={TsriBanner}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <Head>
+              <title key="title">{siteTitle}</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-                {/* Feeds */}
-                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-                {/* Sitemap */}
-                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
-                <meta name="theme-color" content="#ffffff" />
-              </Head>
+              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+              <link rel="manifest" href="/site.webmanifest" />
+              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+              <meta name="msapplication-TileColor" content="#ffffff" />
+              <meta name="theme-color" content="#ffffff" />
+            </Head>
 
-              <Spacer>
-                <NavbarContainer
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                  actions={<MitmachenButton />}
-                />
+            <Spacer>
+              <NavbarContainer
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+              />
 
-                <main>
-                  <MainSpacer maxWidth="lg">
-                    <NoSsr>
-                      <Paywall />
-                    </NoSsr>
+              <main>
+                <MainSpacer maxWidth="lg">
+                  <Component {...pageProps} />
+                </MainSpacer>
+              </main>
 
-                    <Component {...pageProps} />
-                  </MainSpacer>
-                </main>
+              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
+                <LogoLink href="/" aria-label="Startseite">
+                  <LogoWrapper />
+                </LogoLink>
+              </FooterContainer>
+            </Spacer>
 
-                <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                  <LogoLink href="/" aria-label="Startseite">
-                    <LogoWrapper />
-                  </LogoLink>
-                </FooterContainer>
-              </Spacer>
+            <RoutedAdminBar />
 
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
 
-              {publicRuntimeConfig.env.SPARKLOOP_ID && (
-                <Script
-                  src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
-                  strategy="lazyOnload"
-                  data-sparkloop
-                />
-              )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </SessionProvider>
+            {publicRuntimeConfig.env.GTM_ID && (
+              <>
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+              </>
+            )}
+
+            {publicRuntimeConfig.env.SPARKLOOP_ID && (
+              <Script
+                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                strategy="lazyOnload"
+                data-sparkloop
+              />
+            )}
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
     </AppCacheProvider>
   )
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink
+])(withSessionProvider(withJwtHandler(CustomApp)))
 
 export {ConnectedApp as default}

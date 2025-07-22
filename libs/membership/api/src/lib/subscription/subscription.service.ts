@@ -36,12 +36,9 @@ interface PeriodBounds {
 
 @Injectable()
 export class SubscriptionService {
-  constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly payments: PaymentsService
-  ) {}
+  constructor(private prismaService: PrismaClient, private payments: PaymentsService) {}
 
-  public async getSubscriptionsForInvoiceCreation(
+  public async getActiveSubscriptionsWithoutInvoice(
     runDate: Date,
     closestRenewalDate: Date
   ): Promise<
@@ -92,7 +89,7 @@ export class SubscriptionService {
    * @param runDate The current date.
    * @returns All invoices that are due.
    */
-  public async getInvoicesToCharge(runDate: Date) {
+  public async findUnpaidDueInvoices(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
         dueAt: {
@@ -103,6 +100,9 @@ export class SubscriptionService {
         // skip invoices where the subscription has been deleted
         subscriptionID: {
           not: null
+        },
+        subscription: {
+          confirmed: true
         }
       },
       include: {
@@ -128,7 +128,7 @@ export class SubscriptionService {
    * @param runDate the date to check for.
    * @returns a list of invoices.
    */
-  public async getSubscriptionsToDeactivate(runDate: Date) {
+  public async findUnpaidScheduledForDeactivationInvoices(runDate: Date) {
     return this.prismaService.invoice.findMany({
       where: {
         scheduledDeactivationAt: {
@@ -157,7 +157,7 @@ export class SubscriptionService {
    * @returns a list of subscriptions.
    */
 
-  public async getExpiredNotAutoRenewSubscriptionsToDeactivate(runDate: Date) {
+  public async findActiveExpiredNotAutoRenewSubscriptions(runDate: Date) {
     return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
@@ -203,7 +203,7 @@ export class SubscriptionService {
   /**
    * Create an invoice for the new runtime of a subscription.
    * @param subscription The subscription to create an invoice for.
-   * @param scheduledDeactivation The object containing the deactivation date at the end of the new period.
+   * @param deactivationDate The object containing the deactivation date at the end of the new period.
    * @returns The invoice.
    */
   public async createInvoice(
@@ -212,20 +212,11 @@ export class SubscriptionService {
       user: User
       memberPlan: MemberPlan
     },
-    scheduledDeactivation: Action
+    deactivationDate: Date
   ) {
-    if (scheduledDeactivation.type !== SubscriptionEvent.DEACTIVATION_UNPAID) {
-      throw new BadRequestException(
-        `Given action has not right type! ${scheduledDeactivation.type} should never happen!`
-      )
-    }
-
     const amount =
       subscription.monthlyAmount * mapPaymentPeriodToMonths(subscription.paymentPeriodicity)
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`
-    const deactivationDate = add(subscription.paidUntil || new Date(), {
-      days: scheduledDeactivation.daysAwayFromEnding || undefined
-    })
 
     return this.prismaService.invoice.create({
       data: {
@@ -303,12 +294,15 @@ export class SubscriptionService {
    * Deactivates the subscription belonging to an invoice.
    * @param invoice the invoice belonging to subscription.
    */
-  public async deactivateSubscription(invoice: Invoice) {
+  public async deactivateSubscription(invoice: Invoice & {subscription: Subscription | null}) {
+    if (!invoice.subscription) {
+      throw new BadRequestException(`Invoice ${invoice.id} has no subscription assigned!`)
+    }
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {
-          subscriptionID: invoice.subscriptionID!,
-          date: new Date(),
+          subscriptionID: invoice.subscription.id || invoice.subscriptionID!,
+          date: invoice.subscription.paidUntil ?? invoice.subscription.startsAt,
           reason: SubscriptionDeactivationReason.invoiceNotPaid
         }
       }),

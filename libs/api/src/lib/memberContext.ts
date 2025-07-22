@@ -12,18 +12,16 @@ import {
   SubscriptionEvent,
   User
 } from '@prisma/client'
-import {mailLogType} from '@wepublish/mail/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {MailContext, mailLogType} from '@wepublish/mail/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {DataLoaderContext} from './context'
-import {InvoiceWithItems} from '@wepublish/payment/api'
+import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {SubscriptionWithRelations} from './db/subscription'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
-import {MailContext} from '@wepublish/mail/api'
-import {PaymentProvider} from '@wepublish/payment/api'
 import {logger} from '@wepublish/utils/api'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
-import {SubscriptionEventDictionary, Action, LookupActionInput} from '@wepublish/membership/api'
+import {Action, LookupActionInput, SubscriptionEventDictionary} from '@wepublish/membership/api'
 import {add, format} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
@@ -43,17 +41,19 @@ export interface ChargeInvoiceProps {
 
 export interface DeactivateSubscriptionForUserProps {
   subscription: Subscription
-  deactivationReason?: SubscriptionDeactivationReason
+  deactivationReason: SubscriptionDeactivationReason
 }
+
+type MemberContextDataLoaders = Pick<
+  DataLoaderContext,
+  'activePaymentMethodsByID' | 'activePaymentMethodsBySlug'
+>
 
 export interface MemberContextInterface {
   prisma: PrismaClient
-  loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
   mailContext: MailContext
-
-  getLoginUrlForUser(user: User): string
 
   handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<Subscription>
 
@@ -66,11 +66,8 @@ export interface MemberContextInterface {
 
 export interface MemberContextProps {
   readonly prisma: PrismaClient
-  readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
   readonly mailContext: MailContext
-
-  getLoginUrlForUser(user: User): string
 }
 
 export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
@@ -104,21 +101,16 @@ export function calculateAmountForPeriodicity(
 }
 
 export class MemberContext implements MemberContextInterface {
-  loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
   prisma: PrismaClient
 
   mailContext: MailContext
-  getLoginUrlForUser: (user: User) => string
 
   constructor(props: MemberContextProps) {
-    this.loaders = props.loaders
     this.paymentProviders = props.paymentProviders
     this.prisma = props.prisma
 
     this.mailContext = props.mailContext
-
-    this.getLoginUrlForUser = props.getLoginUrlForUser
   }
 
   async handleSubscriptionChange({
@@ -270,12 +262,16 @@ export class MemberContext implements MemberContextInterface {
         return null
       }
       const deactivationDate = add(subscription.paidUntil || new Date(), {
-        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding
+        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding ?? 0
       })
 
       const memberplan = await this.prisma.memberPlan.findUnique({
         where: {id: subscription.memberPlanID}
       })
+
+      if (!memberplan) {
+        throw new Error('Memberplan not found')
+      }
 
       const newInvoice = await this.prisma.invoice.create({
         data: {
@@ -503,11 +499,11 @@ export class MemberContext implements MemberContextInterface {
         deactivation: {
           upsert: {
             create: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
+              date: deactivationDate ?? subscription.paidUntil ?? subscription.startsAt,
               reason: deactivationReason ?? SubscriptionDeactivationReason.none
             },
             update: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
+              date: deactivationDate ?? subscription.paidUntil ?? subscription.startsAt,
               reason: deactivationReason ?? SubscriptionDeactivationReason.none
             }
           }
@@ -537,15 +533,20 @@ export class MemberContext implements MemberContextInterface {
         properties: true
       }
     })
-    const {paymentProviderID} = await this.getPaymentMethodByIDOrSlug(
-      this.loaders,
-      undefined,
-      subscription.paymentMethodID
-    )
+
+    if (!subscription) {
+      throw new Error('Subscription not found')
+    }
+
+    const paymentProviderBySubscription = await this.prisma.paymentMethod.findUnique({
+      where: {id: subscription.paymentMethodID}
+    })
+
     const paymentProvider = this.paymentProviders.find(
-      paymentProvider => paymentProvider.id === paymentProviderID
+      paymentProvider => paymentProvider.id === paymentProviderBySubscription?.paymentProviderID
     )
-    await paymentProvider.cancelRemoteSubscription({
+
+    await paymentProvider?.cancelRemoteSubscription({
       subscription
     })
   }
@@ -559,10 +560,10 @@ export class MemberContext implements MemberContextInterface {
    */
 
   async validateInputParamsCreateSubscription(
-    memberPlanID: string | null,
-    memberPlanSlug: string | null,
-    paymentMethodID: string | null,
-    paymentMethodSlug: string | null
+    memberPlanID: string | null | undefined,
+    memberPlanSlug: string | null | undefined,
+    paymentMethodID: string | null | undefined,
+    paymentMethodSlug: string | null | undefined
   ) {
     if (
       (memberPlanID == null && memberPlanSlug == null) ||
@@ -579,27 +580,19 @@ export class MemberContext implements MemberContextInterface {
     }
   }
 
-  async getMemberPlanByIDOrSlug(
-    loaders: DataLoaderContext,
-    memberPlanSlug: string,
-    memberPlanID: string
-  ) {
-    const memberPlan = memberPlanID
-      ? await loaders.activeMemberPlansByID.load(memberPlanID)
-      : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
-    if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
-    return memberPlan
-  }
-
   async getPaymentMethodByIDOrSlug(
-    loaders: DataLoaderContext,
-    paymentMethodSlug: string,
-    paymentMethodID: string
+    loaders: MemberContextDataLoaders,
+    paymentMethodSlug?: string,
+    paymentMethodID?: string
   ) {
     const paymentMethod = paymentMethodID
       ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
-      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
-    if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!)
+
+    if (!paymentMethod) {
+      throw new NotFound('PaymentMethod', paymentMethodID ?? paymentMethodSlug!)
+    }
+
     return paymentMethod
   }
 
@@ -622,7 +615,7 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async processSubscriptionProperties(
-    subscriptionProperties: Omit<MetadataProperty, 'public'>[]
+    subscriptionProperties: Pick<MetadataProperty, 'key' | 'value'>[]
   ): Promise<Pick<MetadataProperty, 'public' | 'key' | 'value'>[]> {
     return Array.isArray(subscriptionProperties)
       ? subscriptionProperties.map(property => {
@@ -636,7 +629,6 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async createSubscription(
-    prisma: PrismaClient,
     userID: string,
     paymentMethodId: string,
     paymentPeriodicity: PaymentPeriodicity,
@@ -645,21 +637,28 @@ export class MemberContext implements MemberContextInterface {
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
     autoRenew: boolean,
     extendable: boolean,
-    startsAt?: Date | string
+    replacedSubscription?: Subscription | null,
+    startsAt?: Date | string,
+    needsConfirmation?: boolean
   ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
     if (!extendable && autoRenew) {
       throw new Error("You can't create a non extendable subscription that is autoRenew!")
     }
 
-    const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
-    const memberPlanSubscriptionCount = await prisma.subscription.count({
+    const memberPlan = await this.prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+
+    if (!memberPlan) {
+      throw new Error('Memberplan not found')
+    }
+
+    const memberPlanSubscriptionCount = await this.prisma.subscription.count({
       where: {
         userID,
         memberPlanID: memberPlanId
       }
     })
 
-    if (memberPlan.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+    if (memberPlan?.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
       throw new Error(
         `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
@@ -667,7 +666,7 @@ export class MemberContext implements MemberContextInterface {
       )
     }
 
-    const subscription = await prisma.subscription.create({
+    const subscription = await this.prisma.subscription.create({
       data: {
         userID,
         startsAt: startsAt ? startsAt : new Date(),
@@ -682,9 +681,11 @@ export class MemberContext implements MemberContextInterface {
             data: properties
           }
         },
+        replacesSubscriptionID: replacedSubscription?.id,
         autoRenew,
         extendable,
-        currency: memberPlan.currency
+        currency: memberPlan.currency,
+        confirmed: !needsConfirmation
       },
       include: {
         deactivation: true,
@@ -700,8 +701,16 @@ export class MemberContext implements MemberContextInterface {
 
     const invoice = await this.renewSubscriptionForUser({subscription})
 
+    if (!invoice) {
+      throw new InternalError()
+    }
+
     // Send subscribe mail
-    await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})
+
+    const subscriptionEvent = needsConfirmation
+      ? SubscriptionEvent.CONFIRM_SUBSCRIPTION
+      : SubscriptionEvent.SUBSCRIBE
+    await this.sendMailForSubscriptionEvent(subscriptionEvent, subscription, {})
 
     return {
       subscription,
@@ -755,6 +764,11 @@ export class MemberContext implements MemberContextInterface {
     paidUntil = paidUntil ? new Date(paidUntil) : undefined
 
     const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+
+    if (!memberPlan) {
+      throw new Error('Memberplan not found.')
+    }
+
     const memberPlanSubscriptionCount = await prisma.subscription.count({
       where: {
         userID,
@@ -762,7 +776,7 @@ export class MemberContext implements MemberContextInterface {
       }
     })
 
-    if (memberPlan.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+    if (memberPlan?.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
       throw new Error(
         `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
@@ -812,6 +826,11 @@ export class MemberContext implements MemberContextInterface {
         },
         select: unselectPassword
       })
+
+      if (!user) {
+        throw new InternalError()
+      }
+
       const invoice = await this.prisma.invoice.create({
         data: {
           currency: memberPlan.currency,
@@ -855,6 +874,10 @@ export class MemberContext implements MemberContextInterface {
       }
     } else {
       const invoice = await this.renewSubscriptionForUser({subscription})
+
+      if (!invoice) {
+        throw new InternalError()
+      }
 
       // Send subscribe mail
       await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})
@@ -906,4 +929,32 @@ export class MemberContext implements MemberContextInterface {
       mailType: mailLogType.UserFlow
     })
   }
+}
+
+export async function getMemberPlanByIDOrSlug(
+  loaders: Pick<DataLoaderContext, 'activeMemberPlansByID' | 'activeMemberPlansBySlug'>,
+  memberPlanSlug: string,
+  memberPlanID: string
+) {
+  const memberPlan = memberPlanID
+    ? await loaders.activeMemberPlansByID.load(memberPlanID)
+    : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+  if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+  return memberPlan
+}
+
+export async function getPaymentMethodByIDOrSlug(
+  loaders: Pick<DataLoaderContext, 'activePaymentMethodsByID' | 'activePaymentMethodsBySlug'>,
+  paymentMethodSlug?: string,
+  paymentMethodID?: string
+) {
+  const paymentMethod = paymentMethodID
+    ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+    : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!)
+
+  if (!paymentMethod) {
+    throw new NotFound('PaymentMethod', paymentMethodID ?? paymentMethodSlug!)
+  }
+
+  return paymentMethod
 }

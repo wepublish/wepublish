@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArticleRevisionDataloaderService load should load many 1`] = `
+[
+  [
+    {
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
+      "take": 3,
+      "where": {
+        "archivedAt": null,
+        "articleId": "123",
+      },
+    },
+  ],
+  [
+    {
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
+      "take": 3,
+      "where": {
+        "archivedAt": null,
+        "articleId": "321",
+      },
+    },
+  ],
+]
+`;
+
+exports[`ArticleRevisionDataloaderService load should load one 1`] = `
+[
+  [
+    {
+      "orderBy": [
+        {
+          "publishedAt": "desc",
+        },
+        {
+          "createdAt": "desc",
+        },
+      ],
+      "take": 3,
+      "where": {
+        "archivedAt": null,
+        "articleId": "123",
+      },
+    },
+  ],
+]
+`;
+
+exports[`ArticleRevisionDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

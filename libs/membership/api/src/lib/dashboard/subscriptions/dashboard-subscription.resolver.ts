@@ -1,8 +1,9 @@
 import {Args, Query, Resolver} from '@nestjs/graphql'
-import {CanGetSubscriptions, Permissions} from '@wepublish/permissions/api'
-import {DashboardSubscription} from './dashboard-subscription.model'
+import {Permissions} from '@wepublish/permissions/api'
+import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscription.model'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
 import {SettingName, Settings} from '@wepublish/settings/api'
+import {CanGetSubscriptions} from '@wepublish/permissions'
 
 @Resolver()
 export class DashboardSubscriptionResolver {
@@ -66,5 +67,24 @@ export class DashboardSubscriptionResolver {
     @Args('end', {nullable: true, type: () => Date}) end: Date | null
   ) {
     return this.subscriptions.newDeactivations(start, end ?? new Date())
+  }
+
+  @Permissions(CanGetSubscriptions)
+  @Query(returns => [DailySubscriptionStats], {
+    name: 'dailySubscriptionStats',
+    description: `
+      Returns daily stats in a given timeframe.
+    `
+  })
+  async DailySubscriptionStats(
+    @Args('start') start: Date,
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null,
+    @Args('memberPlanIds', {nullable: true, type: () => [String]}) memberPlanIds: string[] | null
+  ) {
+    return await this.subscriptions.dailySubscriptionStats(
+      start,
+      end ?? new Date(),
+      memberPlanIds ?? []
+    )
   }
 }

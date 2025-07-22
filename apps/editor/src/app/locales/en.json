@@ -107,15 +107,12 @@
         "statePublished": "Status: Published",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
-        "likeCount": "Like count is {{likeCount}}",
+        "likeCount": "Likes",
         "type": "Type",
         "untitled": "Untitled",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "uploadImage": "Upload Image",
         "url": "URL",
         "urlPlaceholder": "https://canonical-url.com",
@@ -127,7 +124,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Text",
-        "default": "Default"
+        "default": "Default",
+        "tracking": "Tracking"
       }
     },
     "articleList": {
@@ -222,19 +220,29 @@
         "delete": "Delete banner"
       },
       "form": {
-        "title": "Title (maximized only)",
-        "text": "Text (maximized only)",
-        "cta": "Call to action (minimized only)",
+        "displayOptions": "Display Options",
+        "title": "Title",
+        "text": "Text",
+        "cta": "Call to action",
+        "delay": "Delay in seconds",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
+        "showForLoginStatus": "Display for",
+        "html": "HTML-Code",
+        "loginStatus": {
+          "ALL": "all visitors",
+          "LOGGED_IN": "logged in visitors",
+          "LOGGED_OUT": "logged out visitors"
+        },
         "actions": "Actions",
         "image": "Image",
         "action": {
           "add": "Add new action",
           "label": "Label",
           "url": "URL",
-          "style": "Style"
+          "style": "Style",
+          "role": "Role"
         }
       },
       "list": {
@@ -255,6 +263,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Edit",
+        "label": "Crowdfunding",
+        "title": "Select Crowdfunding",
+        "name": "Name",
+        "select": "Select",
+        "open": "open"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -326,6 +342,9 @@
         "placeholder": "Paste your HTML block here..",
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
       },
+      "subscribe": {
+        "label": "Subscribe"
+      },
       "image": {
         "label": "Image",
         "overview": {
@@ -393,6 +412,9 @@
       },
       "teaserGrid6": {
         "label": "6 Col"
+      },
+      "teaserSlots": {
+        "label": "Teaser Slots"
       },
       "title": {
         "label": "Title",
@@ -540,7 +562,9 @@
       "newUser": "New <0>user</0> added",
       "noData": "No current subscriber data",
       "user": "User",
-      "yearlySubscribers": "New subscribers over past year"
+      "yearlySubscribers": "New subscribers over past year",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Go to Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -783,7 +807,8 @@
       "blocks": {
         "polls": "Polls",
         "blockStyles": "Block Styling",
-        "topMenu": "Content Blocks"
+        "topMenu": "Content Blocks",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Rating System",
       "comments": "Comments",
@@ -814,8 +839,9 @@
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Subscriptions",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -895,8 +921,6 @@
         "tags": "Tags",
         "title": "SEO Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "updateDate": "Update Date",
-        "updateDateWarning": "The update date cannot be older than the publication date.",
         "url": "URL",
         "value": "Value"
       }
@@ -951,17 +975,24 @@
     },
     "peerArticles": {
       "articleImage": "Article image",
-      "authors": "Authors",
       "filterByPeer": "Filter by peer",
       "lead": "Lead",
-      "notPublished": "Not yet published",
-      "originalArticle": "Original article",
       "peer": "Peer",
       "peerArticles": "Peerable Articles",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
       "title": "Title",
-      "toOriginalArticle": "To original article"
+      "import": {
+        "import": "Import",
+        "title": "Import article",
+        "includeAuthors": "Import authors of the article",
+        "includeAuthorsHint": "Imported or updated authors of the article. If another person has the same name, they will be distinguished.",
+        "includeTags": "Import tags of the article",
+        "includeTagsHint": "Imports the tags of the article as long as they do not already exist.",
+        "includeImages": "Import images of the article",
+        "includeImagesHint": "Images that appear in the metadata or blocks of the article are also imported. If the same image exists several times, it will also be imported several times.",
+        "confirm": "Yes, import article"
+      }
     },
     "peerList": {
       "overview": {
@@ -990,6 +1021,7 @@
         "editPeerInfo": "Edit Peer Info",
         "getRemote": "Fetch Remote Peer Profile",
         "image": "Image",
+        "squareImage": "Square image",
         "information": "Information",
         "leaveEmpty": "Leave empty if you don't want to change it",
         "name": "Name",
@@ -1144,6 +1176,8 @@
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
+      "articlePage": "Articles & Pages",
+      "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1161,7 +1195,8 @@
         "passwordToken": "How long (in minutes) the link sent via email to reset password will be valid. Defaults to one day (1440 / 60 / 24).",
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
-        "revenueApiPublic": "Exposes invoices anonymized to the public."
+        "revenueApiPublic": "Exposes invoices anonymized to the public.",
+        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before."
       }
     },
     "subscriptionFlow": {
@@ -1198,12 +1233,14 @@
       "timeline": "Timeline",
       "actions": "Actions",
       "dayOfRenewal": "Day of renewal / subscription ends",
-      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions"
+      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
+      "confirm_subscription": "Subscription confirmation"
     },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Deactivation reason",
         "reasonInvoiceNotPaid": "Invoice not paid",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "By user",
         "reset": "Reset Filter",
@@ -1376,7 +1413,7 @@
         },
         "date": "Deactivation Date",
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Reason: {{reason}}. Probably, a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -1385,6 +1422,7 @@
         },
         "reason": "Deactivation Reason",
         "reasonInvoiceNotPaid": "User did not pay invoices",
+        "reasonUserReplacedSubscription": "Replaced by other subscription",
         "cancellation": "Cancellation Date",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
@@ -1417,6 +1455,8 @@
       "invoiceNr": "Invoice No. {{invoiceId}}",
       "invoicePaid": "paid",
       "invoiceUnpaid": "unpaid",
+      "confirmed": "confirmed",
+      "unconfirmed": "unconfirmed",
       "monthlyAmount": "Monthly amount: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription expires, no automatic renewal",
       "noDeactivation": "No deactivation.",
@@ -1457,7 +1497,9 @@
       "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
       "amountPerMonthTarget": "Target amount / month",
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
-      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing."
+      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
+      "confirmationPage": "Redirect to page for existing users (retargeting)",
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",
@@ -1475,14 +1517,13 @@
     "resources": {
       "teaserType": {
         "article": "Article",
-        "peerArticle": "Peer Article",
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
       },
       "teaserSort": {
-        "hotAndTrending": "Hot & Trending",
-        "publishedAt": "Publication date"
+        "HotAndTrending": "Hot & Trending",
+        "PublishedAt": "Publication date"
       }
     },
     "authorEditPanel": {
@@ -1493,6 +1534,111 @@
     },
     "selectableItemsActions": {
       "selectedItems": "Selected {{numberOfItems}} items"
+    },
+    "trackingPixels": {
+      "noPixelInfoHeader": "No tracking integration available",
+      "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
+      "errorHeader": "Error"
+    },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Name",
+        "delete": "Delete",
+        "createNew": "Create"
+      },
+      "delete": {
+        "title": "Delete Permanently?",
+        "body": "Should the crowdfunding be irrevocably deleted?",
+        "delete": "Delete"
+      },
+      "create": {
+        "title": "Create new crowdfunding"
+      },
+      "edit": {
+        "title": " edit {{crowdfundingName}}"
+      },
+      "form": {
+        "name": "Name of the Crowdfundings (Not published)",
+        "memberPlans": "Subscription Plans",
+        "filter": "Revenue Filter",
+        "additionalRevenue": "External Revenues (e.g.. via direct bank transfer)",
+        "selectMemberPlans": "Select Subscription Plans",
+        "countSubscriptionsFrom": "Include only subscriptions paid from date",
+        "countSubscriptionsUntil": "Include only subscriptions paid until date",
+        "revenue": "Already CHF {{revenue}} financed",
+        "goals": "Goals"
+      },
+      "goalsForm": {
+        "title": "Title",
+        "description": "Description",
+        "amount": "Target amount",
+        "remove": "Remove",
+        "add": "Add Target"
+      }
+    },
+    "audienceFilter": {
+      "daily": "Daily",
+      "monthly": "Monthly",
+      "rangePickerPlaceholder": "from - to",
+      "filterSubscriptionPlans": "Filter by subscription plans",
+      "chart": "Chart",
+      "table": "Table",
+      "panelHeader": "Select data",
+      "rangeLastWeek": "Last Week",
+      "rangeLastMonth": "Last Month",
+      "rangeLastQuarter": "Last Quarter",
+      "rangeLastYear": "Last Year"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
+          "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
+          "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
+          "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
+          "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
+        },
+        "totalActiveSubscriptionCount": "Total active & paid subscriptions",
+        "overdueSubscriptionCount": "Renewed unpaid subscriptions",
+        "renewedSubscriptionCount": "Renewed paid subscriptions",
+        "createdSubscriptionCount": "New paid subscriptions",
+        "deactivatedSubscriptionCount": "Deactivated subscriptions",
+        "replacedSubscriptionCount": "Replaced subscriptions",
+        "totalNewSubscriptions": "Total new and renewed paid subscriptions",
+        "renewalRate": "Renewal rate",
+        "cancellationRate": "Cancellation rate",
+        "createdSubscriptionUsers": "New paid subscriptions",
+        "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
+        "deactivatedSubscriptionUsers": "Deactivated subscriptions",
+        "renewedSubscriptionUsers": "Renewed paid subscriptions",
+        "replacedSubscriptionUsers": "Replaced subscriptions"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Filter users by",
+      "id": "ID",
+      "firstName": "First name",
+      "name": "Last name",
+      "email": "Email",
+      "goToUser": "Link to user",
+      "close": "Close",
+      "userBtn": "Link to user"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "showUsers": "Show details",
+      "byDate": "By",
+      "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
+      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid."
     }
   }
 }

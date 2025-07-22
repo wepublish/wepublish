@@ -1,10 +1,11 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderPeerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {ContentWrapper} from '@wepublish/content/website'
 
 export const PeerInformationWrapper = styled('aside')`
   display: grid;
   padding: ${({theme}) => theme.spacing(3)};
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({theme}) => theme.spacing(1)};
   justify-items: center;
   text-align: center;
   position: relative;
@@ -12,8 +13,6 @@ export const PeerInformationWrapper = styled('aside')`
 
 export const PeerInformationName = styled('div')`
   display: grid;
-  grid-template-columns: 65px 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
   align-items: center;
 `
 
@@ -24,62 +23,38 @@ export const PeerInformationCTA = styled('div')`
 `
 
 export const PeerInformationOrigin = styled('div')`
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      position: absolute;
-      top: ${theme.spacing(3)};
-      left: ${theme.spacing(3)};
-    }
-  `}
+  margin-top: ${({theme}) => theme.spacing(2)};
 `
 
-const logoStyles = css`
-  border-radius: 50%;
-`
-
-export function PeerInformation({data, loading, error, originUrl, className}: BuilderPeerProps) {
+export function PeerInformation({profile, originUrl, className}: BuilderPeerProps) {
   const {
-    elements: {Alert, Image, Button, Link, H5},
+    elements: {Image, Button, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
-  if (error) {
-    return (
-      <PeerInformationWrapper>
-        <Alert severity="error">{error.message}</Alert>
-      </PeerInformationWrapper>
-    )
-  }
-
-  if (!data?.peer) {
-    return null
-  }
-
   return (
-    <PeerInformationWrapper className={className}>
-      <PeerInformationName>
-        {data.peer.profile?.logo && (
-          <Image image={data.peer.profile.logo} square css={logoStyles} />
+    <ContentWrapper>
+      <PeerInformationWrapper className={className}>
+        <PeerInformationName>
+          {profile?.callToActionImage && <Image image={profile.callToActionImage} />}
+        </PeerInformationName>
+
+        <PeerInformationCTA>
+          <Button
+            variant="contained"
+            color="primary"
+            href={profile?.callToActionURL ?? profile?.websiteURL}
+            LinkComponent={Link}>
+            <RichText richText={profile?.callToActionText ?? []} />
+          </Button>
+        </PeerInformationCTA>
+
+        {originUrl && (
+          <PeerInformationOrigin>
+            <Link href={originUrl}>Zum Originalartikel</Link>
+          </PeerInformationOrigin>
         )}
-
-        <H5 component={'span'}>{data.peer.profile?.name}</H5>
-      </PeerInformationName>
-
-      <PeerInformationCTA>
-        <Button
-          variant="contained"
-          color="primary"
-          href={data.peer.profile?.callToActionURL ?? data.peer.profile?.websiteURL}
-          LinkComponent={Link}>
-          <RichText richText={data.peer.profile?.callToActionText ?? []} />
-        </Button>
-      </PeerInformationCTA>
-
-      {originUrl && (
-        <PeerInformationOrigin>
-          <Link href={originUrl}>Zum Originalartikel</Link>
-        </PeerInformationOrigin>
-      )}
-    </PeerInformationWrapper>
+      </PeerInformationWrapper>
+    </ContentWrapper>
   )
 }

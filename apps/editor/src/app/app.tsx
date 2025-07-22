@@ -11,12 +11,17 @@ import {
   UserConsentEditView,
   UserConsentList
 } from '@wepublish/consent/editor'
+import {
+  CreateCrowdfundingForm,
+  CrowdfundingList,
+  EditCrowdfundingForm
+} from '@wepublish/crowdfunding/editor'
 import {TagType} from '@wepublish/editor/api'
+import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
   MailTemplateList,
   MemberPlanEdit,
-  MigrationList,
   PlaceholderList,
   SubscriptionFlowList,
   SystemMailList
@@ -35,6 +40,7 @@ import fr from './locales/rsuiteFr'
 import {Login} from './login'
 import {ArticleEditor} from './routes/articles/articleEditor'
 import {ArticleList} from './routes/articles/articleList'
+import {AudienceDashboard} from './routes/audience/audience-dashboard'
 import {AuthorList} from './routes/authors/authorList'
 import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
@@ -62,7 +68,6 @@ import {TokenList} from './routes/tokens/tokenList'
 import {UserRoleList} from './routes/userRoles/userRoleList'
 import {UserEditView} from './routes/users/userEditView'
 import {UserList} from './routes/users/userList'
-import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -81,7 +86,7 @@ const Logout = () => {
       localStorage.removeItem(LocalStorageKey.SessionToken)
       authDispatch({type: AuthDispatchActionType.Logout})
     }
-  }, [session])
+  }, [authDispatch, logout, session])
 
   return <Navigate to="/login" replace />
 }
@@ -292,6 +297,32 @@ export function App() {
               element={
                 <Base>
                   <BlockStyleList />
+                </Base>
+              }
+            />
+
+            {/* Crowdfunding Routes */}
+            <Route
+              path="crowdfundings"
+              element={
+                <Base>
+                  <CrowdfundingList />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/create"
+              element={
+                <Base>
+                  <CreateCrowdfundingForm />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/edit/:id"
+              element={
+                <Base>
+                  <EditCrowdfundingForm />
                 </Base>
               }
             />
@@ -564,6 +595,17 @@ export function App() {
                 </Base>
               }
             />
+
+            {/* Audience Routes */}
+            <Route
+              path="audience/dashboard"
+              element={
+                <Base>
+                  <AudienceDashboard />
+                </Base>
+              }
+            />
+
             {/* Subscription Routes */}
             <Route
               path="subscriptions"
@@ -777,14 +819,6 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
-                </Base>
-              }
-            />
-            <Route
-              path="migration"
-              element={
-                <Base>
-                  <MigrationList />
                 </Base>
               }
             />

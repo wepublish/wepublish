@@ -1,9 +1,4 @@
-import {
-  Banner,
-  getApiClientV2,
-  useBannersQuery,
-  useCreateBannerMutation
-} from '@wepublish/editor/api-v2'
+import {Banner, getApiClientV2, useBannersQuery} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   IconButton,
@@ -21,37 +16,26 @@ import {Link} from 'react-router-dom'
 import {Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite/esm/Table'
 import {BannerDeleteModal} from './banner-delete-modal'
+import React from 'react'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
 function BannerList() {
   const {t} = useTranslation()
   const [bannerDelete, setBannerDelete] = useState<Banner | undefined>(undefined)
-  const [page, setPage] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(10)
 
   const client = useMemo(() => getApiClientV2(), [])
 
   const {data, loading, error, refetch} = useBannersQuery({
     client,
     variables: {
-      take: limit,
-      skip: (page - 1) * limit
+      take: 100,
+      skip: 0
     },
     onError: () => {
       console.log(error)
     }
   })
-
-  async function createBanner() {
-    await createBannerMutation({
-      onError: error => {
-        console.log(error)
-      }
-    })
-  }
-
-  const [createBannerMutation, {data: newBanner}] = useCreateBannerMutation()
 
   return (
     <>
@@ -84,10 +68,18 @@ function BannerList() {
             <HeaderCell>{t('banner.list.text')}</HeaderCell>
             <RCell>{(rowData: RowDataType<Banner>) => (rowData as Banner).text}</RCell>
           </Column>
-          <Column width={300} resizable>
+          <Column width={100} resizable>
             <HeaderCell>{t('banner.list.active')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Banner>) => ((rowData as Banner).active ? '✓' : '⨯')}
+            </RCell>
+          </Column>
+          <Column width={200} resizable>
+            <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Banner>) =>
+                t(`banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`)
+              }
             </RCell>
           </Column>
           <Column resizable fixed="right">

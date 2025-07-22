@@ -1,14 +1,14 @@
 import {URL} from 'url'
 import FormData from 'form-data'
-import {ImageWithFocalPoint} from '../db/image'
 import fetch from 'node-fetch'
 import type {FileUpload} from 'graphql-upload'
 import {
   ArrayBufferUpload,
-  MediaAdapter,
-  UploadImage,
+  Image,
+  ImageRotation,
   ImageTransformation,
-  ImageRotation
+  MediaAdapter,
+  UploadImage
 } from '@wepublish/image/api'
 import {MediaServerError} from './karmaMediaAdapter'
 
@@ -33,7 +33,8 @@ export class NovaMediaAdapter implements MediaAdapter {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
       body: form,
-      signal: AbortSignal.timeout(50000)
+      // will work with newer node version, @ts-expect-error doesn't work here unfortunately
+      signal: AbortSignal.timeout(50000) as any
     })
 
     const json = await response.json()
@@ -92,18 +93,18 @@ export class NovaMediaAdapter implements MediaAdapter {
     return true
   }
 
-  async getImageURL(
-    image: ImageWithFocalPoint,
-    transformations?: ImageTransformation
-  ): Promise<string> {
+  async getImageURL(image: Image, transformations?: ImageTransformation): Promise<string> {
     const queryParameters = [] as string[]
 
     if (transformations?.width || transformations?.height) {
       let xFocalPoint = ''
       let yFocalPoint = ''
+
       if (image?.focalPoint?.x) {
         xFocalPoint = image.focalPoint.x > 0.6 ? 'right' : image.focalPoint.x < 0.4 ? 'left' : ''
+      }
 
+      if (image?.focalPoint?.y) {
         yFocalPoint = image.focalPoint.y > 0.6 ? 'bottom' : image.focalPoint.y < 0.4 ? 'top' : ''
       }
 

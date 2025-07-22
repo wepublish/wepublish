@@ -1,28 +1,35 @@
 import {EmotionCache} from '@emotion/cache'
+import styled from '@emotion/styled'
 import {
   Container,
   createTheme,
   css,
   CssBaseline,
-  styled,
   Theme,
   ThemeOptions,
   ThemeProvider
 } from '@mui/material'
+import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {theme} from '@wepublish/ui'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
-  ApiV1,
-  FooterContainer,
-  NavbarContainer,
-  WebsiteBuilderProvider,
-  WebsiteProvider
-} from '@wepublish/website'
+  authLink,
+  NextWepublishLink,
+  RoutedAdminBar,
+  withJwtHandler,
+  withSessionProvider
+} from '@wepublish/utils/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient} from '@wepublish/website/api'
+import {WebsiteBuilderProvider} from '@wepublish/website/builder'
+import deTranlations from '@wepublish/website/translations/de.json'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
@@ -38,6 +45,7 @@ import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -46,7 +54,9 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
+  .use(resourcesToBackend(() => deTranlations))
   .init({
+    partialBundledLanguages: true,
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
@@ -118,17 +128,17 @@ const NavBar = styled(NavbarContainer)`
   z-index: 11;
 `
 
-type CustomAppProps = AppProps<{
-  sessionToken?: ApiV1.UserSession
-}> & {emotionCache?: EmotionCache}
-
 const {publicRuntimeConfig} = getConfig()
+
+type CustomAppProps = AppProps<{
+  sessionToken?: UserSession
+}> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Gruppetto - Das neue Schweizer Radsportmagazin'
 
   return (
-    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
+    <AppCacheProvider emotionCache={emotionCache}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           meta={{siteTitle}}
@@ -137,7 +147,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           Footer={Footer}
           MemberPlanItem={YearlyMemberPlanItem}
           elements={{Link: NextWepublishLink}}
-          blocks={{Break: GruppettoBreakBlock}}>
+          blocks={{Break: GruppettoBreakBlock, Subscribe: Mitmachen}}>
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
 
@@ -219,18 +229,20 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               </FooterContainer>
             </Spacer>
 
+            <RoutedAdminBar />
+
             {publicRuntimeConfig.env.GA_ID && (
               <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
             )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
-    </SessionProvider>
+    </AppCacheProvider>
   )
 }
 
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
+const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
+  withSessionProvider(withJwtHandler(CustomApp))
 )
 
 export {ConnectedApp as default}

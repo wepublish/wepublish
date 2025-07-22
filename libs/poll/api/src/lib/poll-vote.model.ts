@@ -1,18 +1,9 @@
-import {
-  ArgsType,
-  Field,
-  InputType,
-  ID,
-  Int,
-  ObjectType,
-  registerEnumType,
-  Directive
-} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
 
 @ObjectType()
 export class PollAnswerInVote {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -20,18 +11,17 @@ export class PollAnswerInVote {
 }
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class PollVote {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
   createdAt!: Date
 
-  @Field(() => ID)
+  @Field()
   pollId!: string
 
-  @Field(() => ID)
+  @Field()
   answerId!: string
 
   @Field()
@@ -40,7 +30,7 @@ export class PollVote {
   @Field()
   disabled!: boolean
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   userId?: string
 
   @Field({nullable: true})
@@ -96,13 +86,13 @@ export class PoleVoteListArgs {
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   cursorId?: string
 }
 
 @ArgsType()
 export class PoleVoteByIdArgs {
-  @Field(() => [ID])
+  @Field(() => [String])
   ids!: string[]
 }
 

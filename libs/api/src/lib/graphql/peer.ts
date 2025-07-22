@@ -1,10 +1,9 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
+  GraphQLBoolean,
   GraphQLInputObjectType,
-  GraphQLID,
-  GraphQLBoolean
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {PeerProfile} from '../db/peer'
@@ -20,13 +19,14 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
   fields: {
     name: {type: new GraphQLNonNull(GraphQLString)},
-    logoID: {type: GraphQLID},
+    logoID: {type: GraphQLString},
+    squareLogoId: {type: GraphQLString},
     themeColor: {type: new GraphQLNonNull(GraphQLColor)},
     themeFontColor: {type: new GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
     callToActionURL: {type: new GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLID}
+    callToActionImageID: {type: GraphQLString}
   }
 })
 
@@ -35,10 +35,19 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
   fields: {
     name: {type: new GraphQLNonNull(GraphQLString)},
 
+    logoID: {type: GraphQLString},
     logo: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}) => {
         return profile.logoID ? loaders.images.load(profile.logoID) : null
+      })
+    },
+
+    squareLogoId: {type: GraphQLString},
+    squareLogo: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
+        return profile.squareLogoId ? loaders.images.load(profile.squareLogoId) : null
       })
     },
 
@@ -54,6 +63,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
     callToActionURL: {type: new GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLString},
     callToActionImage: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}) => {
@@ -87,7 +97,7 @@ export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
 export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
   name: 'Peer',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},

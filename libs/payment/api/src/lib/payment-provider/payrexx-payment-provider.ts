@@ -41,7 +41,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
-    const apiKey = props.req.query?.apiKey as string
+    const apiKey = props.req.query?.['apiKey'] as string
 
     if (!this.timeConstantCompare(apiKey, this.webhookApiKey)) {
       return {
@@ -192,6 +192,14 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       0
     )
 
+    let tokenization: {preAuthorization?: boolean; chargeOnAuthorization?: boolean} = {}
+    if (this.offSessionPayments) {
+      tokenization = {
+        preAuthorization: true,
+        chargeOnAuthorization: true
+      }
+    }
+
     const gateway = await this.gatewayClient.createGateway({
       psp: this.psp,
       pm: this.pm,
@@ -207,8 +215,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       cancelRedirectUrl: failureURL as string,
       vatRate: this.vatRate,
       currency,
-      preAuthorization: true,
-      chargeOnAuthorization: true
+      ...tokenization
     })
 
     logger('payrexxPaymentProvider').info(

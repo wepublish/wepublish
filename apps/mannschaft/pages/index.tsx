@@ -1,6 +1,12 @@
-import {UTCDate} from '@date-fns/utc'
-import {ApiV1, PageContainer} from '@wepublish/website'
-import {startOfDay} from 'date-fns'
+import {PageContainer} from '@wepublish/page/website'
+import {
+  addClientCacheToV1Props,
+  getV1ApiClient,
+  HotAndTrendingDocument,
+  NavigationListDocument,
+  PageDocument,
+  PeerProfileDocument
+} from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -15,30 +21,33 @@ export const getStaticProps: GetStaticProps = async () => {
     return {props: {}, revalidate: 1}
   }
 
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const now = new Date()
+  now.setUTCHours(0, 0, 0, 0)
+
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.PageDocument,
+      query: PageDocument,
       variables: {
         slug: ''
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     }),
     client.query({
-      query: ApiV1.HotAndTrendingDocument,
+      query: HotAndTrendingDocument,
       variables: {
         take: 5,
-        start: startOfDay(new UTCDate()).toISOString()
+        start: now.toISOString()
       }
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {})
 
   return {
     props,

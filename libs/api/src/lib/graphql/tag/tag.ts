@@ -2,7 +2,6 @@ import {Tag, TagType} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -29,7 +28,7 @@ export const GraphQLTagType = new GraphQLEnumType({
 export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
   name: 'Tag',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     tag: {type: GraphQLString},
     type: {type: GraphQLTagType},
     main: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -67,14 +66,3 @@ export const GraphQLTagSort = new GraphQLEnumType({
     [TagSort.Tag]: {value: TagSort.Tag}
   }
 })
-
-export const GraphQLTagResolver = {
-  __resolveReference: async (reference, {prisma}: Context) => {
-    const {id} = reference
-    const tag = await prisma.tag.findUnique({
-      where: {id}
-    })
-    if (!tag) throw new Error('Tag not found')
-    return tag
-  }
-}

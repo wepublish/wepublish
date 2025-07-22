@@ -7,14 +7,16 @@
         "MAILCHIMP_SERVER_PREFIX": "us9",
         "GA_ID": "G-V33XC5HR9Q",
         "SPARKLOOP_ID": "f9addf2ffc66",
-        "STRIPE_PUBLIC_KEY": "pk_live_XjRjXhhUqklInssF37OkD1WO"
+        "STRIPE_PUBLIC_KEY": "pk_live_XjRjXhhUqklInssF37OkD1WO",
+        "GTM_ID": "GTM-PFGZDXQ"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "staging": {
       "deployment": true,
       "env": {
-        "MAILCHIMP_SERVER_PREFIX": "us9"
+        "MAILCHIMP_SERVER_PREFIX": "us9",
+        "GTM_ID": "GTM-PFGZDXQ"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },

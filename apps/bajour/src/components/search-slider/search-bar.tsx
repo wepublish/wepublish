@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {useRef, useState} from 'react'
 import {MdClose, MdSearch} from 'react-icons/md'
 
@@ -7,7 +7,6 @@ const SearchWrapper = styled('div')`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 1em;
 `
 
 const SearchIcon = styled(MdSearch)`

@@ -1,4 +1,5 @@
-import {NoSsr, styled} from '@mui/material'
+import {NoSsr} from '@mui/material'
+import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {
   CalculatedRating,

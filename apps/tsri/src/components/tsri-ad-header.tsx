@@ -1,9 +1,9 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {ArticleWrapper} from '@wepublish/article/website'
+import {Image} from '@wepublish/image/website'
 import {Link} from '@wepublish/ui'
-import {ArticleWrapper, BuilderAuthor, Image} from '@wepublish/website'
+import {BuilderAuthor, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useMemo} from 'react'
-
-import {TsriRichText} from './tsri-richtext'
 
 const TsriAdvertiserContainer = styled(Link)`
   display: grid;
@@ -48,9 +48,18 @@ function getFirstLink(author: BuilderAuthor): string {
 }
 
 export default function TsriAdHeader({authors}: {authors?: BuilderAuthor[]}) {
-  const advertisers: BuilderAuthor[] | undefined = useMemo(() => {
-    return authors?.filter(author => isSponsor(author) || isPromo(author))
-  }, [authors])
+  const {
+    blocks: {RichText}
+  } = useWebsiteBuilder()
+
+  const advertisers = useMemo(
+    () => authors?.filter(author => isSponsor(author) || isPromo(author)),
+    [authors]
+  )
+
+  if (!advertisers?.length) {
+    return
+  }
 
   return (
     <ArticleWrapper>
@@ -67,11 +76,12 @@ export default function TsriAdHeader({authors}: {authors?: BuilderAuthor[]}) {
 
           <TsriAdvertiserContent>
             {isPromo(advertiser) ? (
-              <b>Rubrik Kultur wird präsentiert von: </b>
+              <strong>Rubrik Kultur wird präsentiert von: </strong>
             ) : (
-              <b>Präsentiert von:</b>
+              <strong>Präsentiert von:</strong>
             )}
-            <TsriRichText richText={advertiser.bio || []} />
+
+            <RichText richText={advertiser.bio || []} />
           </TsriAdvertiserContent>
         </TsriAdvertiserContainer>
       ))}

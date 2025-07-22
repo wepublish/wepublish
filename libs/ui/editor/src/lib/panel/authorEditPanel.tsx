@@ -2,7 +2,7 @@ import {
   AuthorLink,
   AuthorListDocument,
   FullAuthorFragment,
-  ImageRefFragment,
+  FullImageFragment,
   Maybe,
   TagType,
   useAuthorQuery,
@@ -41,7 +41,8 @@ import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
 import FormControl from 'rsuite/FormControl'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {Descendant} from 'slate'
 
 const {ControlLabel: RControlLabel, Group, Control} = RForm
 
@@ -60,7 +61,7 @@ const Form = styled(RForm)`
 `
 
 const ControlLabel = styled(RControlLabel)`
-  padding-top: ${({theme}) => theme.spacing(2)};
+  padding-top: 16px;
 `
 
 export interface AuthorEditPanelProps {
@@ -75,8 +76,10 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [tagIds, setTagIds] = useState<string[]>([])
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
-  const [image, setImage] = useState<Maybe<ImageRefFragment>>()
-  const [bio, setBio] = useState<RichTextBlockValue['richText']>(createDefaultValue())
+  const [image, setImage] = useState<Maybe<FullImageFragment>>()
+  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(() =>
+    !id ? createDefaultValue() : undefined
+  )
   const [hideOnArticle, setHideOnArticle] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(undefined)
@@ -145,7 +148,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       )
   }, [loadError, createError, updateError])
 
-  function handleImageChange(image: ImageRefFragment) {
+  function handleImageChange(image: FullImageFragment) {
     setImage(image)
   }
 
@@ -270,11 +273,13 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
             <Panel header={t('authors.panels.bioInformation')}>
               <div className="richTextFrame">
-                <RichTextBlock
-                  disabled={isDisabled}
-                  value={bio}
-                  onChange={value => setBio(value)}
-                />
+                {bio && (
+                  <RichTextBlock
+                    disabled={isDisabled}
+                    value={bio}
+                    onChange={value => setBio(value as Descendant[])}
+                  />
+                )}
               </div>
             </Panel>
 
@@ -345,7 +350,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={(value: ImageRefFragment) => {
+          onSelect={(value: FullImageFragment) => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}

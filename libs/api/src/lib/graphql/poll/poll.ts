@@ -1,16 +1,8 @@
-import {
-  Poll,
-  PollAnswer,
-  PollExternalVote,
-  PollExternalVoteSource,
-  PollVote,
-  Prisma
-} from '@prisma/client'
+import {Poll, PollAnswer, PollExternalVote, PollExternalVoteSource, Prisma} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLEnumType,
   GraphQLError,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -58,7 +50,7 @@ export const VoteValue = new GraphQLScalarType({
 export const GraphQLPoll = new GraphQLObjectType<Poll, Context>({
   name: 'Poll',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     question: {type: GraphQLString},
     opensAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime}
@@ -68,8 +60,8 @@ export const GraphQLPoll = new GraphQLObjectType<Poll, Context>({
 export const GraphQLPollAnswer = new GraphQLObjectType<PollAnswer, Context>({
   name: 'PollAnswer',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    pollId: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    pollId: {type: new GraphQLNonNull(GraphQLString)},
     answer: {type: GraphQLString}
   }
 })
@@ -82,8 +74,8 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
 >({
   name: 'PollAnswerWithVoteCount',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    pollId: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    pollId: {type: new GraphQLNonNull(GraphQLString)},
     answer: {type: GraphQLString},
     votes: {
       type: new GraphQLNonNull(GraphQLInt),
@@ -92,22 +84,11 @@ export const GraphQLPollAnswerWithVoteCount = new GraphQLObjectType<
   }
 })
 
-export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
-  name: 'PollVote',
-  fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    answerId: {type: new GraphQLNonNull(GraphQLID)},
-    pollId: {type: new GraphQLNonNull(GraphQLID)},
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    disabled: {type: new GraphQLNonNull(GraphQLBoolean)}
-  }
-})
-
 export const GraphQLPollExternalVote = new GraphQLObjectType<PollExternalVote, Context>({
   name: 'PollExternalVote',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    answerId: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    answerId: {type: new GraphQLNonNull(GraphQLString)},
     amount: {type: new GraphQLNonNull(VoteValue)}
   }
 })
@@ -116,7 +97,7 @@ export const GraphQLPollExternalVoteSource = new GraphQLObjectType<PollExternalV
   {
     name: 'PollExternalVoteSource',
     fields: {
-      id: {type: new GraphQLNonNull(GraphQLID)},
+      id: {type: new GraphQLNonNull(GraphQLString)},
       source: {type: GraphQLString},
       voteAmounts: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPollExternalVote)))
@@ -153,7 +134,7 @@ export const GraphQLPollSort = new GraphQLEnumType({
 export const GraphQLPollWithAnswers = new GraphQLObjectType<Poll, Context>({
   name: 'PollWithAnswers',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     question: {type: GraphQLString},
     opensAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime},
@@ -166,7 +147,7 @@ export const GraphQLPollWithAnswers = new GraphQLObjectType<Poll, Context>({
 export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
   name: 'FullPoll',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     question: {type: GraphQLString},
     opensAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     closedAt: {type: GraphQLDateTime},
@@ -185,7 +166,7 @@ export const GraphQLFullPoll = new GraphQLObjectType<Poll, Context>({
 export const GraphQLUpdatePollAnswer = new GraphQLInputObjectType({
   name: 'UpdatePollAnswer',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     answer: {type: GraphQLString}
   }
 })
@@ -193,7 +174,7 @@ export const GraphQLUpdatePollAnswer = new GraphQLInputObjectType({
 export const GraphQLUpdatePollExternalVote = new GraphQLInputObjectType({
   name: 'UpdatePollExternalVote',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     amount: {type: VoteValue}
   }
 })
@@ -201,7 +182,7 @@ export const GraphQLUpdatePollExternalVote = new GraphQLInputObjectType({
 export const GraphQLUpdatePollExternalVoteSources = new GraphQLInputObjectType({
   name: 'UpdatePollExternalVoteSources',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     source: {type: GraphQLString},
     voteAmounts: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollExternalVote))}
   }

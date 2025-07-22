@@ -10,6 +10,9 @@ import {EventDataloaderService} from './event-dataloader.service'
 import {CreateEventInput, EventListArgs, EventSort, UpdateEventInput} from './event.model'
 import {EventResolver} from './event.resolver'
 import {EventService} from './event.service'
+import {createMock, PartialMocked} from '@wepublish/testing'
+import {TagService} from '@wepublish/tag/api'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 const mockEvent = {
   id: '1234',
@@ -28,13 +31,14 @@ const mockEvent = {
 } as Event
 
 const eventQuery = `
-  query Event($id: ID!) {
+  query Event($id: String!) {
     event(id: $id) {
       id
       name
       imageId
       image {
         id
+        filename
       }
     }
   }
@@ -43,7 +47,7 @@ const eventQuery = `
 const eventListQuery = `
   query EventList(
     $filter: EventFilter
-    $cursorId: ID
+    $cursorId: String
     $take: Int
     $skip: Int
     $order: SortOrder
@@ -63,6 +67,7 @@ const eventListQuery = `
         imageId
         image {
           id
+          filename
         }
       }
 
@@ -102,6 +107,7 @@ const createEventQuery = `
       imageId
       image {
         id
+        filename
       }
     }
   }
@@ -133,6 +139,7 @@ const updateEventQuery = `
       imageId
       image {
         id
+        filename
       }
     }
   }
@@ -146,6 +153,7 @@ const deleteEventQuery = `
       imageId
       image {
         id
+        filename
       }
     }
   }
@@ -155,7 +163,9 @@ describe('EventResolver', () => {
   let app: INestApplication
   let eventServiceMock: {[method in keyof EventService]?: jest.Mock}
   let eventDataloaderServiceMock: {[method in keyof EventDataloaderService]?: jest.Mock}
-  let imageDataloaderServiceMock: {[method in keyof ImageDataloaderService]?: jest.Mock}
+  let imageDataloaderServiceMock: {[method in keyof EventDataloaderService]?: jest.Mock}
+  let urlAdapter: PartialMocked<URLAdapter>
+  let tagServiceMock: PartialMocked<TagService>
 
   beforeEach(async () => {
     eventServiceMock = {
@@ -172,6 +182,8 @@ describe('EventResolver', () => {
     imageDataloaderServiceMock = {
       load: jest.fn()
     }
+    urlAdapter = createMock(URLAdapter)
+    tagServiceMock = createMock(TagService)
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -197,6 +209,14 @@ describe('EventResolver', () => {
           useValue: imageDataloaderServiceMock
         },
         {
+          provide: URLAdapter,
+          useValue: urlAdapter
+        },
+        {
+          provide: TagService,
+          useValue: tagServiceMock
+        },
+        {
           provide: PrismaClient,
           useValue: jest.fn() // not used due to mocks but needs to be provided
         }
@@ -219,7 +239,8 @@ describe('EventResolver', () => {
     })
 
     imageDataloaderServiceMock.load?.mockResolvedValue({
-      id: '123'
+      id: '123',
+      filename: '123.webp'
     })
 
     await request(app.getHttpServer())
@@ -230,13 +251,12 @@ describe('EventResolver', () => {
           id: '1234'
         }
       })
-      .expect(res => {
-        expect(res.body.errors).toEqual(undefined)
-        expect(imageDataloaderServiceMock.load?.mock.calls[0]).toMatchSnapshot()
-        expect(eventDataloaderServiceMock.load?.mock.calls[0]).toMatchSnapshot()
-        expect(res.body.data.event).toMatchSnapshot()
-      })
       .expect(200)
+      .expect(res => {
+        expect(imageDataloaderServiceMock.load?.mock.calls).toMatchSnapshot()
+        expect(res.body.errors).toBeUndefined()
+        expect(res.body.data).toMatchSnapshot()
+      })
   })
 
   test('events', async () => {
@@ -271,9 +291,9 @@ describe('EventResolver', () => {
         } as EventListArgs
       })
       .expect(res => {
-        expect(res.body.errors).toEqual(undefined)
-        expect(eventServiceMock.getEvents?.mock.calls[0]).toMatchSnapshot()
-        expect(res.body.data.events).toMatchSnapshot()
+        expect(eventServiceMock.getEvents?.mock.calls).toMatchSnapshot()
+        expect(res.body.errors).toBeUndefined()
+        expect(res.body.data).toMatchSnapshot()
       })
       .expect(200)
   })
@@ -282,7 +302,8 @@ describe('EventResolver', () => {
     eventServiceMock.createEvent?.mockResolvedValue(mockEvent)
 
     imageDataloaderServiceMock.load?.mockResolvedValue({
-      id: '123'
+      id: '123',
+      filename: '123.webp'
     })
 
     await request(app.getHttpServer())
@@ -301,8 +322,9 @@ describe('EventResolver', () => {
         } as CreateEventInput
       })
       .expect(res => {
-        expect(eventServiceMock.createEvent?.mock.calls[0]).toMatchSnapshot()
-        expect(res.body.data.createEvent).toMatchSnapshot()
+        expect(eventServiceMock.createEvent?.mock.calls).toMatchSnapshot()
+        expect(res.body.errors).toBeUndefined()
+        expect(res.body.data).toMatchSnapshot()
       })
       .expect(200)
   })
@@ -314,7 +336,8 @@ describe('EventResolver', () => {
     })
 
     imageDataloaderServiceMock.load?.mockResolvedValue({
-      id: '123'
+      id: '123',
+      filename: '123.webp'
     })
 
     await request(app.getHttpServer())
@@ -327,8 +350,9 @@ describe('EventResolver', () => {
         } as UpdateEventInput
       })
       .expect(res => {
-        expect(eventServiceMock.updateEvent?.mock.calls[0]).toMatchSnapshot()
-        expect(res.body.data.updateEvent).toMatchSnapshot()
+        expect(eventServiceMock.updateEvent?.mock.calls).toMatchSnapshot()
+        expect(res.body.errors).toBeUndefined()
+        expect(res.body.data).toMatchSnapshot()
       })
       .expect(200)
   })
@@ -337,7 +361,8 @@ describe('EventResolver', () => {
     eventServiceMock.deleteEvent?.mockResolvedValue(mockEvent)
 
     imageDataloaderServiceMock.load?.mockResolvedValue({
-      id: '123'
+      id: '123',
+      filename: '123.webp'
     })
 
     await request(app.getHttpServer())
@@ -350,6 +375,7 @@ describe('EventResolver', () => {
       })
       .expect(res => {
         expect(eventServiceMock.deleteEvent?.mock.calls[0]).toMatchSnapshot()
+        expect(res.body.errors).toBeUndefined()
         expect(res.body.data.deleteEvent).toMatchSnapshot()
       })
       .expect(200)

@@ -1,14 +1,13 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  ChallengeProvider,
   CfTurnstile,
+  ChallengeProvider,
   HotAndTrendingDataSource,
   MailProvider,
   MediaAdapter,
   Oauth2Provider,
   PaymentProvider,
-  URLAdapter,
   WepublishServer
 } from '@wepublish/api'
 import pinoMultiStream from 'pino-multi-stream'
@@ -16,14 +15,12 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
-import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
-import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
+import {URLAdapter} from '@wepublish/nest-modules'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
-  privateExpressApp?: Application
   publicExpressApp?: Application
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
@@ -32,12 +29,10 @@ type RunServerProps = {
 }
 
 export async function runServer({
-  privateExpressApp,
   publicExpressApp,
   mediaAdapter,
   mailProvider,
-  paymentProviders,
-  hotAndTrendingDataSource
+  paymentProviders
 }: RunServerProps) {
   /*
    * Load User specific configuration
@@ -115,11 +110,7 @@ export async function runServer({
     level: 'debug'
   })
 
-  let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
-
-  if (config.general.urlAdapter === 'mannschaft') {
-    urlAdapter = new MannschaftURLAdapter({websiteURL, prisma})
-  }
+  const urlAdapter = new URLAdapter(websiteURL)
 
   /**
    * Challenge
@@ -168,10 +159,8 @@ export async function runServer({
         ? config.general.apolloIntrospection
         : false,
       logger,
-      challenge,
-      hotAndTrendingDataSource
+      challenge
     },
-    privateExpressApp,
     publicExpressApp
   )
 

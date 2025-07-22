@@ -1,12 +1,5 @@
-import {
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  css,
-  styled,
-  useRadioGroup
-} from '@mui/material'
+import {FormControl, FormControlLabel, Radio, RadioGroup, css, useRadioGroup} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderPaymentMethodPickerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {ComponentProps, PropsWithChildren, forwardRef, useEffect, useId} from 'react'
 
@@ -33,6 +26,7 @@ export const PaymentRadioWrapper = styled('div')<{active?: boolean}>`
 
 const icon = css`
   height: 40px;
+  width: auto;
 `
 
 const hiddenRadio = css`
@@ -76,6 +70,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
           name={name}
           value={value ? value : ''}
           onChange={event => onChange(event.target.value as string)}
+          sx={{flexWrap: 'nowrap'}}
           row>
           {paymentMethods?.map(method => (
             <FormControlLabel

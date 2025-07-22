@@ -1,5 +1,6 @@
 import {ApolloError} from '@apollo/client'
-import {Event, EventFilter, useEventListQuery} from '@wepublish/editor/api'
+import {TagType} from '@wepublish/editor/api'
+import {Event, EventFilter, getApiClientV2, useEventListQuery} from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -63,12 +64,14 @@ function EventListView() {
     skip: (page - 1) * limit
   }
 
+  const client = getApiClientV2()
   const {
     data,
     loading: isLoading,
     refetch
   } = useEventListQuery({
-    fetchPolicy: 'no-cache',
+    client,
+    fetchPolicy: 'cache-and-network',
     variables: eventListVariables,
     onError: onErrorToast
   })
@@ -98,6 +101,7 @@ function EventListView() {
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
+          tagType={TagType.Event}
         />
       </ListViewContainer>
 

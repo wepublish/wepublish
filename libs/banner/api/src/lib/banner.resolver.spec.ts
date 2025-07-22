@@ -2,8 +2,9 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {BannerResolver} from './banner.resolver'
 import {BannerService} from './banner.service'
 import {BannerActionService} from './banner-action.service'
-import {NotFoundException} from '@nestjs/common'
 import {Banner, BannerDocumentType} from './banner.model'
+import {LoginStatus} from '@prisma/client'
+import {ImageDataloaderService} from '@wepublish/image/api'
 
 describe('BannerResolver', () => {
   let resolver: BannerResolver
@@ -12,9 +13,11 @@ describe('BannerResolver', () => {
     id: '1',
     imageId: '123',
     active: true,
+    delay: 0,
     title: '',
     text: '',
-    showOnArticles: false
+    showOnArticles: false,
+    showForLoginStatus: LoginStatus.ALL
   }
 
   const mockBannerService = {
@@ -31,6 +34,11 @@ describe('BannerResolver', () => {
     findAll: jest.fn()
   }
 
+  const mockImageDataloaderService = {
+    load: jest.fn().mockReturnValue({__typename: 'Image', id: '123'}),
+    prime: jest.fn()
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -42,6 +50,10 @@ describe('BannerResolver', () => {
         {
           provide: BannerActionService,
           useValue: mockBannerActionService
+        },
+        {
+          provide: ImageDataloaderService,
+          useValue: mockImageDataloaderService
         }
       ]
     }).compile()
@@ -74,7 +86,7 @@ describe('BannerResolver', () => {
 
     it('should throw NotFoundException when banner not found', async () => {
       mockBannerService.findOne.mockResolvedValue(null)
-      await expect(resolver.banner('1')).rejects.toThrow(NotFoundException)
+      await expect(resolver.banner('1')).rejects.toThrow()
     })
   })
 
@@ -83,16 +95,20 @@ describe('BannerResolver', () => {
       mockBannerService.findFirst.mockResolvedValue(mockBanner)
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,
-        documentId: '1'
+        documentId: '1',
+        loggedIn: true
       })
       expect(result).toEqual(mockBanner)
     })
 
-    it('should throw NotFoundException when no primary banner found', async () => {
+    it('should return null when no primary banner found', async () => {
       mockBannerService.findFirst.mockResolvedValue(null)
-      await expect(
-        resolver.primaryBanner({documentType: BannerDocumentType.ARTICLE, documentId: '1'})
-      ).rejects.toThrow(NotFoundException)
+      const result = await resolver.primaryBanner({
+        documentType: BannerDocumentType.ARTICLE,
+        documentId: '1',
+        loggedIn: true
+      })
+      expect(result).toEqual(null)
     })
   })
 
@@ -112,7 +128,7 @@ describe('BannerResolver', () => {
     })
 
     it('should return null when no imageId', () => {
-      const bannerWithoutImage = {...mockBanner, imageId: null}
+      const bannerWithoutImage = {...mockBanner, imageId: undefined}
       const result = resolver.image(bannerWithoutImage)
       expect(result).toBeNull()
     })
@@ -132,9 +148,11 @@ describe('BannerResolver', () => {
       const createInput = {
         name: 'New Banner',
         active: true,
+        delay: 0,
         title: 'New Banner Title',
         text: 'New Banner Text',
-        showOnArticles: false
+        showOnArticles: false,
+        showForLoginStatus: LoginStatus.ALL
       }
       mockBannerService.create.mockResolvedValue(mockBanner)
       const result = await resolver.createBanner(createInput)
@@ -147,7 +165,9 @@ describe('BannerResolver', () => {
         title: 'Updated Banner Title',
         text: 'Updated Banner Text',
         active: true,
+        delay: 0,
         showOnArticles: false,
+        showForLoginStatus: LoginStatus.ALL,
         actions: []
       }
       mockBannerService.update.mockResolvedValue(mockBanner)

@@ -1,13 +1,12 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLFloat,
   GraphQLEnumType,
+  GraphQLFloat,
   GraphQLInputObjectType,
-  GraphQLID
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -15,7 +14,7 @@ import {GraphQLUpload} from 'graphql-upload'
 
 import {Context} from '../context'
 import {ImageSort, ImageWithTransformURL} from '../db/image'
-import {ImageRotation, ImageOutput} from '@wepublish/image/api'
+import {ImageOutput, ImageRotation} from '@wepublish/image/api'
 import {GraphQLPageInfo} from './common'
 import {createProxyingResolver} from '../utility'
 
@@ -49,9 +48,9 @@ export const GraphQLImageRotation = new GraphQLEnumType({
 export const GraphQLImageOutput = new GraphQLEnumType({
   name: 'ImageOutput',
   values: {
-    [ImageOutput.PNG]: {value: ImageOutput.PNG},
-    [ImageOutput.JPEG]: {value: ImageOutput.JPEG},
-    [ImageOutput.WEBP]: {value: ImageOutput.WEBP}
+    [ImageOutput.png]: {value: ImageOutput.png},
+    [ImageOutput.jpeg]: {value: ImageOutput.jpeg},
+    [ImageOutput.webp]: {value: ImageOutput.webp}
   }
 })
 
@@ -121,7 +120,7 @@ export const GraphQLImageSort = new GraphQLEnumType({
 export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context>({
   name: 'Image',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -170,7 +169,7 @@ export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
 })
 
 export const GraphQLImageResolver = {
-  __resolveReference: async (reference, {loaders}: Context) => {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
     const {id} = reference
     const image = await loaders.images.load(id)
     if (!image) throw new Error('Image not found')

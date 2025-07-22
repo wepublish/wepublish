@@ -1,5 +1,5 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {PrismaClient} from '@prisma/client'
+import {LoginStatus, PrismaClient} from '@prisma/client'
 import {BannerService} from './banner.service'
 import {BannerDocumentType} from './banner.model'
 
@@ -21,9 +21,11 @@ describe('BannerService', () => {
     cta: null,
     imageId: null,
     active: true,
-    tags: [],
+    delay: 0,
+    html: null,
     showOnArticles: true,
-    showOnPages: pages
+    showOnPages: pages,
+    showForLoginStatus: LoginStatus.ALL
   }
 
   beforeEach(async () => {
@@ -78,21 +80,33 @@ describe('BannerService', () => {
     it('should return the first active banner for articles', async () => {
       jest.spyOn(prisma.banner, 'findFirst').mockResolvedValue(banner)
       expect(
-        await service.findFirst({documentType: BannerDocumentType.ARTICLE, documentId: '1'})
+        await service.findFirst({
+          documentType: BannerDocumentType.ARTICLE,
+          documentId: '1',
+          loggedIn: true
+        })
       ).toEqual(banner)
     })
 
     it('should return the first active banner for pages', async () => {
       jest.spyOn(prisma.banner, 'findFirst').mockResolvedValue(banner)
       expect(
-        await service.findFirst({documentType: BannerDocumentType.PAGE, documentId: '1'})
+        await service.findFirst({
+          documentType: BannerDocumentType.PAGE,
+          documentId: '1',
+          loggedIn: true
+        })
       ).toEqual(banner)
     })
 
     it('should return null if no banner found', async () => {
       jest.spyOn(prisma.banner, 'findFirst').mockResolvedValue(null)
       expect(
-        await service.findFirst({documentType: BannerDocumentType.ARTICLE, documentId: '1'})
+        await service.findFirst({
+          documentType: BannerDocumentType.ARTICLE,
+          documentId: '1',
+          loggedIn: true
+        })
       ).toBeNull()
     })
 
@@ -100,7 +114,8 @@ describe('BannerService', () => {
       expect(
         await service.findFirst({
           documentType: 'INVALID' as unknown as BannerDocumentType,
-          documentId: '1'
+          documentId: '1',
+          loggedIn: true
         })
       ).toBeNull()
       expect(prisma.banner.findFirst).not.toHaveBeenCalled()
@@ -127,8 +142,10 @@ describe('BannerService', () => {
         text: 'Test Banner Text',
         active: true,
         showOnArticles: true,
+        delay: 0,
         actions: [],
-        showOnPages: []
+        showOnPages: [],
+        showForLoginStatus: LoginStatus.ALL
       }
       jest.spyOn(prisma.banner, 'create').mockResolvedValue(banner)
       expect(await service.create(createBannerInput)).toEqual(banner)
@@ -145,8 +162,10 @@ describe('BannerService', () => {
         text: 'Updated Banner Text',
         active: true,
         showOnArticles: true,
+        delay: 0,
         actions: [],
-        showOnPages: []
+        showOnPages: [],
+        showForLoginStatus: LoginStatus.ALL
       }
       jest.spyOn(prisma.banner, 'update').mockResolvedValue(updatedBanner)
       expect(await service.update(updateBannerInput)).toEqual(updatedBanner)

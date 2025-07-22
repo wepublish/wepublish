@@ -107,10 +107,10 @@
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
+        "likeCount": "Likes {{likeCount}}",
         "type": "Typ",
         "untitled": "Ohne Titel",
         "updateDate": "Update-Datum",
@@ -126,7 +126,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Text",
-        "default": "Default"
+        "default": "Default",
+        "tracking": "Tracking"
       }
     },
     "articleList": {
@@ -208,7 +209,70 @@
         "tags": "Tags"
       }
     },
+    "banner": {
+      "edit": {
+        "title": "Banner bearbeiten"
+      },
+      "create": {
+        "title": "Banner hinzufügen"
+      },
+      "delete": {
+        "title": "Banner löschen",
+        "body": "Willst Du den Banner wirklich löschen?",
+        "delete": "Banner löschen"
+      },
+      "form": {
+        "displayOptions": "Anzeigeoptionen",
+        "title": "Titel",
+        "text": "Text",
+        "cta": "Call to action",
+        "delay": "Verzögerung in Sekunden",
+        "active": "Aktiv",
+        "showOnArticles": "Auf Artikeln anzeigen",
+        "showOnPages": "Auf Seiten anzeigen",
+        "showForLoginStatus": "Anzeigen für",
+        "html": "HTML-Code",
+        "loginStatus": {
+          "ALL": "alle",
+          "LOGGED_IN": "nur eingeloggt",
+          "LOGGED_OUT": "nur ausgeloggt"
+        },
+        "actions": "Aktionen",
+        "image": "Bild",
+        "action": {
+          "add": "Aktion hinzufügen",
+          "label": "Beschriftung",
+          "url": "URL",
+          "style": "Stil",
+          "role": "Funktion"
+        }
+      },
+      "list": {
+        "title": "Banner",
+        "text": "Text",
+        "createNew": "Neu erstellen",
+        "active": "Aktiv",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "actions": {
+        "add": "Aktion hinzufügen",
+        "role": {
+          "PRIMARY": "Primär",
+          "CANCEL": "Abbrechen",
+          "OTHER": "Andere"
+        }
+      }
+    },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Bearbeiten",
+        "label": "Crowdfunding",
+        "title": "Crowdfunding auswählen",
+        "name": "Name des Crowdfundings",
+        "select": "Auswählen",
+        "open": "öffnen"
+      },
       "comment": {
         "cherryPick": "Spezifische Kommentare auswählen",
         "comments": "{{count}} Kommentar",
@@ -280,6 +344,9 @@
         "placeholder": "Füge hier deinen HTML Block ein",
         "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
       },
+      "subscribe": {
+        "label": "Abonnieren"
+      },
       "image": {
         "label": "Bild",
         "overview": {
@@ -347,6 +414,9 @@
       },
       "teaserGrid6": {
         "label": "6 Kol"
+      },
+      "teaserSlots": {
+        "label": "Teaser Slots"
       },
       "title": {
         "label": "Titel",
@@ -493,7 +563,9 @@
       "newUser": "Neuer <0>User</0> erstellt",
       "noData": "Keine aktuellen Abo-Daten",
       "user": "Benutzer",
-      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr"
+      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Zum Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -726,7 +798,8 @@
       "blocks": {
         "polls": "Umfrage",
         "blockStyles": "Block Styling",
-        "topMenu": "Inhalts-Blöcke"
+        "topMenu": "Inhalts-Blöcke",
+        "crowdfundings": "Crowdfundings"
       },
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
@@ -756,8 +829,9 @@
       "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
       "users": "User",
-      "usersAndMembers": "User & Abos",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -893,17 +967,24 @@
     },
     "peerArticles": {
       "articleImage": "Teaserbild",
-      "authors": "Autor:innen",
       "filterByPeer": "Nach Peer filtern",
       "lead": "Lead",
-      "notPublished": "Noch nicht publiziert",
-      "originalArticle": "Original Artikel",
       "peer": "Peer",
       "peerArticles": "Peerbare Artikel",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publikations Datum",
       "title": "Titel",
-      "toOriginalArticle": "Zum Original Artikel"
+      "import": {
+        "import": "Importieren",
+        "title": "Artikel importieren",
+        "includeAuthors": "Autoren des Artikels importieren",
+        "includeAuthorsHint": "Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den gleichen Namen trägt, werden die unterschieden.",
+        "includeTags": "Tags des Artikels importieren",
+        "includeTagsHint": "Importiert die Tags des Artikels solange sie nicht schon existieren.",
+        "includeImages": "Bilder des Artikels importieren",
+        "includeImagesHint": "Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals importiert.",
+        "confirm": "Ja, Artikel importieren"
+      }
     },
     "peerList": {
       "overview": {
@@ -932,6 +1013,7 @@
         "editPeerInfo": "Peer-Info bearbeiten",
         "getRemote": "Peer Profil abrufen",
         "image": "Bild",
+        "squareImage": "Quadratisches Bild",
         "information": "Information",
         "leaveEmpty": "Leer lassen, falls keine Änderungen erwünscht",
         "name": "Name",
@@ -1086,12 +1168,50 @@
         "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
       }
     },
+    "subscriptionFlow": {
+      "subscribe": "Abonnieren",
+      "renewal_success": "Verlängerung erfolgreich",
+      "renewal_failed": "Verlängerung fehlgeschlagen",
+      "deactivation_by_user": "Vom Benutzer deaktiviert",
+      "reactivation": "Reaktiviert",
+      "invoice_creation": "Rechnungserstellung",
+      "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
+      "custom": "Benutzerdefiniertes Ereignis",
+      "settings": "Abonnement-Ablauf Einstellungen",
+      "edit": "Abonnement-Ablauf bearbeiten",
+      "titleDefaultSettings": "Standard-Abonnement Einstellungen",
+      "settingsDescription": "Sie können diese Einstellungen für jeden Abonnementplan überschreiben.",
+      "addNew": "Neuen Ablauf erstellen",
+      "dayWithNumber": "Tag {{day}}",
+      "days": "Tage",
+      "savedChange": "Änderung erfolgreich gespeichert",
+      "add": "Hinzufügen",
+      "memberplan": "Mitgliedsplan",
+      "paymentMethod": "Zahlungsmethode",
+      "periodicity": "Periodizität",
+      "autoRenewal": "Automatische Verlängerung?",
+      "booleanFilter": {
+        "true": "Ja",
+        "false": "Nein"
+      },
+      "deleteFlowQuestion": "Das Löschen dieses Ablaufs ist permanent und kann nicht rückgängig gemacht werden. Möchten Sie trotzdem fortfahren?",
+      "deletePermanently": "Permanent löschen",
+      "dropHere": "Hier ablegen",
+      "filters": "Filter",
+      "subscriptionEvents": "Statische Abonnement-Ereignisse",
+      "timeline": "Zeitleiste",
+      "actions": "Aktionen",
+      "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
+      "subscriptionsAffected": "Filter gilt für {{numberOfSubscriptions}} Abonnements",
+      "confirm_subscription": "Abonnementbestätigung"
+    },
     "subscriptionList": {
       "filter": {
         "deactivationReason": "Grund Deaktivierung",
         "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
         "reasonNone": "Kein Grund",
         "reasonUserSelfDeactivated": "Durch Benutzer:in",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reset": "Filter zurücksetzen",
         "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
       },
@@ -1243,7 +1363,7 @@
         },
         "date": "Deaktivierung",
         "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
-        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Allenfalls kann ein neues Abo gelöst werden.",
+        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Allenfalls kann ein neues Abo gelöst werden.",
         "cancellation": "Stornierungsdatum",
         "modalMessage": {
           "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
@@ -1253,6 +1373,7 @@
         },
         "reason": "Deaktivierungs Grund",
         "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
         "title": {
@@ -1284,6 +1405,8 @@
       "invoiceNr": "Rechnung Nr. {{invoiceId}}",
       "invoicePaid": "bezahlt",
       "invoiceUnpaid": "unbezahlt",
+      "confirmed": "bestätigt",
+      "unconfirmed": "unbestätigt",
       "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
       "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
       "noDeactivation": "Keine Deaktivierung.",
@@ -1315,7 +1438,9 @@
       "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
-      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen."
+      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",
@@ -1333,14 +1458,13 @@
     "resources": {
       "teaserType": {
         "article": "Artikel",
-        "peerArticle": "Gepeerte Artikel",
         "page": "Seite",
         "event": "Event",
         "custom": "Benutzerdefinierte"
       },
       "teaserSort": {
-        "hotAndTrending": "Beliebtheit",
-        "publishedAt": "Publikationsdatum"
+        "HotAndTrending": "Beliebtheit",
+        "PublishedAt": "Publikationsdatum"
       }
     },
     "authorEditPanel": {
@@ -1351,6 +1475,111 @@
     },
     "selectableItemsActions": {
       "selectedItems": "{{numberOfItems}} Elemente ausgewählt"
+    },
+    "trackingPixels": {
+      "noPixelInfoHeader": "Keine Tracking-Integration vorhanden",
+      "noPixelInfoDescription": "Dies ist etwa der Fall, wenn kein Tracking konfiguriert ist oder bei alten Artikeln.",
+      "errorHeader": "Fehler"
+    },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Name",
+        "delete": "Löschen",
+        "createNew": "Erstellen"
+      },
+      "delete": {
+        "title": "Unwiderruflich löschen?",
+        "body": "Soll das Crowdfunding unwiderruflich gelöscht werden?",
+        "delete": "Löschen"
+      },
+      "create": {
+        "title": "Neues Crowdfunding erstellen"
+      },
+      "edit": {
+        "title": "{{crowdfundingName}} bearbeiten"
+      },
+      "form": {
+        "name": "Bezeichnung des Crowdfundings (wird nicht publiziert)",
+        "memberPlans": "Abo Pläne",
+        "filter": "Einnahmen filtern",
+        "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "selectMemberPlans": "Abo Pläne wählen",
+        "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
+        "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
+        "revenue": "Bereits CHF {{revenue}} finanziert",
+        "goals": "Ziele"
+      },
+      "goalsForm": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "amount": "Zielbetrag",
+        "remove": "Entfernen",
+        "add": "Ziel hinzufügen"
+      }
+    },
+    "audienceFilter": {
+      "daily": "Täglich",
+      "monthly": "Monatlich",
+      "rangePickerPlaceholder": "von - bis",
+      "filterSubscriptionPlans": "Nach Abo Pläne filtern",
+      "chart": "Diagramm",
+      "table": "Tabelle",
+      "panelHeader": "Auswahl der Daten",
+      "rangeLastWeek": "Letzte Woche",
+      "rangeLastMonth": "Letzter Monat",
+      "rangeLastQuarter": "Letztes Quartal",
+      "rangeLastYear": "Letztes Jahr"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",
+          "overdueSubscriptionCount": "Erneuerte Abos, deren Bezahlung fällig und offen ist. Nicht eingerechnet sind erstmalig gelöste Abos, die nicht bezahlt wurden.",
+          "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
+          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+        },
+        "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
+        "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
+        "renewedSubscriptionCount": "Erneuerte bezahlte Abos",
+        "createdSubscriptionCount": "Neue bezahlte Abos",
+        "deactivatedSubscriptionCount": "Deaktivierte Abos",
+        "replacedSubscriptionCount": "Ersetzte Abos",
+        "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
+        "renewalRate": "Erneuerungsrate",
+        "cancellationRate": "Kündigungsrate",
+        "createdSubscriptionUsers": "Neue bezahlte Abos",
+        "overdueSubscriptionUsers": "Erneuerte nicht bezahlte Abos",
+        "deactivatedSubscriptionUsers": "Deaktivierte Abos",
+        "renewedSubscriptionUsers": "Erneuerte bezahlte Abos",
+        "replacedSubscriptionUsers": "Ersetzte Abos"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Benutzer filtern nach",
+      "id": "ID",
+      "firstName": "Vorname",
+      "name": "Nachname",
+      "email": "E-Mail",
+      "goToUser": "Link zum Benutzer",
+      "close": "Schliessen",
+      "userBtn": "Link zum Benutzer"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Datum",
+        "actions": "Aktionen"
+      },
+      "showUsers": "Details anzeigen",
+      "byDate": "Per",
+      "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
+      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
     }
   }
 }

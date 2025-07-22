@@ -1,6 +1,8 @@
-import {Image} from '@prisma/client'
-import type {FileUpload} from 'graphql-upload'
-import {ImageTransformation, UploadImage} from './image-upload'
+import {Injectable} from '@nestjs/common'
+import {FileUpload} from 'graphql-upload'
+import {UploadImage} from './image-upload'
+import {Image} from './image.model'
+import {ImageTransformation} from './image-transformation.model'
 
 export interface ArrayBufferUpload {
   filename: string
@@ -8,9 +10,18 @@ export interface ArrayBufferUpload {
   arrayBuffer: ArrayBuffer
 }
 
-export interface MediaAdapter {
-  uploadImage(fileUpload: Promise<FileUpload>): Promise<UploadImage>
-  uploadImageFromArrayBuffer(arrayBufferUpload: Promise<ArrayBufferUpload>): Promise<UploadImage>
-  deleteImage(id: string): Promise<boolean>
-  getImageURL(image: Image, transformation?: ImageTransformation): Promise<string>
+@Injectable()
+export abstract class MediaAdapter {
+  abstract uploadImage(fileUpload: Promise<FileUpload>): Promise<UploadImage>
+
+  abstract uploadImageFromArrayBuffer(
+    arrayBufferUpload: Promise<ArrayBufferUpload>
+  ): Promise<UploadImage>
+
+  abstract deleteImage(id: string): Promise<boolean>
+
+  abstract getImageURL(
+    image: Image,
+    transformation?: ImageTransformation | undefined
+  ): Promise<string>
 }

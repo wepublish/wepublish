@@ -81,6 +81,10 @@ function UserSubscriptionDeactivatePanel({
                 {
                   value: SubscriptionDeactivationReason.InvoiceNotPaid,
                   label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
+                },
+                {
+                  value: SubscriptionDeactivationReason.UserReplacedSubscription,
+                  label: t('userSubscriptionEdit.deactivation.reasonUserReplacedSubscription')
                 }
               ]}
               value={deactivationReason}

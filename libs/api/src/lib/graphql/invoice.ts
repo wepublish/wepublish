@@ -1,7 +1,6 @@
 import {InvoiceItem} from '@prisma/client'
 import {
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -15,7 +14,6 @@ import {InvoiceSort} from '../db/invoice'
 import {InvoiceWithItems} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
-import {GraphQLPublicSubscription} from './subscription-public'
 import {GraphQLSupportedCurrency} from './memberPlan'
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
@@ -39,7 +37,7 @@ export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
 export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
   name: 'Invoice',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -47,43 +45,10 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
     mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
-    manuallySetAsPaidByUserId: {type: GraphQLID},
+    manuallySetAsPaidByUserId: {type: GraphQLString},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
     canceledAt: {type: GraphQLDateTime},
     currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
-    total: {
-      type: new GraphQLNonNull(GraphQLInt),
-      resolve: createProxyingResolver(({items}) => {
-        return (items || []).reduce((previousValue, currentValue) => {
-          return previousValue + currentValue.quantity * currentValue.amount
-        }, 0)
-      })
-    }
-  }
-})
-
-export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
-  name: 'Invoice',
-  fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-
-    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-
-    mail: {type: new GraphQLNonNull(GraphQLString)},
-
-    description: {type: GraphQLString},
-    paidAt: {type: GraphQLDateTime},
-    dueAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    canceledAt: {type: GraphQLDateTime},
-    items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
-    subscriptionID: {type: new GraphQLNonNull(GraphQLID)},
-    subscription: {
-      type: GraphQLPublicSubscription,
-      resolve({subscriptionID}, args, {loaders}) {
-        return loaders.subscriptionsById.load(subscriptionID)
-      }
-    },
     total: {
       type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
@@ -101,8 +66,8 @@ export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
     mail: {type: GraphQLString},
     paidAt: {type: GraphQLDate},
     canceledAt: {type: GraphQLDate},
-    userID: {type: GraphQLID},
-    subscriptionID: {type: GraphQLID}
+    userID: {type: GraphQLString},
+    subscriptionID: {type: GraphQLString}
   }
 })
 
@@ -141,8 +106,8 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   fields: {
     mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    subscriptionID: {type: GraphQLID},
-    manuallySetAsPaidByUserId: {type: GraphQLID},
+    subscriptionID: {type: GraphQLString},
+    manuallySetAsPaidByUserId: {type: GraphQLString},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

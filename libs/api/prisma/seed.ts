@@ -157,6 +157,17 @@ const seedSettings = (prisma: PrismaClient) =>
         settingRestriction: {allowedValues: {boolChoice: true}}
       }
     }),
+    prisma.setting.upsert({
+      where: {
+        name: SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED
+      },
+      update: {},
+      create: {
+        name: SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED,
+        value: false,
+        settingRestriction: {allowedValues: {boolChoice: true}}
+      }
+    }),
 
     // remove non-used settings
     prisma.setting.deleteMany({

@@ -1,5 +1,5 @@
-import {styled} from '@mui/material'
-import {TeaserGridBlock} from '@wepublish/website'
+import styled from '@emotion/styled'
+import {TeaserGridBlock} from '@wepublish/block-content/website'
 
 export const MannschaftTeaserGrid = styled(TeaserGridBlock)`
   // Makes ads never too big and center them

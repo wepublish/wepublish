@@ -1,3 +1,4 @@
+import {Typography} from '@mui/material'
 import {ForwardedRef, forwardRef, HTMLAttributes} from 'react'
 
 export type UnorderedListProps = HTMLAttributes<HTMLUListElement> & {component?: React.ElementType}
@@ -29,9 +30,9 @@ export type ListItemProps = HTMLAttributes<HTMLLIElement> & {component?: React.E
 export const ListItem = forwardRef(
   ({children, ...props}: ListItemProps, ref: ForwardedRef<HTMLLIElement>) => {
     return (
-      <li {...props} ref={ref}>
+      <Typography {...props} ref={ref} component="li" variant="body1">
         {children}
-      </li>
+      </Typography>
     )
   }
 )

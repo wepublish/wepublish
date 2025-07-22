@@ -1,8 +1,6 @@
 import {
   ArgsType,
-  Directive,
   Field,
-  ID,
   InputType,
   Int,
   ObjectType,
@@ -14,8 +12,7 @@ import {EventStatus} from '@prisma/client'
 import {Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
-import {Node} from 'slate'
-import {Page} from './page.model'
+import {Descendant} from 'slate'
 
 export enum EventSort {
   CreatedAt = 'CreatedAt',
@@ -37,9 +34,8 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Event {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -64,7 +60,7 @@ export class Event {
   location?: string
 
   @Field(type => GraphQLRichText, {nullable: true})
-  description?: Node[]
+  description?: Descendant[]
 
   @Field(type => EventStatus)
   status!: EventStatus
@@ -81,18 +77,12 @@ export class Event {
   @Field({nullable: true})
   externalSourceName?: string
 
-  @Field({nullable: true})
-  page?: Page
+  @Field()
+  url!: string
 }
 
 @ObjectType()
 export class PaginatedEvents extends PaginatedType(Event) {}
-
-@ArgsType()
-export class EventId {
-  @Field(() => ID)
-  id!: string
-}
 
 @InputType()
 export class EventFilter {
@@ -132,7 +122,7 @@ export class EventListArgs {
   @Field(type => Int, {nullable: true, defaultValue: 0})
   skip?: number
 
-  @Field(() => ID, {nullable: true})
+  @Field({nullable: true})
   cursorId?: string
 }
 
@@ -144,19 +134,15 @@ export class CreateEventInput extends PickType(
 ) {
   @Field(type => [String], {nullable: true})
   tagIds?: string[]
+
+  @Field(type => EventStatus, {
+    defaultValue: EventStatus.Scheduled
+  })
+  status?: EventStatus
 }
 
 @ArgsType()
 export class UpdateEventInput extends PartialType(CreateEventInput, ArgsType) {
   @Field()
-  id!: string
-}
-
-@ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
-export class Tag {
-  @Field(() => ID)
-  @Directive('@external')
   id!: string
 }

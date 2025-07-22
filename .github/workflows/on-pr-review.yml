@@ -86,9 +86,19 @@ jobs:
             rootUser: ${S3_ACCESS_KEY_ID}
             rootPassword: ${S3_SECRET_ACCESS_KEY}
           disableWebUI: true
+          console:
+            enabled: false
           defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
+          resourcesPreset: "none"
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "50m"
+            limits:
+              memory: "300Mi"
+              cpu: "200m"
           service:
             type: LoadBalancer
             port: 9000
@@ -109,6 +119,13 @@ jobs:
                 database: wepublish
           primary:
             resourcesPreset: "none"
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
@@ -157,8 +174,21 @@ jobs:
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
+            requests:
+              memory: "200Mi"
+              cpu: "30m"
+            limits:
+              memory: "500Mi"
+              cpu: "200m"
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
+            resources:
+              requests:
+                memory: "200Mi"
+                cpu: "100m"
+              limits:
+                memory: "1024Mi"
+                cpu: "1000m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -248,18 +278,18 @@ jobs:
                   apiBaseUrl: ${{ env.API_URL }}
 
               challenge:
-                secret: 'secret'
-                validTime: 600
-                width: 200
-                height: 200
-                background: '#ffffff'
-                noise: 5
-                minValue: 1
-                maxValue: 10
-                operandAmount: 1
-                operandTypes: [ '+', '-' ]
-                mode: 'formula'
-                targetSymbol: '?'
+                type: 'turnstile'
+                secret: 1x0000000000000000000000000000000AA
+                siteKey: 1x00000000000000000000AA
+          
+              trackingPixelProviders:
+                - type: prolitteris
+                  id: prolitteris
+                  name: "Pro Litteris"
+                  memberNr: '892761'
+                  onlyPaidContentAccess: false
+                  publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
+                  usePublisherInternalKey: true
 
               mediaServer:
                 type: 'nova'
@@ -267,10 +297,24 @@ jobs:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
               PEER_BY_DEFAULT: "true"
+            resources:
+              requests:
+                memory: "32Mi"
+                cpu: "20m"
+              limits:
+                memory: "64Mi"
+                cpu: "100m"
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
+            resources:
+              requests:
+                memory: "8Mi"
+                cpu: "5m"
+              limits:
+                memory: "32Mi"
+                cpu: "50m"
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
@@ -279,6 +323,13 @@ jobs:
               S3_SECRET_KEY: secretKey
               S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
               S3_PORT: '9000'
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "512Mi"
+                cpu: "150m"
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
@@ -298,10 +349,11 @@ jobs:
 
   publish_docker_website_image:
     name: Build Docker Website
-    needs: [setup-website-matrix, helm_deployment, publish_docker_base_image]
+    needs: [ setup-website-matrix, helm_deployment, publish_docker_base_image]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
+      fail-fast: false
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
       website_project: ${{ matrix.target }}

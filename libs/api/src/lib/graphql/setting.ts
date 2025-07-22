@@ -1,14 +1,13 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLScalarType,
-  GraphQLInputObjectType,
-  GraphQLID,
-  GraphQLList,
+  GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLString
 } from 'graphql'
 
 import {Context} from '../context'
@@ -61,14 +60,6 @@ export const GraphQLAllowedSettingVals = new GraphQLObjectType({
   }
 })
 
-export const GraphQLInputAllowedSettingVals = new GraphQLInputObjectType({
-  name: 'AllowedSettingValsInput',
-  fields: {
-    stringChoice: {type: new GraphQLList(GraphQLString)},
-    boolChoice: {type: GraphQLBoolean}
-  }
-})
-
 export const GraphQLSettingRestriction = new GraphQLObjectType({
   name: 'SettingRestriction',
   fields: {
@@ -76,23 +67,6 @@ export const GraphQLSettingRestriction = new GraphQLObjectType({
     minValue: {type: GraphQLInt},
     inputLength: {type: GraphQLInt},
     allowedValues: {type: GraphQLAllowedSettingVals}
-  }
-})
-
-export const GraphQLSettingRestrictionInput = new GraphQLInputObjectType({
-  name: 'SettingRestrictionInput',
-  fields: {
-    maxValue: {type: GraphQLInt},
-    minValue: {type: GraphQLInt},
-    inputLength: {type: GraphQLInt},
-    allowedValues: {type: new GraphQLList(GraphQLInputAllowedSettingVals)}
-  }
-})
-
-export const GraphQLSettingInput = new GraphQLInputObjectType({
-  name: 'SettingInput',
-  fields: {
-    value: {type: GraphQLSettingValueType}
   }
 })
 
@@ -104,17 +78,10 @@ export const GraphQLUpdateSettingArgs = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLSettingsInput = new GraphQLInputObjectType({
-  name: 'SettingsInput',
-  fields: {
-    value: {type: new GraphQLList(GraphQLUpdateSettingArgs)}
-  }
-})
-
 export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   name: 'Setting',
   fields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLSettingName)},
     value: {type: new GraphQLNonNull(GraphQLSettingValueType)},
     settingRestriction: {type: GraphQLSettingRestriction}

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.MannschaftMagazin.android",
+      "sha256_cert_fingerprints": [
+        "DF:CC:D3:89:7A:C3:6D:23:35:A1:25:01:DB:22:DC:05:CC:2D:34:1A:39:8C:12:41:83:78:B8:94:2E:D6:6F:44"
+      ]
+    }
+  }
+]

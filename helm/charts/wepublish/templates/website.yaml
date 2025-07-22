@@ -63,6 +63,14 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          env:
+            {{- if .Values.website.dynamicEnv }}
+            {{- range $key, $value := .Values.website.dynamicEnv }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
+            { { - end } }
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-website-environment-{{ .Release.Revision }}

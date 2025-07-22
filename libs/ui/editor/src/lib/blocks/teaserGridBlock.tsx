@@ -1,17 +1,11 @@
 import styled from '@emotion/styled'
-import {
-  ImageRefFragment,
-  PeerWithProfileFragment,
-  TeaserStyle,
-  TeaserType
-} from '@wepublish/editor/api'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import {ReactNode, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
-import {Avatar, Drawer, IconButton as RIconButton, Panel as RPanel} from 'rsuite'
+import {Drawer, IconButton as RIconButton, Panel as RPanel} from 'rsuite'
 
 import {BlockProps} from '../atoms/blockList'
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
@@ -22,6 +16,7 @@ import {Typography} from '../atoms/typography'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {Teaser as TeaserTypeMixed, TeaserGridBlockValue} from './types'
+import {FullImageFragment, TeaserType} from '@wepublish/editor/api-v2'
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
@@ -58,6 +53,7 @@ const TeaserContentWrapper = styled.div`
 const TeaserImage = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `
 
 export const IconWrapper = styled.div`
@@ -218,17 +214,16 @@ export function TeaserBlock({
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
           <Teaser>
-            {ContentForTeaser(teaser, numColumns)}
-
+            <ContentForTeaser teaser={teaser} numColumns={numColumns} />
             <IconWrapper>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton icon={<MdArticle />} onClick={onChoose} />
               </IconButtonTooltip>
-              {teaser.type !== TeaserType.PeerArticle || !teaser?.peer?.isDisabled ? (
-                <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
-                  <IconButton icon={<MdEdit />} onClick={onEdit} />
-                </IconButtonTooltip>
-              ) : null}
+
+              <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
+                <IconButton icon={<MdEdit />} onClick={onEdit} />
+              </IconButtonTooltip>
+
               <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
                 <IconButton icon={<MdDelete />} onClick={onRemove} />
               </IconButtonTooltip>
@@ -240,7 +235,12 @@ export function TeaserBlock({
   )
 }
 
-export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
+export type ContentForTeaserProps = {
+  teaser: TeaserTypeMixed
+  numColumns?: number
+}
+
+export function ContentForTeaser({teaser, numColumns}: ContentForTeaserProps) {
   const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {
@@ -252,33 +252,11 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
 
       return (
         <TeaserContent
-          style={teaser.style}
           image={teaser.image ?? teaser.article.latest.image ?? undefined}
           preTitle={teaser.preTitle ?? teaser.article.latest.preTitle ?? undefined}
           title={teaser.title ?? teaser.article.latest.title ?? ''}
           lead={teaser.lead ?? teaser.article.latest.lead ?? undefined}
           states={states}
-          numColumns={numColumns}
-        />
-      )
-    }
-
-    case TeaserType.PeerArticle: {
-      const states = []
-
-      if (teaser?.article?.draft) states.push(t('articleEditor.panels.stateDraft'))
-      if (teaser?.article?.pending) states.push(t('articleEditor.panels.statePending'))
-      if (teaser?.article?.published) states.push(t('articleEditor.panels.statePublished'))
-
-      return (
-        <TeaserContent
-          style={teaser.style}
-          image={teaser.image ?? teaser.article?.latest.image ?? undefined}
-          preTitle={teaser.preTitle ?? teaser.article?.latest.preTitle ?? undefined}
-          title={teaser.title ?? teaser.article?.latest.title ?? undefined}
-          lead={teaser.lead ?? teaser.article?.latest.lead ?? undefined}
-          states={states}
-          peer={teaser.peer}
           numColumns={numColumns}
         />
       )
@@ -293,7 +271,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
 
       return (
         <TeaserContent
-          style={teaser.style}
           image={teaser.image ?? teaser.page.latest.image ?? undefined}
           title={teaser.title ?? teaser.page.latest.title ?? ''}
           lead={teaser.lead ?? teaser.page.latest.description ?? undefined}
@@ -306,7 +283,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
     case TeaserType.Event: {
       return (
         <TeaserContent
-          style={teaser.style}
           image={teaser.image ?? teaser.event.image ?? undefined}
           title={teaser.title ?? teaser.event.name ?? ''}
           lead={teaser.lead || teaser.event.lead || teaser.event.location || undefined}
@@ -318,7 +294,6 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
     case TeaserType.Custom: {
       return (
         <TeaserContent
-          style={teaser.style}
           contentUrl={teaser.contentUrl}
           image={teaser.image ?? undefined}
           title={teaser.title}
@@ -334,28 +309,13 @@ export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
 }
 
 export interface TeaserContentProps {
-  style: TeaserStyle
-  preTitle?: string
-  title?: string
-  lead?: string
-  image?: ImageRefFragment
+  preTitle?: string | null
+  title?: string | null
+  lead?: string | null
+  image?: FullImageFragment
   states?: string[]
-  peer?: PeerWithProfileFragment
   numColumns?: number
-  contentUrl?: string
-}
-
-function labelForTeaserStyle(style: TeaserStyle) {
-  switch (style) {
-    case TeaserStyle.Default:
-      return 'Default'
-
-    case TeaserStyle.Light:
-      return 'Light'
-
-    case TeaserStyle.Text:
-      return 'Text'
-  }
+  contentUrl?: string | null
 }
 
 const OverlayComponent = styled(Overlay)<{isDisabled?: boolean}>`
@@ -366,17 +326,14 @@ const OverlayComponent = styled(Overlay)<{isDisabled?: boolean}>`
 `
 
 export function TeaserContent({
-  style,
   preTitle,
   contentUrl,
   title,
   lead,
   image,
   states,
-  peer,
   numColumns
 }: TeaserContentProps) {
-  const label = labelForTeaserStyle(style)
   const {t} = useTranslation()
   const stateJoin = states?.join(' / ')
   return (
@@ -389,50 +346,33 @@ export function TeaserContent({
         )}
       </TeaserContentWrapper>
 
-      <OverlayComponent isDisabled={peer?.isDisabled || false}>
-        {peer && peer.isDisabled === true ? (
-          <PeerInfo>
-            <Typography variant="body2" color="white" spacing="small" align="center">
-              {t('articleEditor.panels.peerDisabled')}
+      <OverlayComponent>
+        <Content>
+          {contentUrl && <div>{contentUrl}</div>}
+          {preTitle && (
+            <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
+              {preTitle}
             </Typography>
-          </PeerInfo>
-        ) : (
-          <>
-            <Content>
-              {contentUrl && <div>{contentUrl}</div>}
-              {preTitle && (
-                <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
-                  {preTitle}
-                </Typography>
-              )}
-              <Typography variant="body2" color="white" spacing="small">
-                {title || t('articleEditor.panels.untitled')}
-              </Typography>
-              {lead && (
-                <Typography variant="subtitle1" color="white" ellipsize>
-                  {lead}
-                </Typography>
-              )}
-            </Content>
-            {peer && (
-              <PeerLogo>
-                <Avatar src={peer.profile?.logo?.squareURL ?? undefined} circle />
-              </PeerLogo>
-            )}
-            <TeaserInfoWrapper>
-              <TeaserStyleElement>
-                <Typography variant="subtitle1" color="gray">
-                  {t('articleEditor.panels.teaserStyle', {label})}
-                </Typography>
-              </TeaserStyleElement>
-              <Status>
-                <Typography variant="subtitle1" color="gray">
-                  {t('articleEditor.panels.status', {stateJoin})}
-                </Typography>
-              </Status>
-            </TeaserInfoWrapper>
-          </>
-        )}
+          )}
+
+          <Typography variant="body2" color="white" spacing="small">
+            {title || t('articleEditor.panels.untitled')}
+          </Typography>
+
+          {lead && (
+            <Typography variant="subtitle1" color="white" ellipsize>
+              {lead}
+            </Typography>
+          )}
+        </Content>
+
+        <TeaserInfoWrapper>
+          <Status>
+            <Typography variant="subtitle1" color="gray">
+              {t('articleEditor.panels.status', {stateJoin})}
+            </Typography>
+          </Status>
+        </TeaserInfoWrapper>
       </OverlayComponent>
     </>
   )

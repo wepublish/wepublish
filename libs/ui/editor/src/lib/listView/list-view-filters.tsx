@@ -1,16 +1,12 @@
 import styled from '@emotion/styled'
 import {
-  ArticleFilter,
   AuthorRefFragment,
-  DateFilterComparison,
-  EventFilter,
   FullUserRoleFragment,
-  PageFilter,
   PollAnswerWithVoteCount,
+  TagType,
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
-  useTagListLazyQuery,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
 import {useEffect, useMemo, useState} from 'react'
@@ -28,13 +24,18 @@ import {
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 import {
+  ArticleFilter,
   InputMaybe,
+  PageFilter,
   PollVoteFilter,
   Scalars,
-  useEventProvidersLazyQuery
+  useEventProvidersLazyQuery,
+  DateFilterComparison,
+  EventFilter,
+  PeerArticleFilter
 } from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
-import {TagCheckPicker, TagRefFragment} from '../panel/tagCheckPicker'
+import {SelectTags} from '../atoms/tag/selectTags'
 
 const {Group} = RForm
 
@@ -84,7 +85,7 @@ type Field =
   | 'published'
   | 'pending'
   | 'authors'
-  | 'peer'
+  | 'peerId'
   | 'publicationDate'
   | 'dates'
   | 'providers'
@@ -104,6 +105,7 @@ export type ImportableEventFilter = {
 }
 
 type Filter = ArticleFilter &
+  PeerArticleFilter &
   PageFilter &
   UserFilter &
   EventFilter &
@@ -116,17 +118,15 @@ export interface ListViewFiltersProps {
   isLoading: boolean
   onSetFilter(filter: Filter): void
   className?: string
-
-  // optional setters for filters
-  setPeerFilter?(value: string): void
+  tagType?: TagType
 }
 
 export function ListViewFilters({
   fields,
   filter,
   onSetFilter,
-  setPeerFilter,
-  className
+  className,
+  tagType
 }: ListViewFiltersProps) {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
@@ -154,15 +154,11 @@ export function ListViewFilters({
     fetchPolicy: 'network-only'
   })
 
-  const [tagFetch, {data: tagData}] = useTagListLazyQuery({
-    fetchPolicy: 'network-only'
-  })
-
   // check whether or not we need to get some data based on which filters are required
   const isAnswerFilter = fields.includes('answerIds')
   const isProviderFilter = fields.includes('providers')
   const isUserRoleFilter = fields.includes('userRole')
-  const isPeerFilter = fields.includes('peer') && !!setPeerFilter
+  const isPeerFilter = fields.includes('peerId')
 
   // conditionally get some additional data
   useEffect(() => {
@@ -241,12 +237,15 @@ export function ListViewFilters({
 
   function resetFilter(): void {
     const cleanFilter: Record<string, any> = {}
+
     for (const filterKey in filter) {
       const possibleField = mapFilterFieldToField(filterKey as keyof Filter)
+
       if (!possibleField || !fields.includes(possibleField)) {
         cleanFilter[filterKey] = filter[filterKey as keyof Filter]
       }
     }
+
     onSetFilter(cleanFilter)
     setResetFilterkey(new Date().getTime().toString())
   }
@@ -255,12 +254,15 @@ export function ListViewFilters({
     if (value.authors && !value.authors.length) {
       value = {authors: null}
     }
+
     if (value.userRole && !value.userRole.length) {
       value = {userRole: null}
     }
+
     if (value.answerIds && !value.answerIds.length) {
       value = {answerIds: null}
     }
+
     const newFilter = {
       ...filter,
       ...value
@@ -287,7 +289,6 @@ export function ListViewFilters({
   }
 
   const authorsData = filter?.authors?.map(author => ({id: author})) || []
-  const tagsData = filter?.tags?.map(tag => ({id: tag})) || []
   return (
     <>
       <Form className={className}>
@@ -433,11 +434,11 @@ export function ListViewFilters({
 
         {fields.includes('tags') && (
           <Group style={formInputStyle}>
-            <TagCheckPicker
-              list={tagsData as TagRefFragment[]}
-              onChange={value => {
-                return updateFilter({tags: value ? value.map(tag => tag.id) : []})
-              }}
+            <SelectTags
+              defaultTags={[]}
+              tagType={tagType ?? TagType.Article}
+              setSelectedTags={tags => updateFilter({tags})}
+              placeholder={t('navbar.articleTags')}
             />
           </Group>
         )}
@@ -516,11 +517,11 @@ export function ListViewFilters({
                   updateFilter({
                     publicationDateFrom: {
                       date: value[0]?.toISOString(),
-                      comparison: DateFilterComparison.Gt
+                      comparison: DateFilterComparison.GreaterThan
                     },
                     publicationDateTo: {
                       date: value[1]?.toISOString(),
-                      comparison: DateFilterComparison.Lte
+                      comparison: DateFilterComparison.LowerThanOrEqual
                     }
                   })
                 }
@@ -565,14 +566,15 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <SelectPicker
               virtualized
+              value={filter.peerId ?? null}
               data={allPeers.map(peer => ({
-                value: peer.name,
-                label: peer.profile?.name
+                value: peer.id,
+                label: peer.name
               }))}
               placeholder={t('peerArticles.filterByPeer')}
               searchable
-              onSelect={value => setPeerFilter(value)}
-              onClean={() => setPeerFilter('')}
+              onSelect={value => updateFilter({peerId: value})}
+              onClean={() => updateFilter({peerId: undefined})}
             />
           </Group>
         )}

@@ -40,15 +40,6 @@ Also, make sure, you have a database up and running. You may want run `docker-co
 
 Once you have done this, you should be able to run a single test using the command `npx jest -t 'my test'`
 
-### Writing Tests with Fabbrica
-When it comes to writing tests, we highly recommend using [Fabbrica](https://github.com/Quramy/prisma-fabbrica).
-With Fabbrica, you can easily generate database entries using the `.create()` method or model instances using
-the `.build()` method, saving you time and effort.
-
-For examples of how to use Fabbrica in your tests, check out the `subscription-flow.controller.spec.ts` file 
-located at `libs/membership/api/src/lib/subscription-flow`. It's a great resource to help you get started with writing
-tests that utilize Fabbrica.
-
 ### ! Do not forget adding tests to the pipeline !
 In order to run your tests within the pipeline, you have to add an entry in the `package.json` in the root folder.
 To test, if it works, run `nx test` from your cli. Your specs should now be tested.

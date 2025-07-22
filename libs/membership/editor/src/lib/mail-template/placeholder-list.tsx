@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {getApiClientV2, ListViewContainer, ListViewHeader} from '@wepublish/ui/editor'
+import {ListViewContainer, ListViewHeader} from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 import {
   NON_USER_ACTION_EVENTS,
@@ -8,9 +8,10 @@ import {
 import {DEFAULT_QUERY_OPTIONS} from '../common'
 import {
   SubscriptionEvent,
-  useSystemMailsQuery,
   useMailTemplateQuery,
-  UserEvent
+  UserEvent,
+  getApiClientV2,
+  useSystemMailsQuery
 } from '@wepublish/editor/api-v2'
 import {
   Grid,
@@ -27,6 +28,7 @@ import {TypeAttributes} from 'rsuite/esm/@types/common'
 interface DecoratedEvent {
   event:
     | SubscriptionEvent.Subscribe
+    | SubscriptionEvent.ConfirmSubscription
     | SubscriptionEvent.RenewalSuccess
     | SubscriptionEvent.RenewalFailed
     | SubscriptionEvent.DeactivationByUser

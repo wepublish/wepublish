@@ -1,9 +1,11 @@
+import React from 'react'
 import {
   CreateBannerActionInput,
   CreateBannerInput,
   getApiClientV2,
-  ImageRefFragment,
-  useCreateBannerMutation
+  FullImageFragment,
+  useCreateBannerMutation,
+  LoginStatus
 } from '@wepublish/editor/api-v2'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -20,10 +22,12 @@ export const CreateBannerForm = () => {
 
   const [banner, setBanner] = useState({
     active: false,
-    showOnArticles: false
-  } as CreateBannerInput & {image?: ImageRefFragment | null})
+    showOnArticles: false,
+    showForLoginStatus: LoginStatus.All,
+    delay: 0
+  } as CreateBannerInput & {image?: FullImageFragment | null})
 
-  const {StringType, BooleanType} = Schema.Types
+  const {StringType} = Schema.Types
   const validationModel = Schema.Model({
     title: StringType().isRequired(),
     text: StringType().isRequired()
@@ -84,7 +88,7 @@ export const CreateBannerForm = () => {
       formValue={banner}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => /*validationPassed &&*/ onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}>
       <SingleViewTitle
         loading={loading}
         title={t('banner.create.title')}

@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
+import {useCreateJwtForWebsiteLoginLazyQuery, useMeQuery} from '@wepublish/editor/api'
 import {
-  PageInput,
+  CreatePageMutationVariables,
+  getApiClientV2,
   useCreatePageMutation,
-  usePagePreviewLinkLazyQuery,
   usePageQuery,
   usePublishPageMutation,
   useUpdatePageMutation
-} from '@wepublish/editor/api'
+} from '@wepublish/editor/api-v2'
+import {CanPreview} from '@wepublish/permissions'
 import {
   blockForQueryBlock,
   BlockList,
@@ -14,15 +16,14 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
+  mapBlockValueToBlockInput,
   NavigationBar,
   PageMetadata,
   PageMetadataPanel,
   PermissionControl,
   PublishPagePanel,
   StateColor,
-  unionMapForBlock,
   useAuthorisation,
-  useBlockMap,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
 import React, {useCallback, useEffect, useState} from 'react'
@@ -85,34 +86,18 @@ function PageEditor() {
   const params = useParams()
   const {id} = params
 
-  const [previewLinkFetch, {data}] = usePagePreviewLinkLazyQuery({
-    fetchPolicy: 'no-cache'
-  })
-
-  useEffect(() => {
-    if (data?.pagePreviewLink) {
-      window.open(data?.pagePreviewLink)
-    }
-  }, [data?.pagePreviewLink])
-
+  const client = getApiClientV2()
   const [createPage, {data: createData, loading: isCreating, error: createError}] =
-    useCreatePageMutation()
-
-  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation({
-    fetchPolicy: 'no-cache'
+    useCreatePageMutation({client})
+  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation({client})
+  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation({
+    client
   })
-
-  const [publishPage, {data: publishData, loading: isPublishing, error: publishError}] =
-    usePublishPageMutation({
-      fetchPolicy: 'no-cache'
-    })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
-  const [updatedAt, setUpdatedAt] = useState<Date>()
-  const [publishAt, setPublishAt] = useState<Date>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -137,9 +122,16 @@ function PageEditor() {
     refetch,
     loading: isLoading
   } = usePageQuery({
+    client,
     errorPolicy: 'all',
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     variables: {id: pageID!}
+  })
+  const {data: user} = useMeQuery({
+    fetchPolicy: 'cache-only'
+  })
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const {t} = useTranslation()
@@ -147,11 +139,6 @@ function PageEditor() {
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
   const canPreview = Boolean(pageData?.page?.draft)
-  const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
-    ? new Date(publishData?.publishPage?.pending?.publishAt)
-    : pageData?.page?.pending?.publishAt
-    ? new Date(pageData?.page?.pending?.publishAt)
-    : undefined
 
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
@@ -165,27 +152,22 @@ function PageEditor() {
 
   useEffect(() => {
     if (pageData?.page) {
-      const {latest, pending, tags} = pageData.page
+      const {latest, tags, slug, url} = pageData.page
       const {
-        slug,
         title,
         description,
-        url,
         image,
         blocks,
         properties,
         socialMediaTitle,
         socialMediaDescription,
-        socialMediaImage
+        socialMediaImage,
+        publishedAt
       } = latest
-      const {publishedAt} = latest ?? {}
-      if (publishedAt) setPublishedAt(new Date(publishedAt))
 
-      const {updatedAt} = latest ?? {}
-      if (updatedAt) setUpdatedAt(new Date(updatedAt))
-
-      const {publishAt} = pending ?? latest
-      if (publishAt) setPublishAt(new Date(publishAt))
+      if (publishedAt) {
+        setPublishedAt(new Date(publishedAt))
+      }
 
       setMetadata({
         slug: slug ?? '',
@@ -194,11 +176,7 @@ function PageEditor() {
         tags: tags.map(({id}) => id),
         defaultTags: tags,
         url,
-        properties: properties.map(property => ({
-          key: property.key,
-          value: property.value,
-          public: property.public
-        })),
+        properties,
         image: image || undefined,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
@@ -217,7 +195,7 @@ function PageEditor() {
       setStateColor(StateColor.pending)
       setTagTitle(
         t('pageEditor.overview.pending', {
-          date: new Date(pageData?.page?.pending?.publishAt ?? '')
+          date: new Date(pageData?.page?.pending?.publishedAt ?? '')
         })
       )
     } else if (pageData?.page?.published) {
@@ -243,18 +221,18 @@ function PageEditor() {
       )
   }, [createError, updateError, publishError])
 
-  function createInput(): PageInput {
+  function createInput(): CreatePageMutationVariables {
     return {
       slug: metadata.slug ?? '',
       title: metadata.title ?? '',
       description: metadata.description,
       imageID: metadata.image?.id,
-      tags: metadata.tags,
+      tagIds: metadata.tags,
       properties: metadata.properties,
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
       socialMediaImageID: metadata.socialMediaImage?.id || undefined,
-      blocks: blocks.map(unionMapForBlock)
+      blocks: blocks.map(mapBlockValueToBlockInput)
     }
   }
 
@@ -262,7 +240,7 @@ function PageEditor() {
     const input = createInput()
 
     if (pageID) {
-      await updatePage({variables: {id: pageID, input}})
+      await updatePage({variables: {id: pageID, ...input}})
 
       setChanged(false)
       toaster.push(
@@ -275,7 +253,7 @@ function PageEditor() {
       )
       await refetch({id: pageID})
     } else {
-      const {data} = await createPage({variables: {input}})
+      const {data} = await createPage({variables: input})
 
       if (data) {
         navigate(`/pages/edit/${data?.createPage.id}`, {replace: true})
@@ -292,35 +270,22 @@ function PageEditor() {
     }
   }
 
-  async function handlePublish(publishedAt: Date, publishAt: Date, updatedAt?: Date) {
+  async function handlePublish(publishedAt: Date) {
     if (pageID) {
       const {data} = await updatePage({
-        variables: {id: pageID, input: createInput()}
+        variables: {id: pageID, ...createInput()}
       })
 
       if (data) {
         const {data: publishData} = await publishPage({
           variables: {
             id: pageID,
-            publishAt: publishAt ? publishAt.toISOString() : publishedAt.toISOString(),
-            publishedAt: publishedAt.toISOString(),
-            updatedAt: updatedAt ? updatedAt.toISOString() : publishedAt.toISOString()
+            publishedAt: publishedAt.toISOString()
           }
         })
 
         if (publishData?.publishPage?.latest?.publishedAt) {
           setPublishedAt(new Date(publishData?.publishPage?.latest.publishedAt))
-        }
-        if (publishData?.publishPage?.latest?.updatedAt) {
-          setUpdatedAt(new Date(publishData?.publishPage?.latest.updatedAt))
-        }
-        if (publishData?.publishPage?.latest?.publishAt) {
-          setPublishAt(new Date(publishData?.publishPage?.latest.publishAt))
-        } else if (
-          publishData?.publishPage?.latest?.publishAt === null &&
-          publishData?.publishPage?.latest?.publishedAt
-        ) {
-          setPublishAt(new Date(publishData?.publishPage?.latest?.publishedAt))
         }
       }
       await refetch({id: pageID})
@@ -331,7 +296,7 @@ function PageEditor() {
       <Notification
         type="success"
         header={t(
-          publishAt <= new Date() || (!publishAt && publishedAt <= new Date())
+          publishedAt <= new Date()
             ? 'pageEditor.overview.pagePublished'
             : 'pageEditor.overview.pagePending'
         )}
@@ -349,7 +314,7 @@ function PageEditor() {
         </Message>
       )
     }
-  }, [isNotFound])
+  }, [isNotFound, t])
 
   return (
     <>
@@ -357,6 +322,7 @@ function PageEditor() {
         <Legend>
           <Tag stateColor={stateColor}>{tagTitle}</Tag>
         </Legend>
+
         <EditorTemplate
           navigationChildren={
             <NavigationBar
@@ -431,33 +397,37 @@ function PageEditor() {
                 </CenterChildren>
               }
               rightChildren={
-                <PermissionControl qualifyingPermissions={['CAN_GET_PAGE_PREVIEW_LINK']}>
-                  <Link to="#">
-                    <IconButtonMTop
-                      className="actionButton"
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}
-                      onClick={() => {
-                        previewLinkFetch({
-                          variables: {
-                            id: id!,
-                            hours: 1
-                          }
-                        })
-                      }}>
-                      {t('pageEditor.overview.preview')}
-                    </IconButtonMTop>
-                  </Link>
+                <PermissionControl qualifyingPermissions={[CanPreview.id]}>
+                  <IconButtonMTop
+                    className="actionButton"
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForWebsiteLogin?.token}`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('pageEditor.overview.preview')}
+                  </IconButtonMTop>
                 </PermissionControl>
               }
             />
           }>
-          <BlockList value={blocks} onChange={handleChange} disabled={isDisabled || !isAuthorized}>
-            {useBlockMap<BlockValue>(() => BlockMap, [])}
-          </BlockList>
+          <BlockList
+            value={blocks}
+            onChange={handleChange}
+            disabled={isDisabled || !isAuthorized}
+            blockMap={BlockMap}
+          />
         </EditorTemplate>
       </FieldSet>
+
       <Drawer open={isMetaDrawerOpen} size="sm" onClose={() => setMetaDrawerOpen(false)}>
         <PageMetadataPanel
           value={metadata}
@@ -475,13 +445,10 @@ function PageEditor() {
       <Modal open={isPublishDialogOpen} size="sm" onClose={() => setPublishDialogOpen(false)}>
         <PublishPagePanel
           publishedAtDate={publishedAt}
-          updatedAtDate={updatedAt}
-          publishAtDate={publishAt}
-          pendingPublishDate={pendingPublishDate}
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
-          onConfirm={(publishedAt, publishAt, updatedAt) => {
-            handlePublish(publishedAt, publishAt, updatedAt)
+          onConfirm={publishedAt => {
+            handlePublish(publishedAt)
             setPublishDialogOpen(false)
           }}
         />
@@ -496,6 +463,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_PAGE',
   'CAN_PUBLISH_PAGE',
   'CAN_DELETE_PAGE',
-  'CAN_GET_PAGE_PREVIEW_LINK'
+  CanPreview.id
 ])(PageEditor)
 export {CheckedPermissionComponent as PageEditor}

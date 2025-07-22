@@ -1,26 +1,35 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
-  ApiV1,
-  BuilderTeaserListBlockProps,
   hasBlockStyle,
   isTeaserListBlock,
   TeaserListBlock,
   TeaserListBlockTeasers
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
+import {
+  BlockContent,
+  CustomTeaser,
+  Teaser,
+  TeaserListBlock as TeaserListBlockType,
+  TeaserType
+} from '@wepublish/website/api'
+import {BuilderTeaserListBlockProps} from '@wepublish/website/builder'
 import {allPass, compose, insert} from 'ramda'
 
 const first = hasBlockStyle('1st Teaser Ad')
 const second = hasBlockStyle('2nd Teaser Ad')
 const third = hasBlockStyle('3rd Teaser Ad')
 
-export const isFirstAdTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBlock =>
-  allPass([first, isTeaserListBlock])(block)
+export const isFirstAdTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => allPass([first, isTeaserListBlock])(block)
 
-export const isSecondAdTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBlock =>
-  allPass([second, isTeaserListBlock])(block)
+export const isSecondAdTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => allPass([second, isTeaserListBlock])(block)
 
-export const isThirdAdTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBlock =>
-  allPass([third, isTeaserListBlock])(block)
+export const isThirdAdTeaser = (
+  block: Pick<BlockContent, '__typename'>
+): block is TeaserListBlockType => allPass([third, isTeaserListBlock])(block)
 
 // This allows the ad slot to not create an empty space when not displayed
 const AdTeaserList = styled(TeaserListBlock)`
@@ -49,17 +58,17 @@ export const AdTeaserBlockStyle = (props: BuilderTeaserListBlockProps) => {
       : 2
 
   const teasers = compose(
-    insert<ApiV1.Teaser>(position, {
+    insert<Teaser>(position, {
       __typename: 'CustomTeaser',
+      type: TeaserType.Custom,
       properties: [],
       contentUrl: null,
       preTitle: 'ad-300x250',
       title: null,
       lead: null,
-      image: null,
-      style: ApiV1.TeaserStyle.Default
-    } as ApiV1.CustomTeaser)
-  )(props.teasers as ApiV1.Teaser[])
+      image: null
+    } as CustomTeaser)
+  )(props.teasers as Teaser[])
 
   return <AdTeaserList {...props} teasers={teasers} />
 }

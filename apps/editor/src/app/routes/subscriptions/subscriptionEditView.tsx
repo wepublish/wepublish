@@ -494,10 +494,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const validationModel = Schema.Model({
     memberPlan: StringType().isRequired(t('errorMessages.noMemberPlanErrorMessage')),
     user: StringType().isRequired(t('errorMessages.noUserErrorMessage')),
-    currency: NumberType()
+    monthlyAmount: NumberType()
       .isRequired(t('errorMessages.noAmountErrorMessage'))
       .min(
-        memberPlan?.amountPerMonthMin || 0,
+        (memberPlan?.amountPerMonthMin || 0) / 100,
         t(`errorMessages.minimalAmountPerMonth`, {
           amount: (memberPlan?.amountPerMonthMin || 0) / 100,
           currency: memberPlan?.currency
@@ -515,6 +515,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     return !!(id && paymentMethod && memberPlan)
   }
 
+  function capitalizeFirstLetter(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
   return (
     <TableWrapper>
       <Form
@@ -526,7 +530,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
           user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity,
-          currency: monthlyAmount
+          monthlyAmount: monthlyAmount
         }}>
         <ListViewContainer>
           <ListViewHeader>
@@ -576,7 +580,14 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                       new Date(deactivation.date) < new Date()
                         ? 'userSubscriptionEdit.deactivation.isDeactivated'
                         : 'userSubscriptionEdit.deactivation.willBeDeactivated',
-                      {date: new Date(deactivation.date)}
+                      {
+                        date: new Date(deactivation.date),
+                        reason: t(
+                          `userSubscriptionEdit.deactivation.reason${capitalizeFirstLetter(
+                            deactivation.reason
+                          )}`
+                        )
+                      }
                     )}
                   </Message>
                 )}
@@ -685,7 +696,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                           </ControlLabel>
 
                           <CurrencyInput
-                            name="currency"
+                            name="monthlyAmount"
                             currency={currency}
                             centAmount={monthlyAmount}
                             onChange={centAmount => {

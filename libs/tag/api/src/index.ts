@@ -1,0 +1,7 @@
+export * from './lib/tag.model'
+export * from './lib/tag.types'
+export * from './lib/tag.dataloader'
+export * from './lib/tag.service'
+export * from './lib/tag.resolver'
+export * from './lib/tag.module'
+export * from './lib/tags.query'

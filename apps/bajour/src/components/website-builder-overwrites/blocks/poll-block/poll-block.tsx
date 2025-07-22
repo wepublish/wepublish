@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {
   PollBlock as BasePollBlock,
   PollBlockMeta,
@@ -9,7 +9,7 @@ import {
   PollBlockVoteBar,
   PollBlockVoteBarFill,
   RichTextBlockWrapper
-} from '@wepublish/website'
+} from '@wepublish/block-content/website'
 
 export const PollBlock = styled(BasePollBlock)`
   ${PollBlockTitle} {

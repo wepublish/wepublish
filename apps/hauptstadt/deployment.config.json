@@ -1,17 +1,18 @@
 {
   "website": {
     "production": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
-      "secret_env": []
+      "secret_env": [],
+      "custom_domain": "https://www.hauptstadt.be"
     },
     "staging": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
       "secret_env": []
     },
     "review": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
       "secret_env": []
     }

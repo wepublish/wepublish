@@ -1,5 +1,5 @@
 import {css} from '@emotion/react'
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson} from 'react-icons/md'
 import {isValidUrl} from '@wepublish/utils'
@@ -41,14 +41,8 @@ export const CommentName = styled('div')`
 `
 
 export const CommentAuthor = styled('div')`
-  font-size: ${({theme}) => theme.typography.body1};
+  font-size: ${({theme}) => theme.typography.body1.fontSize};
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
-`
-
-export const CommentVerifiedBadge = styled('div')`
-  display: grid;
-  align-items: center;
-  color: ${({theme}) => theme.palette.info.main};
 `
 
 export const CommentFlair = styled('div')`
@@ -81,7 +75,8 @@ export const Comment = ({
   source,
   children,
   createdAt,
-  showContent = true
+  showContent = true,
+  includeAnchor = true
 }: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
@@ -91,10 +86,14 @@ export const Comment = ({
 
   const flair = user?.flair || source
   const image = user?.image ?? guestUserImage
-  const name = user ? `${user.firstName} ${user.name}` : guestUsername
+  const name = user
+    ? user.firstName
+      ? `${user.firstName} ${user.name}`
+      : user.name
+    : guestUsername
 
   return (
-    <CommentWrapper className={className} id={id}>
+    <CommentWrapper className={className} id={includeAnchor ? id : undefined}>
       <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
@@ -102,12 +101,6 @@ export const Comment = ({
         <CommentHeaderContent>
           <CommentName>
             <CommentAuthor>{name}</CommentAuthor>
-
-            {/*
-              <CommentVerifiedBadge>
-                <MdVerified title="Member" />
-              </CommentVerifiedBadge>
-            */}
           </CommentName>
 
           {source && isValidUrl(source) && (

@@ -1,6 +1,7 @@
 fragment ImageURLs on Image {
     url
 
+    xxl: transformURL(input: {width: 1500, output: png, quality: 0.8})
     xl: transformURL(input: {width: 1200, output: png, quality: 0.8})
     l: transformURL(input: {width: 1000, output: png, quality: 0.8})
     m: transformURL(input: {width: 800, output: png, quality: 0.8})
@@ -8,6 +9,7 @@ fragment ImageURLs on Image {
     xs: transformURL(input: {width: 300, output: png, quality: 0.8})
     xxs: transformURL(input: {width: 200, output: png, quality: 0.8})
 
+    xxlSquare: transformURL(input: {width: 1500, height: 1500, output: png, quality: 0.8})
     xlSquare: transformURL(input: {width: 1200, height: 1200, output: png, quality: 0.8})
     lSquare: transformURL(input: {width: 1000, height: 1000, output: png, quality: 0.8})
     mSquare: transformURL(input: {width: 800, height: 800, output: png, quality: 0.8})

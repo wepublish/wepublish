@@ -153,7 +153,7 @@ const TagList = memo<TagListProps>(({type}) => {
         type
       }
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
       dispatchApiValue({
@@ -291,7 +291,7 @@ const TagList = memo<TagListProps>(({type}) => {
                 <FlexWrapper>
                   <Form.Control
                     name={tagId}
-                    value={inputValue.tag}
+                    value={inputValue.tag ?? ''}
                     placeholder={t('tags.overview.placeholder')}
                     onChange={(tag: string) => {
                       dispatchFormValue({

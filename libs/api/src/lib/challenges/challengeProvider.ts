@@ -1,8 +1,8 @@
 export type Challenge = {
   type: CaptchaType
   challengeID: string
-  challenge: string
-  validUntil: Date
+  challenge: string | null
+  validUntil: Date | null
 }
 export type ChallengeValidationProps = {
   challengeID?: string

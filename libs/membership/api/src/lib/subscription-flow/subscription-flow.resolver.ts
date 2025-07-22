@@ -2,14 +2,11 @@ import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestj
 import {
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
-  CanGetPaymentMethods,
   CanGetSubscriptionFlows,
-  CanUpdateSubscriptionFlow,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanUpdateSubscriptionFlow
+} from '@wepublish/permissions'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {
-  PaymentMethod,
   SubscriptionFlowModel,
   SubscriptionFlowModelCreateInput,
   SubscriptionFlowModelUpdateInput,
@@ -17,6 +14,7 @@ import {
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
 import {PrismaClient} from '@prisma/client'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {
@@ -74,16 +72,6 @@ export class SubscriptionFlowResolver {
   })
   async deleteSubscriptionInterval(@Args('id') id: string) {
     return await this.subscriptionFlowService.deleteInterval(id)
-  }
-
-  @Permissions(CanGetPaymentMethods)
-  @Query(() => [PaymentMethod], {description: `Returns all payment methods`})
-  async paymentMethods() {
-    return this.prismaService.paymentMethod.findMany({
-      include: {
-        image: true
-      }
-    })
   }
 
   @ResolveField('numberOfSubscriptions', () => Int, {

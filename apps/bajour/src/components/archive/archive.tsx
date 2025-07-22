@@ -1,15 +1,14 @@
-import {css, styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {css} from '@mui/material'
 import {
-  ApiV1,
-  BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
   selectTeaserLead,
   selectTeaserTitle,
-  selectTeaserUrl,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  selectTeaserUrl
+} from '@wepublish/block-content/website'
+import {useStatsQuery} from '@wepublish/website/api'
+import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {differenceInYears} from 'date-fns'
-import getConfig from 'next/config'
 import {useState} from 'react'
 
 import {ReactComponent as Logo} from '../../logo.svg'
@@ -192,8 +191,8 @@ const LinkWrapper = styled('div')`
   display: grid;
 `
 
-const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
-  const {data} = ApiV1.useStatsQuery()
+export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
+  const {data} = useStatsQuery()
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser)
@@ -263,8 +262,3 @@ const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
     </ArchiveWrapper>
   )
 }
-
-const {publicRuntimeConfig} = getConfig()
-const ConnectedArchive = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [])(Archive)
-
-export {ConnectedArchive as Archive}

@@ -16,7 +16,7 @@ declare global {
 }
 
 export interface BildwurfAdEmbedProps {
-  zoneID: string
+  zoneID: string | null | undefined
 }
 
 export function BildwurfAdEmbed({zoneID}: BildwurfAdEmbedProps) {
@@ -29,7 +29,7 @@ export function BildwurfAdEmbed({zoneID}: BildwurfAdEmbedProps) {
   useEffect(() => {
     load()
     try {
-      window._ASO.loadAd('bildwurf-injection-wrapper', zoneID)
+      window._ASO.loadAd('bildwurf-injection-wrapper', zoneID ?? '')
     } catch (error) {
       console.warn('could not call _ASO.loadAd()')
     }

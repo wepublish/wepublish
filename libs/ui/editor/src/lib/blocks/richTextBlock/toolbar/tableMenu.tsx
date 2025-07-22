@@ -3,14 +3,14 @@ import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDisabledByDefault} from 'react-icons/md'
 import {Button, Col as RCol, IconButton, InputGroup as RInputGroup, InputNumber, Row} from 'rsuite'
-import {Transforms} from 'slate'
+import {Element, Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 
 import {ColorPicker} from '../../../atoms/colorPicker'
 import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
-import {BlockFormat} from '../editor/formats'
 import {WepublishEditor} from '../editor/wepublishEditor'
+import {BlockFormat} from '@wepublish/richtext'
 
 const ControlsWrapper = styled.div`
   display: flex;
@@ -54,26 +54,30 @@ export function TableMenu() {
 
   useEffect(() => {
     const nodes = WepublishEditor.nodes(editor, {
-      match: node => node.type === BlockFormat.TableCell
+      match: node => Element.isElement(node) && node.type === BlockFormat.TableCell
     })
+
     for (const [node] of nodes) {
-      setBorderColor(node.borderColor as string)
-      return
+      if (Element.isElement(node)) {
+        setBorderColor(node.borderColor as string)
+        return
+      }
     }
   }, [editor.selection])
 
   useEffect(() => {
     if (borderColor) {
       const nodes = WepublishEditor.nodes(editor, {
-        match: node => node.type === BlockFormat.Table
+        match: node => Element.isElement(node) && node.type === BlockFormat.Table
       })
+
       for (const [, path] of nodes) {
         Transforms.setNodes(
           editor,
           {borderColor},
           {
             at: path,
-            match: node => node.type === BlockFormat.TableCell
+            match: node => Element.isElement(node) && node.type === BlockFormat.TableCell
           }
         )
         return
@@ -112,7 +116,7 @@ export function TableMenu() {
   const removeTable = () => {
     Transforms.removeNodes(editor, {
       at: editor.selection ?? undefined,
-      match: node => node.type === BlockFormat.Table
+      match: node => Element.isElement(node) && node.type === BlockFormat.Table
     })
   }
 

@@ -4,7 +4,6 @@ import {
   Author,
   Comment,
   CommentRatingSystemAnswer,
-  Event,
   Image,
   MailLog,
   Payment,
@@ -12,15 +11,13 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
-  TaggedArticles,
-  TaggedPages,
   User,
   UserRole
 } from '@prisma/client'
 import {
+  AuthenticationService,
   AuthSession,
   AuthSessionType,
-  AuthenticationService,
   TokenSession,
   UserSession
 } from '@wepublish/authentication/api'
@@ -28,7 +25,7 @@ import {MediaAdapter} from '@wepublish/image/api'
 import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
 import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {SettingName} from '@wepublish/settings/api'
-import {GenerateJWTProps, createOptionalsArray, generateJWT, logger} from '@wepublish/utils/api'
+import {createOptionalsArray, generateJWT, GenerateJWTProps, logger} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -40,25 +37,16 @@ import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {
-  ArticleWithRevisions,
-  PublicArticle,
-  articleWithRevisionsToPublicArticle
-} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
-import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db/page'
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
-import {getEvent} from './graphql/event/event.query'
-import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
-import {URLAdapter} from './urlAdapter'
 import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
-import {HotAndTrendingDataSource} from '@wepublish/article/api'
+import {URLAdapter} from '@wepublish/nest-modules'
+import {createSafeHostUrl} from '@wepublish/peering/api'
 
 /**
  * Peered article cache configuration and setup
@@ -73,22 +61,10 @@ const fetcherCache = new NodeCache({
 })
 
 export interface DataLoaderContext {
-  readonly navigationByID: DataLoader<string, NavigationWithLinks | null>
-  readonly navigationByKey: DataLoader<string, NavigationWithLinks | null>
-
   readonly authorsByID: DataLoader<string, Author | null>
   readonly authorsBySlug: DataLoader<string, Author | null>
 
   readonly images: DataLoader<string, Image | null>
-
-  readonly articles: DataLoader<string, (ArticleWithRevisions & {tags: TaggedArticles[]}) | null>
-  readonly publicArticles: DataLoader<string, PublicArticle | null>
-
-  readonly pages: DataLoader<string, (PageWithRevisions & {tags: TaggedPages[]}) | null>
-  readonly publicPagesByID: DataLoader<string, PublicPage | null>
-  readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
-
-  readonly events: DataLoader<string, Event | null>
 
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
@@ -111,7 +87,6 @@ export interface DataLoaderContext {
   readonly paymentsByID: DataLoader<string, Payment | null>
 
   readonly pollById: DataLoader<string, FullPoll | null>
-  readonly eventById: DataLoader<string, Event | null>
 
   readonly commentsById: DataLoader<string, Comment | null>
   readonly commentRatingSystemAnswers: DataLoader<1, CommentRatingSystemAnswer[]>
@@ -135,7 +110,6 @@ export interface Context {
 
   readonly session: AuthSession | null
   readonly loaders: DataLoaderContext
-  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 
   readonly mailContext: MailContext
   readonly memberContext: MemberContext
@@ -206,7 +180,6 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
-  readonly hotAndTrendingDataSource: HotAndTrendingDataSource
 }
 
 export interface SendMailFromProviderProps {
@@ -243,8 +216,7 @@ export async function contextFromRequest(
     paymentProviders,
     challenge,
     sessionTTL,
-    hashCostFactor,
-    hotAndTrendingDataSource
+    hashCostFactor
   }: ContextOptions
 ): Promise<Context> {
   const authService = new AuthenticationService(prisma)
@@ -270,39 +242,6 @@ export async function contextFromRequest(
   )
 
   const loaders: DataLoaderContext = {
-    navigationByID: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.navigation.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            links: true
-          }
-        }),
-        'id'
-      )
-    ),
-    navigationByKey: new DataLoader(async keys =>
-      createOptionalsArray(
-        keys as string[],
-        await prisma.navigation.findMany({
-          where: {
-            key: {
-              in: keys as string[]
-            }
-          },
-          include: {
-            links: true
-          }
-        }),
-        'key'
-      )
-    ),
-
     authorsByID: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],
@@ -347,216 +286,6 @@ export async function contextFromRequest(
           },
           include: {
             focalPoint: true
-          }
-        }),
-        'id'
-      )
-    ),
-
-    articles: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.article.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            tags: true,
-            draft: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            },
-            pending: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            },
-            published: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            }
-          }
-        }),
-        'id'
-      )
-    ),
-    publicArticles: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        (
-          await prisma.article.findMany({
-            where: {
-              id: {
-                in: ids as string[]
-              },
-              OR: [
-                {
-                  publishedId: {
-                    not: null
-                  }
-                },
-                {
-                  pendingId: {
-                    not: null
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true,
-                  authors: true,
-                  socialMediaAuthors: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true,
-                  authors: true,
-                  socialMediaAuthors: true
-                }
-              }
-            }
-          })
-        ).map(articleWithRevisionsToPublicArticle),
-        'id'
-      )
-    ),
-
-    pages: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.page.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            tags: true,
-            draft: {
-              include: {
-                properties: true
-              }
-            },
-            pending: {
-              include: {
-                properties: true
-              }
-            },
-            published: {
-              include: {
-                properties: true
-              }
-            }
-          }
-        }),
-        'id'
-      )
-    ),
-    publicPagesByID: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        (
-          await prisma.page.findMany({
-            where: {
-              id: {
-                in: ids as string[]
-              },
-              OR: [
-                {
-                  published: {
-                    isNot: null
-                  }
-                },
-                {
-                  pending: {
-                    isNot: null
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true
-                }
-              }
-            }
-          })
-        ).map(pageWithRevisionsToPublicPage),
-        'id'
-      )
-    ),
-    publicPagesBySlug: new DataLoader(async slugs =>
-      createOptionalsArray(
-        slugs as string[],
-        (
-          await prisma.page.findMany({
-            where: {
-              OR: [
-                {
-                  published: {
-                    is: {
-                      slug: {
-                        in: slugs as string[]
-                      }
-                    }
-                  }
-                },
-                {
-                  pending: {
-                    is: {
-                      slug: {
-                        in: slugs as string[]
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true
-                }
-              }
-            }
-          })
-        ).map(pageWithRevisionsToPublicPage),
-        'slug'
-      )
-    ),
-
-    events: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.event.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
           }
         }),
         'id'
@@ -624,7 +353,7 @@ export async function contextFromRequest(
                   where: {name: SettingName.PEERING_TIMEOUT_MS}
                 })
               )?.value as number) ||
-              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              parseInt(process.env['PEERING_TIMEOUT_IN_MS'] as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
             const fetcher = createFetcher(
               createSafeHostUrl(peer.hostURL, 'v1'),
@@ -662,7 +391,7 @@ export async function contextFromRequest(
                   where: {name: SettingName.PEERING_TIMEOUT_MS}
                 })
               )?.value as number) ||
-              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              parseInt(process.env['PEERING_TIMEOUT_IN_MS'] as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
 
             const fetcher = createFetcher(
@@ -821,7 +550,6 @@ export async function contextFromRequest(
     ),
 
     pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
-    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event)))),
 
     commentsById: new DataLoader(async ids =>
       createOptionalsArray(
@@ -886,11 +614,11 @@ export async function contextFromRequest(
   })
 
   const generateJWTWrapper: Context['generateJWT'] = ({expiresInMinutes, audience, id}): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
 
     return generateJWT({
       id,
-      secret: process.env.JWT_SECRET_KEY,
+      secret: process.env['JWT_SECRET_KEY'],
       issuer: hostURL,
       audience: audience ?? websiteURL,
       expiresInMinutes
@@ -898,24 +626,15 @@ export async function contextFromRequest(
   }
 
   const verifyJWT = (token: string): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
+    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    const ver = jwt.verify(token, process.env['JWT_SECRET_KEY'])
+    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>)['sub'] : ''
   }
 
   const memberContext = new MemberContext({
-    loaders,
     prisma,
     paymentProviders,
-    mailContext,
-    getLoginUrlForUser(user: User): string {
-      const jwt = generateJWTWrapper({
-        id: user.id,
-        expiresInMinutes: 10080 // One week in minutes
-      })
-
-      return urlAdapter.getLoginURL(jwt)
-    }
+    mailContext
   })
 
   return {
@@ -930,10 +649,9 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     paymentProviders,
-    hotAndTrendingDataSource,
     hooks,
-    requestIP,
-    fingerprint,
+    requestIP: requestIP ?? '',
+    fingerprint: fingerprint ?? '',
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
     hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
 
@@ -971,6 +689,7 @@ export async function contextFromRequest(
       if (!session || session.type !== AuthSessionType.User || !isSessionValid) {
         return null
       }
+
       return session
     },
 
@@ -1018,6 +737,10 @@ export async function contextFromRequest(
         throw new Error('paymentProvider not found')
       }
 
+      if (!invoice.subscriptionID) {
+        throw new Error('Subscription not found')
+      }
+
       /**
        * Gradually migrate subscription's payment method.
        * Mainly used in mutation.public.ts
@@ -1033,6 +756,14 @@ export async function contextFromRequest(
           }
         })
       }
+      await prisma.subscription.update({
+        data: {
+          confirmed: true
+        },
+        where: {
+          id: invoice.subscriptionID
+        }
+      })
 
       const payment = await prisma.payment.create({
         data: {
@@ -1046,7 +777,7 @@ export async function contextFromRequest(
         ? await prisma.paymentProviderCustomer.findFirst({
             where: {
               userId: user.id,
-              paymentProviderID: paymentMethod.paymentProviderID
+              paymentProviderID: paymentMethod?.paymentProviderID
             }
           })
         : null
@@ -1074,26 +805,20 @@ export async function contextFromRequest(
         }
       })
 
-      if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
-
       // Mark invoice as paid
       if (intent.state === PaymentState.paid) {
         const intentState = await paymentProvider.checkIntentStatus({
-          intentID: updatedPayment.intentID,
+          intentID: updatedPayment.intentID ?? '',
           paymentID: updatedPayment.id
         })
-        await paymentProvider.updatePaymentWithIntentState({
-          intentState,
-          paymentClient: prisma.payment,
-          paymentsByID: loaders.paymentsByID,
-          invoicesByID: loaders.invoicesByID,
-          subscriptionClient: prisma.subscription,
-          userClient: prisma.user,
-          invoiceClient: prisma.invoice,
-          subscriptionPeriodClient: prisma.subscriptionPeriod,
-          invoiceItemClient: prisma.invoiceItem
-        })
+
+        await paymentProvider.updatePaymentWithIntentState({intentState})
       }
+
+      if (intent.errorCode) {
+        throw new GraphQLError(intent.errorCode)
+      }
+
       return updatedPayment as Payment
     },
     challenge

@@ -1,11 +1,12 @@
-import {ApiV1} from '@wepublish/website'
+import {useDislikeArticleMutation, useLikeArticleMutation} from '@wepublish/website/api'
 import {useCallback, useEffect, useState} from 'react'
 import {useCounter} from 'usehooks-ts'
 
 const LIKED_KEY = 'likedArticles'
 
 export function useLikeStatus(articleId: string, articleLikes: number) {
-  const [isLiked, setIsLiked] = useState(false)
+  const [isLiked, setIsLiked] = useState<boolean>(false)
+  const [isReady, setIsReady] = useState<boolean>(false)
   const {
     count: likes,
     setCount: setLikes,
@@ -35,46 +36,57 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
     [articleId]
   )
 
-  const [removeLikeMutation] = ApiV1.useRemoveLikeMutation({
+  const [removeLikeMutation] = useDislikeArticleMutation({
     variables: {
-      input: {
-        articleId
-      }
+      id: articleId
     }
   })
 
-  const [addLikeMutation] = ApiV1.useAddLikeMutation({
+  const [addLikeMutation] = useLikeArticleMutation({
     variables: {
-      input: {
-        articleId
-      }
+      id: articleId
     }
   })
 
-  const handleLike = useCallback(async () => {
-    if (isLiked) {
-      decrementLikes()
-      updateLikeStatus(false)
-      await removeLikeMutation()
-    } else {
-      incrementLikes()
-      updateLikeStatus(true)
-      await addLikeMutation()
-    }
-  }, [
-    addLikeMutation,
-    decrementLikes,
-    incrementLikes,
-    isLiked,
-    removeLikeMutation,
-    updateLikeStatus
-  ])
+  const handleLike = useCallback(
+    async (preventDislike?: boolean) => {
+      // wait until isLiked state is properly set and therefore ready
+      if (!isReady) {
+        return
+      }
+
+      // prevent dislikes
+      if (isLiked && !preventDislike) {
+        decrementLikes()
+        updateLikeStatus(false)
+        await removeLikeMutation()
+      } else if (!isLiked) {
+        incrementLikes()
+        updateLikeStatus(true)
+        await addLikeMutation()
+      }
+    },
+    [
+      addLikeMutation,
+      decrementLikes,
+      incrementLikes,
+      isLiked,
+      removeLikeMutation,
+      updateLikeStatus,
+      isReady
+    ]
+  )
 
   useEffect(() => {
+    // if no article id given, avoiding wrong isLiked state
+    if (!articleId) {
+      return
+    }
+
     if (typeof window !== 'undefined') {
       const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]')
-
       setIsLiked(likedArticles.includes(articleId))
+      setIsReady(true)
     }
   }, [articleId])
 
@@ -82,5 +94,5 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
     setLikes(articleLikes ?? 0)
   }, [articleLikes, setLikes])
 
-  return {likes, isLiked, handleLike}
+  return {likes, isLiked, isReady, handleLike}
 }

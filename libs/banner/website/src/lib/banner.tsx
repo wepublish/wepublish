@@ -1,4 +1,5 @@
-import {Link, styled} from '@mui/material'
+import {Link} from '@mui/material'
+import styled from '@emotion/styled'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
 import {BuilderBannerProps} from '@wepublish/website/builder'
@@ -19,7 +20,12 @@ export const BannerImage = styled('div')(
 )
 
 export const BannerContent = styled('div')`
-  padding: ${({theme}) => theme.spacing(9)};
+  padding: ${({theme}) => theme.spacing(4)};
+  padding-top: ${({theme}) => theme.spacing(5)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    padding: ${({theme}) => theme.spacing(9)};
+  }
 `
 
 export const BannerCta = styled('p')`
@@ -29,18 +35,24 @@ export const BannerCta = styled('p')`
 
 export const BannerCloseButton = styled('span')`
   position: absolute;
-  top: ${({theme}) => theme.spacing(9)};
-  right: ${({theme}) => theme.spacing(9)};
+  top: ${({theme}) => theme.spacing(1)};
+  right: ${({theme}) => theme.spacing(1)};
   cursor: pointer;
   font-size: 2rem;
   width: 2rem;
   height: 2rem;
   line-height: 2rem;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    top: ${({theme}) => theme.spacing(4)};
+    right: ${({theme}) => theme.spacing(4)};
+  }
 `
 
 export const BannerTitle = styled('h2')`
   margin-top: 0;
   margin-bottom: ${({theme}) => theme.spacing(2)};
+  line-height: 1.2;
 `
 
 export const BannerText = styled('div')`
@@ -80,8 +92,21 @@ const BannerWrapper = styled('div')<BannerWrapperProps>(
 )
 
 export const Banner = ({data, loading, error, className}: BuilderBannerProps) => {
+  const [showBanner, setShowBanner] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
-  const storageKey = `banner-last-closed-${data?.primaryBanner.id}`
+  const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`
+
+  useEffect(() => {
+    if (!data?.primaryBanner) {
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setShowBanner(true)
+    }, (data?.primaryBanner?.delay ?? 0) * 1000)
+
+    return () => clearTimeout(timer)
+  }, [data?.primaryBanner])
 
   useEffect(() => {
     const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0
@@ -108,6 +133,12 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     return <></>
   }
 
+  if (!showBanner) {
+    return <></>
+  }
+
+  const htmlContent = data?.primaryBanner?.html
+
   return (
     <BannerWrapper
       hasImage={!!data?.primaryBanner.image}
@@ -120,26 +151,30 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
           style={{backgroundImage: `url(${data?.primaryBanner.image.url})`}}></BannerImage>
       )}
 
-      <BannerContent>
-        <BannerTitle>{data?.primaryBanner.title}</BannerTitle>
-        <BannerText>{data?.primaryBanner.text}</BannerText>
-        {data?.primaryBanner.cta && <BannerCta>{data?.primaryBanner.cta}</BannerCta>}
+      {htmlContent != null && htmlContent != '' ? (
+        <BannerContent dangerouslySetInnerHTML={{__html: htmlContent}} />
+      ) : (
+        <BannerContent>
+          <BannerTitle>{data?.primaryBanner.title}</BannerTitle>
+          <BannerText>{data?.primaryBanner.text}</BannerText>
+          {data?.primaryBanner.cta && <BannerCta>{data?.primaryBanner.cta}</BannerCta>}
 
-        <BannerActions>
-          {data?.primaryBanner.actions &&
-            data?.primaryBanner.actions.map(a => (
-              <Link
-                href={a.url}
-                key={a.url}
-                onClick={e => handleActionClick(e, a)}
-                data-role={a.role}>
-                <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
-                  {a.label}
-                </Button>
-              </Link>
-            ))}
-        </BannerActions>
-      </BannerContent>
+          <BannerActions>
+            {data?.primaryBanner.actions &&
+              data?.primaryBanner.actions.map(a => (
+                <Link
+                  href={a.url}
+                  key={a.url}
+                  onClick={e => handleActionClick(e, a)}
+                  data-role={a.role}>
+                  <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
+                    {a.label}
+                  </Button>
+                </Link>
+              ))}
+          </BannerActions>
+        </BannerContent>
+      )}
     </BannerWrapper>
   )
 }

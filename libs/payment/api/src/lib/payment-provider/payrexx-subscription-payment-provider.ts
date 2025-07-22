@@ -1,11 +1,4 @@
-import {
-  Currency,
-  Invoice,
-  MetadataProperty,
-  PaymentState,
-  PrismaClient,
-  Subscription
-} from '@prisma/client'
+import {Currency, Invoice, MetadataProperty, PaymentState, Subscription} from '@prisma/client'
 import {logger, mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 import * as crypto from 'crypto'
 import add from 'date-fns/add'
@@ -32,7 +25,6 @@ export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProvider
   instanceName: string
   instanceAPISecret: string
   webhookSecret: string
-  prisma: PrismaClient
 }
 
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
@@ -50,72 +42,11 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   }
 }
 
-async function findSubscriptionByExternalId(
-  subscriptionClient: PrismaClient['subscription'],
-  externalId: string
-) {
-  return subscriptionClient.findFirst({
-    where: {
-      properties: {
-        some: {
-          key: 'payrexx_external_id',
-          value: `${externalId}`
-        }
-      }
-    },
-    include: {
-      properties: true,
-      deactivation: true,
-      memberPlan: true,
-      periods: {
-        include: {
-          invoice: true
-        }
-      }
-    }
-  })
-}
-
-async function deletePeriodOfUnpaidInvoice(
-  subscriptionPeriodClient: PrismaClient['subscriptionPeriod'],
-  subscription: Subscription,
-  invoice: Invoice
-) {
-  return subscriptionPeriodClient.deleteMany({
-    where: {
-      invoiceID: invoice.id
-    }
-  })
-}
-
-async function deleteUnpaidInvoices(
-  invoiceClient: PrismaClient['invoice'],
-  subscriptionPeriodClient: PrismaClient['subscriptionPeriod'],
-  subscription: Subscription
-) {
-  const unpaidInvoices = await invoiceClient.findMany({
-    where: {
-      subscriptionID: subscription.id,
-      paidAt: null,
-      canceledAt: null
-    }
-  })
-  for (const unpaidInvoice of unpaidInvoices) {
-    await deletePeriodOfUnpaidInvoice(subscriptionPeriodClient, subscription, unpaidInvoice)
-    await invoiceClient.delete({
-      where: {
-        id: unpaidInvoice.id
-      }
-    })
-  }
-}
-
 export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   readonly instanceName: string
   readonly instanceAPISecret: string
   readonly webhookSecret: string
-  readonly prisma: PrismaClient
-  readonly remoteManagedSubscription: boolean
+  override readonly remoteManagedSubscription: boolean
 
   constructor(props: PayrexxSubscripionsPaymentProviderProps) {
     super(props)
@@ -123,10 +54,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     this.instanceAPISecret = props.instanceAPISecret
     this.webhookSecret = props.webhookSecret
     this.remoteManagedSubscription = true
-    this.prisma = props.prisma
   }
 
-  async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {
+  override async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {
     // Find external id property and fail if subscription has been deactivated
     const properties: MetadataProperty[] = props.subscription.properties
     const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
@@ -148,7 +78,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     await this.updateAmountUpstream(+isPayrexxExt.value, currency, amount.toString())
   }
 
-  async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
+  override async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
     // Find external id property and fail if subscription has been deactivated
     const properties: MetadataProperty[] = props.subscription.properties
     const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
@@ -161,14 +91,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     await this.cancelSubscriptionUpstream(parseInt(isPayrexxExt.value, 10))
   }
 
-  async updatePaymentWithIntentState({
-    intentState,
-    paymentClient,
-    subscriptionClient,
-    userClient,
-    invoiceClient,
-    subscriptionPeriodClient,
-    invoiceItemClient
+  override async updatePaymentWithIntentState({
+    intentState
   }: UpdatePaymentWithIntentStateProps): Promise<any> {
     const apiData = JSON.parse(intentState.paymentData ? intentState.paymentData : '{}')
     const rawSubscription = apiData.subscription
@@ -178,7 +102,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       const subscriptionValidUntil = startOfDay(parseISO(rawSubscription.valid_until))
 
       // Get subscription
-      const subscription = await findSubscriptionByExternalId(subscriptionClient, subscriptionId)
+      const subscription = await this.findSubscriptionByExternalId(subscriptionId)
       if (!subscription) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Subscription ${subscriptionId} received from payrexx webhook not found!`
@@ -219,7 +143,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }).toISOString()
 
       // Get User
-      const user = await userClient.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: {
           id: subscription.userID
         }
@@ -241,11 +165,11 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
 
       // Delete unpaid
-      await deleteUnpaidInvoices(invoiceClient, subscriptionPeriodClient, subscription)
+      await this.deleteUnpaidInvoices(subscription)
 
       // Create invoice
 
-      const invoice = await invoiceClient.create({
+      const invoice = await this.prisma.invoice.create({
         data: {
           mail: user.email,
           dueAt: new Date(),
@@ -258,7 +182,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         }
       })
 
-      await invoiceItemClient.create({
+      await this.prisma.invoiceItem.create({
         data: {
           invoiceId: invoice.id,
           createdAt: new Date(),
@@ -268,11 +192,11 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           amount: payedAmount
         }
       })
-      if (!invoice) throw new Error("Can't create Invoice")
+      if (!invoice) throw new Error(`Can't create Invoice`)
 
       // Add subscription Period
 
-      const subscriptionPeriod = await subscriptionPeriodClient.create({
+      const subscriptionPeriod = await this.prisma.subscriptionPeriod.create({
         data: {
           subscriptionId: subscription.id,
           startsAt: newSubscriptionValidFrom,
@@ -285,17 +209,17 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       if (!subscriptionPeriod) throw new Error("Can't create subscription period")
 
       // Create Payment
-      const payment = await paymentClient.create({
+      const payment = await this.prisma.payment.create({
         data: {
           paymentMethodID: subscription.paymentMethodID,
           state: PaymentState.paid,
           invoiceID: invoice.id
         }
       })
-      if (!payment) throw new Error("Can't create Payment")
+      if (!payment) throw new Error(`Can't create Payment`)
 
       // Update subscription
-      await subscriptionClient.update({
+      await this.prisma.subscription.update({
         where: {
           id: subscription.id
         },
@@ -382,11 +306,13 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
+  override async webhookForPaymentIntent(
+    props: WebhookForPaymentIntentProps
+  ): Promise<WebhookResponse> {
     const intentStates: IntentState[] = []
 
     // Protect endpoint
-    const apiKey = props.req.query.apiKey as string
+    const apiKey = props.req.query['apiKey'] as string
     if (!this.timeConstantCompare(apiKey, this.webhookSecret)) {
       return {
         status: 403,
@@ -432,13 +358,60 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  // eslint-disable-next-line
-  async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
+  override async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     throw new Error('NOT IMPLEMENTED')
   }
 
-  // eslint-disable-next-line
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+  override async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     throw new Error('NOT IMPLEMENTED')
+  }
+
+  private async deleteUnpaidInvoices(subscription: Subscription) {
+    const unpaidInvoices = await this.prisma.invoice.findMany({
+      where: {
+        subscriptionID: subscription.id,
+        paidAt: null,
+        canceledAt: null
+      }
+    })
+    for (const unpaidInvoice of unpaidInvoices) {
+      await this.deletePeriodOfUnpaidInvoice(unpaidInvoice)
+      await this.prisma.invoice.delete({
+        where: {
+          id: unpaidInvoice.id
+        }
+      })
+    }
+  }
+
+  async deletePeriodOfUnpaidInvoice(invoice: Invoice) {
+    return this.prisma.subscriptionPeriod.deleteMany({
+      where: {
+        invoiceID: invoice.id
+      }
+    })
+  }
+
+  async findSubscriptionByExternalId(externalId: string) {
+    return this.prisma.subscription.findFirst({
+      where: {
+        properties: {
+          some: {
+            key: 'payrexx_external_id',
+            value: `${externalId}`
+          }
+        }
+      },
+      include: {
+        properties: true,
+        deactivation: true,
+        memberPlan: true,
+        periods: {
+          include: {
+            invoice: true
+          }
+        }
+      }
+    })
   }
 }

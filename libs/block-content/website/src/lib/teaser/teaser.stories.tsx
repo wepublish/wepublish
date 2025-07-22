@@ -1,4 +1,3 @@
-import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
 import {Teaser} from './teaser'
@@ -23,12 +22,14 @@ const image = {
   title: 'An image title',
   filename: 'An image filename',
   url: 'https://unsplash.it/500/500',
+  xxl: 'https://unsplash.it/1500/500',
   xl: 'https://unsplash.it/1200/400',
   l: 'https://unsplash.it/1000/400',
   m: 'https://unsplash.it/800/400',
   s: 'https://unsplash.it/500/300',
   xs: 'https://unsplash.it/300/200',
   xxs: 'https://unsplash.it/200/100',
+  xxlSquare: 'https://unsplash.it/1500/1500',
   xlSquare: 'https://unsplash.it/1200/1200',
   lSquare: 'https://unsplash.it/1000/1000',
   mSquare: 'https://unsplash.it/800/800',
@@ -61,35 +62,5 @@ export const WithoutPreTitle = {
       ...customTeaser,
       preTitle: null
     }
-  }
-}
-
-export const WithClassName = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: customTeaser,
-    className: 'extra-classname'
-  }
-}
-
-export const WithEmotion = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: customTeaser,
-    css: css`
-      background-color: #eee;
-    `
   }
 }

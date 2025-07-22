@@ -3,7 +3,7 @@
 const {composePlugins, withNx} = require('@nx/next')
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: !!process.env.ANALYZE_BUNDLE,
+  enabled: process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false
 })
 
@@ -15,6 +15,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
+      GTM_ID: process.env.GTM_ID || '',
       GA_ID: process.env.GA_ID || '',
       SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || ''
@@ -28,6 +29,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
       {
         source: '/a/:id((?!tag|preview).*)/:slug',
         destination: '/a/:slug',
@@ -55,7 +57,7 @@ const nextConfig = {
       },
       {
         source: '/account/subscriptions',
-        destination: '/profile/subscription',
+        destination: '/profile',
         permanent: false
       },
       {
@@ -76,6 +78,11 @@ const nextConfig = {
       {
         source: '/tipp',
         destination: '/a/crowdfunding-tsueritipp',
+        permanent: false
+      },
+      {
+        source: '/wohnen2025',
+        destination: '/a/save-the-date-fokus-wohnen-2025',
         permanent: false
       }
     ]

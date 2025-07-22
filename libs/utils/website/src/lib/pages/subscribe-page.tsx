@@ -1,16 +1,25 @@
-import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
+import {UserSession} from '@wepublish/website/api'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {SubscribeContainer} from '@wepublish/membership/website'
+import {
+  getV1ApiClient,
+  LoginWithJwtDocument,
+  MemberPlanListDocument,
+  NavigationListDocument,
+  PeerProfileDocument,
+  MeDocument,
+  InvoicesDocument,
+  addClientCacheToV1Props
+} from '@wepublish/website/api'
+import {ComponentProps} from 'react'
 
-type SubscribePageProps = Omit<
-  ComponentProps<typeof SubscribeContainer>,
-  'failureURL' | 'successURL'
->
+type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>
 
 export function SubscribePage(props: SubscribePageProps) {
   const {
@@ -20,7 +29,8 @@ export function SubscribePage(props: SubscribePageProps) {
       firstName,
       mail,
       lastName,
-      deactivateSubscriptionId
+      deactivateSubscriptionId,
+      userId
     }
   } = useRouter()
 
@@ -54,50 +64,47 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId={
         props.deactivateSubscriptionId ?? (deactivateSubscriptionId as string | undefined)
       }
+      returningUserId={userId as string | undefined}
     />
   )
 }
 
 SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
     const data = await client.mutate({
-      mutation: ApiV1.LoginWithJwtDocument,
+      mutation: LoginWithJwtDocument,
       variables: {
         jwt: ctx.query.jwt
       }
     })
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(data.data.createSessionWithJWT as ApiV1.UserSession),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict'
-      }
-    )
+    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
+      req: ctx.req,
+      res: ctx.res,
+      expires: new Date(data.data.createSessionWithJWT.expiresAt),
+      sameSite: 'strict'
+    })
   }
 
   const sessionProps = getSessionTokenProps(ctx)
 
   const dataPromises = [
     client.query({
-      query: ApiV1.MemberPlanListDocument,
+      query: MemberPlanListDocument,
       variables: {
         take: 50
       }
     }),
     client.query({
-      query: ApiV1.NavigationListDocument
+      query: NavigationListDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: PeerProfileDocument
     })
   ]
 
@@ -105,10 +112,10 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
     dataPromises.push(
       ...[
         client.query({
-          query: ApiV1.MeDocument
+          query: MeDocument
         }),
         client.query({
-          query: ApiV1.InvoicesDocument,
+          query: InvoicesDocument,
           variables: {
             take: 50
           }
@@ -118,7 +125,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   await Promise.all(dataPromises)
-  const props = ApiV1.addClientCacheToV1Props(client, sessionProps)
+  const props = addClientCacheToV1Props(client, sessionProps)
 
   return props
 }

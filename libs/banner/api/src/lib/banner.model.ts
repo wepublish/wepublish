@@ -1,14 +1,19 @@
 import {
   ArgsType,
   Field,
-  ID,
   InputType,
+  Int,
   ObjectType,
   OmitType,
   registerEnumType
 } from '@nestjs/graphql'
 import {BannerAction, CreateBannerActionInput} from './banner-action.model'
 import {Image} from '@wepublish/image/api'
+import {LoginStatus} from '@prisma/client'
+
+registerEnumType(LoginStatus, {
+  name: 'LoginStatus'
+})
 
 /*
 This is only here to provide the interface for the "showOnPages" field
@@ -16,19 +21,19 @@ and can be removed when Pages are moved to APIv2
 */
 @ObjectType()
 export class PageModel {
-  @Field(() => ID)
+  @Field()
   id!: string
 }
 
 @InputType()
 export class PageModelInput {
-  @Field(() => ID)
+  @Field()
   id!: string
 }
 
 @ObjectType()
 export class Banner {
-  @Field(() => ID)
+  @Field()
   id!: string
 
   @Field()
@@ -37,23 +42,32 @@ export class Banner {
   @Field()
   text!: string
 
-  @Field(() => String, {nullable: true})
-  cta?: string | null
+  @Field({nullable: true})
+  cta?: string
+
+  @Field({nullable: true})
+  html?: string
 
   @Field()
   active!: boolean
 
+  @Field(() => Int)
+  delay!: number
+
   @Field()
   showOnArticles!: boolean
 
-  @Field(() => String, {nullable: true})
-  imageId?: string | null
+  @Field({nullable: true})
+  imageId?: string
+
+  @Field(() => Image, {nullable: true})
+  image?: Image
 
   @Field(() => [PageModel], {nullable: true})
   showOnPages?: PageModel[]
 
-  @Field(() => Image, {nullable: true})
-  image?: Image
+  @Field(() => LoginStatus)
+  showForLoginStatus!: LoginStatus
 
   @Field(() => [BannerAction], {nullable: true})
   actions?: BannerAction[]
@@ -99,6 +113,9 @@ export class PrimaryBannerArgs {
   @Field(() => BannerDocumentType)
   documentType!: BannerDocumentType
 
-  @Field(() => ID)
+  @Field()
   documentId!: string
+
+  @Field()
+  loggedIn!: boolean
 }

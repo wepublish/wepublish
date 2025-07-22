@@ -1,46 +1,49 @@
 fragment FullPeerProfile on PeerProfile {
-  name
-  logo {
-    ...FullImage
-  }
+    name
+    logo {
+        ...FullImage
+    }
+    squareLogo {
+        ...FullImage
+    }
 
-  themeColor
-  themeFontColor
+    themeColor
+    themeFontColor
 
-  hostURL
-  websiteURL
+    hostURL
+    websiteURL
 
-  callToActionText
-  callToActionURL
-  callToActionImageURL
-  callToActionImage {
-    ...FullImage
-  }
+    callToActionText
+    callToActionURL
+    callToActionImageURL
+    callToActionImage {
+        ...FullImage
+    }
 }
 
 fragment FullPeer on Peer {
-  id
-  createdAt
-  modifiedAt
+    id
+    createdAt
+    modifiedAt
 
-  name
-  slug
-  isDisabled
-  hostURL
+    name
+    slug
+    isDisabled
+    hostURL
 
-  profile {
-    ...FullPeerProfile
-  }
+    profile {
+        ...FullPeerProfile
+    }
 }
 
 query PeerProfile {
-  peerProfile {
-    ...FullPeerProfile
-  }
+    peerProfile {
+        ...FullPeerProfile
+    }
 }
 
-query Peer($id: ID, $slug: Slug) {
-  peer(id: $id, slug: $slug) {
-    ...FullPeer
-  }
+query Peer($id: String, $slug: Slug) {
+    peer(id: $id, slug: $slug) {
+        ...FullPeer
+    }
 }

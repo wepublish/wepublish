@@ -11,8 +11,10 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
+  BuilderArticleAuthorsProps,
   BuilderArticleDateProps,
   BuilderArticleListProps,
+  BuilderArticleMetaProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
 } from './article.interface'
@@ -31,11 +33,11 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderEmbedBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
+  BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
@@ -45,15 +47,18 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTeaserProps,
+  BuilderTeaserSlotsBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
-  BuilderYouTubeVideoBlockProps
+  BuilderYouTubeVideoBlockProps,
+  BuilderCrowdfundingBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -81,16 +86,22 @@ import {
   BuilderInvoiceListProps,
   BuilderMemberPlanItemProps,
   BuilderMemberPlanPickerProps,
+  BuilderPaymentAmountProps,
   BuilderPaymentMethodPickerProps,
   BuilderPeriodicityPickerProps,
   BuilderSubscribeProps,
   BuilderSubscriptionListItemProps,
-  BuilderSubscriptionListProps
+  BuilderSubscriptionListProps,
+  BuilderTransactionFeeProps
 } from './membership.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPeerProps} from './peer.interface'
-import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
+import {
+  BuilderRenderElementProps,
+  BuilderRenderLeafProps,
+  BuilderRenderRichtextProps
+} from './richText.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {
   BuilderAlertProps,
@@ -114,6 +125,7 @@ export type WebsiteBuilderProps = {
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  ArticleMeta: ComponentType<BuilderArticleMetaProps>
   ArticleDate: ComponentType<BuilderArticleDateProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
@@ -122,6 +134,7 @@ export type WebsiteBuilderProps = {
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
   ArticleList: ComponentType<BuilderArticleListProps>
+  ArticleAuthors: ComponentType<BuilderArticleAuthorsProps>
   Banner: ComponentType<BuilderBannerProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
@@ -143,8 +156,10 @@ export type WebsiteBuilderProps = {
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>
   MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>
   MemberPlanItem: ComponentType<BuilderMemberPlanItemProps>
+  PaymentAmount: ComponentType<BuilderPaymentAmountProps>
   PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
+  TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
 
   elements: {
@@ -172,6 +187,7 @@ export type WebsiteBuilderProps = {
   richtext: {
     RenderLeaf: ComponentType<BuilderRenderLeafProps>
     RenderElement: ComponentType<BuilderRenderElementProps>
+    RenderRichtext: ComponentType<BuilderRenderRichtextProps>
   }
 
   blocks: {
@@ -184,6 +200,7 @@ export type WebsiteBuilderProps = {
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    Subscribe: ComponentType<BuilderSubscribeBlockProps>
     FacebookPost: ComponentType<BuilderFacebookPostBlockProps>
     FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>
@@ -194,13 +211,15 @@ export type WebsiteBuilderProps = {
     PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
     TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
     BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
-    Embed: ComponentType<BuilderEmbedBlockProps>
+    IFrame: ComponentType<BuilderIFrameBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
+    Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
+    TeaserSlots: ComponentType<BuilderTeaserSlotsBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -233,15 +252,19 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  TransactionFee: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
+  PaymentAmount: NoComponent,
   PaymentMethodPicker: NoComponent,
   PeriodicityPicker: NoComponent,
   Page: NoComponent,
   PageSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
+  ArticleMeta: NoComponent,
   ArticleDate: NoComponent,
+  ArticleAuthors: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
@@ -289,7 +312,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
 
   richtext: {
     RenderLeaf: NoComponent,
-    RenderElement: NoComponent
+    RenderElement: NoComponent,
+    RenderRichtext: NoComponent
   },
 
   blocks: {
@@ -302,6 +326,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    Subscribe: NoComponent,
     FacebookPost: NoComponent,
     FacebookVideo: NoComponent,
     InstagramPost: NoComponent,
@@ -312,13 +337,15 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     PolisConversation: NoComponent,
     TikTokVideo: NoComponent,
     BildwurfAd: NoComponent,
-    Embed: NoComponent,
+    IFrame: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
+    Crowdfunding: NoComponent,
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     TeaserList: NoComponent,
+    TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },

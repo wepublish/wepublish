@@ -3,11 +3,11 @@ import {URL} from 'url'
 import * as fs from 'fs'
 import {
   ArrayBufferUpload,
-  ImageRotation,
   ImageOutput,
-  ImageTransformation
+  ImageRotation,
+  ImageTransformation,
+  ImageWithFocalPoint
 } from '@wepublish/image/api'
-import {ImageWithFocalPoint} from '../../src/lib/db/image'
 import type {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import {resolve} from 'path'
@@ -43,14 +43,15 @@ const TEST_UPLOAD_IMAGE: ImageWithFocalPoint = {
   license: null,
   link: null,
   source: null,
-  title: null
+  title: null,
+  peerId: null
 }
 
 const TEST_TRANSFORMATION: ImageTransformation = {
   height: '1024px',
   width: '1024px',
   rotation: ImageRotation.Rotate0,
-  output: ImageOutput.JPEG,
+  output: ImageOutput.jpeg,
   quality: 80
 }
 

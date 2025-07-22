@@ -1,10 +1,20 @@
-import {createTheme, CSSObject, SimplePaletteColorOptions} from '@mui/material'
+import {
+  createTheme,
+  CSSObject,
+  SimplePaletteColorOptions,
+  Theme as MaterialTheme
+} from '@mui/material'
 import {createBreakpoints} from '@mui/system'
 
 const {
   palette: {augmentColor},
   breakpoints: originalBreakpoints
 } = createTheme()
+
+declare module '@emotion/react' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  export interface Theme extends MaterialTheme {}
+}
 
 declare module '@mui/material/styles' {
   interface Palette {

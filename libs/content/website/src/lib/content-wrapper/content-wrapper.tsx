@@ -1,5 +1,6 @@
-import {css, styled} from '@mui/material'
-import {createContext, useContext, PropsWithChildren, ComponentProps} from 'react'
+import {css} from '@mui/material'
+import styled from '@emotion/styled'
+import {ComponentProps, createContext, PropsWithChildren, useContext} from 'react'
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
@@ -8,7 +9,8 @@ import {
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
-  TeaserListBlockWrapper
+  TeaserListBlockWrapper,
+  TeaserSlotsBlockWrapper
 } from '@wepublish/block-content/website'
 
 export const ContentWidthContext = createContext({
@@ -54,6 +56,7 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
             ${TeaserGridFlexBlockWrapper},
               ${TeaserGridBlockWrapper},
               ${TeaserListBlockWrapper},
+              ${TeaserSlotsBlockWrapper},
               ${ImageGalleryBlockWrapper}
           ) {
           grid-column: -1/1;
@@ -62,9 +65,7 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
     `}
 `
 
-export const ContentWrapper = (
-  props: Omit<ComponentProps<typeof ContentWrapperStyled>, 'fullWidth'>
-) => {
+export const ContentWrapper = (props: ComponentProps<typeof ContentWrapperStyled>) => {
   const fullWidth = useFullWidthContent()
 
   return <ContentWrapperStyled fullWidth={fullWidth} {...props} />

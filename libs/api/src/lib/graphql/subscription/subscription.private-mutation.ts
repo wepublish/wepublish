@@ -4,7 +4,7 @@ import {
   CanCancelSubscription,
   CanCreateSubscription,
   CanDeleteSubscription
-} from '@wepublish/permissions/api'
+} from '@wepublish/permissions'
 import {
   MetadataProperty,
   Prisma,
@@ -12,9 +12,9 @@ import {
   Subscription,
   SubscriptionDeactivationReason
 } from '@prisma/client'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {AlreadyUnpaidInvoices, NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
-import {MemberContext} from '../../memberContext'
+import {getPaymentMethodByIDOrSlug, MemberContext} from '../../memberContext'
 import {PaymentProvider} from '@wepublish/payment/api'
 
 export const deleteSubscriptionById = (
@@ -103,7 +103,7 @@ export const cancelSubscriptionById = async (
   })
 }
 
-type CreateSubscriptionInput = Prisma.SubscriptionCreateInput & {
+type CreateSubscriptionInput = Prisma.SubscriptionUncheckedCreateInput & {
   properties: Prisma.MetadataPropertyCreateManySubscriptionInput[]
 }
 
@@ -117,7 +117,6 @@ export const createSubscription = async (
   authorise(CanCreateSubscription, roles)
 
   const {subscription} = await memberContext.createSubscription(
-    prismaClient,
     input['userID'],
     input['paymentMethodID'],
     input['paymentPeriodicity'],
@@ -125,7 +124,8 @@ export const createSubscription = async (
     input['memberPlanID'],
     properties,
     input['autoRenew'],
-    input['extendable'],
+    !!input['extendable'],
+    null,
     input['startsAt']
   )
   return subscription
@@ -149,9 +149,9 @@ export const importSubscription = async (
     input['memberPlanID'],
     properties,
     input['autoRenew'],
-    input['extendable'],
+    !!input['extendable'],
     input['startsAt'],
-    input['paidUntil']
+    input['paidUntil'] ?? undefined
   )
   return subscription
 }
@@ -198,6 +198,7 @@ export const updateAdminSubscription = async (
   {properties, ...input}: UpdateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
+  loaders: Context['loaders'],
   subscriptionClient: PrismaClient['subscription'],
   userClient: PrismaClient['user'],
   paymentProviders: PaymentProvider[],
@@ -216,20 +217,26 @@ export const updateAdminSubscription = async (
     }
   })
 
+  if (!originalSubscription) {
+    throw new Error('Subscription not found.')
+  }
+
   if (originalSubscription.deactivation) {
     throw new Error('You are not allowed to change a deactivated subscription!')
   }
 
   // handle remote managed subscriptions (Payrexx Subscription)
-  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
-    memberContext.loaders,
+  const {paymentProviderID} = await getPaymentMethodByIDOrSlug(
+    loaders,
     undefined,
     originalSubscription.paymentMethodID
   )
+
   const paymentProvider = paymentProviders.find(
     paymentProvider => paymentProvider.id === paymentProviderID
   )
-  if (paymentProvider.remoteManagedSubscription) {
+
+  if (paymentProvider?.remoteManagedSubscription) {
     await handleRemoteManagedSubscription({
       paymentProvider,
       input: input as Subscription,

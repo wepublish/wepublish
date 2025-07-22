@@ -7,49 +7,48 @@ import {
   PrimaryBannerArgs,
   UpdateBannerInput
 } from './banner.model'
-import {NotFoundException} from '@nestjs/common'
 import {BannerActionService} from './banner-action.service'
 import {BannerAction} from './banner-action.model'
 import {PaginationArgs} from './pagination.model'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {
   CanCreateBanner,
-  CanUpdateBanner,
   CanDeleteBanner,
   CanGetBanner,
-  Permissions
-} from '@wepublish/permissions/api'
+  CanUpdateBanner
+} from '@wepublish/permissions'
+import {Public} from '@wepublish/authentication/api'
+import {NotFoundException} from '@nestjs/common'
+import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => Banner)
 export class BannerResolver {
   constructor(
     private readonly bannerService: BannerService,
-    private readonly bannerActionService: BannerActionService
+    private readonly bannerActionService: BannerActionService,
+    private readonly imageDataloaderService: ImageDataloaderService
   ) {}
 
   @Permissions(CanGetBanner)
   @Query(() => [Banner])
-  async banners(@Args() args: PaginationArgs): Promise<Banner[]> {
+  async banners(@Args() args: PaginationArgs) {
     return this.bannerService.findAll(args)
   }
 
   @Permissions(CanGetBanner)
   @Query(() => Banner)
-  async banner(@Args('id') args: string): Promise<Banner> {
+  async banner(@Args('id') args: string) {
     const banner = await this.bannerService.findOne(args)
     if (!banner) {
-      throw new NotFoundException()
+      throw new NotFoundException(`Banner with id ${args} not found`)
     }
     return banner
   }
 
-  @Query(() => Banner)
-  async primaryBanner(@Args() args: PrimaryBannerArgs): Promise<Banner> {
-    const banner = await this.bannerService.findFirst(args)
-    if (!banner) {
-      throw new NotFoundException()
-    }
-    return banner
+  @Public()
+  @Query(() => Banner, {nullable: true})
+  async primaryBanner(@Args() args: PrimaryBannerArgs) {
+    return await this.bannerService.findFirst(args)
   }
 
   @ResolveField(() => [BannerAction])
@@ -61,6 +60,7 @@ export class BannerResolver {
   @ResolveField(() => [PageModel])
   async showOnPages(@Parent() banner: Banner) {
     const {id} = banner
+
     return this.bannerService.findPages(id)
   }
 
@@ -72,24 +72,24 @@ export class BannerResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageId}
+    return this.imageDataloaderService.load(imageId)
   }
 
   @Permissions(CanCreateBanner)
   @Mutation(() => Banner)
-  async createBanner(@Args('input') args: CreateBannerInput): Promise<Banner> {
+  async createBanner(@Args('input') args: CreateBannerInput) {
     return await this.bannerService.create(args)
   }
 
   @Permissions(CanUpdateBanner)
   @Mutation(() => Banner)
-  async updateBanner(@Args('input') args: UpdateBannerInput): Promise<Banner> {
+  async updateBanner(@Args('input') args: UpdateBannerInput) {
     return this.bannerService.update(args)
   }
 
   @Permissions(CanDeleteBanner)
   @Mutation(() => Boolean, {nullable: true})
-  async deleteBanner(@Args('id') args: string): Promise<void> {
+  async deleteBanner(@Args('id') args: string) {
     await this.bannerService.delete(args)
   }
 }

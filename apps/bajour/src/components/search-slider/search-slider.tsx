@@ -1,18 +1,24 @@
 import 'keen-slider/keen-slider.min.css'
 
-import {styled} from '@mui/material'
+import styled from '@emotion/styled'
+import {ArticleSEO} from '@wepublish/article/website'
+import {isIFrameBlock, isRichTextBlock, RichTextBlock} from '@wepublish/block-content/website'
+import {CommentListItemShare} from '@wepublish/comments/website'
 import {H1, H4} from '@wepublish/ui'
 import {
-  ApiV1,
-  CommentListItemShare,
-  isRichTextBlock,
-  RichTextBlock,
-  useWebsiteBuilder
-} from '@wepublish/website'
+  Article,
+  ArticleSort,
+  BlockContent,
+  FullArticleFragment,
+  SortOrder,
+  useFullArticleListQuery
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {format} from 'date-fns'
 import {KeenSliderInstance, TrackDetails, useKeenSlider} from 'keen-slider/react'
+import {useRouter} from 'next/router'
 import {descend, eqBy, sortWith, uniqWith} from 'ramda'
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useDebounceCallback} from 'usehooks-ts'
 
 import {LikeButton} from './like-button'
@@ -94,19 +100,23 @@ const SearchContainer = styled('div')`
   grid-column-start: 2;
   grid-column-end: 3;
   padding-right: ${({theme}) => theme.spacing(4)};
-
   text-align: end;
-  font-size: ${({theme}) => theme.typography.subtitle2};
+  font-size: ${({theme}) => theme.typography.subtitle2.fontSize};
 
   ${({theme}) => theme.breakpoints.up('lg')} {
     padding-right: 0;
-    font-size: ${({theme}) => theme.typography.subtitle1};
+    font-size: ${({theme}) => theme.typography.subtitle1.fontSize};
   }
 `
 
-const DateContainer = styled('div')`
-  margin-top: -${({theme}) => theme.spacing(1)};
+const SearchHits = styled('div')`
+  padding-top: ${({theme}) => theme.spacing(0.5)};
+  padding-bottom: ${({theme}) => theme.spacing(0.5)};
+  font-size: ${({theme}) => theme.typography.subtitle1.fontSize};
+  font-weight: 700;
+`
 
+const DateContainer = styled('div')`
   ${({theme}) => theme.breakpoints.up('md')} {
     margin-top: 0;
   }
@@ -147,6 +157,7 @@ const BtnContainer = styled('div')`
 
 const SlideItem = styled('div')<{mainImage?: boolean}>`
   cursor: pointer;
+  position: relative;
   min-height: unset !important;
   height: ${SLIDER_HEIGHT}px;
   min-width: ${SLIDER_WIDTH}px !important;
@@ -167,6 +178,15 @@ const SlideItem = styled('div')<{mainImage?: boolean}>`
   }
 `
 
+const SlideItemOverlay = styled('div')<{mainImage?: boolean}>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.45);
+`
+
 const SlideTitle = styled('span')`
   position: absolute;
   font-weight: bold;
@@ -179,37 +199,59 @@ const SlideTitle = styled('span')`
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.58);
 `
 
-export type SliderArticle = Omit<ApiV1.Article, 'comments' | 'socialMediaAuthors'> & {
-  blocks: ApiV1.Block[]
+const FullScreenVideoContainer = styled('div')`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 13;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const FullScreenVideo = styled('video')`
+  width: 90vw;
+  height: 85vh;
+  margin: 5vh 5vw 0 5vw;
+`
+
+type SearchSliderProps = {
+  article: Article
+  includeSEO?: boolean
+  className?: string
 }
 
-interface SearchSliderProps {
-  article: SliderArticle
-}
-
-const sortArticlesByPublishedAt = sortWith<ApiV1.FullArticleFragment>([
-  descend(article => +new Date(article.publishedAt))
+const sortArticlesByPublishedAt = sortWith<FullArticleFragment>([
+  descend(article => (article.publishedAt ? +new Date(article.publishedAt) : -1))
 ])
 
-const uniqueById = uniqWith(eqBy<ApiV1.FullArticleFragment>(a => a.id))
+const uniqueById = uniqWith(eqBy<FullArticleFragment>(a => a.id))
 
-export function SearchSlider({article}: SearchSliderProps) {
+export function SearchSlider({article, includeSEO, className}: SearchSliderProps) {
   const {
-    elements: {Image, H5}
+    elements: {Image, H5, Button}
   } = useWebsiteBuilder()
+
+  const router = useRouter()
+
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slidesDetails, setSlidesDetails] = useState<TrackDetails['slides']>()
   const [searchQuery, setSearchQuery] = useState<string | null>()
+  const [searchHits, setSearchHits] = useState<number>()
+  const [videoUrl, setVideoUrl] = useState<string>()
 
   // getting the first tag from initial article which is not the technical search-slider tag.
   const tag = useMemo(() => article?.tags.find(tag => tag.tag !== SEARCH_SLIDER_TAG), [article])
 
-  const {data, fetchMore, refetch} = ApiV1.useFullArticleListQuery({
+  const {data, fetchMore, refetch} = useFullArticleListQuery({
     variables: {
       take: TAKE,
-      cursor: article.id,
-      order: ApiV1.SortOrder.Descending,
-      sort: ApiV1.ArticleSort.PublishedAt,
+      cursorId: article.id,
+      order: SortOrder.Descending,
+      sort: ArticleSort.PublishedAt,
       filter: {
         tags: tag ? [tag.id] : []
       }
@@ -218,7 +260,10 @@ export function SearchSlider({article}: SearchSliderProps) {
 
   const sliderArticles = useMemo(() => data?.articles.nodes ?? [], [data])
   const mainArticle = sliderArticles[currentSlide]
-  const {likes, isLiked, handleLike} = useLikeStatus(mainArticle?.id ?? '', mainArticle?.likes)
+  const {likes, isLiked, isReady, handleLike} = useLikeStatus(
+    mainArticle?.id ?? '',
+    mainArticle?.likes
+  )
 
   const paginateArticles = useDebounceCallback(
     useCallback(
@@ -243,7 +288,7 @@ export function SearchSlider({article}: SearchSliderProps) {
         return fetchMore({
           variables: {
             cursor: sliderArticles[slideIndex].id,
-            order: goesBack ? ApiV1.SortOrder.Ascending : ApiV1.SortOrder.Descending,
+            order: goesBack ? SortOrder.Ascending : SortOrder.Descending,
             filter: {
               title: searchQuery,
               body: searchQuery,
@@ -290,7 +335,7 @@ export function SearchSlider({article}: SearchSliderProps) {
         await fetchMore({
           variables: {
             cursor: null,
-            order: ApiV1.SortOrder.Descending,
+            order: SortOrder.Descending,
             filter: {
               title: query,
               body: query,
@@ -298,7 +343,9 @@ export function SearchSlider({article}: SearchSliderProps) {
             }
           },
           updateQuery: (prev, {fetchMoreResult}) => {
-            if (!fetchMoreResult?.articles?.nodes?.length) {
+            const foundArticles = fetchMoreResult?.articles?.nodes?.length
+            setSearchHits(foundArticles)
+            if (!foundArticles) {
               return prev
             }
 
@@ -346,9 +393,37 @@ export function SearchSlider({article}: SearchSliderProps) {
     }
   })
 
+  // like main article via query param userAction
+  useEffect(() => {
+    // main article must be ready
+    if (!mainArticle) {
+      return
+    }
+
+    // router query must contain a slug
+    if (!router.query?.slug) {
+      return
+    }
+
+    // only vote on the designated main article
+    if (router.query.slug !== mainArticle.slug) {
+      return
+    }
+
+    // router must be ready
+    if (!router.isReady) {
+      return
+    }
+
+    // add like, if userAction in query is set to like
+    if (router.query?.userAction === 'like') {
+      handleLike(true)
+    }
+  }, [router.isReady, router.query, mainArticle, handleLike])
+
   // generate an upper and lower part of the title
   const title = useMemo(() => {
-    const splitTag = tag?.tag?.split('-') ?? []
+    const splitTag = tag?.tag?.split(' ') ?? []
     const firstWordLength = Math.floor(splitTag.length / 2)
     const upperTitlePart = splitTag.slice(0, firstWordLength).join(' ')
     const lowerTitlePart = splitTag.slice(firstWordLength).join(' ')
@@ -359,7 +434,8 @@ export function SearchSlider({article}: SearchSliderProps) {
     }
   }, [tag])
 
-  const textBlock = (mainArticle?.blocks as ApiV1.Block[])?.find(isRichTextBlock)
+  const textBlock = (mainArticle?.latest.blocks as BlockContent[])?.find(isRichTextBlock)
+  const videoBlock = (mainArticle?.latest.blocks as BlockContent[])?.find(isIFrameBlock)
   const publicationDate = mainArticle?.publishedAt
     ? format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
     : ''
@@ -372,7 +448,9 @@ export function SearchSlider({article}: SearchSliderProps) {
   }
 
   return (
-    <Container>
+    <Container className={className}>
+      {includeSEO && <ArticleSEO article={article as Article} />}
+
       <HeaderContainer>
         <TitleContainer>
           <TitleUpperPart>{title.upperTitlePart}</TitleUpperPart>
@@ -393,6 +471,14 @@ export function SearchSlider({article}: SearchSliderProps) {
             }}
           />
 
+          <SearchHits>
+            {!!searchQuery && (
+              <strong>
+                {searchHits} Resultat{searchHits !== 1 && <>e</>}
+              </strong>
+            )}
+          </SearchHits>
+
           <DateContainer>
             <u>{publicationDate}</u>
           </DateContainer>
@@ -411,13 +497,28 @@ export function SearchSlider({article}: SearchSliderProps) {
               key={idx}
               className={`keen-slider__slide`}
               mainImage={mainArticle.id === article?.id}
-              onClick={() => keenSliderRef.current?.moveToIdx(idx)}>
-              {article?.image && (
+              onClick={() => {
+                // Click on current slide
+                if (currentSlide === idx) {
+                  if (videoBlock?.url) {
+                    setVideoUrl(videoBlock.url)
+                  }
+                }
+                keenSliderRef.current?.moveToIdx(idx)
+                // used for the stuck slider elements on the very right side, if slider can't be moved further to the right.
+                setCurrentSlide(idx)
+              }}>
+              {article?.latest.image && (
                 <>
-                  <Image image={article.image} />
+                  <Image image={article.latest.image} />
 
                   {slidesDetails?.[idx].abs !== currentSlide && (
-                    <SlideTitle>{article.title}</SlideTitle>
+                    <SlideItemOverlay>
+                      <SlideTitle>{article?.latest.title}</SlideTitle>
+                    </SlideItemOverlay>
+                  )}
+                  {slidesDetails?.[idx].abs === currentSlide && article.latest.image.source && (
+                    <SlideTitle>Bild: {article.latest.image.source}</SlideTitle>
                   )}
                 </>
               )}
@@ -426,23 +527,22 @@ export function SearchSlider({article}: SearchSliderProps) {
         })}
       </SliderContainer>
 
+      {videoUrl && (
+        <FullScreenVideoContainer>
+          <FullScreenVideo src={videoUrl} controls autoPlay />
+          <Button onClick={() => setVideoUrl(undefined)}>Schliessen</Button>
+        </FullScreenVideoContainer>
+      )}
+
       <TextContainer>
         <div>
-          {mainArticle.preTitle ? (
-            <H5 gutterBottom>{mainArticle.preTitle} </H5>
-          ) : (
-            <H5 gutterBottom>
-              {mainArticle?.title}
-
-              <span style={{fontSize: '1rem'}}>, weil ...</span>
-            </H5>
-          )}
+          {mainArticle.latest.preTitle && <H5 gutterBottom>{mainArticle.latest.preTitle} </H5>}
         </div>
 
         {textBlock?.richText && <RichTextBlock richText={textBlock.richText} />}
 
         <BtnContainer>
-          <LikeButton onLike={handleLike} isLiked={isLiked} likes={likes} />
+          <LikeButton onLike={() => handleLike()} isLiked={isLiked} likes={likes} />
 
           <CommentListItemShare url={mainArticle.url} title="Share" />
         </BtnContainer>

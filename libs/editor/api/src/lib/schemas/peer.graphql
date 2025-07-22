@@ -4,29 +4,25 @@ fragment FullPeerProfile on PeerProfile {
   themeColor
   themeFontColor
   logo {
-    ...ImageRef
+    ...FullImage
+  }
+  squareLogo {
+    ...FullImage
   }
   callToActionText
   callToActionURL
   callToActionImage {
-    ...ImageRef
+    ...FullImage
   }
   callToActionImageURL
 }
 
-fragment PeerRef on Peer {
+fragment FullPeer on Peer {
   id
   name
   slug
   isDisabled
   hostURL
-  profile {
-    ...FullPeerProfile
-  }
-}
-
-fragment PeerWithProfile on Peer {
-  ...PeerRef
   profile {
     ...FullPeerProfile
   }
@@ -52,30 +48,30 @@ mutation UpdatePeerProfile($input: PeerProfileInput!) {
 
 query PeerList {
   peers {
-    ...PeerWithProfile
+    ...FullPeer
   }
 }
 
-query Peer($id: ID!) {
+query Peer($id: String!) {
   peer(id: $id) {
-    ...PeerRef
+    ...FullPeer
   }
 }
 
 mutation CreatePeer($input: CreatePeerInput!) {
   createPeer(input: $input) {
-    ...PeerRef
+    ...FullPeer
   }
 }
 
-mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
+mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
   updatePeer(id: $id, input: $input) {
-    ...PeerRef
+    ...FullPeer
   }
 }
 
-mutation DeletePeer($id: ID!) {
+mutation DeletePeer($id: String!) {
   deletePeer(id: $id) {
-    ...PeerRef
+    ...FullPeer
   }
 }

@@ -1,23 +1,26 @@
-import {ApiV1, Blocks, BuilderBlocksProps, isRichTextBlock} from '@wepublish/website'
+import {Blocks, isRichTextBlock} from '@wepublish/block-content/website'
+import {BlockType, CustomTeaser, TeaserGridBlock, TeaserType} from '@wepublish/website/api'
+import {BuilderBlocksProps} from '@wepublish/website/builder'
 import {allPass, complement, findIndex, insert} from 'ramda'
 import {useMemo} from 'react'
 
 import {isContentBoxBlock} from './mannschaft-content-box'
 
-export const createNewAdTeaser = (): ApiV1.TeaserGridBlock => ({
+export const createNewAdTeaser = (): TeaserGridBlock => ({
   __typename: 'TeaserGridBlock',
+  type: BlockType.TeaserGrid,
   numColumns: 1,
   teasers: [
     {
       __typename: 'CustomTeaser',
+      type: TeaserType.Custom,
       properties: [],
       contentUrl: null,
       preTitle: 'ad-300x250',
       title: null,
       lead: null,
-      image: null,
-      style: ApiV1.TeaserStyle.Default
-    } as ApiV1.CustomTeaser
+      image: null
+    } as CustomTeaser
   ]
 })
 

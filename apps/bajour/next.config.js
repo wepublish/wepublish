@@ -3,7 +3,7 @@
 const {composePlugins, withNx} = require('@nx/next')
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: !!process.env.ANALYZE_BUNDLE,
+  enabled: process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false
 })
 
@@ -22,13 +22,14 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
       {
         source: '/home',
         destination: '/',
         permanent: false
       },
       {
-        source: '/a/:id((?!tag|preview).*)/:slug',
+        source: '/a/:id((?!tag|id).*)/:slug',
         destination: '/a/:slug',
         permanent: false
       },

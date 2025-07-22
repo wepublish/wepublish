@@ -15,7 +15,7 @@ fragment FullUser on User {
   flair
   birthday
   userImage {
-    ...ImageRef
+    ...FullImage
   }
   active
   lastLogin
@@ -42,6 +42,7 @@ fragment UserSubscription on UserSubscription {
   monthlyAmount
   currency
   autoRenew
+  confirmed
   startsAt
   paidUntil
   periods {
@@ -71,7 +72,7 @@ fragment UserSubscription on UserSubscription {
 
 query UserList(
   $filter: UserFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -93,7 +94,7 @@ query UserList(
   }
 }
 
-query User($id: ID!) {
+query User($id: String!) {
   user(id: $id) {
     ...FullUser
   }
@@ -111,19 +112,19 @@ mutation CreateUser($input: UserInput!, $password: String!) {
   }
 }
 
-mutation UpdateUser($id: ID!, $input: UserInput!) {
+mutation UpdateUser($id: String!, $input: UserInput!) {
   updateUser(id: $id, input: $input) {
     ...FullUser
   }
 }
 
-mutation ResetUserPassword($id: ID!, $password: String!, $sendMail: Boolean) {
+mutation ResetUserPassword($id: String!, $password: String!, $sendMail: Boolean) {
   resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
     ...FullUser
   }
 }
 
-mutation DeleteUser($id: ID!) {
+mutation DeleteUser($id: String!) {
   deleteUser(id: $id) {
     ...FullUser
   }

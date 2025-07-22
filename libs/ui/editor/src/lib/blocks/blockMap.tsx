@@ -1,15 +1,18 @@
 import nanoid from 'nanoid'
 import {
+  MdAccountBox,
   MdCode,
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFilter,
   MdFilter1,
   MdFilter6,
   MdFilter9Plus,
   MdFormatColorText,
   MdFormatQuote,
   MdIntegrationInstructions,
+  MdMoney,
   MdPhoto,
   MdPhotoLibrary,
   MdQueryStats,
@@ -34,20 +37,27 @@ import {TeaserGridBlock} from './teaserGridBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
 import {TitleBlock} from './titleBlock'
 import {BlockValue, EmbedType} from './types'
-import {BlockType} from '@wepublish/editor/api-v2'
+import {
+  EditorBlockType,
+  TeaserListBlockSort,
+  TeaserSlotType,
+  TeaserType
+} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
 import {TeaserListBlock} from './teaserListBlock'
-import {TeaserListBlockSort, TeaserType} from '@wepublish/editor/api'
+import {SubscribeBlock} from './subscribeBlock'
+import {TeaserSlotsBlock} from './teaserSlotsBlock'
+import {CrowdfundingBlock} from './CrowdfundingBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
-  [BlockType.Title]: {
+  [EditorBlockType.Title]: {
     field: props => <TitleBlock {...props} />,
     defaultValue: {title: '', lead: '', blockStyle: undefined},
     label: 'blocks.title.label',
     icon: <MdTitle />
   },
 
-  [BlockType.RichText]: {
+  [EditorBlockType.RichText]: {
     field: props => (
       <RichTextBlock
         {...props}
@@ -67,21 +77,21 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdFormatColorText />
   },
 
-  [BlockType.Image]: {
+  [EditorBlockType.Image]: {
     field: props => <ImageBlock {...props} />,
     defaultValue: {image: null, caption: '', blockStyle: undefined},
     label: 'blocks.image.label',
     icon: <MdPhoto />
   },
 
-  [BlockType.ImageGallery]: {
+  [EditorBlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
     defaultValue: {images: [{caption: '', image: null}], blockStyle: undefined},
     label: 'blocks.imageGallery.label',
     icon: <MdPhotoLibrary />
   },
 
-  [BlockType.Listicle]: {
+  [EditorBlockType.Listicle]: {
     field: props => <ListicleBlock {...props} />,
     defaultValue: {
       items: [
@@ -100,23 +110,20 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdViewList />
   },
 
-  [BlockType.Quote]: {
+  [EditorBlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
     defaultValue: {quote: '', author: '', image: null, blockStyle: undefined},
     label: 'blocks.quote.label',
     icon: <MdFormatQuote />
   },
 
-  [BlockType.LinkPageBreak]: {
+  [EditorBlockType.LinkPageBreak]: {
     field: props => <LinkPageBreakBlock {...props} />,
     defaultValue: {
       text: '',
       linkText: '',
       linkTarget: '',
       linkURL: '',
-      styleOption: 'default',
-      layoutOption: 'default',
-      templateOption: 'none',
       richText: createDefaultValue(),
       image: undefined,
       hideButton: false,
@@ -126,14 +133,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdCoffee />
   },
 
-  [BlockType.Embed]: {
+  [EditorBlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
     defaultValue: {type: EmbedType.Other, blockStyle: undefined},
     label: 'blocks.embeds.label',
     icon: <MdIntegrationInstructions />
   },
 
-  [BlockType.TeaserList]: {
+  [EditorBlockType.TeaserList]: {
     field: props => <TeaserListBlock {...props} />,
     defaultValue: {
       title: null,
@@ -151,14 +158,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdFilter9Plus />
   },
 
-  [BlockType.TeaserGrid1]: {
+  [EditorBlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {numColumns: 1, teasers: [[nanoid(), null]], blockStyle: undefined},
     label: 'blocks.teaserGrid1.label',
     icon: <MdFilter1 />
   },
 
-  [BlockType.TeaserGrid6]: {
+  [EditorBlockType.TeaserGrid6]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {
       numColumns: 3,
@@ -176,7 +183,35 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdFilter6 />
   },
 
-  [BlockType.TeaserGridFlex]: {
+  [EditorBlockType.TeaserSlots]: {
+    field: props => <TeaserSlotsBlock {...props} />,
+    defaultValue: {
+      title: null,
+      blockStyle: undefined,
+      autofillConfig: {
+        enabled: false,
+        filter: {
+          tags: []
+        },
+        sort: TeaserListBlockSort.PublishedAt,
+        teaserType: TeaserType.Article
+      },
+      slots: [
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual}
+      ],
+      autofillTeasers: [],
+      teasers: []
+    },
+    label: 'blocks.teaserSlots.label',
+    icon: <MdFilter />
+  },
+
+  [EditorBlockType.TeaserGridFlex]: {
     field: props => <TeaserGridFlexBlock {...props} />,
     defaultValue: {
       flexTeasers: [
@@ -203,28 +238,42 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdViewQuilt />
   },
 
-  [BlockType.Html]: {
+  [EditorBlockType.Html]: {
     field: props => <HTMLBlock {...props} />,
     defaultValue: {html: '', blockStyle: undefined},
     label: 'blocks.html.label',
     icon: <MdCode />
   },
 
-  [BlockType.Poll]: {
+  [EditorBlockType.Subscribe]: {
+    field: props => <SubscribeBlock {...props} />,
+    defaultValue: {blockStyle: undefined},
+    label: 'blocks.subscribe.label',
+    icon: <MdAccountBox />
+  },
+
+  [EditorBlockType.Poll]: {
     field: props => <PollBlock {...props} />,
     defaultValue: {poll: null, blockStyle: undefined},
     label: 'blocks.poll.label',
     icon: <MdQueryStats />
   },
 
-  [BlockType.Comment]: {
+  [EditorBlockType.Crowdfunding]: {
+    field: props => <CrowdfundingBlock {...props} />,
+    defaultValue: {crowdfunding: null, blockStyle: undefined},
+    label: 'blocks.crowdfunding.label',
+    icon: <MdMoney />
+  },
+
+  [EditorBlockType.Comment]: {
     field: props => <CommentBlock {...props} />,
     defaultValue: {filter: {}, comments: [], blockStyle: undefined},
     label: 'blocks.comment.label',
     icon: <MdComment />
   },
 
-  [BlockType.Event]: {
+  [EditorBlockType.Event]: {
     field: props => <EventBlock {...props} />,
     defaultValue: {filter: {}, events: [], blockStyle: undefined},
     label: 'blocks.event.label',

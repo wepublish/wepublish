@@ -1,8 +1,3 @@
-fragment FullProperty on PublicProperties {
-  key
-  value
-}
-
 fragment FullOAuth2Account on OAuth2Account {
   type
   provider
@@ -21,6 +16,7 @@ fragment FullUser on User {
   flair
   birthday
   email
+  permissions
 
   address {
     ...FullAddress

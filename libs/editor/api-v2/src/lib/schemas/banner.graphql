@@ -27,31 +27,35 @@ mutation DeleteBanner($id: String!) {
 }
 
 input CreateBannerInput {
-  title: ID!
-  text: String!
-  active: Boolean!
-  showOnArticles: Boolean!
-  actions: [CreateBannerActionInput]!
-  imageId: ID!
-}
-
-input CreateBannerActionInput {
-  label: string!
-  url: string!
-  style: string!
-}
-
-input UpdateBannerInput {
-  id: ID!
   title: String!
   text: String!
   active: Boolean!
+  delay: Int!
   showOnArticles: Boolean!
-  actions: [CreateBannerActionInput!]
-  imageId: ID!
+  showForLoginStatus: LoginStatus!
+  actions: [CreateBannerActionInput]!
+  imageId: String!
 }
 
-fragment PageRef on PageModel {
+input CreateBannerActionInput {
+  label: String!
+  url: String!
+  style: String!
+}
+
+input UpdateBannerInput {
+  id: String!
+  title: String!
+  text: String!
+  active: Boolean!
+  delay: Int!
+  showOnArticles: Boolean!
+  showForLoginStatus: LoginStatus!
+  actions: [CreateBannerActionInput!]
+  imageId: String!
+}
+
+fragment Page2Ref on PageModel {
   id
 }
 
@@ -63,13 +67,17 @@ fragment FullBanner on Banner {
 
   active
 
+  delay
+  html
+
   showOnArticles
   showOnPages {
-    ...PageRef
+    ...Page2Ref
   }
+  showForLoginStatus
 
   image {
-    ...ImageRef
+    ...FullImage
   }
 
   actions {
@@ -83,26 +91,4 @@ fragment FullBannerAction on BannerAction {
   url
   style
   role
-}
-
-fragment ImageURLs on Image {
-  url
-  largeURL: transformURL(input: {width: 500})
-  mediumURL: transformURL(input: {width: 300})
-  thumbURL: transformURL(input: {width: 280, height: 200})
-  squareURL: transformURL(input: {width: 100, height: 100})
-  previewURL: transformURL(input: {width: 400, height: 200})
-  column1URL: transformURL(input: {width: 800, height: 300})
-  column6URL: transformURL(input: {width: 260, height: 300})
-}
-
-fragment ImageRef on Image {
-  id
-  filename
-  extension
-  title
-  description
-  width
-  height
-  ...ImageURLs
 }
