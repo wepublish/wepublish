@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
-import {PageFilter, PageListArgs, PageSort, CreatePageInput, UpdatePageInput} from './page.model'
+import {CreatePageInput, PageFilter, PageListArgs, PageSort, UpdatePageInput} from './page.model'
 import {PageDataloaderService} from './page-dataloader.service'
 import {
   getMaxTake,
@@ -215,8 +215,13 @@ export class PageService {
       }
     })
 
+    const pagePublishedAtInTheFuture = page.publishedAt && page.publishedAt > new Date()
+    const newPublishedAtEarlier = page.publishedAt && page.publishedAt > publishedAt
+
     const pagePublishedAt =
-      !page.publishedAt || page.publishedAt > publishedAt ? publishedAt : page.publishedAt
+      pagePublishedAtInTheFuture || newPublishedAtEarlier
+        ? publishedAt
+        : page.publishedAt ?? publishedAt
 
     return this.prisma.page.update({
       where: {
@@ -249,7 +254,7 @@ export class PageService {
       throw new NotFoundException(`Page with id ${id} not found`)
     }
 
-    return this.prisma.page.update({
+    const updatedPage = await this.prisma.page.update({
       where: {
         id
       },
@@ -263,12 +268,35 @@ export class PageService {
               }
             },
             data: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: new Date()
             }
+          }
+        }
+      },
+      include: {
+        revisions: {
+          take: 1,
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
     })
+
+    if (updatedPage.revisions[0]) {
+      // Latest revision should not be archived
+      await this.prisma.pageRevision.update({
+        where: {
+          id: updatedPage.revisions[0].id
+        },
+        data: {
+          archivedAt: null
+        }
+      })
+    }
+
+    return updatedPage
   }
 
   @PrimeDataLoader(PageDataloaderService)
@@ -336,39 +364,26 @@ export class PageService {
     })
   }
 
-  async getTagIds(pageId: string) {
-    return this.prisma.tag.findMany({
-      select: {
-        id: true
-      },
-      where: {
-        pages: {
-          some: {
-            pageId
-          }
-        }
-      }
-    })
-  }
-
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
       const formattedQuery = searchQuery.replace(/\s+/g, '&')
 
       const foundPageIds = await this.prisma.$queryRaw<Array<{id: string}>>`
-        SELECT p.id
-        FROM pages p
-          JOIN public."pages.revisions" pr
-            ON p."id" = pr."pageId"
-            AND pr."publishedAt" IS NOT NULL
-            AND pr."publishedAt" < NOW()
-        WHERE to_tsvector('german', coalesce(pr.title, '')) ||
-              to_tsvector('german', coalesce(pr.description, '')) ||
-              jsonb_to_tsvector(
-                'german',
-                jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
-                '["string"]'
-              ) @@ to_tsquery('german', ${formattedQuery});
+          SELECT p.id
+          FROM pages p
+                   JOIN public."pages.revisions" pr
+                        ON p."id" = pr."pageId"
+                            AND pr."publishedAt" IS NOT NULL
+                            AND pr."publishedAt" < NOW()
+          WHERE to_tsvector('german', coalesce(pr.title, '')) ||
+                to_tsvector('german', coalesce(pr.description, '')) ||
+                jsonb_to_tsvector(
+                        'german',
+                        jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
+                        '["string"]'
+                ) @
+              @ to_tsquery('german'
+              , ${formattedQuery});
       `
 
       return foundPageIds.map(item => item.id)

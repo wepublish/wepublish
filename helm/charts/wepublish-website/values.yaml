@@ -13,5 +13,12 @@ website:
   dynamicEnv: {}
   properties: {}
   replicaCount: 1
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 200m
+    limits:
+      memory: 768Mi
+      cpu: 500m
 
 labels: {}

@@ -1,5 +1,5 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasPeer, HasPeerLc, HasOptionalPeer, HasOptionalPeerLc} from './has-peer.model'
+import {HasOptionalPeer, HasOptionalPeerLc, HasPeer, HasPeerLc} from './has-peer.model'
 import {Peer} from '../peer.model'
 import {PeerDataloaderService} from '../peer-dataloader.service'
 

@@ -494,10 +494,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const validationModel = Schema.Model({
     memberPlan: StringType().isRequired(t('errorMessages.noMemberPlanErrorMessage')),
     user: StringType().isRequired(t('errorMessages.noUserErrorMessage')),
-    currency: NumberType()
+    monthlyAmount: NumberType()
       .isRequired(t('errorMessages.noAmountErrorMessage'))
       .min(
-        memberPlan?.amountPerMonthMin || 0,
+        (memberPlan?.amountPerMonthMin || 0) / 100,
         t(`errorMessages.minimalAmountPerMonth`, {
           amount: (memberPlan?.amountPerMonthMin || 0) / 100,
           currency: memberPlan?.currency
@@ -530,7 +530,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
           user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity,
-          currency: monthlyAmount
+          monthlyAmount: monthlyAmount
         }}>
         <ListViewContainer>
           <ListViewHeader>
@@ -696,7 +696,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                           </ControlLabel>
 
                           <CurrencyInput
-                            name="currency"
+                            name="monthlyAmount"
                             currency={currency}
                             centAmount={monthlyAmount}
                             onChange={centAmount => {

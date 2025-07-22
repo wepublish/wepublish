@@ -36,10 +36,7 @@ interface PeriodBounds {
 
 @Injectable()
 export class SubscriptionService {
-  constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly payments: PaymentsService
-  ) {}
+  constructor(private prismaService: PrismaClient, private payments: PaymentsService) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
     runDate: Date,

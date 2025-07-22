@@ -293,8 +293,13 @@ export class ArticleService {
       }
     })
 
+    const articlePublishedAtInTheFuture = article.publishedAt && article.publishedAt > new Date()
+    const newPublishedAtEarlier = article.publishedAt && article.publishedAt > publishedAt
+
     const articlePublishedAt =
-      !article.publishedAt || article.publishedAt > publishedAt ? publishedAt : article.publishedAt
+      articlePublishedAtInTheFuture || newPublishedAtEarlier
+        ? publishedAt
+        : article.publishedAt ?? publishedAt
 
     return this.prisma.article.update({
       where: {
@@ -327,7 +332,7 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
-    return this.prisma.article.update({
+    const updatedArticle = await this.prisma.article.update({
       where: {
         id
       },
@@ -341,12 +346,35 @@ export class ArticleService {
               }
             },
             data: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: new Date()
             }
+          }
+        }
+      },
+      include: {
+        revisions: {
+          take: 1,
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
     })
+
+    if (updatedArticle.revisions[0]) {
+      // Latest revision should not be archived
+      await this.prisma.articleRevision.update({
+        where: {
+          id: updatedArticle.revisions[0].id
+        },
+        data: {
+          archivedAt: null
+        }
+      })
+    }
+
+    return updatedArticle
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -470,21 +498,6 @@ export class ArticleService {
     })
   }
 
-  async getTagIds(articleId: string) {
-    return this.prisma.tag.findMany({
-      select: {
-        id: true
-      },
-      where: {
-        articles: {
-          some: {
-            articleId
-          }
-        }
-      }
-    })
-  }
-
   async getTrackingPixels(articleId: string) {
     return this.prisma.articleTrackingPixels.findMany({
       where: {
@@ -501,22 +514,22 @@ export class ArticleService {
       const formattedQuery = searchQuery.replace(/\s+/g, '&')
 
       const foundArticleIds = await this.prisma.$queryRaw<Array<{id: string}>>`
-        SELECT a.id
-        FROM articles a
-               JOIN public."articles.revisions" ar
-                    ON a."id" = ar."articleId"
-                      AND ar."publishedAt" IS NOT NULL
-                      AND ar."publishedAt" < NOW()
-        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
-              to_tsvector('german', coalesce(ar."preTitle", '')) ||
-              to_tsvector('german', coalesce(ar.lead, '')) ||
-              jsonb_to_tsvector(
-                'german',
-                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
-                '["string"]'
-              ) @
-          @ to_tsquery('german'
-            , ${formattedQuery});
+          SELECT a.id
+          FROM articles a
+                   JOIN public."articles.revisions" ar
+                        ON a."id" = ar."articleId"
+                            AND ar."publishedAt" IS NOT NULL
+                            AND ar."publishedAt" < NOW()
+          WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+                to_tsvector('german', coalesce(ar."preTitle", '')) ||
+                to_tsvector('german', coalesce(ar.lead, '')) ||
+                jsonb_to_tsvector(
+                        'german',
+                        jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                        '["string"]'
+                ) @
+              @ to_tsquery('german'
+              , ${formattedQuery});
       `
 
       return foundArticleIds.map(item => item.id)

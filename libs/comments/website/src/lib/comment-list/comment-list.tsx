@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {Button} from '@wepublish/ui'
-import {Comment} from '@wepublish/website/api'
 import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdForum} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
@@ -75,7 +74,7 @@ export const CommentList = ({
           anonymousCanRate={anonymousCanRate}
           userCanEdit={userCanEdit}
           maxCommentLength={maxCommentLength}
-          children={(comment.children as Comment[]) ?? []}
+          children={comment.children ?? []}
           signUpUrl={signUpUrl}
           maxCommentDepth={maxCommentDepth}
         />

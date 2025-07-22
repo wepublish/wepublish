@@ -16,7 +16,7 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
-import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+import {GraphQLPaymentMethod} from './paymentMethod'
 import {AvailablePaymentMethod, Currency, PaymentPeriodicity} from '@prisma/client'
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
@@ -65,37 +65,6 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
     })
   }
 )
-
-export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
-  AvailablePaymentMethod,
-  Context
->({
-  name: 'AvailablePaymentMethod',
-  fields: () => ({
-    paymentMethods: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicPaymentMethod))),
-      async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
-        const paymentMethods = await paymentMethod.findMany({
-          where: {
-            id: {
-              in: paymentMethodIDs
-            },
-            active: true
-          },
-          orderBy: {
-            createdAt: 'desc'
-          }
-        })
-
-        return paymentMethods
-      }
-    },
-    paymentPeriodicities: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentPeriodicity)))
-    },
-    forceAutoRenewal: {type: new GraphQLNonNull(GraphQLBoolean)}
-  })
-})
 
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
@@ -149,55 +118,6 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   })
 })
 
-export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
-  name: 'MemberPlan',
-  fields: () => ({
-    id: {type: new GraphQLNonNull(GraphQLString)},
-
-    name: {type: new GraphQLNonNull(GraphQLString)},
-    slug: {type: new GraphQLNonNull(GraphQLString)},
-    image: {
-      type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
-        return imageID ? loaders.images.load(imageID) : null
-      })
-    },
-    description: {type: GraphQLRichText},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
-    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
-    amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
-    amountPerMonthTarget: {type: GraphQLInt},
-    maxCount: {type: GraphQLInt},
-    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
-    availablePaymentMethods: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPublicAvailablePaymentMethod))
-      )
-    },
-    successPageId: {type: GraphQLString},
-    // successPage: {
-    //   type: GraphQLPublicPage,
-    //   resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
-    //     return successPageId ? loaders.publicPagesByID.load(successPageId) : null
-    //   })
-    // },
-    failPageId: {type: GraphQLString},
-    // failPage: {
-    //   type: GraphQLPublicPage,
-    //   resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
-    //     return failPageId ? loaders.publicPagesByID.load(failPageId) : null
-    //   })
-    // },
-    confirmationPageId: {type: GraphQLString}
-    // confirmationPage: {
-    //   type: GraphQLPublicPage,
-    //   resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
-    //     return confirmationPageId ? loaders.publicPagesByID.load(confirmationPageId) : null
-    //   })
-    // }
-  })
-})
-
 export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
   fields: () => ({
@@ -219,15 +139,6 @@ export const GraphQLMemberPlanConnection = new GraphQLObjectType<any, Context>({
   name: 'MemberPlanConnection',
   fields: () => ({
     nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMemberPlan)))},
-    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
-  })
-})
-
-export const GraphQLPublicMemberPlanConnection = new GraphQLObjectType<any, Context>({
-  name: 'MemberPlanConnection',
-  fields: () => ({
-    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicMemberPlan)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   })
