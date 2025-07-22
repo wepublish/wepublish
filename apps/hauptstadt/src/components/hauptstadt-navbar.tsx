@@ -1,10 +1,3 @@
-/*
-  @TODO:
-  banner integration
-
-  double check font weights (also blocks) on pages only
-*/
-
 import styled from '@emotion/styled'
 import {AppBar, Box, css, GlobalStyles, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
