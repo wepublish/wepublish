@@ -14,7 +14,10 @@ export class MemberPlanDataloader extends DataLoaderService<MemberPlan> {
     return createOptionalsArray(
       ids,
       await this.prisma.memberPlan.findMany({
-        where: {id: {in: ids}}
+        where: {id: {in: ids}},
+        include: {
+          availablePaymentMethods: true
+        }
       }),
       'id'
     )
