@@ -41,7 +41,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  transition: transform 500ms ease-out;
+  transition: transform 300ms ease-out;
 `
 
 enum NavbarState {
