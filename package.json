@@ -367,5 +367,8 @@
   "optionalDependencies": {
     "@img/sharp-darwin-arm64": "^0.33.5",
     "@img/sharp-linux-x64": "^0.33.5"
+  },
+  "overrides": {
+    "stylus": "0.0.1-security"
   }
 }
