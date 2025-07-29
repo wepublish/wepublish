@@ -188,6 +188,7 @@ export const HauptstadtAlternatingTeaser = createWithTheme(
     ${({theme}) => theme.breakpoints.up('md')} {
       ${TeaserImageWrapper} {
         margin-bottom: 0;
+        padding-bottom: 0;
       }
     }
   `,
