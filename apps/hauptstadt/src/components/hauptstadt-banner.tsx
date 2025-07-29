@@ -88,13 +88,13 @@ const HauptstadtBannerContainer = styled(Container, {
 })<{isScrolled: boolean}>`
   padding: 0 !important;
   position: fixed;
-  top: var(--navbar-height);
+  top: var(--changing-navbar-height);
   z-index: 1;
   left: 50%;
   transition: transform 300ms ease-out, top 300ms ease-out;
   transform: translate3d(
     -50%,
-    ${({isScrolled}) => (isScrolled ? `calc(var(--navbar-height) / -3)` : '0')},
+    ${({isScrolled}) => (isScrolled ? `calc(var(--changing-navbar-height) / -3)` : '0')},
     0
   );
 
@@ -117,7 +117,7 @@ const HauptstadtBannerContainer = styled(Container, {
     ${({theme}) => theme.breakpoints.down('sm')} {
       transform: translate3d(
         -50%,
-        ${({isScrolled}) => (isScrolled ? `calc(var(--navbar-height) / -2)` : '0')},
+        ${({isScrolled}) => (isScrolled ? `calc(var(--changing-navbar-height) / -2)` : '0')},
         0
       );
 

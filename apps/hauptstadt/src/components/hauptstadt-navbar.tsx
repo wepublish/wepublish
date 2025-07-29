@@ -28,27 +28,27 @@ enum ScrollDirection {
 const cssVariables = (state: NavbarState) => (theme: Theme) =>
   css`
     :root {
-      --real-navbar-height: 80px;
-      --navbar-height: ${state === NavbarState.Regular ? '80px' : '55px'};
+      --navbar-height: 80px;
+      --changing-navbar-height: ${state === NavbarState.Regular ? '80px' : '55px'};
 
       ${theme.breakpoints.up('sm')} {
-        --real-navbar-height: 109px;
-        --navbar-height: ${state === NavbarState.Regular ? '109px' : '55px'};
+        --navbar-height: 109px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '109px' : '55px'};
       }
 
       ${theme.breakpoints.up('lg')} {
-        --real-navbar-height: 145px;
-        --navbar-height: ${state === NavbarState.Regular ? '145px' : '80px'};
+        --navbar-height: 145px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '145px' : '80px'};
       }
 
       ${theme.breakpoints.up('xl')} {
-        --real-navbar-height: 173px;
-        --navbar-height: ${state === NavbarState.Regular ? '173px' : '80px'};
+        --navbar-height: 173px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '173px' : '80px'};
       }
 
       ${theme.breakpoints.up('xxl')} {
-        --real-navbar-height: 208px;
-        --navbar-height: ${state === NavbarState.Regular ? '208px' : '80px'};
+        --navbar-height: 208px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '208px' : '80px'};
       }
     }
   `
@@ -59,7 +59,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  height: var(--real-navbar-height);
+  height: var(--navbar-height);
 `
 
 const getNavbarState = (
@@ -98,7 +98,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   padding: 0;
   margin: 0 auto;
   width: 100%;
-  height: var(--navbar-height);
+  height: var(--changing-navbar-height);
   background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
