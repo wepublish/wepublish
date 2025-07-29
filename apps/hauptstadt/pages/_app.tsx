@@ -69,6 +69,7 @@ import {
   HauptstadtTeaserSlider,
   HauptstadtTeaserSlots
 } from '../src/components/hauptstadt-teaser'
+import {HauptstadtTitleBlock} from '../src/components/hauptstadt-title-block'
 import {PrintLogo} from '../src/components/print-logo'
 import {printStyles} from '../src/print-styles'
 import theme from '../src/theme'
@@ -157,6 +158,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           CommentList={HauptstadtCommentList}
           blocks={{
             Subscribe: Mitmachen,
+            Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
             BaseTeaser: HauptstadtTeaser,
             TeaserList: HauptstadtTeaserList,
