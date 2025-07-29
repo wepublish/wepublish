@@ -1,9 +1,9 @@
 import {
   ComponentType,
   createContext,
-  ForwardRefExoticComponent,
   memo,
   PropsWithChildren,
+  PropsWithRef,
   ReactNode,
   ScriptHTMLAttributes,
   useContext,
@@ -188,7 +188,7 @@ export type WebsiteBuilderProps = {
     OrderedList: ComponentType<BuilderOrderedListProps>
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
-    Image: ForwardRefExoticComponent<BuilderImageProps>
+    Image: ComponentType<PropsWithRef<BuilderImageProps & {ref?: any}>>
     ImageUpload: ComponentType<BuilderImageUploadProps>
     Modal: ComponentType<BuilderModalProps>
   }
