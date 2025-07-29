@@ -111,6 +111,12 @@ const NavBar = styled(NavbarContainer)`
   z-index: 11;
 `
 
+const Main = styled('main')`
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-top: 11px;
+  }
+`
+
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -201,12 +207,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   iconSlug="icons"
                 />
 
-                <main>
+                <Main>
                   <Container maxWidth="lg">
                     <PrintLogo />
                     <Component {...pageProps} />
                   </Container>
-                </main>
+                </Main>
 
                 <FooterContainer
                   slug="main"
