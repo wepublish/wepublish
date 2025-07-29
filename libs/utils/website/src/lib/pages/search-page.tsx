@@ -162,14 +162,16 @@ export const SearchPageGetServerSideProps = (async ({query}) => {
   const {page, q: phraseQuery} = searchPageSchema.parse(query)
 
   await Promise.all([
-    client.query<PhraseQuery>({
-      query: PhraseDocument,
-      variables: {
-        query: phraseQuery,
-        take: ITEMS_PER_PAGE,
-        skip: (page - 1) * ITEMS_PER_PAGE
-      }
-    }),
+    phraseQuery
+      ? client.query<PhraseQuery>({
+          query: PhraseDocument,
+          variables: {
+            query: phraseQuery,
+            take: ITEMS_PER_PAGE,
+            skip: (page - 1) * ITEMS_PER_PAGE
+          }
+        })
+      : undefined,
     client.query({
       query: NavigationListDocument
     }),

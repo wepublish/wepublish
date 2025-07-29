@@ -141,7 +141,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
 
       &::before {
-        clip-path: polygon(0 80%, 100% 30%, 100% 50%, 0 100%);
+        clip-path: polygon(0 88%, 100% 38%, 100% 50%, 0 100%);
       }
 
       &::after {
