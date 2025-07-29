@@ -46,14 +46,14 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
   useEffect(() => {
     const calcImageSize = () => {
       if (imageRef.current && captionRef.current) {
-        captionRef.current.style = 'display: none;'
+        captionRef.current.setAttribute('style', 'display: none;')
         const [newImageWidth] = getContainedImageSize(imageRef.current)
 
         if (realImageWidth !== newImageWidth) {
           setRealImageWidth(newImageWidth)
         }
 
-        captionRef.current.style = ''
+        captionRef.current.setAttribute('style', '')
       }
     }
 
