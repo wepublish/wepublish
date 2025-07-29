@@ -140,6 +140,17 @@ export class MediaService {
       }
     }
 
+    const transformationsKey = getTransformationKey(transformations)
+    if (!imageExists) {
+      try {
+        imageStream = await this.storage.getFile(
+          this.config.transformationBucket,
+          `images/fallback/${transformationsKey}`
+        )
+        return Promise.all([imageStream, imageExists])
+      } catch (e: any) {}
+    }
+
     const sharpInstance = imageStream.pipe(
       sharp({
         animated: true,
@@ -192,7 +203,6 @@ export class MediaService {
       sharpInstance.grayscale(transformations.grayscale)
     }
 
-    const transformationsKey = getTransformationKey(transformations)
     const transformedImage = sharpInstance.webp({
       quality: transformations.quality,
       effort
@@ -205,6 +215,14 @@ export class MediaService {
       await this.storage.saveFile(
         this.config.transformationBucket,
         `images/${imageId}/${transformationsKey}`,
+        transformedImage.clone(),
+        metadata.size,
+        {ContentType: `image/${metadata.format}`}
+      )
+    } else {
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        `images/fallback/${transformationsKey}`,
         transformedImage.clone(),
         metadata.size,
         {ContentType: `image/${metadata.format}`}
