@@ -918,6 +918,7 @@ model User {
   lastLogin       DateTime?
   roleIDs         String[]
   userImageID     String?
+  internalNote    String    @default("")
   userImage       Image?    @relation(fields: [userImageID], references: [id])
 
   address                  UserAddress?

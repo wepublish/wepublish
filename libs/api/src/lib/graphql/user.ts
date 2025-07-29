@@ -299,6 +299,8 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
     },
 
+    internalNote: {type: GraphQLString},
+
     roleIDs: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })

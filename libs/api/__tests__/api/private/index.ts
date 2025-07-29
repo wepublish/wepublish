@@ -1701,6 +1701,7 @@ export type UserInput = {
   emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
+  internalNote?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   properties: Array<PropertiesInput>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
