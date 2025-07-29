@@ -109,7 +109,6 @@ type CustomAppProps = AppProps<{
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Zwölf'
 
-  // @ts-ignore
   return (
     <AppCacheProvider emotionCache={emotionCache}>
       <WebsiteProvider>
