@@ -148,7 +148,9 @@ export class MediaService {
           `images/fallback/${transformationsKey}`
         )
         return Promise.all([imageStream, imageExists])
-      } catch (e: any) {}
+      } catch (e: any) {
+        // Intentionally ignore if fallback image is not found
+      }
     }
 
     const sharpInstance = imageStream.pipe(
