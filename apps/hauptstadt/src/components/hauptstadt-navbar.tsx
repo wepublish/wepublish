@@ -28,21 +28,26 @@ enum ScrollDirection {
 const cssVariables = (state: NavbarState) => (theme: Theme) =>
   css`
     :root {
+      --real-navbar-height: 80px;
       --navbar-height: ${state === NavbarState.Regular ? '80px' : '55px'};
 
       ${theme.breakpoints.up('sm')} {
+        --real-navbar-height: 109px;
         --navbar-height: ${state === NavbarState.Regular ? '109px' : '55px'};
       }
 
       ${theme.breakpoints.up('lg')} {
+        --real-navbar-height: 145px;
         --navbar-height: ${state === NavbarState.Regular ? '145px' : '80px'};
       }
 
       ${theme.breakpoints.up('xl')} {
+        --real-navbar-height: 173px;
         --navbar-height: ${state === NavbarState.Regular ? '173px' : '80px'};
       }
 
       ${theme.breakpoints.up('xxl')} {
+        --real-navbar-height: 208px;
         --navbar-height: ${state === NavbarState.Regular ? '208px' : '80px'};
       }
     }
@@ -54,6 +59,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
+  height: var(--real-navbar-height);
 `
 
 const getNavbarState = (
@@ -119,14 +125,16 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${({theme}) => theme.palette.primary.main};
     transition: clip-path 300ms ease-out;
     clip-path: polygon(0 calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 0 100%);
     z-index: 10;
-    filter: drop-shadow(0 -3px 13px rgba(0, 0, 0, 0.18));
+
+    ${({theme}) => theme.breakpoints.up('sm')} {
+      background-color: ${({theme}) => theme.palette.primary.main};
+    }
   }
 
-  ${({navbarState}) =>
+  ${({navbarState, theme}) =>
     navbarState === NavbarState.Diagonal &&
     css`
       clip-path: polygon(0px 0px, 100% 0px, 100% 50%, 0px 100%);
@@ -137,6 +145,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       }
 
       &::after {
+        background-color: ${theme.palette.primary.main};
         clip-path: polygon(0 calc(100% - 1px), 100% calc(50% - 1px), 100% 50%, 0 100%);
       }
     `}
@@ -412,27 +421,30 @@ export function HauptstadtNavbar({
 
   const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
 
-  const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY
+  const handleScroll = useCallback(
+    (...args: any) => {
+      const currentScrollY = window.scrollY
 
-    if (currentScrollY > lastScrollY.current) {
-      if (scrollDirection !== ScrollDirection.Down) {
-        setScrollDirection(ScrollDirection.Down)
+      if (currentScrollY > lastScrollY.current) {
+        if (scrollDirection !== ScrollDirection.Down) {
+          setScrollDirection(ScrollDirection.Down)
+        }
+      } else if (currentScrollY < lastScrollY.current) {
+        if (scrollDirection !== ScrollDirection.Up) {
+          setScrollDirection(ScrollDirection.Up)
+        }
       }
-    } else if (currentScrollY < lastScrollY.current) {
-      if (scrollDirection !== ScrollDirection.Up) {
-        setScrollDirection(ScrollDirection.Up)
+
+      const newIsScrolled = currentScrollY > 1
+
+      if (newIsScrolled !== isScrolled) {
+        setIsScrolled(newIsScrolled)
       }
-    }
 
-    const newIsScrolled = currentScrollY > 50
-
-    if (newIsScrolled !== isScrolled) {
-      setIsScrolled(newIsScrolled)
-    }
-
-    lastScrollY.current = currentScrollY
-  }, [isScrolled, scrollDirection])
+      lastScrollY.current = currentScrollY
+    },
+    [isScrolled, scrollDirection]
+  )
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen
