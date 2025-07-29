@@ -36,6 +36,7 @@ import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {ZwoelfBaseTeaser} from '../src/zwoelf-base-teaser'
 import {ZwoelfFocusTeaser} from '../src/zwoelf-focus-teaser'
+import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -173,6 +174,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             </Spacer>
 
             <RoutedAdminBar />
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
