@@ -119,6 +119,7 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
   ${TeaserImageWrapper} {
     margin-bottom: 0;
+    padding-bottom: 0;
     display: grid;
     align-items: center;
   }

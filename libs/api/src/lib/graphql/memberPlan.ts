@@ -33,7 +33,9 @@ export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
     [PaymentPeriodicity.monthly]: {value: PaymentPeriodicity.monthly},
     [PaymentPeriodicity.quarterly]: {value: PaymentPeriodicity.quarterly},
     [PaymentPeriodicity.biannual]: {value: PaymentPeriodicity.biannual},
-    [PaymentPeriodicity.yearly]: {value: PaymentPeriodicity.yearly}
+    [PaymentPeriodicity.yearly]: {value: PaymentPeriodicity.yearly},
+    [PaymentPeriodicity.biennial]: {value: PaymentPeriodicity.biennial},
+    [PaymentPeriodicity.lifetime]: {value: PaymentPeriodicity.lifetime}
   }
 })
 
