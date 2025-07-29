@@ -91,8 +91,12 @@ const HauptstadtBannerContainer = styled(Container, {
   top: var(--navbar-height);
   z-index: 1;
   left: 50%;
-  transform: translateX(-50%);
-  transition: transform 300ms ease-out;
+  transition: transform 300ms ease-out, top 300ms ease-out;
+  transform: translate3d(
+    -50%,
+    ${({isScrolled}) => (isScrolled ? `calc(var(--navbar-height) / -3)` : '0')},
+    0
+  );
 
   &:empty {
     display: none;
@@ -110,7 +114,38 @@ const HauptstadtBannerContainer = styled(Container, {
   }
 
   :has([data-collapsed='true']) {
-    transform: translateX(-50%) ${({isScrolled}) => isScrolled && `translateY(-35%)`};
+    ${({theme}) => theme.breakpoints.down('sm')} {
+      transform: translate3d(
+        -50%,
+        ${({isScrolled}) => (isScrolled ? `calc(var(--navbar-height) / -2)` : '0')},
+        0
+      );
+
+      ${BannerContentWrapper} {
+        padding-bottom: 12px;
+      }
+
+      ${BannerActions} {
+        justify-content: end;
+        align-items: center;
+      }
+
+      ${BannerActions} a:not(:last-child) {
+        flex: 1;
+        background: transparent;
+        letter-spacing: initial;
+        text-transform: initial;
+        font-weight: 600;
+        padding: 0;
+        padding-left: 25%;
+        pointer-events: none;
+      }
+
+      ${BannerActions} a:last-child {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+      }
+    }
 
     ${({theme}) => theme.breakpoints.up('sm')} {
       transform: translateX(-50%);

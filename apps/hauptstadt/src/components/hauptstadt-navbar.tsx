@@ -14,37 +14,6 @@ import {MdSearch, MdWarning} from 'react-icons/md'
 
 import {Tiempos} from '../theme'
 
-const cssVariables = (theme: Theme) => css`
-  :root {
-    --navbar-height: 80px;
-
-    ${theme.breakpoints.up('sm')} {
-      --navbar-height: 109px;
-    }
-
-    ${theme.breakpoints.up('lg')} {
-      --navbar-height: 145px;
-    }
-
-    ${theme.breakpoints.up('xl')} {
-      --navbar-height: 173px;
-    }
-
-    ${theme.breakpoints.up('xxl')} {
-      --navbar-height: 208px;
-    }
-  }
-`
-
-export const NavbarWrapper = styled('nav')`
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  transition: transform 300ms ease-out;
-`
-
 enum NavbarState {
   Hidden,
   Diagonal,
@@ -56,29 +25,56 @@ enum ScrollDirection {
   Down
 }
 
+const cssVariables = (state: NavbarState) => (theme: Theme) =>
+  css`
+    :root {
+      --navbar-height: ${state === NavbarState.Regular ? '80px' : '55px'};
+
+      ${theme.breakpoints.up('sm')} {
+        --navbar-height: ${state === NavbarState.Regular ? '109px' : '55px'};
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        --navbar-height: ${state === NavbarState.Regular ? '145px' : '80px'};
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        --navbar-height: ${state === NavbarState.Regular ? '173px' : '80px'};
+      }
+
+      ${theme.breakpoints.up('xxl')} {
+        --navbar-height: ${state === NavbarState.Regular ? '208px' : '80px'};
+      }
+    }
+  `
+
+export const NavbarWrapper = styled('nav')`
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+`
+
 const getNavbarState = (
   isScrolled: boolean,
   scrollDirection: ScrollDirection,
   isMenuOpen: boolean,
   hasActiveSubscription: boolean
 ): NavbarState => {
-  // When menu is open or scrolled to top, always show regular
-  if (isMenuOpen) {
-    return NavbarState.Regular
-  }
-  if (!isScrolled) {
+  if (isMenuOpen || !isScrolled) {
     return NavbarState.Regular
   }
 
   if (hasActiveSubscription) {
     if (scrollDirection === ScrollDirection.Down) {
       return NavbarState.Hidden
-    } else {
-      return NavbarState.Diagonal
     }
-  } else {
+
     return NavbarState.Diagonal
   }
+
+  return NavbarState.Diagonal
 }
 
 export const NavbarInnerWrapper = styled(Toolbar, {
@@ -90,7 +86,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   grid-template-columns: 1fr max-content 1fr;
   row-gap: ${({theme}) => theme.spacing(0.5)};
   align-content: center;
-  align-items: center;
+  align-items: start;
   justify-items: center;
   min-height: unset;
   padding: 0;
@@ -100,7 +96,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  transition: clip-path 300ms ease-out, transform 300ms ease-out;
+  transition: clip-path 300ms ease-out, transform 300ms ease-out, height 300ms ease-out;
+  transform: translate3d(0, 0, 0);
 
   &::before {
     content: '';
@@ -111,7 +108,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     height: 100%;
     background-color: ${({theme}) => theme.palette.background.paper};
     transition: clip-path 300ms ease-out;
-    clip-path: polygon(0 95%, 100% 95%, 100% calc(100% - 1px), 0 calc(100% - 1px));
+    clip-path: polygon(0 100%, 100% 100%, 100% calc(100% - 1px), 0 calc(100% - 1px));
     z-index: 2;
   }
 
@@ -126,27 +123,28 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     transition: clip-path 300ms ease-out;
     clip-path: polygon(0 calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 0 100%);
     z-index: 10;
+    filter: drop-shadow(0 -3px 13px rgba(0, 0, 0, 0.18));
   }
 
   ${({navbarState}) =>
     navbarState === NavbarState.Diagonal &&
     css`
-      clip-path: polygon(0 0, 100% 0, 100% 40%, 0 90%);
+      clip-path: polygon(0px 0px, 100% 0px, 100% 50%, 0px 100%);
       box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
 
       &::before {
-        clip-path: polygon(0 85%, 100% 35%, 100% 39%, 0 89%);
+        clip-path: polygon(0 80%, 100% 30%, 100% 50%, 0 100%);
       }
 
       &::after {
-        clip-path: polygon(0 89%, 100% 39%, 100% 40%, 0 90%);
+        clip-path: polygon(0 calc(100% - 1px), 100% calc(50% - 1px), 100% 50%, 0 100%);
       }
     `}
 
   ${({navbarState}) =>
     navbarState === NavbarState.Hidden &&
     css`
-      transform: translateY(-100%);
+      transform: translate3d(0, -100%, 0);
     `}
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -305,23 +303,6 @@ export const NavbarLogoWrapper = styled('div')`
 export const HauptstadtClaimWrapper = styled(NavbarLogoWrapper)`
   grid-row: 2;
   grid-column: -1/1;
-  height: 9px;
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    height: 14px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    height: 18px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-    height: 22px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('xxl')} {
-    height: 29px;
-  }
 `
 
 const HauptstadtLogo = styled('img', {
@@ -329,25 +310,26 @@ const HauptstadtLogo = styled('img', {
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   width: 100%;
   transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
 
   ${({theme, isScrolled, isMenuOpen}) =>
     isScrolled &&
     !isMenuOpen &&
     css`
       ${theme.breakpoints.up('sm')} {
-        width: 350px;
+        width: 220px;
       }
 
       ${theme.breakpoints.up('lg')} {
-        width: 440px;
+        width: 330px;
       }
 
       ${theme.breakpoints.up('xl')} {
-        width: 550px;
+        width: 330px;
       }
 
       ${theme.breakpoints.up('xxl')} {
-        width: 700px;
+        width: 330px;
       }
     `}
 `
@@ -357,6 +339,24 @@ const HauptstadtClaim = styled('img', {
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   width: 100%;
   transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  max-height: 9px;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    max-height: 14px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    max-height: 18px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xl')} {
+    max-height: 22px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xxl')} {
+    max-height: 29px;
+  }
 
   ${({isScrolled, isMenuOpen}) =>
     isScrolled &&
@@ -463,18 +463,15 @@ export function HauptstadtNavbar({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
+  const navbarState = getNavbarState(isScrolled, scrollDirection, isMenuOpen, hasActiveSubscription)
+  const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState])
+
   return (
     <NavbarWrapper className={className}>
-      <GlobalStyles styles={theme => cssVariables(theme)} />
+      <GlobalStyles styles={navbarHeight} />
 
       <AppBar position="static" elevation={0} color={'transparent'}>
-        <NavbarInnerWrapper
-          navbarState={getNavbarState(
-            isScrolled,
-            scrollDirection,
-            isMenuOpen,
-            hasActiveSubscription
-          )}>
+        <NavbarInnerWrapper navbarState={navbarState}>
           <NavbarMain>
             <NavbarIconButtonWrapper>
               <NavbarMenuButton
@@ -581,7 +578,7 @@ export const NavPaperWrapper = styled('div', {
   top: calc(var(--navbar-height) - 2px);
   left: 0;
   right: 0;
-  transform: translateX(${({isMenuOpen}) => (isMenuOpen ? '0' : '-100%')});
+  transform: translate3d(${({isMenuOpen}) => (isMenuOpen ? '0' : '-100%')}, 0, 0);
   transition: transform 300ms ease-in-out;
   overflow-y: scroll;
   max-height: 100vh;

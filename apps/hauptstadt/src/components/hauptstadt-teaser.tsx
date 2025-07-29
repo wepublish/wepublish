@@ -101,7 +101,7 @@ const revertTeaserToDefault = ({theme}: {theme: Theme}) => css`
   grid-template-columns: initial;
 
   ${TeaserImageWrapper} {
-    margin-bottom: ${theme.spacing(2)};
+    padding-bottom: ${theme.spacing(1.5)};
   }
 `
 
