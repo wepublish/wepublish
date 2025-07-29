@@ -525,7 +525,12 @@ export function HauptstadtNavbar({
 
           <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
             <NavbarLogoWrapper>
-              <HauptstadtLogo src="/logo.svg" isScrolled={isScrolled} isMenuOpen={isMenuOpen} />
+              <HauptstadtLogo
+                src="/logo.svg"
+                alt="Hauptstadt"
+                isScrolled={isScrolled}
+                isMenuOpen={isMenuOpen}
+              />
             </NavbarLogoWrapper>
           </NavbarLoginLink>
 
@@ -544,6 +549,7 @@ export function HauptstadtNavbar({
           <HauptstadtClaimWrapper>
             <HauptstadtClaim
               src="/logo-claim.svg"
+              alt="Neuer Berner Journalismus"
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
             />
