@@ -17,8 +17,10 @@ export const HauptstadtFooter = styled(Footer)`
   gap: ${({theme}) => theme.spacing(6)};
   padding-top: ${({theme}) => theme.spacing(6)};
   padding-bottom: ${({theme}) => theme.spacing(6)};
+  margin-top: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => theme.breakpoints.up('sm')} {
+    margin-top: 0;
     grid-template-columns: minmax(0, 760px);
   }
 

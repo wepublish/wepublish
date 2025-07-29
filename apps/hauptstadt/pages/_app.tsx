@@ -2,7 +2,7 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
+import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
 import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
@@ -103,8 +103,11 @@ const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    gap: ${({theme}) => theme.spacing(3)};
+  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -228,6 +231,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
+
+              {publicRuntimeConfig.env.GTM_ID && (
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
             </FontSizeProvider>
           </ThemeProvider>

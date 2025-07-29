@@ -428,7 +428,7 @@ export function HauptstadtNavbar({
     const newIsScrolled = currentScrollY > 50
 
     if (newIsScrolled !== isScrolled) {
-      setIsScrolled(currentScrollY > 50)
+      setIsScrolled(newIsScrolled)
     }
 
     lastScrollY.current = currentScrollY
@@ -466,8 +466,8 @@ export function HauptstadtNavbar({
 
   useEffect(() => {
     lastScrollY.current = window.scrollY
-
     window.addEventListener('scroll', handleScroll)
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
