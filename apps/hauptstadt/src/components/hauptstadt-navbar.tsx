@@ -86,7 +86,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   grid-template-columns: 1fr max-content 1fr;
   row-gap: ${({theme}) => theme.spacing(0.5)};
   align-content: center;
-  align-items: start;
+  align-items: center;
   justify-items: center;
   min-height: unset;
   padding: 0;
