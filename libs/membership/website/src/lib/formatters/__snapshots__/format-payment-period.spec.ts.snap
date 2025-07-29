@@ -2,9 +2,9 @@
 
 exports[`formatPaymentPeriod should format payment period for biannual 1`] = `"6 Monate"`;
 
-exports[`formatPaymentPeriod should format payment period for biennial 1`] = `"24 Monate"`;
+exports[`formatPaymentPeriod should format payment period for biennial 1`] = `"2 Jahre"`;
 
-exports[`formatPaymentPeriod should format payment period for lifetime 1`] = `"1200 Monate"`;
+exports[`formatPaymentPeriod should format payment period for lifetime 1`] = `"Lebenslang"`;
 
 exports[`formatPaymentPeriod should format payment period for monthly 1`] = `"1 Monat"`;
 
