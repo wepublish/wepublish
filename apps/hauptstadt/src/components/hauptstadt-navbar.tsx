@@ -6,7 +6,7 @@ import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, IconButton, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
+import {PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 // Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
 import {FiMenu, FiPlus} from 'react-icons/fi'
@@ -407,7 +407,7 @@ export function HauptstadtNavbar({
 
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(ScrollDirection.Down)
-  const [lastScrollY, setLastScrollY] = useState(0)
+  const lastScrollY = useRef(0)
   const hasActiveSubscription = useHasActiveSubscription()
 
   const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
@@ -415,16 +415,24 @@ export function HauptstadtNavbar({
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY
 
-    if (currentScrollY > lastScrollY) {
-      setScrollDirection(ScrollDirection.Down)
-    } else if (currentScrollY < lastScrollY) {
-      setScrollDirection(ScrollDirection.Up)
+    if (currentScrollY > lastScrollY.current) {
+      if (scrollDirection !== ScrollDirection.Down) {
+        setScrollDirection(ScrollDirection.Down)
+      }
+    } else if (currentScrollY < lastScrollY.current) {
+      if (scrollDirection !== ScrollDirection.Up) {
+        setScrollDirection(ScrollDirection.Up)
+      }
     }
 
-    setIsScrolled(currentScrollY > 50)
+    const newIsScrolled = currentScrollY > 50
 
-    setLastScrollY(currentScrollY)
-  }, [lastScrollY])
+    if (newIsScrolled !== isScrolled) {
+      setIsScrolled(currentScrollY > 50)
+    }
+
+    lastScrollY.current = currentScrollY
+  }, [isScrolled, scrollDirection])
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen
@@ -457,7 +465,7 @@ export function HauptstadtNavbar({
   )
 
   useEffect(() => {
-    setLastScrollY(window.scrollY)
+    lastScrollY.current = window.scrollY
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
