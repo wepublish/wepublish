@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {AppBar, Box, css, GlobalStyles, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
+import {useHasActiveSubscription} from '@wepublish/membership/website'
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
@@ -59,7 +60,7 @@ const getNavbarState = (
   isScrolled: boolean,
   scrollDirection: ScrollDirection,
   isMenuOpen: boolean,
-  hasRunningSubscription: boolean
+  hasActiveSubscription: boolean
 ): NavbarState => {
   // When menu is open or scrolled to top, always show regular
   if (isMenuOpen) {
@@ -69,7 +70,7 @@ const getNavbarState = (
     return NavbarState.Regular
   }
 
-  if (hasRunningSubscription) {
+  if (hasActiveSubscription) {
     if (scrollDirection === ScrollDirection.Down) {
       return NavbarState.Hidden
     } else {
@@ -407,6 +408,7 @@ export function HauptstadtNavbar({
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(ScrollDirection.Down)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const hasActiveSubscription = useHasActiveSubscription()
 
   const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
 
@@ -422,7 +424,7 @@ export function HauptstadtNavbar({
     setIsScrolled(currentScrollY > 50)
 
     setLastScrollY(currentScrollY)
-  }, [lastScrollY, scrollDirection])
+  }, [lastScrollY])
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen
@@ -471,7 +473,7 @@ export function HauptstadtNavbar({
             isScrolled,
             scrollDirection,
             isMenuOpen,
-            hasRunningSubscription
+            hasActiveSubscription
           )}>
           <NavbarMain>
             <NavbarIconButtonWrapper>
