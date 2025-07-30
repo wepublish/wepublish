@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {Container} from '@mui/material'
+import {Container, css} from '@mui/material'
 import {
   Banner,
   BannerActions,
@@ -89,7 +89,7 @@ const HauptstadtBannerContainer = styled(Container, {
   padding: 0 !important;
   position: fixed;
   top: var(--changing-navbar-height);
-  z-index: 1;
+  z-index: 100;
   left: 50%;
   transition: transform 300ms ease-out, top 300ms ease-out;
   transform: translate3d(
@@ -98,28 +98,56 @@ const HauptstadtBannerContainer = styled(Container, {
     0
   );
 
+  ${({isScrolled}) =>
+    isScrolled &&
+    css`
+      clip-path: polygon(
+        0 calc(var(--changing-navbar-height) / 3),
+        100% calc(var(--changing-navbar-height) / -6),
+        100% 100%,
+        0px 100%
+      );
+    `}
+
   &:empty {
     display: none;
   }
 
   ::before {
-    content: '';
     position: absolute;
     top: 1px;
     left: 0;
     right: 0;
     transform: translateY(-100%);
     background: ${({theme}) => theme.palette.primary.main};
-    height: calc(var(--navbar-height) * 0.66);
+    height: 50px;
+
+    ${({isScrolled}) =>
+      isScrolled &&
+      css`
+        content: '';
+      `}
   }
 
   :has([data-collapsed='true']) {
+    clip-path: unset;
+
     ${({theme}) => theme.breakpoints.down('sm')} {
       transform: translate3d(
         -50%,
         ${({isScrolled}) => (isScrolled ? `calc(var(--changing-navbar-height) / -2)` : '0')},
         0
       );
+      ${({isScrolled}) =>
+        isScrolled &&
+        css`
+          clip-path: polygon(
+            0 calc(var(--changing-navbar-height) / 2),
+            100% -1px,
+            100% 100%,
+            0px 100%
+          );
+        `}
 
       ${BannerContentWrapper} {
         padding-bottom: 12px;

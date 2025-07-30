@@ -150,10 +150,12 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       }
     `}
 
-  ${({navbarState}) =>
+  ${({navbarState, theme}) =>
     navbarState === NavbarState.Hidden &&
     css`
-      transform: translate3d(0, -100%, 0);
+      ${theme.breakpoints.down('sm')} {
+        transform: translate3d(0, -100%, 0);
+      }
     `}
 
   ${({theme}) => theme.breakpoints.up('sm')} {
