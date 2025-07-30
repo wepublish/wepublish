@@ -120,12 +120,14 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
   useEffect(() => {
     if (showQRModal && selectedToken && qrCanvasRef.current) {
       const websiteUrl = process.env.REACT_APP_WEBSITE_URL || 'https://example.com'
-      const qrUrl = `${websiteUrl}/?paywallToken=${selectedToken}`
+      const qrUrl = `${websiteUrl}/?key=${selectedToken}`
 
       QRCode.toCanvas(qrCanvasRef.current, qrUrl, {width: 300, margin: 2})
 
       QRCode.toString(qrUrl, {type: 'svg', margin: 2}, (error, svg) => {
-        if (!error) setQrSvgString(svg)
+        if (!error) {
+          setQrSvgString(svg)
+        }
       })
 
       return () => setQrSvgString('')
@@ -267,7 +269,7 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
         <Modal.Body style={{textAlign: 'center'}}>
           <TokenUrl>
             {process.env.REACT_APP_WEBSITE_URL || 'https://example.com'}
-            {'/?paywallToken='}
+            {'/?key='}
             {selectedToken}
           </TokenUrl>
           <QRCodeContainer>
