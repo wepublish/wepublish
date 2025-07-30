@@ -60,7 +60,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {Descendant, Element, type Node, Text} from 'slate'
+import {type Node, Descendant, Element, Text} from 'slate'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -163,13 +163,13 @@ function ArticleEditor() {
   useSettingsListQuery({
     client,
     onCompleted(data) {
-      setMetadata({
-        ...metadata,
+      setMetadata(meta => ({
+        ...meta,
         shared: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
           ?.value,
         paywall: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
           ?.value
-      })
+      }))
     }
   })
   const {data: paywallData} = usePaywallListQuery({
