@@ -10,7 +10,9 @@ import {
   FaTiktok,
   FaVimeo,
   FaXTwitter,
-  FaYoutube
+  FaYoutube,
+  FaAppStoreIos,
+  FaGooglePlay
 } from 'react-icons/fa6'
 import {MdContactMail, MdFacebook, MdMail, MdSearch, MdWeb} from 'react-icons/md'
 
@@ -85,6 +87,14 @@ export const TextToIcon = ({title, size}: {title: string; size: number}) => {
 
   if (['search', 'suche'].includes(title.toLowerCase())) {
     return <MdSearch size={size} aria-label={title} />
+  }
+
+  if (['apple-store'].includes(title.toLocaleLowerCase())) {
+    return <FaAppStoreIos size={size} aria-label={title} />
+  }
+
+  if (['play-store'].includes(title.toLocaleLowerCase())) {
+    return <FaGooglePlay size={size} aria-label={title} />
   }
 
   return title
