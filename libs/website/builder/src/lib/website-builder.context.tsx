@@ -3,6 +3,7 @@ import {
   createContext,
   memo,
   PropsWithChildren,
+  PropsWithRef,
   ReactNode,
   ScriptHTMLAttributes,
   useContext,
@@ -117,7 +118,7 @@ import {BuilderTeaserProps} from './teaser.interface'
 import {BuilderPaywallProps} from './paywall.interface'
 import {BuilderTagProps, BuilderTagSEOProps} from './tag.interface'
 
-const NoComponent = () => null
+const NoComponent: any = () => null
 
 export type WebsiteBuilderProps = {
   Head: ComponentType<{children: ReactNode}>
@@ -187,7 +188,7 @@ export type WebsiteBuilderProps = {
     OrderedList: ComponentType<BuilderOrderedListProps>
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
-    Image: ComponentType<BuilderImageProps>
+    Image: ComponentType<PropsWithRef<BuilderImageProps & {ref?: any}>>
     ImageUpload: ComponentType<BuilderImageUploadProps>
     Modal: ComponentType<BuilderModalProps>
   }

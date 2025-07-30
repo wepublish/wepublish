@@ -732,10 +732,12 @@
       "paymentMethods": "Méthodes de paiement possibles",
       "paymentPeriodicities": "Périodicités de paiement",
       "paymentPeriodicity": {
-        "biannual": "Bi-annuelles",
-        "monthly": "Mensuelles",
-        "quarterly": "Trimestrielles",
-        "yearly": "Annuelles"
+        "biannual": "Semestriel",
+        "monthly": "Mensuel",
+        "quarterly": "Trimestriel",
+        "yearly": "Annuel",
+        "biennial": "Biennal",
+        "lifetime": "À vie"
       },
       "title": "Plans membres"
     },

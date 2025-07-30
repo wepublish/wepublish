@@ -101,7 +101,7 @@ const revertTeaserToDefault = ({theme}: {theme: Theme}) => css`
   grid-template-columns: initial;
 
   ${TeaserImageWrapper} {
-    margin-bottom: ${theme.spacing(2)};
+    padding-bottom: ${theme.spacing(1.5)};
   }
 `
 
@@ -119,6 +119,7 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
 
   ${TeaserImageWrapper} {
     margin-bottom: 0;
+    padding-bottom: 0;
     display: grid;
     align-items: center;
   }
@@ -187,6 +188,7 @@ export const HauptstadtAlternatingTeaser = createWithTheme(
     ${({theme}) => theme.breakpoints.up('md')} {
       ${TeaserImageWrapper} {
         margin-bottom: 0;
+        padding-bottom: 0;
       }
     }
   `,

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps, BuilderImageWidths} from '@wepublish/website/builder'
 import {useImageProps} from './image.context'
-import {useMemo} from 'react'
+import {forwardRef, useMemo} from 'react'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,7 +53,10 @@ export const ImageWrapper = styled('img')<{aspectRatio: number; objectPosition: 
   object-fit: contain;
 `
 
-export function Image({image, ...props}: BuilderImageProps) {
+export const Image = forwardRef<HTMLImageElement, BuilderImageProps>(function Image(
+  {image, ...props},
+  ref
+) {
   const {maxWidth, square, fetchPriority, loading} = useImageProps(props)
 
   const images = useMemo(
@@ -102,6 +105,7 @@ export function Image({image, ...props}: BuilderImageProps) {
   return (
     <ImageWrapper
       {...props}
+      ref={ref}
       alt={image.description ?? image.title ?? image.filename ?? ''}
       title={image.title ?? ''}
       aspectRatio={image.width / image.height}
@@ -114,4 +118,4 @@ export function Image({image, ...props}: BuilderImageProps) {
       height={square ? undefined : image.height}
     />
   )
-}
+})

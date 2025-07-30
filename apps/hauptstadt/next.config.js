@@ -15,7 +15,8 @@ const nextConfig = {
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
-      GA_ID: process.env.GA_ID || ''
+      GA_ID: process.env.GA_ID || '',
+      GTM_ID: process.env.GTM_ID || ''
     }
   },
   async redirects() {
@@ -189,6 +190,37 @@ const nextConfig = {
       {
         source: '/l/prixgaranti',
         destination: '/a/phanomen-prix-garanti',
+        permanent: false
+      },
+      // From old version to website builder version
+      {
+        source: '/abo',
+        destination: '/mitmachen',
+        permanent: false
+      },
+      {
+        source: '/politik',
+        destination: '/a/tag/politik',
+        permanent: false
+      },
+      {
+        source: '/gesellschaft',
+        destination: '/a/tag/gesellschaft',
+        permanent: false
+      },
+      {
+        source: '/kolumnen',
+        destination: '/a/tag/kolumnen',
+        permanent: false
+      },
+      {
+        source: '/hauptstadt-brief',
+        destination: '/a/tag/hauptstadt-brief',
+        permanent: false
+      },
+      {
+        source: '/a-stadtrat-brief',
+        destination: '/a/tag/stadtrat-brief',
         permanent: false
       }
     ]

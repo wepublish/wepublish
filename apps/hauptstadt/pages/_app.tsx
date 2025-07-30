@@ -2,7 +2,7 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
-import {GoogleAnalytics} from '@next/third-parties/google'
+import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
 import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
@@ -69,6 +69,7 @@ import {
   HauptstadtTeaserSlider,
   HauptstadtTeaserSlots
 } from '../src/components/hauptstadt-teaser'
+import {HauptstadtTitleBlock} from '../src/components/hauptstadt-title-block'
 import {PrintLogo} from '../src/components/print-logo'
 import {printStyles} from '../src/print-styles'
 import theme from '../src/theme'
@@ -102,13 +103,22 @@ const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    gap: ${({theme}) => theme.spacing(3)};
+  }
 `
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
+`
+
+const Main = styled('main')`
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-top: 11px;
+  }
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -151,6 +161,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           CommentList={HauptstadtCommentList}
           blocks={{
             Subscribe: Mitmachen,
+            Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
             BaseTeaser: HauptstadtTeaser,
             TeaserList: HauptstadtTeaserList,
@@ -185,13 +196,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
                 {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <meta name="apple-mobile-web-app-title" content="Hauptstadt" />
                 <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
-                <meta name="theme-color" content="#ffffff" />
               </Head>
 
               <Spacer>
@@ -202,12 +212,12 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                   iconSlug="icons"
                 />
 
-                <main>
+                <Main>
                   <Container maxWidth="lg">
                     <PrintLogo />
                     <Component {...pageProps} />
                   </Container>
-                </main>
+                </Main>
 
                 <FooterContainer
                   slug="main"
@@ -221,6 +231,10 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
+
+              {publicRuntimeConfig.env.GTM_ID && (
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
             </FontSizeProvider>
           </ThemeProvider>

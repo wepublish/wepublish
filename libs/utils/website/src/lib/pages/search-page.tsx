@@ -10,6 +10,8 @@ import {
   Page,
   PageTeaser,
   PeerProfileDocument,
+  PhraseDocument,
+  PhraseQuery,
   TeaserType,
   usePhraseQuery
 } from '@wepublish/website/api'
@@ -157,7 +159,19 @@ export const SearchPageGetServerSideProps = (async ({query}) => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const {page, q: phraseQuery} = searchPageSchema.parse(query)
+
   await Promise.all([
+    phraseQuery
+      ? client.query<PhraseQuery>({
+          query: PhraseDocument,
+          variables: {
+            query: phraseQuery,
+            take: ITEMS_PER_PAGE,
+            skip: (page - 1) * ITEMS_PER_PAGE
+          }
+        })
+      : undefined,
     client.query({
       query: NavigationListDocument
     }),

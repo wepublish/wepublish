@@ -502,6 +502,8 @@ enum PaymentPeriodicity {
   quarterly @map("quarterly")
   biannual  @map("biannual")
   yearly    @map("yearly")
+  biennial  @map("biennial")
+  lifetime  @map("lifetime")
 }
 
 model AvailablePaymentMethod {

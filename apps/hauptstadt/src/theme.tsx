@@ -591,7 +591,8 @@ const theme = createTheme(variablesTheme, {
         unit: 'rem',
         breakpoints: variablesTheme.breakpoints.values,
         values: {
-          xs: 15,
+          xs: 11,
+          sm: 15,
           md: 16
         }
       })
@@ -771,6 +772,7 @@ export const alternatingTeaserTheme = createTheme(contentTheme, {
         breakpoints: variablesTheme.breakpoints.values,
         values: {
           xs: 16,
+          sm: 16,
           lg: 19,
           xl: 20,
           xxl: 27

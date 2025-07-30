@@ -1751,6 +1751,8 @@ type PaymentMethod implements HasImageLc {
 
 enum PaymentPeriodicity {
   biannual
+  biennial
+  lifetime
   monthly
   quarterly
   yearly

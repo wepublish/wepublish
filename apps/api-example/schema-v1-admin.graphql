@@ -209,6 +209,8 @@ enum PaymentPeriodicity {
   quarterly
   biannual
   yearly
+  biennial
+  lifetime
 }
 
 enum Currency {

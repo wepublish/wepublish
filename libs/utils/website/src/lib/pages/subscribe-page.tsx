@@ -102,7 +102,10 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
     client.query({
       query: MemberPlanListDocument,
       variables: {
-        take: 50
+        take: 50,
+        filter: {
+          active: true
+        }
       }
     }),
     client.query({

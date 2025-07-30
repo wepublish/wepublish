@@ -6,4 +6,4 @@ Allow: /
 User-agent: GPTBot
 Disallow: /
 
-Sitemap: https://wepublish.ch/api/sitemap
+Sitemap: https://hauptstadt.be/api/sitemap

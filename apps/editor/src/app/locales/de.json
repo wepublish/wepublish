@@ -792,7 +792,9 @@
         "biannual": "Halbjährlich",
         "monthly": "Monatlich",
         "quarterly": "Vierteljährlich",
-        "yearly": "Jährlich"
+        "yearly": "Jährlich",
+        "biennial": "Zweijährlich",
+        "lifetime": "Lebenslang"
       },
       "title": "Abo Pläne"
     },
@@ -1057,7 +1059,7 @@
         "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
         "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
-        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly",
+        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly, biennial, lifetime",
         "optional_subscriptionID": "Eindeutige ID der Subscription.",
         "user_email": "E-Mail des Users.",
         "user_firstName": "Vorname des Users",

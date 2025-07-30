@@ -6,44 +6,13 @@ import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, IconButton, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
+import {PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 // Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
 import {FiMenu, FiPlus} from 'react-icons/fi'
 import {MdSearch, MdWarning} from 'react-icons/md'
 
 import {Tiempos} from '../theme'
-
-const cssVariables = (theme: Theme) => css`
-  :root {
-    --navbar-height: 80px;
-
-    ${theme.breakpoints.up('sm')} {
-      --navbar-height: 109px;
-    }
-
-    ${theme.breakpoints.up('lg')} {
-      --navbar-height: 145px;
-    }
-
-    ${theme.breakpoints.up('xl')} {
-      --navbar-height: 173px;
-    }
-
-    ${theme.breakpoints.up('xxl')} {
-      --navbar-height: 208px;
-    }
-  }
-`
-
-export const NavbarWrapper = styled('nav')`
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  transition: transform 300ms ease-out;
-`
 
 enum NavbarState {
   Hidden,
@@ -56,29 +25,62 @@ enum ScrollDirection {
   Down
 }
 
+const cssVariables = (state: NavbarState) => (theme: Theme) =>
+  css`
+    :root {
+      --navbar-height: 80px;
+      --changing-navbar-height: ${state === NavbarState.Regular ? '80px' : '55px'};
+
+      ${theme.breakpoints.up('sm')} {
+        --navbar-height: 109px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '109px' : '55px'};
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        --navbar-height: 145px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '145px' : '80px'};
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        --navbar-height: 173px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '173px' : '80px'};
+      }
+
+      ${theme.breakpoints.up('xxl')} {
+        --navbar-height: 208px;
+        --changing-navbar-height: ${state === NavbarState.Regular ? '208px' : '80px'};
+      }
+    }
+  `
+
+export const NavbarWrapper = styled('nav')`
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: var(--navbar-height);
+`
+
 const getNavbarState = (
   isScrolled: boolean,
   scrollDirection: ScrollDirection,
   isMenuOpen: boolean,
   hasActiveSubscription: boolean
 ): NavbarState => {
-  // When menu is open or scrolled to top, always show regular
-  if (isMenuOpen) {
-    return NavbarState.Regular
-  }
-  if (!isScrolled) {
+  if (isMenuOpen || !isScrolled) {
     return NavbarState.Regular
   }
 
   if (hasActiveSubscription) {
     if (scrollDirection === ScrollDirection.Down) {
       return NavbarState.Hidden
-    } else {
-      return NavbarState.Diagonal
     }
-  } else {
+
     return NavbarState.Diagonal
   }
+
+  return NavbarState.Diagonal
 }
 
 export const NavbarInnerWrapper = styled(Toolbar, {
@@ -96,11 +98,12 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   padding: 0;
   margin: 0 auto;
   width: 100%;
-  height: var(--navbar-height);
+  height: var(--changing-navbar-height);
   background-color: ${({theme}) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  transition: clip-path 300ms ease-out, transform 300ms ease-out;
+  transition: clip-path 300ms ease-out, transform 300ms ease-out, height 300ms ease-out;
+  transform: translate3d(0, 0, 0);
 
   &::before {
     content: '';
@@ -111,7 +114,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     height: 100%;
     background-color: ${({theme}) => theme.palette.background.paper};
     transition: clip-path 300ms ease-out;
-    clip-path: polygon(0 95%, 100% 95%, 100% calc(100% - 1px), 0 calc(100% - 1px));
+    clip-path: polygon(0 100%, 100% 100%, 100% calc(100% - 1px), 0 calc(100% - 1px));
     z-index: 2;
   }
 
@@ -122,31 +125,35 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${({theme}) => theme.palette.primary.main};
     transition: clip-path 300ms ease-out;
     clip-path: polygon(0 calc(100% - 1px), 100% calc(100% - 1px), 100% 100%, 0 100%);
     z-index: 10;
+
+    ${({theme}) => theme.breakpoints.up('sm')} {
+      background-color: ${({theme}) => theme.palette.primary.main};
+    }
   }
 
-  ${({navbarState}) =>
+  ${({navbarState, theme}) =>
     navbarState === NavbarState.Diagonal &&
     css`
-      clip-path: polygon(0 0, 100% 0, 100% 40%, 0 90%);
+      clip-path: polygon(0px 0px, 100% 0px, 100% 50%, 0px 100%);
       box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
 
       &::before {
-        clip-path: polygon(0 85%, 100% 35%, 100% 39%, 0 89%);
+        clip-path: polygon(0 88%, 100% 38%, 100% 50%, 0 100%);
       }
 
       &::after {
-        clip-path: polygon(0 89%, 100% 39%, 100% 40%, 0 90%);
+        background-color: ${theme.palette.primary.main};
+        clip-path: polygon(0 calc(100% - 1px), 100% calc(50% - 1px), 100% 50%, 0 100%);
       }
     `}
 
   ${({navbarState}) =>
     navbarState === NavbarState.Hidden &&
     css`
-      transform: translateY(-100%);
+      transform: translate3d(0, -100%, 0);
     `}
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -305,23 +312,6 @@ export const NavbarLogoWrapper = styled('div')`
 export const HauptstadtClaimWrapper = styled(NavbarLogoWrapper)`
   grid-row: 2;
   grid-column: -1/1;
-  height: 9px;
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    height: 14px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    height: 18px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-    height: 22px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('xxl')} {
-    height: 29px;
-  }
 `
 
 const HauptstadtLogo = styled('img', {
@@ -329,25 +319,26 @@ const HauptstadtLogo = styled('img', {
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   width: 100%;
   transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
 
   ${({theme, isScrolled, isMenuOpen}) =>
     isScrolled &&
     !isMenuOpen &&
     css`
       ${theme.breakpoints.up('sm')} {
-        width: 350px;
+        width: 220px;
       }
 
       ${theme.breakpoints.up('lg')} {
-        width: 440px;
+        width: 330px;
       }
 
       ${theme.breakpoints.up('xl')} {
-        width: 550px;
+        width: 330px;
       }
 
       ${theme.breakpoints.up('xxl')} {
-        width: 700px;
+        width: 330px;
       }
     `}
 `
@@ -357,6 +348,24 @@ const HauptstadtClaim = styled('img', {
 })<{isScrolled?: boolean; isMenuOpen?: boolean}>`
   width: 100%;
   transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  max-height: 9px;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    max-height: 14px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    max-height: 18px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xl')} {
+    max-height: 22px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('xxl')} {
+    max-height: 29px;
+  }
 
   ${({isScrolled, isMenuOpen}) =>
     isScrolled &&
@@ -407,24 +416,35 @@ export function HauptstadtNavbar({
 
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(ScrollDirection.Down)
-  const [lastScrollY, setLastScrollY] = useState(0)
+  const lastScrollY = useRef(0)
   const hasActiveSubscription = useHasActiveSubscription()
 
   const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
 
-  const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY
+  const handleScroll = useCallback(
+    (...args: any) => {
+      const currentScrollY = window.scrollY
 
-    if (currentScrollY > lastScrollY) {
-      setScrollDirection(ScrollDirection.Down)
-    } else if (currentScrollY < lastScrollY) {
-      setScrollDirection(ScrollDirection.Up)
-    }
+      if (currentScrollY > lastScrollY.current) {
+        if (scrollDirection !== ScrollDirection.Down) {
+          setScrollDirection(ScrollDirection.Down)
+        }
+      } else if (currentScrollY < lastScrollY.current) {
+        if (scrollDirection !== ScrollDirection.Up) {
+          setScrollDirection(ScrollDirection.Up)
+        }
+      }
 
-    setIsScrolled(currentScrollY > 50)
+      const newIsScrolled = currentScrollY > 1
 
-    setLastScrollY(currentScrollY)
-  }, [lastScrollY])
+      if (newIsScrolled !== isScrolled) {
+        setIsScrolled(newIsScrolled)
+      }
+
+      lastScrollY.current = currentScrollY
+    },
+    [isScrolled, scrollDirection]
+  )
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen
@@ -457,24 +477,21 @@ export function HauptstadtNavbar({
   )
 
   useEffect(() => {
-    setLastScrollY(window.scrollY)
-
+    lastScrollY.current = window.scrollY
     window.addEventListener('scroll', handleScroll)
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
+  const navbarState = getNavbarState(isScrolled, scrollDirection, isMenuOpen, hasActiveSubscription)
+  const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState])
+
   return (
     <NavbarWrapper className={className}>
-      <GlobalStyles styles={theme => cssVariables(theme)} />
+      <GlobalStyles styles={navbarHeight} />
 
       <AppBar position="static" elevation={0} color={'transparent'}>
-        <NavbarInnerWrapper
-          navbarState={getNavbarState(
-            isScrolled,
-            scrollDirection,
-            isMenuOpen,
-            hasActiveSubscription
-          )}>
+        <NavbarInnerWrapper navbarState={navbarState}>
           <NavbarMain>
             <NavbarIconButtonWrapper>
               <NavbarMenuButton
@@ -508,7 +525,12 @@ export function HauptstadtNavbar({
 
           <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
             <NavbarLogoWrapper>
-              <HauptstadtLogo src="/logo.svg" isScrolled={isScrolled} isMenuOpen={isMenuOpen} />
+              <HauptstadtLogo
+                src="/logo.svg"
+                alt="Hauptstadt"
+                isScrolled={isScrolled}
+                isMenuOpen={isMenuOpen}
+              />
             </NavbarLogoWrapper>
           </NavbarLoginLink>
 
@@ -527,6 +549,7 @@ export function HauptstadtNavbar({
           <HauptstadtClaimWrapper>
             <HauptstadtClaim
               src="/logo-claim.svg"
+              alt="Neuer Berner Journalismus"
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
             />
@@ -581,7 +604,7 @@ export const NavPaperWrapper = styled('div', {
   top: calc(var(--navbar-height) - 2px);
   left: 0;
   right: 0;
-  transform: translateX(${({isMenuOpen}) => (isMenuOpen ? '0' : '-100%')});
+  transform: translate3d(${({isMenuOpen}) => (isMenuOpen ? '0' : '-100%')}, 0, 0);
   transition: transform 300ms ease-in-out;
   overflow-y: scroll;
   max-height: 100vh;

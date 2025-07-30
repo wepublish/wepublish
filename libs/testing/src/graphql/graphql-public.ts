@@ -2296,6 +2296,8 @@ export type PaymentMethod = HasImageLc & {
 
 export enum PaymentPeriodicity {
   Biannual = 'biannual',
+  Biennial = 'biennial',
+  Lifetime = 'lifetime',
   Monthly = 'monthly',
   Quarterly = 'quarterly',
   Yearly = 'yearly'
