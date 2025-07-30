@@ -1,12 +1,12 @@
 {
   "website": {
     "production": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
       "secret_env": []
     },
     "staging": {
-      "deployment": false,
+      "deployment": true,
       "env": {},
       "secret_env": []
     },
