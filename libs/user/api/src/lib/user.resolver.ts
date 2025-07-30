@@ -3,6 +3,7 @@ import {PaymentProviderCustomer, User, UserAddress} from './user.model'
 import {PrismaClient} from '@prisma/client'
 import {Property} from '@wepublish/utils/api'
 import {Image, ImageDataloaderService} from '@wepublish/image/api'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -20,6 +21,7 @@ export class UserResolver {
     if (image !== undefined) {
       return image
     }
+
     return this.imageDataloaderService.load(userImageID)
   }
 
@@ -28,6 +30,7 @@ export class UserResolver {
     if (address !== undefined) {
       return address
     }
+
     return this.prisma.userAddress.findUnique({
       where: {userId}
     })
@@ -38,6 +41,7 @@ export class UserResolver {
     if (paymentProviderCustomers !== undefined) {
       return paymentProviderCustomers
     }
+
     return this.prisma.paymentProviderCustomer.findMany({
       where: {userId}
     })
@@ -58,14 +62,11 @@ export class UserResolver {
   }
 
   @ResolveField(() => [String])
-  public async permissions(@Parent() {roleIDs}: User) {
-    const userRoles = await this.prisma.userRole.findMany({
-      where: {
-        id: {
-          in: roleIDs
-        }
-      }
-    })
-    return userRoles.flatMap(r => r.permissionIDs)
+  public async permissions(@CurrentUser() user: UserSession | undefined, @Parent() {id}: User) {
+    if (user?.user.id === id) {
+      return user.roles.flatMap(r => r.permissionIDs)
+    }
+
+    return []
   }
 }
