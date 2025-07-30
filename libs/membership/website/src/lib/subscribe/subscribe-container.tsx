@@ -67,7 +67,10 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const memberPlanList = useMemberPlanListQuery({
     variables: {
-      take: 50
+      take: 50,
+      filter: {
+        active: true
+      }
     }
   })
 
