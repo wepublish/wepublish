@@ -97,6 +97,7 @@ export class ArticleService {
       tagIds,
       properties,
       blocks,
+      paywallId,
       ...revision
     }: CreateArticleInput,
     userId: string | null | undefined
@@ -105,6 +106,7 @@ export class ArticleService {
 
     const article = await this.prisma.article.create({
       data: {
+        paywallId,
         likes,
         slug,
         shared,
@@ -160,6 +162,7 @@ export class ArticleService {
       likes,
       slug,
       shared,
+      paywallId,
       hidden,
       disableComments,
       authorIds,
@@ -189,6 +192,7 @@ export class ArticleService {
       data: {
         likes,
         slug,
+        paywallId,
         shared,
         hidden,
         disableComments,
@@ -419,6 +423,7 @@ export class ArticleService {
 
     return this.prisma.article.create({
       data: {
+        paywallId: article.paywallId,
         shared: article.shared,
         hidden: article.hidden,
         disableComments: article.disableComments,
@@ -514,22 +519,20 @@ export class ArticleService {
       const formattedQuery = searchQuery.replace(/\s+/g, '&')
 
       const foundArticleIds = await this.prisma.$queryRaw<Array<{id: string}>>`
-          SELECT a.id
-          FROM articles a
-                   JOIN public."articles.revisions" ar
-                        ON a."id" = ar."articleId"
-                            AND ar."publishedAt" IS NOT NULL
-                            AND ar."publishedAt" < NOW()
-          WHERE to_tsvector('german', coalesce(ar.title, '')) ||
-                to_tsvector('german', coalesce(ar."preTitle", '')) ||
-                to_tsvector('german', coalesce(ar.lead, '')) ||
-                jsonb_to_tsvector(
-                        'german',
-                        jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
-                        '["string"]'
-                ) @
-              @ to_tsquery('german'
-              , ${formattedQuery});
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ${formattedQuery});
       `
 
       return foundArticleIds.map(item => item.id)

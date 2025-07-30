@@ -22,15 +22,15 @@ import {PageDataloaderService} from '@wepublish/page/api'
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
-    private readonly commentService: CommentService,
-    private readonly commentDataloader: CommentDataloaderService,
-    private readonly tagService: TagService,
-    private readonly ratingSystemService: RatingSystemService,
-    private readonly imageDataloaderService: ImageDataloaderService,
-    private readonly userDataloaderService: UserDataloaderService,
-    private readonly urlAdapter: URLAdapter,
-    private readonly articleDataloader: ArticleDataloaderService,
-    private readonly pageDataloader: PageDataloaderService
+    private commentService: CommentService,
+    private commentDataloader: CommentDataloaderService,
+    private tagService: TagService,
+    private ratingSystemService: RatingSystemService,
+    private imageDataloaderService: ImageDataloaderService,
+    private userDataloaderService: UserDataloaderService,
+    private urlAdapter: URLAdapter,
+    private articleDataloader: ArticleDataloaderService,
+    private pageDataloader: PageDataloaderService
   ) {}
 
   @Query(() => [Comment], {

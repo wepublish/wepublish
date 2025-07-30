@@ -1,9 +1,8 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, BreakBlock} from '@wepublish/website/api'
-import {useWebsiteBuilder, BuilderBlockStyleProps} from '@wepublish/website/builder'
+import {BuilderBlockStyleProps, Image} from '@wepublish/website/builder'
 import {isBreakBlock} from '../../break/break-block'
-import {hasBlockStyle} from '../../blocks'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {allPass} from 'ramda'
 
 export const BannerWrapper = styled('a')`
@@ -14,19 +13,15 @@ export const BannerWrapper = styled('a')`
   color: inherit;
 `
 
-const imageStyles = css`
+export const BannerImage = styled(Image)`
   width: 100%;
   object-fit: cover;
 `
 
 export const Banner = ({image, linkURL, linkTarget}: BuilderBlockStyleProps['Banner']) => {
-  const {
-    elements: {Image}
-  } = useWebsiteBuilder()
-
   return (
     <BannerWrapper href={linkURL ?? ''} target={linkTarget ?? '_blank'}>
-      {image && <Image image={image} css={imageStyles} />}
+      {image && <BannerImage image={image} />}
     </BannerWrapper>
   )
 }

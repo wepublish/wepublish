@@ -55,5 +55,5 @@ export class AuthorArgs {
   slug?: string
 }
 
-@ObjectType('AuthorConnection')
+@ObjectType()
 export class PaginatedAuthors extends PaginatedType(Author) {}

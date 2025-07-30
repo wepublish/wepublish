@@ -105,6 +105,9 @@ model Article {
   peerId        String?
   peerArticleId String?
 
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?  @db.Uuid
+
   navigations    NavigationLink[]
   tags           TaggedArticles[]
   revisions      ArticleRevision[]
@@ -421,7 +424,7 @@ model CommentRatingOverride {
 
   value Int?
 
-  @@unique([answerId, commentId])
+  @@id([answerId, commentId])
   @@map("comments.rating-override")
 }
 
@@ -531,6 +534,7 @@ model MemberPlan {
   name                           String
   slug                           String                   @unique
   tags                           String[]
+  shortDescription               Json?
   description                    Json
   active                         Boolean
   currency                       Currency
@@ -558,6 +562,7 @@ model MemberPlan {
   subscriptionFlows SubscriptionFlow[]
 
   crowdfundings Crowdfunding[]
+  paywalls      PaywallMemberplan[]
 
   @@index([name])
   @@map("member.plans")
@@ -735,11 +740,12 @@ model Peer {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name       String
-  slug       String  @unique
-  hostURL    String
-  token      String
-  isDisabled Boolean @default(false)
+  name        String
+  slug        String  @unique
+  hostURL     String
+  token       String
+  isDisabled  Boolean @default(false)
+  information Json?
 
   articles Article[]
   images   Image[]
@@ -867,30 +873,6 @@ model UserAddress {
   @@map("users.addresses")
 }
 
-model UserOAuth2Account {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-
-  type              String
-  provider          String
-  providerAccountId String
-  refreshToken      String?
-  accessToken       String
-  expiresAt         Int
-  tokenType         String
-  scope             String
-  idToken           String
-  oauthTokenSecret  String?
-  oauthToken        String?
-  sessionState      String?
-
-  userId String?
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("users.oauth2-accounts")
-}
-
 model PaymentProviderCustomer {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -924,7 +906,6 @@ model User {
 
   address                  UserAddress?
   properties               MetadataProperty[]
-  oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
   comments         Comment[]
@@ -977,9 +958,10 @@ model Tag {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type TagType
-  tag  String?
-  main Boolean @default(false)
+  type        TagType
+  tag         String?
+  description Json?
+  main        Boolean @default(false)
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?
@@ -1315,9 +1297,11 @@ model Banner {
 }
 
 enum LoginStatus {
-  LOGGED_IN  @map("logged_in")
-  LOGGED_OUT @map("logged_out")
-  ALL        @map("all")
+  UNSUBSCRIBED @map("unsubscribed")
+  SUBSCRIBED   @map("subscribed")
+  LOGGED_IN    @map("logged_in")
+  LOGGED_OUT   @map("logged_out")
+  ALL          @map("all")
 }
 
 model BannerAction {
@@ -1368,4 +1352,49 @@ model CrowdfundingGoal {
   crowdfundingId String       @db.Uuid
 
   @@map("crowdfunding_goals")
+}
+
+model Paywall {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name                  String? @unique
+  description           Json?
+  circumventDescription Json?
+  anyMemberPlan         Boolean @default(false)
+  active                Boolean @default(true)
+
+  memberPlans PaywallMemberplan[]
+  articles    Article[]
+  bypasses    PaywallBypass[]
+
+  @@map("paywalls")
+}
+
+model PaywallMemberplan {
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@id([paywallId, memberPlanId])
+  @@map("paywalls.memberPlans")
+}
+
+model PaywallBypass {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  token String @unique
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@map("paywall_bypasses")
 }

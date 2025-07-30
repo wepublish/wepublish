@@ -21,7 +21,8 @@ import {
 } from '../atoms'
 import {getOperationNameFromDocument} from '../utility'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {RichTextBlock} from '../blocks'
+import {RichTextBlock, RichTextBlockValue} from '../blocks'
+import {Descendant} from 'slate'
 
 export interface PeerEditPanelProps {
   id?: string
@@ -55,6 +56,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   const isAuthorized = useAuthorisation('CAN_CREATE_PEER')
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
+  const [information, setInformation] = useState<Descendant[]>()
   const [urlString, setURLString] = useState('')
   const [token, setToken] = useState('')
   const [profile, setProfile] = useState<FullPeerProfileFragment | null>(null)
@@ -102,6 +104,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
     if (data?.peer) {
       setName(data.peer.name)
       setSlug(data.peer.slug)
+      setInformation(data.peer.information ?? undefined)
       setURLString(data.peer.hostURL)
       setTimeout(() => {
         // setProfile in timeout because the useEffect that listens on
@@ -134,7 +137,8 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
             name,
             slug,
             hostURL: new URL(urlString).toString(),
-            token: token || undefined
+            token: token || undefined,
+            information
           }
         }
       })
@@ -145,7 +149,8 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
             name,
             slug,
             hostURL: new URL(urlString).toString(),
-            token
+            token,
+            information
           }
         }
       })
@@ -218,6 +223,21 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                 }}
               />
             </Group>
+
+            <Group controlId="information">
+              <ControlLabel>{t('peerList.panels.information')}</ControlLabel>
+              <Panel bordered>
+                <Control
+                  name="information"
+                  value={information ?? []}
+                  onChange={(newInformation: RichTextBlockValue['richText']) =>
+                    setInformation(newInformation)
+                  }
+                  accepter={RichTextBlock}
+                />
+              </Panel>
+            </Group>
+
             <Group controlId="url">
               <ControlLabel>{toggleRequiredLabel(t('peerList.panels.URL'))}</ControlLabel>
               <Control
@@ -228,6 +248,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                 }}
               />
             </Group>
+
             <Group controlId="token">
               <ControlLabel>{toggleRequiredLabel(t('peerList.panels.token'), !id)}</ControlLabel>
 
@@ -240,6 +261,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                 }}
               />
             </Group>
+
             <Button
               disabled={!isAuthorized}
               className="fetchButton"
@@ -248,6 +270,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
               {t('peerList.panels.getRemote')}
             </Button>
           </Panel>
+
           {profile && (
             <Panel header={t('peerList.panels.information')}>
               <ChooseEditImage disabled image={profile?.logo} />

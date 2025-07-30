@@ -4,7 +4,8 @@ import {
   AlertProps,
   RatingProps,
   TextFieldProps,
-  IconButtonProps
+  IconButtonProps,
+  ModalProps
 } from '@wepublish/ui'
 
 export type BuilderButtonProps = ButtonProps
@@ -13,3 +14,4 @@ export type BuilderIconButtonProps = IconButtonProps
 export type BuilderAlertProps = AlertProps
 export type BuilderRatingProps = RatingProps
 export type BuilderTextFieldProps = TextFieldProps
+export type BuilderModalProps = ModalProps

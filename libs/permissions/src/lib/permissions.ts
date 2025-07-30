@@ -796,6 +796,27 @@ export const CanGetAudienceStats: Permission = {
   deprecated: false
 }
 
+/**
+ * Paywall
+ */
+export const CanCreatePaywall: Permission = {
+  id: 'CAN_CREATE_PAYWALL',
+  description: 'Allows to create a paywall',
+  deprecated: false
+}
+
+export const CanUpdatePaywall: Permission = {
+  id: 'CAN_UPDATE_PAYWALL',
+  description: 'Allows to update a paywall',
+  deprecated: false
+}
+
+export const CanDeletePaywall: Permission = {
+  id: 'CAN_DELETE_PAYWALL',
+  description: 'Allows to delete a paywall',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -916,6 +937,9 @@ export const AllPermissions: Permission[] = [
   CanCreateBlockStyle,
   CanUpdateBlockStyle,
   CanDeleteBlockStyle,
+  CanCreatePaywall,
+  CanUpdatePaywall,
+  CanDeletePaywall,
   CanGetAudienceStats
 ]
 

@@ -1,5 +1,5 @@
 import {UserRole} from '@prisma/client'
-import {AllPermissions, EditorPermissions, PeerPermissions} from './permissions'
+import {AllPermissions, EditorPermissions, PeerPermissions} from '@wepublish/permissions'
 
 export const addPredefinedPermissions = <
   PermissionsUserRole extends Pick<UserRole, 'id' | 'permissionIDs'>

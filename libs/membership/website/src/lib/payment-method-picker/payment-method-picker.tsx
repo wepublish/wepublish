@@ -29,7 +29,7 @@ const icon = css`
   width: auto;
 `
 
-const hiddenRadio = css`
+const HiddenRadio = styled(Radio)`
   visibility: hidden;
   width: 0;
   height: 0;
@@ -43,7 +43,7 @@ export function PaymentRadio({
 
   return (
     <>
-      <Radio {...props} css={hiddenRadio} />
+      <HiddenRadio {...props} />
       <PaymentRadioWrapper active={radio?.value === props.value}>{children}</PaymentRadioWrapper>
     </>
   )
@@ -62,6 +62,9 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
       }
     }, [paymentMethods, onChange, value])
 
+    const filteredPaymentMethods =
+      paymentMethods?.filter(pm => pm.paymentProviderID !== 'no-charge') ?? []
+
     return (
       <PaymentMethodPickerWrapper className={className}>
         <RadioGroup
@@ -72,7 +75,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
           onChange={event => onChange(event.target.value as string)}
           sx={{flexWrap: 'nowrap'}}
           row>
-          {paymentMethods?.map(method => (
+          {filteredPaymentMethods.map(method => (
             <FormControlLabel
               key={method.id}
               value={method.id}

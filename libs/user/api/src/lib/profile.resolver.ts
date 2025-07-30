@@ -12,12 +12,9 @@ import {UserInputError} from '@nestjs/apollo'
 import {UploadImageInput} from '@wepublish/image/api'
 import {ProfileService} from './profile.service'
 
-@Resolver(() => User)
+@Resolver()
 export class ProfileResolver {
-  constructor(
-    private readonly userService: UserService,
-    private readonly profileService: ProfileService
-  ) {}
+  constructor(private userService: UserService, private profileService: ProfileService) {}
 
   @Public()
   @Query(() => User, {
@@ -28,6 +25,7 @@ export class ProfileResolver {
     if (session?.type !== AuthSessionType.User) {
       return null
     }
+
     return session.user
   }
 
@@ -43,6 +41,7 @@ export class ProfileResolver {
     if (password !== passwordRepeated) {
       throw new UserInputError('password and passwordRepeat are not equal')
     }
+
     return this.userService.updateUserPassword(user.id, password)
   }
 
@@ -60,7 +59,7 @@ export class ProfileResolver {
     if (!user) {
       throw new UserInputError(`User not found ${session.user.id}`)
     }
-    console.log({user})
+
     return user.paymentProviderCustomers
   }
 

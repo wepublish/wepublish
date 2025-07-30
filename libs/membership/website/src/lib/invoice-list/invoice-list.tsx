@@ -9,15 +9,20 @@ export const InvoiceListWrapper = styled('article')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const canPayInvoice = (invoice: FullInvoiceFragment) =>
-  // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
-  invoice.subscription?.paymentMethod.slug !== 'payrexx-subscription' &&
-  !invoice.canceledAt &&
-  !invoice.paidAt &&
-  !isSepa(invoice)
-
 export const isSepa = (invoice: FullInvoiceFragment) =>
   invoice.subscription?.paymentMethod.description === 'sepa'
+
+export const isBexio = (invoice: FullInvoiceFragment) =>
+  invoice.subscription?.paymentMethod.slug === 'bexio'
+
+export const isPayrexxSubscription = (invoice: FullInvoiceFragment) =>
+  invoice.subscription?.paymentMethod.paymentProviderID === 'payrexx-subscription'
+
+export const isInvoiceActive = (invoice: FullInvoiceFragment) =>
+  !invoice.canceledAt && !invoice.paidAt && !!invoice.subscription
+
+export const canPayInvoice = (invoice: FullInvoiceFragment) =>
+  isInvoiceActive(invoice) && !isSepa(invoice) && !isBexio(invoice)
 
 export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInvoiceListProps) => {
   const {
@@ -45,12 +50,10 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
             key={invoice.id}
             {...invoice}
             isSepa={isSepa(invoice)}
+            isBexio={isBexio(invoice)}
+            isPayrexxSubscription={isPayrexxSubscription(invoice)}
             canPay={canPayInvoice(invoice)}
-            pay={async () => {
-              if (invoice?.subscription) {
-                return await onPay?.(invoice.id, invoice.subscription.paymentMethod.id)
-              }
-            }}
+            pay={async () => onPay?.(invoice.id, invoice.subscription!.paymentMethod.id)}
           />
         ))}
     </InvoiceListWrapper>

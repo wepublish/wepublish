@@ -11,6 +11,8 @@ fragment ImportBlock on BlockContent {
   ... on TitleBlock {
     blockStyle
     type
+    # Enable once everyone has preTitle in the block
+    # preTitle
     title
     lead
   }

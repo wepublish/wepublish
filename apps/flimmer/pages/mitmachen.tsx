@@ -11,7 +11,7 @@ import {
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
-  UserSession
+  SessionWithTokenWithoutUser
 } from '@wepublish/website/api'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
@@ -24,7 +24,7 @@ export default function Mitmachen() {
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -35,15 +35,19 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict'
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   const dataPromises = [
     client.query({

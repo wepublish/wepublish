@@ -38,15 +38,6 @@ api:
       id: slackMail
       fromAddress: dev@wepublish.dev
       webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
-    OAuthProviders: []
-#      - name: 'google'
-#        discoverUrl: 'OAUTH_GOOGLE_DISCOVERY_URL'
-#        clientId: 'OAUTH_GOOGLE_CLIENT_ID'
-#        clientKey: 'OAUTH_GOOGLE_CLIENT_KEY'
-#        redirectUri:
-#          - 'OAUTH_GOOGLE_REDIRECT_URL'
-#        scopes:
-#          - 'openid profile email'
     paymentProviders: []
 #      - type: payrexx
 #        id: payrexx

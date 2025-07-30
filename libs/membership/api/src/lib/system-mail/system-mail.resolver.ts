@@ -9,7 +9,7 @@ import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
-  constructor(private prismaService: PrismaClient, private readonly mailContext: MailContext) {}
+  constructor(private prismaService: PrismaClient, private mailContext: MailContext) {}
 
   @Permissions(CanGetSystemMails)
   @Query(() => [SystemMailModel], {description: `Returns all mail flows`})

@@ -270,7 +270,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               />
             </Group>
           </BoxWrapper>
+
           <br />
+
           <ControlLabel>{toggleRequiredLabel(t('peerList.panels.callToActionImage'))}</ControlLabel>
           <BoxWrapper>
             <Group controlId="peerListImage">

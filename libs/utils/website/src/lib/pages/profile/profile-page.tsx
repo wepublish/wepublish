@@ -7,14 +7,16 @@ import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {
   useHasUnpaidInvoices,
   InvoiceListContainer,
   SubscriptionListContainer,
-  InvoiceListItemContent
+  InvoiceListItemWrapper,
+  SubscriptionListItemContent,
+  SubscriptionListItemWrapper
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
@@ -25,7 +27,7 @@ import {
   NavigationListDocument,
   addClientCacheToV1Props
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Button, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -54,9 +56,9 @@ const SubscriptionListWrapper = styled('div')`
 `
 
 const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemContent} {
-    border: 8px solid ${({theme}) => theme.palette.primary.main};
-    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  ${InvoiceListItemWrapper} {
+    border-width: 4px;
+    border-color: ${({theme}) => theme.palette.error.main};
   }
 `
 
@@ -65,7 +67,7 @@ const DeactivatedSubscriptions = styled('div')`
   justify-content: center;
 `
 
-const ProfileWrapper = styled(ContentWrapper)`
+export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
@@ -73,7 +75,7 @@ type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, '
 
 function ProfilePage(props: ProfilePageProps) {
   const {
-    elements: {Link, H4}
+    elements: {H4}
   } = useWebsiteBuilder()
 
   const {data: subscriptonData} = useSubscriptionsQuery({
@@ -82,6 +84,9 @@ function ProfilePage(props: ProfilePageProps) {
 
   const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
+  )
+  const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
+    subscription => !subscription.deactivation
   )
 
   const hasUnpaidInvoices = useHasUnpaidInvoices()
@@ -112,6 +117,16 @@ function ProfilePage(props: ProfilePageProps) {
             }
           />
 
+          {hasActiveSubscriptions && (
+            <SubscriptionListItemWrapper>
+              <SubscriptionListItemContent>
+                <Button LinkComponent={Link} href={'/mitmachen'}>
+                  Anderes Abo lösen.
+                </Button>
+              </SubscriptionListItemContent>
+            </SubscriptionListItemWrapper>
+          )}
+
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
               <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
@@ -137,7 +152,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -148,15 +163,20 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: true // @TODO: Config
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([
