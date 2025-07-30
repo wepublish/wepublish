@@ -14,7 +14,7 @@ import {
   useHasUnpaidInvoices,
   InvoiceListContainer,
   SubscriptionListContainer,
-  InvoiceListItemContent
+  InvoiceListItemWrapper
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
@@ -54,9 +54,9 @@ const SubscriptionListWrapper = styled('div')`
 `
 
 const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemContent} {
-    border: 8px solid ${({theme}) => theme.palette.primary.main};
-    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  ${InvoiceListItemWrapper} {
+    border-width: 4px;
+    border-color: ${({theme}) => theme.palette.error.main};
   }
 `
 
