@@ -83,7 +83,7 @@ const StyledBanner = styled(Banner)`
   }
 `
 
-const HauptstadtBannerContainer = styled(Container, {
+export const HauptstadtBannerContainer = styled(Container, {
   shouldForwardProp: propName => propName !== 'isScrolled'
 })<{isScrolled: boolean}>`
   padding: 0 !important;
