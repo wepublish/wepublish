@@ -22,10 +22,11 @@ import {useMemo, useState} from 'react'
 export type SubscriptionListContainerProps = {
   filter?: (subscriptions: FullSubscriptionFragment[]) => FullSubscriptionFragment[]
 } & BuilderContainerProps &
-  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl'>>
+  Partial<Pick<BuilderSubscriptionListProps, 'subscribeUrl' | 'trial'>>
 
 export function SubscriptionListContainer({
   filter,
+  trial,
   subscribeUrl = '/mitmachen',
   className
 }: SubscriptionListContainerProps) {
@@ -81,10 +82,6 @@ export function SubscriptionListContainer({
                 })
 
                 window.location.href = page.data?.page.url ?? ''
-
-                // window.location.href = success
-                //   ? stripeMemberPlan.successPage?.url ?? ''
-                //   : stripeMemberPlan.failPage?.url ?? ''
               }
             }}
           />
@@ -98,6 +95,7 @@ export function SubscriptionListContainer({
         invoices={invoices}
         subscribeUrl={subscribeUrl}
         className={className}
+        trial={trial}
         onCancel={async subscriptionId => {
           await cancel({
             variables: {

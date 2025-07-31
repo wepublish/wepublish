@@ -11,13 +11,22 @@ export const InvoiceListWrapper = styled('article')`
 
 export const canPayInvoice = (invoice: FullInvoiceFragment) =>
   // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
-  invoice.subscription?.paymentMethod.slug !== 'payrexx-subscription' &&
-  !invoice.canceledAt &&
-  !invoice.paidAt &&
-  !isSepa(invoice)
+  !isPayrexxSubscription(invoice) &&
+  !isBexio(invoice) &&
+  !isSepa(invoice) &&
+  isInvoiceActive(invoice)
 
 export const isSepa = (invoice: FullInvoiceFragment) =>
   invoice.subscription?.paymentMethod.description === 'sepa'
+
+export const isBexio = (invoice: FullInvoiceFragment) =>
+  invoice.subscription?.paymentMethod.slug === 'bexio'
+
+export const isPayrexxSubscription = (invoice: FullInvoiceFragment) =>
+  invoice.subscription?.paymentMethod.slug === 'payrexx-subscription'
+
+export const isInvoiceActive = (invoice: FullInvoiceFragment) =>
+  !invoice.canceledAt && !invoice.paidAt
 
 export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInvoiceListProps) => {
   const {
@@ -43,9 +52,7 @@ export const InvoiceList = ({data, loading, error, onPay, className}: BuilderInv
         data?.invoices?.map(invoice => (
           <InvoiceListItem
             key={invoice.id}
-            {...invoice}
-            isSepa={isSepa(invoice)}
-            canPay={canPayInvoice(invoice)}
+            invoice={invoice}
             pay={async () => {
               if (invoice?.subscription) {
                 return await onPay?.(invoice.id, invoice.subscription.paymentMethod.id)
