@@ -192,7 +192,7 @@ const HauptstadtBannerContainer = styled(Container, {
 
 export const HauptstadtBanner = (props: BuilderBannerProps) => {
   const [isScrolled, setIsScrolled] = useState(false)
-  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 50), [])
+  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 1), [])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)

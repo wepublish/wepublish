@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {AppBar, Box, css, GlobalStyles, Theme, Toolbar, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
+import {forceHideBanner} from '@wepublish/banner/website'
 import {useHasActiveSubscription} from '@wepublish/membership/website'
 import {navigationLinkToUrl} from '@wepublish/navigation/website'
 import {ButtonProps, TextToIcon} from '@wepublish/ui'
@@ -491,6 +492,7 @@ export function HauptstadtNavbar({
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarHeight} />
+      {isMenuOpen && forceHideBanner}
 
       <AppBar position="static" elevation={0} color={'transparent'}>
         <NavbarInnerWrapper navbarState={navbarState}>
