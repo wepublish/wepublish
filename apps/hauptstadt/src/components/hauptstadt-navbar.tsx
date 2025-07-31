@@ -26,30 +26,30 @@ enum ScrollDirection {
   Down
 }
 
-const cssVariables = (state: NavbarState) => (theme: Theme) =>
+const cssVariables = (state: NavbarState[]) => (theme: Theme) =>
   css`
     :root {
       --navbar-height: 80px;
-      --changing-navbar-height: ${state === NavbarState.Regular ? '80px' : '55px'};
+      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '80px' : '55px'};
 
       ${theme.breakpoints.up('sm')} {
         --navbar-height: 109px;
-        --changing-navbar-height: ${state === NavbarState.Regular ? '109px' : '55px'};
+        --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '109px' : '55px'};
       }
 
       ${theme.breakpoints.up('lg')} {
         --navbar-height: 145px;
-        --changing-navbar-height: ${state === NavbarState.Regular ? '145px' : '80px'};
+        --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '145px' : '80px'};
       }
 
       ${theme.breakpoints.up('xl')} {
         --navbar-height: 173px;
-        --changing-navbar-height: ${state === NavbarState.Regular ? '173px' : '80px'};
+        --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '173px' : '80px'};
       }
 
       ${theme.breakpoints.up('xxl')} {
         --navbar-height: 208px;
-        --changing-navbar-height: ${state === NavbarState.Regular ? '208px' : '80px'};
+        --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '208px' : '80px'};
       }
     }
   `
@@ -68,26 +68,24 @@ const getNavbarState = (
   scrollDirection: ScrollDirection,
   isMenuOpen: boolean,
   hasActiveSubscription: boolean
-): NavbarState => {
+): NavbarState[] => {
   if (isMenuOpen || !isScrolled) {
-    return NavbarState.Regular
+    return [NavbarState.Regular]
   }
 
   if (hasActiveSubscription) {
     if (scrollDirection === ScrollDirection.Down) {
-      return NavbarState.Hidden
+      return [NavbarState.Hidden, NavbarState.Diagonal]
     }
-
-    return NavbarState.Diagonal
   }
 
-  return NavbarState.Diagonal
+  return [NavbarState.Diagonal]
 }
 
 export const NavbarInnerWrapper = styled(Toolbar, {
   shouldForwardProp: propName => propName !== 'navbarState'
 })<{
-  navbarState: NavbarState
+  navbarState: NavbarState[]
 }>`
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
@@ -136,7 +134,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   }
 
   ${({navbarState, theme}) =>
-    navbarState === NavbarState.Diagonal &&
+    navbarState.includes(NavbarState.Diagonal) &&
     css`
       clip-path: polygon(0px 0px, 100% 0px, 100% 50%, 0px 100%);
       box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
@@ -152,7 +150,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     `}
 
   ${({navbarState, theme}) =>
-    navbarState === NavbarState.Hidden &&
+    navbarState.includes(NavbarState.Hidden) &&
     css`
       ${theme.breakpoints.down('sm')} {
         transform: translate3d(0, -100%, 0);
