@@ -2286,6 +2286,7 @@ export type PaymentFromInvoiceInput = {
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod'
   description: Scalars['String']
+  gracePeriod?: Maybe<Scalars['Float']>
   id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>

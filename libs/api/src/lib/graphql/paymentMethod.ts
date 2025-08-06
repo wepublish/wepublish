@@ -3,7 +3,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLBoolean,
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLInt
 } from 'graphql'
 import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -39,6 +40,7 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
       })
     },
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    gracePeriod: {type: GraphQLInt},
     imageId: {
       type: GraphQLString
     },
@@ -79,6 +81,7 @@ export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
     description: {type: new GraphQLNonNull(GraphQLString)},
     paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    gracePeriod: {type: GraphQLInt},
     imageId: {
       type: GraphQLString
     }
