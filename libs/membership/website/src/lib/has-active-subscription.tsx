@@ -1,6 +1,18 @@
 import {useUser} from '@wepublish/authentication/website'
-import {useSubscriptionsQuery} from '@wepublish/website/api'
+import {FullSubscriptionFragment, useSubscriptionsQuery} from '@wepublish/website/api'
+import {addDays} from 'date-fns'
 import {useMemo} from 'react'
+
+const isWithinGracePeriode = (subscription: FullSubscriptionFragment, today: Date): boolean => {
+  const {gracePeriod} = subscription.paymentMethod
+  if (!gracePeriod) {
+    return false
+  }
+
+  const startDate = new Date(subscription?.paidUntil || subscription.startsAt)
+  const withinGracePeriod = addDays(startDate, gracePeriod)
+  return today <= withinGracePeriod
+}
 
 export const useActiveSubscriptions = () => {
   const {hasUser} = useUser()
@@ -9,13 +21,16 @@ export const useActiveSubscriptions = () => {
     skip: !hasUser
   })
 
+  const today = new Date()
+
   const subscriptions = useMemo(
     () =>
       data?.subscriptions.filter(
         subscription =>
-          subscription.paidUntil &&
-          new Date() > new Date(subscription.startsAt) &&
-          new Date(subscription.paidUntil) > new Date()
+          (subscription.paidUntil &&
+            today > new Date(subscription.startsAt) &&
+            new Date(subscription.paidUntil) > today) ||
+          isWithinGracePeriode(subscription, today)
       ),
     [data?.subscriptions]
   )
