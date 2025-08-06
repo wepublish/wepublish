@@ -265,13 +265,13 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
               />
               <FormGroupWithPadding controlId="paymentMethodGracePeriod">
                 <Form.ControlLabel>{t('paymentMethodEditPanel.gracePeriod')}</Form.ControlLabel>
-                <Form.Control
+                <InputNumber
                   name="gracePeriod"
-                  accepter={InputNumber}
-                  value={gracePeriod}
+                  value={gracePeriod || undefined}
                   disabled={isDisabled}
-                  onChange={(value: string) => {
-                    setGracePeriod(Number(value))
+                  postfix={t('paymentMethodEditPanel.days')}
+                  onChange={(value: string | number) => {
+                    setGracePeriod(typeof value === 'string' ? Number(value) : value)
                   }}
                 />
                 <Form.HelpText>{t('paymentMethodEditPanel.gracePeriodHelpText')}</Form.HelpText>
