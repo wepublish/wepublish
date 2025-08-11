@@ -1,8 +1,4 @@
-import {
-  BlockContent,
-  TeaserSlotsBlock as TeaserSlotsBlockType,
-  TeaserSlotType
-} from '@wepublish/website/api'
+import {BlockContent, TeaserSlotsBlock as TeaserSlotsBlockType} from '@wepublish/website/api'
 import {BuilderTeaserSlotsBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {alignmentForTeaserBlock} from './teaser-grid-block'
 import {css} from '@mui/material'
@@ -66,16 +62,4 @@ export const TeaserSlotsBlock = ({
       </TeaserSlotsBlockTeasers>
     </TeaserSlotsBlockWrapper>
   )
-}
-
-export function getSlotsTeasers({
-  slots,
-  teasers
-}: Pick<BuilderTeaserSlotsBlockProps, 'slots' | 'teasers'>) {
-  return slots?.map(({teaser: manualTeaser, type}, index) => {
-    const autofillIndex = slots
-      .slice(0, index)
-      .filter(slot => slot.type === TeaserSlotType.Autofill).length
-    return type === TeaserSlotType.Manual ? manualTeaser : teasers[autofillIndex] ?? null
-  })
 }
