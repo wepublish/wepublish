@@ -10,30 +10,31 @@ const lastChildNoGutter = css`
 `
 export function OnlineReportsRenderElement(props: BuilderRenderElementProps): JSX.Element {
   const {
-    elements: {H2, H3, H4}
+    elements: {H2, H3, H4},
+    richtext: {RenderRichtext}
   } = useWebsiteBuilder()
 
-  const {attributes, children, element} = props
+  const {element} = props
 
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <H2 component="h2" {...attributes} gutterBottom css={lastChildNoGutter}>
-          {children}
+        <H2 component="h2" gutterBottom css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </H2>
       )
 
     case BlockFormat.H2:
       return (
-        <H3 component="h3" {...attributes} gutterBottom css={lastChildNoGutter}>
-          {children}
+        <H3 component="h3" gutterBottom css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </H3>
       )
 
     case BlockFormat.H3:
       return (
-        <H4 component="h4" {...attributes} gutterBottom css={lastChildNoGutter}>
-          {children}
+        <H4 component="h4" gutterBottom css={lastChildNoGutter}>
+          <RenderRichtext elements={element.children} />
         </H4>
       )
     default:
