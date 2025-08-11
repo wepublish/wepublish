@@ -24,6 +24,7 @@ import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
 import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
+import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
 import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
 import {Advertisement} from '../src/components/advertisement'
 import {Structure} from '../src/structure'
@@ -233,6 +234,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           Script={Script}
           AuthorChip={OnlineReportsAuthorChip}
           ArticleAuthors={OnlineReportsArticleAuthors}
+          ArticleList={OnlineReportsArticleList}
           Navbar={OnlineReportsNavbar}
           Article={OnlineReportsArticle}
           RegistrationForm={OnlineReportsRegistrationForm}
