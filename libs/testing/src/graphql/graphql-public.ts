@@ -1404,9 +1404,7 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT',
-  Subscribed = 'SUBSCRIBED',
-  Unsubscribed = 'UNSUBSCRIBED'
+  LoggedOut = 'LOGGED_OUT'
 }
 
 export type MailProviderModel = {

@@ -39,13 +39,13 @@ export default function SignUp() {
 
   return (
     <SignupWrapper>
-      <H3 component="h1">Registriere dich noch heute</H3>
+      <H3 component="h1">Registrieren Sie sich noch heute</H3>
 
       <Typography variant="body1" paragraph>
-        (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
+        (Falls Sie schon einen Account haben, <Link href={'/login'}>klicken Sie hier.</Link>)
       </Typography>
 
-      <RegistrationFormContainer />
+      <RegistrationFormContainer fields={['firstName']} />
     </SignupWrapper>
   )
 }
