@@ -2,7 +2,7 @@
   "subscription": {
     "subscriptionIsUnpaid": "Rechnung ist unbezahlt",
     "cancelSubscription": "Zahlung kündigen",
-    "cancelSubscriptionConfirmationText": "Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen werden storniert.",
+    "cancelSubscriptionConfirmationText": "Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offenen Rechnungen werden storniert.",
     "renewSubscriptionConfirmationText": "Wir freuen uns, dass Sie Ihren Unterstützungsbeitrag frühzeitig um ein {{subscriptionDuration}} verlängern möchten. Weiterfahren?",
     "noActiveSubscriptions": "Sie haben noch keine aktive Zahlung.",
     "subscribeNow": "Jetzt unterstützen."
