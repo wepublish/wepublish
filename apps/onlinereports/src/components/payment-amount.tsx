@@ -90,3 +90,5 @@ export const OnlineReportsPaymentAmount = forwardRef<HTMLInputElement, BuilderPa
     )
   }
 )
+
+OnlineReportsPaymentAmount.displayName = 'OnlineReportsPaymentAmount'
