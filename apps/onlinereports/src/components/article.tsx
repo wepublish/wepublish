@@ -4,7 +4,10 @@ import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
-import {ArticleProvider} from '../context/article-context'
+import {useEffect, useMemo} from 'react'
+import {useAdsContext} from '../context/ads-context'
+
+const articleAdsDisabledTags = ['Anzeige', 'Publireportage', 'Monatsgespräch', 'Das Monatsgespräch']
 
 export const ArticleWrapper = styled(ContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -52,6 +55,8 @@ export function OnlineReportsArticle({
     elements: {H3, Button}
   } = useWebsiteBuilder()
 
+  const {setAdsDisabled} = useAdsContext()
+
   const article = data?.article as ArticleType
 
   const scrollToComments = () => {
@@ -61,35 +66,43 @@ export function OnlineReportsArticle({
     }
   }
 
+  const adsDisabled = useMemo(
+    () => article?.tags?.some(({tag}) => tag && articleAdsDisabledTags.includes(tag)) ?? false,
+    [article]
+  )
+
+  useEffect(() => {
+    setAdsDisabled(adsDisabled)
+    return () => setAdsDisabled(false)
+  }, [adsDisabled, setAdsDisabled])
+
   return (
-    <ArticleProvider article={article}>
-      <ArticleWrapper className={className}>
-        {article && <ArticleSEO article={article} />}
+    <ArticleWrapper className={className}>
+      {article && <ArticleSEO article={article} />}
 
-        <Blocks
-          key={article.id}
-          blocks={(article?.latest.blocks as BlockContent[]) ?? []}
-          type="Article"
-        />
+      <Blocks
+        key={article.id}
+        blocks={(article?.latest.blocks as BlockContent[]) ?? []}
+        type="Article"
+      />
 
-        <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
+      <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
 
-        <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
+      <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
 
-        <ArticleBottomMeta>
-          {article && <ArticleMeta article={article} />}
-          {!data?.article?.disableComments && (
-            <>
-              <H3>Ihre Meinung zu diesem Artikel</H3>
-              <Button onClick={scrollToComments}>Kommentare</Button>
-            </>
-          )}
-        </ArticleBottomMeta>
+      <ArticleBottomMeta>
+        {article && <ArticleMeta article={article} />}
+        {!data?.article?.disableComments && (
+          <>
+            <H3>Ihre Meinung zu diesem Artikel</H3>
+            <Button onClick={scrollToComments}>Kommentare</Button>
+          </>
+        )}
+      </ArticleBottomMeta>
 
-        {children}
+      {children}
 
-        <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
-      </ArticleWrapper>
-    </ArticleProvider>
+      <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
+    </ArticleWrapper>
   )
 }

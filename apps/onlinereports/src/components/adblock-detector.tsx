@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react'
 import styled from '@emotion/styled'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {Typography} from '@mui/material'
+import {useAdsContext} from '../context/ads-context'
 
 const OVERLAY_KEY = 'adblock_overlay_dismissed_until'
 
@@ -39,8 +40,12 @@ const Buttons = styled('div')`
   flex-direction: row;
   gap: ${({theme}) => theme.spacing(3)};
 `
-
 export const AdblockOverlay = () => {
+  const {adsDisabled} = useAdsContext()
+
+  return <>{!adsDisabled && <AdblockOverlayComponent />}</>
+}
+export const AdblockOverlayComponent = () => {
   const [showOverlay, setShowOverlay] = useState(false)
   const {
     elements: {Button}
@@ -63,7 +68,7 @@ export const AdblockOverlay = () => {
         if (isHidden) {
           const wrapper = elAsHTMLElement.parentElement?.parentElement
           if (wrapper) {
-            (wrapper as HTMLElement).style.display = 'none'
+            ;(wrapper as HTMLElement).style.display = 'none'
           }
         } else {
           adBlocked = false
