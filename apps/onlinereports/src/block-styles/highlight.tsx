@@ -1,8 +1,6 @@
 import {
   alignmentForTeaserBlock,
-  getSlotsTeasers,
   hasBlockStyle,
-  isFilledTeaser,
   isTeaserGridBlock,
   isTeaserListBlock,
   isTeaserSlotsBlock,
@@ -35,14 +33,11 @@ export const HighlightBlockStyle = (
   block: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps | BuilderTeaserSlotsBlockProps
 ) => {
   const {teasers, blockStyle, className} = block
-  const filledTeasers = isTeaserSlotsBlock(block)
-    ? getSlotsTeasers(block)
-    : teasers.filter(isFilledTeaser)
   const numColumns = 1
 
   return (
     <TeaserGridBlockWrapper className={className} numColumns={numColumns}>
-      {filledTeasers.map((teaser, index) => (
+      {teasers.map((teaser, index) => (
         <HighlightTeaser
           key={index}
           teaser={teaser}
