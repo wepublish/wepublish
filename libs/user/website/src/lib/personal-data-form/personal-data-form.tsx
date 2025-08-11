@@ -15,6 +15,7 @@ import {useMemo, useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {z} from 'zod'
+import {t} from 'i18next'
 
 const fullWidth = css`
   grid-column: 1 / -1;
@@ -271,7 +272,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
             <RequestEmail>
               <Link
                 href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${user.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
-                Klicken Sie hier, um Ihre E-Mail-Adresse zu ändern.
+                {t('user.changeEmailRequest')}
               </Link>
             </RequestEmail>
           )}

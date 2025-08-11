@@ -26,6 +26,7 @@ import {
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {t} from 'i18next'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -104,7 +105,7 @@ function ProfilePage(props: ProfilePageProps) {
         )}
 
         <SubscriptionListWrapper>
-          <H4 component={'h1'}>Aktive Zahlungen</H4>
+          <H4 component={'h1'}>{t('user.activeSubscriptions')}</H4>
 
           <SubscriptionListContainer
             filter={subscriptions =>
@@ -114,7 +115,9 @@ function ProfilePage(props: ProfilePageProps) {
 
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">Frühere Zahlungen anzeigen</Link>
+              <Link href="/profile/subscription/deactivated">
+                {t('user.viewCancelledSubscriptions')}
+              </Link>
             </DeactivatedSubscriptions>
           )}
         </SubscriptionListWrapper>

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
+import {t} from 'i18next'
 
 export const SubscriptionListWrapper = styled('article')`
   display: grid;
@@ -28,8 +29,8 @@ export const SubscriptionList = ({
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
             <strong>
-              Sie haben noch keine aktive Zahlung.{' '}
-              <Link href={subscribeUrl}>Jetzt unterstützen.</Link>
+              {t('subscription.noActiveSubscriptions')}{' '}
+              <Link href={subscribeUrl}>{t('subscription.subscribeNow')}</Link>
             </strong>
           </SubscriptionListItemContent>
         </SubscriptionListItemWrapper>

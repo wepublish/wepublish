@@ -72,6 +72,8 @@ import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
 import {GoogleTagManager} from '@next/third-parties/google'
 import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
 import {useRouter} from 'next/router'
+import {mergeDeepRight} from 'ramda'
+import deOverridden from '../locales/deOverridden.json'
 
 setDefaultOptions({
   locale: de
@@ -80,7 +82,7 @@ setDefaultOptions({
 i18next
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverridden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
