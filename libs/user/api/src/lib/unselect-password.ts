@@ -15,6 +15,7 @@ export const unselectPassword: Record<
     | 'mailSent'
     | 'articleRevisions'
     | 'pageRevisions'
+    | 'internalNote'
   >,
   boolean
 > = {
