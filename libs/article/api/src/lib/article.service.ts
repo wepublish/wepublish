@@ -45,7 +45,9 @@ export class ArticleService {
   }: ArticleListArgs) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body)
-      filter.ids = articleIds
+      if (articleIds.length > 0) {
+        filter.ids = articleIds
+      }
     }
 
     const orderBy = createArticleOrder(sort, order)
@@ -527,8 +529,7 @@ export class ArticleService {
                         'german',
                         jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
                         '["string"]'
-                ) @@ to_tsquery('german'
-              , ${formattedQuery});
+                ) @@ to_tsquery('german', ${formattedQuery});
       `
 
       return foundArticleIds.map(item => item.id)
