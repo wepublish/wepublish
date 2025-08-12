@@ -82,7 +82,8 @@ export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanIte
                   locale
                 ),
                 monthlyPrice: formatCurrency(amountPerMonthMin / 100, currency, locale),
-                extendable
+                extendable,
+                exactAmount: props.tags?.includes('hide-payment-amount')
               })}
             </MemberPlanItemPrice>
           </MemberPlanItemContent>
