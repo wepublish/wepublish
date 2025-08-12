@@ -969,6 +969,8 @@ export type PaymentMethodInput = {
 
 export enum PaymentPeriodicity {
   Biannual = 'biannual',
+  Biennial = 'biennial',
+  Lifetime = 'lifetime',
   Monthly = 'monthly',
   Quarterly = 'quarterly',
   Yearly = 'yearly'

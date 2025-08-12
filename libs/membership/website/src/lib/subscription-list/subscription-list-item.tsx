@@ -18,6 +18,7 @@ import {
 import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
 import {MembershipModal} from '../membership-modal/membership-modal'
+import {t} from 'i18next'
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -146,7 +147,7 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> Abo ist unbezahlt
+              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung ist unbezahlt
             </SubscriptionListItemMetaItem>
           )}
 
@@ -200,14 +201,13 @@ export function SubscriptionListItem({
           await callAction(cancel)()
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={`Abo kündigen`}>
+        submitText={t('subscription.cancelSubscription')}>
         <H5 id="modal-modal-title" component="h1">
           {name} wirklich kündigen?
         </H5>
 
         <Paragraph gutterBottom={false}>
-          Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
-          Rechnungen des Abos werden storniert.
+          {t('subscription.cancelSubscriptionConfirmationText')}
         </Paragraph>
       </MembershipModal>
 
@@ -221,8 +221,7 @@ export function SubscriptionListItem({
         submitText={'Jetzt Verlängern'}>
         <H5 component="h1">Abo frühzeitig verlängern?</H5>
         <Paragraph gutterBottom={false}>
-          Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
-          willst. Weiterfahren?
+          {t('subscription.renewSubscriptionConfirmationText', {subscriptionDuration})}
         </Paragraph>
       </MembershipModal>
     </SubscriptionListItemWrapper>

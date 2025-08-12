@@ -1,8 +1,9 @@
-import {Theme, Toolbar, css, useTheme} from '@mui/material'
+import {css, Theme, Toolbar, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
+import {PropsWithChildren} from 'react'
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
@@ -50,7 +51,15 @@ export const FooterMainItems = styled('div')<{show: boolean}>`
   `}
 `
 
-export function Footer({className, categorySlugs, slug, data, loading, error}: BuilderFooterProps) {
+export function Footer({
+  className,
+  categorySlugs,
+  slug,
+  data,
+  loading,
+  error,
+  children
+}: BuilderFooterProps) {
   const mainItems = data?.navigations?.find(({key}) => key === slug)
 
   const categories = categorySlugs.map(categorySlugArray => {
@@ -67,7 +76,9 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
 
   return (
     <FooterWrapper className={className}>
-      <FooterPaper main={mainItems} categories={categories} />
+      <FooterPaper main={mainItems} categories={categories}>
+        {children}
+      </FooterPaper>
     </FooterWrapper>
   )
 }
@@ -136,11 +147,18 @@ const footerPaperLinkStyling = (theme: Theme) => css`
   }
 `
 
-const FooterPaperCategoryLinks = styled('div')`
+export const FooterPaperSection = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `
+
+const FooterPaperCategoryLinks = styled(FooterPaperSection)``
 
 const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
@@ -148,11 +166,12 @@ const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
 
 const FooterPaper = ({
   main,
-  categories
-}: {
+  categories,
+  children
+}: PropsWithChildren<{
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
-}) => {
+}>) => {
   const {
     elements: {Link, H4, H6}
   } = useWebsiteBuilder()
@@ -183,7 +202,7 @@ const FooterPaper = ({
               {arrayIndex > 0 && <FooterSeparator />}
               {categoryArray.map(nav => (
                 <FooterPaperCategory key={nav.id}>
-                  <FooterName>{nav.name}</FooterName>
+                  {nav.name && <FooterName>{nav.name}</FooterName>}
 
                   <FooterPaperCategoryLinks>
                     {nav.links?.map((link, index) => {
@@ -196,9 +215,7 @@ const FooterPaper = ({
                           color="inherit"
                           underline="none"
                           css={footerPaperLinkStyling(theme)}>
-                          <H6 component="span" css={{fontWeight: '700'}}>
-                            {link.label}
-                          </H6>
+                          <H6 component="span">{link.label}</H6>
                         </Link>
                       )
                     })}
@@ -209,6 +226,7 @@ const FooterPaper = ({
           ))}
         </>
       )}
+      {children}
     </FooterPaperWrapper>
   )
 }

@@ -127,7 +127,9 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,
   PaymentPeriodicity.Quarterly,
   PaymentPeriodicity.Biannual,
-  PaymentPeriodicity.Yearly
+  PaymentPeriodicity.Yearly,
+  PaymentPeriodicity.Biennial,
+  PaymentPeriodicity.Lifetime
 ]
 
 export enum StateColor {
