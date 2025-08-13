@@ -153,6 +153,9 @@ export class MediaService {
       }
     }
 
+    const transformGuard = new TransformGuard()
+    transformGuard.validateSignature(imageId, transformations)
+
     const sharpInstance = imageStream.pipe(
       sharp({
         animated: true,
@@ -161,7 +164,6 @@ export class MediaService {
     )
     let metadata = await sharpInstance.metadata()
 
-    const transformGuard = new TransformGuard()
     const effort = transformGuard.checkDimensions(metadata, transformations)
     transformGuard.checkQuality(transformations)
 

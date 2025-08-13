@@ -10,3 +10,5 @@ export * from './lib/media-service/media-service.module'
 export * from './lib/authentication/token.guard'
 export * from './lib/authentication/token.strategy'
 export * from './lib/authentication/token.module'
+
+export * from './lib/signature/mediaServerSignatureHelper'

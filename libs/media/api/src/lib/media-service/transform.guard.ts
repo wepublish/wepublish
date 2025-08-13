@@ -1,49 +1,13 @@
 import sharp from 'sharp'
 import {TransformationsDto} from './transformations.dto'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, ForbiddenException} from '@nestjs/common'
+import {MediaServerSignatureHelper} from '../signature/mediaServerSignatureHelper'
 
 const M_PIXEL_LIMIT = 20
 // WebP Max
 const IMAGE_SIZE_LIMIT = 10
 const MAX_IMAGE_QUALITY = 80
 const DEFAULT_IMAGE_QUALITY = 65
-
-type ImageDimension = {
-  height?: number
-  width?: number
-}
-
-const ALLOWED_DIMENSIONS: ImageDimension[] = [
-  // EDITOR FORMATS:
-  {width: 100, height: 100},
-  {width: 280, height: 200},
-  {width: 300},
-
-  // WEBSITE FORMATS NORMAL
-  {width: 1500},
-  {width: 1200},
-  {width: 1000},
-  {width: 800},
-  {width: 500},
-  {width: 300},
-  {width: 200},
-
-  // WEBSITE FORMATS SQUARE
-  {width: 1500, height: 1500},
-  {width: 1200, height: 1200},
-  {width: 1000, height: 1000},
-  {width: 800, height: 800},
-  {width: 500, height: 500},
-  {width: 300, height: 300},
-  {width: 200, height: 200}
-]
-
-if (process.env['EXTRA_ALLOWED_DIMENSIONS']) {
-  const EXTRA_ALLOWED_IMAGE_SIZES = JSON.parse(
-    process.env['EXTRA_ALLOWED_DIMENSIONS']
-  ) as ImageDimension[]
-  ALLOWED_DIMENSIONS.push(...EXTRA_ALLOWED_IMAGE_SIZES)
-}
 
 export class TransformGuard {
   private calculateMegaPixel(height: number, width: number) {
@@ -81,6 +45,20 @@ export class TransformGuard {
 
   public isAnimatedImage(metadata: sharp.Metadata) {
     return metadata.pages && metadata.pages > 1
+  }
+
+  public validateSignature(imageId: string, t: TransformationsDto) {
+    const {signature, ...dataWithoutSignature} = t
+    const validationSignature = MediaServerSignatureHelper.getSignatureForImage(
+      imageId,
+      dataWithoutSignature
+    )
+    console.log(validationSignature)
+    console.log(signature)
+    if (!MediaServerSignatureHelper.timeConstantCompare(signature ?? '', validationSignature)) {
+      throw new ForbiddenException('Invalid signature!')
+    }
+    return true
   }
 
   public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
@@ -129,39 +107,6 @@ export class TransformGuard {
     const totalWidth = (width ?? 0) + extendedWidth
 
     const mPixel = this.calculateMegaPixel(totalHeight, totalWidth)
-
-    let checkWidth: undefined | number = undefined
-    let checkHeight: undefined | number = undefined
-    if (resizeWidth) {
-      checkWidth = resizeWidth + extendedWidth
-    } else if (extendedWidth) {
-      checkWidth = totalWidth
-    }
-    if (resizeHeight) {
-      checkHeight = resizeHeight + extendedHeight
-    } else if (extendedWidth) {
-      checkHeight = totalHeight
-    }
-
-    const hasWidth = checkWidth != null
-    const hasHeight = checkHeight != null
-
-    let formatCheck: ImageDimension | undefined
-    if (hasWidth && !hasHeight) {
-      formatCheck = ALLOWED_DIMENSIONS.find(d => d.width === checkWidth && d.height == null)
-    } else if (!hasWidth && hasHeight) {
-      formatCheck = ALLOWED_DIMENSIONS.find(d => d.width == null && d.height === checkHeight)
-    } else if (hasWidth && hasHeight) {
-      formatCheck = ALLOWED_DIMENSIONS.find(d => d.width === checkWidth && d.height === checkHeight)
-    } else {
-      formatCheck = {width: undefined, height: undefined}
-    }
-
-    if (!formatCheck) {
-      throw new BadRequestException(
-        `Requested forbidden dimension (${checkWidth ?? '—'}x${checkHeight ?? '—'})`
-      )
-    }
 
     if (mPixel > mpLimit) {
       throw new BadRequestException(`Transformation exceeds pixel limit!`)

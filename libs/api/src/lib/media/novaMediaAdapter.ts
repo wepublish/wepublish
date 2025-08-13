@@ -11,6 +11,53 @@ import {
   UploadImage
 } from '@wepublish/image/api'
 import {MediaServerError} from './karmaMediaAdapter'
+import {
+  MediaServerSignatureHelper,
+  TransformationsDto,
+  TransformationsSchema
+} from '@wepublish/media/api'
+import process from 'node:process'
+import {BadRequestException} from '@nestjs/common'
+
+type ImageDimension = {
+  height?: number
+  width?: number
+}
+
+const ALLOWED_DIMENSIONS: ImageDimension[] = [
+  // EDITOR FORMATS:
+  {width: 100, height: 100},
+  {width: 280, height: 200},
+  {width: 400, height: 200},
+  {width: 800, height: 300},
+  {width: 260, height: 300},
+  {width: 300},
+
+  // WEBSITE FORMATS NORMAL
+  {width: 1500},
+  {width: 1200},
+  {width: 1000},
+  {width: 800},
+  {width: 500},
+  {width: 300},
+  {width: 200},
+
+  // WEBSITE FORMATS SQUARE
+  {width: 1500, height: 1500},
+  {width: 1200, height: 1200},
+  {width: 1000, height: 1000},
+  {width: 800, height: 800},
+  {width: 500, height: 500},
+  {width: 300, height: 300},
+  {width: 200, height: 200}
+]
+
+if (process.env['EXTRA_ALLOWED_DIMENSIONS']) {
+  const EXTRA_ALLOWED_IMAGE_SIZES = JSON.parse(
+    process.env['EXTRA_ALLOWED_DIMENSIONS']
+  ) as ImageDimension[]
+  ALLOWED_DIMENSIONS.push(...EXTRA_ALLOWED_IMAGE_SIZES)
+}
 
 export class NovaMediaAdapter implements MediaAdapter {
   readonly url: URL
@@ -93,6 +140,37 @@ export class NovaMediaAdapter implements MediaAdapter {
     return true
   }
 
+  validateImageDimension(transformations: ImageTransformation) {
+    const checkWidth = transformations.width
+    const checkHeight = transformations.height
+
+    const hasWidth = checkWidth != null
+    const hasHeight = checkHeight != null
+
+    let formatCheck: ImageDimension | undefined
+    if (hasWidth && !hasHeight) {
+      formatCheck = ALLOWED_DIMENSIONS.find(
+        d => d.width === parseInt(checkWidth) && d.height == null
+      )
+    } else if (!hasWidth && hasHeight) {
+      formatCheck = ALLOWED_DIMENSIONS.find(
+        d => d.width == null && d.height === parseInt(checkHeight)
+      )
+    } else if (hasWidth && hasHeight) {
+      formatCheck = ALLOWED_DIMENSIONS.find(
+        d => d.width === parseInt(checkWidth) && d.height === parseInt(checkHeight)
+      )
+    } else {
+      formatCheck = {width: undefined, height: undefined}
+    }
+
+    if (!formatCheck) {
+      throw new BadRequestException(
+        `Requested forbidden dimension (${checkWidth ?? '—'}x${checkHeight ?? '—'})`
+      )
+    }
+  }
+
   async getImageURL(image: Image, transformations?: ImageTransformation): Promise<string> {
     const queryParameters = [] as string[]
 
@@ -110,6 +188,8 @@ export class NovaMediaAdapter implements MediaAdapter {
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined
 
+      this.validateImageDimension(transformations)
+
       queryParameters.push(
         `resize=${JSON.stringify({
           width: transformations.width,
@@ -121,6 +201,7 @@ export class NovaMediaAdapter implements MediaAdapter {
       )
     }
 
+    /** NOT USED AT THE MOMENT WE SHOULD NOT HAVE UNUSED DDOS SURFACE
     if (
       transformations?.rotation &&
       // Ignore no rotation settings
@@ -146,12 +227,40 @@ export class NovaMediaAdapter implements MediaAdapter {
     if (transformations?.sharpen) {
       queryParameters.push(`sharpen=1`)
     }
+    **/
 
     // Max quality is 80 so 1 => 80
     queryParameters.push(
-      `quality=${transformations?.quality ? Math.ceil(transformations.quality * 80) : 65}`
+      `quality=${
+        transformations?.quality
+          ? this.roundToNearest10(Math.ceil(transformations.quality * 80))
+          : 65
+      }`
     )
 
+    const dto = this.parseTransformations(queryParameters)
+
+    const signature = MediaServerSignatureHelper.getSignatureForImage(image.id, dto)
+    queryParameters.push(`signature=${signature}`)
+
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)
+  }
+
+  parseTransformations(params: string[]): TransformationsDto {
+    const raw: Record<string, string> = {}
+
+    for (const entry of params) {
+      const eq = entry.indexOf('=')
+      if (eq === -1) continue
+      const key = entry.slice(0, eq).trim()
+      const value = entry.slice(eq + 1).trim()
+      raw[key] = value // leave as string, schema will coerce/parse
+    }
+
+    // This returns the fully parsed & validated DTO
+    return TransformationsSchema.parse(raw) as TransformationsDto
+  }
+  roundToNearest10(num: number) {
+    return Math.round(num / 10) * 10
   }
 }
