@@ -14,6 +14,14 @@ const isWithinGracePeriode = (subscription: FullSubscriptionFragment, today: Dat
   return today <= withinGracePeriod
 }
 
+const isPaidAndActive = (subscription: FullSubscriptionFragment, today: Date): boolean => {
+  return !!(
+    subscription.paidUntil &&
+    today > new Date(subscription.startsAt) &&
+    new Date(subscription.paidUntil) > today
+  )
+}
+
 export const useActiveSubscriptions = () => {
   const {hasUser} = useUser()
   const {data} = useSubscriptionsQuery({
@@ -21,19 +29,13 @@ export const useActiveSubscriptions = () => {
     skip: !hasUser
   })
 
-  const today = new Date()
-
-  const subscriptions = useMemo(
-    () =>
-      data?.subscriptions.filter(
-        subscription =>
-          (subscription.paidUntil &&
-            today > new Date(subscription.startsAt) &&
-            new Date(subscription.paidUntil) > today) ||
-          isWithinGracePeriode(subscription, today)
-      ),
-    [data?.subscriptions]
-  )
+  const subscriptions = useMemo(() => {
+    const today = new Date()
+    return data?.subscriptions.filter(
+      subscription =>
+        isPaidAndActive(subscription, today) || isWithinGracePeriode(subscription, today)
+    )
+  }, [data?.subscriptions])
 
   if (!hasUser) {
     return subscriptions
