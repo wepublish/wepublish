@@ -1613,6 +1613,11 @@
         "qrCodeTitle": "QR-Code für Bypass-Token",
         "downloadSvg": "SVG herunterladen"
       }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Zahlungsfrist",
+      "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
+      "days": "Tage"
     }
   }
 }

@@ -4,6 +4,7 @@ fragment FullPaymentMethod on PaymentMethod {
   name
   slug
   description
+  gracePeriod
   image {
     ...FullImage
   }

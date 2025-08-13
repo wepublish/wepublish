@@ -278,6 +278,7 @@ type PaymentMethod {
   description: String!
   paymentProvider: PaymentProvider
   active: Boolean!
+  gracePeriod: Int
   imageId: String
   image: Image
 }
@@ -1010,6 +1011,7 @@ input PaymentMethodInput {
   description: String!
   paymentProviderID: String!
   active: Boolean!
+  gracePeriod: Int
   imageId: String
 }
 

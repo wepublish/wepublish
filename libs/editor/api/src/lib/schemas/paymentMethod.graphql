@@ -9,6 +9,7 @@ fragment FullPaymentMethod on PaymentMethod {
   slug
   createdAt
   modifiedAt
+  gracePeriod
   paymentProvider {
     ...FullPaymentProvider
   }
