@@ -53,10 +53,17 @@ const ALLOWED_DIMENSIONS: ImageDimension[] = [
 ]
 
 if (process.env['EXTRA_ALLOWED_DIMENSIONS']) {
-  const EXTRA_ALLOWED_IMAGE_SIZES = JSON.parse(
+  const EXTRA_ALLOWED_IMAGE_DIMENSIONS = JSON.parse(
     process.env['EXTRA_ALLOWED_DIMENSIONS']
   ) as ImageDimension[]
-  ALLOWED_DIMENSIONS.push(...EXTRA_ALLOWED_IMAGE_SIZES)
+  ALLOWED_DIMENSIONS.push(...EXTRA_ALLOWED_IMAGE_DIMENSIONS)
+}
+
+const ALLOWED_QUALITIES: number[] = [65]
+
+if (process.env['EXTRA_ALLOWED_QUALITIES']) {
+  const EXTRA_ALLOWED_QUALITIES = JSON.parse(process.env['EXTRA_ALLOWED_QUALITIES']) as number[]
+  ALLOWED_QUALITIES.push(...EXTRA_ALLOWED_QUALITIES)
 }
 
 export class NovaMediaAdapter implements MediaAdapter {
@@ -201,7 +208,7 @@ export class NovaMediaAdapter implements MediaAdapter {
       )
     }
 
-    /** NOT USED AT THE MOMENT WE SHOULD NOT HAVE UNUSED DDOS SURFACE
+    /** NOT USED AT THE MOMENT WE SHOULD NOT HAVE UNUSED FUNCTIONS AS DDOS SURFACE THEY NEED TO BE LIMITED BY CONFIGURATION SAME AS QUALITY AND SIZE!
     if (
       transformations?.rotation &&
       // Ignore no rotation settings
@@ -228,15 +235,13 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
     **/
+    let quality = transformations?.quality
+    if (transformations?.quality) {
+      quality = ALLOWED_QUALITIES.includes(transformations.quality) ? quality : 65
+    }
 
     // Max quality is 80 so 1 => 80
-    queryParameters.push(
-      `quality=${
-        transformations?.quality
-          ? this.roundToNearest10(Math.ceil(transformations.quality * 80))
-          : 65
-      }`
-    )
+    queryParameters.push(`quality=${quality ? Math.ceil(quality * 80) : 65}`)
 
     const dto = this.parseTransformations(queryParameters)
 
@@ -259,8 +264,5 @@ export class NovaMediaAdapter implements MediaAdapter {
 
     // This returns the fully parsed & validated DTO
     return TransformationsSchema.parse(raw) as TransformationsDto
-  }
-  roundToNearest10(num: number) {
-    return Math.round(num / 10) * 10
   }
 }

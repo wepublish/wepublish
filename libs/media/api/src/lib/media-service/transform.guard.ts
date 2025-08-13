@@ -53,8 +53,7 @@ export class TransformGuard {
       imageId,
       dataWithoutSignature
     )
-    console.log(validationSignature)
-    console.log(signature)
+
     if (!MediaServerSignatureHelper.timeConstantCompare(signature ?? '', validationSignature)) {
       throw new ForbiddenException('Invalid signature!')
     }
