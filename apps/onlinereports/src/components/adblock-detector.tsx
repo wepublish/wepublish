@@ -68,7 +68,7 @@ export const AdblockOverlayComponent = () => {
         if (isHidden) {
           const wrapper = elAsHTMLElement.parentElement?.parentElement
           if (wrapper) {
-            ;(wrapper as HTMLElement).style.display = 'none'
+            (wrapper as HTMLElement).style.display = 'none'
           }
         } else {
           adBlocked = false
