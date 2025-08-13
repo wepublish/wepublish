@@ -1,7 +1,8 @@
-import {Link, css} from '@mui/material'
+import {css, Link} from '@mui/material'
 import styled from '@emotion/styled'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, ImageBlock as ImageBlockType} from '@wepublish/website/api'
+import {useTranslation} from 'react-i18next'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,6 +36,7 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
   const {
     elements: {Image}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   const img = image && <Image image={image} fetchPriority="high" css={imageStyles} />
 
@@ -51,7 +53,10 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
 
         {(caption || image?.source) && (
           <ImageBlockCaption>
-            {caption} {image?.source ? <>(Bild: {image?.source})</> : null}
+            {t('blocks.image.caption', {
+              caption,
+              source: image?.source ? t('blocks.image.captionSource', {source: image.source}) : null
+            })}
           </ImageBlockCaption>
         )}
       </ImageBlockInnerWrapper>

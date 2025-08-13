@@ -2,6 +2,7 @@ import {ImageList, ImageListItem} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
 import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useTranslation} from 'react-i18next'
 
 export const isImageGalleryBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -28,6 +29,7 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
   const {
     elements: {Image, Paragraph}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
   const nonEmptyImages = images.filter(image => image.image)
 
   return (
@@ -38,8 +40,12 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
             <Image image={image.image!} />
 
             <Paragraph gutterBottom={false}>
-              {image.caption ?? image.image?.title}{' '}
-              {image.image?.source ? <>(Bild: {image.image.source})</> : null}
+              {t('blocks.imageGallery.caption', {
+                caption: image.caption ?? image.image?.title,
+                source: image.image?.source
+                  ? t('blocks.imageGallery.captionSource', {source: image.image.source})
+                  : null
+              })}
             </Paragraph>
           </ImageListItem>
         ))}
