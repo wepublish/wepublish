@@ -53,7 +53,6 @@ import {
   TitleBlockTitle,
   TitleBlockWrapper
 } from '@wepublish/block-content/website'
-import {ContentWrapperStyled} from '@wepublish/content/website'
 import styled from '@emotion/styled'
 import {
   authLink,
@@ -122,7 +121,7 @@ const MainContent = styled('main')`
 
   row-gap: ${({theme}) => theme.spacing(7.5)};
 
-  ${ContentWrapperStyled} {
+  [class*='ContentWrapperStyled'][class*='ArticleWrapper'] {
     ${({theme}) => theme.breakpoints.down('md')} {
       row-gap: ${({theme}) => theme.spacing(5)};
     }
