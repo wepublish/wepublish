@@ -76,7 +76,7 @@ export const AdblockOverlay = () => {
         setShowOverlay(true)
         document.body.style.overflow = 'hidden'
       }
-    }, 2200)
+    }, 4200)
 
     return () => clearTimeout(timeout)
   }, [])
