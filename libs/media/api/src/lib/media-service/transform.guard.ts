@@ -13,7 +13,7 @@ type ImageDimension = {
   width?: number
 }
 
-let ALLOWED_DIMENSIONS: ImageDimension[] = [
+const ALLOWED_DIMENSIONS: ImageDimension[] = [
   // EDITOR FORMATS:
   {width: 100, height: 100},
   {width: 280, height: 200},
@@ -89,7 +89,7 @@ export class TransformGuard {
     const originalWidth = metadata.width
     const resizeWidth = transformations.resize?.width
     const hasAnimation = this.isAnimatedImage(metadata)
-    let mpLimit = M_PIXEL_LIMIT
+    const mpLimit = M_PIXEL_LIMIT
 
     // Ensure that original picture is not more than M_PIXEL_LIMIT
     if (this.dimensionAutoResizeCheck(transformations)) {
