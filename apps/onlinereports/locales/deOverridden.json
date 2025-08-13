@@ -1,4 +1,12 @@
 {
+  "blocks": {
+    "image": {
+      "captionSource": "(© {{source}})"
+    },
+    "imageGallery": {
+      "captionSource": "(© {{source}})"
+    }
+  },
   "subscription": {
     "subscriptionIsUnpaid": "Rechnung ist unbezahlt",
     "cancelSubscription": "Zahlung kündigen",
