@@ -72,9 +72,9 @@ import {OnlineReportsRenderElement} from '../src/render-element'
 import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
 import {GoogleTagManager} from '@next/third-parties/google'
 import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
-import {useRouter} from 'next/router'
 import {mergeDeepRight} from 'ramda'
 import deOverridden from '../locales/deOverridden.json'
+import {AdsProvider} from '../src/context/ads-context'
 
 setDefaultOptions({
   locale: de
@@ -174,7 +174,9 @@ const MainContent = styled('main')`
 `
 
 const WideboardPlacer = styled('div')`
-  margin-bottom: -${({theme}) => theme.spacing(5)};
+  * {
+    margin-bottom: -${({theme}) => theme.spacing(5)};
+  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -224,95 +226,94 @@ type CustomAppProps = AppProps<{
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
 
-  const router = useRouter()
-
   return (
     <AppCacheProvider emotionCache={emotionCache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          AuthorChip={OnlineReportsAuthorChip}
-          ArticleAuthors={OnlineReportsArticleAuthors}
-          ArticleList={OnlineReportsArticleList}
-          Navbar={OnlineReportsNavbar}
-          Article={OnlineReportsArticle}
-          RegistrationForm={OnlineReportsRegistrationForm}
-          PaymentAmount={OnlineReportsPaymentAmount}
-          richtext={{RenderElement: OnlineReportsRenderElement}}
-          elements={{Link: NextWepublishLink}}
-          blocks={{
-            Teaser: OnlineReportsTeaser,
-            Renderer: OnlineReportsBlockRenderer,
-            TeaserList: OnlineReportsTeaserListBlock,
-            Quote: OnlineReportsQuoteBlock,
-            Subscribe: Mitmachen,
-            Title: OnlineReportsTitle
-          }}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <OnlineReportsGlobalStyles />
+      <AdsProvider>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            AuthorChip={OnlineReportsAuthorChip}
+            ArticleAuthors={OnlineReportsArticleAuthors}
+            ArticleList={OnlineReportsArticleList}
+            Navbar={OnlineReportsNavbar}
+            Article={OnlineReportsArticle}
+            RegistrationForm={OnlineReportsRegistrationForm}
+            PaymentAmount={OnlineReportsPaymentAmount}
+            richtext={{RenderElement: OnlineReportsRenderElement}}
+            elements={{Link: NextWepublishLink}}
+            blocks={{
+              Teaser: OnlineReportsTeaser,
+              Renderer: OnlineReportsBlockRenderer,
+              TeaserList: OnlineReportsTeaserListBlock,
+              Quote: OnlineReportsQuoteBlock,
+              Subscribe: Mitmachen,
+              Title: OnlineReportsTitle
+            }}
+            date={{format: dateFormatter}}
+            meta={{siteTitle}}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <OnlineReportsGlobalStyles />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-              <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
-              <script src="//servedby.revive-adserver.net/asyncjs.php" async />
-            </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
+                <script src="//servedby.revive-adserver.net/asyncjs.php" async />
+              </Head>
 
-            <AdblockOverlay />
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-                loginBtn={{href: '/login'}}
-                profileBtn={{href: '/profile'}}
-              />
-              <MainContainer>
-                <MainContent>
-                  {router.pathname !== '/mitmachen' && (
+              <AdblockOverlay />
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                  loginBtn={{href: '/login'}}
+                  profileBtn={{href: '/profile'}}
+                />
+                <MainContainer>
+                  <MainContent>
                     <WideboardPlacer>
                       <Advertisement type={'whiteboard'} />
                     </WideboardPlacer>
-                  )}
-                  <Component {...pageProps} />
-                </MainContent>
-              </MainContainer>
-              <AdvertisementPlacer>
-                {router.pathname !== '/mitmachen' && <Advertisement type={'half-page'} />}
-              </AdvertisementPlacer>
-              <OnlineReportsFooter />
-            </Spacer>
+                    <Component {...pageProps} />
+                  </MainContent>
+                </MainContainer>
+                <AdvertisementPlacer>
+                  <Advertisement type={'half-page'} />
+                </AdvertisementPlacer>
 
-            <RoutedAdminBar />
-            {publicRuntimeConfig.env.GTM_ID && (
-              <>
-                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-              </>
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
+                <OnlineReportsFooter />
+              </Spacer>
+
+              <RoutedAdminBar />
+              {publicRuntimeConfig.env.GTM_ID && (
+                <>
+                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+                </>
+              )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AdsProvider>
     </AppCacheProvider>
   )
 }

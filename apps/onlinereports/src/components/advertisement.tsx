@@ -3,12 +3,18 @@ import {Box, useMediaQuery, useTheme} from '@mui/material'
 import {ReviveAd} from './revive-ad'
 import {useRouter} from 'next/router'
 import {useEffect, useState} from 'react'
+import {useAdsContext} from '../context/ads-context'
 
 type AdvertisementProps = {
   type: 'whiteboard' | 'half-page' | 'small'
 }
 
 export const Advertisement = ({type}: AdvertisementProps) => {
+  const {adsDisabled} = useAdsContext()
+  return <>{!adsDisabled && <AdvertisementComponent type={type} />}</>
+}
+
+const AdvertisementComponent = ({type}: AdvertisementProps) => {
   const theme = useTheme()
   const notLg = useMediaQuery(theme.breakpoints.down('sm'), {
     ssrMatchMedia: () => ({matches: false})
@@ -74,6 +80,7 @@ const Wideboard = styled(AdBox)`
 
 const HalfPage = styled(AdBox)`
   margin: 0;
+
   & {
     height: 100%;
     max-height: calc(100vh - 120px);

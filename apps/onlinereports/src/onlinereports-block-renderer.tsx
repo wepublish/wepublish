@@ -12,10 +12,10 @@ import {AktuelleBild, IsAktuelleBildTeasers} from './block-styles/aktuelle-bild'
 import {BuilderBlockRendererProps} from '@wepublish/website/builder'
 import {BlockRenderer} from '@wepublish/block-content/website'
 import {Advertisement} from './components/advertisement'
-import {useArticleContext} from './context/article-context'
+import {useAdsContext} from './context/ads-context'
 
 export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => {
-  const {article} = useArticleContext()
+  const {adsDisabled} = useAdsContext()
   const extraBlockMap = useMemo(
     () =>
       cond([
@@ -33,8 +33,6 @@ export const OnlineReportsBlockRenderer = (props: BuilderBlockRendererProps) => 
     return block
   }
   const position = props.index + 1
-  const adsDisabledTags = ['Anzeige', 'Publireportage', 'Monatsgespräch', 'Das Monatsgespräch']
-  const adsDisabled = article?.tags.some(({tag}) => tag && adsDisabledTags.includes(tag)) ?? true
 
   return (
     <>
