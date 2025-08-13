@@ -16,6 +16,7 @@ import {
 import {FileInterceptor} from '@nestjs/platform-express'
 import {
   getTransformationKey,
+  MediaServerSignatureHelper,
   MediaService,
   SupportedImagesValidator,
   TokenAuthGuard,
@@ -89,7 +90,9 @@ export class AppController {
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    const cacheKey = `${imageId}-${getTransformationKey(transformations)}`
+    const cacheKey = `${imageId}-${getTransformationKey(
+      MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
+    )}`
 
     // Check if image is cached
     const cachedBuffer = this.imageCacheService.get(cacheKey)

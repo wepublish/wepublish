@@ -48,13 +48,13 @@ export class TransformGuard {
   }
 
   public validateSignature(imageId: string, t: TransformationsDto) {
-    const {signature, ...dataWithoutSignature} = t
+    const {sig, ...dataWithoutSignature} = t
     const validationSignature = MediaServerSignatureHelper.getSignatureForImage(
       imageId,
       dataWithoutSignature
     )
 
-    if (!MediaServerSignatureHelper.timeConstantCompare(signature ?? '', validationSignature)) {
+    if (!MediaServerSignatureHelper.timeConstantCompare(sig ?? '', validationSignature)) {
       throw new ForbiddenException('Invalid signature!')
     }
     return true

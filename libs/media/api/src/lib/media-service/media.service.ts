@@ -7,6 +7,7 @@ import {createHash} from 'crypto'
 import {Readable} from 'stream'
 import * as fs from 'fs'
 import * as path from 'path'
+import {MediaServerSignatureHelper} from '../signature/mediaServerSignatureHelper'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
@@ -83,7 +84,9 @@ export class MediaService {
   }
 
   public async getImage(imageId: string, transformations: TransformationsDto) {
-    const transformationsKey = getTransformationKey(transformations)
+    const transformationsKey = getTransformationKey(
+      MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
+    )
 
     let file: Readable
     try {
@@ -134,13 +137,17 @@ export class MediaService {
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
         imageExists = false
-        imageStream = this.getFallbackImage(transformations)
+        imageStream = this.getFallbackImage(
+          MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
+        )
       } else {
         throw e
       }
     }
 
-    const transformationsKey = getTransformationKey(transformations)
+    const transformationsKey = getTransformationKey(
+      MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
+    )
     if (!imageExists) {
       try {
         imageStream = await this.storage.getFile(

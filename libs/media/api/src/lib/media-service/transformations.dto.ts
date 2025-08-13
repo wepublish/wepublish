@@ -12,7 +12,7 @@ const stringToJSONSchema = z.string().transform((str, ctx) => {
 
 export const TransformationsSchema = z
   .object({
-    signature: z.coerce.string(),
+    sig: z.coerce.string(),
     quality: z.coerce.number(),
     negate: z.coerce.boolean(),
     grayscale: z.coerce.boolean(),

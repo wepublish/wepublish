@@ -246,7 +246,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     const dto = this.parseTransformations(queryParameters)
 
     const signature = MediaServerSignatureHelper.getSignatureForImage(image.id, dto)
-    queryParameters.push(`signature=${signature}`)
+    queryParameters.push(`sig=${signature}`)
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)
   }
