@@ -5,7 +5,6 @@ import type {FileUpload} from 'graphql-upload'
 import {
   ArrayBufferUpload,
   Image,
-  ImageRotation,
   ImageTransformation,
   MediaAdapter,
   UploadImage
@@ -208,7 +207,7 @@ export class NovaMediaAdapter implements MediaAdapter {
       )
     }
 
-    /** NOT USED AT THE MOMENT WE SHOULD NOT HAVE UNUSED FUNCTIONS AS DDOS SURFACE THEY NEED TO BE LIMITED BY CONFIGURATION SAME AS QUALITY AND SIZE!
+    /** NOT USED AT THE MOMENT WE SHOULD NOT HAVE UNUSED FUNCTIONS AS DDOS SURFACE THEY NEED TO BE LIMITED BY CONFIGURATION SAME AS QUALITY AND DIMENSION!
     if (
       transformations?.rotation &&
       // Ignore no rotation settings

@@ -1,5 +1,6 @@
 import * as crypto from 'crypto'
-import {getTransformationKey, TransformationsDto} from '@wepublish/media/api'
+import {TransformationsDto} from '../media-service/transformations.dto'
+import {getTransformationKey} from '../media-service/media.service'
 import {timingSafeEqual} from 'crypto'
 
 const TOKEN = process.env['MEDIA_SERVER_TOKEN'] || process.env['TOKEN']
