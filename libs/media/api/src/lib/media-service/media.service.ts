@@ -10,7 +10,7 @@ import {
   removeSignatureFromTransformations,
   getTransformationKey,
   TransformationsDto
-} from '@wepublish/media-signer'
+} from '@wepublish/media-transform-guard'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 

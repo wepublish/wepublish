@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'media-signer-api',
+  displayName: 'media-transform-guard-api',
   preset: '../../../jest.preset.js',
   globals: {},
   testEnvironment: 'node',

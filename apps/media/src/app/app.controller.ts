@@ -19,7 +19,7 @@ import {
   getTransformationKey,
   removeSignatureFromTransformations,
   TransformationsDto
-} from '@wepublish/media-signer'
+} from '@wepublish/media-transform-guard'
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'

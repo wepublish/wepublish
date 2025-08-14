@@ -4,7 +4,7 @@ import {
   timeConstantCompare,
   getSignatureForImage,
   TransformationsDto
-} from '@wepublish/media-signer'
+} from '@wepublish/media-transform-guard'
 
 const M_PIXEL_LIMIT = 20
 // WebP Max

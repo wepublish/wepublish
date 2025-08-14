@@ -15,8 +15,8 @@ import {
   sanitizeImageQuality,
   TransformationsDto,
   TransformationsSchema
-} from '@wepublish/media-signer'
-import {validateImageDimension} from '@wepublish/media-signer'
+} from '@wepublish/media-transform-guard'
+import {validateImageDimension} from '@wepublish/media-transform-guard'
 
 export class NovaMediaAdapter implements MediaAdapter {
   readonly url: URL
@@ -156,8 +156,9 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
     **/
-    if (transformations?.quality) {
-      sanitizeImageQuality(transformations.quality)
+    let quality = transformations?.quality
+    if (quality) {
+      quality = sanitizeImageQuality(quality)
     }
 
     // Max quality is 80 so 1 => 80
