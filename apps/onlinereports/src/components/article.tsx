@@ -5,14 +5,20 @@ import {CommentListWrapper} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
 import {ArticleProvider} from '../context/article-context'
+import {OnlineReportsQuoteBlockWrapper} from './quote-block'
 
-export const ArticleWrapper = styled(ContentWrapper)`
-  ${({theme}) => theme.breakpoints.up('md')} {
-    & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
-      grid-column: 2/12;
-    }
-  }
-`
+import {
+  BreakBlockWrapper,
+  EventBlockWrapper,
+  HeadingWithImage,
+  HeadingWithoutImage,
+  ImageBlockCaption,
+  ImageBlockInnerWrapper,
+  ImageBlockWrapper,
+  RichTextBlockWrapper,
+  SliderWrapper,
+  TitleBlockWrapper
+} from '@wepublish/block-content/website'
 
 export const ArticlePreTitle = styled('div')`
   margin-top: ${({theme}) => theme.spacing(4)};
@@ -35,6 +41,57 @@ export const ArticleBottomMeta = styled('aside')`
   flex-direction: column;
   gap: ${({theme}) => theme.spacing(5)};
   align-items: start;
+`
+
+export const ArticleWrapper = styled(ContentWrapper)`
+  ${({theme}) => theme.breakpoints.up('md')} {
+    & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
+      grid-column: 2/12;
+    }
+  }
+
+  ${({theme}) => theme.breakpoints.down('md')} {
+    row-gap: ${({theme}) => theme.spacing(5)};
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    row-gap: ${({theme}) => theme.spacing(4)};
+
+    &
+      > :is(
+        ${RichTextBlockWrapper},
+          ${ArticleTopMeta},
+          ${ArticleBottomMeta},
+          ${ArticlePreTitle},
+          ${TitleBlockWrapper},
+          ${OnlineReportsQuoteBlockWrapper}
+      ) {
+      grid-column: 3/11;
+    }
+
+    ${RichTextBlockWrapper} {
+    }
+
+    & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
+      grid-column: 2/12;
+    }
+  }
+
+  ${HeadingWithoutImage}, ${HeadingWithImage} {
+    text-transform: none;
+    font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
+    font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
+    font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
+  }
+
+  ${ImageBlockInnerWrapper} {
+    gap: ${({theme}) => theme.spacing(1)};
+  }
+
+  ${ImageBlockCaption} {
+    color: #7c7c7c;
+    font-size: 14px;
+  }
 `
 
 export function OnlineReportsArticle({
