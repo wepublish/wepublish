@@ -116,7 +116,7 @@ export class NovaMediaAdapter implements MediaAdapter {
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined
 
-      validateImageDimension(transformations)
+      validateImageDimension(transformations.width, transformations.height)
 
       queryParameters.push(
         `resize=${JSON.stringify({

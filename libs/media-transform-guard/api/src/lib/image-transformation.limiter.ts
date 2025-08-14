@@ -1,4 +1,3 @@
-import {ImageTransformation} from '@wepublish/image/api'
 import {BadRequestException} from '@nestjs/common'
 
 type ImageDimension = {
@@ -48,10 +47,10 @@ if (process.env['EXTRA_ALLOWED_QUALITIES']) {
   ALLOWED_QUALITIES.push(...EXTRA_ALLOWED_QUALITIES)
 }
 
-export const validateImageDimension = (transformations: ImageTransformation) => {
-  const checkWidth = transformations.width
-  const checkHeight = transformations.height
-
+export const validateImageDimension = (
+  checkWidth: string | undefined,
+  checkHeight: string | undefined
+) => {
   const hasWidth = checkWidth != null
   const hasHeight = checkHeight != null
 
