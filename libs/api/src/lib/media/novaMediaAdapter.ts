@@ -164,13 +164,17 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Max quality is 80 so 1 => 80
     queryParameters.push(`quality=${quality ? Math.ceil(quality * 80) : 65}`)
 
-    const dto = this.parseTransformations(queryParameters)
+    const transformationsDto = this.parseTransformations(queryParameters)
 
-    const signature = getSignatureForImage(image.id, dto)
+    const signature = getSignatureForImage(image.id, transformationsDto)
     queryParameters.push(`sig=${signature}`)
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)
   }
+
+  /**
+   * Parse and validate image-transformation parameters from an array of `key=value` strings.
+   */
 
   parseTransformations(params: string[]): TransformationsDto {
     const raw: Record<string, string> = {}
@@ -180,10 +184,9 @@ export class NovaMediaAdapter implements MediaAdapter {
       if (eq === -1) continue
       const key = entry.slice(0, eq).trim()
       const value = entry.slice(eq + 1).trim()
-      raw[key] = value // leave as string, schema will coerce/parse
+      raw[key] = value
     }
 
-    // This returns the fully parsed & validated DTO
     return TransformationsSchema.parse(raw) as TransformationsDto
   }
 }
