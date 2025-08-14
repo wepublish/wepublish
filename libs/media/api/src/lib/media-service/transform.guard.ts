@@ -1,7 +1,10 @@
 import sharp from 'sharp'
-import {TransformationsDto} from './transformations.dto'
 import {BadRequestException, ForbiddenException} from '@nestjs/common'
-import {MediaServerSignatureHelper} from '../signature/mediaServerSignatureHelper'
+import {
+  timeConstantCompare,
+  getSignatureForImage,
+  TransformationsDto
+} from '@wepublish/media-signer'
 
 const M_PIXEL_LIMIT = 20
 // WebP Max
@@ -49,12 +52,9 @@ export class TransformGuard {
 
   public validateSignature(imageId: string, t: TransformationsDto) {
     const {sig, ...dataWithoutSignature} = t
-    const validationSignature = MediaServerSignatureHelper.getSignatureForImage(
-      imageId,
-      dataWithoutSignature
-    )
+    const validationSignature = getSignatureForImage(imageId, dataWithoutSignature)
 
-    if (!MediaServerSignatureHelper.timeConstantCompare(sig ?? '', validationSignature)) {
+    if (!timeConstantCompare(sig ?? '', validationSignature)) {
       throw new ForbiddenException('Invalid signature!')
     }
     return true

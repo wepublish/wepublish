@@ -1,13 +1,16 @@
 import {Inject, Injectable} from '@nestjs/common'
 import sharp from 'sharp'
-import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
 import {TransformGuard} from './transform.guard'
 import {createHash} from 'crypto'
 import {Readable} from 'stream'
 import * as fs from 'fs'
 import * as path from 'path'
-import {MediaServerSignatureHelper} from '../signature/mediaServerSignatureHelper'
+import {
+  removeSignatureFromTransformations,
+  getTransformationKey,
+  TransformationsDto
+} from '@wepublish/media-signer'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
@@ -48,19 +51,6 @@ const fallbackImageRatios: FallbackImageRatio[] = [
   }
 ]
 
-export const getTransformationKey = (transformations: TransformationsDto) => {
-  return JSON.stringify(transformations, (_key, value) =>
-    value instanceof Object && !(value instanceof Array)
-      ? Object.keys(value)
-          .sort()
-          .reduce((sorted, key) => {
-            sorted[key] = value[key]
-            return sorted
-          }, {} as Record<string, unknown>)
-      : value
-  )
-}
-
 @Injectable()
 export class MediaService {
   constructor(
@@ -85,7 +75,7 @@ export class MediaService {
 
   public async getImage(imageId: string, transformations: TransformationsDto) {
     const transformationsKey = getTransformationKey(
-      MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
+      removeSignatureFromTransformations(transformations)
     )
 
     let file: Readable
@@ -137,16 +127,14 @@ export class MediaService {
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
         imageExists = false
-        imageStream = this.getFallbackImage(
-          MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
-        )
+        imageStream = this.getFallbackImage(removeSignatureFromTransformations(transformations))
       } else {
         throw e
       }
     }
 
     const transformationsKey = getTransformationKey(
-      MediaServerSignatureHelper.removeSignatureFromTransformations(transformations)
+      removeSignatureFromTransformations(transformations)
     )
     if (!imageExists) {
       try {

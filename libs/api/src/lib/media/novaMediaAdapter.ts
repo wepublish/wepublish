@@ -11,10 +11,10 @@ import {
 } from '@wepublish/image/api'
 import {MediaServerError} from './karmaMediaAdapter'
 import {
-  MediaServerSignatureHelper,
+  getSignatureForImage,
   TransformationsDto,
   TransformationsSchema
-} from '@wepublish/media/api'
+} from '@wepublish/media-signer'
 import process from 'node:process'
 import {BadRequestException} from '@nestjs/common'
 
@@ -244,7 +244,7 @@ export class NovaMediaAdapter implements MediaAdapter {
 
     const dto = this.parseTransformations(queryParameters)
 
-    const signature = MediaServerSignatureHelper.getSignatureForImage(image.id, dto)
+    const signature = getSignatureForImage(image.id, dto)
     queryParameters.push(`sig=${signature}`)
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)

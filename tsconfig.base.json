@@ -104,6 +104,7 @@
       "@wepublish/utils/website/sentry/edge": ["libs/utils/sentry/sentry.edge.config.ts"],
       "@wepublish/utils/website/sentry/server": ["libs/utils/sentry/sentry.server.config.ts"],
       "@wepublish/versionInformation/api": ["libs/versionInformation/api/src/index.ts"],
+      "@wepublish/media-signer": ["libs/media-signer/api/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/admin": ["libs/website/admin/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
