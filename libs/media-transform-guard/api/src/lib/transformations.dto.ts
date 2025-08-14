@@ -10,8 +10,9 @@ const stringToJSONSchema = z.string().transform((str, ctx) => {
   }
 })
 
-const TransformationsSchema = z
+export const TransformationsSchema = z
   .object({
+    sig: z.coerce.string(),
     quality: z.coerce.number(),
     negate: z.coerce.boolean(),
     grayscale: z.coerce.boolean(),
