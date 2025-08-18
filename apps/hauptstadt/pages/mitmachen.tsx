@@ -12,22 +12,27 @@ export const HAS_FORM_FIELDS = ['firstName', 'address', 'emailRepeated'] satisfi
   typeof SubscribePage
 >['fields']
 
+export const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => {
+  return (
+    <HauptstadtContentFullWidth>
+      <SubscribePage
+        {...props}
+        sort={sortBy(memberPlan => {
+          const tag = memberPlan.tags
+            ?.find(tag => tag.startsWith('sort-order:'))
+            ?.replace('sort-order:', '')
+
+          return tag ? +tag : 0
+        })}
+        fields={HAS_FORM_FIELDS}
+      />
+    </HauptstadtContentFullWidth>
+  )
+}
 export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
   return (
     <PageContainer slug="mitmachen">
-      <HauptstadtContentFullWidth>
-        <SubscribePage
-          {...props}
-          sort={sortBy(memberPlan => {
-            const tag = memberPlan.tags
-              ?.find(tag => tag.startsWith('sort-order:'))
-              ?.replace('sort-order:', '')
-
-            return tag ? +tag : 0
-          })}
-          fields={HAS_FORM_FIELDS}
-        />
-      </HauptstadtContentFullWidth>
+      <MitmachenInner {...props} />
     </PageContainer>
   )
 }
