@@ -1,14 +1,14 @@
 import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, BreakBlock} from '@wepublish/website/api'
-import {useWebsiteBuilder, BuilderBlockStyleProps} from '@wepublish/website/builder'
+import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isBreakBlock} from '../../break/break-block'
 import {hasBlockStyle} from '../../blocks'
 import {allPass} from 'ramda'
 
 export const BannerWrapper = styled('a')`
   aspect-ratio: 2.7/1;
-  width: 100%;
+  min-width: 100%;
   background-color: ${({theme}) => theme.palette.info.main};
   text-decoration: none;
   color: inherit;
