@@ -10,7 +10,18 @@ import {
 import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Form,
+  InputNumber,
+  Message,
+  Panel,
+  Schema,
+  SelectPicker,
+  toaster,
+  Toggle
+} from 'rsuite'
 import {
   ChooseEditImage,
   PermissionControl,
@@ -19,6 +30,7 @@ import {
 } from '../atoms'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import styled from '@emotion/styled'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -26,6 +38,10 @@ export interface PaymentMethodEditPanelProps {
   onClose?(): void
   onSave?(paymentMethod: FullPaymentMethodFragment): void
 }
+
+const FormGroupWithPadding = styled(Form.Group)`
+  padding-top: ${({theme}) => theme.spacing(2)};
+`
 
 function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
   const {t} = useTranslation()
@@ -36,6 +52,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [active, setActive] = useState<boolean>(true)
+  const [gracePeriod, setGracePeriod] = useState<number | undefined | null>()
   const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
   const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
 
@@ -83,6 +100,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
       setActive(data.paymentMethod.active)
       setPaymentProvider(data.paymentMethod.paymentProvider ?? undefined)
       setImage(data.paymentMethod.image ?? undefined)
+      setGracePeriod(data.paymentMethod.gracePeriod)
     }
   }, [data?.paymentMethod])
 
@@ -120,6 +138,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
             slug,
             description,
             active,
+            gracePeriod,
             paymentProviderID: paymentProvider.id,
             imageId: image?.id
           }
@@ -135,6 +154,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
             slug,
             description,
             active,
+            gracePeriod,
             paymentProviderID: paymentProvider.id
           }
         }
@@ -243,6 +263,19 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
                   setDescription(value)
                 }}
               />
+              <FormGroupWithPadding controlId="paymentMethodGracePeriod">
+                <Form.ControlLabel>{t('paymentMethodEditPanel.gracePeriod')}</Form.ControlLabel>
+                <InputNumber
+                  name="gracePeriod"
+                  value={gracePeriod || undefined}
+                  disabled={isDisabled}
+                  postfix={t('paymentMethodEditPanel.days')}
+                  onChange={(value: string | number) => {
+                    setGracePeriod(typeof value === 'string' ? Number(value) : value)
+                  }}
+                />
+                <Form.HelpText>{t('paymentMethodEditPanel.gracePeriodHelpText')}</Form.HelpText>
+              </FormGroupWithPadding>
             </Form.Group>
           </Panel>
         </Drawer.Body>

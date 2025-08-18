@@ -27,6 +27,9 @@ export class PaymentMethod {
 
   active!: boolean
 
+  @Field(() => Number, {nullable: true})
+  gracePeriod!: number | null
+
   imageId!: string | null
   image?: Image
 }
@@ -47,6 +50,9 @@ export class CreatePaymentMethodInput {
 
   @Field()
   active!: boolean
+
+  @Field(() => Number, {nullable: true})
+  gracePeriod!: number | null
 }
 
 @ArgsType()
@@ -74,6 +80,9 @@ export class UpdatePaymentMethodInput {
 
   @Field({nullable: true})
   active?: boolean
+
+  @Field(() => Number, {nullable: true})
+  gracePeriod?: number
 }
 
 @ArgsType()
