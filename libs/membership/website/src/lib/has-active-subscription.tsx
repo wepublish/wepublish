@@ -17,6 +17,7 @@ const isWithinGracePeriode = (subscription: FullSubscriptionFragment, today: Dat
 const isPaidAndActive = (subscription: FullSubscriptionFragment, today: Date): boolean => {
   return !!(
     subscription.paidUntil &&
+    // @todo: startsAt is supposedly not necessary. Thus, it could go into a single check with grace period.
     today > new Date(subscription.startsAt) &&
     new Date(subscription.paidUntil) > today
   )
@@ -33,6 +34,7 @@ export const useActiveSubscriptions = () => {
     const today = new Date()
     return data?.subscriptions.filter(
       subscription =>
+        // @todo: could possibly be combined into a single check if 'startAt' is not needed (which is supposedly the case).
         isPaidAndActive(subscription, today) || isWithinGracePeriode(subscription, today)
     )
   }, [data?.subscriptions])
