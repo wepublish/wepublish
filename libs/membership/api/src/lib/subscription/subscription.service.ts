@@ -86,7 +86,6 @@ export class SubscriptionService {
 
   /**
    * Get all invoices that are open
-   * @param runDate The current date.
    * @returns All invoices that are due.
    */
   public async findAllOpenInvoices() {
@@ -398,7 +397,6 @@ export class SubscriptionService {
   /**
    * Check state of remote invoice via payment provider
    * @param invoice The invoice to charge.
-   * @param mailActions The possible mailtemplates to use in case of success/failure.
    * @returns The transaction status.
    */
   public async checkInvoiceState(
