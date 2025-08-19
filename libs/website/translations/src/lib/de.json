@@ -2,6 +2,16 @@
   "navbar": {
     "subscribe": "Member werden"
   },
+  "blocks": {
+    "image": {
+      "caption": "{{caption}} {{source}}",
+      "captionSource": "(Bild: {{source}})"
+    },
+    "imageGallery": {
+      "caption": "{{caption}} {{source}}",
+      "captionSource": "(Bild: {{source}})"
+    }
+  },
   "subscription": {
     "subscriptionIsUnpaid": "Abo ist unbezahlt",
     "cancelSubscription": "Abo kündigen",
