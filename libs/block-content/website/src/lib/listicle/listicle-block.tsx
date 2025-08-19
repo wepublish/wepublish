@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
-import {BuilderListicleBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderListicleBlockProps, Image} from '@wepublish/website/builder'
 import {BlockContent, ListicleBlock as ListicleBlockType} from '@wepublish/website/api'
+import {H3} from '@wepublish/ui'
+import {RichTextBlock} from '../richtext/richtext-block'
 
 export const isListicleBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -32,21 +34,20 @@ export const ListicleBlockItemCounter = styled('div')`
   height: 2em;
 `
 
-export const ListicleBlock = ({items, className}: BuilderListicleBlockProps) => {
-  const {
-    elements: {H3, Image},
-    blocks: {RichText}
-  } = useWebsiteBuilder()
+export const ListicleTitle = styled(H3)``
+export const ListicleImage = styled(Image)``
+export const ListicleRichtText = styled(RichTextBlock)``
 
+export const ListicleBlock = ({items, className}: BuilderListicleBlockProps) => {
   return (
     <ListicleBlockWrapper className={className}>
       {items.map((item, index) => (
         <ListicleBlockItem key={index}>
           <ListicleBlockItemCounter>{index + 1}</ListicleBlockItemCounter>
 
-          <H3>{item.title}</H3>
-          {item.image && <Image image={item.image} />}
-          <RichText richText={item.richText} />
+          <ListicleTitle>{item.title}</ListicleTitle>
+          {item.image && <ListicleImage image={item.image} />}
+          <ListicleRichtText richText={item.richText} />
         </ListicleBlockItem>
       ))}
     </ListicleBlockWrapper>
