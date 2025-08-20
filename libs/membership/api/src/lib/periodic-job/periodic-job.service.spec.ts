@@ -1205,4 +1205,99 @@ describe('PeriodicJobService', () => {
     date2.setMilliseconds(0)
     expect(pj[0].date).toEqual(date2)
   })
+
+  it('checkStateOfOpenInvoices should call checkInvoiceState for each open invoice', async () => {
+    const openInvoices = [
+      {
+        id: 'inv1',
+        subscription: {
+          id: 'sub1',
+          paymentMethod: {},
+          memberPlan: {},
+          user: {}
+        },
+        items: [],
+        subscriptionPeriods: []
+      },
+      {
+        id: 'inv2',
+        subscription: {
+          id: 'sub2',
+          paymentMethod: {},
+          memberPlan: {},
+          user: {}
+        },
+        items: [],
+        subscriptionPeriods: []
+      }
+    ]
+    const mockSubscriptionController = {
+      findAllOpenInvoices: jest.fn().mockResolvedValue(openInvoices),
+      checkInvoiceState: jest.fn().mockResolvedValue(undefined)
+    }
+    // @ts-expect-error override private property for test
+    service.subscriptionController = mockSubscriptionController
+
+    await service['checkStateOfOpenInvoices']()
+
+    expect(mockSubscriptionController.findAllOpenInvoices).toHaveBeenCalled()
+    expect(mockSubscriptionController.checkInvoiceState).toHaveBeenCalledTimes(openInvoices.length)
+    expect(mockSubscriptionController.checkInvoiceState).toHaveBeenCalledWith(openInvoices[0])
+    expect(mockSubscriptionController.checkInvoiceState).toHaveBeenCalledWith(openInvoices[1])
+  })
+
+  it('should throw if invoice has no subscription', async () => {
+    const openInvoices = [
+      {
+        id: 'inv1',
+        subscription: null,
+        items: [],
+        subscriptionPeriods: []
+      }
+    ]
+    const mockSubscriptionController = {
+      findAllOpenInvoices: jest.fn().mockResolvedValue(openInvoices),
+      checkInvoiceState: jest.fn()
+    }
+    // @ts-expect-error override private property for test
+    service.subscriptionController = mockSubscriptionController
+
+    await expect(service['checkStateOfOpenInvoices']()).rejects.toThrow(
+      /Invoice inv1 has no subscription assigned!/
+    )
+  })
+  it('checkInvoiceState should call subscriptionController.checkInvoiceState with the correct invoice', async () => {
+    const invoice = {
+      id: 'invoice1',
+      subscription: {
+        id: 'sub1',
+        paymentMethod: {},
+        memberPlan: {},
+        user: {}
+      },
+      items: [],
+      subscriptionPeriods: []
+    } as any
+
+    const checkInvoiceStateSpy = jest
+      .spyOn(service['subscriptionController'], 'checkInvoiceState')
+      .mockResolvedValue(undefined)
+
+    await service['checkInvoiceState'](invoice)
+
+    expect(checkInvoiceStateSpy).toHaveBeenCalledWith(invoice)
+  })
+
+  it('checkInvoiceState should throw if invoice has no subscription', async () => {
+    const invoice = {
+      id: 'invoice2',
+      subscription: null,
+      items: [],
+      subscriptionPeriods: []
+    } as any
+
+    await expect(service['checkInvoiceState'](invoice)).rejects.toThrow(
+      `Invoice ${invoice.id} has no subscription assigned!`
+    )
+  })
 })
