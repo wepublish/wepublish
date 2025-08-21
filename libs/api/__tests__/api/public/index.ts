@@ -636,7 +636,7 @@ export type CrowdfundingGoal = {
   amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   title: Scalars['String'];
 };
@@ -646,7 +646,7 @@ export type CrowdfundingGoalWithProgress = {
   amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   progress?: Maybe<Scalars['Float']>;
   title: Scalars['String'];
@@ -2303,7 +2303,7 @@ export type PaymentFromInvoiceInput = {
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod';
   description: Scalars['String'];
-  gracePeriod?: Maybe<Scalars['Float']>;
+  gracePeriod?: Maybe<Scalars['Int']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;

@@ -44,6 +44,7 @@ export class PaymentMethodService {
     if (!paymentMethod?.active) {
       return null
     }
+
     return paymentMethod
   }
 

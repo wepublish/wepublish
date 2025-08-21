@@ -585,7 +585,7 @@ type CrowdfundingGoal {
   amount: Float!
   createdAt: DateTime!
   description: String
-  id: ID!
+  id: String!
   modifiedAt: DateTime!
   title: String!
 }
@@ -594,7 +594,7 @@ type CrowdfundingGoalWithProgress {
   amount: Float!
   createdAt: DateTime!
   description: String
-  id: ID!
+  id: String!
   modifiedAt: DateTime!
   progress: Float
   title: String!
@@ -1741,7 +1741,7 @@ input PaymentFromInvoiceInput {
 
 type PaymentMethod implements HasImageLc {
   description: String!
-  gracePeriod: Float
+  gracePeriod: Int
   id: String!
   image: Image
   imageId: String

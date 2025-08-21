@@ -1,6 +1,5 @@
 import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
-import {PrismaClient} from '@prisma/client'
-import {PaymentMethod} from './payment-method.model'
+import {PaymentMethod, PrismaClient} from '@prisma/client'
 import {Injectable} from '@nestjs/common'
 
 @Injectable()

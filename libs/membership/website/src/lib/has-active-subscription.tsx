@@ -1,23 +1,30 @@
 import {useUser} from '@wepublish/authentication/website'
 import {FullSubscriptionFragment, useSubscriptionsQuery} from '@wepublish/website/api'
 import {addDays} from 'date-fns'
+import {anyPass} from 'ramda'
 import {useMemo} from 'react'
 
-const isWithinGracePeriode = (subscription: FullSubscriptionFragment, today: Date): boolean => {
-  const {gracePeriod} = subscription.paymentMethod
+const isWithinGracePeriod = ({
+  paidUntil,
+  startsAt,
+  paymentMethod: {gracePeriod}
+}: FullSubscriptionFragment): boolean => {
   if (!gracePeriod) {
     return false
   }
 
-  const startDate = new Date(subscription?.paidUntil || subscription.startsAt)
-  const withinGracePeriod = addDays(startDate, gracePeriod)
-  return today <= withinGracePeriod
+  const today = new Date()
+  const startDate = new Date(paidUntil || startsAt)
+  const gracePeriodEnd = addDays(startDate, gracePeriod)
+
+  return gracePeriodEnd >= today
 }
 
-const isPaidAndActive = (subscription: FullSubscriptionFragment, today: Date): boolean => {
+const isActiveSubscription = (subscription: FullSubscriptionFragment): boolean => {
+  const today = new Date()
+
   return !!(
     subscription.paidUntil &&
-    // @todo: startsAt is supposedly not necessary. Thus, it could go into a single check with grace period.
     today > new Date(subscription.startsAt) &&
     new Date(subscription.paidUntil) > today
   )
@@ -31,12 +38,7 @@ export const useActiveSubscriptions = () => {
   })
 
   const subscriptions = useMemo(() => {
-    const today = new Date()
-    return data?.subscriptions.filter(
-      subscription =>
-        // @todo: could possibly be combined into a single check if 'startAt' is not needed (which is supposedly the case).
-        isPaidAndActive(subscription, today) || isWithinGracePeriode(subscription, today)
-    )
+    return data?.subscriptions.filter(anyPass([isActiveSubscription, isWithinGracePeriod]))
   }, [data?.subscriptions])
 
   if (!hasUser) {
