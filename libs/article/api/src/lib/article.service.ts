@@ -731,12 +731,14 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
 const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.authors) {
     return {
-      revisions: {
-        some: {
-          authors: {
-            some: {
-              authorId: {
-                in: filter.authors
+      ArticleRevisionPublished: {
+        every: {
+          articleRevision: {
+            authors: {
+              some: {
+                authorId: {
+                  in: filter.authors
+                }
               }
             }
           }

@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["fullTextSearch", "views"]
 }
 
 datasource db {
@@ -60,11 +60,22 @@ model ArticleRevision {
   articleId String
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String?
+  user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ArticleRevisionPublished ArticleRevisionPublished[]
 
   @@index([publishedAt])
   @@map("articles.revisions")
+}
+
+view ArticleRevisionPublished {
+  id              String
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@map("articles.revisions.published")
 }
 
 model ArticleRevisionAuthor {
@@ -105,10 +116,11 @@ model Article {
   peerId        String?
   peerArticleId String?
 
-  navigations    NavigationLink[]
-  tags           TaggedArticles[]
-  revisions      ArticleRevision[]
-  trackingPixels ArticleTrackingPixels[]
+  navigations              NavigationLink[]
+  tags                     TaggedArticles[]
+  revisions                ArticleRevision[]
+  trackingPixels           ArticleTrackingPixels[]
+  ArticleRevisionPublished ArticleRevisionPublished[]
 
   @@index([createdAt])
   @@index([modifiedAt])
