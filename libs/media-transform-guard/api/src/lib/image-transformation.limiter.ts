@@ -40,7 +40,7 @@ if (process.env['EXTRA_ALLOWED_DIMENSIONS']) {
   ALLOWED_DIMENSIONS.push(...EXTRA_ALLOWED_IMAGE_DIMENSIONS)
 }
 
-const ALLOWED_QUALITIES: number[] = [65]
+const ALLOWED_QUALITIES: number[] = [0.8]
 
 if (process.env['EXTRA_ALLOWED_QUALITIES']) {
   const EXTRA_ALLOWED_QUALITIES = JSON.parse(process.env['EXTRA_ALLOWED_QUALITIES']) as number[]
@@ -77,5 +77,5 @@ export const validateImageDimension = (
 }
 
 export const sanitizeImageQuality = (quality: number) => {
-  return ALLOWED_QUALITIES.includes(quality) ? quality : 65
+  return ALLOWED_QUALITIES.includes(quality) ? quality : 0.8
 }
