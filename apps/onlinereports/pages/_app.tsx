@@ -52,6 +52,7 @@ import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
 import {useRouter} from 'next/router'
 import {mergeDeepRight} from 'ramda'
 import deOverridden from '../locales/deOverridden.json'
+import {OnlineReportsPage} from '../src/components/page'
 
 setDefaultOptions({
   locale: de
@@ -96,7 +97,6 @@ const MainContainer = styled('div')`
 const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
-
   row-gap: ${({theme}) => theme.spacing(7.5)};
 
   ${theme.breakpoints.down('lg')} {
@@ -169,6 +169,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           ArticleList={OnlineReportsArticleList}
           Navbar={OnlineReportsNavbar}
           Article={OnlineReportsArticle}
+          Page={OnlineReportsPage}
           RegistrationForm={OnlineReportsRegistrationForm}
           PaymentAmount={OnlineReportsPaymentAmount}
           richtext={{RenderElement: OnlineReportsRenderElement}}
