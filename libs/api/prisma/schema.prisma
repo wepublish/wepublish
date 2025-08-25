@@ -64,7 +64,7 @@ model ArticleRevision {
   user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   ArticleRevisionPublished ArticleRevisionPublished[]
   ArticleRevisionPending   ArticleRevisionPending[]
-  ArticleRevisionArchived  ArticleRevisionDraft[]
+  ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
   @@map("articles.revisions")
@@ -97,7 +97,7 @@ view ArticleRevisionDraft {
   articleId String  @unique
   article   Article @relation(fields: [articleId], references: [id])
 
-  @@map("articles.revisions.archived")
+  @@map("articles.revisions.draft")
 }
 
 model ArticleRevisionAuthor {
@@ -142,9 +142,9 @@ model Article {
   tags                     TaggedArticles[]
   revisions                ArticleRevision[]
   trackingPixels           ArticleTrackingPixels[]
-  ArticleRevisionPublished ArticleRevisionPublished[]
+  ArticleRevisionPublished ArticleRevisionPublished?
   ArticleRevisionPending   ArticleRevisionPending?
-  ArticleRevisionArchived  ArticleRevisionDraft?
+  ArticleRevisionDraft     ArticleRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
