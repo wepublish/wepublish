@@ -28,31 +28,9 @@ import {OnlineReportsArticleList} from '../src/components/online-reports-article
 import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
 import {Advertisement} from '../src/components/advertisement'
 import {Structure} from '../src/structure'
-import {
-  OnlineReportsQuoteBlock,
-  OnlineReportsQuoteBlockWrapper
-} from '../src/components/quote-block'
-import {
-  ArticleBottomMeta,
-  ArticlePreTitle,
-  ArticleTopMeta,
-  OnlineReportsArticle
-} from '../src/components/article'
-import {
-  BreakBlockWrapper,
-  EventBlockWrapper,
-  HeadingWithImage,
-  HeadingWithoutImage,
-  ImageBlockCaption,
-  ImageBlockInnerWrapper,
-  ImageBlockWrapper,
-  RichTextBlockWrapper,
-  SliderWrapper,
-  TitleBlock,
-  TitleBlockLead,
-  TitleBlockTitle,
-  TitleBlockWrapper
-} from '@wepublish/block-content/website'
+import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
+import {OnlineReportsArticle} from '../src/components/article'
+import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
 import styled from '@emotion/styled'
 import {
   authLink,
@@ -74,6 +52,8 @@ import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
 import {useRouter} from 'next/router'
 import {mergeDeepRight} from 'ramda'
 import deOverridden from '../locales/deOverridden.json'
+import {useFullWidthContent} from '@wepublish/content/website'
+import {OnlineReportsPage} from '../src/components/page'
 
 setDefaultOptions({
   locale: de
@@ -115,60 +95,14 @@ const MainContainer = styled('div')`
   }
 `
 
-const MainContent = styled('main')`
+const MainContent = styled('main')<{fullWidth?: boolean}>`
   display: flex;
   flex-direction: column;
-
   row-gap: ${({theme}) => theme.spacing(7.5)};
 
-  [class*='ContentWrapperStyled'][class*='ArticleWrapper'] {
-    ${({theme}) => theme.breakpoints.down('md')} {
-      row-gap: ${({theme}) => theme.spacing(5)};
-    }
-
-    ${({theme}) => theme.breakpoints.up('md')} {
-      row-gap: ${({theme}) => theme.spacing(4)};
-
-      &
-        > :is(
-          ${RichTextBlockWrapper},
-            ${ArticleTopMeta},
-            ${ArticleBottomMeta},
-            ${ArticlePreTitle},
-            ${TitleBlockWrapper},
-            ${OnlineReportsQuoteBlockWrapper}
-        ) {
-        grid-column: 3/11;
-      }
-
-      ${RichTextBlockWrapper} {
-      }
-
-      & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
-        grid-column: 2/12;
-      }
-    }
-
-    ${HeadingWithoutImage}, ${HeadingWithImage} {
-      text-transform: none;
-      font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
-      font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
-      font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
-    }
-
-    ${ImageBlockInnerWrapper} {
-      gap: ${({theme}) => theme.spacing(1)};
-    }
-
-    ${ImageBlockCaption} {
-      color: #7c7c7c;
-      font-size: 14px;
-    }
-  }
-
   ${theme.breakpoints.down('lg')} {
-    padding-left: ${({theme}) => theme.spacing(2.5)};
-    padding-right: ${({theme}) => theme.spacing(2.5)};
+    padding-left: ${theme.spacing(2.5)};
+    padding-right: ${theme.spacing(2.5)};
   }
 `
 
@@ -224,6 +158,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
 
   const router = useRouter()
+  const fullWidth = useFullWidthContent()
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -236,6 +171,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
           ArticleList={OnlineReportsArticleList}
           Navbar={OnlineReportsNavbar}
           Article={OnlineReportsArticle}
+          Page={OnlineReportsPage}
           RegistrationForm={OnlineReportsRegistrationForm}
           PaymentAmount={OnlineReportsPaymentAmount}
           richtext={{RenderElement: OnlineReportsRenderElement}}
@@ -288,7 +224,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 profileBtn={{href: '/profile'}}
               />
               <MainContainer>
-                <MainContent>
+                <MainContent fullWidth={fullWidth}>
                   {router.pathname !== '/mitmachen' && (
                     <WideboardPlacer>
                       <Advertisement type={'whiteboard'} />

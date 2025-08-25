@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {CommentListWrapper} from '@wepublish/comments/website'
-import {ContentWrapper} from '@wepublish/content/website'
 import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
 import {ArticleProvider} from '../context/article-context'
+import {OnlineReportsContentWrapper} from './content-wrapper'
 
-export const ArticleWrapper = styled(ContentWrapper)`
+export const ArticleWrapper = styled(OnlineReportsContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {
     & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
       grid-column: 2/12;
