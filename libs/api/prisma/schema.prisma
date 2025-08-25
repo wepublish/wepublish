@@ -75,7 +75,7 @@ view ArticleRevisionPublished {
   articleRevision ArticleRevision @relation(fields: [id], references: [id])
 
   articleId String  @unique
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  article   Article @relation(fields: [articleId], references: [id])
 
   @@map("articles.revisions.published")
 }
@@ -85,7 +85,7 @@ view ArticleRevisionPending {
   articleRevision ArticleRevision @relation(fields: [id], references: [id])
 
   articleId String  @unique
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  article   Article @relation(fields: [articleId], references: [id])
 
   @@map("articles.revisions.pending")
 }
@@ -95,7 +95,7 @@ view ArticleRevisionDraft {
   articleRevision ArticleRevision @relation(fields: [id], references: [id])
 
   articleId String  @unique
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  article   Article @relation(fields: [articleId], references: [id])
 
   @@map("articles.revisions.archived")
 }
@@ -660,6 +660,8 @@ model PageRevision {
   userId                 String?
   user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   PagesRevisionPublished PagesRevisionPublished[]
+  PagesRevisionPending   PagesRevisionPending[]
+  PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
   @@map("pages.revisions")
@@ -681,6 +683,8 @@ model Page {
   memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
   banners                 Banner[]
   PagesRevisionPublished  PagesRevisionPublished?
+  PagesRevisionPending    PagesRevisionPending?
+  PagesRevisionDraft      PagesRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -705,9 +709,29 @@ view PagesRevisionPublished {
   pageRevision PageRevision @relation(fields: [id], references: [id])
 
   pageId String @unique
-  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  page   Page   @relation(fields: [pageId], references: [id])
 
   @@map("pages.revisions.published")
+}
+
+view PagesRevisionPending {
+  id           String
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.pending")
+}
+
+view PagesRevisionDraft {
+  id           String
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.draft")
 }
 
 model PaymentMethod {
