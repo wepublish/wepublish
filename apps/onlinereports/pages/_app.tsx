@@ -52,7 +52,6 @@ import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
 import {useRouter} from 'next/router'
 import {mergeDeepRight} from 'ramda'
 import deOverridden from '../locales/deOverridden.json'
-import {useFullWidthContent} from '@wepublish/content/website'
 import {OnlineReportsPage} from '../src/components/page'
 
 setDefaultOptions({
@@ -95,14 +94,14 @@ const MainContainer = styled('div')`
   }
 `
 
-const MainContent = styled('main')<{fullWidth?: boolean}>`
+const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
   row-gap: ${({theme}) => theme.spacing(7.5)};
 
   ${theme.breakpoints.down('lg')} {
-    padding-left: ${theme.spacing(2.5)};
-    padding-right: ${theme.spacing(2.5)};
+    padding-left: ${({theme}) => theme.spacing(2.5)};
+    padding-right: ${({theme}) => theme.spacing(2.5)};
   }
 `
 
@@ -158,7 +157,6 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
 
   const router = useRouter()
-  const fullWidth = useFullWidthContent()
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -224,7 +222,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 profileBtn={{href: '/profile'}}
               />
               <MainContainer>
-                <MainContent fullWidth={fullWidth}>
+                <MainContent>
                   {router.pathname !== '/mitmachen' && (
                     <WideboardPlacer>
                       <Advertisement type={'whiteboard'} />
