@@ -633,8 +633,9 @@ model PageRevision {
   pageId String
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 String?
+  user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PagesRevisionPublished PagesRevisionPublished[]
 
   @@index([publishedAt])
   @@map("pages.revisions")
@@ -651,10 +652,11 @@ model Page {
   revisions               PageRevision[]
   navigations             NavigationLink[]
   tags                    TaggedPages[]
-  memberPlansSuccess      MemberPlan[]     @relation("successPage")
-  memberPlansFail         MemberPlan[]     @relation("failPage")
-  memberPlansConfirmation MemberPlan[]     @relation("confirmationPage")
+  memberPlansSuccess      MemberPlan[]            @relation("successPage")
+  memberPlansFail         MemberPlan[]            @relation("failPage")
+  memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
   banners                 Banner[]
+  PagesRevisionPublished  PagesRevisionPublished?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -672,6 +674,16 @@ model TaggedPages {
 
   @@id([pageId, tagId])
   @@map("pages.tagged-pages")
+}
+
+view PagesRevisionPublished {
+  id           String
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@map("pages.revisions.published")
 }
 
 model PaymentMethod {
