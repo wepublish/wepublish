@@ -71,7 +71,7 @@ model ArticleRevision {
 }
 
 view ArticleRevisionPublished {
-  id              String
+  id              String          @unique
   articleRevision ArticleRevision @relation(fields: [id], references: [id])
 
   articleId String  @unique
@@ -81,7 +81,7 @@ view ArticleRevisionPublished {
 }
 
 view ArticleRevisionPending {
-  id              String
+  id              String          @unique
   articleRevision ArticleRevision @relation(fields: [id], references: [id])
 
   articleId String  @unique
@@ -91,7 +91,7 @@ view ArticleRevisionPending {
 }
 
 view ArticleRevisionDraft {
-  id              String
+  id              String          @unique
   articleRevision ArticleRevision @relation(fields: [id], references: [id])
 
   articleId String  @unique
@@ -705,7 +705,7 @@ model TaggedPages {
 }
 
 view PagesRevisionPublished {
-  id           String
+  id           String       @unique
   pageRevision PageRevision @relation(fields: [id], references: [id])
 
   pageId String @unique
@@ -715,7 +715,7 @@ view PagesRevisionPublished {
 }
 
 view PagesRevisionPending {
-  id           String
+  id           String       @unique
   pageRevision PageRevision @relation(fields: [id], references: [id])
 
   pageId String @unique
@@ -725,7 +725,7 @@ view PagesRevisionPending {
 }
 
 view PagesRevisionDraft {
-  id           String
+  id           String       @unique
   pageRevision PageRevision @relation(fields: [id], references: [id])
 
   pageId String @unique

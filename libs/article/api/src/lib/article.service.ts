@@ -577,11 +577,13 @@ const createIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInp
 const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.title) {
     return {
-      revisions: {
-        some: {
-          title: {
-            contains: filter.title,
-            mode: 'insensitive'
+      ArticleRevisionPublished: {
+        every: {
+          articleRevision: {
+            title: {
+              contains: filter.title,
+              mode: 'insensitive'
+            }
           }
         }
       }
@@ -594,11 +596,13 @@ const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
 const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.preTitle) {
     return {
-      revisions: {
-        some: {
-          preTitle: {
-            contains: filter.preTitle,
-            mode: 'insensitive'
+      ArticleRevisionPublished: {
+        every: {
+          articleRevision: {
+            preTitle: {
+              contains: filter.preTitle,
+              mode: 'insensitive'
+            }
           }
         }
       }
@@ -611,11 +615,13 @@ const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhe
 const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.lead) {
     return {
-      revisions: {
-        some: {
-          lead: {
-            contains: filter.lead,
-            mode: 'insensitive'
+      ArticleRevisionPublished: {
+        every: {
+          articleRevision: {
+            lead: {
+              contains: filter.lead,
+              mode: 'insensitive'
+            }
           }
         }
       }
