@@ -23,17 +23,6 @@ CREATE VIEW "article.revisions.pending" AS
     ORDER BY
         "articleId", "createdAt" DESC
 ;
-CREATE VIEW "article.revisions.archived" AS
-    SELECT
-        id,
-        "articleId"
-    FROM
-        "articles.revisions"
-    WHERE
-        "archivedAt" IS NOT NULL AND "archivedAt" <= CURRENT_TIMESTAMP
-    ORDER BY
-        "articleId", "createdAt" DESC
-;
 
 CREATE VIEW "article.revisions.draft" AS
     SELECT
@@ -70,17 +59,6 @@ FROM
     "pages.revisions"
 WHERE
     "publishedAt" IS NOT NULL AND "publishedAt" > CURRENT_TIMESTAMP
-ORDER BY
-    "pageId", "createdAt" DESC
-;
-CREATE VIEW "pages.revisions.archived" AS
-SELECT
-    id,
-    "pageId"
-FROM
-    "pages.revisions"
-WHERE
-    "archivedAt" IS NOT NULL AND "archivedAt" <= CURRENT_TIMESTAMP
 ORDER BY
     "pageId", "createdAt" DESC
 ;
