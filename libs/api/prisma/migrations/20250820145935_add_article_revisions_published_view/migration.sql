@@ -1,6 +1,7 @@
 CREATE VIEW "article.revisions.published" AS
     SELECT DISTINCT ON ("articleId")
-        *
+        id,
+        articleId
         FROM
         "articles.revisions"
         WHERE
