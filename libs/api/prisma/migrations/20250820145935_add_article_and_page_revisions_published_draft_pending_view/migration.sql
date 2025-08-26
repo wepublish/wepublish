@@ -17,7 +17,7 @@ CREATE INDEX article_revisions_published_by_article_created_id_desc
     WHERE "publishedAt" IS NOT NULL;
 
 CREATE VIEW "articles.revisions.pending" AS
-    SELECT
+    SELECT DISTINCT ON ("articleId")
         id,
         "articleId"
     FROM
@@ -25,7 +25,7 @@ CREATE VIEW "articles.revisions.pending" AS
     WHERE
         "publishedAt" IS NOT NULL AND "publishedAt" > CURRENT_TIMESTAMP
     ORDER BY
-        "articleId", "createdAt" DESC
+        "articleId", "createdAt" DESC, id DESC
 ;
 
 CREATE INDEX article_revisions_pending_by_article_created
@@ -35,7 +35,7 @@ CREATE INDEX article_revisions_pending_by_article_created
 
 
 CREATE VIEW "articles.revisions.draft" AS
-    SELECT
+    SELECT DISTINCT ON ("articleId")
         id,
         "articleId"
     FROM
@@ -43,7 +43,7 @@ CREATE VIEW "articles.revisions.draft" AS
     WHERE
         "archivedAt" IS NULL AND "publishedAt" is NULL
     ORDER BY
-        "articleId", "createdAt" DESC
+        "articleId", "createdAt" DESC, id DESC
 ;
 
 CREATE INDEX article_revisions_draft_by_article_created
@@ -62,7 +62,7 @@ FROM
 WHERE
     "publishedAt" IS NOT NULL AND "publishedAt" <= CURRENT_TIMESTAMP
 ORDER BY
-    "pageId", "createdAt" DESC
+    "pageId", "createdAt" DESC, id DESC;
 ;
 
 CREATE INDEX page_revisions_published_by_page_created_id_desc
@@ -72,7 +72,7 @@ CREATE INDEX page_revisions_published_by_page_created_id_desc
 
 
 CREATE VIEW "pages.revisions.pending" AS
-SELECT
+SELECT DISTINCT ON ("pageId")
     id,
     "pageId"
 FROM
@@ -80,7 +80,7 @@ FROM
 WHERE
     "publishedAt" IS NOT NULL AND "publishedAt" > CURRENT_TIMESTAMP
 ORDER BY
-    "pageId", "createdAt" DESC
+    "pageId", "createdAt" DESC, id DESC;
 ;
 
 CREATE INDEX page_revisions_pending_by_page_created
@@ -89,7 +89,7 @@ CREATE INDEX page_revisions_pending_by_page_created
     WHERE "publishedAt" IS NOT NULL;
 
 CREATE VIEW "pages.revisions.draft" AS
-SELECT
+SELECT DISTINCT ON ("pageId")
     id,
     "pageId"
 FROM
@@ -97,7 +97,7 @@ FROM
 WHERE
     "archivedAt" IS NULL AND "publishedAt" is NULL
 ORDER BY
-    "pageId", "createdAt" DESC
+    "pageId", "createdAt" DESC, id DESC;
 ;
 
 CREATE INDEX page_revisions_draft_by_page_created
