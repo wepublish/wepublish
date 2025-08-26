@@ -37,6 +37,10 @@ export const NewsTeaser = styled(NewsTeaserUnstyled)`
     :first-child {
       flex-grow: 1;
     }
+
+    svg {
+      min-width: 18px;
+    }
   }
 
   > span {

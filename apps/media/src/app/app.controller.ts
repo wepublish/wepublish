@@ -14,13 +14,12 @@ import {
   NotFoundException
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
+import {MediaService, SupportedImagesValidator, TokenAuthGuard} from '@wepublish/media/api'
 import {
   getTransformationKey,
-  MediaService,
-  SupportedImagesValidator,
-  TokenAuthGuard,
+  removeSignatureFromTransformations,
   TransformationsDto
-} from '@wepublish/media/api'
+} from '@wepublish/media-transform-guard'
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'
@@ -89,7 +88,9 @@ export class AppController {
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    const cacheKey = `${imageId}-${getTransformationKey(transformations)}`
+    const cacheKey = `${imageId}-${getTransformationKey(
+      removeSignatureFromTransformations(transformations)
+    )}`
 
     // Check if image is cached
     const cachedBuffer = this.imageCacheService.get(cacheKey)
