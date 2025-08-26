@@ -527,8 +527,7 @@ export class ArticleService {
                         'german',
                         jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
                         '["string"]'
-                ) @
-              @ to_tsquery('german'
+                ) @@ to_tsquery('german'
               , ${formattedQuery});
       `
 
