@@ -25,12 +25,11 @@ export function OnlineReportsArticleList({data, className}: BuilderArticleListPr
 
 function enrichTeaserListWithOnlineReportsAds(teasers: Teaser[]) {
   return teasers.reduce((teasers: Teaser[], teaser: Teaser, index) => {
-    // Add ad placement after every 5th article for OnlineReports specific layout
-    if ((index + 1) % 5 === 0 && index > 0) {
+    if ((index + 3) % 6 === 0) {
       teasers.push({
         __typename: 'CustomTeaser',
         type: TeaserType.Custom,
-        title: 'or-ad-banner'
+        title: 'ad-small'
       })
     }
     teasers.push(teaser)

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import {useUser} from '@wepublish/authentication/website'
 import {Button} from '@wepublish/ui'
 import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdForum} from 'react-icons/md'
@@ -44,9 +43,7 @@ export const CommentList = ({
     CommentListItem,
     elements: {Alert}
   } = useWebsiteBuilder()
-  const {hasUser} = useUser()
-  const canReply = anonymousCanComment || hasUser
-
+  const canReply = true
   const showReply = getStateForEditor(openEditorsState)('add', null)
 
   return (
