@@ -25,13 +25,17 @@ async function bootstrap() {
   })
   nestApp.use(helmet())
 
-  const skipPrefixes: string[] = [`/${MAIL_WEBHOOK_PATH_PREFIX}`, `/${PAYMENT_WEBHOOK_PATH_PREFIX}`]
+  const skipPrefixes = [`/${MAIL_WEBHOOK_PATH_PREFIX}`, `/${PAYMENT_WEBHOOK_PATH_PREFIX}`] as const
+  const skipPrefixesLength = skipPrefixes.length
   const jsonParser = json({limit: MAX_PAYLOAD_SIZE})
 
   // Only apply JSON parsing middleware if the path does not match the webhook prefixes
-  const conditionalJson: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    const url = req.originalUrl ?? req.url ?? ''
-    if (skipPrefixes.some(p => url === p || url.startsWith(`${p}/`))) return next()
+  const conditionalJson: RequestHandler = (req, res, next) => {
+    const path: string = req.path ?? req.url
+    for (let i = 0; i < skipPrefixesLength; i++) {
+      const p = skipPrefixes[i]
+      if (path === p || path.startsWith(p + '/')) return next()
+    }
     return jsonParser(req, res, next)
   }
   nestApp.use(conditionalJson)
