@@ -15,40 +15,36 @@ type RevisionMap = Partial<{
 export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> {
   private readonly dataloader = new DataLoader<string, RevisionMap>(
     async (articleIds: readonly string[]) => {
-      const revisionPromises = []
+      const articles = await this.prisma.article.findMany({
+        where: {
+          id: {
+            in: articleIds as string[]
+          }
+        },
+        include: {
+          ArticleRevisionPublished: {
+            include: {
+              articleRevision: true
+            }
+          },
+          ArticleRevisionDraft: {
+            include: {
+              articleRevision: true
+            }
+          },
+          ArticleRevisionPending: {
+            include: {
+              articleRevision: true
+            }
+          }
+        }
+      })
 
-      for (const articleId of articleIds) {
-        revisionPromises.push(
-          this.prisma.articleRevision.findMany({
-            where: {
-              articleId,
-              archivedAt: null
-            },
-            take: 3,
-            orderBy: [
-              {
-                publishedAt: 'desc'
-              },
-              {
-                createdAt: 'desc'
-              }
-            ]
-          })
-        )
-      }
-
-      const revisions = (await Promise.all(revisionPromises)).flat()
       return articleIds.map((articleId): RevisionMap => {
-        const published = revisions.find(
-          rev =>
-            rev.articleId === articleId && rev.publishedAt && new Date() > new Date(rev.publishedAt)
-        )
-
-        const draft = revisions.find(rev => rev.articleId === articleId && !rev.publishedAt)
-        const pending = revisions.find(
-          rev =>
-            rev.articleId === articleId && rev.publishedAt && new Date(rev.publishedAt) > new Date()
-        )
+        const rev = articles.find(rev => rev.id === articleId)
+        const published = rev?.ArticleRevisionPublished?.articleRevision
+        const draft = rev?.ArticleRevisionDraft?.articleRevision
+        const pending = rev?.ArticleRevisionPending?.articleRevision
 
         return {draft, pending, published}
       })

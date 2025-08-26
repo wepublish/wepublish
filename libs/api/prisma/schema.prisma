@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["fullTextSearch", "views"]
 }
 
 datasource db {
@@ -60,11 +60,44 @@ model ArticleRevision {
   articleId String
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String?
+  user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ArticleRevisionPublished ArticleRevisionPublished[]
+  ArticleRevisionPending   ArticleRevisionPending[]
+  ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
   @@map("articles.revisions")
+}
+
+view ArticleRevisionPublished {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.published")
+}
+
+view ArticleRevisionPending {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.pending")
+}
+
+view ArticleRevisionDraft {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.draft")
 }
 
 model ArticleRevisionAuthor {
@@ -105,10 +138,13 @@ model Article {
   peerId        String?
   peerArticleId String?
 
-  navigations    NavigationLink[]
-  tags           TaggedArticles[]
-  revisions      ArticleRevision[]
-  trackingPixels ArticleTrackingPixels[]
+  navigations              NavigationLink[]
+  tags                     TaggedArticles[]
+  revisions                ArticleRevision[]
+  trackingPixels           ArticleTrackingPixels[]
+  ArticleRevisionPublished ArticleRevisionPublished?
+  ArticleRevisionPending   ArticleRevisionPending?
+  ArticleRevisionDraft     ArticleRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -621,8 +657,11 @@ model PageRevision {
   pageId String
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 String?
+  user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PagesRevisionPublished PagesRevisionPublished[]
+  PagesRevisionPending   PagesRevisionPending[]
+  PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
   @@map("pages.revisions")
@@ -639,10 +678,13 @@ model Page {
   revisions               PageRevision[]
   navigations             NavigationLink[]
   tags                    TaggedPages[]
-  memberPlansSuccess      MemberPlan[]     @relation("successPage")
-  memberPlansFail         MemberPlan[]     @relation("failPage")
-  memberPlansConfirmation MemberPlan[]     @relation("confirmationPage")
+  memberPlansSuccess      MemberPlan[]            @relation("successPage")
+  memberPlansFail         MemberPlan[]            @relation("failPage")
+  memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
   banners                 Banner[]
+  PagesRevisionPublished  PagesRevisionPublished?
+  PagesRevisionPending    PagesRevisionPending?
+  PagesRevisionDraft      PagesRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -660,6 +702,36 @@ model TaggedPages {
 
   @@id([pageId, tagId])
   @@map("pages.tagged-pages")
+}
+
+view PagesRevisionPublished {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.published")
+}
+
+view PagesRevisionPending {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.pending")
+}
+
+view PagesRevisionDraft {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.draft")
 }
 
 model PaymentMethod {

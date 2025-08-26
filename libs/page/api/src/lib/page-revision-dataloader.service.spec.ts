@@ -8,7 +8,7 @@ jest.mock('dataloader')
 describe('PageRevisionDataloaderService', () => {
   let service: PageRevisionDataloaderService
   let prismaMock: {
-    pageRevision: {
+    page: {
       findMany: jest.Mock
       findFirst: jest.Mock
     }
@@ -25,7 +25,7 @@ describe('PageRevisionDataloaderService', () => {
 
   beforeEach(async () => {
     prismaMock = {
-      pageRevision: {
+      page: {
         findMany: jest.fn(),
         findFirst: jest.fn()
       }
@@ -75,19 +75,19 @@ describe('PageRevisionDataloaderService', () => {
     })
 
     it('should load one', async () => {
-      prismaMock.pageRevision.findMany.mockResolvedValue([])
+      prismaMock.page.findMany.mockResolvedValue([])
 
       await service.load('123')
-      expect(prismaMock.pageRevision.findMany).toHaveBeenCalled()
-      expect(prismaMock.pageRevision.findMany.mock.calls).toMatchSnapshot()
+      expect(prismaMock.page.findMany).toHaveBeenCalled()
+      expect(prismaMock.page.findMany.mock.calls).toMatchSnapshot()
     })
 
     it('should load many', async () => {
-      prismaMock.pageRevision.findMany.mockResolvedValue([])
+      prismaMock.page.findMany.mockResolvedValue([])
 
       await service.loadMany(['123', '321'])
-      expect(prismaMock.pageRevision.findMany).toHaveBeenCalled()
-      expect(prismaMock.pageRevision.findMany.mock.calls).toMatchSnapshot()
+      expect(prismaMock.page.findMany).toHaveBeenCalled()
+      expect(prismaMock.page.findMany.mock.calls).toMatchSnapshot()
     })
   })
 })
