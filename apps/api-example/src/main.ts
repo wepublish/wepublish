@@ -4,14 +4,16 @@ import {NestFactory} from '@nestjs/core'
 import {AppModule} from './nestapp/app.module'
 import {MediaAdapter} from '@wepublish/image/api'
 import {PaymentsService} from '@wepublish/payment/api'
-import {MailContext} from '@wepublish/mail/api'
+import {MAIL_WEBHOOK_PATH_PREFIX, MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
 import {
   HOT_AND_TRENDING_DATA_SOURCE,
+  PAYMENT_WEBHOOK_PATH_PREFIX,
   HotAndTrendingDataSource,
   MAX_PAYLOAD_SIZE
 } from '@wepublish/api'
 import {json, urlencoded} from 'body-parser'
+import type {Request, Response, NextFunction, RequestHandler} from 'express'
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000
@@ -22,7 +24,18 @@ async function bootstrap() {
     credentials: true
   })
   nestApp.use(helmet())
-  nestApp.use(json({limit: MAX_PAYLOAD_SIZE}))
+
+  const skipPrefixes: string[] = [`/${MAIL_WEBHOOK_PATH_PREFIX}`, `/${PAYMENT_WEBHOOK_PATH_PREFIX}`]
+  const jsonParser = json({limit: MAX_PAYLOAD_SIZE})
+
+  // Only apply JSON parsing middleware if the path does not match the webhook prefixes
+  const conditionalJson: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+    const url = req.originalUrl ?? req.url ?? ''
+    if (skipPrefixes.some(p => url === p || url.startsWith(`${p}/`))) return next()
+    return jsonParser(req, res, next)
+  }
+  nestApp.use(conditionalJson)
+
   nestApp.use(urlencoded({extended: true, limit: MAX_PAYLOAD_SIZE}))
   const mediaAdapter = nestApp.get(MediaAdapter)
   const paymentProviders = nestApp.get(PaymentsService).paymentProviders
