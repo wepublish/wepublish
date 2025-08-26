@@ -457,11 +457,6 @@ describe('SubscriptionPaymentsService', () => {
       subscriptionPeriods: []
     }
 
-    const paymentsService = {
-      findById: jest.fn().mockReturnValue(undefined),
-      findByInvoiceId: jest.fn()
-    }
-
     await expect(subscriptionService['checkInvoiceState'](mockInvoice as any)).rejects.toThrow(
       'Payment Provider invalid not found!'
     )
