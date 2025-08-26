@@ -29,7 +29,7 @@ async function bootstrap() {
   const skipPrefixesLength = skipPrefixes.length
   const jsonParser = json({limit: MAX_PAYLOAD_SIZE})
 
-  // Only apply JSON parsing middleware if the path does not match the webhook prefixes
+  // Only apply JSON parsing middleware if the path does not match the webhook prefixes (basic for loop used for max speed and lowest overhead)
   const conditionalJson: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const path: string = req.path ?? req.url
     for (let i = 0; i < skipPrefixesLength; i++) {
