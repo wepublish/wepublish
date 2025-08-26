@@ -1,6 +1,6 @@
 /** VIEWS for articles **/
 
-CREATE VIEW "article.revisions.published" AS
+CREATE VIEW "articles.revisions.published" AS
     SELECT DISTINCT ON ("articleId")
         id,
         "articleId"
@@ -12,7 +12,7 @@ CREATE VIEW "article.revisions.published" AS
     "articleId", "createdAt" DESC
 ;
 
-CREATE VIEW "article.revisions.pending" AS
+CREATE VIEW "articles.revisions.pending" AS
     SELECT
         id,
         "articleId"
@@ -24,7 +24,7 @@ CREATE VIEW "article.revisions.pending" AS
         "articleId", "createdAt" DESC
 ;
 
-CREATE VIEW "article.revisions.draft" AS
+CREATE VIEW "articles.revisions.draft" AS
     SELECT
         id,
         "articleId"
