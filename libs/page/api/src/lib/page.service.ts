@@ -381,8 +381,7 @@ export class PageService {
                         'german',
                         jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
                         '["string"]'
-                ) @
-              @ to_tsquery('german'
+                ) @@ to_tsquery('german'
               , ${formattedQuery});
       `
 
