@@ -1741,7 +1741,7 @@ input PaymentFromInvoiceInput {
 
 type PaymentMethod implements HasImageLc {
   description: String!
-  gracePeriod: Int
+  gracePeriod: Int!
   id: String!
   image: Image
   imageId: String
