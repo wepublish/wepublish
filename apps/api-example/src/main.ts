@@ -28,7 +28,7 @@ async function bootstrap() {
   const skipPrefixes = [`/${MAIL_WEBHOOK_PATH_PREFIX}`, `/${PAYMENT_WEBHOOK_PATH_PREFIX}`] as const
   const jsonParser = json({limit: MAX_PAYLOAD_SIZE})
 
-  // Apply JSON parsing only when the path doesn't match any webhook prefix (plain for loop for maximum speed and minimal overhead)
+  // Apply JSON parsing only when the path doesn't match any webhook prefix
   const conditionalJson: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     const path: string = req.path ?? req.url
     for (let i = 0; i < skipPrefixes.length; i++) {
