@@ -133,7 +133,7 @@ export class CommentService {
         ]
       },
       include: {
-        revisions: {orderBy: {createdAt: order === SortOrder.Ascending ? 'asc' : 'desc'}},
+        revisions: {orderBy: {createdAt: 'asc'}},
         ratings: true,
         overriddenRatings: true,
         tags: {include: {tag: true}}
