@@ -1500,7 +1500,8 @@
         "newBypassToken": "Créer un nouveau token de contournement",
         "addBypass": "Ajouter",
         "qrCodeTitle": "Code QR pour le token de contournement",
-        "downloadSvg": "Télécharger SVG"
+        "downloadSvg": "Télécharger SVG",
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
       }
     },
     "paymentMethodEditPanel": {

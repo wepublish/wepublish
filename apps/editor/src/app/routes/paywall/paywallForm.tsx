@@ -8,7 +8,7 @@ import {
 } from '@wepublish/editor/api-v2'
 import {RichTextBlock, RichTextBlockValue, SelectMemberPlans} from '@wepublish/ui/editor'
 import QRCode from 'qrcode'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDownload, MdQrCode} from 'react-icons/md'
 import {Button, Checkbox, FlexboxGrid, Form, IconButton, Input, Modal, Panel} from 'rsuite'
@@ -55,13 +55,18 @@ const QRCodeContainer = styled.div`
 const TokenUrl = styled.p`
   font-family: monospace;
   word-break: break-all;
-  margin-bottom: 16px;
+  padding-top: ${({theme}) => theme.spacing(2)};
+`
+
+const BaseUrlInput = styled(Input)`
+  margin-bottom: ${({theme}) => theme.spacing(2)};
 `
 
 export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
   const {t} = useTranslation()
   const [newBypassToken, setNewBypassToken] = useState('')
   const [showQRModal, setShowQRModal] = useState(false)
+  const [qrBaseUrl, setQrBaseUrl] = useState<string>('https://example.com')
   const [selectedToken, setSelectedToken] = useState('')
   const qrCanvasRef = useRef<HTMLCanvasElement>(null)
   const [qrSvgString, setQrSvgString] = useState('')
@@ -117,14 +122,16 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
     }
   }
 
+  const fullBypassUrl = useMemo<string>(
+    () => `${qrBaseUrl}/?key=${selectedToken}`,
+    [qrBaseUrl, selectedToken]
+  )
+
   useEffect(() => {
-    if (showQRModal && selectedToken && qrCanvasRef.current) {
-      const websiteUrl = process.env.REACT_APP_WEBSITE_URL || 'https://example.com'
-      const qrUrl = `${websiteUrl}/?key=${selectedToken}`
+    if (showQRModal && fullBypassUrl && qrCanvasRef.current) {
+      QRCode.toCanvas(qrCanvasRef.current, fullBypassUrl, {width: 300, margin: 2})
 
-      QRCode.toCanvas(qrCanvasRef.current, qrUrl, {width: 300, margin: 2})
-
-      QRCode.toString(qrUrl, {type: 'svg', margin: 2}, (error, svg) => {
+      QRCode.toString(fullBypassUrl, {type: 'svg', margin: 2}, (error, svg) => {
         if (!error) {
           setQrSvgString(svg)
         }
@@ -132,7 +139,7 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
 
       return () => setQrSvgString('')
     }
-  }, [showQRModal, selectedToken])
+  }, [showQRModal, fullBypassUrl])
 
   return (
     <PaywallFormWrapper>
@@ -267,14 +274,15 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
           <Modal.Title>{t('paywall.form.qrCodeTitle')}</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{textAlign: 'center'}}>
-          <TokenUrl>
-            {process.env.REACT_APP_WEBSITE_URL || 'https://example.com'}
-            {'/?key='}
-            {selectedToken}
-          </TokenUrl>
+          <BaseUrlInput
+            value={qrBaseUrl}
+            onChange={newUrl => setQrBaseUrl(newUrl)}
+            placeholder={t('paywall.form.baseUrl')}
+          />
           <QRCodeContainer>
             <canvas ref={qrCanvasRef} />
           </QRCodeContainer>
+          <TokenUrl>{fullBypassUrl}</TokenUrl>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={downloadQRCode} appearance="primary" startIcon={<MdDownload />}>
