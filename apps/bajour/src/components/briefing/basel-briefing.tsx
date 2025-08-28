@@ -11,7 +11,7 @@ import BaselBg from './basel.jpg'
 import EscBg from './esc.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
-import {BriefingType, isBaselBriefingIgnoringBlockType} from './is-briefing'
+import {BriefingType} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
   teasers?: CustomTeaser[]
