@@ -82,7 +82,8 @@ const RequestEmail = styled('div')``
 
 const requiredSchema = requiredRegisterSchema.omit({
   challengeAnswer: true,
-  email: true
+  email: true,
+  emailRepeated: true
 })
 
 const defaultSchema = z.object({
