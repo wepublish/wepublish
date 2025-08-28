@@ -443,17 +443,6 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
             )}
 
             <ButtonRow>
-              {isBaselBriefingIgnoringBlockType({blockStyle}) && (
-                <LinkWrapper
-                  color="inherit"
-                  underline="none"
-                  href="https://bajour.ch/basel-briefing-podcast"
-                  target={'_blank'}>
-                  <ReadMoreButton variant="outlined" color="inherit" size="small">
-                    <HideOnMobile>Briefing&nbsp;</HideOnMobile>hören
-                  </ReadMoreButton>
-                </LinkWrapper>
-              )}
               <LinkWrapper
                 color="inherit"
                 underline="none"
