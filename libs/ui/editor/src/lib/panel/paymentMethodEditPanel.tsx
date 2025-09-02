@@ -52,7 +52,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [active, setActive] = useState<boolean>(true)
-  const [gracePeriod, setGracePeriod] = useState<number | undefined | null>()
+  const [gracePeriod, setGracePeriod] = useState<number>(0)
   const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
   const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
 
@@ -267,7 +267,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
                 <Form.ControlLabel>{t('paymentMethodEditPanel.gracePeriod')}</Form.ControlLabel>
                 <InputNumber
                   name="gracePeriod"
-                  value={gracePeriod || undefined}
+                  value={gracePeriod}
                   disabled={isDisabled}
                   postfix={t('paymentMethodEditPanel.days')}
                   onChange={(value: string | number) => {

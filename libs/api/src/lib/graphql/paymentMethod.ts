@@ -40,7 +40,7 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
       })
     },
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
-    gracePeriod: {type: GraphQLInt},
+    gracePeriod: {type: new GraphQLNonNull(GraphQLInt)},
     imageId: {
       type: GraphQLString
     },
@@ -81,7 +81,7 @@ export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
     description: {type: new GraphQLNonNull(GraphQLString)},
     paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
-    gracePeriod: {type: GraphQLInt},
+    gracePeriod: {type: new GraphQLNonNull(GraphQLInt)},
     imageId: {
       type: GraphQLString
     }
