@@ -10,9 +10,7 @@ concurrency:
 
 
 env:
-  RUN_REVIEW: ${{ !(
-    (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
-    (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')) }}
+  RUN_REVIEW: ${{ !((github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') || (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')) }}
   API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
