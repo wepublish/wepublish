@@ -22,6 +22,12 @@ env:
 
 
 jobs:
+  debug_pr_refs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "base.ref=${{ github.event.pull_request.base.ref }}"
+          echo "head.ref=${{ github.event.pull_request.head.ref }}"
   publish_docker_base_image:
     name: Docker base image
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
