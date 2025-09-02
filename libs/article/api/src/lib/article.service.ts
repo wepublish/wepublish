@@ -529,7 +529,8 @@ export class ArticleService {
                         'german',
                         jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
                         '["string"]'
-                ) @@ to_tsquery('german', ${formattedQuery});
+                ) @@ to_tsquery('german'
+              , ${formattedQuery});
       `
 
       return foundArticleIds.map(item => item.id)
