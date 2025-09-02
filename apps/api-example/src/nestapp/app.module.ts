@@ -77,6 +77,8 @@ import {MemberPlanModule} from '@wepublish/member-plan/api'
 import {SessionModule} from '@wepublish/session/api'
 import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
 import {PaymentMethodModule} from '@wepublish/payment-method/api'
+import {CacheModule} from '@nestjs/cache-manager'
+import {createKeyv} from '@keyv/redis'
 
 @Global()
 @Module({
@@ -511,6 +513,15 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
           token,
           internalUrl ? new URL(internalUrl) : undefined
         )
+      },
+      inject: [ConfigService]
+    }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        return {
+          stores: [createKeyv(config.getOrThrow('CACHE_URL'))]
+        }
       },
       inject: [ConfigService]
     })
