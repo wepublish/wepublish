@@ -89,6 +89,12 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
+  if (!article.data) {
+    return {
+      notFound: true
+    }
+  }
+
   if (article.data?.article) {
     await Promise.all([
       client.query({

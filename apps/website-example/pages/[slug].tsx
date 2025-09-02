@@ -55,8 +55,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }
   }
 
-  //console.log('page', page.data);
-
   const props = addClientCacheToV1Props(client, {})
 
   return {
