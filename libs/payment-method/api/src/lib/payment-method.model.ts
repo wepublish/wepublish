@@ -27,8 +27,8 @@ export class PaymentMethod {
 
   active!: boolean
 
-  @Field(() => Int, {nullable: true})
-  gracePeriod?: number
+  @Field(() => Int)
+  gracePeriod!: number
 
   imageId?: string
   image?: Image
