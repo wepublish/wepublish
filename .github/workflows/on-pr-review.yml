@@ -52,6 +52,7 @@ jobs:
 
   helm_deployment_deps:
     name: Helm deployment dependencies
+    if: ${{ env.RUN_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
