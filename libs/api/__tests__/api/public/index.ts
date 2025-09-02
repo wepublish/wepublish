@@ -2374,7 +2374,7 @@ export type Peer = {
   isDisabled?: Maybe<Scalars['Boolean']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  profile?: Maybe<PeerProfile>;
+  profile?: Maybe<RemotePeerProfile>;
   slug: Scalars['String'];
 };
 
@@ -2388,7 +2388,6 @@ export type PeerArticle = HasOptionalPeerLc & {
   peerId?: Maybe<Scalars['String']>;
   publishedAt: Scalars['DateTime'];
   slug?: Maybe<Scalars['String']>;
-  tags: Array<Tag>;
   url: Scalars['String'];
 };
 
@@ -2408,7 +2407,6 @@ export type PeerArticleFilter = {
 
 export type PeerArticleRevision = {
   __typename?: 'PeerArticleRevision';
-  authors: Array<Author>;
   id: Scalars['String'];
   image?: Maybe<PeerImage>;
   lead?: Maybe<Scalars['String']>;
@@ -2419,10 +2417,38 @@ export type PeerArticleRevision = {
 
 export type PeerImage = {
   __typename?: 'PeerImage';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
   id: Scalars['String'];
+  l?: Maybe<Scalars['String']>;
+  lSquare?: Maybe<Scalars['String']>;
   license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  m?: Maybe<Scalars['String']>;
+  mSquare?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  s?: Maybe<Scalars['String']>;
+  sSquare?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
+  xl?: Maybe<Scalars['String']>;
+  xlSquare?: Maybe<Scalars['String']>;
+  xs?: Maybe<Scalars['String']>;
+  xsSquare?: Maybe<Scalars['String']>;
+  xxl?: Maybe<Scalars['String']>;
+  xxlSquare?: Maybe<Scalars['String']>;
+  xxs?: Maybe<Scalars['String']>;
+  xxsSquare?: Maybe<Scalars['String']>;
 };
 
 export type PeerProfile = {
@@ -3111,6 +3137,24 @@ export type Registration = {
   user: User;
 };
 
+export type RemotePeerProfile = {
+  __typename?: 'RemotePeerProfile';
+  callToActionImage?: Maybe<PeerImage>;
+  callToActionImageID?: Maybe<Scalars['String']>;
+  callToActionImageURL?: Maybe<Scalars['String']>;
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
+  hostURL: Scalars['String'];
+  logo?: Maybe<PeerImage>;
+  logoID?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  squareLogo?: Maybe<PeerImage>;
+  squareLogoId?: Maybe<Scalars['String']>;
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
+  websiteURL: Scalars['String'];
+};
+
 export type RichTextBlock = BaseBlock & {
   __typename?: 'RichTextBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -3747,9 +3791,11 @@ export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: s
 
 export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
+export type FullRemotePeerProfileFragment = { __typename?: 'RemotePeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'PeerImage', id: string } | null, squareLogo?: { __typename?: 'PeerImage', id: string } | null };
+
 export type PeerRefFragment = { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string };
 
-export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
+export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'RemotePeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'PeerImage', id: string } | null, squareLogo?: { __typename?: 'PeerImage', id: string } | null } | null };
 
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3894,14 +3940,6 @@ export const FullComment = gql`
   itemType
 }
     ${FullCommentUser}`;
-export const PeerRef = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  slug
-  hostURL
-}
-    `;
 export const FullPeerProfile = gql`
     fragment FullPeerProfile on PeerProfile {
   name
@@ -3916,15 +3954,37 @@ export const FullPeerProfile = gql`
   }
 }
     ${ImageRef}`;
+export const PeerRef = gql`
+    fragment PeerRef on Peer {
+  id
+  name
+  slug
+  hostURL
+}
+    `;
+export const FullRemotePeerProfile = gql`
+    fragment FullRemotePeerProfile on RemotePeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    id
+  }
+  squareLogo {
+    id
+  }
+}
+    `;
 export const PeerWithProfile = gql`
     fragment PeerWithProfile on Peer {
   ...PeerRef
   profile {
-    ...FullPeerProfile
+    ...FullRemotePeerProfile
   }
 }
     ${PeerRef}
-${FullPeerProfile}`;
+${FullRemotePeerProfile}`;
 export const FullUser = gql`
     fragment FullUser on User {
   name

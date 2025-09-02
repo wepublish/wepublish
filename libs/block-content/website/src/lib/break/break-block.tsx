@@ -1,7 +1,13 @@
 import {Theme, Typography, css, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
-import {BuilderBreakBlockProps, Button, Image, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderBreakBlockProps,
+  Button,
+  Image,
+  Link,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 
 export const isBreakBlock = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
   block.__typename === 'BreakBlock'
@@ -41,6 +47,7 @@ export const BreakBlockHeading = styled('div')``
 
 export const BreakBlockButton = styled(Button)`
   margin-top: ${({theme}) => theme.spacing(2)};
+  padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(3)};
   width: fit-content;
 `
 
@@ -63,7 +70,6 @@ export const BreakBlock = ({
   linkURL
 }: BuilderBreakBlockProps) => {
   const {
-    elements: {Image, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
@@ -71,15 +77,17 @@ export const BreakBlock = ({
 
   return (
     <BreakBlockWrapper className={className}>
-      <BreakBlockSegment>
-        {!image && text && (
-          <Typography variant="blockBreakTitle" component={BreakBlockHeading}>
-            {text}
-          </Typography>
-        )}
+      {(image || text) && (
+        <BreakBlockSegment>
+          {!image && text && (
+            <Typography variant="blockBreakTitle" component={BreakBlockHeading}>
+              {text}
+            </Typography>
+          )}
 
-        {image && <BreakBlockImage image={image} />}
-      </BreakBlockSegment>
+          {image && <BreakBlockImage image={image} />}
+        </BreakBlockSegment>
+      )}
 
       <BreakBlockSegment>
         {image && text && (
@@ -93,7 +101,7 @@ export const BreakBlock = ({
           <BreakBlockButton
             color="accent"
             variant="contained"
-            size="large"
+            size="medium"
             LinkComponent={Link}
             href={linkURL ?? ''}
             target={linkTarget ?? '_blank'}>

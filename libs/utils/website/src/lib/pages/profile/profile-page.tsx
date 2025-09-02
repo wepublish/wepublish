@@ -1,33 +1,34 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {setCookie} from 'cookies-next'
-import {NextPage, NextPageContext} from 'next'
-import getConfig from 'next/config'
-import {withAuthGuard} from '../../auth-guard'
-import {ssrAuthLink} from '../../auth-link'
-import {getSessionTokenProps} from '../../get-session-token-props'
-import {ComponentProps} from 'react'
-import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
+import {css} from '@mui/material'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {
-  useHasUnpaidInvoices,
   InvoiceListContainer,
-  SubscriptionListContainer,
   InvoiceListItemWrapper,
+  SubscriptionListContainer,
   SubscriptionListItemContent,
-  SubscriptionListItemWrapper
+  SubscriptionListItemWrapper,
+  useHasUnpaidInvoices
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
-  useSubscriptionsQuery,
+  addClientCacheToV1Props,
   getV1ApiClient,
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  addClientCacheToV1Props
+  SessionWithTokenWithoutUser,
+  useSubscriptionsQuery
 } from '@wepublish/website/api'
 import {Button, Link, useWebsiteBuilder} from '@wepublish/website/builder'
+import {setCookie} from 'cookies-next'
+import {NextPage, NextPageContext} from 'next'
+import getConfig from 'next/config'
+import {ComponentProps} from 'react'
+import {withAuthGuard} from '../../auth-guard'
+import {ssrAuthLink} from '../../auth-link'
+import {getSessionTokenProps} from '../../get-session-token-props'
+import {useTranslation} from 'react-i18next'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -77,6 +78,7 @@ function ProfilePage(props: ProfilePageProps) {
   const {
     elements: {H4}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   const {data: subscriptonData} = useSubscriptionsQuery({
     fetchPolicy: 'cache-only'
@@ -109,7 +111,7 @@ function ProfilePage(props: ProfilePageProps) {
         )}
 
         <SubscriptionListWrapper>
-          <H4 component={'h1'}>Aktive Abos</H4>
+          <H4 component={'h1'}>{t('user.activeSubscriptions')}</H4>
 
           <SubscriptionListContainer
             filter={subscriptions =>
@@ -129,7 +131,9 @@ function ProfilePage(props: ProfilePageProps) {
 
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
+              <Link href="/profile/subscription/deactivated">
+                {t('user.viewCancelledSubscriptions')}
+              </Link>
             </DeactivatedSubscriptions>
           )}
         </SubscriptionListWrapper>
@@ -171,7 +175,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
         res: ctx.res,
         expires: new Date(data.data.createSessionWithJWT.expiresAt),
         sameSite: 'strict',
-        httpOnly: true // @TODO: Config
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
       }
     )
   }

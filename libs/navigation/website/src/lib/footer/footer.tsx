@@ -3,9 +3,10 @@ import styled from '@emotion/styled'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderFooterProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
+import {PropsWithChildren} from 'react'
+import {TextToIcon} from '@wepublish/ui'
 import {useIntersectionObserver} from 'usehooks-ts'
 import {forceHideBanner} from '@wepublish/banner/website'
-import {TextToIcon} from '@wepublish/ui'
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
@@ -72,7 +73,8 @@ export function Footer({
   data,
   loading,
   error,
-  hideBannerOnIntersecting
+  hideBannerOnIntersecting,
+  children
 }: BuilderFooterProps) {
   const {isIntersecting, ref} = useIntersectionObserver({
     initialIsIntersecting: false,
@@ -97,17 +99,19 @@ export function Footer({
 
   return (
     <FooterWrapper className={className} ref={ref}>
-      <FooterPaper main={mainItems} categories={categories} />
+      <FooterPaper main={mainItems} categories={categories} children={children} />
 
-      <FooterIconsWrapper>
-        <FooterIcons>
-          {iconItems?.links.map((link, index) => (
-            <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
-              <TextToIcon title={link.label} size={32} />
-            </Link>
-          ))}
-        </FooterIcons>
-      </FooterIconsWrapper>
+      {!!iconItems?.links.length && (
+        <FooterIconsWrapper>
+          <FooterIcons>
+            {iconItems.links.map((link, index) => (
+              <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
+                <TextToIcon title={link.label} size={32} />
+              </Link>
+            ))}
+          </FooterIcons>
+        </FooterIconsWrapper>
+      )}
 
       {isIntersecting && hideBannerOnIntersecting && forceHideBanner}
     </FooterWrapper>
@@ -164,6 +168,11 @@ export const FooterCategoryLinks = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `
 
 export const FooterMainLinks = styled(FooterCategoryLinks)`
@@ -173,11 +182,12 @@ export const FooterMainLinks = styled(FooterCategoryLinks)`
 
 const FooterPaper = ({
   main,
-  categories
-}: {
+  categories,
+  children
+}: PropsWithChildren<{
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
-}) => {
+}>) => {
   const {
     elements: {H4, H6}
   } = useWebsiteBuilder()
@@ -200,7 +210,7 @@ const FooterPaper = ({
         <FooterLinksGroup key={arrayIndex}>
           {categoryArray.map(nav => (
             <FooterCategory key={nav.id}>
-              <FooterName>{nav.name}</FooterName>
+              {nav.name && <FooterName>{nav.name}</FooterName>}
 
               <FooterCategoryLinks>
                 {nav.links?.map((link, index) => (
@@ -219,6 +229,8 @@ const FooterPaper = ({
           ))}
         </FooterLinksGroup>
       ))}
+
+      {children}
     </FooterPaperWrapper>
   )
 }

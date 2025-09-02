@@ -1,8 +1,9 @@
-import {Link, Typography} from '@mui/material'
 import styled from '@emotion/styled'
-import {BuilderImageBlockProps, Image} from '@wepublish/website/builder'
+import {Typography} from '@mui/material'
 import {BlockContent, ImageBlock as ImageBlockType} from '@wepublish/website/api'
+import {BuilderImageBlockProps, Image, Link} from '@wepublish/website/builder'
 import {useEffect, useRef, useState} from 'react'
+import {Trans} from 'react-i18next'
 import {getContainedImageSize} from './contained-image-size'
 
 declare module 'react' {
@@ -84,8 +85,16 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
             variant="caption"
             component={ImageBlockCaption}
             sx={realImageWidth ? {width: `${realImageWidth}px`, justifySelf: 'center'} : undefined}>
-            {caption}
-            {image?.source ? <ImageBlockSource> (Bild: {image?.source})</ImageBlockSource> : null}
+            <Trans
+              i18nKey="image.caption"
+              values={{
+                caption,
+                source: image?.source || 'EMPTY'
+              }}
+              components={{
+                ImageSource: <ImageBlockSource />
+              }}
+            />
           </Typography>
         )}
       </ImageBlockInnerWrapper>

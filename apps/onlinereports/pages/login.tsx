@@ -7,8 +7,11 @@ import {
   useUser
 } from '@wepublish/authentication/website'
 import {getSessionTokenProps} from '@wepublish/utils/website'
-import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
-import {getV1ApiClient, LoginWithJwtDocument} from '@wepublish/website/api'
+import {
+  getV1ApiClient,
+  LoginWithJwtDocument,
+  SessionWithTokenWithoutUser
+} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
@@ -50,10 +53,10 @@ export default function Login({sessionToken}: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <H3 component="h1">Login für Leserinnen und Leser</H3>
 
       <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
+        (Falls Sie noch keinen Account haben, <Link href={'/signup'}>klicken Sie hier.</Link>)
       </Typography>
 
       <LoginFormContainer

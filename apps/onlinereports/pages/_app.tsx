@@ -1,9 +1,25 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
-import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
+import {CssBaseline, ThemeProvider} from '@mui/material'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleTagManager} from '@next/third-parties/google'
+import {
+  BreakBlockHeading,
+  BreakBlockWrapper,
+  EventBlockWrapper,
+  ImageBlockCaption,
+  ImageBlockInnerWrapper,
+  ImageBlockWrapper,
+  RichTextBlockWrapper,
+  SliderWrapper,
+  TitleBlock,
+  TitleBlockLead,
+  TitleBlockTitle,
+  TitleBlockWrapper
+} from '@wepublish/block-content/website'
+import {ContentWrapperStyled} from '@wepublish/content/website'
 import {withErrorSnackbar} from '@wepublish/errors/website'
-import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
@@ -27,11 +43,38 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
+import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
+import deOverridden from '../locales/deOverridden.json'
+import {AdblockOverlay} from '../src/components/adblock-detector'
+import {Advertisement} from '../src/components/advertisement'
+import {
+  ArticleBottomMeta,
+  ArticlePreTitle,
+  ArticleTopMeta,
+  OnlineReportsArticle
+} from '../src/components/article'
+import {OnlineReportsAuthorChip} from '../src/components/author-chip'
+import {OnlineReportsFooter} from '../src/components/footer'
+import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
+import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
+import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import {
+  OnlineReportsQuoteBlock,
+  OnlineReportsQuoteBlockWrapper
+} from '../src/components/quote-block'
+import {AdsProvider} from '../src/context/ads-context'
+import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
+import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
+import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
+import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {OnlineReportsRenderElement} from '../src/render-element'
+import {Structure} from '../src/structure'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
@@ -43,7 +86,7 @@ i18next
   .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
+  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverridden)))
   .init({
     partialBundledLanguages: true,
     lng: 'de',
@@ -58,38 +101,87 @@ i18next
   })
 z.setErrorMap(zodI18nMap)
 
-const Spacer = styled('div')`
-  display: grid;
-  align-items: flex-start;
+const Spacer = styled(Structure)`
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
+
+  main {
+    overflow-x: hidden;
+  }
 `
 
-const MainSpacer = styled(Container)`
+const MainContainer = styled('div')`
+  grid-column: 2/3;
   display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
+  row-gap: ${({theme}) => theme.spacing(2.5)};
+  margin-bottom: ${({theme}) => theme.spacing(2.5)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
+    row-gap: ${({theme}) => theme.spacing(4)};
+    margin-bottom: ${({theme}) => theme.spacing(4)};
+  }
+`
+
+const MainContent = styled('main')`
+  display: flex;
+  flex-direction: column;
+
+  row-gap: ${({theme}) => theme.spacing(7.5)};
+
+  ${ContentWrapperStyled} {
+    ${({theme}) => theme.breakpoints.down('md')} {
+      row-gap: ${({theme}) => theme.spacing(5)};
+    }
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      row-gap: ${({theme}) => theme.spacing(4)};
+
+      &
+        > :is(
+          ${RichTextBlockWrapper},
+            ${ArticleTopMeta},
+            ${ArticleBottomMeta},
+            ${ArticlePreTitle},
+            ${TitleBlockWrapper},
+            ${OnlineReportsQuoteBlockWrapper}
+        ) {
+        grid-column: 3/11;
+      }
+
+      ${RichTextBlockWrapper} {
+      }
+
+      & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
+        grid-column: 2/12;
+      }
+    }
+
+    ${BreakBlockHeading} {
+      text-transform: none;
+      font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
+      font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
+      font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
+    }
+
+    ${ImageBlockInnerWrapper} {
+      gap: ${({theme}) => theme.spacing(1)};
+    }
+
+    ${ImageBlockCaption} {
+      color: #7c7c7c;
+      font-size: 14px;
+    }
+  }
+
+  ${theme.breakpoints.down('lg')} {
+    padding-left: ${({theme}) => theme.spacing(2.5)};
+    padding-right: ${({theme}) => theme.spacing(2.5)};
+  }
+`
+
+const WideboardPlacer = styled('div')`
+  * {
+    margin-bottom: -${({theme}) => theme.spacing(5)};
   }
 `
 
@@ -98,17 +190,47 @@ const NavBar = styled(NavbarContainer)`
   z-index: 11;
 `
 
+const OnlineReportsTitle = styled(TitleBlock)`
+  ${TitleBlockTitle} {
+    margin-bottom: -${({theme}) => theme.spacing(2)};
+    font-size: ${({theme}) => theme.typography.h1.fontSize};
+    font-family: ${({theme}) => theme.typography.h1.fontFamily};
+    font-weight: ${({theme}) => theme.typography.h1.fontWeight};
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      font-size: 44px;
+    }
+  }
+
+  ${TitleBlockLead} {
+    font-size: -${({theme}) => theme.typography.body1.fontSize};
+  }
+`
+
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
+
+const AdvertisementPlacer = styled('div')`
+  padding-left: ${({theme}) => theme.spacing(2.5)};
+  position: sticky;
+  top: 112px;
+  margin-bottom: ${({theme}) => theme.spacing(2.5)};
+  grid-column: 3/4;
+  overflow: hidden;
+
+  @media (max-width: 1200px) {
+    display: none;
+  }
+`
 
 type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'We.Publish'
+  const siteTitle = 'OnlineReports'
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -116,65 +238,93 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   cache.compat = true
 
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{Link: NextWepublishLink}}
-          blocks={{Subscribe: Mitmachen}}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <AppCacheProvider emotionCache={emotionCache}>
+      <AdsProvider>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            AuthorChip={OnlineReportsAuthorChip}
+            ArticleAuthors={OnlineReportsArticleAuthors}
+            ArticleList={OnlineReportsArticleList}
+            Navbar={OnlineReportsNavbar}
+            Article={OnlineReportsArticle}
+            RegistrationForm={OnlineReportsRegistrationForm}
+            PaymentAmount={OnlineReportsPaymentAmount}
+            richtext={{RenderElement: OnlineReportsRenderElement}}
+            elements={{Link: NextWepublishLink}}
+            blocks={{
+              Teaser: OnlineReportsTeaser,
+              Renderer: OnlineReportsBlockRenderer,
+              TeaserList: OnlineReportsTeaserListBlock,
+              Quote: OnlineReportsQuoteBlock,
+              Subscribe: Mitmachen,
+              Title: OnlineReportsTitle
+            }}
+            date={{format: dateFormatter}}
+            meta={{siteTitle}}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <OnlineReportsGlobalStyles />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                {/* Feeds */}
+                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                {/* Sitemap */}
+                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-              <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-              <link rel="manifest" href="/site.webmanifest" />
-              <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-              <meta name="msapplication-TileColor" content="#ffffff" />
-              <meta name="theme-color" content="#ffffff" />
-            </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="theme-color" content="#ffffff" />
+                <script src="//servedby.revive-adserver.net/asyncjs.php" async />
+              </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
+              <AdblockOverlay />
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                  loginBtn={{href: '/login'}}
+                  profileBtn={{href: '/profile'}}
+                />
+                <MainContainer>
+                  <MainContent>
+                    <WideboardPlacer>
+                      <Advertisement type={'whiteboard'} />
+                    </WideboardPlacer>
+                    <Component {...pageProps} />
+                  </MainContent>
+                </MainContainer>
+                <AdvertisementPlacer>
+                  <Advertisement type={'half-page'} />
+                </AdvertisementPlacer>
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
+                <OnlineReportsFooter />
+              </Spacer>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
-            </Spacer>
-
-            <RoutedAdminBar />
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
+              <RoutedAdminBar />
+              {publicRuntimeConfig.env.GTM_ID && (
+                <>
+                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+                </>
+              )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AdsProvider>
     </AppCacheProvider>
   )
 }

@@ -9,11 +9,6 @@ import {TypographyStyleOptions} from '@mui/material/styles/createTypography'
 import {Breakpoint, createBreakpoints, CSSInterpolation, Theme, ThemeProvider} from '@mui/system'
 import {ComponentType, memo} from 'react'
 
-const {
-  palette: {augmentColor},
-  breakpoints: originalBreakpoints
-} = createTheme()
-
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface Theme extends MaterialTheme {}
@@ -46,6 +41,8 @@ declare module '@mui/material/styles' {
 
     articleAuthors: TypographyStyleOptions
 
+    peerInformation: TypographyStyleOptions
+
     bannerTitle: TypographyStyleOptions
     bannerText: TypographyStyleOptions
     bannerCta: TypographyStyleOptions
@@ -65,6 +62,8 @@ declare module '@mui/material/styles' {
     teaserMeta?: TypographyStyleOptions
 
     articleAuthors?: TypographyStyleOptions
+
+    peerInformation?: TypographyStyleOptions
 
     bannerTitle?: TypographyStyleOptions
     bannerText?: TypographyStyleOptions
@@ -94,6 +93,8 @@ declare module '@mui/material/Typography' {
 
     articleAuthors: true
 
+    peerInformation: true
+
     bannerTitle: true
     bannerText: true
     bannerCta: true
@@ -108,6 +109,10 @@ declare module '@mui/material/Typography' {
 }
 
 export const baseTheme = createTheme()
+const {
+  palette: {augmentColor},
+  breakpoints: originalBreakpoints
+} = baseTheme
 
 export const theme = createTheme({
   typography: {
@@ -121,6 +126,7 @@ export const theme = createTheme({
       lineHeight: 1.15
     },
     h2: {
+      ...baseTheme.typography.h3,
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15
@@ -156,10 +162,14 @@ export const theme = createTheme({
     subtitle1: {
       ...baseTheme.typography.h6,
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-      fontWeight: 300
+      fontWeight: 300,
+      lineHeight: 1.4
     },
     // Article
     articleAuthors: {
+      lineHeight: 1.7
+    },
+    peerInformation: {
       lineHeight: 1.7
     },
     // Blocks
@@ -170,6 +180,7 @@ export const theme = createTheme({
     blockBreakTitle: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontSize: '40px',
+      lineHeight: 1.15,
       fontWeight: 600,
       textTransform: 'uppercase',
       [baseTheme.breakpoints.up('md')]: {

@@ -43,7 +43,6 @@ import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
 
@@ -88,22 +87,6 @@ const MainSpacer = styled(Container)`
       gap: ${theme.spacing(10)};
     }
   `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const TsriTitle = styled(TitleBlock)`
@@ -195,11 +178,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories', 'about-us']]}
+                iconSlug="icons"
+              />
             </Spacer>
 
             <RoutedAdminBar />

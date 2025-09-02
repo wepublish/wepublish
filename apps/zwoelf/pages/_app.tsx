@@ -2,6 +2,7 @@ import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
@@ -33,11 +34,9 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 
 import deOverriden from '../locales/deOverriden.json'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {ZwoelfBaseTeaser} from '../src/zwoelf-base-teaser'
 import {ZwoelfFocusTeaser} from '../src/zwoelf-focus-teaser'
-import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -79,22 +78,6 @@ const MainSpacer = styled(Container)`
       gap: ${theme.spacing(10)};
     }
   `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -176,11 +159,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="main" categorySlugs={[['about']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
+              <FooterContainer slug="main" categorySlugs={[['about']]} iconSlug="icons" />
             </Spacer>
 
             <RoutedAdminBar />

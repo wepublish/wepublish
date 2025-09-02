@@ -6,8 +6,8 @@ import {
   BuilderUserFormFields,
   Button
 } from '@wepublish/website/builder'
-import {useEffect, useMemo} from 'react'
-import {Controller, useForm} from 'react-hook-form'
+import {PropsWithChildren, useEffect, useMemo} from 'react'
+import {Controller, DeepPartial, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {UserForm} from './user-form'
 import {ApiAlert} from '@wepublish/errors/website'
@@ -71,8 +71,14 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
   register,
   className,
   schema = defaultRegisterSchema,
-  onRegister
-}: BuilderRegistrationFormProps<T>) {
+  onRegister,
+  onChange,
+  children
+}: PropsWithChildren<
+  BuilderRegistrationFormProps<T> & {
+    onChange?: (values: DeepPartial<RegisterMutationVariables>) => void
+  }
+>) {
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({...obj, [field]: true}),
     {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>
@@ -95,7 +101,7 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
     return result
   }, [fieldsToDisplay, schema])
 
-  const {handleSubmit, control, setValue} = useForm<RegisterMutationVariables>({
+  const {handleSubmit, control, setValue, watch} = useForm<RegisterMutationVariables>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       challengeAnswer: {
@@ -106,6 +112,14 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
     mode: 'onTouched',
     reValidateMode: 'onChange'
   })
+
+  useEffect(() => {
+    const subscription = watch(value => {
+      onChange?.(value)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [onChange, watch])
 
   const onSubmit = handleSubmit(data => onRegister?.(data))
 
@@ -133,6 +147,7 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
           )}
         />
       )}
+      {children}
 
       {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
       {register.error && <ApiAlert error={register.error} severity="error" />}

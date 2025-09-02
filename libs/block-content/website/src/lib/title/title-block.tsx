@@ -20,6 +20,7 @@ export const TitleBlockPreTitle = styled('div')`
   width: fit-content;
   margin-bottom: -${({theme}) => theme.spacing(1.5)};
 `
+export const TitleBlockLead = styled('p')``
 
 export const TitleBlock = ({title, lead, preTitle, className}: BuilderTitleBlockProps) => {
   const {
@@ -37,7 +38,7 @@ export const TitleBlock = ({title, lead, preTitle, className}: BuilderTitleBlock
       <H2 component={TitleBlockTitle}>{title}</H2>
 
       {lead && (
-        <Typography variant="subtitle1" component="p">
+        <Typography variant="subtitle1" component={TitleBlockLead}>
           {lead}
         </Typography>
       )}

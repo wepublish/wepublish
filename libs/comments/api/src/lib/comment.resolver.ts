@@ -119,6 +119,7 @@ export class CommentResolver {
     if (!comment.userID) {
       return null
     }
+
     return this.userDataloaderService.load(comment.userID)
   }
 
@@ -132,6 +133,7 @@ export class CommentResolver {
     if (!comment.parentID) {
       return null
     }
+
     return this.commentDataloader.load(comment.parentID)
   }
 
@@ -141,19 +143,23 @@ export class CommentResolver {
     if (comment.itemType === 'article') {
       item = await this.articleDataloader.load(comment.itemID)
     }
+
     if (comment.itemType === 'page') {
       item = await this.pageDataloader.load(comment.itemID)
     }
+
     if (!item) {
       return null
     }
+
     return this.urlAdapter.getCommentURL(item, comment)
   }
 
   @ResolveField(() => [Comment])
   @Public()
-  async children(@Parent() comment: Comment, @CurrentUser() session?: UserSession | null) {
-    const userId = session?.user?.id || null
+  async children(@Parent() comment: Comment, @CurrentUser() session?: UserSession) {
+    const userId = session?.user?.id ?? null
+
     return this.commentService.getPublicChildrenCommentsByParentId(comment.id, userId)
   }
 }

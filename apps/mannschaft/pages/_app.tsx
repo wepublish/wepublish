@@ -38,7 +38,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 
 import {PURModel} from '../src/cookie-or-pay/pur-model'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import {MainSpacer} from '../src/main-spacer'
 import {MannschaftArticle} from '../src/mannschaft-article'
 import {MannschaftArticleDateWithShare} from '../src/mannschaft-article-date-with-share'
@@ -83,22 +82,6 @@ const Spacer = styled('div')`
   grid-template-rows: min-content 1fr min-content;
   gap: ${({theme}) => theme.spacing(3)};
   min-height: 100vh;
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -228,11 +211,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories', 'about-us']]}
+                iconSlug="icons"
+              />
             </Spacer>
 
             <RoutedAdminBar />

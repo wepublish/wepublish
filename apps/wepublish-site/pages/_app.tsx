@@ -29,7 +29,6 @@ import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
@@ -73,22 +72,6 @@ const MainSpacer = styled(Container)`
       gap: ${theme.spacing(10)};
     }
   `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -156,11 +139,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </MainSpacer>
             </main>
 
-            <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-              <LogoLink href="/" aria-label="Startseite">
-                <LogoWrapper />
-              </LogoLink>
-            </FooterContainer>
+            <FooterContainer
+              slug="footer"
+              categorySlugs={[['categories', 'about-us']]}
+              iconSlug="icons"
+            />
           </Spacer>
 
           <RoutedAdminBar />

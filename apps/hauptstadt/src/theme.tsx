@@ -453,6 +453,19 @@ const theme = createTheme(variablesTheme, {
         }
       })
     },
+    peerInformation: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 200,
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 15,
+          md: 15
+        }
+      })
+    },
     // Blocks
     blockTitlePreTitle: {
       padding: `0 ${variablesTheme.spacing(0.5)}`,

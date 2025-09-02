@@ -1,14 +1,15 @@
 {
   "website": {
     "production": {
-      "deployment": false,
+      "deployment": true,
+      "custom_domain": "https://wepublish-site.wepublish.media",
       "env": {
         "DEPLOY_ENV": "production"
       },
       "secret_env": []
     },
     "staging": {
-      "deployment": false,
+      "deployment": true,
       "env": {
         "DEPLOY_ENV": "staging"
       },

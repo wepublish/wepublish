@@ -1,7 +1,6 @@
 export * from './lib/authentication.interface'
 export * from './lib/author.interface'
 export * from './lib/banner.interface'
-export * from './lib/blocks.interface'
 export * from './lib/block-styles.interface'
 export * from './lib/comment.interface'
 export * from './lib/container.interface'
@@ -42,3 +41,6 @@ export * from './lib/article.components'
 
 export * from './lib/peer.interface'
 export * from './lib/peer.components'
+
+export * from './lib/blocks.interface'
+export * from './lib/blocks.components'

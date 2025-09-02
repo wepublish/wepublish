@@ -10,6 +10,12 @@ export const TsriBreakBlock = styled(BreakBlock)`
     padding: ${({theme}) => theme.spacing(10)};
   }
 
+  .MuiButton-root,
+  .MuiButton-root:hover {
+    background-color: ${({theme}) => theme.palette.secondary.main};
+    color: ${({theme}) => theme.palette.secondary.contrastText};
+  }
+
   ${BreakBlockHeading} {
     font-size: 2rem;
   }

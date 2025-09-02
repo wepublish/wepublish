@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import {BlockContent, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
 import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {ImageBlockCaption, ImageBlockSource} from '../image/image-block'
+import {Trans} from 'react-i18next'
 
 export const isImageGalleryBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -39,10 +40,16 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
             <Image image={image.image!} />
 
             <Typography variant="caption" component={ImageBlockCaption}>
-              {image.caption ?? image.image?.title}
-              {image.image?.source ? (
-                <ImageBlockSource> (Bild: {image.image.source})</ImageBlockSource>
-              ) : null}
+              <Trans
+                i18nKey="image.caption"
+                values={{
+                  caption: image.caption ?? image.image?.title,
+                  source: image.image?.source || 'EMPTY'
+                }}
+                components={{
+                  ImageSource: <ImageBlockSource />
+                }}
+              />
             </Typography>
           </ImageListItem>
         ))}

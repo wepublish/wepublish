@@ -1,8 +1,12 @@
 import {GraphQLScalarType, Kind} from 'graphql'
 
-const ColorRegexp = /^#[A-Fa-f0-9]{5}$/
+const ColorRegexp = /^#[A-Fa-f0-9]{6}$/
 
-const validateColor = (value: unknown): string => {
+const validateColor = (value: unknown): string | null => {
+  if (value === null || value === undefined) {
+    return null
+  }
+
   if (typeof value !== 'string') {
     throw new Error('Color must be a string')
   }

@@ -15,7 +15,7 @@ export class PeerProfileResolver {
   @Query(() => PeerProfile, {
     description: 'This query returns the peer profile.'
   })
-  async peerProfile(): Promise<PeerProfile> {
+  async peerProfile() {
     return this.peerProfileService.getPeerProfile()
   }
 

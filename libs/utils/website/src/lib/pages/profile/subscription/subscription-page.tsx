@@ -102,7 +102,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
         res: ctx.res,
         expires: new Date(data.data.createSessionWithJWT.expiresAt),
         sameSite: 'strict',
-        httpOnly: true // @TODO: Config
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
       }
     )
   }

@@ -1093,8 +1093,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
-    default:
+    default: {
       throw new Error('Invalid Block')
+    }
   }
 }
 

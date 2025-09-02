@@ -36,7 +36,6 @@ import {zodI18nMap} from 'zod-i18n-map'
 import {CulturBreakBlock} from '../src/components/cultur-break'
 import {CulturTeaser} from '../src/components/cultur-teaser'
 import {Footer} from '../src/components/footer'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 
 setDefaultOptions({
@@ -79,22 +78,6 @@ const MainSpacer = styled(Container)`
       gap: ${theme.spacing(10)};
     }
   `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const NavBar = styled(NavbarContainer)`
@@ -171,11 +154,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </MainSpacer>
             </main>
 
-            <FooterContainer slug="footer" categorySlugs={[['categories']]}>
-              <LogoLink href="/" aria-label="Startseite">
-                <LogoWrapper />
-              </LogoLink>
-            </FooterContainer>
+            <FooterContainer slug="footer" categorySlugs={[['categories']]} iconSlug="icons" />
           </Spacer>
 
           <RoutedAdminBar />

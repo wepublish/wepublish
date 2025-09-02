@@ -106,3 +106,36 @@ export class UploadImageInput {
   @Field(() => FocalPointInput, {nullable: true})
   focalPoint?: FocalPointInput
 }
+
+@ObjectType()
+export class PeerImage extends OmitType(Image, ['transformURL'] as const, ObjectType) {
+  @Field({nullable: true})
+  xxl?: string
+  @Field({nullable: true})
+  xl?: string
+  @Field({nullable: true})
+  l?: string
+  @Field({nullable: true})
+  m?: string
+  @Field({nullable: true})
+  s?: string
+  @Field({nullable: true})
+  xs?: string
+  @Field({nullable: true})
+  xxs?: string
+
+  @Field({nullable: true})
+  xxlSquare?: string
+  @Field({nullable: true})
+  xlSquare?: string
+  @Field({nullable: true})
+  lSquare?: string
+  @Field({nullable: true})
+  mSquare?: string
+  @Field({nullable: true})
+  sSquare?: string
+  @Field({nullable: true})
+  xsSquare?: string
+  @Field({nullable: true})
+  xxsSquare?: string
+}

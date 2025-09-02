@@ -164,7 +164,12 @@ export const selectTeaserTags = (teaser: TeaserType) => {
       return teaser.event?.tags?.filter(({tag, main}) => !!tag && main) ?? []
 
     case 'CustomTeaser':
-      return []
+      return (
+        teaser.properties
+          ?.find(property => property.key === 'tags')
+          ?.value.split(/,\s+/)
+          .map(tag => ({tag, id: tag, url: '/'})) ?? []
+      )
   }
 
   return []
@@ -214,8 +219,7 @@ export const TeaserImageWrapper = styled('div')`
   }
 `
 
-// InnerWrapper exists because inside a grid,
-// vertical margin is added to the height of the elemement.
+// InnerWrapper exists because inside a grid, vertical margin is added to the height of the element.
 // This causes the TeaserLogo to not be properly positioned if a margin exists
 export const TeaserImageInnerWrapper = styled('div')`
   position: relative;

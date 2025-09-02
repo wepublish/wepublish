@@ -10,25 +10,19 @@ import {
   ListicleItemInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
-import {createSafeHostUrl} from '@wepublish/peering/api'
+import {createSafeHostUrl, remote} from '@wepublish/peering/api'
 import {DateFilter, PrimeDataLoader} from '@wepublish/utils/api'
 import {GraphQLClient} from 'graphql-request'
 import {pipe, replace, toLower} from 'ramda'
 import {ValueOf} from 'type-fest'
 import {
-  Article,
-  ArticleFilter as GqlArticleFilter,
-  ArticleList,
-  ArticleListQuery,
-  ArticleListQueryVariables,
-  ArticleQuery,
-  ArticleQueryVariables,
-  DateFilter as GqlDateFilter,
-  FullImageFragment
-} from './graphql'
-import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
+  ImportArticleOptions,
+  PaginatedPeerArticle,
+  PeerArticleFilter,
+  PeerArticleListArgs
+} from './peer-article.model'
 
-const dateFilterToGqlDateFilter = (comparison: DateFilter): GqlDateFilter => ({
+const dateFilterToGqlDateFilter = (comparison: DateFilter): remote.DateFilter => ({
   comparison: comparison.comparison,
   date: comparison.date?.toDateString()
 })
@@ -36,7 +30,7 @@ const dateFilterToGqlDateFilter = (comparison: DateFilter): GqlDateFilter => ({
 const peerArticleFilterToGqlArticleFilter = ({
   peerId: _peerId,
   ...filter
-}: Partial<PeerArticleFilter>): GqlArticleFilter => ({
+}: Partial<PeerArticleFilter>): remote.ArticleFilter => ({
   ...filter,
   publicationDateFrom:
     filter.publicationDateFrom && dateFilterToGqlDateFilter(filter.publicationDateFrom),
@@ -51,7 +45,13 @@ export class ImportPeerArticleService {
     private mediaAdapter: MediaAdapter
   ) {}
 
-  async getArticles({filter, sort, order, take = 10, skip = 0}: PeerArticleListArgs) {
+  async getArticles({
+    filter,
+    sort,
+    order,
+    take = 10,
+    skip = 0
+  }: PeerArticleListArgs): Promise<PaginatedPeerArticle> {
     const peers = await this.prisma.peer.findMany({
       where: {
         id: filter?.peerId ?? undefined,
@@ -76,22 +76,30 @@ export class ImportPeerArticleService {
           }
         })
 
-        const data = await client.request<ArticleListQuery, ArticleListQueryVariables>(
-          ArticleList,
-          {
-            filter: {
-              ...peerArticleFilterToGqlArticleFilter(filter ?? {}),
-              shared: true,
-              published: true
-            },
-            order,
-            sort,
-            take: articleToTakeFromEachPeer,
-            skip: articleToSkipFromEachPeer
-          }
-        )
+        const data = await client.request<
+          remote.ArticleListQuery,
+          remote.ArticleListQueryVariables
+        >(remote.ArticleList, {
+          filter: {
+            ...peerArticleFilterToGqlArticleFilter(filter ?? {}),
+            shared: true,
+            published: true
+          },
+          order,
+          sort,
+          take: articleToTakeFromEachPeer,
+          skip: articleToSkipFromEachPeer
+        })
 
-        return data.articles
+        return {
+          ...data.articles,
+          nodes: data.articles.nodes.map(article => ({
+            ...article,
+            createdAt: new Date(article.createdAt),
+            modifiedAt: new Date(article.modifiedAt),
+            publishedAt: article.publishedAt ? new Date(article.publishedAt) : article.publishedAt
+          }))
+        } as unknown as PaginatedPeerArticle
       })
     )
 
@@ -153,9 +161,12 @@ export class ImportPeerArticleService {
       }
     })
 
-    const {article} = await client.request<ArticleQuery, ArticleQueryVariables>(Article, {
-      id: articleId
-    })
+    const {article} = await client.request<remote.ArticleQuery, remote.ArticleQueryVariables>(
+      remote.Article,
+      {
+        id: articleId
+      }
+    )
 
     const authors = options.importAuthors
       ? await this.importAuthors(peerId, article.published!.authors)
@@ -207,7 +218,7 @@ export class ImportPeerArticleService {
 
   private async importAuthors(
     peerId: string,
-    authors: Exclude<ArticleQuery['article']['published'], undefined | null>['authors']
+    authors: Exclude<remote.ArticleQuery['article']['published'], undefined | null>['authors']
   ): Promise<Prisma.ArticleRevisionAuthorCreateManyRevisionInput[]> {
     const res = await Promise.all(
       authors
@@ -246,7 +257,7 @@ export class ImportPeerArticleService {
 
   private async importTags(
     peerId: string,
-    tags: ArticleQuery['article']['tags']
+    tags: remote.ArticleQuery['article']['tags']
   ): Promise<Prisma.TaggedArticlesUncheckedCreateWithoutArticleInput[]> {
     const existingTags = await this.prisma.tag.findMany({
       where: {
@@ -281,13 +292,13 @@ export class ImportPeerArticleService {
 
   private async prepareBlocksForImport(
     peerId: string,
-    blocks: Exclude<ArticleQuery['article']['published'], undefined | null>['blocks'],
+    blocks: Exclude<remote.ArticleQuery['article']['published'], undefined | null>['blocks'],
     options: ImportArticleOptions
   ) {
     //@TODO: Maybe copy block style? (search for identical blockStyleName + blockType)
 
-    return Promise.all(
-      blocks.flatMap(async block => {
+    const updatedBlocks = await Promise.all(
+      blocks.map(async block => {
         switch (block.__typename) {
           case 'BreakBlock':
           case 'QuoteBlock':
@@ -371,11 +382,13 @@ export class ImportPeerArticleService {
         }
       })
     )
+
+    return updatedBlocks.flat()
   }
 
   private async importImage(
     peerId: string,
-    originImage: FullImageFragment | null | undefined
+    originImage: remote.RemoteImageFragment | null | undefined
   ): Promise<string | null | undefined> {
     let imageId: string | undefined
 

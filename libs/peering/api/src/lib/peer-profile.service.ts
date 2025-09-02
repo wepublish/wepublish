@@ -1,14 +1,19 @@
 import {Inject, Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {PeerProfile} from './peer-profile.model'
+import {PeerProfile, RemotePeerProfile} from './peer-profile.model'
 import {Image} from '@wepublish/image/api'
 import {PEER_MODULE_OPTIONS, PeerModuleOptions} from './peer.constants'
 import {Descendant} from 'slate'
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {RemotePeerProfileDataloaderService} from './remote-peer-profile.dataloader'
+import {Cache} from 'cache-manager'
 
 @Injectable()
 export class PeerProfileService {
   constructor(
     private prisma: PrismaClient,
+    private peerProfile: RemotePeerProfileDataloaderService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @Inject(PEER_MODULE_OPTIONS) private options: PeerModuleOptions
   ) {}
 
@@ -60,5 +65,22 @@ export class PeerProfileService {
       squareLogo,
       callToActionImage
     }
+  }
+
+  async getRemotePeerProfile(peerId: string) {
+    const key = `REMOTE-PEER-PROFILE:${peerId}`
+    const cached = await this.cacheManager.get<RemotePeerProfile>(key)
+
+    if (cached) {
+      return cached
+    }
+
+    const profile = await this.peerProfile.load(peerId)
+
+    if (process.env.NODE_ENV === 'production' && profile) {
+      await this.cacheManager.set(key, profile, 1000 * 3600 * 24)
+    }
+
+    return profile
   }
 }

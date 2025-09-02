@@ -24,6 +24,7 @@ import {
   BuilderTeaserListBlockProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
+import {MdArrowBackIos, MdArrowForwardIos} from 'react-icons/md'
 import {isTeaserSlotsBlock} from '../../teaser/teaser-slots-block'
 
 export const SliderWrapper = styled('section')`
@@ -49,6 +50,7 @@ export const SliderBallContainer = styled('div')`
   flex-flow: row wrap;
   justify-content: center;
   gap: ${({theme}) => theme.spacing(1)};
+  position: relative;
 `
 
 export const SliderBall = styled('button')`
@@ -74,7 +76,34 @@ export const SliderBallFill = styled('span')`
   height: 100%;
 `
 
-export const useSlidesPerView = () => {
+export const SliderArrow = styled('button')`
+  appearance: none;
+  border: none;
+  background: transparent;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+  display: none;
+
+  &:last-of-type {
+    right: 0;
+    left: initial;
+  }
+
+  &:hover {
+    color: #000;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+`
+
+export const useSlidesPerViewResponsive = () => {
   const theme = useTheme()
 
   const sm = useMediaQuery(theme.breakpoints.up('sm'), {
@@ -126,12 +155,15 @@ export const useSlidesPadding = () => {
   return 16
 }
 
+type TeaserSliderProps = BuilderBlockStyleProps['TeaserSlider'] & {useSlidesPerView?: () => number}
+
 export const TeaserSlider = ({
   blockStyle,
   className,
   teasers,
+  useSlidesPerView = useSlidesPerViewResponsive,
   ...props
-}: BuilderBlockStyleProps['TeaserSlider']) => {
+}: TeaserSliderProps) => {
   const {
     elements: {H5},
     blocks: {Teaser}
@@ -192,6 +224,14 @@ export const TeaserSlider = ({
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
+
+              <SliderArrow onClick={() => sliderRef.current?.prev()} aria-label="Previous slide">
+                <MdArrowBackIos size={22} />
+              </SliderArrow>
+
+              <SliderArrow onClick={() => sliderRef.current?.next()} aria-label="Next slide">
+                <MdArrowForwardIos size={22} />
+              </SliderArrow>
             </SliderBallContainer>
           )}
         </SliderInnerContainer>

@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, Modal, Theme, css, useTheme} from '@mui/material'
+import {css, IconButton, Modal, Theme, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {
   Challenge,
@@ -362,9 +362,14 @@ export const CommentEditor = ({
               <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
 
               <InitialModalContent>
-                <Button onClick={handleGuestComment} variant="outlined" css={initialButtonsStyles}>
-                  als gast kommentieren
-                </Button>
+                {anonymousCanComment && (
+                  <Button
+                    onClick={handleGuestComment}
+                    variant="outlined"
+                    css={initialButtonsStyles}>
+                    als gast kommentieren
+                  </Button>
+                )}
 
                 <Button onClick={handleLoginRegister} css={initialButtonsStyles}>
                   anmelden/registieren

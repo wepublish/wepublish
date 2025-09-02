@@ -90,6 +90,7 @@ export function TeaserSlotsAutofillDialog({
           <Button appearance="subtle" onClick={handleCancel}>
             Cancel
           </Button>
+
           <Button appearance="primary" onClick={handleSave}>
             {!localConfig.enabled ? 'Enable & Save' : 'Save Configuration'}
           </Button>

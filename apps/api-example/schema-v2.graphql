@@ -1808,7 +1808,7 @@ type Peer {
   isDisabled: Boolean
   modifiedAt: DateTime!
   name: String!
-  profile: PeerProfile
+  profile: RemotePeerProfile
   slug: String!
 }
 
@@ -1821,7 +1821,6 @@ type PeerArticle implements HasOptionalPeerLc {
   peerId: String
   publishedAt: DateTime!
   slug: String
-  tags: [Tag!]!
   url: String!
 }
 
@@ -1840,7 +1839,6 @@ input PeerArticleFilter {
 }
 
 type PeerArticleRevision {
-  authors: [Author!]!
   id: String!
   image: PeerImage
   lead: String
@@ -1850,10 +1848,38 @@ type PeerArticleRevision {
 }
 
 type PeerImage {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  focalPoint: FocalPoint
+  format: String!
+  height: Int!
   id: String!
+  l: String
+  lSquare: String
   license: String
+  link: String
+  m: String
+  mSquare: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  s: String
+  sSquare: String
   source: String
-  url: String!
+  tags: [String!]!
+  title: String
+  url: String
+  width: Int!
+  xl: String
+  xlSquare: String
+  xs: String
+  xsSquare: String
+  xxl: String
+  xxlSquare: String
+  xxs: String
+  xxsSquare: String
 }
 
 type PeerProfile {
@@ -2232,6 +2258,23 @@ enum RatingSystemType {
 type Registration {
   session: SessionWithTokenWithoutUser!
   user: User!
+}
+
+type RemotePeerProfile {
+  callToActionImage: PeerImage
+  callToActionImageID: String
+  callToActionImageURL: String
+  callToActionText: RichText!
+  callToActionURL: String!
+  hostURL: String!
+  logo: PeerImage
+  logoID: String
+  name: String!
+  squareLogo: PeerImage
+  squareLogoId: String
+  themeColor: Color!
+  themeFontColor: Color!
+  websiteURL: String!
 }
 
 scalar RichText
