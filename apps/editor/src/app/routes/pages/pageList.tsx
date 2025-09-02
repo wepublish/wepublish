@@ -137,7 +137,15 @@ function PageList() {
         </PermissionControl>
 
         <ListFilters
-          fields={['title', 'description', 'draft', 'pending', 'published', 'publicationDate']}
+          fields={[
+            'title',
+            'description',
+            'draft',
+            'pending',
+            'published',
+            'publicationDate',
+            'includeHidden'
+          ]}
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}

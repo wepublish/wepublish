@@ -8,7 +8,7 @@ import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {SubscriptionsQuery, UserSession} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {SubscriptionListContainer, InvoiceListContainer} from '@wepublish/membership/website'
@@ -105,17 +105,26 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
   const sessionProps = getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
-    await Promise.all([
-      client.query({
-        query: MeDocument
-      }),
-      client.query({
+    const [subscriptions] = await Promise.all([
+      client.query<SubscriptionsQuery>({
         query: SubscriptionsDocument
       }),
       client.query({
         query: InvoicesDocument
+      }),
+      client.query({
+        query: MeDocument
       })
     ])
+
+    if (
+      !subscriptions.error &&
+      !subscriptions.data.subscriptions.find(subscription => subscription.id === ctx.query.id)
+    ) {
+      return {
+        notFound: true
+      }
+    }
   }
 
   const props = addClientCacheToV1Props(client, sessionProps)

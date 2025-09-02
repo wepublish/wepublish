@@ -1,5 +1,4 @@
 import {PageContainer} from '@wepublish/page/website'
-import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -10,26 +9,14 @@ import {
 } from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
 
-export default function PageBySlugOrId() {
-  const {
-    query: {slug, id}
-  } = useRouter()
+const fourOhFourSlug = '404'
 
-  const containerProps = {
-    slug,
-    id
-  } as ComponentProps<typeof PageContainer>
-
-  return <PageContainer {...containerProps} />
+export function FourOhFourPage() {
+  return <PageContainer slug={fourOhFourSlug} />
 }
 
-export const getStaticPaths = getPagePathsBasedOnPage('')
-
-export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug, id} = params || {}
+export const getFourOhFourStaticProps: GetStaticProps = async () => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -37,8 +24,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug,
-        id
+        slug: fourOhFourSlug
       }
     }),
     client.query({
@@ -48,14 +34,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
-
-  const is404 = page.errors?.find(({extensions}) => extensions?.status === 404)
-
-  if (is404) {
-    return {
-      notFound: true
-    }
-  }
 
   const props = addClientCacheToV1Props(client, {})
 

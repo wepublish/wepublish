@@ -74,12 +74,13 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async createPage(
-    {slug, tagIds, properties, blocks, ...revision}: CreatePageInput,
+    {slug, hidden, tagIds, properties, blocks, ...revision}: CreatePageInput,
     userId: string | null | undefined
   ) {
     return this.prisma.page.create({
       data: {
         slug,
+        hidden,
         tags: {
           createMany: {
             data: tagIds.map(tagId => ({
@@ -106,7 +107,7 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async updatePage(
-    {id, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
+    {id, hidden, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
     userId: string | null | undefined
   ) {
     const page = await this.prisma.page.findUnique({
@@ -124,6 +125,7 @@ export class PageService {
       where: {id},
       data: {
         slug,
+        hidden,
         revisions: {
           updateMany: {
             where: {
@@ -336,6 +338,7 @@ export class PageService {
 
     return this.prisma.page.create({
       data: {
+        hidden: page.hidden,
         tags: {
           createMany: {
             data: page.tags.map(({tagId}) => ({
@@ -587,6 +590,30 @@ const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =>
   return {}
 }
 
+const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  console.log('filter', filter, filter?.includeHidden)
+  if (filter?.includeHidden) {
+    return {}
+  }
+
+  return {
+    hidden: false
+  }
+}
+
+/*
+const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  if (filter?.includeHidden) {
+    return{
+      hidden: {
+        equals: filter.includeHidden
+      }
+    }
+  }
+
+  return {}
+}
+*/
 export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -595,7 +622,12 @@ export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereI
     createDescriptionFilter(filter),
     createTagsFilter(filter),
     {
-      OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
+      OR: [
+        createPublishedFilter(filter),
+        createDraftFilter(filter),
+        createPendingFilter(filter),
+        createHiddenFilter(filter)
+      ]
     }
   ]
 })

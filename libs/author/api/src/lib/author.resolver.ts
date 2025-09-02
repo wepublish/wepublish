@@ -7,6 +7,7 @@ import {UserInputError} from '@nestjs/apollo'
 import {AuthorArgs, AuthorsQueryArgs, PaginatedAuthors} from './authors.query'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Tag, TagService} from '@wepublish/tag/api'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Author)
 export class AuthorResolver {
@@ -23,19 +24,27 @@ export class AuthorResolver {
     description: 'Get an author by ID or slug'
   })
   async author(@Args() args: AuthorArgs) {
-    let author
-    if (args.id) {
-      author = await this.authorDataloader.load(args.id)
-    } else if (args.slug) {
-      author = await this.authorService.getAuthorBySlug(args.slug)
-    } else {
-      throw new UserInputError('You must provide either `id` or `slug`.')
+    if (args.id != null) {
+      const author = await this.authorDataloader.load(args.id)
+
+      if (!author) {
+        throw new NotFoundException(`Author with id ${args.id} was not found.`)
+      }
+
+      return author
     }
 
-    if (null === author) {
-      throw new UserInputError('Author not found')
+    if (args.slug != null) {
+      const author = await this.authorService.getAuthorBySlug(args.slug)
+
+      if (!author) {
+        throw new NotFoundException(`Author with slug ${args.slug} was not found.`)
+      }
+
+      return author
     }
-    return author
+
+    throw new UserInputError('Author id or slug required.')
   }
 
   @Public()
