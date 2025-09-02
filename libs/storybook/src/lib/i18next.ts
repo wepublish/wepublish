@@ -14,7 +14,6 @@ const i18n = i18next
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
   .init({
-    debug: true,
     partialBundledLanguages: true,
     lng: 'en',
     fallbackLng: 'en',

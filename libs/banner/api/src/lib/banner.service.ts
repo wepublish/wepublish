@@ -78,11 +78,18 @@ export class BannerService {
       })
     }
 
-    const sortBannerByFittingLoginStatus = sortBy<Banner>(banner =>
-      findIndex<(typeof showForLoginStatus)[0]>(
+    const sortBannerByFittingLoginStatus = sortBy<Banner>(banner => {
+      const index = findIndex<(typeof showForLoginStatus)[0]>(
         ls => ls.showForLoginStatus === banner.showForLoginStatus
       )(showForLoginStatus)
-    )
+
+      if (index === -1) {
+        // not found, so put it at the end
+        return showForLoginStatus.length
+      }
+
+      return index
+    })
 
     return sortBannerByFittingLoginStatus(banners).at(0)
   }

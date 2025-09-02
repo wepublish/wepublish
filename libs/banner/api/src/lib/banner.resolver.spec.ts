@@ -96,8 +96,10 @@ describe('BannerResolver', () => {
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,
         documentId: '1',
-        loggedIn: true
+        loggedIn: true,
+        hasSubscription: false
       })
+
       expect(result).toEqual(mockBanner)
     })
 
@@ -106,8 +108,10 @@ describe('BannerResolver', () => {
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,
         documentId: '1',
-        loggedIn: true
+        loggedIn: true,
+        hasSubscription: false
       })
+
       expect(result).toEqual(null)
     })
   })

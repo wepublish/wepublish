@@ -77,7 +77,7 @@ export class PeerProfileService {
 
     const profile = await this.peerProfile.load(peerId)
 
-    if (process.env.NODE_ENV === 'production' && profile) {
+    if (process.env['NODE_ENV'] === 'production' && profile) {
       await this.cacheManager.set(key, profile, 1000 * 3600 * 24)
     }
 

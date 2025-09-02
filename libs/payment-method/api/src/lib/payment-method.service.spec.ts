@@ -93,7 +93,6 @@ describe('PaymentMethodService', () => {
       active: true
     }
     prismaMock.paymentMethod.update.mockResolvedValueOnce({
-      id: '1',
       ...paymentMethod,
       createdAt: new Date('2023-01-01T00:00:00Z'),
       modifiedAt: new Date('2023-01-04T00:00:00Z')
