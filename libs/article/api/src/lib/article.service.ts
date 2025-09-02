@@ -45,7 +45,9 @@ export class ArticleService {
   }: ArticleListArgs) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body)
-      filter.ids = articleIds
+      if (articleIds.length > 0) {
+        filter.ids = articleIds
+      }
     }
 
     const orderBy = createArticleOrder(sort, order)
@@ -575,48 +577,115 @@ const createIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInp
 
 const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.title) {
-    return {
-      revisions: {
-        some: {
-          title: {
-            contains: filter.title,
-            mode: 'insensitive'
-          }
+    const titleFilter: Prisma.ArticleRevisionWhereInput = {
+      title: {
+        contains: filter.title,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: titleFilter
         }
       }
     }
-  }
+    if (filter?.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: titleFilter
+        }
+      }
+    }
 
+    if (filter?.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: titleFilter
+        }
+      }
+    }
+
+    return {
+      revisions: {
+        some: titleFilter
+      }
+    }
+  }
   return {}
 }
 
 const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.preTitle) {
-    return {
-      revisions: {
-        some: {
-          preTitle: {
-            contains: filter.preTitle,
-            mode: 'insensitive'
-          }
+    const preTitleFilter: Prisma.ArticleRevisionWhereInput = {
+      preTitle: {
+        contains: filter.preTitle,
+        mode: 'insensitive'
+      }
+    }
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: preTitleFilter
         }
       }
     }
+    if (filter.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: preTitleFilter
+        }
+      }
+    }
+    if (filter.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: preTitleFilter
+        }
+      }
+    }
+    return {
+      revisions: {
+        some: preTitleFilter
+      }
+    }
   }
-
   return {}
 }
 
 const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.lead) {
+    const leadFilter: Prisma.ArticleRevisionWhereInput = {
+      lead: {
+        contains: filter.lead,
+        mode: 'insensitive'
+      }
+    }
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: leadFilter
+        }
+      }
+    }
+    if (filter.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: leadFilter
+        }
+      }
+    }
+    if (filter.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: leadFilter
+        }
+      }
+    }
     return {
       revisions: {
-        some: {
-          lead: {
-            contains: filter.lead,
-            mode: 'insensitive'
-          }
-        }
+        some: leadFilter
       }
     }
   }
@@ -729,17 +798,39 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
 
 const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.authors) {
-    return {
-      revisions: {
+    const authorFilter: Prisma.ArticleRevisionWhereInput = {
+      authors: {
         some: {
-          authors: {
-            some: {
-              authorId: {
-                in: filter.authors
-              }
-            }
+          authorId: {
+            in: filter.authors
           }
         }
+      }
+    }
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: authorFilter
+        }
+      }
+    }
+    if (filter.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: authorFilter
+        }
+      }
+    }
+    if (filter.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: authorFilter
+        }
+      }
+    }
+    return {
+      revisions: {
+        some: authorFilter
       }
     }
   }

@@ -33,6 +33,14 @@ export class PaymentsService {
     return this.paymentProviders.find(p => p.id === id)
   }
 
+  findByInvoiceId(invoiceID: string) {
+    return this.prisma.payment.findMany({
+      where: {
+        invoiceID
+      }
+    })
+  }
+
   async findPaymentProviderByPaymentMethodeId(id: string): Promise<PaymentProvider | undefined> {
     const paymentMethode = await this.prisma.paymentMethod.findUnique({
       where: {

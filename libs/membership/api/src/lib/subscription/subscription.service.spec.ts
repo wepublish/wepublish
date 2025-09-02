@@ -442,4 +442,107 @@ describe('SubscriptionPaymentsService', () => {
       expect((e as Error).toString()).toEqual('NotFoundException: Subscription not found!')
     }
   })
+
+  it('checkInvoiceState should throw NotFoundException if payment provider is not found', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: {
+          paymentProviderID: 'invalid'
+        },
+        memberPlan: {},
+        user: {paymentProviderCustomers: []}
+      },
+      items: [],
+      subscriptionPeriods: []
+    }
+
+    await expect(subscriptionService['checkInvoiceState'](mockInvoice as any)).rejects.toThrow(
+      'Payment Provider invalid not found!'
+    )
+  })
+
+  it('checkInvoiceState should call checkIntentStatus and updatePaymentWithIntentState for each payment with intentID', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: {
+          paymentProviderID: 'provider-1'
+        },
+        memberPlan: {},
+        user: {paymentProviderCustomers: []}
+      },
+      items: [],
+      subscriptionPeriods: []
+    }
+
+    const mockPayments = [
+      {id: 'pay-1', intentID: 'intent-1'},
+      {id: 'pay-2', intentID: null},
+      {id: 'pay-3', intentID: 'intent-3'}
+    ]
+
+    const checkIntentStatus = jest
+      .fn()
+      .mockResolvedValueOnce('intent-state-1')
+      .mockResolvedValueOnce('intent-state-3')
+    const updatePaymentWithIntentState = jest.fn()
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState
+    }
+    const paymentsService = {
+      findById: jest.fn().mockReturnValue(paymentProvider),
+      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments)
+    }
+    const subscriptionService = new SubscriptionService(prismaMock as any, paymentsService as any)
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any)
+
+    expect(paymentsService.findById).toHaveBeenCalledWith('provider-1')
+    expect(paymentsService.findByInvoiceId).toHaveBeenCalledWith('invoice-1')
+    expect(checkIntentStatus).toHaveBeenCalledTimes(2)
+    expect(checkIntentStatus).toHaveBeenCalledWith({intentID: 'intent-1', paymentID: 'pay-1'})
+    expect(checkIntentStatus).toHaveBeenCalledWith({intentID: 'intent-3', paymentID: 'pay-3'})
+    expect(updatePaymentWithIntentState).toHaveBeenCalledTimes(2)
+    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({intentState: 'intent-state-1'})
+    expect(updatePaymentWithIntentState).toHaveBeenCalledWith({intentState: 'intent-state-3'})
+  })
+
+  it('checkInvoiceState should skip payments without intentID', async () => {
+    const mockInvoice = {
+      id: 'invoice-1',
+      subscription: {
+        paymentMethod: {
+          paymentProviderID: 'provider-1'
+        },
+        memberPlan: {},
+        user: {paymentProviderCustomers: []}
+      },
+      items: [],
+      subscriptionPeriods: []
+    }
+
+    const mockPayments = [
+      {id: 'pay-1', intentID: null},
+      {id: 'pay-2', intentID: undefined}
+    ]
+
+    const checkIntentStatus = jest.fn()
+    const updatePaymentWithIntentState = jest.fn()
+    const paymentProvider = {
+      checkIntentStatus,
+      updatePaymentWithIntentState
+    }
+    const paymentsService = {
+      findById: jest.fn().mockReturnValue(paymentProvider),
+      findByInvoiceId: jest.fn().mockResolvedValue(mockPayments)
+    }
+    const subscriptionService = new SubscriptionService(prismaMock as any, paymentsService as any)
+
+    await subscriptionService.checkInvoiceState(mockInvoice as any)
+
+    expect(checkIntentStatus).not.toHaveBeenCalled()
+    expect(updatePaymentWithIntentState).not.toHaveBeenCalled()
+  })
 })
