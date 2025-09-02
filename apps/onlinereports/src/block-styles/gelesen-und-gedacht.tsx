@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import {Box} from '@mui/material'
-
 import {hasBlockStyle, isFilledTeaser, isTeaserListBlock} from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
 import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'

@@ -1,6 +1,7 @@
-import {render} from '@testing-library/react'
-import * as stories from './modal.stories'
 import {composeStories} from '@storybook/react'
+import {render} from '@testing-library/react'
+
+import * as stories from './modal.stories'
 
 const storiesCmp = composeStories(stories)
 

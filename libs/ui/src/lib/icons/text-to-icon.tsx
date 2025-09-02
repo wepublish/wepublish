@@ -1,7 +1,9 @@
 import {
   FaAmazon,
+  FaAppStoreIos,
   FaBluesky,
   FaDiscord,
+  FaGooglePlay,
   FaInstagram,
   FaLinkedin,
   FaReddit,
@@ -10,9 +12,7 @@ import {
   FaTiktok,
   FaVimeo,
   FaXTwitter,
-  FaYoutube,
-  FaAppStoreIos,
-  FaGooglePlay
+  FaYoutube
 } from 'react-icons/fa6'
 import {MdContactMail, MdFacebook, MdMail, MdSearch, MdWeb} from 'react-icons/md'
 

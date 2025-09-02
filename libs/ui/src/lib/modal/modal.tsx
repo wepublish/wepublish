@@ -1,6 +1,7 @@
-import {Modal as MuiModal} from '@mui/material'
 import styled from '@emotion/styled'
+import {Modal as MuiModal} from '@mui/material'
 import {PropsWithChildren} from 'react'
+
 import {Button} from '../button/button'
 
 export const ModalWrapper = styled('section')`

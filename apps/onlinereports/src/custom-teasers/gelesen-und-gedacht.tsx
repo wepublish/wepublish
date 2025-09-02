@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import {Box, Typography} from '@mui/material'
 import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
-import {BuilderTeaserProps} from '@wepublish/website/builder'
-import {useMemo} from 'react'
-import {allPass} from 'ramda'
 import {ArticleTeaser} from '@wepublish/website/api'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
+import {allPass} from 'ramda'
+import {useMemo} from 'react'
+
 import {BlueBox} from '../components/blue-box'
 
 export const isGelesenUndGedachtTeaser = allPass([

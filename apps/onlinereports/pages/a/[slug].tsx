@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {ArticleContainer, ArticleListContainer} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
@@ -18,7 +19,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
-import styled from '@emotion/styled'
+
 import {Advertisement} from '../../src/components/advertisement'
 
 export const ArticleWrapper = styled('div')`

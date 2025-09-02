@@ -1,6 +1,7 @@
-import {Meta, StoryObj} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
-import {H5, Paragraph} from '@wepublish/ui'
+import {Meta, StoryObj} from '@storybook/react'
+
+import {H5, Paragraph} from '../typography/typography'
 import {Modal} from './modal'
 
 export default {

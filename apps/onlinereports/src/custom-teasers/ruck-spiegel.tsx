@@ -1,9 +1,10 @@
-import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
 import styled from '@emotion/styled'
-import {BlueBox} from '../components/blue-box'
-import {allPass} from 'ramda'
+import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
 import {ArticleTeaser} from '@wepublish/website/api'
+import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {allPass} from 'ramda'
+
+import {BlueBox} from '../components/blue-box'
 
 export const isRuckSpiegelTeaser = allPass([
   ({teaser}: BuilderTeaserProps) => teaser?.__typename === 'ArticleTeaser',

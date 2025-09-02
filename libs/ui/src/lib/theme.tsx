@@ -152,7 +152,7 @@ export const theme = createTheme({
     },
     body1: {
       lineHeight: 1.7,
-      ['&.MuiTypography-gutterBottom']: {
+      '&.MuiTypography-gutterBottom': {
         marginBottom: baseTheme.spacing(3)
       }
     },

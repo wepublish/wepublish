@@ -1,16 +1,16 @@
+import {BlockRenderer} from '@wepublish/block-content/website'
+import {BuilderBlockRendererProps} from '@wepublish/website/builder'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 
-import {HighlightBlockStyle, isHighlightTeasers} from './block-styles/highlight'
-import {isNewsTeasers, NewsBlockStyle} from './block-styles/news'
-import {isRuckSpiegelTeasers, RuckSpiegelBlockStyle} from './block-styles/ruck-spiegel'
+import {AktuelleBild, IsAktuelleBildTeasers} from './block-styles/aktuelle-bild'
 import {
   GelesenUndGedachtBlockStyle,
   isGelesenUndGedacthTeasers
 } from './block-styles/gelesen-und-gedacht'
-import {AktuelleBild, IsAktuelleBildTeasers} from './block-styles/aktuelle-bild'
-import {BuilderBlockRendererProps} from '@wepublish/website/builder'
-import {BlockRenderer} from '@wepublish/block-content/website'
+import {HighlightBlockStyle, isHighlightTeasers} from './block-styles/highlight'
+import {isNewsTeasers, NewsBlockStyle} from './block-styles/news'
+import {isRuckSpiegelTeasers, RuckSpiegelBlockStyle} from './block-styles/ruck-spiegel'
 import {Advertisement} from './components/advertisement'
 import {useAdsContext} from './context/ads-context'
 
