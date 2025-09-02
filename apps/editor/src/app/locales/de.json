@@ -1611,7 +1611,8 @@
         "newBypassToken": "Neuen Bypass-Token erstellen",
         "addBypass": "hinzufügen",
         "qrCodeTitle": "QR-Code für Bypass-Token",
-        "downloadSvg": "SVG herunterladen"
+        "downloadSvg": "SVG herunterladen",
+        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch"
       }
     },
     "paymentMethodEditPanel": {
