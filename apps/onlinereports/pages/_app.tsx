@@ -3,21 +3,7 @@ import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleTagManager} from '@next/third-parties/google'
-import {
-  BreakBlockHeading,
-  BreakBlockWrapper,
-  EventBlockWrapper,
-  ImageBlockCaption,
-  ImageBlockInnerWrapper,
-  ImageBlockWrapper,
-  RichTextBlockWrapper,
-  SliderWrapper,
-  TitleBlock,
-  TitleBlockLead,
-  TitleBlockTitle,
-  TitleBlockWrapper
-} from '@wepublish/block-content/website'
-import {ContentWrapperStyled} from '@wepublish/content/website'
+import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
 import {withErrorSnackbar} from '@wepublish/errors/website'
 import {NavbarContainer} from '@wepublish/navigation/website'
 import {withPaywallBypassToken} from '@wepublish/paywall/website'
@@ -51,21 +37,14 @@ import {zodI18nMap} from 'zod-i18n-map'
 import deOverridden from '../locales/deOverridden.json'
 import {AdblockOverlay} from '../src/components/adblock-detector'
 import {Advertisement} from '../src/components/advertisement'
-import {
-  ArticleBottomMeta,
-  ArticlePreTitle,
-  ArticleTopMeta,
-  OnlineReportsArticle
-} from '../src/components/article'
+import {OnlineReportsArticle} from '../src/components/article'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 import {OnlineReportsFooter} from '../src/components/footer'
 import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
 import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
+import {OnlineReportsPage} from '../src/components/page'
 import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
-import {
-  OnlineReportsQuoteBlock,
-  OnlineReportsQuoteBlockWrapper
-} from '../src/components/quote-block'
+import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
 import {AdsProvider} from '../src/context/ads-context'
 import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
 import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
@@ -125,53 +104,7 @@ const MainContainer = styled('div')`
 const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
-
   row-gap: ${({theme}) => theme.spacing(7.5)};
-
-  ${ContentWrapperStyled} {
-    ${({theme}) => theme.breakpoints.down('md')} {
-      row-gap: ${({theme}) => theme.spacing(5)};
-    }
-
-    ${({theme}) => theme.breakpoints.up('md')} {
-      row-gap: ${({theme}) => theme.spacing(4)};
-
-      &
-        > :is(
-          ${RichTextBlockWrapper},
-            ${ArticleTopMeta},
-            ${ArticleBottomMeta},
-            ${ArticlePreTitle},
-            ${TitleBlockWrapper},
-            ${OnlineReportsQuoteBlockWrapper}
-        ) {
-        grid-column: 3/11;
-      }
-
-      ${RichTextBlockWrapper} {
-      }
-
-      & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
-        grid-column: 2/12;
-      }
-    }
-
-    ${BreakBlockHeading} {
-      text-transform: none;
-      font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
-      font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
-      font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
-    }
-
-    ${ImageBlockInnerWrapper} {
-      gap: ${({theme}) => theme.spacing(1)};
-    }
-
-    ${ImageBlockCaption} {
-      color: #7c7c7c;
-      font-size: 14px;
-    }
-  }
 
   ${theme.breakpoints.down('lg')} {
     padding-left: ${({theme}) => theme.spacing(2.5)};
@@ -249,6 +182,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             ArticleList={OnlineReportsArticleList}
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
+            Page={OnlineReportsPage}
             RegistrationForm={OnlineReportsRegistrationForm}
             PaymentAmount={OnlineReportsPaymentAmount}
             richtext={{RenderElement: OnlineReportsRenderElement}}
@@ -317,9 +251,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <RoutedAdminBar />
               {publicRuntimeConfig.env.GTM_ID && (
-                <>
-                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-                </>
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
             </ThemeProvider>
           </WebsiteBuilderProvider>

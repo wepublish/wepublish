@@ -89,6 +89,8 @@ export class PeriodicJobService {
         this.logger.log('Executing periodic job...')
         this.logger.log('Processing custom mails...')
         await this.sendCustomSubscriptionEmails(periodicJobRunObject)
+        this.logger.log('Processing invoice state changes...')
+        await this.checkStateOfOpenInvoices()
         this.logger.log('Processing invoice creation...')
         await this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
         this.logger.log('Processing charge of invoices...')
@@ -166,6 +168,13 @@ export class PeriodicJobService {
     )
     for (const invoice of invoices) {
       await this.chargeInvoice(periodicJobRunObject, invoice)
+    }
+  }
+
+  private async checkStateOfOpenInvoices() {
+    const invoices = await this.subscriptionController.findAllOpenInvoices()
+    for (const invoice of invoices) {
+      await this.checkInvoiceState(invoice)
     }
   }
 
@@ -379,6 +388,26 @@ export class PeriodicJobService {
         periodicJobRunObject.date
       )
     }
+  }
+
+  private async checkInvoiceState(
+    invoiceToCheck: Invoice & {
+      subscription:
+        | (Subscription & {
+            paymentMethod: PaymentMethod
+            memberPlan: MemberPlan
+            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+          })
+        | null
+      items: InvoiceItem[]
+      subscriptionPeriods: SubscriptionPeriod[]
+    }
+  ) {
+    if (!invoiceToCheck.subscription) {
+      throw new Error(`Invoice ${invoiceToCheck.id} has no subscription assigned!`)
+    }
+
+    await this.subscriptionController.checkInvoiceState(invoiceToCheck)
   }
 
   private async deactivateSubscriptionByInvoice(

@@ -5,6 +5,7 @@ import {useRouter} from 'next/router'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
 import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
+import {MemberPlanListQueryVariables} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {SubscribeContainer} from '@wepublish/membership/website'
 import {
@@ -99,7 +100,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   const sessionProps = await getSessionTokenProps(ctx)
 
   const dataPromises = [
-    client.query({
+    client.query<MemberPlanListQueryVariables>({
       query: MemberPlanListDocument,
       variables: {
         take: 50,

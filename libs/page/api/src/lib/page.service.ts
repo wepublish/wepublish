@@ -416,31 +416,80 @@ export const createPageOrder = (
 
 const createTitleFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.title) {
-    return {
-      revisions: {
-        some: {
-          title: {
-            contains: filter.title,
-            mode: 'insensitive'
-          }
+    const titleFilter: Prisma.PageRevisionWhereInput = {
+      title: {
+        contains: filter.title,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filter?.published) {
+      return {
+        PagesRevisionPublished: {
+          pageRevision: titleFilter
         }
       }
     }
-  }
+    if (filter?.draft) {
+      return {
+        PagesRevisionDraft: {
+          pageRevision: titleFilter
+        }
+      }
+    }
 
+    if (filter?.pending) {
+      return {
+        PagesRevisionPending: {
+          pageRevision: titleFilter
+        }
+      }
+    }
+
+    return {
+      revisions: {
+        some: titleFilter
+      }
+    }
+  }
   return {}
 }
 
 const createDescriptionFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.description) {
+    const descriptionFilter: Prisma.PageRevisionWhereInput = {
+      description: {
+        contains: filter.description,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filter?.published) {
+      return {
+        PagesRevisionPublished: {
+          pageRevision: descriptionFilter
+        }
+      }
+    }
+    if (filter?.draft) {
+      return {
+        PagesRevisionDraft: {
+          pageRevision: descriptionFilter
+        }
+      }
+    }
+
+    if (filter?.pending) {
+      return {
+        PagesRevisionPending: {
+          pageRevision: descriptionFilter
+        }
+      }
+    }
+
     return {
       revisions: {
-        some: {
-          description: {
-            contains: filter.description,
-            mode: 'insensitive'
-          }
-        }
+        some: descriptionFilter
       }
     }
   }
