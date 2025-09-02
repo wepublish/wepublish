@@ -1,35 +1,27 @@
 import {PageContainer} from '@wepublish/page/website'
-import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   NavigationListDocument,
   PageDocument,
-  PageQuery,
-  PeerProfileDocument
+  PageQuery
 } from '@wepublish/website/api'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
-import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-export default function PageBySlugOrId() {
-  const {
-    query: {slug, id}
-  } = useRouter()
+export default function Custom404() {
+  //return <h1>404 - Page Not Found</h1>
 
   const containerProps = {
-    slug,
-    id
+    slug: 'my-404-page'
   } as ComponentProps<typeof PageContainer>
 
   return <PageContainer {...containerProps} />
 }
 
-export const getStaticPaths = getPagePathsBasedOnPage('')
-
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug, id} = params || {}
+  const {slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -37,23 +29,13 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug,
-        id
+        slug
       }
     }),
     client.query({
       query: NavigationListDocument
-    }),
-    client.query({
-      query: PeerProfileDocument
     })
   ])
-
-  if (!page.data) {
-    return {
-      notFound: true
-    }
-  }
 
   //console.log('page', page.data);
 
