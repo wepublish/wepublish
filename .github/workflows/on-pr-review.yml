@@ -10,6 +10,9 @@ concurrency:
 
 
 env:
+  RUN_REVIEW: ${{ !(
+    (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
+    (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')) }}
   API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
@@ -43,6 +46,7 @@ jobs:
 
   helm_deployment_deps:
     name: Helm deployment dependencies
+    if: ${{ env.RUN_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -133,6 +137,7 @@ jobs:
   helm_deployment:
     name: Helm deployment
     needs: [publish_docker_image, helm_deployment_deps]
+    if: ${{ env.RUN_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -337,6 +342,7 @@ jobs:
 
   setup-website-matrix:
     runs-on: ubuntu-latest
+    if: ${{ env.RUN_REVIEW == 'true' }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -350,7 +356,7 @@ jobs:
   publish_docker_website_image:
     name: Build Docker Website
     needs: [ setup-website-matrix, helm_deployment, publish_docker_base_image]
-    if: ${{ needs.helm_deployment.result == 'success' }}
+    if: ${{ needs.helm_deployment.result == 'success' && env.RUN_REVIEW == 'true' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
       fail-fast: false
@@ -381,7 +387,7 @@ jobs:
   notify:
     name: Notify
     needs: [setup-website-matrix, publish_docker_website_image]
-    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+    if: ${{ needs.publish_docker_website_image.result == 'success' && env.RUN_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
