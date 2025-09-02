@@ -45,7 +45,9 @@ export class ArticleService {
   }: ArticleListArgs) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body)
-      filter.ids = articleIds
+      if (articleIds.length > 0) {
+        filter.ids = articleIds
+      }
     }
 
     const orderBy = createArticleOrder(sort, order)
