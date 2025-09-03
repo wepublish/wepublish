@@ -5,6 +5,19 @@ export async function middleware(request: NextRequest) {
   const {pathname} = request.nextUrl
   console.log(`Checking ${pathname}`)
 
+  // Validate pathname to prevent SSRF attacks
+  const pathValidation = /^\/[a-zA-Z0-9\-_/]+\.html$/
+  if (!pathValidation.test(pathname)) {
+    console.warn(`Invalid pathname pattern: ${pathname}`)
+    return NextResponse.next()
+  }
+
+  // Additional security: prevent path traversal attacks
+  if (pathname.includes('..') || pathname.includes('//') || pathname.includes('\\')) {
+    console.warn(`Path traversal attempt detected: ${pathname}`)
+    return NextResponse.next()
+  }
+
   const htmlFile = pathname.substring(1) // Remove leading slash
   if (redirectMap.has(htmlFile)) {
     const newPath = `/${redirectMap.get(htmlFile)}`
