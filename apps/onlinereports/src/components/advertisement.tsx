@@ -79,8 +79,6 @@ const Wideboard = styled(AdBox)`
 `
 
 const HalfPage = styled(AdBox)`
-  margin: 0;
-
   & {
     height: 100%;
     max-height: calc(100vh - 120px);
