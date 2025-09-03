@@ -8,11 +8,20 @@ export const PeerAvatar = ({
   peer,
   children
 }: PropsWithChildren<{peer?: FullPeerFragment | V2FullPeerFragment | null}>) => {
+  const logo = peer?.profile?.squareLogo ?? peer?.profile?.logo
+  const logoUrl = logo
+    ? 'thumbURL' in logo
+      ? logo.thumbURL
+      : 'xxsSquare' in logo
+      ? logo.xxsSquare
+      : null
+    : null
+
   return (
     <InlineAvatar
       children={children}
       url={peer ? `/peering/edit/${peer?.id}` : undefined}
-      src={peer?.profile?.squareLogo?.thumbURL ?? peer?.profile?.logo?.thumbURL}
+      src={logoUrl}
       title={peer?.name}
       showAvatar={!!peer}
     />
