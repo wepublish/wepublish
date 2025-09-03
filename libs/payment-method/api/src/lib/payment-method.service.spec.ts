@@ -69,7 +69,8 @@ describe('PaymentMethodService', () => {
       slug: 'new-method',
       description: 'New Method Description',
       paymentProviderID: 'provider1',
-      active: true
+      active: true,
+      gracePeriod: 0
     }
     prismaMock.paymentMethod.create.mockResolvedValueOnce({
       id: '3',

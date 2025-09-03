@@ -145,8 +145,8 @@ function ArticleEditor() {
     url: '',
     properties: [],
     canonicalUrl: '',
-    shared: false,
-    paywall: false,
+    shared: undefined,
+    paywall: undefined,
     hidden: false,
     disableComments: false,
     breaking: false,
@@ -165,10 +165,12 @@ function ArticleEditor() {
     onCompleted(data) {
       setMetadata(meta => ({
         ...meta,
-        shared: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
-          ?.value,
-        paywall: !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)
-          ?.value
+        shared:
+          meta.shared ??
+          !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)?.value,
+        paywall:
+          meta.paywall ??
+          !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)?.value
       }))
     }
   })
@@ -373,7 +375,7 @@ function ArticleEditor() {
       authorIds: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
-      shared: metadata.shared,
+      shared: !!metadata.shared,
       paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,

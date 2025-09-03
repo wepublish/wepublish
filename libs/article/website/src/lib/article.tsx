@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import {useEffect, useState} from 'react'
 import {BuilderArticleProps, PeerInformation, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
 import {ArticleListWrapper} from './article-list/article-list'
@@ -8,8 +7,6 @@ import {ContentWrapper} from '@wepublish/content/website'
 import {ArticleTrackingPixels} from './article-tracking-pixels'
 import {Paywall} from '@wepublish/website/builder'
 import {css} from '@emotion/react'
-
-import {useShowPaywall} from '@wepublish/paywall/website'
 
 export const ArticleInfoWrapper = styled('aside')`
   display: grid;
@@ -42,8 +39,15 @@ export const ArticleWrapper = styled(ContentWrapper)<{hideContent?: boolean}>`
   }
 `
 
-export function Article({className, data, children, loading, error}: BuilderArticleProps) {
-  const [isClient, setIsClient] = useState(false)
+export function Article({
+  className,
+  data,
+  children,
+  showPaywall,
+  hideContent,
+  loading,
+  error
+}: BuilderArticleProps) {
   const {
     ArticleSEO,
     ArticleAuthors,
@@ -52,14 +56,9 @@ export function Article({className, data, children, loading, error}: BuilderArti
   } = useWebsiteBuilder()
 
   const article = data?.article as ArticleType | undefined
-  const {showPaywall, hideContent} = useShowPaywall(article?.paywall)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   return (
-    <ArticleWrapper className={className} hideContent={isClient && hideContent}>
+    <ArticleWrapper className={className} hideContent={hideContent}>
       {article && <ArticleSEO article={article} />}
 
       {article && (
@@ -82,7 +81,7 @@ export function Article({className, data, children, loading, error}: BuilderArti
         )}
       </ArticleInfoWrapper>
 
-      {isClient && showPaywall && article?.paywall && (
+      {showPaywall && article?.paywall && (
         <Paywall {...article.paywall} hideContent={hideContent} />
       )}
 

@@ -1,7 +1,7 @@
 import nock from 'nock'
-import {MailgunMailProvider, MailProviderTemplate} from '../../src'
 import Mailgun from 'mailgun.js'
 import FormData from 'form-data'
+import {MailgunMailProvider, MailProviderTemplate} from '@wepublish/mail/api'
 
 const mockSubmit = jest.fn()
 const mockAppend = jest.fn()

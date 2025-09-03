@@ -10,6 +10,8 @@ import {PropsWithChildren} from 'react'
 
 export type BuilderArticleProps = PropsWithChildren<
   Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
+    showPaywall: boolean
+    hideContent: boolean
     className?: string
   }
 >

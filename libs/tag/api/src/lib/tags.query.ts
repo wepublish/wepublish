@@ -12,6 +12,11 @@ export class TagFilter {
   type?: TagType
 }
 
+registerEnumType(TagType, {
+  name: 'TagType',
+  description: 'Type of tag.'
+})
+
 export enum TagSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
