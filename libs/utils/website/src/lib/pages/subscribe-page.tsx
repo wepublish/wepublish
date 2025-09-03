@@ -99,7 +99,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
       variables: {
         take: 50,
         filter: {
-          active: false
+          active: true
         }
       }
     }),
