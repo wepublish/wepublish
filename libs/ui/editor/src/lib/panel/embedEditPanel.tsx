@@ -191,7 +191,7 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
             hasWidth ? ` width="${embed.width}"` : ''
           }${hasHeight ? ` height="${embed.height}"` : ''}${
             hasStyles ? ` style="${embed.styleCustom}"` : ''
-          }${hasSandbox ? ` sandbox="${embed.sandbox}"` : ''} />`
+          }${hasSandbox ? ` sandbox="${embed.sandbox}"` : ''}></iframe>`
         : ''
     }
   }
