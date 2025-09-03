@@ -1,10 +1,12 @@
 'use client'
 
-import {type ReactNode, useEffect, useState} from 'react'
 import styled from '@emotion/styled'
-import {Button, Modal} from 'rsuite'
-import {TeaserSlotsAutofillConfigPanel} from './teaser-slots-autofill-config'
 import {TeaserSlotsAutofillConfigInput} from '@wepublish/editor/api-v2'
+import {PropsWithChildren, useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Modal} from 'rsuite'
+
+import {TeaserSlotsAutofillConfigPanel} from './teaser-slots-autofill-config'
 
 interface TeaserSlotsDialogProps {
   config: TeaserSlotsAutofillConfigInput
@@ -12,7 +14,6 @@ interface TeaserSlotsDialogProps {
   onOpenChange: (open: boolean) => void
   onSave: (config: TeaserSlotsAutofillConfigInput) => void
   onCancel: () => void
-  children?: ReactNode
 }
 
 const StyledModal = styled(Modal)`
@@ -44,7 +45,8 @@ export function TeaserSlotsAutofillDialog({
   onSave,
   onCancel,
   children
-}: TeaserSlotsDialogProps) {
+}: PropsWithChildren<TeaserSlotsDialogProps>) {
+  const {t} = useTranslation()
   const [localConfig, setLocalConfig] = useState<TeaserSlotsAutofillConfigInput>({...config})
 
   useEffect(() => {
@@ -88,7 +90,7 @@ export function TeaserSlotsAutofillDialog({
       <Modal.Footer>
         <FooterContainer>
           <Button appearance="subtle" onClick={handleCancel}>
-            Cancel
+            {t('cancel')}
           </Button>
 
           <Button appearance="primary" onClick={handleSave}>

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {InlineFormat} from '@wepublish/richtext'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdLinkOff} from 'react-icons/md'
@@ -8,7 +9,6 @@ import {useSlate} from 'slate-react'
 
 import {SubMenuContext} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
-import {InlineFormat} from '@wepublish/richtext'
 
 const {Group, Control, ControlLabel, HelpText} = Form
 

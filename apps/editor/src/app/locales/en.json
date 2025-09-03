@@ -267,6 +267,7 @@
     },
     "blocks": {
       "crowdfunding": {
+        "crowdfundingName": "Crowdfunding {{name}}",
         "edit": "Edit",
         "label": "Crowdfunding",
         "title": "Select Crowdfunding",
@@ -417,7 +418,15 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Teaser Slots"
+        "autoLoading": "Auto-loading:",
+        "fillManually": "All slots will be manually filled",
+        "teasersLoaded": "teasers loaded",
+        "configure": "Configure",
+        "latest": "Latest",
+        "addSlot": "Add slot",
+        "label": "Teaser Slots",
+        "filter": "Filter by tags",
+        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering."
       },
       "title": {
         "label": "Title",
@@ -1552,7 +1561,10 @@
     "trackingPixels": {
       "noPixelInfoHeader": "No tracking integration available",
       "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
-      "errorHeader": "Error"
+      "errorHeader": "Error",
+      "providerId": "Provider ID:",
+      "trackingId": "Tracking ID:",
+      "trackingURI": "Tracking URI:"
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"

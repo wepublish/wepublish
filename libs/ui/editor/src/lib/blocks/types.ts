@@ -1,10 +1,4 @@
 import {FullPoll, Tag} from '@wepublish/editor/api'
-import nanoid from 'nanoid'
-import {Descendant} from 'slate'
-
-import {BlockListValue} from '../atoms/blockList'
-import {ListValue} from '../atoms/listInput'
-import {TeaserMetadataProperty} from '../panel/teaserEditPanel'
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
@@ -22,6 +16,12 @@ import {
   TeaserSlotType,
   TeaserType
 } from '@wepublish/editor/api-v2'
+import nanoid from 'nanoid'
+import {Descendant} from 'slate'
+
+import {BlockListValue} from '../atoms/blockList'
+import {ListValue} from '../atoms/listInput'
+import {TeaserMetadataProperty} from '../panel/teaserEditPanel'
 
 export interface BaseBlockValue {
   blockStyle?: string | null

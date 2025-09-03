@@ -1,7 +1,8 @@
+import styled from '@emotion/styled'
 import {
+  FullImageFragment,
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
-  FullImageFragment,
   useCreatePaymentMethodMutation,
   usePaymentMethodQuery,
   usePaymentProviderListQuery,
@@ -22,15 +23,15 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+
 import {
   ChooseEditImage,
-  PermissionControl,
   createCheckedPermissionComponent,
+  PermissionControl,
   useAuthorisation
 } from '../atoms'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import styled from '@emotion/styled'
 
 export interface PaymentMethodEditPanelProps {
   id?: string

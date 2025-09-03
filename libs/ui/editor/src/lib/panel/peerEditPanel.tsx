@@ -11,18 +11,19 @@ import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
+import {Descendant} from 'slate'
+
 import {
   ChooseEditImage,
+  createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
   PermissionControl,
-  createCheckedPermissionComponent,
   useAuthorisation
 } from '../atoms'
-import {getOperationNameFromDocument} from '../utility'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {RichTextBlock, RichTextBlockValue} from '../blocks'
-import {Descendant} from 'slate'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {getOperationNameFromDocument} from '../utility'
 
 export interface PeerEditPanelProps {
   id?: string

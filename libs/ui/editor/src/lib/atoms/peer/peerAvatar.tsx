@@ -1,7 +1,8 @@
-import {PropsWithChildren} from 'react'
-import {InlineAvatar} from '../inlineAvatar'
-import {FullPeerFragment as V2FullPeerFragment} from '@wepublish/editor/api-v2'
 import {FullPeerFragment} from '@wepublish/editor/api'
+import {FullPeerFragment as V2FullPeerFragment} from '@wepublish/editor/api-v2'
+import {PropsWithChildren} from 'react'
+
+import {InlineAvatar} from '../inlineAvatar'
 
 export const PeerAvatar = ({
   peer,
