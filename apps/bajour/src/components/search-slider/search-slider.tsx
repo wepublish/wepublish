@@ -21,7 +21,7 @@ import {descend, eqBy, sortWith, uniqWith} from 'ramda'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useDebounceCallback} from 'usehooks-ts'
 
-import {LikeButton} from './like-button'
+import {LikeButton, VideoLikeButton} from './like-button'
 import {SearchBar} from './search-bar'
 import {useLikeStatus} from './use-like-status'
 
@@ -150,7 +150,7 @@ const TextContainer = styled('div')`
 
 const BtnContainer = styled('div')`
   display: flex;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({theme}) => theme.spacing(3)};
   padding-top: ${({theme}) => theme.spacing(2)};
   font-size: 2em;
 `
@@ -210,12 +210,12 @@ const FullScreenVideoContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `
 
 const FullScreenVideo = styled('video')`
   width: 90vw;
   height: 85vh;
-  margin: 5vh 5vw 0 5vw;
 `
 
 type SearchSliderProps = {
@@ -528,7 +528,10 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
       {videoUrl && (
         <FullScreenVideoContainer>
           <FullScreenVideo src={videoUrl} controls autoPlay />
-          <Button onClick={() => setVideoUrl(undefined)}>Schliessen</Button>
+          <BtnContainer>
+            <VideoLikeButton onLike={() => handleLike()} isLiked={isLiked} likes={likes} />
+            <Button onClick={() => setVideoUrl(undefined)}>Schliessen</Button>
+          </BtnContainer>
         </FullScreenVideoContainer>
       )}
 
