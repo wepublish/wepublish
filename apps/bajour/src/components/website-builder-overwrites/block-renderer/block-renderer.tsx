@@ -20,6 +20,7 @@ import {isSearchSlider} from '../../search-slider/is-search-slider'
 import {SearchSliderBlock} from '../../search-slider/search-slider-block'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
+import {isNewsTeasers, NewsBlockStyle} from '../blocks/news'
 import {
   BajourLightBreakBlock,
   BajourSponsoredBreakBlock,
@@ -72,7 +73,8 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
           )
         ],
         [isLightBreak, block => <BajourLightBreakBlock {...block} />],
-        [isSponsoredBreak, block => <BajourSponsoredBreakBlock {...block} />]
+        [isSponsoredBreak, block => <BajourSponsoredBreakBlock {...block} />],
+        [isNewsTeasers, block => <NewsBlockStyle {...block} />]
       ]),
     [TeaserGrid, TeaserList, isOldRelatedArticles]
   )
