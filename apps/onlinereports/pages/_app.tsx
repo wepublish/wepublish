@@ -19,7 +19,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 import theme from '../src/theme'
-import Mitmachen from './mitmachen'
 import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
 import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
 import {OnlineReportsAuthorChip} from '../src/components/author-chip'
@@ -53,6 +52,7 @@ import {mergeDeepRight} from 'ramda'
 import deOverridden from '../locales/deOverridden.json'
 import {OnlineReportsPage} from '../src/components/page'
 import {AdsProvider} from '../src/context/ads-context'
+import {MitmachenInner} from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -180,7 +180,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
               Quote: OnlineReportsQuoteBlock,
-              Subscribe: Mitmachen,
+              Subscribe: MitmachenInner,
               Title: OnlineReportsTitle
             }}
             date={{format: dateFormatter}}
