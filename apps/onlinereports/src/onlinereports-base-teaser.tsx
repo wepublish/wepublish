@@ -162,6 +162,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserAuthors} {
+    display: ${({teaser}) => (hasSpecialTags(teaser) ? 'none' : 'block')};
     font-family: ${({theme}) => theme.typography.body2.fontFamily};
     font-size: ${({theme}) => theme.typography.body2.fontSize};
     font-weight: ${({theme}) => theme.typography.body2.fontWeight};
