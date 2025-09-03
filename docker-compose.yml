@@ -104,8 +104,27 @@ services:
     volumes:
       - storage_data:/data
 
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    container_name: dragonfly
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: >
+      --logtostderr
+      --cache_mode=true
+      --maxmemory=1gb
+      --proactor_threads=2
+      --requirepass password
+    volumes:
+      - dragonfly_data:/data
+    networks:
+      - app-tier
+
 volumes:
   database_data:
     driver: local
   storage_data:
+    driver: local
+  dragonfly_data:
     driver: local
