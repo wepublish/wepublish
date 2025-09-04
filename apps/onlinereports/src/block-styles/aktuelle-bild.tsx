@@ -18,7 +18,7 @@ import {
   TeaserWrapper
 } from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderTeaserListBlockProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
 import {
@@ -41,7 +41,7 @@ export const AktuelleBild = ({
   const numColumns = 1
 
   const {
-    elements: {H2, Link}
+    elements: {H2}
   } = useWebsiteBuilder()
 
   return (
@@ -55,10 +55,12 @@ export const AktuelleBild = ({
           </Link>{' '}
           (mit Adresse und Datum)!
         </Typography>
+
         <Link href={'/a/tag/Das%20Wort%20zum%20Bild'}>
           <b>Zum Archiv {'->'}</b>
         </Link>
       </SideInfo>
+
       <TeaserSliderWrapper>
         <TeaserSlider
           teasers={filledTeasers}

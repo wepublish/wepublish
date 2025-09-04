@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import {Box} from '@mui/material'
 import {hasBlockStyle, isFilledTeaser, isTeaserListBlock} from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderTeaserListBlockProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
 import {Advertisement} from '../components/advertisement'
@@ -21,10 +21,9 @@ export const RuckSpiegelBlockStyle = ({
   className
 }: Pick<BuilderTeaserListBlockProps, 'title' | 'teasers' | 'blockStyle' | 'className'>) => {
   const filledTeasers = teasers.filter(isFilledTeaser)
-  const numColumns = 1
 
   const {
-    elements: {H2, Link}
+    elements: {H2}
   } = useWebsiteBuilder()
 
   return (
@@ -36,10 +35,12 @@ export const RuckSpiegelBlockStyle = ({
             <RuckSpiegelTeaserContent key={index} teaser={teaser} />
           ))}
         </TeaserList>
+
         <Link href={'/a/tag/RückSpiegel'}>
           <b>Zum Archiv {'->'}</b>
         </Link>
       </BlueBox>
+
       <Filler>
         <Advertisement type={'small'} />
       </Filler>
