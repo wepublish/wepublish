@@ -511,7 +511,7 @@ enum MailLogState {
 }
 
 model MailLog {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -522,7 +522,7 @@ model MailLog {
   mailProviderID String
   mailIdentifier String
   mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId String       @db.Uuid
+  mailTemplateId String
   mailData       String?
   subject        String?
 
@@ -1163,7 +1163,7 @@ enum EventStatus {
 }
 
 model Event {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1189,7 +1189,7 @@ model Event {
 
 model TaggedEvents {
   event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId    String   @db.Uuid
+  eventId    String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
   createdAt  DateTime @default(now())
@@ -1200,7 +1200,7 @@ model TaggedEvents {
 }
 
 model Consent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1213,12 +1213,12 @@ model Consent {
 }
 
 model UserConsent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
-  consentId String  @db.Uuid
+  consentId String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
@@ -1237,14 +1237,14 @@ enum UserEvent {
 }
 
 model UserFlowMail {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   event UserEvent @unique
 
   mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
-  mailTemplateId String?       @db.Uuid
+  mailTemplateId String?
 
   @@map("user_communication_flows")
 }
@@ -1261,7 +1261,7 @@ enum SubscriptionEvent {
 }
 
 model SubscriptionFlow {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1280,22 +1280,22 @@ model SubscriptionFlow {
 }
 
 model SubscriptionInterval {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                 String            @id @default(dbgenerated("gen_random_uuid()"))
   createdAt          DateTime          @default(now())
   modifiedAt         DateTime          @updatedAt
   event              SubscriptionEvent
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId     String?           @db.Uuid
+  mailTemplateId     String?
 
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
-  subscriptionFlowId String           @db.Uuid
+  subscriptionFlowId String
 
   @@map("subscriptions.intervals")
 }
 
 model MailTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1314,7 +1314,7 @@ model MailTemplate {
 }
 
 model PeriodicJob {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1351,7 +1351,7 @@ enum BlockType {
 }
 
 model BlockStyle {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1362,7 +1362,7 @@ model BlockStyle {
 }
 
 model Banner {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1394,12 +1394,12 @@ enum LoginStatus {
 }
 
 model BannerAction {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  bannerId String @db.Uuid
+  bannerId String
 
   label String
   url   String
@@ -1417,7 +1417,7 @@ enum BannerActionRole {
 }
 
 model Crowdfunding {
-  id                      String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                      String             @id @default(dbgenerated("gen_random_uuid()"))
   createdAt               DateTime           @default(now())
   modifiedAt              DateTime           @updatedAt
   name                    String
@@ -1431,14 +1431,14 @@ model Crowdfunding {
 }
 
 model CrowdfundingGoal {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
   createdAt      DateTime     @default(now())
   modifiedAt     DateTime     @updatedAt
   title          String
   description    String?
   amount         Int
   Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
-  crowdfundingId String       @db.Uuid
+  crowdfundingId String
 
   @@map("crowdfunding_goals")
 }
