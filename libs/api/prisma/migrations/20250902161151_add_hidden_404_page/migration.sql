@@ -1,8 +1,2 @@
--- This is an empty migration.
-
-BEGIN;
 INSERT INTO "pages" ("id", "createdAt", "modifiedAt", "publishedAt", "slug", "hidden") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '404', true);
-INSERT INTO "pages.revisions" ("id", "createdAt", "publishedAt", "pageId", "title", "blocks") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, (SELECT id FROM "pages" WHERE slug = '404'), 'Seite wurde nicht gefunden.', '[{ "lead": "Sorry. Diese Seite wurde nicht gefunden.", "type": "title", "title": "Oh nein, etwas ist schiefgelaufen.", "blockStyle": null},{ "type": "richText", "richText": [ {"type": "paragraph","children": [{ "text": ""},{ "url": "/", "type": "link", "title": "Hier gehts zurück zur Startseite.", "children": [ {"text": "Hier gehts zur zurück Startseite." } ]},{ "text": ""}] } ], "blockStyle": null}]');
-COMMIT;
-
-
+INSERT INTO "pages.revisions" ("id", "createdAt", "publishedAt", "pageId", "title", "blocks") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, (SELECT id FROM "pages" WHERE slug = '404'), 'Seite wurde nicht gefunden.', '[{ "lead": "Sorry. Diese Seite wurde nicht gefunden.", "type": "title", "title": "Oh nein, etwas ist schiefgelaufen.", "blockStyle": null},{ "type": "richText", "richText": [ {"type": "paragraph","children": [{ "text": ""},{ "url": "/", "type": "link", "title": "Hier geht''s zurück zur Startseite.", "children": [ {"text": "Hier geht''s zurück zur Startseite." } ]},{ "text": ""}] } ], "blockStyle": null}]');

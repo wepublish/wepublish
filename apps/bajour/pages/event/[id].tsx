@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
-  await Promise.all([
+  const event = await Promise.all([
     client.query({
       query: EventDocument,
       variables: {
@@ -51,6 +51,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+
+  const is404 = event.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   const props = addClientCacheToV1Props(client, {})
 

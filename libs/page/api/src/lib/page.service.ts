@@ -591,7 +591,6 @@ const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =>
 }
 
 const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
-  console.log('filter', filter, filter?.includeHidden)
   if (filter?.includeHidden) {
     return {}
   }
@@ -601,19 +600,6 @@ const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput 
   }
 }
 
-/*
-const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
-  if (filter?.includeHidden) {
-    return{
-      hidden: {
-        equals: filter.includeHidden
-      }
-    }
-  }
-
-  return {}
-}
-*/
 export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -621,13 +607,9 @@ export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereI
     createPublicationDateToFilter(filter),
     createDescriptionFilter(filter),
     createTagsFilter(filter),
+    createHiddenFilter(filter),
     {
-      OR: [
-        createPublishedFilter(filter),
-        createDraftFilter(filter),
-        createPendingFilter(filter),
-        createHiddenFilter(filter)
-      ]
+      OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
     }
   ]
 })
