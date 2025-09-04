@@ -12,7 +12,7 @@ export default function Profile() {
     <PageContainer slug="profile">
       <HauptstadtContentFullWidth>
         <ContentWidthProvider fullWidth>
-          <ProfilePage mediaEmail="info@wepublish.dev" />
+          <ProfilePage mediaEmail="abo@hauptstadt.be" />
         </ContentWidthProvider>
       </HauptstadtContentFullWidth>
     </PageContainer>

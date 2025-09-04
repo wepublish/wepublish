@@ -355,7 +355,13 @@ import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
-        const sessionTTL = parseInt(config.get('SESSION_TTL') || '0', 10) || 7 * 24 * 60 * 60 * 1000
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        configFile.general.sessionTTLDays
+        const MS_PER_DAY = 24 * 60 * 60 * 1000
+        const sessionTTLDays = configFile.general.sessionTTLDays
+          ? configFile.general.sessionTTLDays
+          : 7
+        const sessionTTL = MS_PER_DAY * sessionTTLDays
         const jwtSecretKey = config.get('JWT_SECRET_KEY') || 'development-secret-key'
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000'
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000'
