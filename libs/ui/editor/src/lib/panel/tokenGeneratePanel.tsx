@@ -3,8 +3,9 @@ import {TokenListDocument, useCreateTokenMutation} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Input, Message as RMessage, Panel, toaster} from 'rsuite'
-import {getOperationNameFromDocument} from '../utility'
+
 import {createCheckedPermissionComponent} from '../atoms'
+import {getOperationNameFromDocument} from '../utility'
 
 const Message = styled(RMessage)`
   margin-top: 5px;

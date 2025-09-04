@@ -8,7 +8,7 @@ import {User} from './user.model'
   scope: Scope.REQUEST
 })
 export class UserDataloaderService implements Primeable<User> {
-  private readonly dataloader = new DataLoader<string, User | null>(
+  private dataloader = new DataLoader<string, User | null>(
     async (ids: readonly string[]) => {
       return createOptionalsArray(
         ids as string[],

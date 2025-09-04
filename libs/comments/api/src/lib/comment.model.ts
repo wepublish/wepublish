@@ -2,7 +2,7 @@ import {Field, Float, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {Tag} from '@wepublish/tag/api'
 import {User} from '@wepublish/user/api'
 import {Image} from '@wepublish/image/api'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {RatingSystemType as PrismaRatingSystemType} from '@prisma/client'
 
@@ -212,7 +212,7 @@ export class Comment {
   lead?: string | null
 
   @Field(() => GraphQLRichText, {nullable: true})
-  text?: Node[] | null
+  text?: Descendant[]
 
   @Field(() => String)
   url?: string

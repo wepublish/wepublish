@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   selectTeaserTitle,
   TeaserLead,
@@ -5,10 +6,9 @@ import {
   TeaserPreTitleNoContent,
   TeaserTitle
 } from '@wepublish/block-content/website'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 
 import {OnlineReportsBaseTeaser} from '../onlinereports-base-teaser'
-import styled from '@emotion/styled'
-import {BuilderTeaserProps} from '@wepublish/website/builder'
 
 const teaserTitleIsLongOrHasLongWords = (teaser: BuilderTeaserProps['teaser']) => {
   if (!teaser) {

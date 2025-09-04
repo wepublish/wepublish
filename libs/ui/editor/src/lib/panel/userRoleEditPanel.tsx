@@ -10,7 +10,8 @@ import {
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
-import {PermissionControl, createCheckedPermissionComponent, useAuthorisation} from '../atoms'
+
+import {createCheckedPermissionComponent, PermissionControl, useAuthorisation} from '../atoms'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 const {Group, ControlLabel, Control} = RForm

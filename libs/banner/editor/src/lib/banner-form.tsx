@@ -4,13 +4,12 @@ import {
   CreateBannerActionInput,
   CreateBannerInput,
   FullImageFragment,
-  PageWithoutBlocksFragment,
   UpdateBannerInput,
   usePageListQuery,
   LoginStatus,
   getApiClientV2
 } from '@wepublish/editor/api-v2'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
   CheckPicker,
@@ -50,8 +49,6 @@ const BannerFormContainer = styled('div')`
 
 export const BannerForm = (props: BannerFormProps) => {
   const {t} = useTranslation()
-  const [pages, setPages] = useState<PageWithoutBlocksFragment[]>([])
-
   const client = getApiClientV2()
   const {data: pageData} = usePageListQuery({
     client,
@@ -59,12 +56,7 @@ export const BannerForm = (props: BannerFormProps) => {
     fetchPolicy: 'cache-and-network'
   })
 
-  useEffect(() => {
-    if (pageData?.pages?.nodes) {
-      setPages(pageData.pages.nodes)
-    }
-  }, [pageData?.pages])
-
+  const pages = pageData?.pages.nodes ?? []
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 

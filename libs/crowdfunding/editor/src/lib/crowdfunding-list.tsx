@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {
   ListViewActions,
   ListViewContainer,
@@ -27,10 +27,7 @@ function CrowdfundingList() {
 
   const {data, loading, error, refetch} = useCrowdfundingsQuery({
     client,
-    fetchPolicy: 'cache-and-network',
-    onError: () => {
-      console.log(error)
-    }
+    fetchPolicy: 'cache-and-network'
   })
 
   return (

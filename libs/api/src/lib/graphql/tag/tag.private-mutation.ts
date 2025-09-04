@@ -2,9 +2,11 @@ import {TagType, PrismaClient} from '@prisma/client'
 import {authorise} from '../permissions'
 import {CanCreateTag, CanDeleteTag, CanUpdateTag} from '@wepublish/permissions'
 import {Context} from '../../context'
+import {Descendant} from 'slate'
 
 export const createTag = (
   tag: string,
+  description: Descendant[],
   type: TagType,
   main = false,
   authenticate: Context['authenticate'],
@@ -17,6 +19,7 @@ export const createTag = (
     data: {
       tag,
       type,
+      description: description as any[],
       main
     }
   })
@@ -40,6 +43,7 @@ export const deleteTag = (
 export const updateTag = (
   tagId: string,
   tag: string,
+  description: Descendant[],
   main: boolean | undefined,
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
@@ -53,7 +57,8 @@ export const updateTag = (
     },
     data: {
       tag,
-      main
+      main,
+      description: description as any[]
     }
   })
 }

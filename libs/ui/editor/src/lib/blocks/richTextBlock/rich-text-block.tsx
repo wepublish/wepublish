@@ -1,4 +1,6 @@
 import styled from '@emotion/styled'
+import {BlockFormat, InlineFormat, TextFormat, toPlaintext} from '@wepublish/richtext'
+import {pipe} from 'ramda'
 import React, {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -15,6 +17,7 @@ import {
   MdTableChart
 } from 'react-icons/md'
 import {createEditor, Editor, Location, Transforms} from 'slate'
+import {Hotkeys} from 'slate-dom'
 import {withHistory} from 'slate-history'
 import {Editable, ReactEditor, Slate, withReact} from 'slate-react'
 
@@ -29,9 +32,6 @@ import {WepublishEditor} from './editor/wepublishEditor'
 import {EditorSubMenuButton, FormatButton, FormatIconButton} from './toolbar/buttons'
 import {LinkMenu} from './toolbar/linkMenu'
 import {TableMenu} from './toolbar/tableMenu'
-import {pipe} from 'ramda'
-import {TextFormat, BlockFormat, InlineFormat, toPlaintext} from '@wepublish/richtext'
-import {Hotkeys} from 'slate-dom'
 
 const CharCount = styled.p`
   text-align: right;

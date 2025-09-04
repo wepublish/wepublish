@@ -58,7 +58,7 @@ export const TeaserGridFlexBlock = ({
   return (
     <TeaserGridFlexBlockWrapper className={className}>
       {sortedTeasers.map((teaser, index) => (
-        <Teaser key={index} {...teaser} blockStyle={blockStyle} />
+        <Teaser key={index} index={index} {...teaser} blockStyle={blockStyle} />
       ))}
     </TeaserGridFlexBlockWrapper>
   )

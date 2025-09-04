@@ -3,7 +3,11 @@ import {TransformationsDto} from './transformations.dto'
 import {timingSafeEqual} from 'crypto'
 
 const TOKEN = process.env['MEDIA_SERVER_TOKEN'] || process.env['TOKEN']
-if (!TOKEN) throw new Error('MEDIA_SERVER_TOKEN missing')
+
+if (!TOKEN) {
+  throw new Error('MEDIA_SERVER_TOKEN missing')
+}
+
 const KEY = Buffer.from(TOKEN, 'base64')
 
 export const getSignatureForImage = (imageId: string, transformations: TransformationsDto) => {

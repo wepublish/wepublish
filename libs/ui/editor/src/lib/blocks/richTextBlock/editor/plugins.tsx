@@ -1,9 +1,9 @@
-import {Element as SlateElement, Point, Range, Node as SlateNode, Editor} from 'slate'
+import {BlockFormat, InlineFormat, TextFormat} from '@wepublish/richtext'
+import {Editor, Element as SlateElement, Node as SlateNode, Point, Range} from 'slate'
 import {jsx} from 'slate-hyperscript'
 
-import {WepublishEditor} from './wepublishEditor'
-import {InlineFormat, BlockFormat, TextFormat} from '@wepublish/richtext'
 import {InlineFormats} from './formats'
+import {WepublishEditor} from './wepublishEditor'
 
 const ElementTags: any = {
   A: (el: Element) => ({

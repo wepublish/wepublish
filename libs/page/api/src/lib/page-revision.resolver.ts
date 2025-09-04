@@ -56,6 +56,7 @@ export class PageRevisionResolver {
     if (revision.blocks.some(isTeaserSlotsBlock)) {
       return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks)
     }
+
     return revision.blocks
   }
 }

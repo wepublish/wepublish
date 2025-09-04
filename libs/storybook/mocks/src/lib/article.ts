@@ -58,5 +58,6 @@ export const mockArticle = ({
   url: 'https://example.com',
   peerId,
   peerArticleId,
-  peer
+  peer,
+  paywall: null
 })

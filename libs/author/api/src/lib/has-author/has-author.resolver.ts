@@ -5,7 +5,7 @@ import {AuthorDataloaderService} from '../author-dataloader.service'
 
 @Resolver(() => HasAuthor)
 export class HasAuthorResolver {
-  public constructor(private readonly authorDataloaderService: AuthorDataloaderService) {}
+  public constructor(private authorDataloaderService: AuthorDataloaderService) {}
 
   @ResolveField(() => Author, {nullable: true})
   public author(@Parent() {authorId}: HasOptionalAuthor | HasAuthor) {

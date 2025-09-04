@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import {useTranslation} from 'react-i18next'
 import {Panel as RPanel} from 'rsuite'
-import {SubscribeBlockValue} from '.'
+
 import {BlockProps} from '../atoms/blockList'
+import {SubscribeBlockValue} from '.'
 
 const Panel = styled(RPanel)`
   display: grid;

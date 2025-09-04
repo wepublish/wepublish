@@ -10,7 +10,7 @@ import {
 } from '@prisma/client'
 import {faker} from '@faker-js/faker'
 import {createReadStream} from 'fs'
-import {Node} from 'slate'
+import {Descendant, Node} from 'slate'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 import {NovaMediaAdapter} from '../../../libs/api/src/lib/media/novaMediaAdapter'
@@ -57,7 +57,7 @@ const pickRandom = <T>(value: T, chance = 0.5): T[] | never[] => {
 }
 
 function getText(min = 1, max = 10) {
-  const text: Node[] = Array.from({length: faker.number.int({min, max})}, () => ({
+  const text: Descendant[] = Array.from({length: faker.number.int({min, max})}, () => ({
     type: 'paragraph',
     children: [
       {

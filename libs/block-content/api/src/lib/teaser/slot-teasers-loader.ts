@@ -29,6 +29,7 @@ export class SlotTeasersLoader {
           }, [])
         )
       }
+
       if (isTeaserGridBlock(block)) {
         this.addLoadedTeaser(
           ...block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
@@ -39,6 +40,7 @@ export class SlotTeasersLoader {
           }, [])
         )
       }
+
       if (isTeaserGridFlexBlock(block)) {
         this.addLoadedTeaser(
           ...block.flexTeasers.reduce((teasers: (typeof Teaser)[], flexTeaser) => {
@@ -65,6 +67,7 @@ export class SlotTeasersLoader {
         blocks.push(block)
       }
     }
+
     return blocks
   }
 
@@ -76,6 +79,7 @@ export class SlotTeasersLoader {
       const autofillIndex = slots
         .slice(0, index)
         .filter(slot => slot.type === TeaserSlotType.Autofill).length
+
       return (
         (type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex]) ?? null
       )
@@ -153,10 +157,12 @@ export class SlotTeasersLoader {
         if (teaser.type === TeaserType.Article && teaser.articleID) {
           ids.push(teaser.articleID)
         }
+
         if (teaser.type === TeaserType.Event && teaser.eventID) {
           ids.push(teaser.eventID)
         }
       }
+
       return ids
     }, [])
   }

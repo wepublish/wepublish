@@ -1,4 +1,5 @@
 import {NextRequest, NextResponse} from 'next/server'
+
 import {redirectMap} from './redirectMap'
 
 export async function middleware(request: NextRequest) {

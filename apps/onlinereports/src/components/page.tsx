@@ -1,5 +1,6 @@
 import {BlockContent, Page as PageType} from '@wepublish/website/api'
 import {BuilderPageProps, useWebsiteBuilder} from '@wepublish/website/builder'
+
 import {OnlineReportsContentWrapper} from './content-wrapper'
 
 export function OnlineReportsPage({className, data, loading, error, children}: BuilderPageProps) {

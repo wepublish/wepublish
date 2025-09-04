@@ -15,7 +15,7 @@ import {
   MeDocument,
   NavigationListDocument,
   SubscriptionsDocument,
-  UserSession
+  SessionWithTokenWithoutUser
 } from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
@@ -54,7 +54,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (ctx: NextPageContext) =
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -65,15 +65,20 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (ctx: NextPageContext) =
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([

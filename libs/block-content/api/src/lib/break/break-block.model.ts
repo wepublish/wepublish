@@ -2,7 +2,7 @@ import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {HasImage} from '@wepublish/image/api'
 
@@ -13,7 +13,7 @@ export class BreakBlock extends BaseBlock<typeof BlockType.LinkPageBreak> implem
   @Field({nullable: true})
   text?: string
   @Field(() => GraphQLRichText)
-  richText!: Node[]
+  richText!: Descendant[]
 
   @Field({nullable: true})
   linkURL?: string

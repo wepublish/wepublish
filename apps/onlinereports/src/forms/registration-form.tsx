@@ -1,10 +1,10 @@
-import {PropsWithChildren, useCallback, useState} from 'react'
-import {BuilderRegistrationFormProps, BuilderUserFormFields} from '@wepublish/website/builder'
-import {RegisterMutationVariables} from '@wepublish/website/api'
-import {RegistrationForm} from '@wepublish/authentication/website'
-import {useRouter} from 'next/router'
-import {Checkbox} from '@mui/material'
 import styled from '@emotion/styled'
+import {Checkbox} from '@mui/material'
+import {RegistrationForm} from '@wepublish/authentication/website'
+import {RegisterMutationVariables} from '@wepublish/website/api'
+import {BuilderRegistrationFormProps, BuilderUserFormFields} from '@wepublish/website/builder'
+import {useRouter} from 'next/router'
+import {PropsWithChildren, useCallback, useState} from 'react'
 import {DeepPartial} from 'react-hook-form'
 
 export const SubscribeCheckboxWrapper = styled('div')`

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {FullImageFragment, TeaserType} from '@wepublish/editor/api-v2'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import {ReactNode, useState} from 'react'
@@ -16,7 +17,6 @@ import {Typography} from '../atoms/typography'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {Teaser as TeaserTypeMixed, TeaserGridBlockValue} from './types'
-import {FullImageFragment, TeaserType} from '@wepublish/editor/api-v2'
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
