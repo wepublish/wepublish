@@ -52,7 +52,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  const is404 = event.errors?.find(({extensions}) => extensions?.status === 404)
+  const is404 = event[0].errors?.find(({extensions}) => extensions?.status === 404)
 
   if (is404) {
     return {
