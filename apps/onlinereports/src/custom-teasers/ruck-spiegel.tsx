@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
+import {selectTeaserLead, TeaserWrapper} from '@wepublish/block-content/website'
 import {ArticleTeaser} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
@@ -30,10 +30,11 @@ const RuckSpiegelUnstyled = ({
   teaser,
   className
 }: Pick<BuilderTeaserProps, 'className' | 'teaser'>) => {
-  const {lead, href} = extractTeaserData(teaser)
+  const lead = teaser && selectTeaserLead(teaser)
   const {
-    elements: {H4, Link}
+    elements: {H4}
   } = useWebsiteBuilder()
+
   return (
     <div className={className}>
       <H4 gutterBottom>{lead}</H4>

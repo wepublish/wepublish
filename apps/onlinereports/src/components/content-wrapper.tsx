@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import {css} from '@mui/material'
 import {
+  BreakBlockHeading,
   BreakBlockWrapper,
   EventBlockWrapper,
-  HeadingWithImage,
-  HeadingWithoutImage,
   ImageBlockCaption,
   ImageBlockInnerWrapper,
   ImageBlockWrapper,
@@ -45,7 +44,7 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         }
       }
 
-      ${HeadingWithoutImage}, ${HeadingWithImage} {
+      ${BreakBlockHeading} {
         text-transform: none;
         font-family: ${theme.typography.subtitle2.fontFamily};
         font-style: ${theme.typography.subtitle2.fontStyle};
