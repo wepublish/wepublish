@@ -3,7 +3,7 @@ import {Public} from '@wepublish/authentication/api'
 import {Author} from './author.model'
 import {AuthorService} from './author.service'
 import {AuthorDataloaderService} from './author-dataloader.service'
-import {UserInputError} from '@nestjs/apollo'
+import {BadRequestException} from '@nestjs/common'
 import {AuthorArgs, AuthorsQueryArgs, PaginatedAuthors} from './authors.query'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Tag, TagService} from '@wepublish/tag/api'
@@ -44,7 +44,7 @@ export class AuthorResolver {
       return author
     }
 
-    throw new UserInputError('Author id or slug required.')
+    throw new BadRequestException('Author id or slug required.')
   }
 
   @Public()
