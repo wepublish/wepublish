@@ -1668,6 +1668,7 @@ export type MutationCreateNavigationArgs = {
 export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']>;
+  hidden: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   slug?: InputMaybe<Scalars['String']>;
@@ -1991,6 +1992,7 @@ export type MutationUpdateNavigationArgs = {
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']>;
+  hidden: Scalars['Boolean'];
   id: Scalars['String'];
   imageID?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
@@ -2109,6 +2111,7 @@ export type Page = {
   __typename?: 'Page';
   createdAt: Scalars['DateTime'];
   draft?: Maybe<PageRevision>;
+  hidden: Scalars['Boolean'];
   id: Scalars['String'];
   latest: PageRevision;
   modifiedAt: Scalars['DateTime'];
@@ -2132,6 +2135,7 @@ export type PageCreatedAction = BaseAction & HasPageLc & {
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  includeHidden?: InputMaybe<Scalars['Boolean']>;
   pending?: InputMaybe<Scalars['Boolean']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
@@ -4276,6 +4280,7 @@ export type CreatePageMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput> | PropertyInput;
   slug?: InputMaybe<Scalars['String']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
   socialMediaDescription?: InputMaybe<Scalars['String']>;
   socialMediaImageID?: InputMaybe<Scalars['String']>;
   socialMediaTitle?: InputMaybe<Scalars['String']>;
@@ -4293,6 +4298,7 @@ export type UpdatePageMutationVariables = Exact<{
   description?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput> | PropertyInput;
   slug?: InputMaybe<Scalars['String']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
   socialMediaDescription?: InputMaybe<Scalars['String']>;
   socialMediaImageID?: InputMaybe<Scalars['String']>;
   socialMediaTitle?: InputMaybe<Scalars['String']>;
@@ -7657,13 +7663,14 @@ export type PageListQueryHookResult = ReturnType<typeof usePageListQuery>;
 export type PageListLazyQueryHookResult = ReturnType<typeof usePageListLazyQuery>;
 export type PageListQueryResult = Apollo.QueryResult<PageListQuery, PageListQueryVariables>;
 export const CreatePageDocument = gql`
-    mutation CreatePage($blocks: [BlockContentInput!]!, $imageID: String, $description: String, $properties: [PropertyInput!]!, $slug: String, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String) {
+    mutation CreatePage($blocks: [BlockContentInput!]!, $imageID: String, $description: String, $properties: [PropertyInput!]!, $slug: String, $hidden: Boolean = false, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String) {
   createPage(
     blocks: $blocks
     imageID: $imageID
     description: $description
     properties: $properties
     slug: $slug
+    hidden: $hidden
     socialMediaDescription: $socialMediaDescription
     socialMediaImageID: $socialMediaImageID
     socialMediaTitle: $socialMediaTitle
@@ -7694,6 +7701,7 @@ export type CreatePageMutationFn = Apollo.MutationFunction<CreatePageMutation, C
  *      description: // value for 'description'
  *      properties: // value for 'properties'
  *      slug: // value for 'slug'
+ *      hidden: // value for 'hidden'
  *      socialMediaDescription: // value for 'socialMediaDescription'
  *      socialMediaImageID: // value for 'socialMediaImageID'
  *      socialMediaTitle: // value for 'socialMediaTitle'
@@ -7710,7 +7718,7 @@ export type CreatePageMutationHookResult = ReturnType<typeof useCreatePageMutati
 export type CreatePageMutationResult = Apollo.MutationResult<CreatePageMutation>;
 export type CreatePageMutationOptions = Apollo.BaseMutationOptions<CreatePageMutation, CreatePageMutationVariables>;
 export const UpdatePageDocument = gql`
-    mutation UpdatePage($id: String!, $blocks: [BlockContentInput!]!, $imageID: String, $description: String, $properties: [PropertyInput!]!, $slug: String, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String) {
+    mutation UpdatePage($id: String!, $blocks: [BlockContentInput!]!, $imageID: String, $description: String, $properties: [PropertyInput!]!, $slug: String, $hidden: Boolean = false, $socialMediaDescription: String, $socialMediaImageID: String, $socialMediaTitle: String, $tagIds: [String!]!, $title: String) {
   updatePage(
     id: $id
     blocks: $blocks
@@ -7718,6 +7726,7 @@ export const UpdatePageDocument = gql`
     description: $description
     properties: $properties
     slug: $slug
+    hidden: $hidden
     socialMediaDescription: $socialMediaDescription
     socialMediaImageID: $socialMediaImageID
     socialMediaTitle: $socialMediaTitle
@@ -7749,6 +7758,7 @@ export type UpdatePageMutationFn = Apollo.MutationFunction<UpdatePageMutation, U
  *      description: // value for 'description'
  *      properties: // value for 'properties'
  *      slug: // value for 'slug'
+ *      hidden: // value for 'hidden'
  *      socialMediaDescription: // value for 'socialMediaDescription'
  *      socialMediaImageID: // value for 'socialMediaImageID'
  *      socialMediaTitle: // value for 'socialMediaTitle'

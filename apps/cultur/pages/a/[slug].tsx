@@ -89,6 +89,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
+
   if (article.data?.article) {
     await Promise.all([
       client.query({

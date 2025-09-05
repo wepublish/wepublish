@@ -476,6 +476,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.draft}
+              checked={!!filter.draft}
               onChange={value => updateFilter({draft: value || null})}
               checkedChildren={t('articleList.filter.isDraft')}
               unCheckedChildren={t('articleList.filter.isDraft')}
@@ -487,6 +488,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.pending}
+              checked={!!filter.pending}
               onChange={value => updateFilter({pending: value || null})}
               checkedChildren={t('articleList.filter.isPending')}
               unCheckedChildren={t('articleList.filter.isPending')}
@@ -498,6 +500,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.published}
+              checked={!!filter.published}
               onChange={value => updateFilter({published: value || null})}
               checkedChildren={t('articleList.filter.isPublished')}
               unCheckedChildren={t('articleList.filter.isPublished')}
@@ -583,6 +586,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.includeHidden}
+              checked={!!filter.includeHidden}
               onChange={value => updateFilter({includeHidden: value || null})}
               checkedChildren={t('articleList.filter.includeHidden')}
               unCheckedChildren={t('articleList.filter.includeHidden')}

@@ -15,6 +15,7 @@ import {Tag, TagService} from '@wepublish/tag/api'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Event as PEvent} from '@prisma/client'
 import {Permissions} from '@wepublish/permissions/api'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Event)
 export class EventResolver {
@@ -36,8 +37,14 @@ export class EventResolver {
 
   @Public()
   @Query(() => Event, {description: `Returns a event by id.`})
-  public event(@Args('id') id: string) {
-    return this.eventDataloader.load(id)
+  public async event(@Args('id') id: string) {
+    const event = await this.eventDataloader.load(id)
+
+    if (!event) {
+      throw new NotFoundException(`Event with id ${id} was not found.`)
+    }
+
+    return event
   }
 
   @Mutation(() => Event, {description: `Creates a new event.`})

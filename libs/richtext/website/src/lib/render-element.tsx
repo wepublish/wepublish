@@ -97,7 +97,11 @@ export function RenderElement({element}: BuilderRenderElementProps): ReactNode {
     case InlineFormat.Link:
       return (
         <Link
-          target={(element.url as string).startsWith('#') ? '' : '_blank'}
+          target={
+            (element.url as string).startsWith('#') || (element.url as string).startsWith('/')
+              ? ''
+              : '_blank'
+          }
           rel="noreferrer"
           id={element.id as string}
           href={element.url as string}

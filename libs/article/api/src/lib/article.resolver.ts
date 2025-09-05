@@ -13,7 +13,7 @@ import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Article as PArticle} from '@prisma/client'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, NotFoundException} from '@nestjs/common'
 import {
   CanCreateArticle,
   CanDeleteArticle,
@@ -46,7 +46,11 @@ export class ArticleResolver {
     if (id != null) {
       const article = await this.articleDataloader.load(id)
 
-      if (article && !article?.peerId) {
+      if (!article) {
+        throw new NotFoundException(`Article with id ${id} was not found.`)
+      }
+
+      if (!article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(id)
       }
 
@@ -56,14 +60,18 @@ export class ArticleResolver {
     if (slug != null) {
       const article = await this.articleService.getArticleBySlug(slug)
 
-      if (article && !article?.peerId) {
+      if (!article) {
+        throw new NotFoundException(`Article with slug ${slug} was not found.`)
+      }
+
+      if (!article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(article.id)
       }
 
       return article
     }
 
-    throw new BadRequestException('id or slug required.')
+    throw new BadRequestException('Article id or slug required.')
   }
 
   @Public()
