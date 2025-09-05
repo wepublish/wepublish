@@ -77,9 +77,7 @@ function SubscriptionPage() {
 const GuardedSubscription = withAuthGuard(SubscriptionPage) as NextPage<
   ComponentProps<typeof SubscriptionPage>
 >
-GuardedSubscription.getInitialProps = async (
-  ctx: NextPageContext
-): Promise<{sessionToken: UserSession | null} | object> => {
+GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
