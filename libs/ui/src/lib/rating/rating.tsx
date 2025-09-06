@@ -12,8 +12,8 @@ export type RatingProps = Omit<MuiRatingProps, 'value' | 'onChange'> & {
   averageEmptyColor?: string;
   userFilledColor?: string;
   userEmptyColor?: string;
-  averageRating: number;
-  userRating: number;
+  averageRating?: number;
+  userRating?: number;
   onChange?: (event: SyntheticEvent<Element, Event>, newValue: number) => void;
 };
 
@@ -60,11 +60,11 @@ export function Rating({
   onChange,
   ...props
 }: RatingProps) {
-  const [internalRating, setInternalRating] = useState(userRating);
+  const [internalRating, setInternalRating] = useState(userRating || 0);
   const { hoverProps, isHovered } = useHover({});
 
   useEffect(() => {
-    setInternalRating(userRating);
+    setInternalRating(userRating || 0);
   }, [userRating]);
 
   const handleRatingChange = (
