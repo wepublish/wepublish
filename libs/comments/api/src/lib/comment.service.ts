@@ -56,7 +56,7 @@ export class CommentService {
         ]
       },
       orderBy: {
-        modifiedAt: 'desc'
+        modifiedAt: 'asc'
       },
       include: {
         revisions: {orderBy: {createdAt: 'asc'}},
