@@ -4,7 +4,6 @@ import {
   RatingProps as MuiRatingProps,
 } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { useHover } from 'react-aria';
 import { MdStar, MdStarBorder } from 'react-icons/md';
 
 export type RatingProps = Omit<MuiRatingProps, 'value' | 'onChange'> & {
@@ -17,36 +16,40 @@ export type RatingProps = Omit<MuiRatingProps, 'value' | 'onChange'> & {
   onChange?: (event: SyntheticEvent<Element, Event>, newValue: number) => void;
 };
 
-export const RatingWrapper = styled('div')<Partial<RatingProps>>`
-  position: relative;
+type RatingColors = {
+  filledColor?: string;
+  emptyColor?: string;
+};
+
+export const RatingContainer = styled('div')`
   display: inline-flex;
+  cursor: pointer;
+`;
 
-  .average-rating {
-    & .MuiRating-iconFilled {
-      color: ${({ theme, averageFilledColor }) =>
-        averageFilledColor || theme.palette.primary.main};
-    }
-
-    & .MuiRating-iconEmpty {
-      color: ${({ theme, averageEmptyColor }) =>
-        averageEmptyColor || theme.palette.grey[400]};
-    }
+export const AverageRatingWrapper = styled('div')<Partial<RatingColors>>`
+  .MuiRating-iconFilled {
+    color: ${({ theme, filledColor }) =>
+      filledColor || theme.palette.primary.main};
   }
 
-  .user-rating {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .MuiRating-iconEmpty {
+    color: ${({ theme, emptyColor }) => emptyColor || theme.palette.grey[400]};
+  }
+`;
 
-    & .MuiRating-iconFilled {
-      color: ${({ theme, userFilledColor }) =>
-        userFilledColor || theme.palette.primary.main};
-    }
+export const UserRatingWrapper = styled('div')<Partial<RatingColors>>`
+  .MuiRating-iconFilled {
+    color: ${({ theme, filledColor }) =>
+      filledColor || theme.palette.primary.main};
+  }
 
-    & .MuiRating-iconHover {
-      color: ${({ theme, userFilledColor }) =>
-        userFilledColor || theme.palette.primary.main};
-    }
+  .MuiRating-iconEmpty {
+    color: ${({ theme, emptyColor }) => emptyColor || theme.palette.grey[400]};
+  }
+
+  .MuiRating-iconHover {
+    color: ${({ theme, filledColor }) =>
+      filledColor || theme.palette.primary.main};
   }
 `;
 
@@ -55,16 +58,16 @@ export function Rating({
   averageEmptyColor,
   userFilledColor,
   userEmptyColor,
-  averageRating,
-  userRating,
+  averageRating = 0,
+  userRating = 0,
   onChange,
   ...props
 }: RatingProps) {
-  const [internalRating, setInternalRating] = useState(userRating || 0);
-  const { hoverProps, isHovered } = useHover({});
+  const [internalRating, setInternalRating] = useState(userRating);
+  const [isRatingMode, setIsRatingMode] = useState(false);
 
   useEffect(() => {
-    setInternalRating(userRating || 0);
+    setInternalRating(userRating);
   }, [userRating]);
 
   const handleRatingChange = (
@@ -77,39 +80,56 @@ export function Rating({
     }
   };
 
-  const displayRating = internalRating ?? 0;
+  const handleContainerClick = () => {
+    if (!props.readOnly) {
+      setIsRatingMode(true);
+    }
+  };
+
+  const handleRatingComplete = (
+    event: SyntheticEvent<Element, Event>,
+    newValue: number | null
+  ) => {
+    handleRatingChange(event, newValue);
+    setIsRatingMode(false);
+  };
 
   const icon = props.icon ?? <MdStar />;
   const emptyIcon = props.emptyIcon ?? <MdStarBorder />;
 
-  const showUserRating = (displayRating > 0 || isHovered) && !props.readOnly;
+  const displayValue =
+    isRatingMode || internalRating > 0 ? internalRating : averageRating;
+  const isReadOnly = props.readOnly || !isRatingMode;
 
   return (
-    <RatingWrapper
-      {...(hoverProps as object)}
-      userEmptyColor={userEmptyColor}
-      userFilledColor={userFilledColor}
-      averageEmptyColor={averageEmptyColor}
-      averageFilledColor={averageFilledColor}
-    >
-      {!showUserRating && (
-        <MuiRating
-          className="average-rating"
-          value={averageRating}
-          icon={emptyIcon}
-          emptyIcon={emptyIcon}
-          readOnly
-        />
-      )}
-      {showUserRating && (
-        <MuiRating
-          className="user-rating"
-          value={displayRating}
-          onChange={handleRatingChange}
-          icon={icon}
-          emptyIcon={emptyIcon}
-        />
-      )}
-    </RatingWrapper>
+    <RatingContainer onClick={handleContainerClick}>
+      {!isRatingMode && internalRating === 0 ?
+        <AverageRatingWrapper
+          filledColor={averageFilledColor}
+          emptyColor={averageEmptyColor}
+        >
+          <MuiRating
+            value={averageRating}
+            icon={emptyIcon}
+            emptyIcon={emptyIcon}
+            readOnly
+            {...props}
+          />
+        </AverageRatingWrapper>
+      : <UserRatingWrapper
+          filledColor={userFilledColor}
+          emptyColor={userEmptyColor}
+        >
+          <MuiRating
+            value={displayValue}
+            onChange={isRatingMode ? handleRatingComplete : undefined}
+            icon={icon}
+            emptyIcon={emptyIcon}
+            readOnly={isReadOnly}
+            {...props}
+          />
+        </UserRatingWrapper>
+      }
+    </RatingContainer>
   );
 }
