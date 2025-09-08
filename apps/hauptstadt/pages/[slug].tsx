@@ -49,6 +49,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
   const is404 = page.errors?.find(({extensions}) => extensions?.status === 404)
+
   if (is404) {
     return {
       notFound: true
