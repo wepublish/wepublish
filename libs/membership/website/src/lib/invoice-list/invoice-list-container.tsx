@@ -27,7 +27,7 @@ export function InvoiceListContainer({filter, className}: InvoiceListContainerPr
   } = useInvoicesQuery({
     onCompleted(data) {
       for (const {id, paidAt, canceledAt} of data.invoices) {
-        if (paidAt || canceledAt) {
+        if (paidAt || canceledAt || typeof window === 'undefined') {
           continue
         }
 
