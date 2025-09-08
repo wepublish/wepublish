@@ -401,7 +401,7 @@ async function seedAuthors(prisma: PrismaClient, imageIds: string[] = []) {
   }
 
   return Promise.all(
-    Array.from({length: 5}, () =>
+    Array.from({length: 26}, () =>
       prisma.author.create({
         data: {
           ...nameAndSlug(),
@@ -418,7 +418,7 @@ async function seedEvents(prisma: PrismaClient, imageIds: string[] = []) {
   const future = faker.date.future()
 
   return Promise.all(
-    Array.from({length: faker.number.int({min: 10, max: 20})}, () =>
+    Array.from({length: faker.number.int({min: 26, max: 45})}, () =>
       prisma.event.create({
         data: {
           name: capitalize(faker.lorem.words({min: 3, max: 8})),
@@ -623,15 +623,31 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
   return [home]
 }
 
+async function seedTags(prisma: PrismaClient) {
+  const tags = await Promise.all(
+    Array.from({length: faker.number.int({min: 5, max: 10})}, () =>
+      prisma.tag.create({
+        data: {
+          tag: capitalize(faker.word.noun({length: {min: 4, max: 10}})).toLowerCase(),
+          type: 'Article',
+          main: false
+        }
+      })
+    )
+  )
+  return tags
+}
+
 async function seedArticles(
   prisma: PrismaClient,
   imageIds: string[] = [],
   authorIds: string[] = [],
   pollIds: string[] = [],
-  eventIds: string[] = []
+  eventIds: string[] = [],
+  tagIds: string[] = []
 ) {
   const articles = await Promise.all(
-    Array.from({length: faker.number.int({min: 10, max: 20})}, () =>
+    Array.from({length: faker.number.int({min: 27, max: 40})}, () =>
       prisma.article.create({
         data: {
           shared: true,
@@ -734,6 +750,11 @@ async function seedArticles(
               breaking: false,
               hideAuthor: false,
               publishedAt: new Date()
+            }
+          },
+          tags: {
+            create: {
+              tagId: tagIds[0]
             }
           }
         },
@@ -873,11 +894,16 @@ async function seed() {
       throw 'Website Example seeding has already been done. Skipping'
     }
 
-    const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
+    console.log('Seeding tags')
+
+    const tags = await seedTags(prisma)
     console.log('Seeding polls')
     const polls = await seedPoll(prisma)
     console.log('Seeding navigations')
-    const navigations = await seedNavigations(prisma, tags)
+    const navigations = await seedNavigations(
+      prisma,
+      tags.map(({tag}) => tag)
+    )
     console.log('Seeding images')
     // const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
     console.log('Seeding authors')
@@ -890,7 +916,8 @@ async function seed() {
       [],
       authors.map(({id}) => id),
       polls.map(({id}) => id),
-      events.map(({id}) => id)
+      events.map(({id}) => id),
+      tags.map(({id}) => id)
     )
     console.log('Seeding comments')
     const comments = await seedComments(
