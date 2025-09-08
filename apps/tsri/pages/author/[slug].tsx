@@ -64,7 +64,7 @@ export default function AuthorBySlug() {
   }, [articleListData?.articles.totalCount])
 
   const canonicalUrl = useMemo(() => {
-    return `/autor/${slug}`
+    return `/author/${slug}`
   }, [slug])
 
   return (
