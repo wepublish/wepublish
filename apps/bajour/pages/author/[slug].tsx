@@ -13,6 +13,7 @@ import {
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
+import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 import {z} from 'zod'
@@ -69,6 +70,10 @@ export default function AuthorBySlug() {
     return 1
   }, [articleListData?.articles.totalCount])
 
+  const canonicalUrl = useMemo(() => {
+    return `/autor/${slug}`
+  }, [slug])
+
   return (
     <Container>
       <ArticleWrapper>
@@ -83,19 +88,24 @@ export default function AuthorBySlug() {
             <ArticleListContainer variables={variables} />
 
             {pageCount > 1 && (
-              <Pagination
-                page={page ?? 1}
-                count={pageCount}
-                onChange={(_, value) =>
-                  replace(
-                    {
-                      query: {...query, page: value}
-                    },
-                    undefined,
-                    {shallow: true, scroll: true}
-                  )
-                }
-              />
+              <>
+                <Head>
+                  <link rel="canonical" href={`${canonicalUrl}`} />
+                </Head>
+                <Pagination
+                  page={page ?? 1}
+                  count={pageCount}
+                  onChange={(_, value) =>
+                    replace(
+                      {
+                        query: value > 1 ? {...query, page: value} : (delete query.page, {...query})
+                      },
+                      undefined,
+                      {shallow: true, scroll: true}
+                    )
+                  }
+                />
+              </>
             )}
           </>
         )}
