@@ -1288,6 +1288,7 @@
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
         "confirm": "Confirm",
+        "count": "Count",
         "createSuccess": "Tag created successfully",
         "createTag": "New Tag",
         "deleteSuccess": "Tag deleted successfully",

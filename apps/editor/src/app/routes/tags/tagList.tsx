@@ -163,6 +163,11 @@ const TagList = memo<TagListProps>(({type}) => {
             </Cell>
           </Column>
 
+          <Column width={100} align="center" resizable>
+            <HeaderCell>{t('tags.overview.count')}</HeaderCell>
+            <Cell dataKey="count" />
+          </Column>
+
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('tags.overview.action')}</HeaderCell>
             <PaddedCell>

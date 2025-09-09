@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, Message, Schema, toaster, Toggle} from 'rsuite'
 
-type Tag = Omit<GraphqlTag, 'url'>
+type Tag = Omit<GraphqlTag, 'url' | '__typename'>
 
 interface TagCreateFormProps {
   type: TagType

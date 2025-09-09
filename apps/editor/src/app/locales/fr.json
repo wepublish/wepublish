@@ -1151,6 +1151,7 @@
         "areYouSureBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
         "areYouSureConfirmation": "Supprimer le tag",
         "confirm": "Confirmer",
+        "count": "Nombre",
         "createSuccess": "Tag créé avec succès",
         "createTag": "Nouveau Tag",
         "deleteSuccess": "Tag supprimé avec succès",

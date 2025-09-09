@@ -734,9 +734,18 @@ enum RatingSystemType {
 }
 
 type TagConnection {
-  nodes: [Tag!]!
+  nodes: [TagWithCount!]!
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+type TagWithCount {
+  id: String!
+  tag: String
+  type: TagType
+  main: Boolean!
+  count: Int!
+  url: String!
 }
 
 input TagFilter {

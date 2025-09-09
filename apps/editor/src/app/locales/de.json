@@ -1244,6 +1244,7 @@
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
         "confirm": "Bestätigen",
+        "count": "Anzahl",
         "createSuccess": "Tag erfolgreich erstellt",
         "createTag": "Neuen Tag",
         "deleteSuccess": "Tag erfolgreich gelöscht",
