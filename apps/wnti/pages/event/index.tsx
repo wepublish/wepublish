@@ -120,7 +120,7 @@ export default function EventList() {
       {pageCount > 1 && (
         <>
           <Head>
-            <link rel="canonical" href={`${canonicalUrl}`} />
+            <link rel="canonical" href={canonicalUrl} />
           </Head>
           <Pagination
             page={page ?? 1}
