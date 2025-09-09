@@ -81,9 +81,7 @@ export default function EventList() {
     return 1
   }, [data?.events?.totalCount])
 
-  const canonicalUrl = useMemo(() => {
-    return `/event`
-  }, [])
+  const canonicalUrl = '/event'
 
   return (
     <>

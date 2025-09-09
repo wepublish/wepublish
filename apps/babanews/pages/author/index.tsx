@@ -54,9 +54,7 @@ export default function AuthorList() {
     return 1
   }, [data?.authors.totalCount])
 
-  const canonicalUrl = useMemo(() => {
-    return `/author`
-  }, [])
+  const canonicalUrl = '/author'
 
   return (
     <>

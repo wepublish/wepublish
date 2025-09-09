@@ -52,9 +52,7 @@ export default function ArticleList() {
     return 1
   }, [data?.articles.totalCount])
 
-  const canonicalUrl = useMemo(() => {
-    return `/a`
-  }, [])
+  const canonicalUrl = '/a'
 
   return (
     <Container>
