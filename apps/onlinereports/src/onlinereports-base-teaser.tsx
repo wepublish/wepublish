@@ -42,13 +42,11 @@ export const useImageStyles = () => {
   )
 }
 
-const hasSpecialTags = (teaser: BuilderTeaserProps['teaser']) => {
+const hasTags = (teaser: BuilderTeaserProps['teaser']) => {
   if (!teaser) {
     return false
   }
-  const tags = selectTeaserTags(teaser).map(({tag}) => tag)
-  const specialTags = ['Anzeige', 'Publireportage']
-  return tags.some(tag => tag && specialTags.includes(tag))
+  return selectTeaserTags(teaser).length > 0
 }
 
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
@@ -150,7 +148,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserTags} {
-    display: ${({teaser}) => (hasSpecialTags(teaser) ? 'block' : 'none')};
+    display: ${({teaser}) => (hasTags(teaser) ? 'block' : 'none')};
 
     .MuiChip-root {
       background-color: #7c7c7c;
@@ -162,6 +160,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserAuthors} {
+    display: ${({teaser}) => (hasTags(teaser) ? 'none' : 'block')};
     font-family: ${({theme}) => theme.typography.body2.fontFamily};
     font-size: ${({theme}) => theme.typography.body2.fontSize};
     font-weight: ${({theme}) => theme.typography.body2.fontWeight};
