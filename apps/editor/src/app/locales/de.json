@@ -1239,13 +1239,28 @@
     },
     "tags": {
       "overview": {
+        "action": "Aktion",
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
+        "confirm": "Bestätigen",
+        "createSuccess": "Tag erfolgreich erstellt",
         "createTag": "Neuen Tag",
+        "deleteSuccess": "Tag erfolgreich gelöscht",
+        "deleteTag": "Tag löschen",
+        "deleteTagBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "editTag": "Tag bearbeiten",
+        "main": "Haupt",
+        "mainTag": "Haupt-Tag",
+        "mainTagHelp": "Diesen Tag als Haupt-Tag markieren",
+        "markAsMain": "Als Haupt-Tag verwenden",
+        "name": "Name",
         "placeholder": "Name des Tags",
+        "specialTags": "Spezielle Tags",
+        "tagRequired": "Tag-Name ist erforderlich",
         "title": "Tags",
-        "markAsMain": "Als Haupt-Tag verwenden"
+        "untitled": "Ohne Titel",
+        "updateSuccess": "Tag erfolgreich aktualisiert"
       }
     },
     "tokenList": {

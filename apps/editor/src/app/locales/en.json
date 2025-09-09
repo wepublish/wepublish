@@ -1283,13 +1283,28 @@
     },
     "tags": {
       "overview": {
+        "action": "Action",
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
+        "confirm": "Confirm",
+        "createSuccess": "Tag created successfully",
         "createTag": "New Tag",
+        "deleteSuccess": "Tag deleted successfully",
+        "deleteTag": "Delete Tag",
+        "deleteTagBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
+        "editTag": "Edit Tag",
+        "main": "Main",
+        "mainTag": "Main Tag",
+        "mainTagHelp": "Mark this tag as a main tag",
+        "markAsMain": "Use as main tag",
+        "name": "Name",
         "placeholder": "Name of tag",
+        "specialTags": "Special Tags",
+        "tagRequired": "Tag name is required",
         "title": "Tags",
-        "markAsMain": "Use as main tag"
+        "untitled": "Untitled",
+        "updateSuccess": "Tag updated successfully"
       }
     },
     "toast": {

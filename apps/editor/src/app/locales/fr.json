@@ -1146,13 +1146,28 @@
     },
     "tags": {
       "overview": {
-        "areYouSure": "Are you sure?",
-        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete tag",
-        "createTag": "New Tag",
-        "placeholder": "Name of tag",
+        "action": "Action",
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le tag",
+        "confirm": "Confirmer",
+        "createSuccess": "Tag créé avec succès",
+        "createTag": "Nouveau Tag",
+        "deleteSuccess": "Tag supprimé avec succès",
+        "deleteTag": "Supprimer le Tag",
+        "deleteTagBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
+        "editTag": "Modifier le Tag",
+        "main": "Principal",
+        "mainTag": "Tag Principal",
+        "mainTagHelp": "Marquer ce tag comme tag principal",
+        "markAsMain": "Utiliser comme tag principal",
+        "name": "Nom",
+        "placeholder": "Nom du tag",
+        "specialTags": "Tags Spéciaux",
+        "tagRequired": "Le nom du tag est obligatoire",
         "title": "Tags",
-        "markAsMain": "Use as main tag"
+        "untitled": "Sans titre",
+        "updateSuccess": "Tag mis à jour avec succès"
       }
     },
     "tokenList": {
