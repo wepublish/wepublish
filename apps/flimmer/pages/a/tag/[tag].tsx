@@ -61,9 +61,7 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
     return 1
   }, [data?.articles.totalCount])
 
-  const canonicalUrl = useMemo(() => {
-    return `/a/tag/${tag}`
-  }, [tag])
+  const canonicalUrl = `/a/tag/${tag}`
 
   return (
     <>
@@ -78,8 +76,9 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
       {pageCount > 1 && (
         <>
           <Head>
-            <link rel="canonical" href={canonicalUrl} />
+            <link rel="canonical" key="canonical" href={canonicalUrl} />
           </Head>
+
           <Pagination
             page={page ?? 1}
             count={pageCount}

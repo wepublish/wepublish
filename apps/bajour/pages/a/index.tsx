@@ -61,8 +61,9 @@ export default function ArticleList() {
       {pageCount > 1 && (
         <>
           <Head>
-            <link rel="canonical" href={canonicalUrl} />
+            <link rel="canonical" key="canonical" href={canonicalUrl} />
           </Head>
+
           <Pagination
             page={page ?? 1}
             count={pageCount}
