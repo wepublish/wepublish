@@ -1,9 +1,9 @@
 import {ApolloError} from '@apollo/client'
+import {TagCreateForm} from './tagCreateForm'
 import styled from '@emotion/styled'
 import {
   Tag,
   TagType,
-  useCreateTagMutation,
   useDeleteTagMutation,
   useTagListLazyQuery,
   useUpdateTagMutation
@@ -24,12 +24,12 @@ import {
 import {equals} from 'ramda'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdEdit, MdSave} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
 import {
   Button,
   Checkbox,
+  Drawer,
   FlexboxGrid,
-  Form,
   IconButton as RIconButton,
   Input,
   Loader as RLoader,
@@ -37,7 +37,6 @@ import {
   Modal,
   Pagination,
   Table as RTable,
-  Tag as RTag,
   toaster
 } from 'rsuite'
 
@@ -130,8 +129,9 @@ const TagList = memo<TagListProps>(({type}) => {
   const [formValue, dispatchFormValue] = useReducer(tagFormValueReducer, {})
   const [apiValue, dispatchApiValue] = useReducer(tagFormValueReducer, {})
   const [tagToDelete, setTagToDelete] = useState<string | null>(null)
+  const [isCreateDrawerOpen, setCreateDrawerOpen] = useState(false)
 
-  const [fetch, {data, loading}] = useTagListLazyQuery({
+  const [fetch, {data, loading, refetch}] = useTagListLazyQuery({
     variables: {
       take: limit,
       filter: {
@@ -153,31 +153,6 @@ const TagList = memo<TagListProps>(({type}) => {
     }
   })
 
-  const [createTag] = useCreateTagMutation({
-    variables: {
-      type
-    },
-    onError: showErrors,
-    onCompleted(createdTag) {
-      if (!createdTag.createTag) {
-        return
-      }
-
-      dispatchApiValue({
-        type: TagListActionType.Create,
-        payload: {
-          id: createdTag.createTag.id
-        }
-      })
-
-      dispatchFormValue({
-        type: TagListActionType.Create,
-        payload: {
-          id: createdTag.createTag.id
-        }
-      })
-    }
-  })
   const [updateTag] = useUpdateTagMutation({
     onError: showErrors,
     onCompleted(updatedTag) {
@@ -255,7 +230,7 @@ const TagList = memo<TagListProps>(({type}) => {
               appearance="primary"
               data-testid="create"
               icon={<MdAdd />}
-              onClick={() => createTag()}>
+              onClick={() => setCreateDrawerOpen(true)}>
               {t('tags.overview.createTag')}
             </RIconButton>
           </ListViewActions>
@@ -400,6 +375,23 @@ const TagList = memo<TagListProps>(({type}) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Drawer open={isCreateDrawerOpen} onClose={() => setCreateDrawerOpen(false)} size="sm">
+        <Drawer.Header>
+          <Drawer.Title>{t('tags.overview.createTag')}</Drawer.Title>
+        </Drawer.Header>
+        <Drawer.Body>
+          <TagCreateForm
+            type={type}
+            onSuccess={() => {
+              setCreateDrawerOpen(false)
+              // Refetch to update the list
+              refetch()
+            }}
+            onCancel={() => setCreateDrawerOpen(false)}
+          />
+        </Drawer.Body>
+      </Drawer>
     </>
   )
 })

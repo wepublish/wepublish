@@ -2369,6 +2369,7 @@ export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagCon
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
+  main?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -5618,8 +5619,8 @@ export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+    mutation CreateTag($tag: String, $type: TagType!, $main: Boolean) {
+  createTag(tag: $tag, type: $type, main: $main) {
     id
     tag
     main
@@ -5643,6 +5644,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  *   variables: {
  *      tag: // value for 'tag'
  *      type: // value for 'type'
+ *      main: // value for 'main'
  *   },
  * });
  */
