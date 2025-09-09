@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {LoginStatus, Page, PrismaClient} from '@prisma/client'
+import {Banner, LoginStatus, Page, PrismaClient} from '@prisma/client'
 import {
   BannerDocumentType,
   CreateBannerInput,
@@ -7,6 +7,7 @@ import {
   UpdateBannerInput
 } from './banner.model'
 import {PaginationArgs} from './pagination.model'
+import {findIndex, sortBy} from 'ramda'
 
 @Injectable()
 export class BannerService {
@@ -28,19 +29,43 @@ export class BannerService {
   }
 
   async findFirst(args: PrimaryBannerArgs) {
+    let showForLoginStatus = [] as Array<{showForLoginStatus: LoginStatus}>
+
+    if (args.hasSubscription === false && args.loggedIn === false) {
+      showForLoginStatus = [
+        {showForLoginStatus: LoginStatus.LOGGED_OUT},
+        {showForLoginStatus: LoginStatus.UNSUBSCRIBED}
+      ]
+    }
+
+    if (args.hasSubscription === false && args.loggedIn === true) {
+      showForLoginStatus = [
+        {showForLoginStatus: LoginStatus.UNSUBSCRIBED},
+        {showForLoginStatus: LoginStatus.LOGGED_IN}
+      ]
+    }
+
+    if (args.hasSubscription === true && args.loggedIn === true) {
+      showForLoginStatus = [
+        {showForLoginStatus: LoginStatus.SUBSCRIBED},
+        {showForLoginStatus: LoginStatus.LOGGED_IN}
+      ]
+    }
+
+    showForLoginStatus = [...showForLoginStatus, {showForLoginStatus: LoginStatus.ALL}]
+
+    let banners: Banner[] = []
+
     if (args.documentType === BannerDocumentType.ARTICLE) {
-      return this.prisma.banner.findFirst({
+      banners = await this.prisma.banner.findMany({
         where: {
           active: true,
           showOnArticles: true,
-          OR: [
-            {showForLoginStatus: LoginStatus.ALL},
-            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
-          ]
+          OR: showForLoginStatus
         }
       })
     } else if (args.documentType === BannerDocumentType.PAGE) {
-      return this.prisma.banner.findFirst({
+      banners = await this.prisma.banner.findMany({
         where: {
           active: true,
           showOnPages: {
@@ -48,15 +73,25 @@ export class BannerService {
               id: args.documentId
             }
           },
-          OR: [
-            {showForLoginStatus: LoginStatus.ALL},
-            {showForLoginStatus: args.loggedIn ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT}
-          ]
+          OR: showForLoginStatus
         }
       })
-    } else {
-      return null
     }
+
+    const sortBannerByFittingLoginStatus = sortBy<Banner>(banner => {
+      const index = findIndex<(typeof showForLoginStatus)[0]>(
+        ls => ls.showForLoginStatus === banner.showForLoginStatus
+      )(showForLoginStatus)
+
+      if (index === -1) {
+        // not found, so put it at the end
+        return showForLoginStatus.length
+      }
+
+      return index
+    })
+
+    return sortBannerByFittingLoginStatus(banners).at(0)
   }
 
   async findPages(id: string): Promise<Page[]> {

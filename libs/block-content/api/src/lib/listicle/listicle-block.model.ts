@@ -2,7 +2,7 @@ import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {BaseBlock} from '../base-block.model'
 import {BlockType} from '../block-type.model'
 import {HasImage, Image} from '@wepublish/image/api'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 
 @ObjectType({
@@ -13,7 +13,7 @@ export class ListicleItem implements HasImage {
   imageID?: string
 
   @Field(() => GraphQLRichText)
-  richText!: Node[]
+  richText!: Descendant[]
 
   @Field({nullable: true})
   title?: string

@@ -6,12 +6,9 @@ import {MediaAdapter} from '@wepublish/image/api'
 import {PaymentsService} from '@wepublish/payment/api'
 import {MAIL_WEBHOOK_PATH_PREFIX, MailContext} from '@wepublish/mail/api'
 import helmet from 'helmet'
-import {
-  HOT_AND_TRENDING_DATA_SOURCE,
-  PAYMENT_WEBHOOK_PATH_PREFIX,
-  HotAndTrendingDataSource,
-  MAX_PAYLOAD_SIZE
-} from '@wepublish/api'
+import {HotAndTrendingDataSource, HOT_AND_TRENDING_DATA_SOURCE} from '@wepublish/article/api'
+import {MAX_PAYLOAD_SIZE} from '@wepublish/utils/api'
+import {PAYMENT_WEBHOOK_PATH_PREFIX} from '@wepublish/api'
 import {json, urlencoded} from 'body-parser'
 import type {Request, Response, NextFunction, RequestHandler} from 'express'
 

@@ -54,6 +54,7 @@ export const TeaserListBlock = ({
             teaser={teaser}
             alignment={alignmentForTeaserBlock(index, 3)}
             blockStyle={blockStyle}
+            index={index}
           />
         ))}
       </TeaserListBlockTeasers>

@@ -24,7 +24,6 @@ const mockUser: User = {
     country: 'Australia'
   },
   image: mockImage(),
-  oauth2Accounts: [],
   paymentProviderCustomers: [],
   properties: []
 }

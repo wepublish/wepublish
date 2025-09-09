@@ -2,15 +2,15 @@ import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Modal} from 'rsuite'
 
-import {ArticleMetadata} from './articleMetadataPanel'
 import {
+  createCheckedPermissionComponent,
   DateTimePicker,
   DescriptionList,
   DescriptionListItem,
   DescriptionListItemWithMessage,
-  InfoColor,
-  createCheckedPermissionComponent
+  InfoColor
 } from '../atoms'
+import {ArticleMetadata} from './articleMetadataPanel'
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date

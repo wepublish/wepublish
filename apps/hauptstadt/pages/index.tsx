@@ -7,6 +7,7 @@ import {
   PageDocument,
   PeerProfileDocument
 } from '@wepublish/website/api'
+import {Link} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
@@ -14,6 +15,10 @@ export default function Index() {
   return (
     <ContentWidthProvider fullWidth>
       <PageContainer slug={''} />
+
+      <Link href="/a" css={{justifySelf: 'center', fontWeight: 400}}>
+        Alle Hauptstadt-Artikel
+      </Link>
     </ContentWidthProvider>
   )
 }
@@ -26,7 +31,7 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  await Promise.all([
+  const [page] = await Promise.all([
     client.query({
       query: PageDocument,
       variables: {

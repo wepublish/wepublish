@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import {Box, Typography} from '@mui/material'
-import {extractTeaserData, TeaserWrapper} from '@wepublish/block-content/website'
-import {BuilderTeaserProps} from '@wepublish/website/builder'
-import {useMemo} from 'react'
-import {allPass} from 'ramda'
+import {selectTeaserLead, selectTeaserTitle, TeaserWrapper} from '@wepublish/block-content/website'
 import {ArticleTeaser} from '@wepublish/website/api'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
+import {allPass} from 'ramda'
+import {useMemo} from 'react'
+
 import {BlueBox} from '../components/blue-box'
 
 export const isGelesenUndGedachtTeaser = allPass([
@@ -27,10 +28,13 @@ const GelesenUndGedachtUnstyled = ({
   teaser,
   className
 }: Pick<BuilderTeaserProps, 'className' | 'teaser'>) => {
-  const {title, lead} = extractTeaserData(teaser)
+  const title = teaser && selectTeaserTitle(teaser)
+  const lead = teaser && selectTeaserLead(teaser)
+
   const [gelesen, source, gedacht] = useMemo(() => {
     return [title, ...(lead?.split(/\n+/, 2) ?? [])]
   }, [title, lead])
+
   return (
     <Box className={className}>
       <Gelesen>
@@ -38,6 +42,7 @@ const GelesenUndGedachtUnstyled = ({
         <GelesenQuote variant={'subtitle2'}>{gelesen}</GelesenQuote>
         <GelesenSource>{source}</GelesenSource>
       </Gelesen>
+
       <Gedacht>
         <Box>... und dabei gedacht</Box>
         <GedachtText variant={'subtitle2'}>{gedacht}</GedachtText>

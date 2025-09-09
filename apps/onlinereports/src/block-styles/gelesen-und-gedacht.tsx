@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 import {Box} from '@mui/material'
-
 import {hasBlockStyle, isFilledTeaser, isTeaserListBlock} from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderTeaserListBlockProps, Link} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
 import {Advertisement} from '../components/advertisement'
@@ -22,23 +21,20 @@ export const GelesenUndGedachtBlockStyle = ({
   className
 }: Pick<BuilderTeaserListBlockProps, 'title' | 'teasers' | 'blockStyle' | 'className'>) => {
   const filledTeasers = teasers.filter(isFilledTeaser)
-  const numColumns = 1
-
-  const {
-    elements: {H3, Link}
-  } = useWebsiteBuilder()
 
   return (
     <GelesenUndGedachtWrapper>
       <Filler>
         <Advertisement type={'small'} />
       </Filler>
+
       <BlueBox>
         <TeaserList>
           {filledTeasers.map((teaser, index) => (
             <GelesenUndGedachtTeaserContent key={index} teaser={teaser} />
           ))}
         </TeaserList>
+
         <Link href={'/a/tag/Gelesen%20&%20gedacht'}>
           <b>Zum Archiv {'->'}</b>
         </Link>

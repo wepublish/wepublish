@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client'
 import {getApiClientV2, PageSort, SortOrder, usePageListQuery} from '@wepublish/editor/api-v2'
 import {useMemo} from 'react'
+import {useTranslation} from 'react-i18next'
 import {Message, SelectPicker, toaster} from 'rsuite'
-import {t} from 'i18next'
 
 interface SelectPageProps {
   className?: string
@@ -19,6 +19,8 @@ export function SelectPage({
   selectedPage,
   setSelectedPage
 }: SelectPageProps) {
+  const {t} = useTranslation()
+
   /**
    * Error handling
    * @param error

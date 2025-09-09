@@ -1,11 +1,10 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {RegisterMutationVariables} from '@wepublish/website/api'
 import {
   BuilderRegistrationFormProps,
   BuilderUserFormFields,
-  useWebsiteBuilder
+  Button
 } from '@wepublish/website/builder'
 import {PropsWithChildren, useEffect, useMemo} from 'react'
 import {Controller, DeepPartial, useForm} from 'react-hook-form'
@@ -20,7 +19,7 @@ export const RegistrationFormWrapper = styled('form')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-const buttonStyles = css`
+export const RegistrationFormButton = styled(Button)`
   justify-self: flex-end;
 `
 
@@ -46,6 +45,7 @@ export function zodAlwaysRefine<T extends z.ZodTypeAny>(zodType: T) {
 export const requiredRegisterSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
+  emailRepeated: z.string().email().min(1),
   challengeAnswer: z.object({
     challengeSolution: z.string().min(1),
     challengeID: z.string().min(1)
@@ -121,10 +121,6 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
     return () => subscription.unsubscribe()
   }, [onChange, watch])
 
-  const {
-    elements: {Button}
-  } = useWebsiteBuilder()
-
   const onSubmit = handleSubmit(data => onRegister?.(data))
 
   useEffect(() => {
@@ -156,9 +152,9 @@ export function RegistrationForm<T extends Exclude<BuilderUserFormFields, 'flair
       {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
       {register.error && <ApiAlert error={register.error} severity="error" />}
 
-      <Button css={buttonStyles} disabled={register.loading || challenge.loading} type="submit">
+      <RegistrationFormButton disabled={register.loading || challenge.loading} type="submit">
         Registrieren
-      </Button>
+      </RegistrationFormButton>
     </RegistrationFormWrapper>
   )
 }

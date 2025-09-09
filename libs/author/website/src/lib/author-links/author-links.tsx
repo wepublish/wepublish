@@ -1,7 +1,6 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
 import {TextToIcon} from '@wepublish/ui'
-import {BuilderAuthorLinksProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderAuthorLinksProps, Link} from '@wepublish/website/builder'
 
 export const AuthorLinksWrapper = styled('aside')`
   display: grid;
@@ -11,21 +10,17 @@ export const AuthorLinksWrapper = styled('aside')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-const linkStyles = css`
+export const AuthorLink = styled(Link)`
   display: grid;
 `
 
 export function AuthorLinks({links, className}: BuilderAuthorLinksProps) {
-  const {
-    elements: {Link}
-  } = useWebsiteBuilder()
-
   return (
     <AuthorLinksWrapper className={className}>
       {links.map((link, index) => (
-        <Link key={index} href={link.url} target="__blank" title={link.title} css={linkStyles}>
+        <AuthorLink key={index} href={link.url} target="__blank" title={link.title}>
           <TextToIcon title={link.title} size={22} />
-        </Link>
+        </AuthorLink>
       ))}
     </AuthorLinksWrapper>
   )

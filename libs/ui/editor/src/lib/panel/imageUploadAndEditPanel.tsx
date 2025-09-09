@@ -1,8 +1,8 @@
 import {useState} from 'react'
 
-import {ImageUploadPanel} from './imageUploadPanel'
 import {ImageMetaData, readImageMetaData} from '../atoms'
 import {ImageEditPanel} from './imageEditPanel'
+import {ImageUploadPanel} from './imageUploadPanel'
 
 export interface ImageUploadAndEditPanelProps {
   onClose(): void

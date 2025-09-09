@@ -1,25 +1,4 @@
 import styled from '@emotion/styled'
-
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  Drawer,
-  Form,
-  Input as RInput,
-  Message,
-  Panel,
-  SelectPicker as RSelectPicker,
-  toaster
-} from 'rsuite'
-import {
-  ListInput,
-  ListValue,
-  PermissionControl,
-  createCheckedPermissionComponent,
-  useAuthorisation
-} from '../atoms'
-import {generateID, getOperationNameFromDocument} from '../utility'
 import {
   ArticleWithoutBlocksFragment,
   FullNavigationFragment,
@@ -34,6 +13,27 @@ import {
   usePageListQuery,
   useUpdateNavigationMutation
 } from '@wepublish/editor/api-v2'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {
+  Button,
+  Drawer,
+  Form,
+  Input as RInput,
+  Message,
+  Panel,
+  SelectPicker as RSelectPicker,
+  toaster
+} from 'rsuite'
+
+import {
+  createCheckedPermissionComponent,
+  ListInput,
+  ListValue,
+  PermissionControl,
+  useAuthorisation
+} from '../atoms'
+import {generateID, getOperationNameFromDocument} from '../utility'
 
 const SelectPicker = styled(RSelectPicker)`
   margin-bottom: 4px;

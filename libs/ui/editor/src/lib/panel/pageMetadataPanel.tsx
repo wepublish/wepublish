@@ -14,20 +14,21 @@ import {
   TagPicker as RTagPicker,
   Toggle as RToggle
 } from 'rsuite'
-import {MetaDataType} from '../blocks'
+
 import {
   ChooseEditImage,
+  createCheckedPermissionComponent,
   ListInput,
   ListValue,
   PermissionControl,
   SelectTags,
   Textarea,
-  createCheckedPermissionComponent,
   useAuthorisation
 } from '../atoms'
+import {MetaDataType} from '../blocks'
 import {generateID} from '../utility'
-import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;

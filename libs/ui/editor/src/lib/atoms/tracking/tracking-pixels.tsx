@@ -42,9 +42,18 @@ export default function TrackingPixels({trackingPixels}: TrackingPixelsProps) {
                   {trackingPixel.error}
                 </MessageWithMarginBottom>
               )}
-              <p>Provider ID: {trackingPixel.trackingPixelMethod.trackingPixelProviderID}</p>
-              <p>Tracking ID: {trackingPixel.pixelUid}</p>
-              <p>Tracking URI: {trackingPixel.uri}</p>
+              <p>
+                {t('trackingPixels.providerId')}{' '}
+                {trackingPixel.trackingPixelMethod.trackingPixelProviderID}
+              </p>
+
+              <p>
+                {t('trackingPixels.trackingId')} {trackingPixel.pixelUid}
+              </p>
+
+              <p>
+                {t('trackingPixels.trackingURI')} {trackingPixel.uri}
+              </p>
             </Panel>
           )
         }

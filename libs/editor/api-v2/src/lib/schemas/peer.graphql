@@ -1,36 +1,60 @@
 fragment FullPeerProfile on PeerProfile {
-    name
-    logo {
-        ...FullImage
-    }
-    squareLogo {
-        ...FullImage
-    }
+  name
+  logo {
+    ...FullImage
+  }
+  squareLogo {
+    ...FullImage
+  }
 
-    themeColor
-    themeFontColor
+  # themeColor
+  # themeFontColor
 
-    hostURL
-    websiteURL
+  hostURL
+  websiteURL
 
-    callToActionText
-    callToActionURL
-    callToActionImageURL
-    callToActionImage {
-        ...FullImage
-    }
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullImage
+  }
 }
+
+fragment FullRemotePeerProfile on RemotePeerProfile {
+  name
+  logo {
+    ...FullPeerImage
+  }
+  squareLogo {
+    ...FullPeerImage
+  }
+
+  # themeColor
+  # themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullPeerImage
+  }
+}
+
 fragment FullPeer on Peer {
-    id
-    createdAt
-    modifiedAt
+  id
+  createdAt
+  modifiedAt
 
-    name
-    slug
-    isDisabled
-    hostURL
+  name
+  slug
+  isDisabled
+  hostURL
 
-    profile {
-        ...FullPeerProfile
-    }
+  profile {
+    ...FullRemotePeerProfile
+  }
 }

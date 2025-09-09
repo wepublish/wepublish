@@ -2,11 +2,11 @@ import {Field, ObjectType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {HasImage, Image} from '@wepublish/image/api'
 import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 import {GraphQLSlug} from '@wepublish/utils/api'
 import {AuthorLink} from './author-link.model'
 
-@ObjectType('Author', {
+@ObjectType({
   implements: () => [HasImage, HasOptionalPeerLc]
 })
 export class Author implements HasImage, HasOptionalPeerLc {
@@ -32,7 +32,7 @@ export class Author implements HasImage, HasOptionalPeerLc {
   links?: AuthorLink[]
 
   @Field(() => GraphQLRichText, {nullable: true})
-  bio?: Node[]
+  bio?: Descendant[]
 
   imageID?: string
   image?: Image

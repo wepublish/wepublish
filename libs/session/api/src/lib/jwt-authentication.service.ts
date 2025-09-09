@@ -5,7 +5,7 @@ import {JwtService} from './jwt.service'
 @Injectable()
 export class JwtAuthenticationService {
   constructor(
-    private readonly jwtService: JwtService,
+    private jwtService: JwtService,
     private userDataloaderService: UserDataloaderService
   ) {}
 

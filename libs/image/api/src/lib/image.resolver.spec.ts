@@ -7,7 +7,6 @@ import request from 'supertest'
 import {ImageResolver} from './image.resolver'
 import {ImageDataloaderService} from './image-dataloader.service'
 import {MediaAdapter} from './media-adapter'
-import {ImageService} from './image.service'
 
 const imageQuery = `
   query Image($id: String!) {
@@ -22,7 +21,6 @@ describe('ImageService', () => {
   let app: INestApplication
   let imageDataloaderServiceMock: {[method in keyof ImageDataloaderService]?: jest.Mock}
   let mediaAdapterMock: {getImageURL: jest.Mock}
-  let imageServiceMock: {ensureImageHasFocalPoint: jest.Mock}
 
   beforeEach(async () => {
     imageDataloaderServiceMock = {
@@ -31,10 +29,6 @@ describe('ImageService', () => {
 
     mediaAdapterMock = {
       getImageURL: jest.fn().mockReturnValue('https://example.com/image.jpg')
-    }
-
-    imageServiceMock = {
-      ensureImageHasFocalPoint: jest.fn().mockImplementation(image => Promise.resolve(image))
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -55,10 +49,6 @@ describe('ImageService', () => {
         {
           provide: MediaAdapter,
           useValue: mediaAdapterMock
-        },
-        {
-          provide: ImageService,
-          useValue: imageServiceMock
         },
         {
           provide: PrismaClient,

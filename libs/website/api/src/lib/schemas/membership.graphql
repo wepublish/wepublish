@@ -4,6 +4,7 @@ fragment FullPaymentMethod on PaymentMethod {
   name
   slug
   description
+  gracePeriod
   image {
     ...FullImage
   }
@@ -24,6 +25,7 @@ fragment FullMemberPlan on MemberPlan {
   name
   tags
   description
+  shortDescription
   image {
     ...FullImage
   }

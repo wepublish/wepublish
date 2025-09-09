@@ -6,6 +6,7 @@ import {
   Tag,
   TagType
 } from '@wepublish/editor/api'
+import {FullTrackingPixelFragment} from '@wepublish/editor/api-v2'
 import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
@@ -18,40 +19,40 @@ import {
   MdTrackChanges
 } from 'react-icons/md'
 import {
+  Badge,
   Button,
   Drawer,
   Form as RForm,
   IconButton,
   Input,
   InputGroup as RInputGroup,
+  InputNumber,
   Message,
   Nav as RNav,
   Panel,
   Schema,
   Toggle as RToggle,
   Tooltip,
-  Whisper,
-  Badge,
-  InputNumber
+  Whisper
 } from 'rsuite'
+
 import {
   ChooseEditImage,
   CommentHistory,
+  createCheckedPermissionComponent,
   ListInput,
   ListValue,
   PermissionControl,
   SelectTags,
   Textarea,
-  createCheckedPermissionComponent,
   useAuthorisation
 } from '../atoms'
+import TrackingPixels from '../atoms/tracking/tracking-pixels'
 import {MetaDataType} from '../blocks'
 import {generateID} from '../utility'
 import {AuthorCheckPicker} from './authorCheckPicker'
-import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
-import TrackingPixels from '../atoms/tracking/tracking-pixels'
-import {FullTrackingPixelFragment} from '@wepublish/editor/api-v2'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 const {Item} = RNav
 
@@ -124,7 +125,8 @@ export interface ArticleMetadata {
   readonly properties: ArticleMetadataProperty[]
   readonly canonicalUrl: string
   readonly image?: FullImageFragment
-  readonly shared: boolean
+  readonly shared?: boolean
+  readonly paywall?: boolean
   readonly hidden?: boolean | null
   readonly disableComments?: boolean | null
   readonly breaking: boolean
@@ -170,6 +172,7 @@ function ArticleMetadataPanel({
     defaultTags,
     authors,
     shared,
+    paywall,
     hidden,
     disableComments,
     breaking,
@@ -333,7 +336,7 @@ function ArticleMetadataPanel({
             </PaddingBottom>
 
             <Group>
-              <ControlLabel>{t('articleEditor.panels.likeCount')}</ControlLabel>
+              <ControlLabel>{t('articleEditor.panels.likeCount', {likeCount: likes})}</ControlLabel>
               <Control
                 accepter={InputNumber}
                 name="likes"
@@ -537,6 +540,16 @@ function ArticleMetadataPanel({
                 <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
               </Group>
             )}
+
+            <Group controlId="paywall">
+              <ControlLabel>{t('articleEditor.panels.paywall')}</ControlLabel>
+
+              <Toggle
+                checked={paywall}
+                disabled={!isAuthorized}
+                onChange={paywall => onChange?.({...value, paywall})}
+              />
+            </Group>
 
             <Group controlId="hidden">
               <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>

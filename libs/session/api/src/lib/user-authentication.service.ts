@@ -1,8 +1,9 @@
 import {Injectable} from '@nestjs/common'
 import bcrypt from 'bcrypt'
 import {UserService} from '@wepublish/user/api'
-import {logger, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '@wepublish/api'
+import {USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '@wepublish/api'
 import {PrismaClient} from '@prisma/client'
+import {logger} from '@wepublish/utils/api'
 
 @Injectable()
 export class UserAuthenticationService {

@@ -1,7 +1,7 @@
 import {Author} from '@wepublish/website/api'
-import {Theme, css, useTheme} from '@mui/material'
+import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Link, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const AuthorListItemImageWrapper = styled('div')`
   display: grid;
@@ -10,10 +10,10 @@ export const AuthorListItemImageWrapper = styled('div')`
 
 export const AuthorListItemContent = styled('div')``
 
-const wrapperStyles = (theme: Theme) => css`
+const AuthorListItemLink = styled(Link)`
   display: grid;
   grid-template-rows: max-content 1fr;
-  gap: ${theme.spacing(3)};
+  gap: ${({theme}) => theme.spacing(3)};
   width: 240px;
   text-align: center;
   text-decoration: none;
@@ -31,13 +31,12 @@ export function AuthorListItem({
   name,
   jobTitle
 }: Author & {className?: string}) {
-  const theme = useTheme()
   const {
-    elements: {Image, Paragraph, H6, Link}
+    elements: {Image, Paragraph, H6}
   } = useWebsiteBuilder()
 
   return (
-    <Link css={wrapperStyles(theme)} className={className} href={url}>
+    <AuthorListItemLink className={className} href={url}>
       <AuthorListItemImageWrapper>
         {image && <Image image={image} square css={imageStyles} maxWidth={500} />}
       </AuthorListItemImageWrapper>
@@ -47,6 +46,6 @@ export function AuthorListItem({
 
         {jobTitle && <Paragraph gutterBottom={false}>{jobTitle}</Paragraph>}
       </AuthorListItemContent>
-    </Link>
+    </AuthorListItemLink>
   )
 }

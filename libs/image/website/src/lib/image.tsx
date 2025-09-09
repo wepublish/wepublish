@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
-import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps, BuilderImageWidths} from '@wepublish/website/builder'
 import {useImageProps} from './image.context'
-import {useMemo} from 'react'
+import {forwardRef, useMemo} from 'react'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,7 +21,7 @@ type ImageItems = [
   xxs: ImageItem<200>
 ]
 
-export const imageToImageItems = (image: FullImageFragment): ImageItems => [
+export const imageToImageItems = (image: BuilderImageProps['image']): ImageItems => [
   {url: image.xxl, size: 1500},
   {url: image.xl, size: 1200},
   {url: image.l, size: 1000},
@@ -32,7 +31,7 @@ export const imageToImageItems = (image: FullImageFragment): ImageItems => [
   {url: image.xxs, size: 200}
 ]
 
-export const imageToSquareImageItems = (image: FullImageFragment): ImageItems => [
+export const imageToSquareImageItems = (image: BuilderImageProps['image']): ImageItems => [
   {url: image.xxlSquare, size: 1500},
   {url: image.xlSquare, size: 1200},
   {url: image.lSquare, size: 1000},
@@ -53,7 +52,10 @@ export const ImageWrapper = styled('img')<{aspectRatio: number; objectPosition: 
   object-fit: contain;
 `
 
-export function Image({image, ...props}: BuilderImageProps) {
+export const Image = forwardRef<HTMLImageElement, BuilderImageProps>(function Image(
+  {image, ...props},
+  ref
+) {
   const {maxWidth, square, fetchPriority, loading} = useImageProps(props)
 
   const images = useMemo(
@@ -102,6 +104,7 @@ export function Image({image, ...props}: BuilderImageProps) {
   return (
     <ImageWrapper
       {...props}
+      ref={ref}
       alt={image.description ?? image.title ?? image.filename ?? ''}
       title={image.title ?? ''}
       aspectRatio={image.width / image.height}
@@ -114,4 +117,4 @@ export function Image({image, ...props}: BuilderImageProps) {
       height={square ? undefined : image.height}
     />
   )
-}
+})

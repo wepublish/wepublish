@@ -1,5 +1,5 @@
 import {useUser} from '@wepublish/authentication/website'
-import {useLoginWithJwtMutation, UserSession} from '@wepublish/website/api'
+import {useLoginWithJwtMutation, SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {ComponentType, memo} from 'react'
 
 export const withJwtHandler = <
@@ -26,7 +26,7 @@ export const withJwtHandler = <
           }
         }).then(result => {
           if (result?.data?.createSessionWithJWT) {
-            setToken(result.data.createSessionWithJWT as UserSession)
+            setToken(result.data.createSessionWithJWT as SessionWithTokenWithoutUser)
           }
         })
       }

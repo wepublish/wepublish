@@ -1,12 +1,13 @@
-import {useTranslation} from 'react-i18next'
-import {BlockProps} from '../atoms/blockList'
-import {useEffect, useState} from 'react'
-import {Button, Drawer, IconButton, Progress, Panel as RPanel} from 'rsuite'
-import {PlaceholderInput} from '../atoms'
-import {MdEdit, MdOpenInNew} from 'react-icons/md'
 import styled from '@emotion/styled'
-import {CrowdfundingBlockValue} from '.'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdEdit, MdOpenInNew} from 'react-icons/md'
+import {Button, Drawer, IconButton, Panel as RPanel, Progress} from 'rsuite'
+
+import {PlaceholderInput} from '../atoms'
+import {BlockProps} from '../atoms/blockList'
 import {SelectCrowdfundingPanel} from '../panel/selectCrowdfundingPanel'
+import {CrowdfundingBlockValue} from '.'
 
 const IconWrapper = styled.div`
   position: absolute;
@@ -66,7 +67,7 @@ export const CrowdfundingBlock = ({
               </IconWrapper>
 
               <CrowdfundingRow>
-                <h3>Crowdfunding {crowdfunding.name}</h3>
+                <h3>{t('blocks.crowdfunding.crowdfundingName', {name: crowdfunding.name})}</h3>
               </CrowdfundingRow>
               <CrowdfundingRow>
                 <Progress.Line percent={crowdfunding.activeCrowdfundingGoal?.progress || 0} />

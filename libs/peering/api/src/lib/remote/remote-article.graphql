@@ -1,0 +1,228 @@
+fragment ImportBlock on BlockContent {
+  __typename
+
+  ... on TitleBlock {
+    blockStyle
+    type
+    # Enable once everyone has preTitle in the block
+    # preTitle
+    title
+    lead
+  }
+
+  ... on ImageBlock {
+    blockStyle
+    type
+    caption
+    linkUrl
+    image {
+      ...RemoteImage
+    }
+  }
+
+  ... on ImageGalleryBlock {
+    blockStyle
+    type
+    images {
+      caption
+      image {
+        ...RemoteImage
+      }
+    }
+  }
+
+  ... on QuoteBlock {
+    blockStyle
+    type
+    quote
+    author
+    image {
+      ...RemoteImage
+    }
+  }
+
+  ... on RichTextBlock {
+    blockStyle
+    type
+    richText
+  }
+
+  ... on ListicleBlock {
+    blockStyle
+    type
+    items {
+      title
+      richText
+      image {
+        ...RemoteImage
+      }
+    }
+  }
+
+  ... on BreakBlock {
+    blockStyle
+    type
+    text
+    richText
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    image {
+      ...RemoteImage
+    }
+  }
+
+  ... on FacebookPostBlock {
+    blockStyle
+    type
+    userID
+    postID
+  }
+
+  ... on FacebookVideoBlock {
+    blockStyle
+    type
+    userID
+    videoID
+  }
+
+  ... on InstagramPostBlock {
+    blockStyle
+    type
+    postID
+  }
+
+  ... on TwitterTweetBlock {
+    blockStyle
+    type
+    userID
+    tweetID
+  }
+
+  ... on VimeoVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on YouTubeVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on SoundCloudTrackBlock {
+    blockStyle
+    type
+    trackID
+  }
+
+  ... on PolisConversationBlock {
+    blockStyle
+    type
+    conversationID
+  }
+
+  ... on TikTokVideoBlock {
+    blockStyle
+    type
+    userID
+    videoID
+  }
+
+  ... on IFrameBlock {
+    blockStyle
+    type
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
+}
+
+fragment SlimArticleRevision on ArticleRevision {
+  id
+  createdAt
+  preTitle
+  title
+  lead
+
+  image {
+    ...RemoteImage
+  }
+}
+
+fragment SlimArticle on Article {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  slug
+  url
+
+  latest {
+    ...SlimArticleRevision
+  }
+}
+
+query ArticleList(
+  $filter: ArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(filter: $filter, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...SlimArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Article($id: String!) {
+  article(id: $id) {
+    id
+    url
+    slug
+
+    tags {
+      tag
+    }
+
+    published {
+      title
+      lead
+
+      image {
+        ...RemoteImage
+      }
+
+      blocks {
+        ...ImportBlock
+      }
+
+      authors {
+        name
+        slug
+        bio
+        jobTitle
+        image {
+          ...RemoteImage
+        }
+        hideOnArticle
+      }
+    }
+  }
+}

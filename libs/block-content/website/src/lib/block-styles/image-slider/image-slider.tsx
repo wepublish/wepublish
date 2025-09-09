@@ -2,10 +2,11 @@ import {useKeenSlider} from 'keen-slider/react'
 import {allPass} from 'ramda'
 import {useState} from 'react'
 
-import {hasBlockStyle} from '../../blocks'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {isImageGalleryBlock} from '../../image-gallery/image-gallery-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {
+  SliderArrow,
   SliderBall,
   SliderBallContainer,
   SliderBallFill,
@@ -16,6 +17,7 @@ import {
   useSlidesPerViewResponsive
 } from '../teaser-slider/teaser-slider'
 import {BlockContent, ImageGalleryBlock} from '@wepublish/website/api'
+import {MdArrowBackIos, MdArrowForwardIos} from 'react-icons/md'
 
 export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => {
   const {
@@ -64,6 +66,14 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
+
+              <SliderArrow onClick={() => sliderRef.current?.prev()} aria-label="Previous slide">
+                <MdArrowBackIos size={22} />
+              </SliderArrow>
+
+              <SliderArrow onClick={() => sliderRef.current?.next()} aria-label="Next slide">
+                <MdArrowForwardIos size={22} />
+              </SliderArrow>
             </SliderBallContainer>
           )}
         </SliderInnerContainer>

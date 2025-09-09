@@ -5,7 +5,7 @@ import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 
 @Resolver()
 export class SessionResolver {
-  constructor(private readonly sessionService: SessionService) {}
+  constructor(private sessionService: SessionService) {}
 
   @Public()
   @Mutation(() => SessionWithToken)
@@ -20,16 +20,6 @@ export class SessionResolver {
   @Mutation(() => SessionWithToken)
   async createSessionWithJWT(@Args('jwt') jwt: string): Promise<SessionWithToken> {
     return this.sessionService.createSessionWithJWT(jwt)
-  }
-
-  @Public()
-  @Mutation(() => SessionWithToken)
-  async createSessionWithOAuth2Code(
-    @Args('provider') provider: string,
-    @Args('code') code: string,
-    @Args('redirectUri') redirectUri: string
-  ): Promise<SessionWithToken> {
-    return this.sessionService.createOAuth2Session(provider, code, redirectUri)
   }
 
   @Public()

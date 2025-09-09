@@ -1,11 +1,13 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
 import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -15,7 +17,7 @@ import {
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {createWithV1ApiClient} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
@@ -23,6 +25,7 @@ import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -31,7 +34,6 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {TsriArticleDate} from '../src/components/tsri-article-date'
 import {TsriArticleMeta} from '../src/components/tsri-article-meta'
@@ -42,7 +44,6 @@ import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {MitmachenInner} from './mitmachen'
 
@@ -51,6 +52,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
@@ -59,8 +61,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
-      de: {zod: translation}
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -85,22 +90,6 @@ const MainSpacer = styled(Container)`
   `}
 `
 
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
-`
-
 const TsriTitle = styled(TitleBlock)`
   ${TitleBlockTitle} {
     ${({theme}) => theme.breakpoints.down('sm')} {
@@ -115,14 +104,19 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Tsri'
 
+  // Emotion cache from _document is not supplied when client side rendering
+  // Compat removes certain warnings that are irrelevant to us
+  const cache = emotionCache ?? createEmotionCache()
+  cache.compat = true
+
   return (
-    <AppCacheProvider emotionCache={emotionCache}>
+    <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
@@ -188,11 +182,11 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories', 'about-us']]}
+                iconSlug="icons"
+              />
             </Spacer>
 
             <RoutedAdminBar />
@@ -202,9 +196,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             )}
 
             {publicRuntimeConfig.env.GTM_ID && (
-              <>
-                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-              </>
+              <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
             )}
 
             {publicRuntimeConfig.env.SPARKLOOP_ID && (
@@ -222,9 +214,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withSessionProvider(withJwtHandler(CustomApp)))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
+)
 
 export {ConnectedApp as default}
