@@ -9,6 +9,7 @@ import {
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
+  ListViewFilterArea,
   ListViewHeader,
   PaddedCell,
   PermissionControl,
@@ -17,12 +18,14 @@ import {
 } from '@wepublish/ui/editor'
 import {memo, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
   Drawer,
   IconButton as RIconButton,
+  Input,
+  InputGroup,
   Message,
   Modal,
   Pagination,
@@ -56,6 +59,7 @@ const TagList = memo<TagListProps>(({type}) => {
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
+  const [filter, setFilter] = useState('')
   const [tagToDelete, setTagToDelete] = useState<Tag | null>(null)
 
   const {data, loading, refetch} = useTagListQuery({
@@ -63,7 +67,8 @@ const TagList = memo<TagListProps>(({type}) => {
       take: limit,
       skip: (page - 1) * limit,
       filter: {
-        type
+        type,
+        tag: filter || undefined
       }
     },
     fetchPolicy: 'cache-and-network',
@@ -125,6 +130,15 @@ const TagList = memo<TagListProps>(({type}) => {
             </Link>
           </ListViewActions>
         </PermissionControl>
+
+        <ListViewFilterArea>
+          <InputGroup style={{width: '300px'}}>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <MdSearch />
+            </InputGroup.Addon>
+          </InputGroup>
+        </ListViewFilterArea>
       </ListViewContainer>
 
       <TableWrapper>
