@@ -1,5 +1,5 @@
 import {ApolloError} from '@apollo/client'
-import {TagCreateForm} from './tagCreateForm'
+import {TagForm} from './tagForm'
 import {Tag, TagType, useDeleteTagMutation, useTagListQuery} from '@wepublish/editor/api'
 import {
   createCheckedPermissionComponent,
@@ -18,7 +18,7 @@ import {
 import {memo, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
-import {Link, useLocation, useNavigate} from 'react-router-dom'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
   Drawer,
@@ -49,7 +49,10 @@ const TagList = memo<TagListProps>(({type}) => {
   const {t} = useTranslation()
   const navigate = useNavigate()
   const {pathname} = useLocation()
+  const {id} = useParams()
+
   const isCreateRoute = useMemo(() => pathname.includes('create'), [pathname])
+  const isEditRoute = useMemo(() => pathname.includes('edit'), [pathname])
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
@@ -83,7 +86,14 @@ const TagList = memo<TagListProps>(({type}) => {
   const tags = data?.tags?.nodes ?? []
   const total = data?.tags?.totalCount ?? 0
 
-  const getBaseRoute = () => {
+  const tagToEdit = useMemo(() => {
+    if (isEditRoute && id) {
+      return tags.find(tag => tag.id === id)
+    }
+    return undefined
+  }, [isEditRoute, id, tags])
+
+  const baseRoute = useMemo(() => {
     switch (type) {
       case TagType.Article:
         return '/articles/tags'
@@ -96,7 +106,8 @@ const TagList = memo<TagListProps>(({type}) => {
       case TagType.Author:
         return '/authors/tags'
     }
-  }
+    return '/articles/tags'
+  }, [type])
 
   return (
     <>
@@ -107,7 +118,7 @@ const TagList = memo<TagListProps>(({type}) => {
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
           <ListViewActions>
-            <Link to={`${getBaseRoute()}/create`}>
+            <Link to={`${baseRoute}/create`}>
               <RIconButton type="button" appearance="primary" data-testid="create" icon={<MdAdd />}>
                 {t('tags.overview.createTag')}
               </RIconButton>
@@ -121,7 +132,11 @@ const TagList = memo<TagListProps>(({type}) => {
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('tags.overview.name')}</HeaderCell>
             <Cell dataKey="tag">
-              {(rowData: Tag) => <span>{rowData.tag || t('tags.overview.untitled')}</span>}
+              {(rowData: Tag) => (
+                <Link to={`${baseRoute}/edit/${rowData.id}`}>
+                  {rowData.tag || t('tags.overview.untitled')}
+                </Link>
+              )}
             </Cell>
           </Column>
 
@@ -203,23 +218,26 @@ const TagList = memo<TagListProps>(({type}) => {
       </Modal>
 
       <Drawer
-        open={isCreateRoute}
+        open={isCreateRoute || isEditRoute}
         onClose={() => {
-          navigate(getBaseRoute())
+          navigate(baseRoute)
         }}
         size="sm">
         <Drawer.Header>
-          <Drawer.Title>{t('tags.overview.createTag')}</Drawer.Title>
+          <Drawer.Title>
+            {isEditRoute ? t('tags.overview.editTag') : t('tags.overview.createTag')}
+          </Drawer.Title>
         </Drawer.Header>
         <Drawer.Body>
-          <TagCreateForm
+          <TagForm
             type={type}
+            initialData={tagToEdit}
             onSuccess={() => {
-              navigate(getBaseRoute())
+              navigate(baseRoute)
               refetch()
             }}
             onCancel={() => {
-              navigate(getBaseRoute())
+              navigate(baseRoute)
             }}
           />
         </Drawer.Body>
