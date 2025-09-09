@@ -12,51 +12,36 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
+  Table,
   TableWrapper
 } from '@wepublish/ui/editor'
 import {equals} from 'ramda'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
+import {MdAdd, MdDelete, MdEdit, MdSave} from 'react-icons/md'
 import {
   Button,
   Checkbox,
   FlexboxGrid,
   Form,
   IconButton as RIconButton,
+  Input,
   Loader as RLoader,
   Message,
   Modal,
   Pagination,
+  Table as RTable,
+  Tag as RTag,
   toaster
 } from 'rsuite'
 
-const FlexGridSmallerMargin = styled(FlexboxGrid)`
-  margin-bottom: 12px;
-`
-
-const Content = styled.div`
-  margin-top: 2rem;
-  height: 100%;
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`
-
-const Flex = styled.div`
-  flex: 0 0 auto;
-`
-
-const FlexWrapper = styled.div`
-  max-width: 300px;
-  flex: 1 1;
-`
+const {Column, HeaderCell, Cell} = RTable
 
 const Loader = styled(RLoader)`
   margin: 30px;
@@ -284,63 +269,72 @@ const TagList = memo<TagListProps>(({type}) => {
       )}
 
       <TableWrapper>
-        <Content>
-          {Object.entries(formValue).map(([tagId, inputValue]) => (
-            <Form key={tagId}>
-              <FlexGridSmallerMargin>
-                <FlexWrapper>
-                  <Form.Control
-                    name={tagId}
-                    value={inputValue.tag ?? ''}
-                    placeholder={t('tags.overview.placeholder')}
-                    onChange={(tag: string) => {
-                      dispatchFormValue({
-                        type: TagListActionType.Update,
-                        payload: {
-                          id: tagId,
-                          tag
-                        }
-                      })
-                    }}
-                  />
-                </FlexWrapper>
+        <Table
+          fillHeight
+          loading={loading}
+          data={Object.entries(formValue).map(([id, value]) => ({id, ...value}))}>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('tags.overview.name')}</HeaderCell>
+            <Cell>
+              {(rowData: any) => (
+                <Input
+                  value={rowData.tag ?? ''}
+                  placeholder={t('tags.overview.placeholder')}
+                  onChange={(value: string) => {
+                    dispatchFormValue({
+                      type: TagListActionType.Update,
+                      payload: {
+                        id: rowData.id,
+                        tag: value
+                      }
+                    })
+                  }}
+                />
+              )}
+            </Cell>
+          </Column>
 
-                <Flex>
-                  <Checkbox
-                    name={tagId}
-                    checked={inputValue.main}
-                    value={inputValue.main ? 0 : 1}
-                    onChange={main => {
-                      dispatchFormValue({
-                        type: TagListActionType.Update,
-                        payload: {
-                          id: tagId,
-                          main: !!main
-                        }
-                      })
-                    }}>
-                    {t('tags.overview.markAsMain')}
-                  </Checkbox>
-                </Flex>
+          <Column width={150} align="center" resizable>
+            <HeaderCell>{t('tags.overview.mainTag')}</HeaderCell>
+            <Cell>
+              {(rowData: any) => (
+                <Checkbox
+                  checked={rowData.main}
+                  onChange={(value, checked) => {
+                    dispatchFormValue({
+                      type: TagListActionType.Update,
+                      payload: {
+                        id: rowData.id,
+                        main: checked
+                      }
+                    })
+                  }}
+                />
+              )}
+            </Cell>
+          </Column>
 
-                <Flex>
+          <Column width={150} align="center" fixed="right">
+            <HeaderCell>{t('tags.overview.action')}</HeaderCell>
+            <Cell>
+              {(rowData: any) => (
+                <>
                   <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
                     <IconButtonTooltip caption={t('save')}>
                       <IconButton
-                        type="submit"
                         circle
                         size="sm"
                         icon={<MdSave />}
                         onClick={() => {
-                          formValue[tagId] &&
-                            updateTag({
-                              variables: {
-                                id: tagId,
-                                ...formValue[tagId]
-                              }
-                            })
+                          updateTag({
+                            variables: {
+                              id: rowData.id,
+                              tag: rowData.tag,
+                              main: rowData.main
+                            }
+                          })
                         }}
-                        disabled={!shouldUpdateTag(tagId)}
+                        disabled={!shouldUpdateTag(rowData.id)}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
@@ -353,15 +347,15 @@ const TagList = memo<TagListProps>(({type}) => {
                         circle
                         size="sm"
                         icon={<MdDelete />}
-                        onClick={() => setTagToDelete(tagId)}
+                        onClick={() => setTagToDelete(rowData.id)}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
-                </Flex>
-              </FlexGridSmallerMargin>
-            </Form>
-          ))}
-        </Content>
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
 
         <Pagination
           limit={limit}
