@@ -70,6 +70,23 @@ export class DashboardSubscriptionResolver {
   }
 
   @Permissions(CanGetSubscriptions)
+  @Settings(SettingName.MAKE_NEW_DEACTIVATIONS_API_PUBLIC)
+  @Query(returns => [DashboardSubscription], {
+    name: 'predictedSubscriptionRenewals',
+    description: `
+      Returns the predicted subscription renewals in a given timeframe.
+      A predicted renewal is a subscription that has autoRenew enabled and its paidUntil date is in the given timeframe.
+    `
+  })
+  predictedSubscriptionRenewals(
+    @Args('start') start: Date,
+    @Args('end', {nullable: true, type: () => Date}) end: Date | null
+  ) {
+    console.log('dashboard-subscription-resolver.ts - predictedSubscriptionRenewals', start, end)
+    return this.subscriptions.predictedSubscriptionRenewals(start, end ?? new Date())
+  }
+
+  @Permissions(CanGetSubscriptions)
   @Query(returns => [DailySubscriptionStats], {
     name: 'dailySubscriptionStats',
     description: `

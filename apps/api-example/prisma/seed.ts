@@ -791,17 +791,19 @@ async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds
 }
 
 async function seedPaymentMethods(prisma: PrismaClient) {
-  await prisma.paymentMethod.createMany({
-    data: [
-      {
+  const paymentMethods = await Promise.all([
+    prisma.paymentMethod.create({
+      data: {
         id: 'payrexx',
         name: 'Payrexx',
         slug: 'payrexx',
         description: '',
         paymentProviderID: 'payrexx',
         active: true
-      },
-      {
+      }
+    }),
+    prisma.paymentMethod.create({
+      data: {
         id: 'stripe',
         name: 'Stripe',
         slug: 'stripe',
@@ -809,50 +811,235 @@ async function seedPaymentMethods(prisma: PrismaClient) {
         paymentProviderID: 'stripe',
         active: true
       }
-    ]
-  })
+    })
+  ])
+
+  return paymentMethods
 }
 
 async function seedMemberPlans(prisma: PrismaClient) {
-  const testAbo1 = prisma.memberPlan.create({
-    data: {
-      active: true,
-      name: 'Test-Abo CHF',
-      description: [],
-      slug: 'test-abo-chf',
-      amountPerMonthMin: 1000,
-      extendable: true,
-      currency: 'CHF',
-      availablePaymentMethods: {
-        create: {
-          forceAutoRenewal: true,
-          paymentMethodIDs: ['payrexx'],
-          paymentPeriodicities: ['yearly']
+  const memberPlans = await Promise.all([
+    prisma.memberPlan.create({
+      data: {
+        active: true,
+        name: 'Test-Abo CHF',
+        description: [],
+        slug: 'test-abo-chf',
+        amountPerMonthMin: 1000,
+        extendable: true,
+        currency: 'CHF',
+        availablePaymentMethods: {
+          create: {
+            forceAutoRenewal: true,
+            paymentMethodIDs: ['payrexx'],
+            paymentPeriodicities: ['yearly']
+          }
         }
+      }
+    }),
+    prisma.memberPlan.create({
+      data: {
+        active: true,
+        name: 'Test-Abo EUR',
+        description: [],
+        slug: 'test-abo-eur',
+        amountPerMonthMin: 2000,
+        extendable: true,
+        currency: 'EUR',
+        availablePaymentMethods: {
+          create: {
+            forceAutoRenewal: false,
+            paymentMethodIDs: ['stripe'],
+            paymentPeriodicities: ['yearly', 'monthly']
+          }
+        }
+      }
+    })
+  ])
+
+  return memberPlans
+}
+
+async function seedUsers(prisma: PrismaClient, roles: {adminUserRole: any; editorUserRole: any}) {
+  const users = await Promise.all([
+    prisma.user.upsert({
+      where: {
+        email: 'dev@wepublish.ch'
+      },
+      update: {},
+      create: {
+        email: 'dev@wepublish.ch',
+        emailVerifiedAt: new Date(),
+        name: 'Dev User',
+        active: true,
+        roleIDs: [roles.adminUserRole.id],
+        password: await hashPassword('123')
+      }
+    }),
+    prisma.user.upsert({
+      where: {
+        email: 'editor@wepublish.ch'
+      },
+      update: {},
+      create: {
+        email: 'editor@wepublish.ch',
+        emailVerifiedAt: new Date(),
+        name: 'Editor User',
+        active: true,
+        roleIDs: [roles.editorUserRole.id],
+        password: await hashPassword('123')
+      }
+    }),
+    Promise.all(
+      Array.from(faker.lorem.words({min: 20, max: 40}).split(' '), async (word: string) =>
+        prisma.user.upsert({
+          where: {
+            email: `${word}@wepublish.ch`
+          },
+          update: {},
+          create: {
+            email: `${word}@wepublish.ch`,
+            emailVerifiedAt: new Date(),
+            name: `${word.charAt(0).toUpperCase() + word.slice(1)} User`,
+            active: true,
+            roleIDs: [roles.editorUserRole.id],
+            password: await hashPassword('123')
+          }
+        })
+      )
+    )
+  ])
+
+  return [users[0], users[1], ...(users[2] as any)]
+}
+
+async function seedSubscriptions(
+  prisma: PrismaClient,
+  roles: {adminUserRole: any; editorUserRole: any},
+  users: string[],
+  paymentMethods: string[],
+  memberPlans: string[]
+) {
+  const pastDate = faker.date.past()
+  const futureDate = faker.date.future()
+
+  /*
+  const users = await prisma.user.findMany({
+    where: {
+      roleIDs: {
+        has: roles.editorUserRole.id
       }
     }
   })
 
-  const testAbo2 = prisma.memberPlan.create({
-    data: {
-      active: true,
-      name: 'Test-Abo EUR',
-      description: [],
-      slug: 'test-abo-eur',
-      amountPerMonthMin: 2000,
-      extendable: true,
-      currency: 'EUR',
-      availablePaymentMethods: {
-        create: {
-          forceAutoRenewal: false,
-          paymentMethodIDs: ['stripe'],
-          paymentPeriodicities: ['yearly', 'monthly']
-        }
-      }
-    }
-  })
+  if (users.length === 0) {
+    throw new Error('No users found to create subscriptions for')
+  }
+  */
 
-  await Promise.all([testAbo1, testAbo2])
+  /*
+    export type SubscriptionCreateInput = {
+      id?: string
+      createdAt?: Date | string
+      modifiedAt?: Date | string
+      paymentPeriodicity: PaymentPeriodicity
+      monthlyAmount: number
+      autoRenew: boolean
+      startsAt: Date | string
+      paidUntil?: Date | string | null
+      extendable?: boolean
+      currency: Currency
+      confirmed?: boolean
+      periods?: SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput
+      properties?: MetadataPropertyCreateNestedManyWithoutSubscriptionInput
+      deactivation?: SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput
+      paymentMethod: PaymentMethodCreateNestedOneWithoutSubscriptionInput
+      memberPlan: MemberPlanCreateNestedOneWithoutSubscriptionInput
+      user: UserCreateNestedOneWithoutSubscriptionsInput
+      replacesSubscription?: SubscriptionCreateNestedOneWithoutReplacedByInput
+      replacedBy?: SubscriptionCreateNestedManyWithoutReplacesSubscriptionInput
+      invoices?: InvoiceCreateNestedManyWithoutSubscriptionInput
+    }
+  */
+
+  await Promise.all(
+    users.flatMap(userId =>
+      prisma.subscription.create({
+        data: {
+          user: {
+            connect: {
+              id: userId
+            }
+          },
+          paymentMethod: {
+            connect: {
+              id: paymentMethods[0]
+            }
+          },
+          memberPlan: {
+            connect: {
+              id: memberPlans[0]
+            }
+          },
+          autoRenew: true,
+          startsAt: faker.date.past({refDate: pastDate}),
+          paidUntil: faker.date.future({refDate: futureDate}),
+          confirmed: true,
+          createdAt: faker.date.past({refDate: pastDate}),
+          modifiedAt: faker.date.past({refDate: pastDate}),
+          monthlyAmount: faker.number.int({min: 1000, max: 4000}),
+          paymentPeriodicity: 'yearly',
+          currency: 'CHF',
+          extendable: true
+
+          /*
+          events: {
+            createMany: {
+              data: [
+                {
+                  type: SubscriptionEvent.created,
+                  occurredAt: pastDate
+                },
+                {
+                  type: SubscriptionEvent.activated,
+                  occurredAt: pastDate
+                },
+                {
+                  type: SubscriptionEvent.renewal,
+                  occurredAt: faker.date.soon({days: 20, refDate: pastDate})
+                }
+              ]
+            }
+          },
+          payments: {
+            create: {
+              paymentMethodID: 'payrexx',
+              amount: 12000,
+              currency: 'CHF',
+              paymentPeriodicity: PaymentPeriodicity.yearly,
+              paidAt: pastDate,
+              confirmedAt: pastDate,
+              chargeId: faker.string.uuid()
+            }
+          } 
+          */
+        }
+      })
+    )
+  )
+  /*
+  await Promise.all(
+    users.map(user =>
+      prisma.userEvent.create({
+        data: {
+          userId: user.id,
+          type: UserEvent.subscriptionCreated,
+          occurredAt: faker.date.recent({days: 20})
+        }
+      })
+    )
+  )
+  */
 }
 
 async function seed() {
@@ -866,13 +1053,13 @@ async function seed() {
     if (!adminUserRole || !editorUserRole) {
       throw new Error('@wepublish/api seeding has not been done')
     }
-
+    /*
     const hasUsers = await prisma.user.count()
 
     if (hasUsers) {
       throw 'Website Example seeding has already been done. Skipping'
     }
-
+*/
     const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
     console.log('Seeding polls')
     const polls = await seedPoll(prisma)
@@ -906,42 +1093,25 @@ async function seed() {
     )
 
     console.log('Seeding users')
-    await Promise.all([
-      prisma.user.upsert({
-        where: {
-          email: 'dev@wepublish.ch'
-        },
-        update: {},
-        create: {
-          email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          active: true,
-          roleIDs: [adminUserRole.id],
-          password: await hashPassword('123')
-        }
-      }),
-      prisma.user.upsert({
-        where: {
-          email: 'editor@wepublish.ch'
-        },
-        update: {},
-        create: {
-          email: 'editor@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Editor User',
-          active: true,
-          roleIDs: [editorUserRole.id],
-          password: await hashPassword('123')
-        }
-      })
-    ])
+    const users = await seedUsers(prisma, {
+      adminUserRole: adminUserRole,
+      editorUserRole: editorUserRole
+    })
 
     console.log('Seeding Payment Methods')
-    await seedPaymentMethods(prisma)
+    const paymentMethods = await seedPaymentMethods(prisma)
 
     console.log('Seeding Member Plans')
-    await seedMemberPlans(prisma)
+    const memberPlans = await seedMemberPlans(prisma)
+
+    console.log('Seeding Subscriptions')
+    const subscriptions = await seedSubscriptions(
+      prisma,
+      {adminUserRole: adminUserRole, editorUserRole: editorUserRole},
+      users.map(({id}) => id),
+      paymentMethods.map(({id}) => id),
+      memberPlans.map(({id}) => id)
+    )
   } catch (e) {
     if (typeof e === 'string') {
       console.warn(e)

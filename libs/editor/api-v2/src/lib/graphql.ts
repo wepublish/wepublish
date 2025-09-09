@@ -721,6 +721,8 @@ export type DailySubscriptionStats = {
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: Scalars['Int'];
+  predictedSubscriptionRenewalUsers: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];
@@ -4092,7 +4094,7 @@ export type DailySubscriptionStatsQueryVariables = Exact<{
 }>;
 
 
-export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
+export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, predictedSubscriptionRenewalCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
 
 export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }> | null };
 
@@ -6910,6 +6912,13 @@ export const DailySubscriptionStatsDocument = gql`
     }
     overdueSubscriptionCount
     overdueSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalCount
+    predictedSubscriptionRenewalUsers {
       id
       name
       firstName

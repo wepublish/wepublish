@@ -88,4 +88,10 @@ export class DailySubscriptionStats {
 
   @Field(type => [DailySubscriptionStatsUser])
   deactivatedSubscriptionUsers!: DailySubscriptionStatsUser[]
+
+  @Field(() => Int)
+  predictedSubscriptionRenewalCount!: number
+
+  @Field(() => [DailySubscriptionStatsUser])
+  predictedSubscriptionRenewalUsers!: DailySubscriptionStatsUser[]
 }

@@ -1544,7 +1544,8 @@
           "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
           "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
-          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos).",
+          "predictedSubscriptionRenewalCount": "Prognostizierte Anzahl Abos, die am Ende ihrer Laufzeit erneuert werden."
         },
         "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
         "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
@@ -1552,6 +1553,7 @@
         "createdSubscriptionCount": "Neue bezahlte Abos",
         "deactivatedSubscriptionCount": "Deaktivierte Abos",
         "replacedSubscriptionCount": "Ersetzte Abos",
+        "predictedSubscriptionRenewalCount": "Prognostizierte Abo-Erneuerungen",
         "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
         "renewalRate": "Erneuerungsrate",
         "cancellationRate": "Kündigungsrate",

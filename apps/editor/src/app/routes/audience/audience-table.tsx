@@ -51,7 +51,8 @@ export function AudienceTable({
     renewedSubscriptionCount,
     overdueSubscriptionCount,
     replacedSubscriptionCount,
-    deactivatedSubscriptionCount
+    deactivatedSubscriptionCount,
+    predictedSubscriptionRenewalCount
   } = clientFilter
 
   const [selectedAudienceStats, setSelectedAudienceStats] = useState<
@@ -96,6 +97,13 @@ export function AudienceTable({
           <Column resizable width={120}>
             <HeaderCell>{t('audience.legend.renewedSubscriptionCount')}</HeaderCell>
             <Cell dataKey="renewedSubscriptionCount" />
+          </Column>
+        )}
+
+        {predictedSubscriptionRenewalCount && (
+          <Column resizable width={150}>
+            <HeaderCell>{t('audience.legend.predictedSubscriptionRenewalCount')}</HeaderCell>
+            <Cell dataKey="predictedSubscriptionRenewalCount" />
           </Column>
         )}
 

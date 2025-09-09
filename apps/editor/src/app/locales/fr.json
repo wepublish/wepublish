@@ -1442,7 +1442,8 @@
           "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
           "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
-          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai)."
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai).",
+          "predictedSubscriptionRenewalCount": "Abonnements qui seront probablement renouvelés à la fin de leur période."
         },
         "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
         "overdueSubscriptionCount": "Abonnements renouvelés et non payés",
@@ -1450,6 +1451,7 @@
         "createdSubscriptionCount": "Nouveaux abonnements payés",
         "deactivatedSubscriptionCount": "Abonnements désactivés",
         "replacedSubscriptionCount": "Abonnements remplacés",
+        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement prévus",
         "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
         "renewalRate": "Taux de renouvellement",
         "cancellationRate": "Taux de résiliation",

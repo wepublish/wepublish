@@ -719,6 +719,8 @@ export type DailySubscriptionStats = {
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: Scalars['Int'];
+  predictedSubscriptionRenewalUsers: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];

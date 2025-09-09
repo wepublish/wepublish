@@ -21,7 +21,8 @@ export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
   deactivatedSubscriptionCount: 'var(--rs-orange-900)',
   renewedSubscriptionCount: 'var(--rs-blue-900)',
   replacedSubscriptionCount: 'var(--rs-cyan-900)',
-  totalActiveSubscriptionCount: 'var(--rs-red-900)'
+  totalActiveSubscriptionCount: 'var(--rs-red-900)',
+  predictedSubscriptionRenewalCount: 'var(--rs-yellow-900)'
 }
 
 interface AudienceChartProps {
@@ -42,11 +43,14 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
     renewedSubscriptionCount,
     overdueSubscriptionCount,
     replacedSubscriptionCount,
-    deactivatedSubscriptionCount
+    deactivatedSubscriptionCount,
+    predictedSubscriptionRenewalCount
   } = clientFilter
 
   // Ensure the ResponsiveContainer does not render outside the viewport during initial load.
   const readyRenderChart = !!audienceStats.length
+
+  //console.log('audienceStats', audienceStats)
 
   return (
     readyRenderChart && (
@@ -121,6 +125,13 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
                 stackId="deactivated"
                 dataKey={'deactivatedSubscriptionCount'}
                 fill={chartColors.deactivatedSubscriptionCount}
+              />
+            )}
+            {predictedSubscriptionRenewalCount && (
+              <Bar
+                stackId="predicted"
+                dataKey={'predictedSubscriptionRenewalCount'}
+                fill={chartColors.predictedSubscriptionRenewalCount}
               />
             )}
           </ComposedChart>

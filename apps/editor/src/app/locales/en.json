@@ -1603,7 +1603,8 @@
           "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
-          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
+          "predictedSubscriptionRenewalCount": "Predicted number of subscriptions that will be renewed at the end of their term."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
         "overdueSubscriptionCount": "Renewed unpaid subscriptions",
@@ -1611,6 +1612,7 @@
         "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
+        "predictedSubscriptionRenewalCount": "Predicted renewals",
         "totalNewSubscriptions": "Total new and renewed paid subscriptions",
         "renewalRate": "Renewal rate",
         "cancellationRate": "Cancellation rate",

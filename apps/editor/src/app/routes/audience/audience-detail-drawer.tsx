@@ -92,8 +92,9 @@ export function AudienceDetailDrawer({
               <Header>{t('audienceDetailDrawer.selectStat')}</Header>
               <Body>
                 <Nav>
-                  {availableStats.map(availableStat => (
+                  {availableStats.map((availableStat, index) => (
                     <Nav.Item
+                      key={index}
                       active={selectedStat === availableStat}
                       onClick={() => setSelectedStat(availableStat)}
                       icon={getIconByUserFilter(availableStat)}>
