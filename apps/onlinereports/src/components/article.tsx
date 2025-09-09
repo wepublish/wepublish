@@ -7,7 +7,14 @@ import {useEffect, useMemo} from 'react'
 import {useAdsContext} from '../context/ads-context'
 import {OnlineReportsContentWrapper} from './content-wrapper'
 
-const articleAdsDisabledTags = ['Anzeige', 'Publireportage', 'Monatsgespräch', 'Das Monatsgespräch']
+const articleAdsDisabledTags = [
+  'Anzeige',
+  'Publireportage',
+  'Monatsgespräch',
+  'Das Monatsgespräch',
+  'NB',
+  'No Banner'
+]
 
 export const ArticleWrapper = styled(OnlineReportsContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {
