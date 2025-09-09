@@ -1,13 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import {TagCreateForm} from './tagCreateForm'
-import styled from '@emotion/styled'
-import {
-  Tag,
-  TagType,
-  useDeleteTagMutation,
-  useTagListLazyQuery,
-  useUpdateTagMutation
-} from '@wepublish/editor/api'
+import {Tag, TagType, useDeleteTagMutation, useTagListQuery} from '@wepublish/editor/api'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -17,101 +10,30 @@ import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
+  PaddedCell,
   PermissionControl,
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {equals} from 'ramda'
-import {memo, useCallback, useEffect, useReducer, useState} from 'react'
+import {memo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
+import {MdAdd, MdDelete} from 'react-icons/md'
 import {
   Button,
-  Checkbox,
   Drawer,
-  FlexboxGrid,
   IconButton as RIconButton,
-  Input,
-  Loader as RLoader,
   Message,
   Modal,
   Pagination,
   Table as RTable,
+  Tag as RTag,
   toaster
 } from 'rsuite'
 
 const {Column, HeaderCell, Cell} = RTable
 
-const Loader = styled(RLoader)`
-  margin: 30px;
-`
-
 export type TagListProps = {
   type: TagType
-}
-
-enum TagListActionType {
-  Set = 'set',
-  Create = 'create',
-  Update = 'update',
-  Delete = 'delete'
-}
-
-type TagListActions =
-  | {type: TagListActionType.Set; payload: Record<string, Pick<Tag, 'tag' | 'main'>>}
-  | {type: TagListActionType.Create; payload: {id: string}}
-  | {type: TagListActionType.Update; payload: {id: string; tag?: string | null; main?: boolean}}
-  | {type: TagListActionType.Delete; payload: {id: string}}
-
-const mapTagsToFormValue = <T extends Pick<Tag, 'id' | 'main' | 'tag'>>(
-  tags: T[] | null | undefined
-) =>
-  tags?.reduce((obj, node) => {
-    obj[node.id] = {
-      main: node.main,
-      tag: node.tag ?? ''
-    }
-
-    return obj
-  }, {} as Record<string, Pick<Tag, 'tag' | 'main'>>) ?? {}
-
-const tagFormValueReducer = (
-  state: Record<string, Pick<Tag, 'tag' | 'main'>>,
-  action: TagListActions
-): Record<string, Pick<Tag, 'tag' | 'main'>> => {
-  switch (action.type) {
-    case TagListActionType.Set:
-      return action.payload
-
-    case TagListActionType.Create:
-      return {
-        [action.payload.id]: {
-          main: false,
-          tag: ''
-        },
-        ...state
-      }
-
-    case TagListActionType.Update: {
-      const newState = {...state}
-
-      newState[action.payload.id] = {
-        tag: action.payload.tag ?? newState[action.payload.id].tag,
-        main: action.payload.main ?? newState[action.payload.id].main
-      }
-
-      return newState
-    }
-
-    case TagListActionType.Delete: {
-      const newState = {...state}
-      delete newState[action.payload.id]
-
-      return newState
-    }
-  }
-
-  return state
 }
 
 const showErrors = (error: ApolloError): void => {
@@ -126,95 +48,36 @@ const TagList = memo<TagListProps>(({type}) => {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [formValue, dispatchFormValue] = useReducer(tagFormValueReducer, {})
-  const [apiValue, dispatchApiValue] = useReducer(tagFormValueReducer, {})
-  const [tagToDelete, setTagToDelete] = useState<string | null>(null)
+  const [tagToDelete, setTagToDelete] = useState<Tag | null>(null)
   const [isCreateDrawerOpen, setCreateDrawerOpen] = useState(false)
 
-  const [fetch, {data, loading, refetch}] = useTagListLazyQuery({
+  const {data, loading, refetch} = useTagListQuery({
     variables: {
       take: limit,
+      skip: (page - 1) * limit,
       filter: {
         type
       }
     },
     fetchPolicy: 'cache-and-network',
-    onError: showErrors,
-    onCompleted(newData) {
-      dispatchApiValue({
-        type: TagListActionType.Set,
-        payload: mapTagsToFormValue(newData?.tags?.nodes)
-      })
+    onError: showErrors
+  })
 
-      dispatchFormValue({
-        type: TagListActionType.Set,
-        payload: mapTagsToFormValue(newData?.tags?.nodes)
-      })
+  const [deleteTag, {loading: isDeleting}] = useDeleteTagMutation({
+    onError: showErrors,
+    onCompleted() {
+      refetch()
+      setTagToDelete(null)
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('tags.overview.deleteSuccess')}
+        </Message>
+      )
     }
   })
 
-  const [updateTag] = useUpdateTagMutation({
-    onError: showErrors,
-    onCompleted(updatedTag) {
-      if (!updatedTag.updateTag) {
-        return
-      }
-
-      dispatchApiValue({
-        type: TagListActionType.Update,
-        payload: updatedTag.updateTag
-      })
-    }
-  })
-  const [deleteTag] = useDeleteTagMutation({
-    onError: showErrors,
-    onCompleted(deletedTag) {
-      if (!deletedTag.deleteTag) {
-        return
-      }
-
-      dispatchApiValue({
-        type: TagListActionType.Delete,
-        payload: {
-          id: deletedTag.deleteTag.id
-        }
-      })
-
-      dispatchFormValue({
-        type: TagListActionType.Delete,
-        payload: {
-          id: deletedTag.deleteTag.id
-        }
-      })
-    }
-  })
-
-  const shouldUpdateTag = useCallback(
-    (id: string) => {
-      const apiTag = apiValue[id]
-      const formTag = formValue[id]
-
-      return !equals(apiTag, formTag)
-    },
-    [apiValue, formValue]
-  )
-
-  const total =
-    data?.tags?.totalCount && data.tags.totalCount > Object.keys(apiValue).length
-      ? data.tags.totalCount
-      : Object.keys(apiValue).length
-
-  useEffect(() => {
-    fetch({
-      variables: {
-        take: limit,
-        skip: (page - 1) * limit,
-        filter: {
-          type
-        }
-      }
-    })
-  }, [type, limit, page, fetch])
+  const tags = data?.tags?.nodes ?? []
+  const total = data?.tags?.totalCount ?? 0
 
   return (
     <>
@@ -237,98 +100,42 @@ const TagList = memo<TagListProps>(({type}) => {
         </PermissionControl>
       </ListViewContainer>
 
-      {loading && (
-        <FlexboxGrid justify="center">
-          <Loader size="lg" />
-        </FlexboxGrid>
-      )}
-
       <TableWrapper>
-        <Table
-          fillHeight
-          loading={loading}
-          data={Object.entries(formValue).map(([id, value]) => ({id, ...value}))}>
+        <Table fillHeight loading={loading} data={tags}>
           <Column width={400} align="left" resizable>
             <HeaderCell>{t('tags.overview.name')}</HeaderCell>
-            <Cell>
-              {(rowData: any) => (
-                <Input
-                  value={rowData.tag ?? ''}
-                  placeholder={t('tags.overview.placeholder')}
-                  onChange={(value: string) => {
-                    dispatchFormValue({
-                      type: TagListActionType.Update,
-                      payload: {
-                        id: rowData.id,
-                        tag: value
-                      }
-                    })
-                  }}
-                />
-              )}
+            <Cell dataKey="tag">
+              {(rowData: Tag) => <span>{rowData.tag || t('tags.overview.untitled')}</span>}
             </Cell>
           </Column>
 
           <Column width={150} align="center" resizable>
-            <HeaderCell>{t('tags.overview.mainTag')}</HeaderCell>
+            <HeaderCell>{t('tags.overview.specialTags')}</HeaderCell>
             <Cell>
-              {(rowData: any) => (
-                <Checkbox
-                  checked={rowData.main}
-                  onChange={(value, checked) => {
-                    dispatchFormValue({
-                      type: TagListActionType.Update,
-                      payload: {
-                        id: rowData.id,
-                        main: checked
-                      }
-                    })
-                  }}
-                />
-              )}
+              {(rowData: Tag) =>
+                rowData.main && <RTag color="blue">{t('tags.overview.main')}</RTag>
+              }
             </Cell>
           </Column>
 
-          <Column width={150} align="center" fixed="right">
+          <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('tags.overview.action')}</HeaderCell>
-            <Cell>
-              {(rowData: any) => (
-                <>
-                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
-                    <IconButtonTooltip caption={t('save')}>
-                      <IconButton
-                        circle
-                        size="sm"
-                        icon={<MdSave />}
-                        onClick={() => {
-                          updateTag({
-                            variables: {
-                              id: rowData.id,
-                              tag: rowData.tag,
-                              main: rowData.main
-                            }
-                          })
-                        }}
-                        disabled={!shouldUpdateTag(rowData.id)}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        color="red"
-                        appearance="ghost"
-                        circle
-                        size="sm"
-                        icon={<MdDelete />}
-                        onClick={() => setTagToDelete(rowData.id)}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </>
+            <PaddedCell>
+              {(rowData: Tag) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      onClick={() => setTagToDelete(rowData)}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
               )}
-            </Cell>
+            </PaddedCell>
           </Column>
         </Table>
 
@@ -351,23 +158,26 @@ const TagList = memo<TagListProps>(({type}) => {
       </TableWrapper>
 
       <Modal open={!!tagToDelete} backdrop="static" size="xs" onClose={() => setTagToDelete(null)}>
-        <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
+        <Modal.Title>{t('tags.overview.deleteTag')}</Modal.Title>
         <Modal.Body>
-          {tagToDelete && t('tags.overview.areYouSureBody', {tag: formValue[tagToDelete].tag})}
+          {tagToDelete && t('tags.overview.deleteTagBody', {tag: tagToDelete.tag})}
         </Modal.Body>
         <Modal.Footer>
           <Button
             color="red"
             appearance="primary"
+            disabled={isDeleting}
+            loading={isDeleting}
             onClick={() => {
-              deleteTag({
-                variables: {
-                  id: tagToDelete!
-                }
-              })
-              setTagToDelete(null)
+              if (tagToDelete) {
+                deleteTag({
+                  variables: {
+                    id: tagToDelete.id
+                  }
+                })
+              }
             }}>
-            {t('tags.overview.areYouSureConfirmation')}
+            {t('tags.overview.confirm')}
           </Button>
 
           <Button appearance="subtle" onClick={() => setTagToDelete(null)}>
@@ -385,7 +195,6 @@ const TagList = memo<TagListProps>(({type}) => {
             type={type}
             onSuccess={() => {
               setCreateDrawerOpen(false)
-              // Refetch to update the list
               refetch()
             }}
             onCancel={() => setCreateDrawerOpen(false)}
@@ -399,7 +208,6 @@ const TagList = memo<TagListProps>(({type}) => {
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_TAGS',
   'CAN_CREATE_TAG',
-  'CAN_UPDATE_TAG',
   'CAN_DELETE_TAG'
 ])(TagList)
 export {CheckedPermissionComponent as TagList}
