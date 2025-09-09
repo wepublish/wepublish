@@ -51,6 +51,7 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock
 } from '../src/components/hauptstadt-image-block'
+import {HauptstadtListicle} from '../src/components/hauptstadt-listicle'
 import {
   HauptstadtMemberPlanItem,
   HauptstadtMemberPlanPicker
@@ -169,7 +170,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             TeaserSlots: HauptstadtTeaserSlots,
             Image: HauptstadtImageBlock,
             ImageGallery: HauptstadtImageGalleryBlock,
-            Break: HauptstadtBreakBlock
+            Break: HauptstadtBreakBlock,
+            Listicle: HauptstadtListicle
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
