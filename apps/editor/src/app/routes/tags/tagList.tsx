@@ -15,9 +15,10 @@ import {
   Table,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {memo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
   Button,
   Drawer,
@@ -46,10 +47,13 @@ const showErrors = (error: ApolloError): void => {
 
 const TagList = memo<TagListProps>(({type}) => {
   const {t} = useTranslation()
+  const navigate = useNavigate()
+  const {pathname} = useLocation()
+  const isCreateRoute = useMemo(() => pathname.includes('create'), [pathname])
+
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [tagToDelete, setTagToDelete] = useState<Tag | null>(null)
-  const [isCreateDrawerOpen, setCreateDrawerOpen] = useState(false)
 
   const {data, loading, refetch} = useTagListQuery({
     variables: {
@@ -79,6 +83,21 @@ const TagList = memo<TagListProps>(({type}) => {
   const tags = data?.tags?.nodes ?? []
   const total = data?.tags?.totalCount ?? 0
 
+  const getBaseRoute = () => {
+    switch (type) {
+      case TagType.Article:
+        return '/articles/tags'
+      case TagType.Page:
+        return '/pages/tags'
+      case TagType.Comment:
+        return '/comments/tags'
+      case TagType.Event:
+        return '/events/tags'
+      case TagType.Author:
+        return '/authors/tags'
+    }
+  }
+
   return (
     <>
       <ListViewContainer>
@@ -88,14 +107,11 @@ const TagList = memo<TagListProps>(({type}) => {
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
           <ListViewActions>
-            <RIconButton
-              type="button"
-              appearance="primary"
-              data-testid="create"
-              icon={<MdAdd />}
-              onClick={() => setCreateDrawerOpen(true)}>
-              {t('tags.overview.createTag')}
-            </RIconButton>
+            <Link to={`${getBaseRoute()}/create`}>
+              <RIconButton type="button" appearance="primary" data-testid="create" icon={<MdAdd />}>
+                {t('tags.overview.createTag')}
+              </RIconButton>
+            </Link>
           </ListViewActions>
         </PermissionControl>
       </ListViewContainer>
@@ -186,7 +202,12 @@ const TagList = memo<TagListProps>(({type}) => {
         </Modal.Footer>
       </Modal>
 
-      <Drawer open={isCreateDrawerOpen} onClose={() => setCreateDrawerOpen(false)} size="sm">
+      <Drawer
+        open={isCreateRoute}
+        onClose={() => {
+          navigate(getBaseRoute())
+        }}
+        size="sm">
         <Drawer.Header>
           <Drawer.Title>{t('tags.overview.createTag')}</Drawer.Title>
         </Drawer.Header>
@@ -194,10 +215,12 @@ const TagList = memo<TagListProps>(({type}) => {
           <TagCreateForm
             type={type}
             onSuccess={() => {
-              setCreateDrawerOpen(false)
+              navigate(getBaseRoute())
               refetch()
             }}
-            onCancel={() => setCreateDrawerOpen(false)}
+            onCancel={() => {
+              navigate(getBaseRoute())
+            }}
           />
         </Drawer.Body>
       </Drawer>

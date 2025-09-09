@@ -272,6 +272,14 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="articles/tags/create"
+              element={
+                <Base>
+                  <TagList type={TagType.Article} />
+                </Base>
+              }
+            />
             {/* Pages Routes */}
             <Route
               path="pages"
@@ -285,6 +293,14 @@ export function App() {
             <Route path="pages/edit/:id" element={<PageEditor />} />
             <Route
               path="pages/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Page} />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/tags/create"
               element={
                 <Base>
                   <TagList type={TagType.Page} />
@@ -380,6 +396,14 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="comments/tags/create"
+              element={
+                <Base>
+                  <TagList type={TagType.Comment} />
+                </Base>
+              }
+            />
 
             <Route
               path="comments/rating"
@@ -420,6 +444,14 @@ export function App() {
 
             <Route
               path="events/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/create"
               element={
                 <Base>
                   <TagList type={TagType.Event} />
@@ -538,6 +570,14 @@ export function App() {
 
             <Route
               path="authors/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Author} />
+                </Base>
+              }
+            />
+            <Route
+              path="authors/tags/create"
               element={
                 <Base>
                   <TagList type={TagType.Author} />
