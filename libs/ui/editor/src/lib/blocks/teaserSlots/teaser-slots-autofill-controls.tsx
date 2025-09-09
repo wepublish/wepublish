@@ -1,16 +1,18 @@
 'use client'
 
-import {useState} from 'react'
 import styled from '@emotion/styled'
-import {Button, Panel, Tag, Toggle} from 'rsuite'
 import GearIcon from '@rsuite/icons/Gear'
-import {TeaserSlotsAutofillDialog} from './teaser-slots-autofill-dialog'
 import {useTagListQuery} from '@wepublish/editor/api'
 import {
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
   TeaserType
 } from '@wepublish/editor/api-v2'
+import {useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {Button, Panel, Tag, Toggle} from 'rsuite'
+
+import {TeaserSlotsAutofillDialog} from './teaser-slots-autofill-dialog'
 
 interface TeaserSlotsContorlsProps {
   config: TeaserSlotsAutofillConfigInput
@@ -51,6 +53,7 @@ export function TeaserSlotsAutofillControls({
   loadedTeasers,
   onConfigChange
 }: TeaserSlotsContorlsProps) {
+  const {t} = useTranslation()
   const [configDialogOpen, setConfigDialogOpen] = useState(false)
 
   const {data: tagsData, refetch} = useTagListQuery({
@@ -87,7 +90,7 @@ export function TeaserSlotsAutofillControls({
     <ControlsContainer bordered>
       <ControlsSection>
         <div>
-          <ControlsLabel>Auto-loading:</ControlsLabel>
+          <ControlsLabel>{t('blocks.teaserSlots.autoLoading')}</ControlsLabel>
           <Toggle checked={config.enabled} onChange={handleToggleChange} size="md" />
           <ControlsLabel style={{marginLeft: '8px'}}>
             {config.enabled ? 'Enabled' : 'Disabled'}
@@ -100,7 +103,7 @@ export function TeaserSlotsAutofillControls({
               onClick={() => setConfigDialogOpen(true)}
               style={{marginLeft: '8px'}}>
               <GearIcon style={{marginRight: '4px'}} />
-              Configure
+              {t('blocks.teaserSlots.configure')}
             </Button>
           )}
         </div>
@@ -118,15 +121,16 @@ export function TeaserSlotsAutofillControls({
                     ))}
                 </TagsContainer>
               ) : (
-                <Tag color="green">Latest</Tag>
+                <Tag color="green">{t('blocks.teaserSlots.latest')}</Tag>
               )}
               <span style={{marginLeft: '8px'}}>
                 {loadedTeasers}
-                {loadedTeasers < autofillSlots ? `/${autofillSlots}` : ``} teasers loaded{' '}
+                {loadedTeasers < autofillSlots ? `/${autofillSlots}` : ``}{' '}
+                {t('blocks.teaserSlots.teasersLoaded')}{' '}
               </span>
             </>
           ) : (
-            <span style={{color: '#6b7280'}}>All slots will be manually filled</span>
+            <span style={{color: '#6b7280'}}>{t('blocks.teaserSlots.fillManually')}</span>
           )}
         </SummarySection>
       </ControlsSection>

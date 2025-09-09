@@ -156,13 +156,10 @@ export class NovaMediaAdapter implements MediaAdapter {
       queryParameters.push(`sharpen=1`)
     }
     **/
-    let quality = transformations?.quality
-    if (quality) {
-      quality = sanitizeImageQuality(quality)
-    }
 
+    const quality = transformations?.quality ? sanitizeImageQuality(transformations.quality) : 65
     // Max quality is 80 so 1 => 80
-    queryParameters.push(`quality=${quality ? Math.ceil(quality * 80) : 65}`)
+    queryParameters.push(`quality=${Math.ceil(quality * 80)}`)
 
     const transformationsDto = this.parseTransformations(queryParameters)
 

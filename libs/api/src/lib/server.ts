@@ -24,10 +24,7 @@ export interface WepublishServerOpts extends ContextOptions {
 }
 
 export class WepublishServer {
-  constructor(
-    private readonly opts: WepublishServerOpts,
-    private publicApp?: Application | undefined
-  ) {}
+  constructor(private opts: WepublishServerOpts, private publicApp?: Application | undefined) {}
 
   async listen(port?: number, hostname?: string): Promise<void> {
     if (!this.publicApp) {

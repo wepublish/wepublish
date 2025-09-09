@@ -6,8 +6,13 @@ import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {hasBlockStyle} from '../../blocks'
+import {
+  BlockContent,
+  TeaserGridBlock,
+  TeaserListBlock,
+  TeaserSlotsBlock
+} from '@wepublish/website/api'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {
   alignmentForTeaserBlock,
   isFilledTeaser,
@@ -20,6 +25,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {MdArrowBackIos, MdArrowForwardIos} from 'react-icons/md'
+import {isTeaserSlotsBlock} from '../../teaser/teaser-slots-block'
 
 export const SliderWrapper = styled('section')`
   display: grid;
@@ -70,16 +76,22 @@ export const SliderBallFill = styled('span')`
   height: 100%;
 `
 
-export const ArrowButton = styled('span')<{side: 'left' | 'right'}>`
+export const SliderArrow = styled('button')`
+  appearance: none;
+  border: none;
+  background: transparent;
   position: absolute;
   top: 50%;
-  ${({side}) => (side === 'left' ? 'left: 0;' : 'right: 0;')}
+  left: 0;
   transform: translateY(-50%);
-  background: transparent;
-  border: none;
   z-index: 2;
   cursor: pointer;
   display: none;
+
+  &:last-of-type {
+    right: 0;
+    left: initial;
+  }
 
   &:hover {
     color: #000;
@@ -182,17 +194,18 @@ export const TeaserSlider = ({
   return (
     !!filledTeasers.length && (
       <SliderWrapper className={className}>
-        <SliderTitle>
-          {(props as BuilderTeaserListBlockProps).title && (
+        {(props as BuilderTeaserListBlockProps).title && (
+          <SliderTitle>
             <H5 component={'h1'}>{(props as BuilderTeaserListBlockProps).title}</H5>
-          )}
-        </SliderTitle>
+          </SliderTitle>
+        )}
 
         <SliderInnerContainer>
           <SlidesContainer ref={ref} className="keen-slider">
             {filledTeasers.map((teaser, index) => (
               <div key={index} className="keen-slider__slide">
                 <Teaser
+                  index={index}
                   teaser={teaser}
                   blockStyle={blockStyle}
                   alignment={alignmentForTeaserBlock(0, 3)}
@@ -211,18 +224,14 @@ export const TeaserSlider = ({
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
-              <ArrowButton
-                side="left"
-                onClick={() => sliderRef.current?.prev()}
-                aria-label="Previous slide">
+
+              <SliderArrow onClick={() => sliderRef.current?.prev()} aria-label="Previous slide">
                 <MdArrowBackIos size={22} />
-              </ArrowButton>
-              <ArrowButton
-                side="right"
-                onClick={() => sliderRef.current?.next()}
-                aria-label="Next slide">
+              </SliderArrow>
+
+              <SliderArrow onClick={() => sliderRef.current?.next()} aria-label="Next slide">
                 <MdArrowForwardIos size={22} />
-              </ArrowButton>
+              </SliderArrow>
             </SliderBallContainer>
           )}
         </SliderInnerContainer>
@@ -233,5 +242,8 @@ export const TeaserSlider = ({
 
 export const isTeaserSliderBlockStyle = (
   block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
-  allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
+): block is TeaserGridBlock | TeaserListBlock | TeaserSlotsBlock =>
+  allPass([
+    hasBlockStyle('Slider'),
+    anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock])
+  ])(block)

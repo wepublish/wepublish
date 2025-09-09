@@ -1,5 +1,6 @@
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 import {Pagination as RsuitePagination} from 'rsuite'
+
+import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 import {PaginationState} from './paginated-query-container'
 
 type PaginationProps = {

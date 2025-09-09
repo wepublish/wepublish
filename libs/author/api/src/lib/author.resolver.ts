@@ -12,7 +12,7 @@ import {Tag, TagService} from '@wepublish/tag/api'
 export class AuthorResolver {
   constructor(
     private authorService: AuthorService,
-    private readonly authorDataloader: AuthorDataloaderService,
+    private authorDataloader: AuthorDataloaderService,
     private tagService: TagService,
     private urlAdapter: URLAdapter
   ) {}
@@ -32,9 +32,10 @@ export class AuthorResolver {
       throw new UserInputError('You must provide either `id` or `slug`.')
     }
 
-    if (null === author) {
+    if (!author) {
       throw new UserInputError('Author not found')
     }
+
     return author
   }
 

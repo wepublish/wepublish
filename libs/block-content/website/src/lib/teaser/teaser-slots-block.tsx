@@ -1,6 +1,6 @@
 import {BlockContent, TeaserSlotsBlock as TeaserSlotsBlockType} from '@wepublish/website/api'
 import {BuilderTeaserSlotsBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {alignmentForTeaserBlock} from './teaser-grid-block'
+import {alignmentForTeaserBlock, isFilledTeaser} from './teaser-grid-block'
 import {css} from '@mui/material'
 import styled from '@emotion/styled'
 
@@ -35,7 +35,6 @@ export const TeaserSlotsBlockTeasers = styled('div')`
 export const TeaserSlotsBlock = ({
   title,
   teasers,
-  slots,
   blockStyle,
   className
 }: BuilderTeaserSlotsBlockProps) => {
@@ -44,21 +43,22 @@ export const TeaserSlotsBlock = ({
     blocks: {Teaser}
   } = useWebsiteBuilder()
 
+  const filledTeasers = teasers.filter(isFilledTeaser)
+
   return (
     <TeaserSlotsBlockWrapper className={className}>
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserSlotsBlockTeasers>
-        {teasers?.map((teaser, index) => {
-          return (
-            <Teaser
-              key={index}
-              teaser={teaser}
-              alignment={alignmentForTeaserBlock(index, 3)}
-              blockStyle={blockStyle}
-            />
-          )
-        })}
+        {filledTeasers.map((teaser, index) => (
+          <Teaser
+            key={index}
+            index={index}
+            teaser={teaser}
+            alignment={alignmentForTeaserBlock(index, 3)}
+            blockStyle={blockStyle}
+          />
+        ))}
       </TeaserSlotsBlockTeasers>
     </TeaserSlotsBlockWrapper>
   )

@@ -8,7 +8,7 @@ import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {SubscriptionListContainer, InvoiceListContainer} from '@wepublish/membership/website'
@@ -83,7 +83,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -94,15 +94,20 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([

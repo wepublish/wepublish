@@ -13,7 +13,7 @@ type RevisionMap = Partial<{
   scope: Scope.REQUEST
 })
 export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
-  private readonly dataloader = new DataLoader<string, RevisionMap>(
+  private dataloader = new DataLoader<string, RevisionMap>(
     async (pageIds: readonly string[]) => {
       const pages = await this.prisma.page.findMany({
         where: {

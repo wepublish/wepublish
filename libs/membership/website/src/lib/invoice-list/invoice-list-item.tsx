@@ -4,7 +4,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useMemo, useState} from 'react'
+import {useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatCurrency} from '../formatters/format-currency'
 import {Currency} from '@wepublish/website/api'
@@ -41,11 +41,6 @@ export const InvoiceListItemMetaItem = styled('li')`
 export const InvoiceListItemActions = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
-
-  @container (min-width: 45ch) {
-    display: flex;
-    justify-content: center;
-  }
 `
 
 export function InvoiceListItem({
@@ -57,6 +52,8 @@ export function InvoiceListItem({
   dueAt,
   subscription,
   isSepa,
+  isBexio,
+  isPayrexxSubscription,
   canPay,
   pay,
   className
@@ -70,15 +67,6 @@ export function InvoiceListItem({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
-
-  const showPayrexxSubscriptionWarning = useMemo(
-    () =>
-      subscription?.paymentMethod.slug === 'payrexx-subscription' &&
-      new Date() > new Date(dueAt) &&
-      !canceledAt &&
-      !paidAt,
-    [canceledAt, dueAt, paidAt, subscription?.paymentMethod.slug]
-  )
 
   return (
     <InvoiceListItemWrapper className={className}>
@@ -148,14 +136,6 @@ export function InvoiceListItem({
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
-        {canPay && (
-          <InvoiceListItemActions>
-            <Button onClick={callAction(pay)} disabled={loading}>
-              Jetzt Bezahlen
-            </Button>
-          </InvoiceListItemActions>
-        )}
-
         {isSepa && (
           <Alert severity="warning">
             Die Rechnung wird automatisch per Lastschriftverfahren beglichen. Dies kann einige Tage
@@ -163,19 +143,24 @@ export function InvoiceListItem({
           </Alert>
         )}
 
+        {isBexio && (
+          <Alert severity="warning">Du erhältst eine PDF-Rechnung per E-Mail zugeschickt.</Alert>
+        )}
+
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
-        {/* @TODO: Make href used in <Link> component customizable if necessary. You may want to make the custom Bajour filters default filters. */}
-        {showPayrexxSubscriptionWarning && (
-          <Alert
-            severity="warning"
-            action={
-              <Link
-                href={`/mitmachen?memberPlanBySlug=${subscription?.memberPlan.slug}&upsell=true&deactivateSubscriptionId=${subscription?.id}`}>
-                <Button>Jetzt Abo ersetzen</Button>
-              </Link>
-            }>
-            Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet.
+        {isPayrexxSubscription && (
+          <Alert severity="warning">
+            Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet. Es wird
+            automatisch angepasst wenn du auf "Jetzt Bezahlen" drückst.
           </Alert>
+        )}
+
+        {canPay && (
+          <InvoiceListItemActions>
+            <Button onClick={callAction(pay)} disabled={loading}>
+              Jetzt Bezahlen
+            </Button>
+          </InvoiceListItemActions>
         )}
       </InvoiceListItemContent>
     </InvoiceListItemWrapper>

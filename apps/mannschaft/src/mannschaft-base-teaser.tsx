@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import {Teaser, TeaserMetadata, TeaserTags} from '@wepublish/block-content/website'
+import {BaseTeaser, TeaserMetadata, TeaserTags} from '@wepublish/block-content/website'
 
-export const MannschaftBaseTeaser = styled(Teaser)`
+export const MannschaftBaseTeaser = styled(BaseTeaser)`
   grid-template-areas:
     'image'
     'pretitle'

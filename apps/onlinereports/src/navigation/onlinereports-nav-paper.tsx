@@ -1,12 +1,14 @@
-import {IconButton, useTheme} from '@mui/material'
-import {TextToIcon, useToggle} from '@wepublish/ui'
-import {MdClose, MdExpandLess, MdExpandMore, MdSearch} from 'react-icons/md'
-import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
-import {navigationLinkToUrl} from '@wepublish/navigation/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import styled from '@emotion/styled'
-import {BuilderNavPaperProps, MemberButtons, navPaperLinkStyling} from './nav-paper'
+import {IconButton, useTheme} from '@mui/material'
+import {navigationLinkToUrl} from '@wepublish/navigation/website'
+import {TextToIcon} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
+import {Link, useWebsiteBuilder} from '@wepublish/website/builder'
+import {MdClose, MdExpandLess, MdExpandMore, MdSearch} from 'react-icons/md'
+
+import {useToggle} from '../use-toggle'
+import {BuilderNavPaperProps, MemberButtons, navPaperLinkStyling} from './nav-paper'
+import {NavbarActions, NavbarInnerWrapper, NavStructure} from './onlinereports-nav-app-bar'
 
 const NavPaperOverlay = styled('div')`
   position: absolute;
@@ -55,9 +57,6 @@ type OnlineReportsNavCategoryProps = {
 }
 
 export const NavigationCategory = ({navigation: nav, closeMenu}: OnlineReportsNavCategoryProps) => {
-  const {
-    elements: {Link, H6}
-  } = useWebsiteBuilder()
   const theme = useTheme()
   const subItemsToggle = useToggle()
 
@@ -66,6 +65,7 @@ export const NavigationCategory = ({navigation: nav, closeMenu}: OnlineReportsNa
       <NavigationTopItem onClick={subItemsToggle.toggle}>
         {nav.name} {subItemsToggle.value ? <MdExpandLess /> : <MdExpandMore />}{' '}
       </NavigationTopItem>
+
       {subItemsToggle.value && (
         <NavigationCategorySubItems>
           {nav.links?.map((link, index) => {

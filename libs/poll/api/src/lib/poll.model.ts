@@ -1,6 +1,7 @@
 import {Field, Int, ObjectType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLError, GraphQLScalarType, Kind} from 'graphql/index'
+import {Descendant} from 'slate'
 
 @ObjectType()
 export class FullPoll {
@@ -17,7 +18,7 @@ export class FullPoll {
   closedAt?: Date | null
 
   @Field(() => GraphQLRichText, {nullable: true})
-  infoText?: Node[] | null
+  infoText?: Descendant[]
 
   @Field(() => [PollAnswerWithVoteCount])
   answers!: PollAnswerWithVoteCount[]

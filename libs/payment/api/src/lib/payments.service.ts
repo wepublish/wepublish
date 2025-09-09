@@ -232,7 +232,7 @@ export class PaymentsService {
     const customer = userId
       ? await this.prisma.paymentProviderCustomer.findFirst({
           where: {
-            userId: userId,
+            userId,
             paymentProviderID: paymentMethod.paymentProviderID
           }
         })

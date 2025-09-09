@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import {Box} from '@mui/material'
-
 import {
   alignmentForTeaserBlock,
   hasBlockStyle,
@@ -8,7 +7,7 @@ import {
   isTeaserListBlock
 } from '@wepublish/block-content/website'
 import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderTeaserListBlockProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
 import {Advertisement} from '../components/advertisement'
@@ -27,7 +26,7 @@ export const NewsBlockStyle = ({
   const filledTeasers = teasers.filter(isFilledTeaser)
   const numColumns = 1
   const {
-    elements: {H2, Link}
+    elements: {H2}
   } = useWebsiteBuilder()
 
   return (
@@ -43,9 +42,11 @@ export const NewsBlockStyle = ({
                 numColumns={numColumns}
                 alignment={alignmentForTeaserBlock(index, numColumns)}
                 blockStyle={blockStyle}
+                index={index}
               />
             ))}
           </TeaserList>
+
           <Link href={'/a/tag/news'}>
             <b>Weitere News {'->'}</b>
           </Link>

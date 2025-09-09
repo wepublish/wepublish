@@ -7,6 +7,12 @@ export const BajourBreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.accent.main};
   color: ${({theme}) => theme.palette.accent.contrastText};
 
+  .MuiButton-root,
+  .MuiButton-root:hover {
+    background-color: ${({theme}) => theme.palette.secondary.main};
+    color: ${({theme}) => theme.palette.secondary.contrastText};
+  }
+
   ${({theme}) => theme.breakpoints.up('sm')} {
     padding-left: 0;
     padding-right: 0;
