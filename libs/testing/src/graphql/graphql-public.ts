@@ -1705,6 +1705,7 @@ export type MutationCreateNavigationArgs = {
 export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>
   description?: InputMaybe<Scalars['String']>
+  hidden: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   slug?: InputMaybe<Scalars['String']>
@@ -1982,6 +1983,7 @@ export type MutationUpdateNavigationArgs = {
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>
   description?: InputMaybe<Scalars['String']>
+  hidden: Scalars['Boolean']
   id: Scalars['String']
   imageID?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
@@ -2089,6 +2091,7 @@ export type Page = {
   __typename?: 'Page'
   createdAt: Scalars['DateTime']
   draft?: Maybe<PageRevision>
+  hidden: Scalars['Boolean']
   id: Scalars['String']
   latest: PageRevision
   modifiedAt: Scalars['DateTime']
@@ -2113,6 +2116,7 @@ export type PageCreatedAction = BaseAction &
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>
   draft?: InputMaybe<Scalars['Boolean']>
+  includeHidden?: InputMaybe<Scalars['Boolean']>
   pending?: InputMaybe<Scalars['Boolean']>
   publicationDateFrom?: InputMaybe<DateFilter>
   publicationDateTo?: InputMaybe<DateFilter>
