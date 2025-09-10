@@ -338,7 +338,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   useEffect(() => {
     if (selectedMemberPlan) {
-      setValue<'monthlyAmount'>('monthlyAmount', selectedMemberPlan.amountPerMonthTarget ?? 0)
+      setValue<'monthlyAmount'>(
+        'monthlyAmount',
+        selectedMemberPlan.amountPerMonthTarget || selectedMemberPlan.amountPerMonthMin
+      )
     }
   }, [selectedMemberPlan, setValue])
 
