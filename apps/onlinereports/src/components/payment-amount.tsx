@@ -1,7 +1,7 @@
+import styled from '@emotion/styled'
 import {FormControlLabel, InputAdornment, OutlinedInput, RadioGroup} from '@mui/material'
 import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef} from 'react'
-import styled from '@emotion/styled'
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;

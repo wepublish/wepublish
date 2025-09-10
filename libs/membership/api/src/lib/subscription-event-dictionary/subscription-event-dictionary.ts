@@ -24,7 +24,7 @@ export class SubscriptionEventDictionary {
     intervals: (SubscriptionInterval & {mailTemplate: MailTemplate | null})[]
   })[] = []
 
-  constructor(private readonly prismaService: PrismaClient) {}
+  constructor(private prismaService: PrismaClient) {}
 
   /**
    * Get the earliest date when an invoice must be created.

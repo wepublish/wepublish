@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Drawer} from 'rsuite'
 
+import {ChooseEditImage} from '../atoms'
 import {BlockProps} from '../atoms/blockList'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-import {QuoteBlockValue} from './types'
-import {ChooseEditImage} from '../atoms'
 import {ImageEditPanel, ImageSelectPanel} from '../panel'
-import {Drawer} from 'rsuite'
+import {QuoteBlockValue} from './types'
 
 const ChooseImageWrapper = styled.div`
   flex: 1 0 25%;

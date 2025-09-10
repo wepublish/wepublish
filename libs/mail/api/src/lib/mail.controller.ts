@@ -23,12 +23,12 @@ export type MailControllerConfig = {
 }
 
 export class MailController {
-  private readonly logger = new Logger('MailController')
+  private logger = new Logger('MailController')
 
   constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly mailContext: MailContext,
-    private readonly config: MailControllerConfig
+    private prismaService: PrismaClient,
+    private mailContext: MailContext,
+    private config: MailControllerConfig
   ) {}
 
   /**

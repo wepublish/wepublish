@@ -19,8 +19,8 @@ import {Permissions} from '@wepublish/permissions/api'
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {
   constructor(
-    private readonly subscriptionFlowService: SubscriptionFlowService,
-    private readonly prismaService: PrismaClient
+    private subscriptionFlowService: SubscriptionFlowService,
+    private prismaService: PrismaClient
   ) {}
 
   @Permissions(CanGetSubscriptionFlows)

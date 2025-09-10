@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {BuilderArticleAuthorsProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType} from '@wepublish/website/api'
+import {Typography} from '@mui/material'
 
 export const ArticleAuthorsWrapper = styled('div')`
   display: grid;
@@ -16,12 +17,12 @@ export const ArticleAuthors = ({article, className}: BuilderArticleAuthorsProps)
   }
 
   return (
-    <ArticleAuthorsWrapper className={className}>
+    <Typography variant="articleAuthors" component={ArticleAuthorsWrapper} className={className}>
       {authors.map(author => (
         <AuthorChip key={author.id} author={author} />
       ))}
 
       <ArticleDate article={article as ArticleType} />
-    </ArticleAuthorsWrapper>
+    </Typography>
   )
 }

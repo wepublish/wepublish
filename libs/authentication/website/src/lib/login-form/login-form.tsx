@@ -1,7 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, css} from '@mui/material'
+import {Checkbox, FormControlLabel} from '@mui/material'
 import styled from '@emotion/styled'
-import {BuilderLoginFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderLoginFormProps, Button, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
 
@@ -18,7 +18,7 @@ export const LoginFormForm = styled('form')`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-const buttonStyles = css`
+export const LoginFormButton = styled(Button)`
   justify-self: flex-end;
 `
 
@@ -36,6 +36,12 @@ const withCredentialsFormSchema = z.object({
 
 const loginFormSchema = z.union([withEmailFormSchema, withCredentialsFormSchema])
 
+const autofocus = (node: HTMLElement | null) => {
+  const inputNode = node?.querySelector('input') ?? node
+  console.log(inputNode)
+  inputNode?.focus()
+}
+
 export function LoginForm({
   loginWithCredentials,
   onSubmitLoginWithCredentials,
@@ -46,7 +52,7 @@ export function LoginForm({
   className
 }: BuilderLoginFormProps) {
   const {
-    elements: {Alert, Button, TextField}
+    elements: {Alert, TextField}
   } = useWebsiteBuilder()
 
   type FormInput = z.infer<typeof loginFormSchema>
@@ -106,6 +112,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
+              ref={autofocus}
             />
           )}
         />
@@ -133,21 +140,16 @@ export function LoginForm({
         {loginLinkSent && (
           <Alert severity="success">
             Falls ein Account unter der Email &quot;{loginWithEmail.data?.sendWebsiteLogin}&quot;
-            besteht, sollte bald ein Login-Link in deinem Email Postfach sein.
+            besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen
+            Moment dauern. Bitte prüfe auch deinen Spam-Ordner.
           </Alert>
         )}
 
-        <Button
-          css={buttonStyles}
-          disabled={loading || loginLinkSent}
-          type="submit"
-          onClick={onSubmit}>
-          {!loginWithPassword && (
-            <>{loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern'}</>
-          )}
+        <LoginFormButton disabled={loading || loginLinkSent} type="submit" onClick={onSubmit}>
+          {!loginWithPassword && (loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern')}
 
           {loginWithPassword && 'Login'}
-        </Button>
+        </LoginFormButton>
       </LoginFormForm>
     </LoginFormWrapper>
   )

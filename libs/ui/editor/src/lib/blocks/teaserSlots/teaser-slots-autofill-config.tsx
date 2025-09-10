@@ -1,10 +1,12 @@
 'use client'
 
 import styled from '@emotion/styled'
-import {Form} from 'rsuite'
 import {TagType} from '@wepublish/editor/api'
-import {SelectTags} from '../../atoms/tag/selectTags'
 import {TeaserSlotsAutofillConfigInput} from '@wepublish/editor/api-v2'
+import {useTranslation} from 'react-i18next'
+import {Form} from 'rsuite'
+
+import {SelectTags} from '../../atoms/tag/selectTags'
 
 interface TeaserSlotsConfigPanelProps {
   config: TeaserSlotsAutofillConfigInput
@@ -28,6 +30,8 @@ const HelpText = styled('div')`
 `
 
 export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsConfigPanelProps) {
+  const {t} = useTranslation()
+
   const handleChange = (key: keyof TeaserSlotsAutofillConfigInput, value: any) => {
     onChange({
       ...config,
@@ -40,7 +44,7 @@ export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsCo
   return (
     <ConfigContainer>
       <FormGroup>
-        <Form.ControlLabel>Filter by tags</Form.ControlLabel>
+        <Form.ControlLabel>{t('blocks.teaserSlots.filter')}</Form.ControlLabel>
         <SelectTags
           defaultTags={[]}
           name="tags"
@@ -48,7 +52,8 @@ export function TeaserSlotsAutofillConfigPanel({config, onChange}: TeaserSlotsCo
           setSelectedTags={tags => handleChange('filter', {tags})}
           selectedTags={config.filter?.tags}
         />
-        <HelpText>Enter tags separated by commas. Leave empty for no tag filtering.</HelpText>
+
+        <HelpText>{t('blocks.teaserSlots.filterHelpText')}</HelpText>
       </FormGroup>
     </ConfigContainer>
   )

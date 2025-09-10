@@ -11,7 +11,7 @@ import {
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
-  UserSession
+  SessionWithTokenWithoutUser
 } from '@wepublish/website/api'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
@@ -35,12 +35,16 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict'
+      }
+    )
   }
 
   const sessionProps = await getSessionTokenProps(ctx)

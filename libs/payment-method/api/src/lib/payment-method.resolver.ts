@@ -6,7 +6,7 @@ import {PaymentMethod} from './payment-method.model'
 
 @Resolver(() => PaymentMethod)
 export class PaymentMethodResolver {
-  constructor(private readonly prismaService: PrismaClient) {}
+  constructor(private prismaService: PrismaClient) {}
 
   @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentMethod], {

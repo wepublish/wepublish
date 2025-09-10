@@ -9,6 +9,18 @@ import {
   UserFilter,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
+import {
+  ArticleFilter,
+  DateFilterComparison,
+  EventFilter,
+  getApiClientV2,
+  InputMaybe,
+  PageFilter,
+  PeerArticleFilter,
+  PollVoteFilter,
+  Scalars,
+  useEventProvidersLazyQuery
+} from '@wepublish/editor/api-v2'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
@@ -22,20 +34,8 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {AuthorCheckPicker} from '../panel/authorCheckPicker'
-import {
-  ArticleFilter,
-  InputMaybe,
-  PageFilter,
-  PollVoteFilter,
-  Scalars,
-  useEventProvidersLazyQuery,
-  DateFilterComparison,
-  EventFilter,
-  PeerArticleFilter
-} from '@wepublish/editor/api-v2'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
 import {SelectTags} from '../atoms/tag/selectTags'
+import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 
 const {Group} = RForm
 

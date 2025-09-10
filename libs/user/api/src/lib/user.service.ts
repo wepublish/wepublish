@@ -8,7 +8,7 @@ import {Validator} from '@wepublish/user'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) {}
 
   async getUserByEmail(email: string) {
     return this.prisma.user.findUnique({

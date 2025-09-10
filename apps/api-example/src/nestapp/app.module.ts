@@ -3,80 +3,81 @@ import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ScheduleModule} from '@nestjs/schedule'
+
+import {HttpModule, HttpService} from '@nestjs/axios'
+import {PrismaClient} from '@prisma/client'
+import {ActionModule} from '@wepublish/action/api'
+import {KarmaMediaAdapter, NovaMediaAdapter} from '@wepublish/api'
+import {ArticleModule, HotAndTrendingModule} from '@wepublish/article/api'
+import {AuthenticationModule} from '@wepublish/authentication/api'
+import {BannerApiModule} from '@wepublish/banner/api'
+import {BlockContentModule} from '@wepublish/block-content/api'
+import {CommentModule} from '@wepublish/comments/api'
+import {ConsentModule} from '@wepublish/consent/api'
+import {CrowdfundingApiModule} from '@wepublish/crowdfunding/api'
+import {EventModule} from '@wepublish/event/api'
 import {
   AgendaBaselService,
-  AuthenticationModule,
-  BannerApiModule,
-  BexioPaymentProvider,
-  ConsentModule,
-  CrowdfundingApiModule,
-  DashboardModule,
-  EventModule,
   EventsImportModule,
-  GoogleAnalyticsModule,
-  GoogleAnalyticsService,
-  GraphQLRichText,
-  HealthModule,
-  HotAndTrendingModule,
-  KarmaMediaAdapter,
-  KulturZueriService,
-  MailchimpMailProvider,
-  MailgunMailProvider,
-  MailsModule,
-  MembershipModule,
+  KulturZueriService
+} from '@wepublish/event/import/api'
+import {GoogleAnalyticsModule, GoogleAnalyticsService} from '@wepublish/google-analytics/api'
+import {HealthModule} from '@wepublish/health'
+import {MediaAdapterModule} from '@wepublish/image/api'
+import {MailchimpMailProvider, MailgunMailProvider, MailsModule} from '@wepublish/mail/api'
+import {DashboardModule, MembershipModule, SubscriptionModule} from '@wepublish/membership/api'
+import {NavigationModule} from '@wepublish/navigation/api'
+import {
+  ApiModule,
+  HauptstadtURLAdapter,
+  PrismaModule,
+  URLAdapter,
+  URLAdapterModule
+} from '@wepublish/nest-modules'
+import {PageModule} from '@wepublish/page/api'
+import {
+  BexioPaymentProvider,
   MolliePaymentProvider,
   NeverChargePaymentProvider,
-  NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
-  PermissionModule,
-  SettingModule,
-  StatsModule,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  SubscriptionModule,
-  SystemInfoModule,
-  VersionInformationModule
-} from '@wepublish/api'
-import {ApiModule, PrismaModule, URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
+  StripePaymentProvider
+} from '@wepublish/payment/api'
+import {PaywallModule} from '@wepublish/paywall/api'
+import {PeerModule} from '@wepublish/peering/api'
+import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
+import {PermissionModule} from '@wepublish/permissions/api'
+import {PhraseModule} from '@wepublish/phrase/api'
+import {PollModule} from '@wepublish/poll/api'
+import {GraphQLRichText} from '@wepublish/richtext/api'
+import {SettingModule} from '@wepublish/settings/api'
+import {StatsModule} from '@wepublish/stats/api'
+import {SystemInfoModule} from '@wepublish/system-info'
+import {TagModule} from '@wepublish/tag/api'
+import {
+  ProlitterisTrackingPixelProvider,
+  TrackingPixelProvider,
+  TrackingPixelsModule
+} from '@wepublish/tracking-pixel/api'
+import {UserModule} from '@wepublish/user/api'
+import {VersionInformationModule} from '@wepublish/versionInformation/api'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
-import {Issuer} from 'openid-client'
-import {BlockContentModule} from '@wepublish/block-content/api'
-import {PrismaClient} from '@prisma/client'
-import {PollModule} from '@wepublish/poll/api'
-import {AuthProviderModule, OAuth2Client} from '@wepublish/authprovider/api'
-import {PageModule} from '@wepublish/page/api'
-import {PeerModule} from '@wepublish/peering/api'
-import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
-import {CommentModule} from '@wepublish/comments/api'
-import {ArticleModule} from '@wepublish/article/api'
-import {PhraseModule} from '@wepublish/phrase/api'
-import {ActionModule} from '@wepublish/action/api'
-import {NavigationModule} from '@wepublish/navigation/api'
-import {TagModule} from '@wepublish/tag/api'
-import {UserModule} from '@wepublish/user/api'
-import {
-  ProlitterisTrackingPixelProvider,
-  TrackingPixelProvider,
-  TrackingPixelsModule
-} from '@wepublish/tracking-pixel/api'
-import {HttpModule, HttpService} from '@nestjs/axios'
-import {MediaAdapterModule} from '@wepublish/image/api'
-import {AuthorModule} from '@wepublish/author/api'
-import {InvoiceModule} from '@wepublish/invoice/api'
-import {ChallengeModule} from '@wepublish/challenge/api'
-import {MemberPlanModule} from '@wepublish/member-plan/api'
-import {SessionModule} from '@wepublish/session/api'
-import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
 import {PaymentMethodModule} from '@wepublish/payment-method/api'
+import {AuthorModule} from '@wepublish/author/api'
+import {MemberPlanModule} from '@wepublish/member-plan/api'
+import {InvoiceModule} from '@wepublish/invoice/api'
+import {SessionModule} from '@wepublish/session/api'
+import {ChallengeModule} from '@wepublish/challenge/api'
+import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
 
 @Global()
 @Module({
@@ -216,6 +217,7 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
         const paymentProviders: PaymentProvider[] = []
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const paymentProvidersRaw = configFile.paymentProviders
+
         if (paymentProvidersRaw) {
           for (const paymentProvider of paymentProvidersRaw) {
             if (paymentProvider.type === 'stripe-checkout') {
@@ -347,13 +349,19 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
     DashboardModule,
     AuthenticationModule,
 
-    // Register SessionModule after AuthenticationModule but before AuthProviderModule
+    // Register SessionModule after AuthenticationModule
     // to ensure proper order of dependencies
     SessionModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
-        const sessionTTL = parseInt(config.get('SESSION_TTL') || '0', 10) || 7 * 24 * 60 * 60 * 1000
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+        configFile.general.sessionTTLDays
+        const MS_PER_DAY = 24 * 60 * 60 * 1000
+        const sessionTTLDays = configFile.general.sessionTTLDays
+          ? configFile.general.sessionTTLDays
+          : 7
+        const sessionTTL = MS_PER_DAY * sessionTTLDays
         const jwtSecretKey = config.get('JWT_SECRET_KEY') || 'development-secret-key'
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000'
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000'
@@ -367,33 +375,6 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
           jwtSecretKey,
           hostURL,
           websiteURL
-        }
-      }
-    }),
-
-    AuthProviderModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => {
-        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
-        const oauth2Providers = configFile.OAuthProviders || []
-
-        return {
-          oauth2Clients: await Promise.all(
-            oauth2Providers.map(async provider => {
-              const issuer = await Issuer.discover(provider.discoverUrl)
-              return {
-                name: provider.name,
-                provider,
-                client: new issuer.Client({
-                  client_id: provider.clientId,
-                  client_secret: provider.clientKey,
-                  redirect_uris: provider.redirectUri,
-                  response_types: ['code']
-                })
-              } as OAuth2Client
-            })
-          )
         }
       }
     }),
@@ -485,8 +466,15 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => {
-        return new URLAdapter(config.getOrThrow('WEBSITE_URL'))
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
+
+        const urlAdapter =
+          configFile.general.urlAdapter === 'hauptstadt'
+            ? new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
+            : new URLAdapter(config.getOrThrow('WEBSITE_URL'))
+
+        return urlAdapter
       },
       inject: [ConfigService]
     }),
@@ -513,7 +501,8 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
         )
       },
       inject: [ConfigService]
-    })
+    }),
+    PaywallModule
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [

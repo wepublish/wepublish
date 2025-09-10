@@ -6,14 +6,15 @@ import {
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {UserSession} from '@wepublish/website/api'
+import {getSessionTokenProps} from '@wepublish/utils/website'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {getV1ApiClient, LoginWithJwtDocument} from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -23,14 +24,15 @@ const LoginWrapper = styled('div')`
   justify-self: center;
 `
 
-type LoginProps = {sessionToken?: UserSession}
+type LoginProps = {sessionToken?: SessionWithTokenWithoutUser}
 
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
+  const router = useRouter()
+  const isRedirecting = useRef(false)
   const {
     elements: {H3, Link}
   } = useWebsiteBuilder()
-  const router = useRouter()
 
   useEffect(() => {
     if (sessionToken) {
@@ -43,7 +45,10 @@ export default function Login({sessionToken}: LoginProps) {
     deleteCookie(IntendedRouteStorageKey)
     const route = intendedRoute ?? '/profile'
 
-    router.replace(route)
+    if (!isRedirecting.current) {
+      router.replace(route)
+      isRedirecting.current = true
+    }
   }
 
   return (
@@ -87,21 +92,19 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
-
-    return {
-      props: {
-        sessionToken: data.data.createSessionWithJWT
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict'
       }
-    }
+    )
+
+    return await getSessionTokenProps(ctx)
   }
 
-  return {
-    props: {}
-  }
+  return {}
 }

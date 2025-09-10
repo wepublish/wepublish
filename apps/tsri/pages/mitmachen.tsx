@@ -4,7 +4,7 @@ import {SubscribeWrapper} from '@wepublish/membership/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
 import {SubscribePage} from '@wepublish/utils/website'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -65,12 +65,16 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict'
+      }
+    )
   }
 
   const sessionProps = await getSessionTokenProps(ctx)

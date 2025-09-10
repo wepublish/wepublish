@@ -530,7 +530,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
           user: user?.name,
           paymentMethod: paymentMethod?.name,
           paymentPeriodicity,
-          monthlyAmount: monthlyAmount
+          monthlyAmount
         }}>
         <ListViewContainer>
           <ListViewHeader>

@@ -94,7 +94,7 @@ export class ProfileService {
       data: {
         paymentProviderCustomers: {
           deleteMany: {
-            userId: userId
+            userId
           },
           createMany: {
             data: paymentProviderCustomers

@@ -1,5 +1,5 @@
+import {MailchimpMailProvider, MailProviderTemplate} from '@wepublish/mail/api'
 import nock from 'nock'
-import {MailchimpMailProvider, MailProviderTemplate} from '../../src'
 
 let mailChimpMailProvider: MailchimpMailProvider
 

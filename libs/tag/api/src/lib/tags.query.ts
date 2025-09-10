@@ -1,7 +1,7 @@
 import {ArgsType, Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {PaginatedType, SortOrder} from '@wepublish/utils/api'
 import {Tag} from './tag.model'
-import {TagType} from './tag.types'
+import {TagType} from '@prisma/client'
 
 @InputType()
 export class TagFilter {
@@ -11,6 +11,11 @@ export class TagFilter {
   @Field(() => TagType, {nullable: true})
   type?: TagType
 }
+
+registerEnumType(TagType, {
+  name: 'TagType',
+  description: 'Type of tag.'
+})
 
 export enum TagSort {
   CreatedAt = 'CreatedAt',

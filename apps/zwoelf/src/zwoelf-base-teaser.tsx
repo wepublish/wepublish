@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import {Teaser, TeaserTime} from '@wepublish/block-content/website'
+import {BaseTeaser, TeaserTime} from '@wepublish/block-content/website'
 
-export const ZwoelfBaseTeaser = styled(Teaser)`
+export const ZwoelfBaseTeaser = styled(BaseTeaser)`
   ${TeaserTime} {
     display: none;
   }

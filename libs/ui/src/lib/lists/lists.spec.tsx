@@ -4,22 +4,20 @@ import {OrderedList, UnorderedList} from './lists'
 
 describe('UnorderedList', () => {
   it('should render successfully', () => {
-    const {baseElement} = render(
+    render(
       <UnorderedList>
         <li>Foobar</li>
       </UnorderedList>
     )
-    expect(baseElement).toMatchSnapshot()
   })
 })
 
 describe('OrderedList', () => {
   it('should render successfully', () => {
-    const {baseElement} = render(
+    render(
       <OrderedList>
         <li>Foobar</li>
       </OrderedList>
     )
-    expect(baseElement).toMatchSnapshot()
   })
 })

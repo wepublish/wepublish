@@ -1,3 +1,19 @@
+fragment FullPaywall on Paywall {
+  id
+  active
+  anyMemberPlan
+  name
+  description
+  circumventDescription
+  memberPlans {
+    id
+  }
+  bypasses {
+    id
+    token
+  }
+}
+
 fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   id
   publishedAt
@@ -61,6 +77,10 @@ fragment ArticleWithoutBlocks on Article {
 
   peer {
     ...FullPeer
+  }
+
+  paywall {
+    ...FullPaywall
   }
 }
 

@@ -1,21 +1,10 @@
 import styled from '@emotion/styled'
 import {ReactNode} from 'react'
-import {TeaserSlotsBlockWrapper} from '../blocks/teaserSlotsBlock'
 
 const Children = styled.div`
   display: flex;
   width: 100%;
   max-width: 1220px;
-
-  > * > * {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 920px;
-
-    :has(${TeaserSlotsBlockWrapper}) {
-      max-width: 1220px;
-    }
-  }
 `
 
 const ChildrenWrapper = styled.div`

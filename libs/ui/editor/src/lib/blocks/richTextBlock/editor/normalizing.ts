@@ -1,7 +1,7 @@
-import {Element, Node, Path, Transforms, Editor} from 'slate'
+import {BlockFormat} from '@wepublish/richtext'
+import {Editor, Element, Node, Path, Transforms} from 'slate'
 
 import {DEFAULT_BORDER_COLOR, emptyTextParagraph} from './elements'
-import {BlockFormat} from '@wepublish/richtext'
 
 export function withNormalizeNode<T extends Editor>(editor: T): T {
   const {normalizeNode} = editor

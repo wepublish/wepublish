@@ -37,3 +37,49 @@ fragment FullImage on Image {
 
   ...ImageURLs
 }
+
+fragment FullPeerImage on PeerImage {
+  id
+
+  createdAt
+  modifiedAt
+
+  filename
+  format
+  mimeType
+  extension
+  width
+  height
+  fileSize
+
+  title
+  description
+  tags
+
+  source
+  link
+  license
+
+  focalPoint {
+    x
+    y
+  }
+
+  url
+
+  xxl
+  xl
+  l
+  m
+  s
+  xs
+  xxs
+
+  xxlSquare
+  xlSquare
+  lSquare
+  mSquare
+  sSquare
+  xsSquare
+  xxsSquare
+}
