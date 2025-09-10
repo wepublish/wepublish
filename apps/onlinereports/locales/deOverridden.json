@@ -1,6 +1,6 @@
 {
   "image": {
-    "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(© {source})</ImageSource>}}"
+    "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>({source})</ImageSource>}}"
   },
   "subscription": {
     "subscriptionIsUnpaid": "Rechnung ist unbezahlt",
