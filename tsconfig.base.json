@@ -19,7 +19,6 @@
     "paths": {
       "@wepublish/action/api": ["libs/action/api/src/index.ts"],
       "@wepublish/authprovider/api": ["libs/authprovider/api/src/index.ts"],
-      "@wepublish/analytics": ["libs/analytics/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
