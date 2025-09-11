@@ -24,12 +24,19 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-  await client.query({
+  const event = await client.query({
     query: EventDocument,
     variables: {
       id
     }
   })
+  const is404 = event.errors?.find(({extensions}) => extensions?.status === 404)
+  
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   const props = addClientCacheToV1Props(client, {})
 

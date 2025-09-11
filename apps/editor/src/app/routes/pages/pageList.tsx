@@ -143,7 +143,8 @@ function PageList() {
             'pending',
             'published',
             'publicationDate',
-            'tags'
+            'tags',
+            'includeHidden'
           ]}
           filter={filter}
           isLoading={isLoading}
