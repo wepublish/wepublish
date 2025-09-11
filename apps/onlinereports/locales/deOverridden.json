@@ -5,6 +5,9 @@
     },
     "imageGallery": {
       "captionSource": "({{source}})"
+    },
+    "teaser": {
+      "authors": "{{authors}}"
     }
   },
   "subscription": {

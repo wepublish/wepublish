@@ -6,6 +6,7 @@ import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
 import {PropsWithChildren, useMemo} from 'react'
 import styled from '@emotion/styled'
+import {t} from 'i18next'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -402,7 +403,9 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
         <TeaserMetadata>
           {authors && authors?.length ? (
-            <TeaserAuthors>Von {authors?.join(', ')} </TeaserAuthors>
+            <TeaserAuthors>
+              {t('blocks.teaser.authors', {authors: authors?.join(', ')})}
+            </TeaserAuthors>
           ) : null}
 
           {publishDate && (
