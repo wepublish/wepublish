@@ -1,10 +1,13 @@
 {
   "blocks": {
     "image": {
-      "captionSource": "(© {{source}})"
+      "captionSource": "({{source}})"
     },
     "imageGallery": {
-      "captionSource": "(© {{source}})"
+      "captionSource": "({{source}})"
+    },
+    "teaser": {
+      "authors": "{{authors}}"
     }
   },
   "subscription": {
