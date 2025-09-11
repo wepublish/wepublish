@@ -5,6 +5,8 @@ import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscri
 import {differenceInDays, endOfDay, startOfDay, format, subDays} from 'date-fns'
 import NodeCache from 'node-cache'
 import {createHash} from 'crypto'
+import {fr} from 'date-fns/locale'
+import {gt} from 'ramda'
 
 /**
  * Stats cache configuration and setup
@@ -434,10 +436,13 @@ export class DashboardSubscriptionService {
     })
   }
 
-  private async getDailyPredictedSubscriptionRenewals(date: Date, memberPlanIds: string[] = []) {
-    const start = startOfDay(date)
+  private async getDailyPredictedSubscriptionRenewalsCount(
+    date: Date,
+    memberPlanIds: string[] = [],
+    fromDate: Date = new Date()
+  ) {
+    const start = startOfDay(fromDate)
     const end = endOfDay(date)
-    //console.log('Getting daily predicted subscription renewals', start, end )
 
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
     if (memberPlanIds.length > 0) {
@@ -447,17 +452,8 @@ export class DashboardSubscriptionService {
         }
       }
     }
-    return this.prisma.subscription.findMany({
-      select: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            name: true,
-            email: true
-          }
-        }
-      },
+
+    const data = await this.prisma.subscription.findMany({
       where: {
         paidUntil: {
           gte: start,
@@ -465,45 +461,18 @@ export class DashboardSubscriptionService {
         },
         autoRenew: true,
         deactivation: null,
-        // Ensure that it is not the initial creation
-        /*
-        createdAt: {
-          not: {
-            gte: start
-          }
-        },
-        */
-        // Ensure that the new period starts today
-        /*
-        periods: {
-          some: {
-            startsAt: {
-              gte: start,
-              lte: end
-            }
-          }
-        },
-        */
-        // Ensure that it is not a renewed subscription
-        /*
-        NOT: {
-          periods: {
-            some: {
-              startsAt: {
-                lt: start
-              },
-              endsAt: {
-                gte: start
-              }
-            }
-          }
-        },
-        */
-        // Ensure that it is not deactivated
-        //deactivation: null,
         ...memberPlanFilter
+      },
+      include: {
+        _count: {
+          select: {periods: true}
+        }
       }
     })
+
+    const d = data.filter(subscription => gt(subscription._count.periods, 1))
+    //console.log('d', d.length)
+    return d.length
   }
 
   private getCacheTTLByDate(date: Date) {
@@ -519,7 +488,11 @@ export class DashboardSubscriptionService {
     return cappedDays * ONE_HOUR_IN_SEC + 1
   }
 
-  async generateDailyData(current: Date, sortedPlanIds: string[]): Promise<DailySubscriptionStats> {
+  async generateDailyData(
+    current: Date,
+    sortedPlanIds: string[],
+    fromDate: Date
+  ): Promise<DailySubscriptionStats> {
     const [
       totalActiveSubscriptionCount,
       createdSubscriptions,
@@ -533,7 +506,7 @@ export class DashboardSubscriptionService {
       this.getDailyRenewedSubscriptions(current, sortedPlanIds),
       this.getDailyDeactivatedSubscriptions(current, sortedPlanIds),
       this.getDailyOverdueSubscriptions(current, sortedPlanIds),
-      this.getDailyPredictedSubscriptionRenewals(current, sortedPlanIds)
+      this.getDailyPredictedSubscriptionRenewalsCount(current, sortedPlanIds, fromDate)
     ])
 
     const replacedSubscriptions = createdSubscriptions.filter(
@@ -567,10 +540,8 @@ export class DashboardSubscriptionService {
         deactivatedSubscription => deactivatedSubscription.user
       ),
 
-      predictedSubscriptionRenewalCount: dailyPredictedSubscriptionRenewals.length,
-      predictedSubscriptionRenewalUsers: dailyPredictedSubscriptionRenewals.map(
-        predictedSubscription => predictedSubscription.user
-      )
+      predictedSubscriptionRenewalCount: dailyPredictedSubscriptionRenewals,
+      predictedSubscriptionRenewalUsers: [] // To be implemented,
     }
   }
 
@@ -625,7 +596,7 @@ export class DashboardSubscriptionService {
           return dailyStatsCache.get(cacheKey) as DailySubscriptionStats
         }
 
-        const stats = await this.generateDailyData(date, sortedPlanIds)
+        const stats = await this.generateDailyData(date, sortedPlanIds, start)
         dailyStatsCache.set(cacheKey, stats, this.getCacheTTLByDate(date))
         return stats
       })

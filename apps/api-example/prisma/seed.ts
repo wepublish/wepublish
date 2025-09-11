@@ -1053,13 +1053,13 @@ async function seed() {
     if (!adminUserRole || !editorUserRole) {
       throw new Error('@wepublish/api seeding has not been done')
     }
-    /*
+
     const hasUsers = await prisma.user.count()
 
     if (hasUsers) {
       throw 'Website Example seeding has already been done. Skipping'
     }
-*/
+
     const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
     console.log('Seeding polls')
     const polls = await seedPoll(prisma)

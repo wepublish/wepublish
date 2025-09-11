@@ -38,6 +38,7 @@ export type AggregatedUsers = keyof Pick<
   | 'deactivatedSubscriptionUsers'
   | 'renewedSubscriptionUsers'
   | 'replacedSubscriptionUsers'
+  | 'predictedSubscriptionRenewalUsers'
 >
 
 interface UseAudienceProps {

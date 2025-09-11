@@ -7,7 +7,8 @@ import {
   MdLibraryAdd,
   MdOpenInNew,
   MdRefresh,
-  MdSpaceBar
+  MdSpaceBar,
+  MdAutorenew
 } from 'react-icons/md'
 import {Button, Col, Drawer, Nav, Row, Sidenav, Table} from 'rsuite'
 
@@ -22,7 +23,8 @@ const availableStats: AggregatedUsers[] = [
   'overdueSubscriptionUsers',
   'deactivatedSubscriptionUsers',
   'renewedSubscriptionUsers',
-  'replacedSubscriptionUsers'
+  'replacedSubscriptionUsers',
+  'predictedSubscriptionRenewalUsers'
 ]
 
 function getIconByUserFilter(filterProp: AggregatedUsers) {
@@ -37,6 +39,8 @@ function getIconByUserFilter(filterProp: AggregatedUsers) {
       return <MdRefresh />
     case 'replacedSubscriptionUsers':
       return <MdSpaceBar />
+    case 'predictedSubscriptionRenewalUsers':
+      return <MdAutorenew />
     default:
       break
   }

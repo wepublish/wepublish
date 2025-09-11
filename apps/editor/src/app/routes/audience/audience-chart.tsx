@@ -88,8 +88,10 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
                 type={'monotone'}
                 dataKey={'totalActiveSubscriptionCount'}
                 stroke={chartColors.totalActiveSubscriptionCount}
-                strokeWidth={2}
+                strokeWidth={1}
                 fill={chartColors.totalActiveSubscriptionCount}
+                dot={false}
+                activeDot={1 > 0}
               />
             )}
             {renewedSubscriptionCount && (
@@ -128,11 +130,22 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
               />
             )}
             {predictedSubscriptionRenewalCount && (
+              <Line
+                type={'monotone'}
+                dataKey={'predictedSubscriptionRenewalCount'}
+                stroke={chartColors.predictedSubscriptionRenewalCount}
+                strokeWidth={1}
+                fill={chartColors.predictedSubscriptionRenewalCount}
+                dot={false}
+                activeDot={1 > 0}
+              />
+              /*
               <Bar
                 stackId="predicted"
                 dataKey={'predictedSubscriptionRenewalCount'}
                 fill={chartColors.predictedSubscriptionRenewalCount}
               />
+              */
             )}
           </ComposedChart>
         )}

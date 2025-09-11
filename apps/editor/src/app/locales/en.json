@@ -1617,6 +1617,8 @@
         "renewalRate": "Renewal rate",
         "cancellationRate": "Cancellation rate",
         "createdSubscriptionUsers": "New paid subscriptions",
+        "overdueSubscriptionUsers": "Renewed unpaid subscriptions",
+        "predictedSubscriptionRenewalUsers": "Predicted renewals",
         "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
