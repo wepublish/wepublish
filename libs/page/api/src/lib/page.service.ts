@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
-import {PageFilter, PageListArgs, PageSort, CreatePageInput, UpdatePageInput} from './page.model'
+import {CreatePageInput, PageFilter, PageListArgs, PageSort, UpdatePageInput} from './page.model'
 import {PageDataloaderService} from './page-dataloader.service'
 import {
   getMaxTake,
@@ -74,12 +74,13 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async createPage(
-    {slug, tagIds, properties, blocks, ...revision}: CreatePageInput,
+    {slug, hidden, tagIds, properties, blocks, ...revision}: CreatePageInput,
     userId: string | null | undefined
   ) {
     return this.prisma.page.create({
       data: {
         slug,
+        hidden,
         tags: {
           createMany: {
             data: tagIds.map(tagId => ({
@@ -106,7 +107,7 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async updatePage(
-    {id, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
+    {id, hidden, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
     userId: string | null | undefined
   ) {
     const page = await this.prisma.page.findUnique({
@@ -124,6 +125,7 @@ export class PageService {
       where: {id},
       data: {
         slug,
+        hidden,
         revisions: {
           updateMany: {
             where: {
@@ -336,6 +338,7 @@ export class PageService {
 
     return this.prisma.page.create({
       data: {
+        hidden: page.hidden,
         tags: {
           createMany: {
             data: page.tags.map(({tagId}) => ({
@@ -364,39 +367,25 @@ export class PageService {
     })
   }
 
-  async getTagIds(pageId: string) {
-    return this.prisma.tag.findMany({
-      select: {
-        id: true
-      },
-      where: {
-        pages: {
-          some: {
-            pageId
-          }
-        }
-      }
-    })
-  }
-
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
       const formattedQuery = searchQuery.replace(/\s+/g, '&')
 
       const foundPageIds = await this.prisma.$queryRaw<Array<{id: string}>>`
-        SELECT p.id
-        FROM pages p
-          JOIN public."pages.revisions" pr
-            ON p."id" = pr."pageId"
-            AND pr."publishedAt" IS NOT NULL
-            AND pr."publishedAt" < NOW()
-        WHERE to_tsvector('german', coalesce(pr.title, '')) ||
-              to_tsvector('german', coalesce(pr.description, '')) ||
-              jsonb_to_tsvector(
-                'german',
-                jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
-                '["string"]'
-              ) @@ to_tsquery('german', ${formattedQuery});
+          SELECT p.id
+          FROM pages p
+                   JOIN public."pages.revisions" pr
+                        ON p."id" = pr."pageId"
+                            AND pr."publishedAt" IS NOT NULL
+                            AND pr."publishedAt" < NOW()
+          WHERE to_tsvector('german', coalesce(pr.title, '')) ||
+                to_tsvector('german', coalesce(pr.description, '')) ||
+                jsonb_to_tsvector(
+                        'german',
+                        jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
+                        '["string"]'
+                ) @@ to_tsquery('german'
+              , ${formattedQuery});
       `
 
       return foundPageIds.map(item => item.id)
@@ -431,31 +420,80 @@ export const createPageOrder = (
 
 const createTitleFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.title) {
-    return {
-      revisions: {
-        some: {
-          title: {
-            contains: filter.title,
-            mode: 'insensitive'
-          }
+    const titleFilter: Prisma.PageRevisionWhereInput = {
+      title: {
+        contains: filter.title,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filter?.published) {
+      return {
+        PagesRevisionPublished: {
+          pageRevision: titleFilter
         }
       }
     }
-  }
+    if (filter?.draft) {
+      return {
+        PagesRevisionDraft: {
+          pageRevision: titleFilter
+        }
+      }
+    }
 
+    if (filter?.pending) {
+      return {
+        PagesRevisionPending: {
+          pageRevision: titleFilter
+        }
+      }
+    }
+
+    return {
+      revisions: {
+        some: titleFilter
+      }
+    }
+  }
   return {}
 }
 
 const createDescriptionFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.description) {
+    const descriptionFilter: Prisma.PageRevisionWhereInput = {
+      description: {
+        contains: filter.description,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filter?.published) {
+      return {
+        PagesRevisionPublished: {
+          pageRevision: descriptionFilter
+        }
+      }
+    }
+    if (filter?.draft) {
+      return {
+        PagesRevisionDraft: {
+          pageRevision: descriptionFilter
+        }
+      }
+    }
+
+    if (filter?.pending) {
+      return {
+        PagesRevisionPending: {
+          pageRevision: descriptionFilter
+        }
+      }
+    }
+
     return {
       revisions: {
-        some: {
-          description: {
-            contains: filter.description,
-            mode: 'insensitive'
-          }
-        }
+        some: descriptionFilter
       }
     }
   }
@@ -552,6 +590,16 @@ const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =>
   return {}
 }
 
+const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  if (filter?.includeHidden) {
+    return {}
+  }
+
+  return {
+    hidden: false
+  }
+}
+
 export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -559,6 +607,7 @@ export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereI
     createPublicationDateToFilter(filter),
     createDescriptionFilter(filter),
     createTagsFilter(filter),
+    createHiddenFilter(filter),
     {
       OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
     }

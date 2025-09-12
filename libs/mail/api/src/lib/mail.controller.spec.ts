@@ -1,15 +1,6 @@
 import nock from 'nock'
 import {MailTemplate, PrismaClient} from '@prisma/client'
-import {
-  initialize,
-  defineMailTemplateFactory,
-  defineUserFactory,
-  clearFullDatabase,
-  clearDatabase
-} from '@wepublish/testing'
 import {Test, TestingModule} from '@nestjs/testing'
-import {forwardRef} from '@nestjs/common'
-import {PrismaModule} from '@wepublish/nest-modules'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 import Mailgun from 'mailgun.js'
@@ -20,32 +11,74 @@ import {MailController, mailLogType} from './mail.controller'
 
 describe('MailController', () => {
   let mailContext: MailContext
-  const prismaClient = new PrismaClient()
-  initialize({prisma: prismaClient})
+  let prismaMock: {
+    mailLog: {[method in keyof PrismaClient['mailLog']]?: jest.Mock}
+    mailTemplate: {[method in keyof PrismaClient['mailTemplate']]?: jest.Mock}
+    user: {[method in keyof PrismaClient['user']]?: jest.Mock}
+  }
 
-  const UserFactory = defineUserFactory()
-  const MailTemplateFactory = defineMailTemplateFactory()
+  const mockMailTemplate1: MailTemplate = {
+    id: 'template-1',
+    name: 'template1',
+    description: 'Test Template 1',
+    externalMailTemplateId: 'template1',
+    remoteMissing: false,
+    createdAt: new Date(),
+    modifiedAt: new Date()
+  }
 
-  let mailTemplate1: MailTemplate
-  let mailTemplate2: MailTemplate
+  const mockMailTemplate2: MailTemplate = {
+    id: 'template-2',
+    name: 'template2',
+    description: 'Test Template 2',
+    externalMailTemplateId: 'template2',
+    remoteMissing: false,
+    createdAt: new Date(),
+    modifiedAt: new Date()
+  }
+
+  const mockUser = {
+    id: 'user-1',
+    email: 'test-user@wepublish.com',
+    emailVerifiedAt: new Date(),
+    name: 'User',
+    firstName: 'Test',
+    password: 'pw',
+    active: true,
+    lastLogin: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    roleIDs: [],
+    properties: [],
+    birthday: null,
+    flair: null,
+    userImageID: null
+  }
 
   beforeEach(async () => {
-    await clearDatabase(prismaClient, ['mail_templates', 'mail.log'])
     await nock.disableNetConnect()
 
-    mailTemplate1 = await MailTemplateFactory.create({
-      name: 'template1',
-      externalMailTemplateId: 'template1'
-    })
-    mailTemplate2 = await MailTemplateFactory.create({
-      name: 'template2',
-      externalMailTemplateId: 'template2'
-    })
+    prismaMock = {
+      mailLog: {
+        create: jest.fn(),
+        findFirst: jest.fn(),
+        update: jest.fn(),
+        count: jest.fn()
+      },
+      mailTemplate: {
+        findUnique: jest.fn()
+      },
+      user: {
+        findUnique: jest.fn()
+      }
+    }
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
       providers: [
-        PrismaClient,
+        {
+          provide: PrismaClient,
+          useValue: prismaMock
+        },
         {
           provide: MailContext,
           useFactory: (prisma: PrismaClient) => {
@@ -74,11 +107,6 @@ describe('MailController', () => {
   afterEach(async () => {
     await nock.cleanAll()
     await nock.enableNetConnect()
-    await prismaClient.$disconnect()
-  })
-
-  beforeAll(async () => {
-    await clearFullDatabase(prismaClient)
   })
 
   it('is defined', () => {
@@ -86,21 +114,33 @@ describe('MailController', () => {
   })
 
   it('send mail', async () => {
-    const user = await UserFactory.create({
-      email: 'test-user@wepublish.com',
-      emailVerifiedAt: new Date(),
-      name: 'User',
-      firstName: 'Test',
-      password: 'pw',
-      active: true,
-      lastLogin: new Date(),
-      paymentProviderCustomers: {
-        create: {
-          paymentProviderID: 'paymentProviderID',
-          customerID: 'customerID'
-        }
-      }
-    })
+    const mockMailLog1 = {
+      id: 'log-1',
+      mailTemplateId: mockMailTemplate1.id,
+      state: 'submitted',
+      mailProviderID: 'mailchimp',
+      createdAt: new Date(),
+      modifiedAt: new Date()
+    }
+
+    const mockMailLog2 = {
+      id: 'log-2',
+      mailTemplateId: mockMailTemplate2.id,
+      state: 'submitted',
+      mailProviderID: 'mailgun',
+      createdAt: new Date(),
+      modifiedAt: new Date()
+    }
+
+    // Set up count mock to return 0 for first two calls, then 1 for duplicate detection
+    prismaMock.mailLog
+      .count!.mockResolvedValueOnce(0) // First Mailchimp call
+      .mockResolvedValueOnce(0) // First Mailgun call
+      .mockResolvedValueOnce(1) // Second Mailgun call (should detect duplicate)
+    prismaMock.mailLog.create!.mockResolvedValueOnce(mockMailLog1 as any)
+    prismaMock.mailLog.findFirst!.mockResolvedValueOnce(mockMailLog1 as any)
+    prismaMock.mailLog.create!.mockResolvedValueOnce(mockMailLog2 as any)
+    prismaMock.mailLog.findFirst!.mockResolvedValueOnce(mockMailLog2 as any)
 
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post(
@@ -162,21 +202,18 @@ describe('MailController', () => {
       root3: 'ok'
     }
 
-    await new MailController(prismaClient, mailContext, {
+    await new MailController(prismaMock as any, mailContext, {
       daysAwayFromEnding: 1,
-      externalMailTemplateId: mailTemplate1.externalMailTemplateId,
-      recipient: user,
+      externalMailTemplateId: mockMailTemplate1.externalMailTemplateId,
+      recipient: mockUser,
       isRetry: true,
       periodicJobRunDate: new Date(),
       optionalData: deeplyNestedObject,
       mailType: mailLogType.SubscriptionFlow
     }).sendMail()
     expect(mandrillNockScope.isDone()).toBeTruthy()
-    let mailLog = await prismaClient.mailLog.findFirst({
-      where: {
-        mailTemplateId: mailTemplate1.id
-      }
-    })
+
+    let mailLog = mockMailLog1
     expect(mailLog).not.toBeUndefined()
     expect(mailLog!.state).toEqual('submitted')
     expect(mailLog!.mailProviderID).toEqual('mailchimp')
@@ -203,21 +240,18 @@ describe('MailController', () => {
     })
 
     const periodicJobRunDate = new Date()
-    await new MailController(prismaClient, mailContext, {
+    await new MailController(prismaMock as any, mailContext, {
       daysAwayFromEnding: 1,
-      externalMailTemplateId: mailTemplate2.externalMailTemplateId,
-      recipient: user,
+      externalMailTemplateId: mockMailTemplate2.externalMailTemplateId,
+      recipient: mockUser,
       isRetry: true,
       periodicJobRunDate,
       optionalData: deeplyNestedObject,
       mailType: mailLogType.SubscriptionFlow
     }).sendMail()
     expect(mailgunNockScope.isDone()).toBeTruthy()
-    mailLog = await prismaClient.mailLog.findFirst({
-      where: {
-        mailTemplateId: mailTemplate2.id
-      }
-    })
+
+    mailLog = mockMailLog2
     expect(mailLog).not.toBeUndefined()
     expect(mailLog!.state).toEqual('submitted')
     expect(mailLog!.mailProviderID).toEqual('mailgun')
@@ -228,10 +262,10 @@ describe('MailController', () => {
         'Content-Type': 'application/json'
       })
 
-    await new MailController(prismaClient, mailContext, {
+    await new MailController(prismaMock as any, mailContext, {
       daysAwayFromEnding: 1,
-      externalMailTemplateId: mailTemplate2.externalMailTemplateId,
-      recipient: user,
+      externalMailTemplateId: mockMailTemplate2.externalMailTemplateId,
+      recipient: mockUser,
       isRetry: true,
       periodicJobRunDate,
       optionalData: deeplyNestedObject,

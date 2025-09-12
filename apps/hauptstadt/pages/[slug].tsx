@@ -29,7 +29,7 @@ export default function PageBySlugOrId() {
 export const getStaticPaths = getPagePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {id, slug} = params || {}
+  const {slug, id} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -48,6 +48,13 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+  const is404 = page.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   const props = addClientCacheToV1Props(client, {})
 

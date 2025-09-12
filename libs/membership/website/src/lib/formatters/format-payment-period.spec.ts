@@ -10,7 +10,9 @@ describe('formatPaymentPeriod', () => {
     PaymentPeriodicity.Monthly,
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
-    PaymentPeriodicity.Yearly
+    PaymentPeriodicity.Yearly,
+    PaymentPeriodicity.Biennial,
+    PaymentPeriodicity.Lifetime
   ])('should format payment period for %s', periodicity => {
     expect(formatPaymentPeriod(periodicity)).toMatchSnapshot()
   })
@@ -21,7 +23,9 @@ describe('formatPaymentTimeline', () => {
     PaymentPeriodicity.Monthly,
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
-    PaymentPeriodicity.Yearly
+    PaymentPeriodicity.Yearly,
+    PaymentPeriodicity.Biennial,
+    PaymentPeriodicity.Lifetime
   ])('should format payment timeline for %s', periodicity => {
     expect(formatPaymentTimeline(periodicity)).toMatchSnapshot()
   })
@@ -32,7 +36,9 @@ describe('getPaymentPeriodicyMonths', () => {
     PaymentPeriodicity.Monthly,
     PaymentPeriodicity.Quarterly,
     PaymentPeriodicity.Biannual,
-    PaymentPeriodicity.Yearly
+    PaymentPeriodicity.Yearly,
+    PaymentPeriodicity.Biennial,
+    PaymentPeriodicity.Lifetime
   ])('should get the payment periodicty month for %s', periodicity => {
     expect(getPaymentPeriodicyMonths(periodicity)).toMatchSnapshot()
   })

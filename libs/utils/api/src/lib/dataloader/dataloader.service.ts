@@ -8,7 +8,7 @@ import {Primeable} from './prime-dataloaders.decorator'
 export abstract class DataLoaderService<Type> implements Primeable<Type> {
   protected abstract loadByKeys(keys: string[]): Promise<(Type | null)[]>
 
-  private readonly dataloader = new DataLoader<string, Type | null>(
+  public readonly dataloader = new DataLoader<string, Type | null>(
     async (keys: readonly string[]) => this.loadByKeys(keys as string[]),
     {name: this.constructor.name}
   )

@@ -8,17 +8,17 @@ import {
   PaginatedArticles,
   UpdateArticleInput
 } from './article.model'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagService} from '@wepublish/tag/api'
 import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Article as PArticle} from '@prisma/client'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, NotFoundException} from '@nestjs/common'
 import {
   CanCreateArticle,
   CanDeleteArticle,
-  CanPublishArticle,
-  CanGetArticle
+  CanGetArticle,
+  CanPublishArticle
 } from '@wepublish/permissions'
 import {Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
@@ -33,7 +33,8 @@ export class ArticleResolver {
     private articleService: ArticleService,
     private trackingPixelService: TrackingPixelService,
     private urlAdapter: URLAdapter,
-    private settings: SettingDataloaderService
+    private settings: SettingDataloaderService,
+    private tagService: TagService
   ) {}
 
   @Public()
@@ -45,7 +46,11 @@ export class ArticleResolver {
     if (id != null) {
       const article = await this.articleDataloader.load(id)
 
-      if (article && !article?.peerId) {
+      if (!article) {
+        throw new NotFoundException(`Article with id ${id} was not found.`)
+      }
+
+      if (!article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(id)
       }
 
@@ -55,14 +60,18 @@ export class ArticleResolver {
     if (slug != null) {
       const article = await this.articleService.getArticleBySlug(slug)
 
-      if (article && !article?.peerId) {
+      if (!article) {
+        throw new NotFoundException(`Article with slug ${slug} was not found.`)
+      }
+
+      if (!article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(article.id)
       }
 
       return article
     }
 
-    throw new BadRequestException('id or slug required.')
+    throw new BadRequestException('Article id or slug required.')
   }
 
   @Public()
@@ -210,9 +219,7 @@ export class ArticleResolver {
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PArticle) {
     const {id: articleId} = parent
-    const tagIds = await this.articleService.getTagIds(articleId)
-
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    return this.tagService.getTagsByArticleId(articleId)
   }
 
   @ResolveField(() => String, {nullable: true})

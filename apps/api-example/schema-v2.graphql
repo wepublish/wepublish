@@ -2,26 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-directive @extends on INTERFACE | OBJECT
-
-directive @external on FIELD_DEFINITION | OBJECT
-
-directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
-directive @key(fields: String!, resolvable: Boolean = true) repeatable on INTERFACE | OBJECT
-
-directive @link(import: [link__Import], url: String!) on SCHEMA
-
-directive @override(from: String!) on FIELD_DEFINITION
-
-directive @provides(fields: String!) on FIELD_DEFINITION
-
-directive @requires(fields: String!) on FIELD_DEFINITION
-
-directive @shareable on FIELD_DEFINITION | OBJECT
-
-directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
-
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 enum ActionType {
@@ -147,8 +127,35 @@ input ArticleTeaserInput {
   title: String
 }
 
-type Author {
+type AuthProvider {
+  name: String!
+  url: String!
+}
+
+type Author implements HasImage & HasOptionalPeerLc {
+  bio: RichText
+  createdAt: DateTime!
+  hideOnArticle: Boolean!
+  hideOnTeam: Boolean!
+  hideOnTeaser: Boolean!
   id: String!
+  image: Image
+  imageID: String
+  jobTitle: String
+  links: [AuthorLink!]
+  modifiedAt: DateTime!
+  name: String!
+  peer: Peer
+  peerId: String
+  slug: Slug!
+  tags: [Tag!]!
+  url: String!
+}
+
+type AuthorConnection {
+  nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type AuthorCreatedAction implements BaseAction & HasAuthor {
@@ -156,6 +163,24 @@ type AuthorCreatedAction implements BaseAction & HasAuthor {
   author: Author!
   authorId: String!
   date: DateTime!
+}
+
+input AuthorFilter {
+  hideOnTeam: Boolean
+  name: String
+  tagIds: [String!]
+}
+
+type AuthorLink {
+  title: String!
+  url: String!
+}
+
+"""Sorting options for authors"""
+enum AuthorSort {
+  CreatedAt
+  ModifiedAt
+  Name
 }
 
 type AvailablePaymentMethod {
@@ -338,8 +363,65 @@ input BreakBlockInput {
   text: String
 }
 
+type CalculatedRating {
+  answer: CommentRatingSystemAnswer!
+  count: Int!
+  mean: Float!
+  total: Int!
+}
+
+enum CaptchaType {
+  Algebraic
+  CfTurnstile
+}
+
+type Challenge {
+  challenge: String
+  challengeID: String
+  type: CaptchaType!
+  validUntil: Date
+}
+
+input ChallengeInput {
+  challengeID: String!
+  challengeSolution: String!
+}
+
+"""A hexadecimal color value (#RRGGBB)"""
+scalar Color
+
 type Comment {
+  authorType: CommentAuthorType!
+  calculatedRatings: [CalculatedRating!]!
+  children: [Comment!]!
+  createdAt: DateTime!
+  featured: Boolean
+  guestUserImage: Image
+  guestUsername: String
   id: String!
+  itemID: String!
+  itemType: CommentItemType!
+  lead: String
+  modifiedAt: DateTime!
+  overriddenRatings: [overriddenRating!]!
+  parentComment: Comment
+  parentID: String
+  rejectionReason: String
+  source: String
+  state: CommentState!
+  tags: [Tag!]!
+  text: RichText
+  title: String
+  url: String!
+  user: User
+  userRatings: [CommentRating!]!
+}
+
+enum CommentAuthorType {
+  author
+  guestUser
+  team
+  verifiedUser
 }
 
 type CommentBlock implements BaseBlock {
@@ -373,6 +455,57 @@ type CommentCreatedAction implements BaseAction & HasComment {
   comment: Comment!
   commentId: String!
   date: DateTime!
+}
+
+input CommentInput {
+  challenge: ChallengeInput
+  guestUsername: String
+  itemID: String!
+  itemType: CommentItemType!
+  parentID: String
+  text: RichText!
+  title: String
+}
+
+enum CommentItemType {
+  article
+  page
+}
+
+type CommentRating {
+  answer: CommentRatingSystemAnswer!
+  commentId: String!
+  createdAt: DateTime!
+  disabled: Boolean
+  fingerprint: String
+  id: String!
+  userId: String
+  value: Int!
+}
+
+type CommentRatingSystemAnswer {
+  answer: String
+  id: String!
+  ratingSystemId: String!
+  type: RatingSystemType!
+}
+
+enum CommentSort {
+  rating
+}
+
+enum CommentState {
+  approved
+  pendingApproval
+  pendingUserChanges
+  rejected
+}
+
+input CommentUpdateInput {
+  id: String!
+  lead: String
+  text: RichText
+  title: String
 }
 
 type Consent {
@@ -559,6 +692,11 @@ type DashboardSubscription {
   renewsAt: DateTime
   startsAt: DateTime!
 }
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
 
 input DateFilter {
   comparison: DateFilterComparison!
@@ -784,8 +922,20 @@ type FocalPoint {
   y: Float!
 }
 
-type FullPoll {
+type FullCommentRatingSystem {
+  answers: [CommentRatingSystemAnswer!]!
   id: String!
+  name: String
+}
+
+type FullPoll {
+  answers: [PollAnswerWithVoteCount!]!
+  closedAt: DateTime
+  externalVoteSources: [PollExternalVoteSource!]!
+  id: String!
+  infoText: RichText
+  opensAt: DateTime!
+  question: String
 }
 
 """Setting Value"""
@@ -838,6 +988,11 @@ interface HasImage {
   imageID: String
 }
 
+interface HasImageLc {
+  image: Image
+  imageId: String
+}
+
 interface HasOptionalArticle {
   article: Article
   articleID: String
@@ -868,6 +1023,11 @@ interface HasOptionalPoll {
   pollId: String
 }
 
+interface HasOptionalSubscription {
+  subscription: PublicSubscription
+  subscriptionID: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -878,14 +1038,24 @@ interface HasPageLc {
   pageId: String!
 }
 
+interface HasPaymentMethod {
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+}
+
 interface HasPoll {
   poll: FullPoll!
   pollId: String!
 }
 
-interface HasSubscription {
+interface HasSubscriptionLc {
   subscription: PublicSubscription!
   subscriptionId: String!
+}
+
+interface HasUser {
+  user: User!
+  userID: String!
 }
 
 interface HasUserLc {
@@ -917,7 +1087,25 @@ input IFrameBlockInput {
 }
 
 type Image {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  focalPoint: FocalPoint
+  format: String!
+  height: Int!
   id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  tags: [String!]!
+  title: String
+  transformURL(input: ImageTransformation): String
+  url: String
+  width: Int!
 }
 
 type ImageBlock implements BaseBlock & HasImage {
@@ -962,24 +1150,30 @@ input ImageGalleryImageInput {
   imageID: String
 }
 
-type ImageV2 {
-  createdAt: DateTime!
-  description: RichText
-  extension: String!
-  fileSize: Int!
-  filename: String
-  focalPoint: FocalPoint
-  format: String!
-  height: Int!
-  id: String!
-  license: String
-  link: String
-  mimeType: String!
-  modifiedAt: DateTime!
-  source: String
-  tags: [String!]!
-  title: String
-  width: Int!
+enum ImageOutput {
+  jpeg
+  png
+  webp
+}
+
+enum ImageRotation {
+  Auto
+  Rotate0
+  Rotate90
+  Rotate180
+  Rotate270
+}
+
+input ImageTransformation {
+  blur: Boolean
+  grayscale: Boolean
+  height: Int
+  negate: Boolean
+  output: ImageOutput
+  quality: Float
+  rotation: ImageRotation
+  sharpen: Boolean
+  width: Int
 }
 
 input ImportArticleOptions {
@@ -1009,6 +1203,11 @@ type ImportedEventsDocument {
   totalCount: Int!
 }
 
+input InputPoint {
+  x: Float!
+  y: Float!
+}
+
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1020,6 +1219,31 @@ input InstagramPostBlockInput {
   blockStyle: String
   blockStyleName: String
   postID: String
+}
+
+type Invoice implements HasOptionalSubscription {
+  canceledAt: DateTime
+  createdAt: DateTime!
+  description: String
+  dueAt: DateTime!
+  id: String!
+  items: [InvoiceItem!]!
+  mail: String!
+  modifiedAt: DateTime!
+  paidAt: DateTime
+  subscription: PublicSubscription
+  subscriptionID: String
+  total: Int!
+}
+
+type InvoiceItem {
+  amount: Int!
+  createdAt: DateTime!
+  description: String
+  modifiedAt: DateTime!
+  name: String!
+  quantity: Int!
+  total: Int!
 }
 
 type ListicleBlock implements BaseBlock {
@@ -1073,7 +1297,7 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
-type MemberPlan {
+type MemberPlan implements HasImage {
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
@@ -1084,6 +1308,7 @@ type MemberPlan {
   failPageId: String
   id: String!
   image: Image
+  imageID: String
   maxCount: Int
   name: String!
   slug: String!
@@ -1091,7 +1316,32 @@ type MemberPlan {
   tags: [String!]
 }
 
+type MemberPlanConnection {
+  nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input MemberPlanFilter {
+  active: Boolean
+  name: String
+  tags: [String!]
+}
+
+enum MemberPlanSort {
+  createdAt
+  modifiedAt
+}
+
 type Mutation {
+  """Create a new comment"""
+  addComment(input: CommentInput!): Comment!
+
+  """
+  This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
+  """
+  cancelUserSubscription(id: String!): PublicSubscription
+
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
   createBanner(input: CreateBannerInput!): Banner!
@@ -1112,13 +1362,32 @@ type Mutation {
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Creates an page."""
-  createPage(blocks: [BlockContentInput!]!, description: String, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """
+  This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
+  """
+  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
+
+  """This mutation allows to create payment by referencing a subscription."""
+  createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
+  createSession(email: String!, password: String!): SessionWithToken!
+  createSessionWithJWT(jwt: String!): SessionWithToken!
+  createSessionWithOAuth2Code(code: String!, provider: String!, redirectUri: String!): SessionWithToken!
+
+  """Allows authenticated users to create additional subscriptions"""
+  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  """
+  Allows guests and authenticated users to create additional subscriptions
+  """
+  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1164,6 +1433,9 @@ type Mutation {
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
+  """Allows authenticated users to extend existing subscriptions"""
+  extendSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
 
@@ -1178,6 +1450,24 @@ type Mutation {
 
   """Publishes an page at the given time."""
   publishPage(id: String!, publishedAt: DateTime!): Page!
+
+  """
+  This mutation allows to rate a comment. Supports logged in and anonymous
+  """
+  rateComment(answerId: String!, commentId: String!, value: Int!): Comment!
+
+  """
+  This mutation registers a new member by providing name, email, and other required information.
+  """
+  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, name: String!, password: String): Registration!
+
+  """This mutation revokes and deletes the active session."""
+  revokeActiveSession: Boolean!
+
+  """
+  This mutation sends a login link to the email if the user exists. Method will always return email address
+  """
+  sendWebsiteLogin(email: String!): String!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
@@ -1196,6 +1486,9 @@ type Mutation {
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
+  """Update an existing comment"""
+  updateComment(input: CommentUpdateInput!): Comment!
+
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
@@ -1209,7 +1502,15 @@ type Mutation {
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates an page."""
-  updatePage(blocks: [BlockContentInput!]!, description: String, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+
+  """
+  This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
+  """
+  updatePassword(password: String!, passwordRepeated: String!): User!
+
+  """This mutation allows to update the Payment Provider Customers"""
+  updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1223,8 +1524,26 @@ type Mutation {
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
+  """
+  This mutation allows to update the user's data by taking an input of type UserInput.
+  """
+  updateUser(input: UserInput!): User
+
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
+
+  """
+  This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
+  """
+  updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
+
+  """This mutation allows to upload and update the user's profile image."""
+  uploadUserProfileImage(uploadImageInput: UploadImageInput): User
+
+  """
+  This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
+  """
+  voteOnPoll(answerId: String!): PollVote
 }
 
 type Navigation {
@@ -1256,9 +1575,16 @@ type NonDbProperty {
   value: String!
 }
 
+type OAuth2Account {
+  provider: String!
+  scope: String!
+  type: String!
+}
+
 type Page {
   createdAt: DateTime!
   draft: PageRevision
+  hidden: Boolean!
   id: String!
   latest: PageRevision!
   modifiedAt: DateTime!
@@ -1281,6 +1607,7 @@ type PageCreatedAction implements BaseAction & HasPageLc {
 input PageFilter {
   description: String
   draft: Boolean
+  includeHidden: Boolean
   pending: Boolean
   publicationDateFrom: DateFilter
   publicationDateTo: DateFilter
@@ -1385,7 +1712,23 @@ type PaginatedPollVotes {
   totalCount: Int!
 }
 
-type PaymentMethod {
+type Payment implements HasPaymentMethod {
+  id: String!
+  intentSecret: String!
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  state: PaymentState!
+}
+
+input PaymentFromInvoiceInput {
+  failureURL: String
+  invoiceID: String!
+  paymentMethodID: String
+  paymentMethodSlug: Slug
+  successURL: String
+}
+
+type PaymentMethod implements HasImageLc {
   description: String!
   id: String!
   image: Image
@@ -1397,13 +1740,42 @@ type PaymentMethod {
 
 enum PaymentPeriodicity {
   biannual
+  biennial
+  lifetime
   monthly
   quarterly
   yearly
 }
 
+type PaymentProviderCustomer {
+  customerID: String!
+  paymentProviderID: String!
+}
+
+input PaymentProviderCustomerInput {
+  customerID: String!
+  paymentProviderID: String!
+}
+
+enum PaymentState {
+  canceled
+  created
+  declined
+  paid
+  processing
+  requiresUserAction
+  submitted
+}
+
 type Peer {
+  createdAt: DateTime!
+  hostURL: String!
   id: String!
+  isDisabled: Boolean
+  modifiedAt: DateTime!
+  name: String!
+  profile: PeerProfile
+  slug: String!
 }
 
 type PeerArticle implements HasOptionalPeerLc {
@@ -1450,6 +1822,23 @@ type PeerImage {
   url: String!
 }
 
+type PeerProfile {
+  callToActionImage: Image
+  callToActionImageID: String
+  callToActionImageURL: String
+  callToActionText: RichText!
+  callToActionURL: String!
+  hostURL: String!
+  logo: Image
+  logoID: String
+  name: String!
+  squareLogo: Image
+  squareLogoId: String
+  themeColor: Color!
+  themeFontColor: Color!
+  websiteURL: String!
+}
+
 type PeriodicJob {
   createdAt: DateTime!
   date: DateTime!
@@ -1485,6 +1874,13 @@ type PollAnswerInVote {
   id: String!
 }
 
+type PollAnswerWithVoteCount {
+  answer: String
+  id: String!
+  pollId: String!
+  votes: Int!
+}
+
 type PollBlock implements BaseBlock & HasOptionalPoll {
   blockStyle: String
   blockStyleName: String
@@ -1497,6 +1893,18 @@ input PollBlockInput {
   blockStyle: String
   blockStyleName: String
   pollId: String
+}
+
+type PollExternalVote {
+  amount: VoteValue!
+  answerId: String!
+  id: String!
+}
+
+type PollExternalVoteSource {
+  id: String!
+  source: String
+  voteAmounts: [PollExternalVote!]!
 }
 
 type PollStartedAction implements BaseAction & HasPoll {
@@ -1544,8 +1952,23 @@ input PropertyInput {
   value: String!
 }
 
-type PublicSubscription {
+type PublicSubscription implements HasPaymentMethod & HasUser {
+  autoRenew: Boolean!
+  canExtend: Boolean!
+  deactivation: SubscriptionDeactivation
+  extendable: Boolean!
   id: String!
+  memberPlan: MemberPlan!
+  monthlyAmount: Int!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
+  properties: [Property!]!
+  startsAt: DateTime!
+  url: String!
+  user: User!
+  userID: String!
 }
 
 type Query {
@@ -1560,11 +1983,35 @@ type Query {
 
   """Returns a paginated list of articles based on the filters given."""
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
+
+  """
+  This query returns available OAuth providers with their authorization URLs.
+  """
+  authProviders(redirectUri: String): [AuthProvider!]!
+
+  """Get an author by ID or slug"""
+  author(id: String, slug: Slug): Author
+
+  """Get a paginated list of authors with optional filtering and sorting"""
+  authors(cursor: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): AuthorConnection!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
+
+  """
+  This query generates a challenge which can be used to access protected endpoints.
+  """
+  challenge: Challenge!
+
+  """
+  Check the status of an invoice and update with information from the payment provider
+  """
+  checkInvoiceStatus(id: String!): Invoice
+
+  """This query returns the comments of an item."""
+  comments(itemId: String!, order: SortOrder = Descending, sort: CommentSort): [Comment!]!
 
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!
@@ -1594,7 +2041,7 @@ type Query {
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """Returns an image by id."""
-  getImage(id: String!): ImageV2!
+  getImage(id: String!): Image!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
@@ -1608,8 +2055,20 @@ type Query {
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
 
+  """Get all invoices for the authenticated user"""
+  invoices: [Invoice!]!
+
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+
+  """This query returns the user."""
+  me: User
+
+  """This query returns a member plan."""
+  memberPlan(id: String, slug: Slug): MemberPlan
+
+  """This query returns the member plans."""
+  memberPlans(cursor: String, filter: MemberPlanFilter, order: SortOrder! = Descending, skip: Int! = 0, sort: MemberPlanSort! = createdAt, take: Int! = 10): MemberPlanConnection!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -1632,19 +2091,31 @@ type Query {
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
 
+  """
+  This query takes either the ID or the slug and returns the peer profile.
+  """
+  peer(id: String, slug: Slug): Peer
+
   """Returns a paginated list of peer articles based on the filters given."""
   peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
+
+  """This query returns the peer profile."""
+  peerProfile: PeerProfile!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """
   This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
   """
   phrase(articleSort: ArticleSort! = PublishedAt, order: SortOrder! = Descending, pageSort: PageSort! = PublishedAt, query: String!, skip: Int! = 0, take: Int! = 10): Phrase!
+  poll(id: String!): FullPoll!
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
+
+  """This query returns the comment rating system."""
+  ratingSystem: FullCommentRatingSystem!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
@@ -1665,14 +2136,39 @@ type Query {
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
+  """This query returns the subscriptions of the authenticated user."""
+  subscriptions: [PublicSubscription!]!
+
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
+
+  """This query returns a list of tags"""
+  tags(
+    """Cursor for pagination"""
+    cursor: String
+
+    """Filter for tags"""
+    filter: TagFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: TagSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): TagConnection
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
+  userPollVote(pollId: String!): String
   versionInformation: VersionInformation!
 }
 
@@ -1694,6 +2190,15 @@ input QuoteBlockInput {
   quote: String
 }
 
+enum RatingSystemType {
+  star
+}
+
+type Registration {
+  session: UserSession!
+  user: User!
+}
+
 scalar RichText
 
 type RichTextBlock implements BaseBlock {
@@ -1707,6 +2212,13 @@ input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
   richText: RichText!
+}
+
+type SessionWithToken {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  token: String!
+  user: User!
 }
 
 type Setting {
@@ -1788,11 +2300,16 @@ input SubscribeBlockInput {
   blockStyleName: String
 }
 
-type SubscriptionCreatedAction implements BaseAction & HasSubscription {
+type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
   actionType: ActionType!
   date: DateTime!
   subscription: PublicSubscription!
   subscriptionId: String!
+}
+
+type SubscriptionDeactivation {
+  date: DateTime!
+  reason: SubscriptionDeactivationReason!
 }
 
 enum SubscriptionDeactivationReason {
@@ -1838,6 +2355,36 @@ type SystemMailModel {
 
 type Tag {
   id: String!
+  main: Boolean!
+  tag: String
+  type: TagType
+  url: String!
+}
+
+type TagConnection {
+  nodes: [Tag!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input TagFilter {
+  tag: String
+  type: TagType
+}
+
+enum TagSort {
+  CreatedAt
+  ModifiedAt
+  Tag
+}
+
+"""Type of tag."""
+enum TagType {
+  Article
+  Author
+  Comment
+  Event
+  Page
 }
 
 union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser
@@ -2068,8 +2615,52 @@ input UpdateCrowdfundingInput {
   name: String!
 }
 
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UploadImageInput {
+  description: String
+  file: Upload!
+  filename: String
+  focalPoint: InputPoint
+  license: String
+  link: String
+  source: String
+  tags: [String!]
+  title: String
+}
+
 type User {
+  address: UserAddress
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
   id: String!
+  image: Image
+  name: String!
+  oauth2Accounts: [OAuth2Account!]!
+  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  permissions: [String!]!
+  properties: [Property!]!
+}
+
+type UserAddress {
+  city: String
+  company: String
+  country: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
+}
+
+input UserAddressInput {
+  city: String
+  company: String
+  country: String
+  streetAddress: String
+  streetAddress2: String
+  zipCode: String
 }
 
 type UserConsent {
@@ -2095,6 +2686,31 @@ enum UserEvent {
   TEST_MAIL
 }
 
+input UserInput {
+  address: UserAddressInput
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
+  name: String!
+  uploadImageInput: UploadImageInput
+}
+
+type UserSession {
+  createdAt: DateTime!
+  expiresAt: DateTime!
+  token: String!
+}
+
+input UserSubscriptionInput {
+  autoRenew: Boolean!
+  id: String!
+  memberPlanID: String!
+  monthlyAmount: Int!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
+}
+
 type VersionInformation {
   version: String!
 }
@@ -2112,6 +2728,9 @@ input VimeoVideoBlockInput {
   videoID: String
 }
 
+"""A valid vote value"""
+scalar VoteValue
+
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -2125,4 +2744,7 @@ input YouTubeVideoBlockInput {
   videoID: String
 }
 
-scalar link__Import
+type overriddenRating {
+  answerId: String!
+  value: Int
+}

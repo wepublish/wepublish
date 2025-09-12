@@ -1,31 +1,32 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {setCookie} from 'cookies-next'
-import {NextPage, NextPageContext} from 'next'
-import getConfig from 'next/config'
-import {withAuthGuard} from '../../auth-guard'
-import {ssrAuthLink} from '../../auth-link'
-import {getSessionTokenProps} from '../../get-session-token-props'
-import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {css} from '@mui/material'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {
-  useHasUnpaidInvoices,
   InvoiceListContainer,
+  InvoiceListItemWrapper,
   SubscriptionListContainer,
-  InvoiceListItemWrapper
+  useHasUnpaidInvoices
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
-  useSubscriptionsQuery,
+  addClientCacheToV1Props,
   getV1ApiClient,
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  addClientCacheToV1Props
+  UserSession,
+  useSubscriptionsQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {setCookie} from 'cookies-next'
+import {t} from 'i18next'
+import {NextPage, NextPageContext} from 'next'
+import getConfig from 'next/config'
+import {ComponentProps} from 'react'
+import {withAuthGuard} from '../../auth-guard'
+import {ssrAuthLink} from '../../auth-link'
+import {getSessionTokenProps} from '../../get-session-token-props'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -104,7 +105,7 @@ function ProfilePage(props: ProfilePageProps) {
         )}
 
         <SubscriptionListWrapper>
-          <H4 component={'h1'}>Aktive Abos</H4>
+          <H4 component={'h1'}>{t('user.activeSubscriptions')}</H4>
 
           <SubscriptionListContainer
             filter={subscriptions =>
@@ -114,7 +115,9 @@ function ProfilePage(props: ProfilePageProps) {
 
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
+              <Link href="/profile/subscription/deactivated">
+                {t('user.viewCancelledSubscriptions')}
+              </Link>
             </DeactivatedSubscriptions>
           )}
         </SubscriptionListWrapper>
@@ -137,7 +140,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -156,7 +159,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
     })
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([

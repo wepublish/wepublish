@@ -1,0 +1,17 @@
+{
+    "Servers": {
+        "1": {
+            "Group": "Servers",
+            "Name": "We.Publish",
+            "Host": "database",
+            "Port": 5432,
+            "MaintenanceDB": "wepublish",
+            "Username": "postgres",
+            "Password": "postgres",
+            "ConnectionParameters": {
+                "sslmode": "prefer",
+                "passfile": "/pgadmin4/.pgpass"
+            }
+        }
+    }
+}

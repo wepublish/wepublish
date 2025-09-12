@@ -1,6 +1,6 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {PageRevision} from './page.model'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {PageRevisionService} from './page-revision.service'
 import {Property} from '@wepublish/utils/api'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
@@ -14,7 +14,8 @@ export class PageRevisionResolver {
   constructor(
     private revisionService: PageRevisionService,
     @Inject(forwardRef(() => SlotTeasersLoader))
-    private slotTeasersLoader: SlotTeasersLoader
+    private slotTeasersLoader: SlotTeasersLoader,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => [Property])
@@ -36,7 +37,7 @@ export class PageRevisionResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageID}
+    return this.imageDataloaderService.load(imageID)
   }
 
   @ResolveField(() => Image, {nullable: true})
@@ -47,7 +48,7 @@ export class PageRevisionResolver {
       return null
     }
 
-    return {__typename: 'Image', id: socialMediaImageID}
+    return this.imageDataloaderService.load(socialMediaImageID)
   }
 
   @ResolveField(() => [BlockContent])

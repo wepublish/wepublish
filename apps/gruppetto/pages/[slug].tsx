@@ -48,6 +48,12 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+  const is404 = page.errors?.find(({extensions}) => extensions?.status === 404)
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   const props = addClientCacheToV1Props(client, {})
 

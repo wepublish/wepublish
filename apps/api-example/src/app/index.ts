@@ -1,8 +1,8 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  ChallengeProvider,
   CfTurnstile,
+  ChallengeProvider,
   HotAndTrendingDataSource,
   MailProvider,
   MediaAdapter,
@@ -21,7 +21,6 @@ import {URLAdapter} from '@wepublish/nest-modules'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
-  privateExpressApp?: Application
   publicExpressApp?: Application
   mediaAdapter: MediaAdapter
   paymentProviders: PaymentProvider[]
@@ -30,7 +29,6 @@ type RunServerProps = {
 }
 
 export async function runServer({
-  privateExpressApp,
   publicExpressApp,
   mediaAdapter,
   mailProvider,
@@ -163,7 +161,6 @@ export async function runServer({
       logger,
       challenge
     },
-    privateExpressApp,
     publicExpressApp
   )
 

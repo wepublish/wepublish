@@ -49,11 +49,13 @@ export type Author = {
   hideOnTeaser?: Maybe<Scalars['Boolean']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
   jobTitle?: Maybe<Scalars['String']>;
   links?: Maybe<Array<AuthorLink>>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -97,9 +99,9 @@ export type AuthorLinkInput = {
 };
 
 export enum AuthorSort {
-  Name = 'NAME',
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'NAME'
 }
 
 export type AvailablePaymentMethod = {
@@ -967,6 +969,8 @@ export type PaymentMethodInput = {
 
 export enum PaymentPeriodicity {
   Biannual = 'biannual',
+  Biennial = 'biennial',
+  Lifetime = 'lifetime',
   Monthly = 'monthly',
   Quarterly = 'quarterly',
   Yearly = 'yearly'
@@ -1014,13 +1018,16 @@ export type Peer = {
 export type PeerProfile = {
   __typename?: 'PeerProfile';
   callToActionImage?: Maybe<Image>;
+  callToActionImageID?: Maybe<Scalars['String']>;
   callToActionImageURL?: Maybe<Scalars['String']>;
   callToActionText: Scalars['RichText'];
   callToActionURL: Scalars['String'];
   hostURL: Scalars['String'];
   logo?: Maybe<Image>;
+  logoID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   squareLogo?: Maybe<Image>;
+  squareLogoId?: Maybe<Scalars['String']>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
   websiteURL: Scalars['String'];

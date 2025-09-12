@@ -6,14 +6,14 @@ import {hasBlockStyle} from '../../blocks'
 import {isImageGalleryBlock} from '../../image-gallery/image-gallery-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {
-  useSlidesPerView,
-  useSlidesPadding,
-  SliderWrapper,
-  SliderInnerContainer,
-  SlidesContainer,
-  SliderBallContainer,
   SliderBall,
-  SliderBallFill
+  SliderBallContainer,
+  SliderBallFill,
+  SliderInnerContainer,
+  SliderWrapper,
+  SlidesContainer,
+  useSlidesPadding,
+  useSlidesPerViewResponsive
 } from '../teaser-slider/teaser-slider'
 import {BlockContent, ImageGalleryBlock} from '@wepublish/website/api'
 
@@ -24,7 +24,7 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
-  const slidesPerView = useSlidesPerView()
+  const slidesPerView = useSlidesPerViewResponsive()
   const slidePadding = useSlidesPadding()
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
