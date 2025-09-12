@@ -1545,7 +1545,8 @@
           "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
           "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos).",
-          "predictedSubscriptionRenewalCount": "Prognostizierte Anzahl Abos, die am Ende ihrer Laufzeit erneuert werden."
+          "predictedSubscriptionRenewalCount": "Prognostizierte Anzahl Abos, die am Ende ihrer Laufzeit erneuert werden.\n Tiefere Probabilität: Erstmalige Abos\n Höhere Probabilität: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Summe: Gesamtzahl der Abos, die im gewählten Zeitraum potentiell erneuert werden\n Abo-Erneuerungen werden summiert dargestellt, beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt).\n Als potentielle Abo-Erneuerungen werden die zurzeit Bezahlten mit aktivierter automatischer Verlängerung gezählt.",
+          "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
         "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
         "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
@@ -1554,14 +1555,29 @@
         "deactivatedSubscriptionCount": "Deaktivierte Abos",
         "replacedSubscriptionCount": "Ersetzte Abos",
         "predictedSubscriptionRenewalCount": "Prognostizierte Abo-Erneuerungen",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "Tiefere Probabilität",
+          "high": "Höhere Probabilität",
+          "total": "Total potentielle Abo-Erneuerungen"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "Unsichere Abo-Erneuerungen",
+          "highProbability": "Erwartete Abo-Erneuerungen"
+        },
+        "endingSubscriptionCount": "Auslaufende Abos",
         "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
         "renewalRate": "Erneuerungsrate",
         "cancellationRate": "Kündigungsrate",
         "createdSubscriptionUsers": "Neue bezahlte Abos",
         "overdueSubscriptionUsers": "Erneuerte nicht bezahlte Abos",
+        "predictedSubscriptionRenewalUsers": "Erwartete Abo-Ereneurungen",
+        "createdUnpaidSubscriptionUsers": "Erneuerte, nicht bezahlte Abos",
         "deactivatedSubscriptionUsers": "Deaktivierte Abos",
         "renewedSubscriptionUsers": "Erneuerte bezahlte Abos",
-        "replacedSubscriptionUsers": "Ersetzte Abos"
+        "replacedSubscriptionUsers": "Ersetzte Abos",
+        "predictedSubscriptionRenewalUsersLowProbability": "Unsichere Abo-Erneuerungen",
+        "predictedSubscriptionRenewalUsersHighProbability": "Erwartete Abo-Erneuerungen",
+        "endingSubscriptionUsers": "Auslaufende Abos"
       }
     },
     "audienceDetailDrawer": {
@@ -1583,7 +1599,11 @@
       "byDate": "Per",
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
       "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
-      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "Abo-Erneuerungen mit tieferer Probabilität, Anzahl pro Tag oder Monat abhängig von der gewählten Ansicht",
+        "highProbability": "Abo-Erneuerungen mit höherer Probabilität, Anzahl pro Tag oder Monat abhängig von der gewählten Ansicht"
+      }
     }
   }
 }

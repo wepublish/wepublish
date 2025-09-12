@@ -20,7 +20,18 @@ const Info = styled.div`
 `
 
 const FilterInfo = ({text, color}: {text: string; color: string | undefined}) => (
-  <Whisper trigger="hover" speaker={<Tooltip>{text}</Tooltip>} placement="top">
+  <Whisper
+    trigger="hover"
+    speaker={
+      <Tooltip>
+        {text.split('\n').map((line, index) => (
+          <span style={{display: 'block', paddingBottom: '6px'}} key={index}>
+            {line}
+          </span>
+        ))}
+      </Tooltip>
+    }
+    placement="rightStart">
     <Info>
       <MdInfo size={24} color={color} />
     </Info>
@@ -40,11 +51,13 @@ export function AudienceFilterToggle({
 }: AudienceFilterToggleProps) {
   const {t} = useTranslation()
 
+  const chartColor =
+    typeof chartColors[filterKey] === 'string' ? chartColors[filterKey] : chartColors[filterKey][0]
+
   return (
     <>
       <Toggle
-        color={chartColors[filterKey]}
-        style={{color: chartColors[filterKey]}}
+        color={'red'}
         checked={clientFilter[filterKey as keyof AudienceClientFilter]}
         onChange={(checked: boolean) =>
           setClientFilter({
@@ -54,7 +67,7 @@ export function AudienceFilterToggle({
         }
       />
       <ToggleLable>{t(`audience.legend.${filterKey}`)}</ToggleLable>
-      <FilterInfo text={t(`audience.legend.info.${filterKey}`)} color={chartColors[filterKey]} />
+      <FilterInfo text={t(`audience.legend.info.${filterKey}`)} color={chartColor} />
     </>
   )
 }

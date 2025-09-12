@@ -1598,13 +1598,14 @@
     "audience": {
       "legend": {
         "info": {
-          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
+          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",
           "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
           "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
           "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
-          "predictedSubscriptionRenewalCount": "Predicted number of subscriptions that will be renewed at the end of their term."
+          "predictedSubscriptionRenewalCount": "Predicted number of subscriptions that will be renewed at the end of their term.\n Lower probability: First-time subscriptions\n Higher probability: Subscriptions with a history of renewal\n Sum: The total number of potential upcoming renewals\n Renewals are summarized from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
+          "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
         "overdueSubscriptionCount": "Renewed unpaid subscriptions",
@@ -1612,7 +1613,17 @@
         "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
-        "predictedSubscriptionRenewalCount": "Predicted renewals",
+        "predictedSubscriptionRenewalCount": "Potential renewals in period",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "Lower probability",
+          "high": "Higher probability",
+          "total": "Sum of potential renewals"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "Low probability renewals",
+          "highProbability": "High probability renewals"
+        },
+        "endingSubscriptionCount": "Expiring subscriptions",
         "totalNewSubscriptions": "Total new and renewed paid subscriptions",
         "renewalRate": "Renewal rate",
         "cancellationRate": "Cancellation rate",
@@ -1622,7 +1633,10 @@
         "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
-        "replacedSubscriptionUsers": "Replaced subscriptions"
+        "replacedSubscriptionUsers": "Replaced subscriptions",
+        "predictedSubscriptionRenewalUsersLowProbability": "Low probability renewals",
+        "predictedSubscriptionRenewalUsersHighProbability": "High probability renewals",
+        "endingSubscriptionUsers": "Expiring subscriptions"
       }
     },
     "audienceDetailDrawer": {
@@ -1644,7 +1658,11 @@
       "byDate": "By",
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
       "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
-      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid."
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "Predicted renewals with lower probability, per day or cumulated per month if set to monthly view",
+        "highProbability": "Predicted renewals with higher probability, per day or cumulated per month if set to monthly view"
+      }
     }
   }
 }

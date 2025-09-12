@@ -18,6 +18,8 @@ export interface AudienceStatsComputed extends DailySubscriptionStats, RenewalFi
   totalNewSubscriptions: number
   renewalRate: number
   cancellationRate: number
+  'predictedSubscriptionRenewalCount.perDayHighProbability'?: number
+  'predictedSubscriptionRenewalCount.perDayLowProbability'?: number
 }
 
 type SumUpCount = Pick<
@@ -27,6 +29,9 @@ type SumUpCount = Pick<
   | 'deactivatedSubscriptionCount'
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
+  | 'endingSubscriptionCount'
+  | 'predictedSubscriptionRenewalCount.perDayHighProbability'
+  | 'predictedSubscriptionRenewalCount.perDayLowProbability'
 >
 
 type SumUpCountKeys = keyof SumUpCount
@@ -38,7 +43,9 @@ export type AggregatedUsers = keyof Pick<
   | 'deactivatedSubscriptionUsers'
   | 'renewedSubscriptionUsers'
   | 'replacedSubscriptionUsers'
-  | 'predictedSubscriptionRenewalUsers'
+  | 'predictedSubscriptionRenewalUsersHighProbability'
+  | 'predictedSubscriptionRenewalUsersLowProbability'
+  | 'endingSubscriptionUsers'
 >
 
 interface UseAudienceProps {
@@ -109,6 +116,7 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
           ...dailyStat,
           deactivatedSubscriptionCount: -dailyStat.deactivatedSubscriptionCount,
           overdueSubscriptionCount: -dailyStat.overdueSubscriptionCount,
+          endingSubscriptionCount: -dailyStat.endingSubscriptionCount,
           totalNewSubscriptions,
           ...renewalFigures
         }
@@ -118,7 +126,14 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
 
   const sumUpCounts = useCallback(
     (monthStats: AudienceStatsComputed[], sumUpCountKey: SumUpCountKeys) => {
-      return monthStats.reduce((sum, stat) => sum + stat[sumUpCountKey], 0)
+      return monthStats.reduce((sum, stat) => {
+        return (
+          sum +
+          (sumUpCountKey
+            .split('.')
+            .reduce((a: object, b: string) => a[b as keyof typeof a], stat) as unknown as number)
+        )
+      }, 0)
     },
     []
   )
@@ -163,7 +178,10 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
           'overdueSubscriptionCount',
           'deactivatedSubscriptionCount',
           'renewedSubscriptionCount',
-          'replacedSubscriptionCount'
+          'replacedSubscriptionCount',
+          'endingSubscriptionCount',
+          'predictedSubscriptionRenewalCount.perDayHighProbability',
+          'predictedSubscriptionRenewalCount.perDayLowProbability'
         ] as SumUpCountKeys[]
       ).reduce((acc, key) => ({...acc, [key]: sumUpCounts(statsByMonth, key)}), {})
     },
@@ -178,7 +196,10 @@ export function useAudience({audienceStats, audienceClientFilter}: UseAudiencePr
           'overdueSubscriptionUsers',
           'deactivatedSubscriptionUsers',
           'renewedSubscriptionUsers',
-          'replacedSubscriptionUsers'
+          'replacedSubscriptionUsers',
+          'endingSubscriptionUsers',
+          'predictedSubscriptionRenewalUsersHighProbability',
+          'predictedSubscriptionRenewalUsersLowProbability'
         ] as AggregatedUsers[]
       ).reduce((acc, key) => ({...acc, [key]: sumUpUsers(statsByMonth, key)}), {})
     },

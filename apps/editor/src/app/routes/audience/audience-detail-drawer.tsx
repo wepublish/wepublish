@@ -8,7 +8,8 @@ import {
   MdOpenInNew,
   MdRefresh,
   MdSpaceBar,
-  MdAutorenew
+  MdAutorenew,
+  MdStopCircle
 } from 'react-icons/md'
 import {Button, Col, Drawer, Nav, Row, Sidenav, Table} from 'rsuite'
 
@@ -24,7 +25,9 @@ const availableStats: AggregatedUsers[] = [
   'deactivatedSubscriptionUsers',
   'renewedSubscriptionUsers',
   'replacedSubscriptionUsers',
-  'predictedSubscriptionRenewalUsers'
+  'predictedSubscriptionRenewalUsersHighProbability',
+  'predictedSubscriptionRenewalUsersLowProbability',
+  'endingSubscriptionUsers'
 ]
 
 function getIconByUserFilter(filterProp: AggregatedUsers) {
@@ -39,16 +42,22 @@ function getIconByUserFilter(filterProp: AggregatedUsers) {
       return <MdRefresh />
     case 'replacedSubscriptionUsers':
       return <MdSpaceBar />
-    case 'predictedSubscriptionRenewalUsers':
+    case 'predictedSubscriptionRenewalUsersHighProbability':
       return <MdAutorenew />
+    case 'predictedSubscriptionRenewalUsersLowProbability':
+      return <MdAutorenew />
+    case 'endingSubscriptionUsers':
+      return <MdStopCircle />
     default:
       break
   }
 }
 
 interface AudienceDetailDrawerProps {
-  audienceStats: AudienceStatsComputed | undefined
-  setOpen: Dispatch<SetStateAction<AudienceStatsComputed | undefined>>
+  audienceStats: Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined
+  setOpen: Dispatch<
+    SetStateAction<Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined>
+  >
   timeResolution: TimeResolution
 }
 

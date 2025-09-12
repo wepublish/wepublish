@@ -64,9 +64,9 @@ function getText(min = 1, max = 10) {
         text: faker.lorem.paragraph()
       }
     ]
-  }))
+  })) as unknown as Node[]
 
-  return text as Prisma.InputJsonValue
+  return text as unknown as Prisma.InputJsonValue
 }
 
 async function seedImages(prisma: PrismaClient) {
@@ -923,45 +923,6 @@ async function seedSubscriptions(
   const pastDate = faker.date.past()
   const futureDate = faker.date.future()
 
-  /*
-  const users = await prisma.user.findMany({
-    where: {
-      roleIDs: {
-        has: roles.editorUserRole.id
-      }
-    }
-  })
-
-  if (users.length === 0) {
-    throw new Error('No users found to create subscriptions for')
-  }
-  */
-
-  /*
-    export type SubscriptionCreateInput = {
-      id?: string
-      createdAt?: Date | string
-      modifiedAt?: Date | string
-      paymentPeriodicity: PaymentPeriodicity
-      monthlyAmount: number
-      autoRenew: boolean
-      startsAt: Date | string
-      paidUntil?: Date | string | null
-      extendable?: boolean
-      currency: Currency
-      confirmed?: boolean
-      periods?: SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput
-      properties?: MetadataPropertyCreateNestedManyWithoutSubscriptionInput
-      deactivation?: SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput
-      paymentMethod: PaymentMethodCreateNestedOneWithoutSubscriptionInput
-      memberPlan: MemberPlanCreateNestedOneWithoutSubscriptionInput
-      user: UserCreateNestedOneWithoutSubscriptionsInput
-      replacesSubscription?: SubscriptionCreateNestedOneWithoutReplacedByInput
-      replacedBy?: SubscriptionCreateNestedManyWithoutReplacesSubscriptionInput
-      invoices?: InvoiceCreateNestedManyWithoutSubscriptionInput
-    }
-  */
-
   await Promise.all(
     users.flatMap(userId =>
       prisma.subscription.create({
@@ -991,55 +952,10 @@ async function seedSubscriptions(
           paymentPeriodicity: 'yearly',
           currency: 'CHF',
           extendable: true
-
-          /*
-          events: {
-            createMany: {
-              data: [
-                {
-                  type: SubscriptionEvent.created,
-                  occurredAt: pastDate
-                },
-                {
-                  type: SubscriptionEvent.activated,
-                  occurredAt: pastDate
-                },
-                {
-                  type: SubscriptionEvent.renewal,
-                  occurredAt: faker.date.soon({days: 20, refDate: pastDate})
-                }
-              ]
-            }
-          },
-          payments: {
-            create: {
-              paymentMethodID: 'payrexx',
-              amount: 12000,
-              currency: 'CHF',
-              paymentPeriodicity: PaymentPeriodicity.yearly,
-              paidAt: pastDate,
-              confirmedAt: pastDate,
-              chargeId: faker.string.uuid()
-            }
-          } 
-          */
         }
       })
     )
   )
-  /*
-  await Promise.all(
-    users.map(user =>
-      prisma.userEvent.create({
-        data: {
-          userId: user.id,
-          type: UserEvent.subscriptionCreated,
-          occurredAt: faker.date.recent({days: 20})
-        }
-      })
-    )
-  )
-  */
 }
 
 async function seed() {

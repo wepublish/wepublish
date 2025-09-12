@@ -37,8 +37,27 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
       firstName
       email
     }
-    predictedSubscriptionRenewalCount
-    predictedSubscriptionRenewalUsers {
+    endingSubscriptionCount
+    endingSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalCount {
+      high
+      low
+      total
+      perDayHighProbability
+      perDayLowProbability
+    }
+    predictedSubscriptionRenewalUsersHighProbability {
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalUsersLowProbability {
       id
       name
       firstName

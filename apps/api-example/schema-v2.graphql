@@ -653,16 +653,27 @@ input CustomTeaserInput {
   title: String
 }
 
+type DailyPredictedSubscriptionRenewalCount {
+  high: Int!
+  low: Int!
+  perDayHighProbability: Int!
+  perDayLowProbability: Int!
+  total: Int!
+}
+
 type DailySubscriptionStats {
   createdSubscriptionCount: Int!
   createdSubscriptionUsers: [DailySubscriptionStatsUser!]!
   date: String!
   deactivatedSubscriptionCount: Int!
   deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  endingSubscriptionCount: Int!
+  endingSubscriptionUsers: [DailySubscriptionStatsUser!]!
   overdueSubscriptionCount: Int!
   overdueSubscriptionUsers: [DailySubscriptionStatsUser!]!
-  predictedSubscriptionRenewalCount: Int!
-  predictedSubscriptionRenewalUsers: [DailySubscriptionStatsUser!]!
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount!
+  predictedSubscriptionRenewalUsersHighProbability: [DailySubscriptionStatsUser!]!
+  predictedSubscriptionRenewalUsersLowProbability: [DailySubscriptionStatsUser!]!
   renewedSubscriptionCount: Int!
   renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
   replacedSubscriptionCount: Int!
@@ -2111,9 +2122,6 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
-
-  "\n      Returns the predicted subscription renewals in a given timeframe.\n      A predicted renewal is a subscription that has autoRenew enabled and its paidUntil date is in the given timeframe.\n    "
-  predictedSubscriptionRenewals(end: DateTime, start: DateTime!): [DashboardSubscription!]!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, loggedIn: Boolean!): Banner
   provider: MailProviderModel!
 

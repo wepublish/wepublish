@@ -5,8 +5,9 @@ import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscri
 import {differenceInDays, endOfDay, startOfDay, format, subDays} from 'date-fns'
 import NodeCache from 'node-cache'
 import {createHash} from 'crypto'
-import {fr} from 'date-fns/locale'
+//import {fr} from 'date-fns/locale'
 import {gt} from 'ramda'
+//import { da } from 'date-fns/locale'
 
 /**
  * Stats cache configuration and setup
@@ -211,51 +212,11 @@ export class DashboardSubscriptionService {
     )
   }
 
-  async predictedSubscriptionRenewals(start: Date, end: Date): Promise<DashboardSubscription[]> {
-    console.log('predictedSubscriptionRenewals', start, end)
-    const data = await this.prisma.subscription.findMany({
-      where: {
-        paidUntil: {
-          gte: start,
-          lt: end
-        },
-        autoRenew: true,
-        deactivation: null
-      },
-      orderBy: {
-        paidUntil: 'desc'
-      },
-      include: {
-        memberPlan: {
-          select: {
-            name: true
-          }
-        }
-      }
-    })
-
-    return data.map(
-      ({
-        monthlyAmount,
-        startsAt,
-        paidUntil,
-        paymentPeriodicity,
-        memberPlan: {name: memberPlan}
-      }) => {
-        ok(paidUntil)
-
-        return {
-          startsAt,
-          renewsAt: paidUntil,
-          monthlyAmount,
-          paymentPeriodicity,
-          memberPlan
-        }
-      }
-    )
-  }
-
   private async getDailyCreatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    if (date > new Date()) {
+      return []
+    }
+
     const start = startOfDay(date)
     const end = endOfDay(date)
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
@@ -292,6 +253,10 @@ export class DashboardSubscriptionService {
   }
 
   private async getDailyDeactivatedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    if (date > new Date()) {
+      return []
+    }
+
     // Since the subscription is running until end of paidUntil; we need to subtract one day to ensure to count the ones who have been deactivated and paid until is yesterday
     const start = startOfDay(date)
     const end = endOfDay(date)
@@ -332,6 +297,10 @@ export class DashboardSubscriptionService {
   }
 
   private getDailyOverdueSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    if (date > new Date()) {
+      return []
+    }
+
     const yesterday = subDays(date, 1)
     const startYesterday = startOfDay(yesterday)
     const endYesterday = endOfDay(yesterday)
@@ -367,6 +336,10 @@ export class DashboardSubscriptionService {
   }
 
   private async getDailyRenewedSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    if (date > new Date()) {
+      return []
+    }
+
     const start = startOfDay(date)
     const end = endOfDay(date)
     let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
@@ -436,11 +409,62 @@ export class DashboardSubscriptionService {
     })
   }
 
-  private async getDailyPredictedSubscriptionRenewalsCount(
+  private async getDailyPredictedSubscriptionRenewals(date: Date, memberPlanIds: string[] = []) {
+    if (date < new Date()) {
+      return []
+    }
+
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+
+    return await this.prisma.subscription.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            name: true,
+            email: true
+          }
+        },
+        _count: {
+          select: {periods: true}
+        }
+      },
+      where: {
+        paidUntil: {
+          gte: start,
+          lte: end
+        },
+        autoRenew: true,
+        deactivation: null,
+        ...memberPlanFilter
+      }
+    })
+  }
+
+  private async getDailySummarizedPredictedSubscriptionRenewals(
     date: Date,
     memberPlanIds: string[] = [],
-    fromDate: Date = new Date()
+    fromDate: Date
   ) {
+    if (date < new Date()) {
+      return []
+    }
+
+    if (fromDate < new Date()) {
+      fromDate = new Date()
+    }
+
     const start = startOfDay(fromDate)
     const end = endOfDay(date)
 
@@ -453,7 +477,12 @@ export class DashboardSubscriptionService {
       }
     }
 
-    const data = await this.prisma.subscription.findMany({
+    return await this.prisma.subscription.findMany({
+      select: {
+        _count: {
+          select: {periods: true}
+        }
+      },
       where: {
         paidUntil: {
           gte: start,
@@ -462,17 +491,47 @@ export class DashboardSubscriptionService {
         autoRenew: true,
         deactivation: null,
         ...memberPlanFilter
-      },
-      include: {
-        _count: {
-          select: {periods: true}
-        }
       }
     })
+  }
 
-    const d = data.filter(subscription => gt(subscription._count.periods, 1))
-    //console.log('d', d.length)
-    return d.length
+  private async getDailyEndingSubscriptions(date: Date, memberPlanIds: string[] = []) {
+    if (date < new Date()) {
+      return []
+    }
+
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    let memberPlanFilter: Prisma.SubscriptionWhereInput = {}
+    if (memberPlanIds.length > 0) {
+      memberPlanFilter = {
+        memberPlanID: {
+          in: memberPlanIds
+        }
+      }
+    }
+
+    return this.prisma.subscription.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            name: true,
+            email: true
+          }
+        }
+      },
+      where: {
+        deactivation: null,
+        autoRenew: false,
+        paidUntil: {
+          gte: start,
+          lte: end
+        },
+        ...memberPlanFilter
+      }
+    })
   }
 
   private getCacheTTLByDate(date: Date) {
@@ -499,18 +558,38 @@ export class DashboardSubscriptionService {
       renewedSubscriptions,
       deactivatedSubscriptions,
       dailyOverdueSubscriptions,
-      dailyPredictedSubscriptionRenewals
+      dailySummarizedPredictedSubscriptionRenewals,
+      dailyPredictedSubscriptionRenewals,
+      dailyEndingSubscriptions
     ] = await Promise.all([
       this.getDailyTotalActiveSubscriptionCount(current, sortedPlanIds),
       this.getDailyCreatedSubscriptions(current, sortedPlanIds),
       this.getDailyRenewedSubscriptions(current, sortedPlanIds),
       this.getDailyDeactivatedSubscriptions(current, sortedPlanIds),
       this.getDailyOverdueSubscriptions(current, sortedPlanIds),
-      this.getDailyPredictedSubscriptionRenewalsCount(current, sortedPlanIds, fromDate)
+      this.getDailySummarizedPredictedSubscriptionRenewals(current, sortedPlanIds, fromDate),
+      this.getDailyPredictedSubscriptionRenewals(current, sortedPlanIds),
+      this.getDailyEndingSubscriptions(current, sortedPlanIds)
     ])
 
     const replacedSubscriptions = createdSubscriptions.filter(
       createdSubscription => createdSubscription.replacesSubscriptionID
+    )
+
+    const summarizedHighProbabilityRenewals = dailySummarizedPredictedSubscriptionRenewals.filter(
+      subscription => gt(subscription._count.periods, 1)
+    )
+
+    const summarizedLowProbabilityRenewals = dailySummarizedPredictedSubscriptionRenewals.filter(
+      subscription => !gt(subscription._count.periods, 1)
+    )
+
+    const highProbabilityRenewals = dailyPredictedSubscriptionRenewals.filter(subscription =>
+      gt(subscription._count.periods, 1)
+    )
+
+    const lowProbabilityRenewals = dailyPredictedSubscriptionRenewals.filter(
+      subscription => !gt(subscription._count.periods, 1)
     )
 
     return {
@@ -540,8 +619,24 @@ export class DashboardSubscriptionService {
         deactivatedSubscription => deactivatedSubscription.user
       ),
 
-      predictedSubscriptionRenewalCount: dailyPredictedSubscriptionRenewals,
-      predictedSubscriptionRenewalUsers: [] // To be implemented,
+      predictedSubscriptionRenewalCount: {
+        high: summarizedHighProbabilityRenewals.length,
+        low: summarizedLowProbabilityRenewals.length,
+        total: dailySummarizedPredictedSubscriptionRenewals.length,
+        perDayHighProbability: highProbabilityRenewals.length,
+        perDayLowProbability: lowProbabilityRenewals.length
+      },
+      predictedSubscriptionRenewalUsersHighProbability: highProbabilityRenewals.map(
+        predictedSubscription => predictedSubscription.user
+      ),
+      predictedSubscriptionRenewalUsersLowProbability: lowProbabilityRenewals.map(
+        predictedSubscription => predictedSubscription.user
+      ),
+
+      endingSubscriptionCount: dailyEndingSubscriptions.length,
+      endingSubscriptionUsers: dailyEndingSubscriptions.map(
+        endingSubscription => endingSubscription.user
+      )
     }
   }
 
@@ -571,11 +666,6 @@ export class DashboardSubscriptionService {
     // Ensure start is not after end
     if (end < start) {
       end = start
-    }
-
-    // Ensure end is not in the future since data from future is not supported
-    if (end > new Date()) {
-      //end = endOfDay(new Date())
     }
 
     const dates: Date[] = []

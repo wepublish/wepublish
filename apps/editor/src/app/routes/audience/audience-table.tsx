@@ -52,11 +52,12 @@ export function AudienceTable({
     overdueSubscriptionCount,
     replacedSubscriptionCount,
     deactivatedSubscriptionCount,
-    predictedSubscriptionRenewalCount
+    predictedSubscriptionRenewalCount,
+    endingSubscriptionCount
   } = clientFilter
 
   const [selectedAudienceStats, setSelectedAudienceStats] = useState<
-    AudienceStatsComputed | undefined
+    Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined
   >(undefined)
 
   return (
@@ -101,9 +102,32 @@ export function AudienceTable({
         )}
 
         {predictedSubscriptionRenewalCount && (
+          <>
+            <Column resizable width={150}>
+              <HeaderCell>
+                <HeaderInfo
+                  text={t('audienceTable.predictedSubscriptionRenewalCountPerDay.highProbability')}
+                />
+                {t('audience.legend.predictedSubscriptionRenewalCountPerDay.highProbability')}
+              </HeaderCell>
+              <Cell dataKey="predictedSubscriptionRenewalCount.perDayHighProbability" />
+            </Column>
+            <Column resizable width={150}>
+              <HeaderCell>
+                <HeaderInfo
+                  text={t('audienceTable.predictedSubscriptionRenewalCountPerDay.lowProbability')}
+                />
+                {t('audience.legend.predictedSubscriptionRenewalCountPerDay.lowProbability')}
+              </HeaderCell>
+              <Cell dataKey="predictedSubscriptionRenewalCount.perDayLowProbability" />
+            </Column>
+          </>
+        )}
+
+        {endingSubscriptionCount && (
           <Column resizable width={150}>
-            <HeaderCell>{t('audience.legend.predictedSubscriptionRenewalCount')}</HeaderCell>
-            <Cell dataKey="predictedSubscriptionRenewalCount" />
+            <HeaderCell>{t('audience.legend.endingSubscriptionCount')}</HeaderCell>
+            <Cell dataKey="endingSubscriptionCount" />
           </Column>
         )}
 

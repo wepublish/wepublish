@@ -27,6 +27,7 @@ export type AudienceClientFilter = Pick<
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
   | 'predictedSubscriptionRenewalCount'
+  | 'endingSubscriptionCount'
 >
 
 export interface AudienceComponentFilter {
@@ -55,7 +56,8 @@ export function useAudienceFilter({fetchStats}: UseAudienceFilterProps) {
     deactivatedSubscriptionCount: true,
     renewedSubscriptionCount: true,
     replacedSubscriptionCount: true,
-    predictedSubscriptionRenewalCount: false
+    predictedSubscriptionRenewalCount: false,
+    endingSubscriptionCount: false
   })
   const [audienceComponentFilter, setAudienceComponentFilter] = useState<AudienceComponentFilter>({
     chart: true,
