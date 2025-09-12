@@ -290,7 +290,6 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
             cursor: sliderArticles[slideIndex].id,
             order: goesBack ? SortOrder.Ascending : SortOrder.Descending,
             filter: {
-              title: searchQuery,
               body: searchQuery,
               tags: tag ? [tag.id] : []
             }
@@ -337,7 +336,6 @@ export function SearchSlider({article, includeSEO, className}: SearchSliderProps
             cursor: null,
             order: SortOrder.Descending,
             filter: {
-              title: query,
               body: query,
               tags: tag ? [tag.id] : []
             }

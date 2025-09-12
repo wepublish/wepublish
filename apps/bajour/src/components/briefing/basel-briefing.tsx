@@ -11,7 +11,7 @@ import BaselBg from './basel.jpg'
 import EscBg from './esc.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
-import {BriefingType, isBaselBriefingIgnoringBlockType} from './is-briefing'
+import {BriefingType} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
   teasers?: CustomTeaser[]
@@ -443,17 +443,6 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
             )}
 
             <ButtonRow>
-              {isBaselBriefingIgnoringBlockType({blockStyle}) && (
-                <LinkWrapper
-                  color="inherit"
-                  underline="none"
-                  href="https://bajour.ch/basel-briefing-podcast"
-                  target={'_blank'}>
-                  <ReadMoreButton variant="outlined" color="inherit" size="small">
-                    <HideOnMobile>Briefing&nbsp;</HideOnMobile>hören
-                  </ReadMoreButton>
-                </LinkWrapper>
-              )}
               <LinkWrapper
                 color="inherit"
                 underline="none"

@@ -4,12 +4,13 @@ import {
   AddCommentMutationVariables,
   CalculatedRating,
   ChallengeQuery,
-  Comment,
   CommentListQuery,
   CommentListQueryVariables,
   CommentRating,
+  CommentWithoutNestingFragment,
   EditCommentMutation,
   EditCommentMutationVariables,
+  FullCommentFragment,
   FullCommentRatingSystem,
   OverriddenRating
 } from '@wepublish/website/api'
@@ -74,9 +75,12 @@ export type BuilderCommentListItemShareProps = {
   className?: string
   url: string
   title: string
+  forceNonSystemShare?: boolean
 }
 
-export type BuilderCommentListItemProps = Comment & {
+export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
+  children?: CommentWithoutNestingFragment[] | null
+}) & {
   className?: string
   ratingSystem: FullCommentRatingSystem
   signUpUrl: string
@@ -99,7 +103,7 @@ export type BuilderCommentListItemProps = Comment & {
 
 export type BuilderCommentProps = PropsWithChildren<
   Pick<
-    Comment,
+    FullCommentFragment,
     | 'text'
     | 'authorType'
     | 'user'

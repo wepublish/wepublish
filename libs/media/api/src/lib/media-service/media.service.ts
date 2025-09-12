@@ -1,12 +1,16 @@
 import {Inject, Injectable} from '@nestjs/common'
 import sharp from 'sharp'
-import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
 import {TransformGuard} from './transform.guard'
 import {createHash} from 'crypto'
 import {Readable} from 'stream'
 import * as fs from 'fs'
 import * as path from 'path'
+import {
+  removeSignatureFromTransformations,
+  getTransformationKey,
+  TransformationsDto
+} from '@wepublish/media-transform-guard'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
 
@@ -47,19 +51,6 @@ const fallbackImageRatios: FallbackImageRatio[] = [
   }
 ]
 
-export const getTransformationKey = (transformations: TransformationsDto) => {
-  return JSON.stringify(transformations, (_key, value) =>
-    value instanceof Object && !(value instanceof Array)
-      ? Object.keys(value)
-          .sort()
-          .reduce((sorted, key) => {
-            sorted[key] = value[key]
-            return sorted
-          }, {} as Record<string, unknown>)
-      : value
-  )
-}
-
 @Injectable()
 export class MediaService {
   constructor(
@@ -83,7 +74,9 @@ export class MediaService {
   }
 
   public async getImage(imageId: string, transformations: TransformationsDto) {
-    const transformationsKey = getTransformationKey(transformations)
+    const transformationsKey = getTransformationKey(
+      removeSignatureFromTransformations(transformations)
+    )
 
     let file: Readable
     try {
@@ -134,11 +127,29 @@ export class MediaService {
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
         imageExists = false
-        imageStream = this.getFallbackImage(transformations)
+        imageStream = this.getFallbackImage(removeSignatureFromTransformations(transformations))
       } else {
         throw e
       }
     }
+
+    const transformationsKey = getTransformationKey(
+      removeSignatureFromTransformations(transformations)
+    )
+    if (!imageExists) {
+      try {
+        imageStream = await this.storage.getFile(
+          this.config.transformationBucket,
+          `images/fallback/${transformationsKey}`
+        )
+        return Promise.all([imageStream, imageExists])
+      } catch (e: any) {
+        // Intentionally ignore if fallback image is not found
+      }
+    }
+
+    const transformGuard = new TransformGuard()
+    transformGuard.validateSignature(imageId, transformations)
 
     const sharpInstance = imageStream.pipe(
       sharp({
@@ -148,7 +159,6 @@ export class MediaService {
     )
     let metadata = await sharpInstance.metadata()
 
-    const transformGuard = new TransformGuard()
     const effort = transformGuard.checkDimensions(metadata, transformations)
     transformGuard.checkQuality(transformations)
 
@@ -192,7 +202,6 @@ export class MediaService {
       sharpInstance.grayscale(transformations.grayscale)
     }
 
-    const transformationsKey = getTransformationKey(transformations)
     const transformedImage = sharpInstance.webp({
       quality: transformations.quality,
       effort
@@ -205,6 +214,14 @@ export class MediaService {
       await this.storage.saveFile(
         this.config.transformationBucket,
         `images/${imageId}/${transformationsKey}`,
+        transformedImage.clone(),
+        metadata.size,
+        {ContentType: `image/${metadata.format}`}
+      )
+    } else {
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        `images/fallback/${transformationsKey}`,
         transformedImage.clone(),
         metadata.size,
         {ContentType: `image/${metadata.format}`}

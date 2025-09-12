@@ -796,7 +796,9 @@
         "biannual": "Biannual",
         "monthly": "Monthly",
         "quarterly": "Quarterly",
-        "yearly": "Yearly"
+        "yearly": "Yearly",
+        "biennial": "Biennial",
+        "lifetime": "Lifetime"
       },
       "title": "Member Plans"
     },
@@ -1060,7 +1062,7 @@
         "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
         "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
         "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
-        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly",
+        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly, biennial, lifetime",
         "optional_subscriptionID": "Eindeutige ID der Subscription.",
         "user_email": "E-Mail des Users.",
         "user_firstName": "Vorname des Users",
@@ -1516,10 +1518,10 @@
     },
     "resources": {
       "teaserType": {
-        "Article": "Article",
-        "Page": "Page",
-        "Event": "Event",
-        "Custom": "Custom"
+        "article": "Article",
+        "page": "Page",
+        "event": "Event",
+        "custom": "Custom"
       },
       "teaserSort": {
         "HotAndTrending": "Hot & Trending",
@@ -1597,25 +1599,25 @@
       "legend": {
         "info": {
           "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
-          "createdUnpaidSubscriptionCount": "Newly created but unpaid subscriptions up to now.",
-          "renewedSubscriptionCount": "Subscriptions that have been renewed for another period.",
-          "createdSubscriptionCount": "Completely new subscriptions with only one period so far.",
+          "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
+          "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
+          "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
           "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
         },
-        "totalActiveSubscriptionCount": "Total active subscriptions",
-        "createdUnpaidSubscriptionCount": "New unpaid subscriptions",
-        "renewedSubscriptionCount": "Renewed subscriptions",
-        "createdSubscriptionCount": "New subscriptions",
+        "totalActiveSubscriptionCount": "Total active & paid subscriptions",
+        "overdueSubscriptionCount": "Renewed unpaid subscriptions",
+        "renewedSubscriptionCount": "Renewed paid subscriptions",
+        "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
-        "totalNewSubscriptions": "Total new subscriptions",
+        "totalNewSubscriptions": "Total new and renewed paid subscriptions",
         "renewalRate": "Renewal rate",
         "cancellationRate": "Cancellation rate",
-        "createdSubscriptionUsers": "New subscriptions",
-        "createdUnpaidSubscriptionUsers": "New unpaid subscriptions",
+        "createdSubscriptionUsers": "New paid subscriptions",
+        "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
-        "renewedSubscriptionUsers": "Renewed subscriptions",
+        "renewedSubscriptionUsers": "Renewed paid subscriptions",
         "replacedSubscriptionUsers": "Replaced subscriptions"
       }
     },
@@ -1637,8 +1639,8 @@
       "showUsers": "Show details",
       "byDate": "By",
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
-      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included.",
-      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Replaced, renewed, and deactivated subscriptions are included."
+      "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid."
     }
   }
 }

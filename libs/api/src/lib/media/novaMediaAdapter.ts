@@ -1,16 +1,22 @@
 import {URL} from 'url'
 import FormData from 'form-data'
-import {ImageWithFocalPoint} from '../db/image'
 import fetch from 'node-fetch'
 import type {FileUpload} from 'graphql-upload'
 import {
   ArrayBufferUpload,
-  MediaAdapter,
-  UploadImage,
+  Image,
   ImageTransformation,
-  ImageRotation
+  MediaAdapter,
+  UploadImage
 } from '@wepublish/image/api'
 import {MediaServerError} from './karmaMediaAdapter'
+import {
+  getSignatureForImage,
+  sanitizeImageQuality,
+  TransformationsDto,
+  TransformationsSchema
+} from '@wepublish/media-transform-guard'
+import {validateImageDimension} from '@wepublish/media-transform-guard'
 
 export class NovaMediaAdapter implements MediaAdapter {
   readonly url: URL
@@ -93,10 +99,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     return true
   }
 
-  async getImageURL(
-    image: ImageWithFocalPoint,
-    transformations?: ImageTransformation
-  ): Promise<string> {
+  async getImageURL(image: Image, transformations?: ImageTransformation): Promise<string> {
     const queryParameters = [] as string[]
 
     if (transformations?.width || transformations?.height) {
@@ -113,6 +116,8 @@ export class NovaMediaAdapter implements MediaAdapter {
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined
 
+      validateImageDimension(transformations.width, transformations.height)
+
       queryParameters.push(
         `resize=${JSON.stringify({
           width: transformations.width,
@@ -124,6 +129,7 @@ export class NovaMediaAdapter implements MediaAdapter {
       )
     }
 
+    /** NOT USED AT THE MOMENT WE SHOULD NOT HAVE UNUSED FUNCTIONS AS DDOS SURFACE THEY NEED TO BE LIMITED BY CONFIGURATION SAME AS QUALITY AND DIMENSION!
     if (
       transformations?.rotation &&
       // Ignore no rotation settings
@@ -149,12 +155,38 @@ export class NovaMediaAdapter implements MediaAdapter {
     if (transformations?.sharpen) {
       queryParameters.push(`sharpen=1`)
     }
+    **/
+    let quality = transformations?.quality
+    if (quality) {
+      quality = sanitizeImageQuality(quality)
+    }
 
     // Max quality is 80 so 1 => 80
-    queryParameters.push(
-      `quality=${transformations?.quality ? Math.ceil(transformations.quality * 80) : 65}`
-    )
+    queryParameters.push(`quality=${quality ? Math.ceil(quality * 80) : 65}`)
+
+    const transformationsDto = this.parseTransformations(queryParameters)
+
+    const signature = getSignatureForImage(image.id, transformationsDto)
+    queryParameters.push(`sig=${signature}`)
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`)
+  }
+
+  /**
+   * Parse and validate image-transformation parameters from an array of `key=value` strings.
+   */
+
+  parseTransformations(params: string[]): TransformationsDto {
+    const raw: Record<string, string> = {}
+
+    for (const entry of params) {
+      const eq = entry.indexOf('=')
+      if (eq === -1) continue
+      const key = entry.slice(0, eq).trim()
+      const value = entry.slice(eq + 1).trim()
+      raw[key] = value
+    }
+
+    return TransformationsSchema.parse(raw) as TransformationsDto
   }
 }

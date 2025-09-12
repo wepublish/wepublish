@@ -4,7 +4,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ssrAuthLink} from '../auth-link'
 import {getSessionTokenProps} from '../get-session-token-props'
-import {UserSession} from '@wepublish/website/api'
+import {MemberPlanListQueryVariables, UserSession} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {SubscribeContainer} from '@wepublish/membership/website'
 import {
@@ -72,7 +72,7 @@ export function SubscribePage(props: SubscribePageProps) {
 SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -91,13 +91,16 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
     })
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   const dataPromises = [
-    client.query({
+    client.query<MemberPlanListQueryVariables>({
       query: MemberPlanListDocument,
       variables: {
-        take: 50
+        take: 50,
+        filter: {
+          active: false
+        }
       }
     }),
     client.query({

@@ -1,9 +1,38 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {UserConsentService} from './user-consent.service'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 import {UserSession} from '@wepublish/authentication/api'
-import {mockUserConsents} from './user-consent.resolver.spec'
+import {generateRandomString} from '../consent/consent.resolver.spec'
+
+const mockSlug1 = generateRandomString()
+
+export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
+  {
+    consent: {
+      connectOrCreate: {
+        where: {id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd'},
+        create: {
+          name: 'some-name',
+          slug: mockSlug1,
+          defaultValue: true
+        }
+      }
+    },
+    value: true,
+    user: {
+      connectOrCreate: {
+        where: {id: 'some-id'},
+        create: {
+          name: 'some-name',
+          email: `${generateRandomString()}@wepublish.ch`,
+          password: 'some-password',
+          active: true
+        }
+      }
+    }
+  }
+]
 
 describe('UserConsentService', () => {
   let service: UserConsentService

@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment} from '@wepublish/editor/api'
+import {
+  AuthorRefFragment,
+  FullImageFragment,
+  useCreateJwtForWebsiteLoginLazyQuery
+} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
@@ -54,7 +58,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {type Node, Descendant, Element, Text} from 'slate'
+import {Descendant, Element, type Node, Text} from 'slate'
 
 import {ClientSettings} from '../../../shared/types'
 
@@ -173,6 +177,10 @@ function ArticleEditor() {
     variables: {id: articleID!}
   })
 
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
+  })
+
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
   const canPreview = Boolean(articleData?.article?.draft)
@@ -240,14 +248,14 @@ function ArticleEditor() {
         disableComments,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image || undefined,
+        image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],
-        socialMediaImage: socialMediaImage || undefined,
+        socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
         likes: likes ?? 0,
         trackingPixels: trackingPixels || undefined
       })
@@ -473,7 +481,7 @@ function ArticleEditor() {
         </Message>
       )
     }
-  }, [isNotFound])
+  }, [isNotFound, t])
 
   const [infoData, setInfoData] = useState<InfoData>({
     charCount: 0
@@ -569,17 +577,23 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link
-                    to={articleData?.article.previewUrl ?? ''}
-                    className="actionButton"
-                    target="_blank">
-                    <IconButtonMarginTop
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('articleEditor.overview.preview')}
-                    </IconButtonMarginTop>
-                  </Link>
+                  <IconButtonMarginTop
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${articleData!.article.previewUrl}&jwt=${
+                          jwt?.createJWTForWebsiteLogin?.token
+                        }`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('articleEditor.overview.preview')}
+                  </IconButtonMarginTop>
                 </PermissionControl>
               }
             />

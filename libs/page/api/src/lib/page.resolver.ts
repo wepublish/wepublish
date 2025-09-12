@@ -8,15 +8,15 @@ import {
   PaginatedPages,
   UpdatePageInput
 } from './page.model'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagService} from '@wepublish/tag/api'
 import {PageService} from './page.service'
 import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, NotFoundException} from '@nestjs/common'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {CanCreatePage, CanDeletePage, CanGetPage, CanPublishPage} from '@wepublish/permissions'
-import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
+import {Permissions, PreviewMode} from '@wepublish/permissions/api'
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -24,6 +24,7 @@ export class PageResolver {
     private pageDataloader: PageDataloaderService,
     private pageRevisionsDataloader: PageRevisionDataloaderService,
     private pageService: PageService,
+    private tagService: TagService,
     private urlAdapter: URLAdapter
   ) {}
 
@@ -34,22 +35,34 @@ export class PageResolver {
     @Args('slug', {nullable: true}) slug?: string
   ) {
     if (id != null) {
-      return this.pageDataloader.load(id)
+      const page = await this.pageDataloader.load(id)
+
+      if (!page) {
+        throw new NotFoundException(`Page with id ${id} was not found.`)
+      }
+
+      return page
     }
 
     if (slug != null) {
-      return this.pageService.getPageBySlug(slug)
+      const page = await this.pageService.getPageBySlug(slug)
+
+      if (!page) {
+        throw new NotFoundException(`Page with slug ${slug} was not found.`)
+      }
+
+      return page
     }
 
-    throw new BadRequestException('id or slug required.')
+    throw new BadRequestException('Page id or slug required.')
   }
 
   @Public()
   @Query(() => PaginatedPages, {
     description: `Returns a paginated list of pages based on the filters given.`
   })
-  public pages(@Args() args: PageListArgs, @CurrentUser() user: UserSession | undefined) {
-    if (!hasPermission(CanGetPage, user?.roles ?? [])) {
+  public pages(@Args() args: PageListArgs, @PreviewMode() isPreview: boolean) {
+    if (!isPreview) {
       args.filter = {
         ...args.filter,
         draft: undefined,
@@ -110,15 +123,11 @@ export class PageResolver {
   }
 
   @ResolveField(() => PageRevision)
-  async latest(
-    @Parent() parent: PPage,
-    @CurrentUser() user: UserSession | undefined,
-    @PreviewMode() isPreview: boolean
-  ) {
+  async latest(@Parent() parent: PPage, @PreviewMode() isPreview: boolean) {
     const {id: pageId} = parent
     const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
 
-    if (!isPreview || !hasPermission(CanGetPage, user?.roles ?? [])) {
+    if (!isPreview) {
       return published
     }
 
@@ -164,8 +173,6 @@ export class PageResolver {
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PPage) {
     const {id: pageId} = parent
-    const tagIds = await this.pageService.getTagIds(pageId)
-
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    return this.tagService.getTagsByPageId(pageId)
   }
 }

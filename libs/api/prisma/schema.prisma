@@ -1,11 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
-}
-
-generator fabbrica {
-  provider = "prisma-fabbrica"
-  output   = "../../testing/src/__generated__/fabbrica"
+  previewFeatures = ["fullTextSearch", "views"]
 }
 
 datasource db {
@@ -65,11 +60,44 @@ model ArticleRevision {
   articleId String
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String?
+  user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ArticleRevisionPublished ArticleRevisionPublished[]
+  ArticleRevisionPending   ArticleRevisionPending[]
+  ArticleRevisionDraft     ArticleRevisionDraft[]
 
   @@index([publishedAt])
   @@map("articles.revisions")
+}
+
+view ArticleRevisionPublished {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.published")
+}
+
+view ArticleRevisionPending {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.pending")
+}
+
+view ArticleRevisionDraft {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.draft")
 }
 
 model ArticleRevisionAuthor {
@@ -110,10 +138,13 @@ model Article {
   peerId        String?
   peerArticleId String?
 
-  navigations    NavigationLink[]
-  tags           TaggedArticles[]
-  revisions      ArticleRevision[]
-  trackingPixels ArticleTrackingPixels[]
+  navigations              NavigationLink[]
+  tags                     TaggedArticles[]
+  revisions                ArticleRevision[]
+  trackingPixels           ArticleTrackingPixels[]
+  ArticleRevisionPublished ArticleRevisionPublished?
+  ArticleRevisionPending   ArticleRevisionPending?
+  ArticleRevisionDraft     ArticleRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -480,7 +511,7 @@ enum MailLogState {
 }
 
 model MailLog {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -491,7 +522,7 @@ model MailLog {
   mailProviderID String
   mailIdentifier String
   mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId String       @db.Uuid
+  mailTemplateId String
   mailData       String?
   subject        String?
 
@@ -504,6 +535,8 @@ enum PaymentPeriodicity {
   quarterly @map("quarterly")
   biannual  @map("biannual")
   yearly    @map("yearly")
+  biennial  @map("biennial")
+  lifetime  @map("lifetime")
 }
 
 model AvailablePaymentMethod {
@@ -624,8 +657,11 @@ model PageRevision {
   pageId String
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 String?
+  user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PagesRevisionPublished PagesRevisionPublished[]
+  PagesRevisionPending   PagesRevisionPending[]
+  PagesRevisionDraft     PagesRevisionDraft[]
 
   @@index([publishedAt])
   @@map("pages.revisions")
@@ -637,15 +673,19 @@ model Page {
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
 
-  slug String?
+  slug        String?
+  hidden      Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]
   tags                    TaggedPages[]
-  memberPlansSuccess      MemberPlan[]     @relation("successPage")
-  memberPlansFail         MemberPlan[]     @relation("failPage")
-  memberPlansConfirmation MemberPlan[]     @relation("confirmationPage")
+  memberPlansSuccess      MemberPlan[]            @relation("successPage")
+  memberPlansFail         MemberPlan[]            @relation("failPage")
+  memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
   banners                 Banner[]
+  PagesRevisionPublished  PagesRevisionPublished?
+  PagesRevisionPending    PagesRevisionPending?
+  PagesRevisionDraft      PagesRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -663,6 +703,36 @@ model TaggedPages {
 
   @@id([pageId, tagId])
   @@map("pages.tagged-pages")
+}
+
+view PagesRevisionPublished {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.published")
+}
+
+view PagesRevisionPending {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.pending")
+}
+
+view PagesRevisionDraft {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.draft")
 }
 
 model PaymentMethod {
@@ -1093,7 +1163,7 @@ enum EventStatus {
 }
 
 model Event {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1119,7 +1189,7 @@ model Event {
 
 model TaggedEvents {
   event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId    String   @db.Uuid
+  eventId    String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
   createdAt  DateTime @default(now())
@@ -1130,7 +1200,7 @@ model TaggedEvents {
 }
 
 model Consent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1143,12 +1213,12 @@ model Consent {
 }
 
 model UserConsent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
-  consentId String  @db.Uuid
+  consentId String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
@@ -1167,14 +1237,14 @@ enum UserEvent {
 }
 
 model UserFlowMail {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   event UserEvent @unique
 
   mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
-  mailTemplateId String?       @db.Uuid
+  mailTemplateId String?
 
   @@map("user_communication_flows")
 }
@@ -1191,7 +1261,7 @@ enum SubscriptionEvent {
 }
 
 model SubscriptionFlow {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1210,22 +1280,22 @@ model SubscriptionFlow {
 }
 
 model SubscriptionInterval {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                 String            @id @default(dbgenerated("gen_random_uuid()"))
   createdAt          DateTime          @default(now())
   modifiedAt         DateTime          @updatedAt
   event              SubscriptionEvent
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId     String?           @db.Uuid
+  mailTemplateId     String?
 
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
-  subscriptionFlowId String           @db.Uuid
+  subscriptionFlowId String
 
   @@map("subscriptions.intervals")
 }
 
 model MailTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1244,7 +1314,7 @@ model MailTemplate {
 }
 
 model PeriodicJob {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1281,7 +1351,7 @@ enum BlockType {
 }
 
 model BlockStyle {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1292,7 +1362,7 @@ model BlockStyle {
 }
 
 model Banner {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1324,12 +1394,12 @@ enum LoginStatus {
 }
 
 model BannerAction {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  bannerId String @db.Uuid
+  bannerId String
 
   label String
   url   String
@@ -1347,7 +1417,7 @@ enum BannerActionRole {
 }
 
 model Crowdfunding {
-  id                      String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                      String             @id @default(dbgenerated("gen_random_uuid()"))
   createdAt               DateTime           @default(now())
   modifiedAt              DateTime           @updatedAt
   name                    String
@@ -1361,14 +1431,14 @@ model Crowdfunding {
 }
 
 model CrowdfundingGoal {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
   createdAt      DateTime     @default(now())
   modifiedAt     DateTime     @updatedAt
   title          String
   description    String?
   amount         Int
   Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
-  crowdfundingId String       @db.Uuid
+  crowdfundingId String
 
   @@map("crowdfunding_goals")
 }

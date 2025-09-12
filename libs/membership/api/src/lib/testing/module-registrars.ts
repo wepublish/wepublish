@@ -3,14 +3,14 @@ import {DynamicModule} from '@nestjs/common'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {FakeMailProvider, MailsModule} from '@wepublish/mail/api'
 import {
+  MolliePaymentProvider,
   PaymentProvider,
   PaymentsModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  MolliePaymentProvider
+  StripePaymentProvider
 } from '@wepublish/payment/api'
 import bodyParser from 'body-parser'
 import {ConfigModule, ConfigService} from '@nestjs/config'
@@ -52,7 +52,8 @@ export function registerPaymentsModule(): DynamicModule {
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
             webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
             incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
-            methods: ['card']
+            methods: ['card'],
+            prisma
           }),
           new StripePaymentProvider({
             id: 'stripe',
@@ -61,7 +62,8 @@ export function registerPaymentsModule(): DynamicModule {
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
             webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
             incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
-            methods: ['card']
+            methods: ['card'],
+            prisma
           })
         )
       }
@@ -87,7 +89,8 @@ export function registerPaymentsModule(): DynamicModule {
             psp: [0, 15, 17, 2, 3, 36],
             pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
             vatRate: 7.7,
-            incomingRequestHandler: bodyParser.json()
+            incomingRequestHandler: bodyParser.json(),
+            prisma
           })
         )
         paymentProviders.push(
@@ -112,7 +115,8 @@ export function registerPaymentsModule(): DynamicModule {
             incomingRequestHandler: bodyParser.urlencoded({extended: true}),
             apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
             webhookEndpointSecret: 'secret',
-            apiBaseUrl: 'https://wepublish.ch'
+            apiBaseUrl: 'https://wepublish.ch',
+            prisma
           })
         )
       }

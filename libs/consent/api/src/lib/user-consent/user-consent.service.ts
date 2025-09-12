@@ -1,7 +1,7 @@
 import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {UserSession} from '@wepublish/authentication/api'
-import {UserConsentFilter, UserConsentInput} from './user-consent.model'
+import {UserConsent, UserConsentFilter, UserConsentInput} from './user-consent.model'
 
 @Injectable()
 export class UserConsentService {
@@ -28,7 +28,7 @@ export class UserConsentService {
     return data
   }
 
-  async userConsent(id: string) {
+  async userConsent(id: string): Promise<UserConsent> {
     const data = await this.prisma.userConsent.findUnique({
       where: {
         id
@@ -46,7 +46,7 @@ export class UserConsentService {
     return data
   }
 
-  async createUserConsent(userConsent: UserConsentInput) {
+  async createUserConsent(userConsent: UserConsentInput): Promise<UserConsent> {
     const created = await this.prisma.userConsent.create({
       data: userConsent,
       include: {user: true, consent: true}
@@ -55,7 +55,7 @@ export class UserConsentService {
     return created
   }
 
-  async updateUserConsent(id: string, value: boolean, user: UserSession) {
+  async updateUserConsent(id: string, value: boolean, user: UserSession): Promise<UserConsent> {
     const toUpdate = await this.prisma.userConsent.findFirst({
       where: {id},
       include: {user: true}
@@ -77,7 +77,7 @@ export class UserConsentService {
     return updated
   }
 
-  async deleteUserConsent(id: string, user: UserSession) {
+  async deleteUserConsent(id: string, user: UserSession): Promise<UserConsent> {
     const toDelete = await this.prisma.userConsent.findFirst({
       where: {id},
       include: {user: true}

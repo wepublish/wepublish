@@ -28,10 +28,13 @@ export * from './lib/utility'
 export * from './lib/error'
 export * from './lib/context'
 export * from './lib/server'
+export * from './lib/payments'
 
 export * from './lib/challenges/challengeProvider'
 export * from './lib/challenges/algebraicCaptchaChallenge'
 export * from './lib/challenges/cfTurnstile'
+
+export * from './lib/memberContext'
 
 export {getUserForCredentials} from './lib/graphql/user/user.queries'
 

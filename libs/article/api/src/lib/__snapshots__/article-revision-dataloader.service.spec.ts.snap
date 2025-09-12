@@ -4,35 +4,30 @@ exports[`ArticleRevisionDataloaderService load should load many 1`] = `
 [
   [
     {
-      "orderBy": [
-        {
-          "publishedAt": "desc",
+      "include": {
+        "ArticleRevisionDraft": {
+          "include": {
+            "articleRevision": true,
+          },
         },
-        {
-          "createdAt": "desc",
+        "ArticleRevisionPending": {
+          "include": {
+            "articleRevision": true,
+          },
         },
-      ],
-      "take": 3,
-      "where": {
-        "archivedAt": null,
-        "articleId": "123",
+        "ArticleRevisionPublished": {
+          "include": {
+            "articleRevision": true,
+          },
+        },
       },
-    },
-  ],
-  [
-    {
-      "orderBy": [
-        {
-          "publishedAt": "desc",
-        },
-        {
-          "createdAt": "desc",
-        },
-      ],
-      "take": 3,
       "where": {
-        "archivedAt": null,
-        "articleId": "321",
+        "id": {
+          "in": [
+            "123",
+            "321",
+          ],
+        },
       },
     },
   ],
@@ -43,18 +38,29 @@ exports[`ArticleRevisionDataloaderService load should load one 1`] = `
 [
   [
     {
-      "orderBy": [
-        {
-          "publishedAt": "desc",
+      "include": {
+        "ArticleRevisionDraft": {
+          "include": {
+            "articleRevision": true,
+          },
         },
-        {
-          "createdAt": "desc",
+        "ArticleRevisionPending": {
+          "include": {
+            "articleRevision": true,
+          },
         },
-      ],
-      "take": 3,
+        "ArticleRevisionPublished": {
+          "include": {
+            "articleRevision": true,
+          },
+        },
+      },
       "where": {
-        "archivedAt": null,
-        "articleId": "123",
+        "id": {
+          "in": [
+            "123",
+          ],
+        },
       },
     },
   ],

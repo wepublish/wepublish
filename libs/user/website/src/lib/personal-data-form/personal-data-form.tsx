@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {InputAdornment, Theme, css, useTheme} from '@mui/material'
+import {css, InputAdornment, Theme, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {requiredRegisterSchema, UserForm, zodAlwaysRefine} from '@wepublish/authentication/website'
 import {userCountryNames} from '@wepublish/user'
@@ -15,6 +15,7 @@ import {useMemo, useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {z} from 'zod'
+import {t} from 'i18next'
 
 const fullWidth = css`
   grid-column: 1 / -1;
@@ -271,7 +272,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
             <RequestEmail>
               <Link
                 href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${user.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
-                Klicke hier um deine Email zu ändern
+                {t('user.changeEmailRequest')}
               </Link>
             </RequestEmail>
           )}

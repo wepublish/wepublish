@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {
   FooterContainer,
   NavbarContainer,
@@ -9,7 +10,8 @@ import {
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
-  SessionProvider
+  withJwtHandler,
+  withSessionProvider
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
@@ -112,71 +114,69 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Cültür'
 
   return (
-    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          Footer={Footer}
-          elements={{Link: NextWepublishLink}}
-          blocks={{
-            Teaser: CulturTeaser,
-            Break: CulturBreakBlock
-          }}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <WebsiteProvider>
+      <WebsiteBuilderProvider
+        Head={Head}
+        Script={Script}
+        Footer={Footer}
+        elements={{Link: NextWepublishLink}}
+        blocks={{
+          Teaser: CulturTeaser,
+          Break: CulturBreakBlock
+        }}
+        date={{format: dateFormatter}}
+        meta={{siteTitle}}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <Head>
+            <title key="title">{siteTitle}</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-              {/* Feeds */}
-              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+            {/* Feeds */}
+            <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+            <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+            <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
 
-              {/* Sitemap */}
-              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+            {/* Sitemap */}
+            <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-              <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-              <link rel="shortcut icon" href="/favicon.ico" />
-              <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-              <meta name="apple-mobile-web-app-title" content="Cültür" />
-              <link rel="manifest" href="/site.webmanifest" />
-            </Head>
+            {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+            <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+            <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+            <link rel="shortcut icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+            <meta name="apple-mobile-web-app-title" content="Cültür" />
+            <link rel="manifest" href="/site.webmanifest" />
+          </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-                loginBtn={null}
-                subscribeBtn={null}
-              />
+          <Spacer>
+            <NavBar
+              categorySlugs={[['categories']]}
+              slug="main"
+              headerSlug="header"
+              iconSlug="icons"
+              loginBtn={null}
+              subscribeBtn={null}
+            />
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
+            <main>
+              <MainSpacer maxWidth="lg">
+                <Component {...pageProps} />
+              </MainSpacer>
+            </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
-            </Spacer>
+            <FooterContainer slug="footer" categorySlugs={[['categories']]}>
+              <LogoLink href="/" aria-label="Startseite">
+                <LogoWrapper />
+              </LogoLink>
+            </FooterContainer>
+          </Spacer>
 
-            <RoutedAdminBar />
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </SessionProvider>
+          <RoutedAdminBar />
+        </ThemeProvider>
+      </WebsiteBuilderProvider>
+    </WebsiteProvider>
   )
 }
 
@@ -184,6 +184,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(CustomApp)
+])(withErrorSnackbar(withSessionProvider(withJwtHandler(CustomApp))))
 
 export {ConnectedApp as default}

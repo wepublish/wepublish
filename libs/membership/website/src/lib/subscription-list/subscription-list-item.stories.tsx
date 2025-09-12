@@ -170,6 +170,38 @@ export const RenewYearlyManually: StoryObj = {
   }
 }
 
+export const RenewBiennial: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    paymentPeriodicity: PaymentPeriodicity.Biennial
+  }
+}
+
+export const RenewBiennialManually: StoryObj = {
+  ...RenewBiennial,
+  args: {
+    ...RenewBiennial.args,
+    autoRenew: false
+  }
+}
+
+export const RenewLifetime: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    paymentPeriodicity: PaymentPeriodicity.Lifetime
+  }
+}
+
+export const RenewLifetimeManually: StoryObj = {
+  ...RenewLifetime,
+  args: {
+    ...RenewLifetime.args,
+    autoRenew: false
+  }
+}
+
 export const DeactivatedCancelled: StoryObj = {
   ...Default,
   args: {

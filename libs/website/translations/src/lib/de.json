@@ -1,5 +1,28 @@
 {
   "navbar": {
     "subscribe": "Member werden"
+  },
+  "blocks": {
+    "image": {
+      "caption": "{{caption}} {{source}}",
+      "captionSource": "(Bild: {{source}})"
+    },
+    "imageGallery": {
+      "caption": "{{caption}} {{source}}",
+      "captionSource": "(Bild: {{source}})"
+    }
+  },
+  "subscription": {
+    "subscriptionIsUnpaid": "Abo ist unbezahlt",
+    "cancelSubscription": "Abo kündigen",
+    "cancelSubscriptionConfirmationText": "Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
+    "renewSubscriptionConfirmationText": "Wir freuen uns, dass du dein Abo frühzeitig um ein {{subscriptionDuration}} verlängern willst. Weiterfahren?",
+    "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
+    "subscribeNow": "Jetzt ein Abo lösen."
+  },
+  "user": {
+    "changeEmailRequest": "Klicke hier um deine Email zu ändern",
+    "activeSubscriptions": "Aktive Abos",
+    "viewCancelledSubscriptions": "Gekündigte Abos anzeigen"
   }
 }

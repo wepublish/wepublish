@@ -15,39 +15,36 @@ type RevisionMap = Partial<{
 export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
   private readonly dataloader = new DataLoader<string, RevisionMap>(
     async (pageIds: readonly string[]) => {
-      const revisionPromises = []
+      const pages = await this.prisma.page.findMany({
+        where: {
+          id: {
+            in: pageIds as string[]
+          }
+        },
+        include: {
+          PagesRevisionPublished: {
+            include: {
+              pageRevision: true
+            }
+          },
+          PagesRevisionDraft: {
+            include: {
+              pageRevision: true
+            }
+          },
+          PagesRevisionPending: {
+            include: {
+              pageRevision: true
+            }
+          }
+        }
+      })
 
-      for (const pageId of pageIds) {
-        revisionPromises.push(
-          this.prisma.pageRevision.findMany({
-            where: {
-              pageId,
-              archivedAt: null
-            },
-            take: 3,
-            orderBy: [
-              {
-                publishedAt: 'desc'
-              },
-              {
-                createdAt: 'desc'
-              }
-            ]
-          })
-        )
-      }
-
-      const revisions = (await Promise.all(revisionPromises)).flat()
-
-      return pageIds.map((pageId): RevisionMap => {
-        const published = revisions.find(
-          rev => rev.pageId === pageId && rev.publishedAt && new Date() > new Date(rev.publishedAt)
-        )
-
-        const draft = revisions.find(rev => rev.pageId === pageId && !rev.publishedAt)
-        const pending = revisions.find(
-          rev => rev.pageId === pageId && rev.publishedAt && new Date(rev.publishedAt) > new Date()
-        )
+      return pageIds.map((pageIds): RevisionMap => {
+        const rev = pages.find(rev => rev.id === pageIds)
+        const published = rev?.PagesRevisionPublished?.pageRevision
+        const draft = rev?.PagesRevisionDraft?.pageRevision
+        const pending = rev?.PagesRevisionPending?.pageRevision
 
         return {draft, pending, published}
       })
