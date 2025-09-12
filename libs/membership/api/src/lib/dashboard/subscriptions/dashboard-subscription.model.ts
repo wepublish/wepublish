@@ -104,7 +104,7 @@ export class DailySubscriptionStats {
   @Field(() => Int)
   deactivatedSubscriptionCount!: number
 
-  @Field(() => [DailySubscriptionStatsUser])
+  @Field(type => [DailySubscriptionStatsUser])
   deactivatedSubscriptionUsers!: DailySubscriptionStatsUser[]
 
   @Field(() => Int)

@@ -5,9 +5,7 @@ import {DailySubscriptionStats, DashboardSubscription} from './dashboard-subscri
 import {differenceInDays, endOfDay, startOfDay, format, subDays} from 'date-fns'
 import NodeCache from 'node-cache'
 import {createHash} from 'crypto'
-//import {fr} from 'date-fns/locale'
 import {gt} from 'ramda'
-//import { da } from 'date-fns/locale'
 
 /**
  * Stats cache configuration and setup

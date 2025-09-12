@@ -25,7 +25,7 @@ const FilterInfo = ({text, color}: {text: string; color: string | undefined}) =>
     speaker={
       <Tooltip>
         {text.split('\n').map((line, index) => (
-          <span style={{display: 'block', paddingBottom: '6px'}} key={index}>
+          <span style={{display: 'block', paddingBottom: '.5rem'}} key={index}>
             {line}
           </span>
         ))}
@@ -57,7 +57,6 @@ export function AudienceFilterToggle({
   return (
     <>
       <Toggle
-        color={'red'}
         checked={clientFilter[filterKey as keyof AudienceClientFilter]}
         onChange={(checked: boolean) =>
           setClientFilter({

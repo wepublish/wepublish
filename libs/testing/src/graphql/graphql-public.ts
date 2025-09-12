@@ -2668,13 +2668,6 @@ export type Query = {
   poll: FullPoll
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes
-  /**
-   *
-   *       Returns the predicted subscription renewals in a given timeframe.
-   *       A predicted renewal is a subscription that has autoRenew enabled, is active, and its paidUntil date is in the given timeframe.
-   *
-   */
-  predictedSubscriptionRenewals: Array<DashboardSubscription>
   primaryBanner?: Maybe<Banner>
   provider: MailProviderModel
   /** This query returns the comment rating system. */
@@ -2923,11 +2916,6 @@ export type QueryPollVotesArgs = {
   skip?: InputMaybe<Scalars['Int']>
   sort?: InputMaybe<PollVoteSort>
   take?: InputMaybe<Scalars['Int']>
-}
-
-export type QueryPredictedSubscriptionRenewalsArgs = {
-  end?: InputMaybe<Scalars['DateTime']>
-  start: Scalars['DateTime']
 }
 
 export type QueryPrimaryBannerArgs = {

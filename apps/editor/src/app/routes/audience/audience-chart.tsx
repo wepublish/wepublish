@@ -40,7 +40,7 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
   const {
     t,
     i18n: {language}
-  } = useTranslation(['', 'ns2'])
+  } = useTranslation()
 
   const {
     totalActiveSubscriptionCount,
