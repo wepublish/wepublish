@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleAnalytics} from '@next/third-parties/google'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {theme} from '@wepublish/ui'
 import {
@@ -242,7 +243,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  withSessionProvider(withJwtHandler(CustomApp))
+  withErrorSnackbar(withSessionProvider(withJwtHandler(CustomApp)))
 )
 
 export {ConnectedApp as default}

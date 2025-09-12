@@ -1,12 +1,14 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {setCookie} from 'cookies-next'
-import {NextPage, NextPageContext} from 'next'
-import getConfig from 'next/config'
-import {withAuthGuard} from '../../auth-guard'
-import {ssrAuthLink} from '../../auth-link'
-import {getSessionTokenProps} from '../../get-session-token-props'
-import {ComponentProps} from 'react'
+import {css} from '@mui/material'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {
+  InvoiceListContainer,
+  InvoiceListItemWrapper,
+  SubscriptionListContainer,
+  useHasUnpaidInvoices
+} from '@wepublish/membership/website'
+import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -16,17 +18,15 @@ import {
   UserSession,
   useSubscriptionsQuery
 } from '@wepublish/website/api'
-import {AuthTokenStorageKey} from '@wepublish/authentication/website'
-import {ContentWrapper} from '@wepublish/content/website'
-import {
-  InvoiceListContainer,
-  InvoiceListItemContent,
-  SubscriptionListContainer,
-  useHasUnpaidInvoices
-} from '@wepublish/membership/website'
-import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {setCookie} from 'cookies-next'
 import {t} from 'i18next'
+import {NextPage, NextPageContext} from 'next'
+import getConfig from 'next/config'
+import {ComponentProps} from 'react'
+import {withAuthGuard} from '../../auth-guard'
+import {ssrAuthLink} from '../../auth-link'
+import {getSessionTokenProps} from '../../get-session-token-props'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -55,9 +55,9 @@ const SubscriptionListWrapper = styled('div')`
 `
 
 const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemContent} {
-    border: 8px solid ${({theme}) => theme.palette.primary.main};
-    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  ${InvoiceListItemWrapper} {
+    border-width: 4px;
+    border-color: ${({theme}) => theme.palette.error.main};
   }
 `
 

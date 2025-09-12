@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleTagManager} from '@next/third-parties/google'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
 import {
   authLink,
@@ -249,6 +250,6 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink
-])(withSessionProvider(withJwtHandler(CustomApp)))
+])(withErrorSnackbar(withSessionProvider(withJwtHandler(CustomApp))))
 
 export {ConnectedApp as default}
