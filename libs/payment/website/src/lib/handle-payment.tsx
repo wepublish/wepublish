@@ -1,6 +1,6 @@
 import {
   FullMemberPlanFragment,
-  Payment,
+  FullPaymentFragment,
   usePageLazyQuery,
   usePayInvoiceMutation,
   useSubscribeMutation
@@ -157,7 +157,7 @@ const handlePayment = ({
   failUrl,
   setStripeClientSecret
 }: {
-  intent?: Payment
+  intent?: FullPaymentFragment
   successUrl: string
   failUrl: string
   setStripeClientSecret?: (secret: string | undefined) => void
