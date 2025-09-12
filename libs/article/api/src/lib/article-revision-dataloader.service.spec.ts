@@ -10,7 +10,6 @@ describe('ArticleRevisionDataloaderService', () => {
   let prismaMock: {
     article: {
       findMany: jest.Mock
-      findFirst: jest.Mock
     }
   }
 
@@ -26,8 +25,7 @@ describe('ArticleRevisionDataloaderService', () => {
   beforeEach(async () => {
     prismaMock = {
       article: {
-        findMany: jest.fn(),
-        findFirst: jest.fn()
+        findMany: jest.fn()
       }
     }
 

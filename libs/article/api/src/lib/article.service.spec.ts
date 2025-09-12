@@ -16,6 +16,7 @@ describe('ArticleService', () => {
     $queryRaw: jest.Mock
     articleTrackingPixels: {[method in keyof PrismaClient['articleTrackingPixels']]?: jest.Mock}
     article: {[method in keyof PrismaClient['article']]?: jest.Mock}
+    articleRevision: {[method in keyof PrismaClient['articleRevision']]?: jest.Mock}
   }
   let trackingPixelMock: {[method in keyof TrackingPixelService]?: jest.Mock}
 
@@ -40,8 +41,13 @@ describe('ArticleService', () => {
         create: jest.fn(),
         update: jest.fn()
       },
+      articleRevision: {
+        updateMany: jest.fn(),
+        update: jest.fn()
+      },
       articleTrackingPixels: {
-        createMany: jest.fn()
+        createMany: jest.fn(),
+        findMany: jest.fn()
       }
     }
 
@@ -76,6 +82,84 @@ describe('ArticleService', () => {
 
   it('should query articles based on filter', async () => {
     prismaMock.article.findMany?.mockResolvedValue([])
+    prismaMock.$queryRaw.mockResolvedValue([{id: '1234'}, {id: '1235'}])
+
+    await service.getArticles({
+      filter: {
+        authors: ['1234'],
+        tags: ['1234'],
+        excludeIds: ['1234'],
+        ids: ['12345'],
+        peerId: '1234',
+        includeHidden: false,
+        preTitle: 'preTitle',
+        title: 'title',
+        lead: 'lead',
+        publicationDateFrom: {
+          date: new Date('2025z-01-01'),
+          comparison: DateFilterComparison.LowerThan
+        },
+        publicationDateTo: {
+          date: new Date('2030-01-01'),
+          comparison: DateFilterComparison.LowerThan
+        },
+        shared: true,
+        draft: true,
+        pending: true,
+        published: true
+      },
+      sort: ArticleSort.PublishedAt,
+      order: SortOrder.Ascending,
+      skip: 5,
+      take: 5
+    })
+
+    expect(prismaMock.$queryRaw.mock.calls[0]).toMatchSnapshot()
+    expect(prismaMock.article.findMany?.mock.calls[0]).toMatchSnapshot()
+    expect(prismaMock.article.count?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should query articles based on full text search', async () => {
+    prismaMock.article.findMany?.mockResolvedValue([])
+    prismaMock.$queryRaw.mockResolvedValue([{id: '1234'}, {id: '1235'}])
+
+    await service.getArticles({
+      filter: {
+        authors: ['1234'],
+        tags: ['1234'],
+        excludeIds: ['1234'],
+        peerId: '1234',
+        includeHidden: false,
+        preTitle: 'preTitle',
+        title: 'title',
+        lead: 'lead',
+        body: 'body',
+        publicationDateFrom: {
+          date: new Date('2025z-01-01'),
+          comparison: DateFilterComparison.LowerThan
+        },
+        publicationDateTo: {
+          date: new Date('2030-01-01'),
+          comparison: DateFilterComparison.LowerThan
+        },
+        shared: true,
+        draft: true,
+        pending: true,
+        published: true
+      },
+      sort: ArticleSort.PublishedAt,
+      order: SortOrder.Ascending,
+      skip: 5,
+      take: 5
+    })
+
+    expect(prismaMock.$queryRaw.mock.calls[0]).toMatchSnapshot()
+    expect(prismaMock.article.findMany?.mock.calls[0]).toMatchSnapshot()
+    expect(prismaMock.article.count?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should query articles on all revisions', async () => {
+    prismaMock.article.findMany?.mockResolvedValue([])
     prismaMock.$queryRaw.mockResolvedValue([])
 
     await service.getArticles({
@@ -98,10 +182,7 @@ describe('ArticleService', () => {
           date: new Date('2030-01-01'),
           comparison: DateFilterComparison.LowerThan
         },
-        shared: true,
-        draft: true,
-        pending: true,
-        published: true
+        shared: true
       },
       sort: ArticleSort.PublishedAt,
       order: SortOrder.Ascending,
@@ -171,7 +252,7 @@ describe('ArticleService', () => {
     expect((mapBlockUnionMap as jest.Mock).mock.calls[0]).toMatchSnapshot()
   })
 
-  it('should not creat tracking pixels for peer articles', async () => {
+  it('should not create tracking pixels for peer articles', async () => {
     prismaMock.article.create?.mockResolvedValue({
       id: '1234',
       peerId: '1234'
@@ -240,6 +321,137 @@ describe('ArticleService', () => {
     await service.deleteArticle('1234')
 
     expect(prismaMock.article.delete?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should publish a revision', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: undefined,
+      revisions: [
+        {
+          id: '1234-1234'
+        }
+      ]
+    })
+
+    await service.publishArticle('1234', new Date('2025-01-01'))
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should override the original publication date if the original date is in the future', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: new Date('2025-01-01'),
+      revisions: [
+        {
+          id: '1234-1234'
+        }
+      ]
+    })
+
+    await service.publishArticle('1234', new Date('2026-01-01'))
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should override the original publication date if older', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: new Date('2023-01-01'),
+      revisions: [
+        {
+          id: '1234-1234'
+        }
+      ]
+    })
+
+    await service.publishArticle('1234', new Date('2022-01-01'))
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should not override the original publication date if newer', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      publishedAt: new Date('2022-01-01'),
+      revisions: [
+        {
+          id: '1234-1234'
+        }
+      ]
+    })
+
+    await service.publishArticle('1234', new Date('2023-01-01'))
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should unpublish & archive all pending revisions on publish', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      revisions: [
+        {
+          id: '1234-1234'
+        }
+      ]
+    })
+
+    await service.publishArticle('1234', new Date('2025-01-01'))
+    expect(prismaMock.articleRevision.updateMany?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should unpublish an article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234'
+    })
+
+    prismaMock.article.update?.mockResolvedValue({
+      id: '1234',
+      revisions: [
+        {
+          id: '1234-1234'
+        },
+        {
+          id: '1234-1235'
+        }
+      ]
+    })
+
+    await service.unpublishArticle('1234')
+
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+    expect(prismaMock.articleRevision.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should like an article', async () => {
+    await service.likeArticle('1234')
+
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should dislike an article', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      likes: 1
+    })
+
+    await service.dislikeArticle('1234')
+
+    expect(prismaMock.article.update?.mock.calls[0]).toMatchSnapshot()
+  })
+
+  it('should not dislike an article with 0 likes', async () => {
+    prismaMock.article.findUnique?.mockResolvedValue({
+      id: '1234',
+      likes: 0
+    })
+
+    await service.dislikeArticle('1234')
+
+    expect(prismaMock.article.update).not.toHaveBeenCalled()
+  })
+
+  it('should return the tracking pixels of an article', async () => {
+    await service.getTrackingPixels('1234')
+
+    expect(prismaMock.articleTrackingPixels.findMany?.mock.calls[0]).toMatchSnapshot()
   })
 
   describe('unhappy path', () => {
