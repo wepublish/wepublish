@@ -935,6 +935,7 @@ input UserInput {
   userImageID: String
   active: Boolean!
   properties: [PropertiesInput!]!
+  internalNote: String
   roleIDs: [String!]
 }
 
