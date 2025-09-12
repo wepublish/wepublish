@@ -8,7 +8,8 @@ interface ReviveAdProps {
 export const ReviveAd: React.FC<ReviveAdProps> = ({zoneId, reviveId}) => {
   useEffect(() => {
     if ((window as any).reviveAsync) {
-      ;(window as any).reviveAsync[reviveId].refresh()
+      // prettier-ignore
+      (window as any).reviveAsync[reviveId].refresh()
     }
   }, [reviveId])
 
