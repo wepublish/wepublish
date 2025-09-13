@@ -29,7 +29,10 @@
 			"extensions": [
 				"dbaeumer.vscode-eslint",
 				"Prisma.prisma",
-				"GraphQL.vscode-graphql"
+				"GraphQL.vscode-graphql",
+				"nrwl.angular-console",
+				"firsttris.vscode-jest-runner",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}
