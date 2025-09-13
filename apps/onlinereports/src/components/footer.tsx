@@ -3,6 +3,7 @@ import {
   FooterContainer,
   FooterName,
   FooterPaperCategory,
+  FooterPaperCategoryLinks,
   FooterPaperSection,
   FooterPaperWrapper
 } from '@wepublish/navigation/website'
@@ -24,6 +25,10 @@ const OnlineReportsFooterContainer = styled(FooterContainer)`
 
   ${FooterPaperSection} {
     font-size: 18px;
+  }
+
+  ${FooterPaperCategoryLinks} span {
+    font-weight: inherit;
   }
 `
 
