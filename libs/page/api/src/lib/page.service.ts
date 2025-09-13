@@ -427,33 +427,28 @@ const createTitleFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =
       }
     }
 
-    if (filter?.published) {
-      return {
-        PagesRevisionPublished: {
-          pageRevision: titleFilter
-        }
-      }
-    }
-    if (filter?.draft) {
-      return {
-        PagesRevisionDraft: {
-          pageRevision: titleFilter
-        }
-      }
-    }
-
-    if (filter?.pending) {
-      return {
-        PagesRevisionPending: {
-          pageRevision: titleFilter
-        }
-      }
-    }
-
     return {
-      revisions: {
-        some: titleFilter
-      }
+      PagesRevisionPublished: filter?.published
+        ? {
+            pageRevision: titleFilter
+          }
+        : undefined,
+      PagesRevisionDraft: filter?.draft
+        ? {
+            pageRevision: titleFilter
+          }
+        : undefined,
+      PagesRevisionPending: filter?.pending
+        ? {
+            pageRevision: titleFilter
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending
+          ? {
+              some: titleFilter
+            }
+          : undefined
     }
   }
   return {}
@@ -468,33 +463,28 @@ const createDescriptionFilter = (filter: Partial<PageFilter>): Prisma.PageWhereI
       }
     }
 
-    if (filter?.published) {
-      return {
-        PagesRevisionPublished: {
-          pageRevision: descriptionFilter
-        }
-      }
-    }
-    if (filter?.draft) {
-      return {
-        PagesRevisionDraft: {
-          pageRevision: descriptionFilter
-        }
-      }
-    }
-
-    if (filter?.pending) {
-      return {
-        PagesRevisionPending: {
-          pageRevision: descriptionFilter
-        }
-      }
-    }
-
     return {
-      revisions: {
-        some: descriptionFilter
-      }
+      PagesRevisionPublished: filter?.published
+        ? {
+            pageRevision: descriptionFilter
+          }
+        : undefined,
+      PagesRevisionDraft: filter?.draft
+        ? {
+            pageRevision: descriptionFilter
+          }
+        : undefined,
+      PagesRevisionPending: filter?.pending
+        ? {
+            pageRevision: descriptionFilter
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending
+          ? {
+              some: descriptionFilter
+            }
+          : undefined
     }
   }
 
