@@ -41,10 +41,28 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
   }
 })
 
+// Type for tags with count - used in editor listing
+export const GraphQLTagWithCount = new GraphQLObjectType<Tag & {count: number}, Context>({
+  name: 'TagWithCount',
+  fields: {
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    tag: {type: GraphQLString},
+    type: {type: GraphQLTagType},
+    main: {type: new GraphQLNonNull(GraphQLBoolean)},
+    count: {type: new GraphQLNonNull(GraphQLInt)},
+    url: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(async (tag, _, {urlAdapter}) => {
+        return await urlAdapter.getTagURL(tag)
+      })
+    }
+  }
+})
+
 export const GraphQLTagConnection = new GraphQLObjectType({
   name: 'TagConnection',
   fields: {
-    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag)))},
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTagWithCount)))},
     pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }

@@ -1,133 +1,43 @@
 import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
-import {
-  Tag,
-  TagType,
-  useCreateTagMutation,
-  useDeleteTagMutation,
-  useTagListLazyQuery,
-  useUpdateTagMutation
-} from '@wepublish/editor/api'
+import {TagForm} from './tagForm'
+import {Tag, TagType, useDeleteTagMutation, useTagListQuery} from '@wepublish/editor/api'
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
+  ListViewFilterArea,
   ListViewHeader,
+  PaddedCell,
   PermissionControl,
+  Table,
   TableWrapper
 } from '@wepublish/ui/editor'
-import {equals} from 'ramda'
-import {memo, useCallback, useEffect, useReducer, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
+import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button,
-  Checkbox,
-  FlexboxGrid,
-  Form,
+  Drawer,
   IconButton as RIconButton,
-  Loader as RLoader,
+  Input,
+  InputGroup,
   Message,
   Modal,
   Pagination,
+  Table as RTable,
+  Tag as RTag,
   toaster
 } from 'rsuite'
 
-const FlexGridSmallerMargin = styled(FlexboxGrid)`
-  margin-bottom: 12px;
-`
-
-const Content = styled.div`
-  margin-top: 2rem;
-  height: 100%;
-`
-
-const IconButton = styled(RIconButton)`
-  margin-left: 12px;
-`
-
-const Flex = styled.div`
-  flex: 0 0 auto;
-`
-
-const FlexWrapper = styled.div`
-  max-width: 300px;
-  flex: 1 1;
-`
-
-const Loader = styled(RLoader)`
-  margin: 30px;
-`
+const {Column, HeaderCell, Cell} = RTable
 
 export type TagListProps = {
   type: TagType
-}
-
-enum TagListActionType {
-  Set = 'set',
-  Create = 'create',
-  Update = 'update',
-  Delete = 'delete'
-}
-
-type TagListActions =
-  | {type: TagListActionType.Set; payload: Record<string, Pick<Tag, 'tag' | 'main'>>}
-  | {type: TagListActionType.Create; payload: {id: string}}
-  | {type: TagListActionType.Update; payload: {id: string; tag?: string | null; main?: boolean}}
-  | {type: TagListActionType.Delete; payload: {id: string}}
-
-const mapTagsToFormValue = <T extends Pick<Tag, 'id' | 'main' | 'tag'>>(
-  tags: T[] | null | undefined
-) =>
-  tags?.reduce((obj, node) => {
-    obj[node.id] = {
-      main: node.main,
-      tag: node.tag ?? ''
-    }
-
-    return obj
-  }, {} as Record<string, Pick<Tag, 'tag' | 'main'>>) ?? {}
-
-const tagFormValueReducer = (
-  state: Record<string, Pick<Tag, 'tag' | 'main'>>,
-  action: TagListActions
-): Record<string, Pick<Tag, 'tag' | 'main'>> => {
-  switch (action.type) {
-    case TagListActionType.Set:
-      return action.payload
-
-    case TagListActionType.Create:
-      return {
-        [action.payload.id]: {
-          main: false,
-          tag: ''
-        },
-        ...state
-      }
-
-    case TagListActionType.Update: {
-      const newState = {...state}
-
-      newState[action.payload.id] = {
-        tag: action.payload.tag ?? newState[action.payload.id].tag,
-        main: action.payload.main ?? newState[action.payload.id].main
-      }
-
-      return newState
-    }
-
-    case TagListActionType.Delete: {
-      const newState = {...state}
-      delete newState[action.payload.id]
-
-      return newState
-    }
-  }
-
-  return state
 }
 
 const showErrors = (error: ApolloError): void => {
@@ -140,121 +50,69 @@ const showErrors = (error: ApolloError): void => {
 
 const TagList = memo<TagListProps>(({type}) => {
   const {t} = useTranslation()
+  const navigate = useNavigate()
+  const {pathname} = useLocation()
+  const {id} = useParams()
+
+  const isCreateRoute = useMemo(() => pathname.includes('create'), [pathname])
+  const isEditRoute = useMemo(() => pathname.includes('edit'), [pathname])
+
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [formValue, dispatchFormValue] = useReducer(tagFormValueReducer, {})
-  const [apiValue, dispatchApiValue] = useReducer(tagFormValueReducer, {})
-  const [tagToDelete, setTagToDelete] = useState<string | null>(null)
+  const [filter, setFilter] = useState('')
+  const [tagToDelete, setTagToDelete] = useState<Tag | null>(null)
 
-  const [fetch, {data, loading}] = useTagListLazyQuery({
+  const {data, loading, refetch} = useTagListQuery({
     variables: {
       take: limit,
+      skip: (page - 1) * limit,
       filter: {
-        type
+        type,
+        tag: filter || undefined
       }
     },
     fetchPolicy: 'cache-and-network',
-    onError: showErrors,
-    onCompleted(newData) {
-      dispatchApiValue({
-        type: TagListActionType.Set,
-        payload: mapTagsToFormValue(newData?.tags?.nodes)
-      })
+    onError: showErrors
+  })
 
-      dispatchFormValue({
-        type: TagListActionType.Set,
-        payload: mapTagsToFormValue(newData?.tags?.nodes)
-      })
+  const [deleteTag, {loading: isDeleting}] = useDeleteTagMutation({
+    onError: showErrors,
+    onCompleted() {
+      refetch()
+      setTagToDelete(null)
+      toaster.push(
+        <Message type="success" showIcon closable duration={3000}>
+          {t('tags.overview.deleteSuccess')}
+        </Message>
+      )
     }
   })
 
-  const [createTag] = useCreateTagMutation({
-    variables: {
-      type
-    },
-    onError: showErrors,
-    onCompleted(createdTag) {
-      if (!createdTag.createTag) {
-        return
-      }
+  const tags = data?.tags?.nodes ?? []
+  const total = data?.tags?.totalCount ?? 0
 
-      dispatchApiValue({
-        type: TagListActionType.Create,
-        payload: {
-          id: createdTag.createTag.id
-        }
-      })
-
-      dispatchFormValue({
-        type: TagListActionType.Create,
-        payload: {
-          id: createdTag.createTag.id
-        }
-      })
+  const tagToEdit = useMemo(() => {
+    if (isEditRoute && id) {
+      return tags.find(tag => tag.id === id)
     }
-  })
-  const [updateTag] = useUpdateTagMutation({
-    onError: showErrors,
-    onCompleted(updatedTag) {
-      if (!updatedTag.updateTag) {
-        return
-      }
+    return undefined
+  }, [isEditRoute, id, tags])
 
-      dispatchApiValue({
-        type: TagListActionType.Update,
-        payload: updatedTag.updateTag
-      })
+  const baseRoute = useMemo(() => {
+    switch (type) {
+      case TagType.Article:
+        return '/articles/tags'
+      case TagType.Page:
+        return '/pages/tags'
+      case TagType.Comment:
+        return '/comments/tags'
+      case TagType.Event:
+        return '/events/tags'
+      case TagType.Author:
+        return '/authors/tags'
     }
-  })
-  const [deleteTag] = useDeleteTagMutation({
-    onError: showErrors,
-    onCompleted(deletedTag) {
-      if (!deletedTag.deleteTag) {
-        return
-      }
-
-      dispatchApiValue({
-        type: TagListActionType.Delete,
-        payload: {
-          id: deletedTag.deleteTag.id
-        }
-      })
-
-      dispatchFormValue({
-        type: TagListActionType.Delete,
-        payload: {
-          id: deletedTag.deleteTag.id
-        }
-      })
-    }
-  })
-
-  const shouldUpdateTag = useCallback(
-    (id: string) => {
-      const apiTag = apiValue[id]
-      const formTag = formValue[id]
-
-      return !equals(apiTag, formTag)
-    },
-    [apiValue, formValue]
-  )
-
-  const total =
-    data?.tags?.totalCount && data.tags.totalCount > Object.keys(apiValue).length
-      ? data.tags.totalCount
-      : Object.keys(apiValue).length
-
-  useEffect(() => {
-    fetch({
-      variables: {
-        take: limit,
-        skip: (page - 1) * limit,
-        filter: {
-          type
-        }
-      }
-    })
-  }, [type, limit, page, fetch])
+    return '/articles/tags'
+  }, [type])
 
   return (
     <>
@@ -265,103 +123,71 @@ const TagList = memo<TagListProps>(({type}) => {
 
         <PermissionControl qualifyingPermissions={['CAN_CREATE_TAG']}>
           <ListViewActions>
-            <RIconButton
-              type="button"
-              appearance="primary"
-              data-testid="create"
-              icon={<MdAdd />}
-              onClick={() => createTag()}>
-              {t('tags.overview.createTag')}
-            </RIconButton>
+            <Link to={`${baseRoute}/create`}>
+              <RIconButton type="button" appearance="primary" data-testid="create" icon={<MdAdd />}>
+                {t('tags.overview.createTag')}
+              </RIconButton>
+            </Link>
           </ListViewActions>
         </PermissionControl>
+
+        <ListViewFilterArea>
+          <InputGroup style={{width: '300px'}}>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <MdSearch />
+            </InputGroup.Addon>
+          </InputGroup>
+        </ListViewFilterArea>
       </ListViewContainer>
 
-      {loading && (
-        <FlexboxGrid justify="center">
-          <Loader size="lg" />
-        </FlexboxGrid>
-      )}
-
       <TableWrapper>
-        <Content>
-          {Object.entries(formValue).map(([tagId, inputValue]) => (
-            <Form key={tagId}>
-              <FlexGridSmallerMargin>
-                <FlexWrapper>
-                  <Form.Control
-                    name={tagId}
-                    value={inputValue.tag ?? ''}
-                    placeholder={t('tags.overview.placeholder')}
-                    onChange={(tag: string) => {
-                      dispatchFormValue({
-                        type: TagListActionType.Update,
-                        payload: {
-                          id: tagId,
-                          tag
-                        }
-                      })
-                    }}
-                  />
-                </FlexWrapper>
+        <Table fillHeight loading={loading} data={tags}>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('tags.overview.name')}</HeaderCell>
+            <Cell dataKey="tag">
+              {(rowData: Tag) => (
+                <Link to={`${baseRoute}/edit/${rowData.id}`}>
+                  {rowData.tag || t('tags.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
 
-                <Flex>
-                  <Checkbox
-                    name={tagId}
-                    checked={inputValue.main}
-                    value={inputValue.main ? 0 : 1}
-                    onChange={main => {
-                      dispatchFormValue({
-                        type: TagListActionType.Update,
-                        payload: {
-                          id: tagId,
-                          main: !!main
-                        }
-                      })
-                    }}>
-                    {t('tags.overview.markAsMain')}
-                  </Checkbox>
-                </Flex>
+          <Column width={150} align="center" resizable>
+            <HeaderCell>{t('tags.overview.specialTags')}</HeaderCell>
+            <Cell>
+              {(rowData: Tag) =>
+                rowData.main && <RTag color="blue">{t('tags.overview.main')}</RTag>
+              }
+            </Cell>
+          </Column>
 
-                <Flex>
-                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
-                    <IconButtonTooltip caption={t('save')}>
-                      <IconButton
-                        type="submit"
-                        circle
-                        size="sm"
-                        icon={<MdSave />}
-                        onClick={() => {
-                          formValue[tagId] &&
-                            updateTag({
-                              variables: {
-                                id: tagId,
-                                ...formValue[tagId]
-                              }
-                            })
-                        }}
-                        disabled={!shouldUpdateTag(tagId)}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
+          <Column width={100} align="center" resizable>
+            <HeaderCell>{t('tags.overview.count')}</HeaderCell>
+            <Cell dataKey="count" />
+          </Column>
 
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
-                    <IconButtonTooltip caption={t('delete')}>
-                      <IconButton
-                        color="red"
-                        appearance="ghost"
-                        circle
-                        size="sm"
-                        icon={<MdDelete />}
-                        onClick={() => setTagToDelete(tagId)}
-                      />
-                    </IconButtonTooltip>
-                  </PermissionControl>
-                </Flex>
-              </FlexGridSmallerMargin>
-            </Form>
-          ))}
-        </Content>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('tags.overview.action')}</HeaderCell>
+            <PaddedCell>
+              {(rowData: Tag) => (
+                <PermissionControl qualifyingPermissions={['CAN_DELETE_TAG']}>
+                  <IconButtonTooltip caption={t('delete')}>
+                    <IconButton
+                      icon={<MdDelete />}
+                      circle
+                      size="sm"
+                      appearance="ghost"
+                      color="red"
+                      onClick={() => setTagToDelete(rowData)}
+                    />
+                  </IconButtonTooltip>
+                </PermissionControl>
+              )}
+            </PaddedCell>
+          </Column>
+        </Table>
 
         <Pagination
           limit={limit}
@@ -382,23 +208,26 @@ const TagList = memo<TagListProps>(({type}) => {
       </TableWrapper>
 
       <Modal open={!!tagToDelete} backdrop="static" size="xs" onClose={() => setTagToDelete(null)}>
-        <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
+        <Modal.Title>{t('tags.overview.deleteTag')}</Modal.Title>
         <Modal.Body>
-          {tagToDelete && t('tags.overview.areYouSureBody', {tag: formValue[tagToDelete].tag})}
+          {tagToDelete && t('tags.overview.deleteTagBody', {tag: tagToDelete.tag})}
         </Modal.Body>
         <Modal.Footer>
           <Button
             color="red"
             appearance="primary"
+            disabled={isDeleting}
+            loading={isDeleting}
             onClick={() => {
-              deleteTag({
-                variables: {
-                  id: tagToDelete!
-                }
-              })
-              setTagToDelete(null)
+              if (tagToDelete) {
+                deleteTag({
+                  variables: {
+                    id: tagToDelete.id
+                  }
+                })
+              }
             }}>
-            {t('tags.overview.areYouSureConfirmation')}
+            {t('tags.overview.confirm')}
           </Button>
 
           <Button appearance="subtle" onClick={() => setTagToDelete(null)}>
@@ -406,6 +235,32 @@ const TagList = memo<TagListProps>(({type}) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Drawer
+        open={isCreateRoute || isEditRoute}
+        onClose={() => {
+          navigate(baseRoute)
+        }}
+        size="sm">
+        <Drawer.Header>
+          <Drawer.Title>
+            {isEditRoute ? t('tags.overview.editTag') : t('tags.overview.createTag')}
+          </Drawer.Title>
+        </Drawer.Header>
+        <Drawer.Body>
+          <TagForm
+            type={type}
+            initialData={tagToEdit}
+            onSuccess={() => {
+              navigate(baseRoute)
+              refetch()
+            }}
+            onCancel={() => {
+              navigate(baseRoute)
+            }}
+          />
+        </Drawer.Body>
+      </Drawer>
     </>
   )
 })
@@ -413,7 +268,6 @@ const TagList = memo<TagListProps>(({type}) => {
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_TAGS',
   'CAN_CREATE_TAG',
-  'CAN_UPDATE_TAG',
   'CAN_DELETE_TAG'
 ])(TagList)
 export {CheckedPermissionComponent as TagList}

@@ -1549,7 +1549,7 @@ export type Tag = {
 
 export type TagConnection = {
   __typename?: 'TagConnection';
-  nodes: Array<Tag>;
+  nodes: Array<TagWithCount>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -1572,6 +1572,16 @@ export enum TagType {
   Event = 'Event',
   Page = 'Page'
 }
+
+export type TagWithCount = {
+  __typename?: 'TagWithCount';
+  count: Scalars['Int'];
+  id: Scalars['String'];
+  main: Scalars['Boolean'];
+  tag?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+  url: Scalars['String'];
+};
 
 export type Token = {
   __typename?: 'Token';
@@ -2364,11 +2374,12 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'TagWithCount', id: string, tag?: string | null, main: boolean, count: number }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
+  main?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -5573,6 +5584,7 @@ export const TagListDocument = gql`
       id
       tag
       main
+      count
     }
     pageInfo {
       startCursor
@@ -5618,8 +5630,8 @@ export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+    mutation CreateTag($tag: String, $type: TagType!, $main: Boolean) {
+  createTag(tag: $tag, type: $type, main: $main) {
     id
     tag
     main
@@ -5643,6 +5655,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  *   variables: {
  *      tag: // value for 'tag'
  *      type: // value for 'type'
+ *      main: // value for 'main'
  *   },
  * });
  */

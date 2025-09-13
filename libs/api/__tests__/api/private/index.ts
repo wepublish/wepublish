@@ -1547,7 +1547,7 @@ export type Tag = {
 
 export type TagConnection = {
   __typename?: 'TagConnection';
-  nodes: Array<Tag>;
+  nodes: Array<TagWithCount>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -1570,6 +1570,16 @@ export enum TagType {
   Event = 'Event',
   Page = 'Page'
 }
+
+export type TagWithCount = {
+  __typename?: 'TagWithCount';
+  count: Scalars['Int'];
+  id: Scalars['String'];
+  main: Scalars['Boolean'];
+  tag?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+  url: Scalars['String'];
+};
 
 export type Token = {
   __typename?: 'Token';
@@ -2019,7 +2029,7 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'TagWithCount', id: string, tag?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;

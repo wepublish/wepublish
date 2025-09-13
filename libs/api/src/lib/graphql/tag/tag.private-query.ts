@@ -1,6 +1,6 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
 import {CanGetTags} from '@wepublish/permissions'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 
@@ -65,6 +65,15 @@ export const createTagFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInp
   AND: [createTypeFilter(filter), createTagNameFilter(filter)]
 })
 
+// Relation mapping for efficient count queries
+const relationForType: Record<TagType, keyof Prisma.TagCountOutputType> = {
+  [TagType.Comment]: 'comments',
+  [TagType.Event]: 'events',
+  [TagType.Author]: 'authors',
+  [TagType.Article]: 'articles',
+  [TagType.Page]: 'pages'
+}
+
 export const getTags = async (
   filter: Partial<TagFilter>,
   sortedField: TagSort,
@@ -96,6 +105,84 @@ export const getTags = async (
   ])
 
   const nodes = tags.slice(0, take)
+  const firstTag = nodes[0]
+  const lastTag = nodes[nodes.length - 1]
+
+  const hasPreviousPage = Boolean(skip)
+  const hasNextPage = tags.length > nodes.length
+
+  return {
+    nodes,
+    totalCount,
+    pageInfo: {
+      hasPreviousPage,
+      hasNextPage,
+      startCursor: firstTag?.id,
+      endCursor: lastTag?.id
+    }
+  }
+}
+
+export const getTagsWithCount = async (
+  filter: Partial<TagFilter>,
+  sortedField: TagSort,
+  order: SortOrder,
+  cursorId: string | null,
+  skip: number,
+  take: number,
+  authenticate: Context['authenticate'],
+  tag: PrismaClient['tag']
+) => {
+  const {roles} = authenticate()
+  authorise(CanGetTags, roles)
+
+  const orderBy = createTagOrder(sortedField, order)
+  const where = createTagFilter(filter)
+
+  // Get the relation key for the count based on tag type
+  const relationKey = filter.type ? relationForType[filter.type] : undefined
+
+  const [totalCount, tags] = await Promise.all([
+    tag.count({
+      where,
+      orderBy
+    }),
+    tag.findMany({
+      where,
+      skip,
+      take: getMaxTake(take) + 1,
+      orderBy,
+      cursor: cursorId ? {id: cursorId} : undefined,
+      include: {
+        _count: relationKey
+          ? {
+              select: {[relationKey]: true}
+            }
+          : {
+              select: {
+                comments: true,
+                events: true,
+                authors: true,
+                articles: true,
+                pages: true
+              }
+            }
+      }
+    })
+  ])
+
+  const nodes = tags.slice(0, take).map(tag => {
+    // Get the count for the specific relation type, or sum all if no specific type
+    const count = relationKey
+      ? (tag._count as any)[relationKey]
+      : Object.values(tag._count).reduce((sum: number, val: number) => sum + val, 0)
+
+    return {
+      ...tag,
+      count
+    }
+  })
+
   const firstTag = nodes[0]
   const lastTag = nodes[nodes.length - 1]
 

@@ -11,6 +11,7 @@ query TagList(
       id
       tag
       main
+      count
     }
 
     pageInfo {
@@ -24,8 +25,8 @@ query TagList(
   }
 }
 
-mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+mutation CreateTag($tag: String, $type: TagType!, $main: Boolean) {
+  createTag(tag: $tag, type: $type, main: $main) {
     id
     tag
     main
