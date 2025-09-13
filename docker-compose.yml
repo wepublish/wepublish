@@ -50,7 +50,7 @@ services:
     depends_on:
       - api
   database:
-    image: bitnami/postgresql:14
+    image: bitnami/postgresql:17
     platform: linux/amd64
     ports:
       - '127.0.0.1:5432:5432'

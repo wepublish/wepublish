@@ -7,7 +7,9 @@ import {
   MdLibraryAdd,
   MdOpenInNew,
   MdRefresh,
-  MdSpaceBar
+  MdSpaceBar,
+  MdAutorenew,
+  MdStopCircle
 } from 'react-icons/md'
 import {Button, Col, Drawer, Nav, Row, Sidenav, Table} from 'rsuite'
 
@@ -22,7 +24,10 @@ const availableStats: AggregatedUsers[] = [
   'overdueSubscriptionUsers',
   'deactivatedSubscriptionUsers',
   'renewedSubscriptionUsers',
-  'replacedSubscriptionUsers'
+  'replacedSubscriptionUsers',
+  'predictedSubscriptionRenewalUsersHighProbability',
+  'predictedSubscriptionRenewalUsersLowProbability',
+  'endingSubscriptionUsers'
 ]
 
 function getIconByUserFilter(filterProp: AggregatedUsers) {
@@ -37,14 +42,22 @@ function getIconByUserFilter(filterProp: AggregatedUsers) {
       return <MdRefresh />
     case 'replacedSubscriptionUsers':
       return <MdSpaceBar />
+    case 'predictedSubscriptionRenewalUsersHighProbability':
+      return <MdAutorenew />
+    case 'predictedSubscriptionRenewalUsersLowProbability':
+      return <MdAutorenew />
+    case 'endingSubscriptionUsers':
+      return <MdStopCircle />
     default:
       break
   }
 }
 
 interface AudienceDetailDrawerProps {
-  audienceStats: AudienceStatsComputed | undefined
-  setOpen: Dispatch<SetStateAction<AudienceStatsComputed | undefined>>
+  audienceStats: Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined
+  setOpen: Dispatch<
+    SetStateAction<Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined>
+  >
   timeResolution: TimeResolution
 }
 
@@ -92,8 +105,9 @@ export function AudienceDetailDrawer({
               <Header>{t('audienceDetailDrawer.selectStat')}</Header>
               <Body>
                 <Nav>
-                  {availableStats.map(availableStat => (
+                  {availableStats.map((availableStat, index) => (
                     <Nav.Item
+                      key={index}
                       active={selectedStat === availableStat}
                       onClick={() => setSelectedStat(availableStat)}
                       icon={getIconByUserFilter(availableStat)}>
