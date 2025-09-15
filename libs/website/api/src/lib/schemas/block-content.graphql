@@ -240,6 +240,7 @@ fragment FullTeaser on Teaser {
         title
         lead
         contentUrl
+        openInNewTab
         properties {
             key
             value

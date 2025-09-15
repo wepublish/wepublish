@@ -16,6 +16,7 @@ export const createNewAdTeaser = (): TeaserGridBlock => ({
       type: TeaserType.Custom,
       properties: [],
       contentUrl: null,
+      openInNewTab: false,
       preTitle: 'ad-300x250',
       title: null,
       lead: null,

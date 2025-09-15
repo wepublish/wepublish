@@ -741,6 +741,7 @@ export type CustomTeaser = BaseTeaser &
     image?: Maybe<Image>
     imageID?: Maybe<Scalars['String']>
     lead?: Maybe<Scalars['String']>
+    openInNewTab?: Maybe<Scalars['Boolean']>
     preTitle?: Maybe<Scalars['String']>
     properties?: Maybe<Array<NonDbProperty>>
     title?: Maybe<Scalars['String']>
@@ -751,6 +752,7 @@ export type CustomTeaserInput = {
   contentUrl?: InputMaybe<Scalars['String']>
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
+  openInNewTab?: InputMaybe<Scalars['Boolean']>
   preTitle?: InputMaybe<Scalars['String']>
   properties?: InputMaybe<Array<PropertyInput>>
   title?: InputMaybe<Scalars['String']>
