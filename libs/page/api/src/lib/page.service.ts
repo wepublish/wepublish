@@ -19,7 +19,10 @@ export class PageService {
   async getPageBySlug(slug: string) {
     return this.prisma.page.findFirst({
       where: {
-        slug
+        slug: {
+          equals: slug,
+          mode: 'insensitive'
+        }
       },
       orderBy: {
         publishedAt: 'asc' // there might be an unpublished page with the same slug
