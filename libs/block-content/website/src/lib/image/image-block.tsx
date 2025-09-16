@@ -55,7 +55,10 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
           <ImageBlockCaption>
             {t('blocks.image.caption', {
               caption,
-              source: image?.source ? t('blocks.image.captionSource', {source: image.source}) : null
+              source: image?.source
+                ? t('blocks.image.captionSource', {source: image.source})
+                : null,
+              interpolation: {escapeValue: false}
             })}
           </ImageBlockCaption>
         )}
