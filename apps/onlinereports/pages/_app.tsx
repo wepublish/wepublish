@@ -52,7 +52,7 @@ import {mergeDeepRight} from 'ramda'
 import deOverridden from '../locales/deOverridden.json'
 import {OnlineReportsPage} from '../src/components/page'
 import {AdsProvider} from '../src/context/ads-context'
-import {MitmachenInner} from './mitmachen'
+import Mitmachen from './mitmachen'
 
 setDefaultOptions({
   locale: de
@@ -180,7 +180,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
               Quote: OnlineReportsQuoteBlock,
-              Subscribe: MitmachenInner,
+              Subscribe: Mitmachen,
               Title: OnlineReportsTitle
             }}
             date={{format: dateFormatter}}
