@@ -16,6 +16,9 @@ const i18 = i18next
     supportedLngs: ['en'],
     resources: {
       en: {zod: translation}
+    },
+    interpolation: {
+      escapeValue: false
     }
   })
 

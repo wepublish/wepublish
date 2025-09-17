@@ -55,6 +55,9 @@ i18next
     supportedLngs: ['de'],
     resources: {
       de: {zod: translation}
+    },
+    interpolation: {
+      escapeValue: false
     }
   })
 z.setErrorMap(zodI18nMap)
