@@ -1147,7 +1147,7 @@ const mapTeaserToQueryTeaser = (teaser: FullTeaserFragment | null | undefined): 
             title: teaser.title ?? undefined,
             lead: teaser.lead ?? undefined,
             contentUrl: teaser.contentUrl ?? undefined,
-            openInNewTab: teaser.openInNewTab ?? undefined,
+            openInNewTab: teaser.openInNewTab ?? false,
             properties: teaser?.properties ?? undefined
           }
         : null
