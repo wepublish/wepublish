@@ -1,6 +1,7 @@
 {
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>({source})</ImageSource>}}"
+  },
   "blocks": {
     "image": {
       "captionSource": "({{source}})"
