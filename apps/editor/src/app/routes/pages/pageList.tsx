@@ -135,7 +135,6 @@ function PageList() {
             </Link>
           </ListViewActions>
         </PermissionControl>
-
         <ListFilters
           fields={[
             'title',
@@ -144,6 +143,7 @@ function PageList() {
             'pending',
             'published',
             'publicationDate',
+            'tags',
             'includeHidden'
           ]}
           filter={filter}

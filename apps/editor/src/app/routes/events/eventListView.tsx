@@ -97,7 +97,7 @@ function EventListView() {
           </ListViewActions>
         </PermissionControl>
         <ListFilters
-          fields={['dates', 'name', 'location']}
+          fields={['dates', 'name', 'location', 'tags']}
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}

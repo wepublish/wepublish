@@ -1,5 +1,5 @@
 import {CanGetPaymentProviders, CanLoginAsOtherUser} from '@wepublish/permissions'
-import {SortOrder} from '@wepublish/utils/api'
+import {GraphQLSlug, SortOrder} from '@wepublish/utils/api'
 import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 import {Context} from '../context'
 import {AuthorSort} from '../db/author'
@@ -36,8 +36,8 @@ import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
   GraphQLInvoice,
   GraphQLInvoiceConnection,
-  GraphQLInvoiceSort,
-  GraphQLinvoiceFilter
+  GraphQLinvoiceFilter,
+  GraphQLInvoiceSort
 } from './invoice'
 import {getAdminInvoices, getInvoiceById} from './invoice/invoice.private-queries'
 import {
@@ -76,13 +76,12 @@ import {
   GraphQLPollFilter,
   GraphQLPollSort
 } from './poll/poll'
-import {PollSort, getPolls} from './poll/poll.private-queries'
+import {getPolls, PollSort} from './poll/poll.private-queries'
 import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
 import {GraphQLSetting} from './setting'
 import {getSetting, getSettings} from './setting/setting.private-queries'
-import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLSubscribersPerMonth,
   GraphQLSubscription,
@@ -97,7 +96,7 @@ import {
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags} from './tag/tag.private-query'
+import {getTagsWithCount} from './tag/tag.private-query'
 import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
@@ -572,7 +571,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
-        getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+        getTagsWithCount(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
     },
 
     // Polls
