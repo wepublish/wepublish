@@ -20,6 +20,9 @@ const i18n = i18next
     supportedLngs: ['en'],
     resources: {
       en: {zod: deTranlations.zod}
+    },
+    interpolation: {
+      escapeValue: false
     }
   })
 z.setErrorMap(zodI18nMap)

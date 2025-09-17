@@ -11,7 +11,14 @@
       "seperator": ", "
     },
     "meta": {
-      "seperator": " | "
+      "seperator": " | ",
+      "imageGallery": {
+        "caption": "{{caption}} {{source}}",
+        "captionSource": "(Bild: {{source}})"
+      },
+      "teaser": {
+        "authors": "Von {{authors}}"
+      }
     }
   },
   "subscribe": {

@@ -1,6 +1,16 @@
 {
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>({source})</ImageSource>}}"
+  "blocks": {
+    "image": {
+      "captionSource": "({{source}})"
+    },
+    "imageGallery": {
+      "captionSource": "({{source}})"
+    },
+    "teaser": {
+      "authors": "{{authors}}"
+    }
   },
   "subscription": {
     "subscriptionIsUnpaid": "Rechnung ist unbezahlt",
