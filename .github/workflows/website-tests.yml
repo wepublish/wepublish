@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: bitnami/postgresql:14
+        image: bitnami/postgresql:14-debian-12
         env:
           ALLOW_EMPTY_PASSWORD: yes
           POSTGRESQL_DATABASE: wepublish
