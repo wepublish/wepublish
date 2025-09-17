@@ -57,7 +57,7 @@ export default function ArticleBySlugOrId() {
         </ArticleWrapper>
       )}
 
-      {data?.article && !data.article.disableComments && (
+      {data?.article && !data?.article?.disableComments && (
         <ArticleWrapper>
           <H3 component={'h2'}>Kommentare</H3>
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
@@ -90,6 +90,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   if (article.data?.article) {
     await Promise.all([

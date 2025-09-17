@@ -678,7 +678,8 @@ model Page {
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
 
-  slug String?
+  slug        String?
+  hidden      Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]

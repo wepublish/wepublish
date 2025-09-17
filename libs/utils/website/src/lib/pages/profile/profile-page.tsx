@@ -25,10 +25,10 @@ import {setCookie} from 'cookies-next'
 import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {ComponentProps} from 'react'
+import {useTranslation} from 'react-i18next'
 import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
-import {useTranslation} from 'react-i18next'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
