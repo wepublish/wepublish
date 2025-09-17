@@ -150,7 +150,7 @@ export default function EventList() {
             onChange={(_, value) =>
               replace(
                 {
-                  query: value > 1 ? {...query, page: value} : (delete query.page, {...query})
+                  query: {...query, page: value}
                 },
                 undefined,
                 {shallow: true, scroll: true}
