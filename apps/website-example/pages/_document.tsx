@@ -2,7 +2,7 @@ import {
   documentGetInitialProps,
   DocumentHeadTags,
   DocumentHeadTagsProps
-} from '@mui/material-nextjs/v13-pagesRouter'
+} from '@mui/material-nextjs/v15-pagesRouter'
 import {DocumentContext, Head, Html, Main, NextScript} from 'next/document'
 
 export default function MuiDocument(props: DocumentHeadTagsProps) {

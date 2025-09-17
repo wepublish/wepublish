@@ -63,7 +63,7 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
-  'amountPerMonthMin' | 'currency' | 'extendable'
+  'amountPerMonthMin' | 'currency' | 'extendable' | 'shortDescription' | 'tags'
 > &
   Omit<RadioProps, 'ref'> & {className?: string} & {slug: string}
 
@@ -130,6 +130,7 @@ export type BuilderSubscribeProps<
   }>
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
+  hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
   transactionFee?: (monthlyAmount: number) => number
   transactionFeeText?: string

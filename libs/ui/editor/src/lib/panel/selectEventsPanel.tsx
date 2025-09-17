@@ -1,5 +1,6 @@
 import {ApolloError} from '@apollo/client'
 import {TagType} from '@wepublish/editor/api'
+import {FullEventFragment, getApiClientV2, useEventListLazyQuery} from '@wepublish/editor/api-v2'
 import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
@@ -16,14 +17,13 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-
 import {RowDataType} from 'rsuite-table'
+
 import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
 import {PermissionControl} from '../atoms/permissionControl'
 import {SelectTags} from '../atoms/tag/selectTags'
 import {EventBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
-import {FullEventFragment, getApiClientV2, useEventListLazyQuery} from '@wepublish/editor/api-v2'
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {

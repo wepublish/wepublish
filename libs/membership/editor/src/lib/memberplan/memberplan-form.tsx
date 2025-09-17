@@ -129,13 +129,12 @@ export function MemberPlanForm({
   ): void {
     // if subscription plan ist not extendable, a subscription can not be forced to be auto-renew.
     if (!memberPlan?.extendable && forceAutoRenewal) {
-      // inform user
       toaster.push(
         <Message type="error" showIcon closable>
           {t('memberplanForm.forceAutoRenewNotPossible')}
         </Message>
       )
-      // cancel action
+
       return
     }
 
@@ -243,6 +242,29 @@ export function MemberPlanForm({
                       setMemberPlan({
                         ...memberPlan,
                         description: (newDescription as RichTextBlockValue['richText']) || []
+                      })
+                    }}
+                  />
+                )}
+              </div>
+            </Col>
+
+            {/* short description */}
+            <Col xs={24}>
+              <Form.ControlLabel>{t('memberPlanEdit.shortDescription')}</Form.ControlLabel>
+              <div className="richTextFrame">
+                {memberPlan && (
+                  <RichTextBlock
+                    value={memberPlan?.shortDescription || []}
+                    disabled={loading}
+                    onChange={newShortDescription => {
+                      if (!memberPlan) {
+                        return
+                      }
+                      setMemberPlan({
+                        ...memberPlan,
+                        shortDescription:
+                          (newShortDescription as RichTextBlockValue['richText']) || []
                       })
                     }}
                   />

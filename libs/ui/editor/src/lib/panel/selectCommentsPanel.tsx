@@ -1,9 +1,10 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
 import {FullCommentFragment, TagType, useCommentListLazyQuery} from '@wepublish/editor/api'
+import {CommentBlockCommentFragment} from '@wepublish/editor/api-v2'
+import {TFunction} from 'i18next'
 import React, {useEffect, useMemo, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {TFunction} from 'i18next'
 import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {
@@ -19,11 +20,11 @@ import {
   Toggle
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
+
 import {IconButtonTooltip, PermissionControl, SelectTags} from '../atoms'
 import {RichTextBlock} from '../blocks'
 import {CommentBlockValue} from '../blocks/types'
 import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
-import {CommentBlockCommentFragment} from '@wepublish/editor/api-v2'
 
 const CheckboxWrapper = styled.div`
   height: 46px;

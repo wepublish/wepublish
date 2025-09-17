@@ -1,5 +1,5 @@
 import {INestApplication} from '@nestjs/common'
-import {createMock, PartialMocked, TagList} from '@wepublish/testing'
+import {createMock, PartialMocked, TagList, TagType} from '@wepublish/testing'
 import {Test, TestingModule} from '@nestjs/testing'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
@@ -53,7 +53,13 @@ describe('TagResolver', () => {
       nodes: [
         {
           id: 'id1',
-          tag: 'tag1'
+          tag: 'tag1',
+          createdAt: new Date('2023-01-01'),
+          description: [],
+          main: false,
+          modifiedAt: new Date('2023-01-01'),
+          peerId: null,
+          type: TagType.Article
         }
       ],
       pageInfo: {
@@ -63,7 +69,7 @@ describe('TagResolver', () => {
         hasPreviousPage: false
       },
       totalCount: 0
-    } as any)
+    })
 
     await request(app.getHttpServer())
       .post('')

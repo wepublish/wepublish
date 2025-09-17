@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   AuthorLink,
   AuthorListDocument,
@@ -26,23 +27,23 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-import {RichTextBlock, RichTextBlockValue, createDefaultValue} from '../blocks'
-import {generateID, getOperationNameFromDocument} from '../utility'
+import FormControl from 'rsuite/FormControl'
+import {Descendant} from 'slate'
+
 import {
   ChooseEditImage,
+  createCheckedPermissionComponent,
   ListInput,
   ListValue,
   PermissionControl,
-  createCheckedPermissionComponent,
-  useAuthorisation,
-  SelectTags
+  SelectTags,
+  useAuthorisation
 } from '../atoms'
+import {createDefaultValue, RichTextBlock, RichTextBlockValue} from '../blocks'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ImageSelectPanel} from './imageSelectPanel'
+import {generateID, getOperationNameFromDocument} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
-import FormControl from 'rsuite/FormControl'
-import styled from '@emotion/styled'
-import {Descendant} from 'slate'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 const {ControlLabel: RControlLabel, Group, Control} = RForm
 

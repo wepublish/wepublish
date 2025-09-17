@@ -44,6 +44,7 @@ export const HighlightBlockStyle = (
           numColumns={numColumns}
           alignment={alignmentForTeaserBlock(index, numColumns)}
           blockStyle={blockStyle}
+          index={index}
         />
       ))}
     </TeaserGridBlockWrapper>

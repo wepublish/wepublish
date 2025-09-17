@@ -14,8 +14,8 @@ import {Public} from '@wepublish/authentication/api'
 @Resolver(() => Navigation)
 export class NavigationResolver {
   constructor(
-    private readonly navigationService: NavigationService,
-    private readonly navigationDataLoader: NavigationDataloaderService
+    private navigationService: NavigationService,
+    private navigationDataLoader: NavigationDataloaderService
   ) {}
 
   @Public()

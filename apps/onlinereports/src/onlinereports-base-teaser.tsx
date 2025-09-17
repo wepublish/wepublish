@@ -14,8 +14,9 @@ import {
   TeaserTitle,
   TeaserWrapper
 } from '@wepublish/block-content/website'
-import {useMemo} from 'react'
 import {BuilderTeaserProps} from '@wepublish/website/builder'
+import {useMemo} from 'react'
+
 import {Advertisement} from './components/advertisement'
 
 export const useImageStyles = () => {

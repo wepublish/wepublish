@@ -1,11 +1,12 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v13-pagesRouter'
 import {GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
 import {withErrorSnackbar} from '@wepublish/errors/website'
 import {NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -15,13 +16,14 @@ import {
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
-import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {createWithV1ApiClient, SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -31,7 +33,6 @@ import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import deOverridden from '../locales/deOverridden.json'
 import {AdblockOverlay} from '../src/components/adblock-detector'
@@ -61,6 +62,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverridden)))
@@ -69,8 +71,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
+    interpolation: {
+      escapeValue: false
+    },
     resources: {
-      de: {zod: translation}
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -154,11 +159,16 @@ const AdvertisementPlacer = styled('div')`
 `
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
+
+  // Emotion cache from _document is not supplied when client side rendering
+  // Compat removes certain warnings that are irrelevant to us
+  const cache = emotionCache ?? createEmotionCache()
+  cache.compat = true
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -241,9 +251,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <RoutedAdminBar />
               {publicRuntimeConfig.env.GTM_ID && (
-                <>
-                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-                </>
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
@@ -254,9 +262,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withErrorSnackbar(withSessionProvider(withJwtHandler(CustomApp))))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
+)
 
 export {ConnectedApp as default}

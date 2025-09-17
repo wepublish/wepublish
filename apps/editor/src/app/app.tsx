@@ -56,6 +56,7 @@ import {NavigationList} from './routes/navigations/navigationList'
 import {PageEditor} from './routes/pages/pageEditor'
 import {PageList} from './routes/pages/pageList'
 import {PaymentMethodList} from './routes/paymentMethods/paymentMethodList'
+import {PaywallEditView} from './routes/paywall/paywallEditView'
 import {PeerArticleList} from './routes/peerArticles/peerArticleList'
 import {PeerList} from './routes/peers/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
@@ -63,6 +64,8 @@ import {PollList} from './routes/polls/pollList'
 import {PollVoteListContainer} from './routes/polls/PollVotesListContainer'
 import {SubscriptionEditView} from './routes/subscriptions/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptions/subscriptionList'
+import {TagCreateView} from './routes/tags/tagCreateView'
+import {TagEditView} from './routes/tags/tagEditView'
 import {TagList} from './routes/tags/tagList'
 import {TokenList} from './routes/tokens/tokenList'
 import {UserRoleList} from './routes/userRoles/userRoleList'
@@ -272,6 +275,30 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="articles/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Article} />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywall"
+              element={
+                <Base>
+                  <PaywallEditView />
+                </Base>
+              }
+            />
             {/* Pages Routes */}
             <Route
               path="pages"
@@ -288,6 +315,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Page} />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Page} />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />
@@ -380,6 +423,22 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="comments/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Comment} />
+                </Base>
+              }
+            />
+            <Route
+              path="comments/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
 
             <Route
               path="comments/rating"
@@ -423,6 +482,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />
@@ -541,6 +616,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Author} />
+                </Base>
+              }
+            />
+            <Route
+              path="authors/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Author} />
+                </Base>
+              }
+            />
+            <Route
+              path="authors/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />

@@ -33,14 +33,14 @@ const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 export class PeriodicJobService {
   private subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
   private runningJob?: PeriodicJob
-  private readonly logger = new Logger('PeriodicJobService')
+  private logger = new Logger('PeriodicJobService')
   private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS
 
   constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly mailContext: MailContext,
-    private readonly subscriptionController: SubscriptionService,
-    private readonly payments: PaymentsService
+    private prismaService: PrismaClient,
+    private mailContext: MailContext,
+    private subscriptionController: SubscriptionService,
+    private payments: PaymentsService
   ) {}
 
   getJobLog(take: number, skip?: number) {

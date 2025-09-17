@@ -3,18 +3,6 @@ import {Image, UploadImageInput} from '@wepublish/image/api'
 import {Property} from '@wepublish/utils/api'
 
 @ObjectType()
-export class OAuth2Account {
-  @Field()
-  type!: string
-
-  @Field()
-  provider!: string
-
-  @Field()
-  scope!: string
-}
-
-@ObjectType()
 export class UserAddress {
   @Field(() => String, {nullable: true})
   company!: string | null
@@ -71,9 +59,6 @@ export class User {
 
   @Field(() => [PaymentProviderCustomer])
   paymentProviderCustomers?: PaymentProviderCustomer[]
-
-  @Field(() => [OAuth2Account])
-  oauth2Accounts?: OAuth2Account[]
 
   userImageID!: string | null
 

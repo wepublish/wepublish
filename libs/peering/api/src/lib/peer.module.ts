@@ -12,8 +12,9 @@ import {PeerProfileService} from './peer-profile.service'
 import {PeerResolver} from './peer.resolver'
 import {PeerProfileResolver} from './peer-profile.resolver'
 import {PEER_MODULE_OPTIONS, PeerModuleOptions} from './peer.constants'
-import {ColorScalar} from './scalars/color.scalar'
 import {ImageModule} from '@wepublish/image/api'
+import {CacheModule} from '@nestjs/cache-manager'
+import {RemotePeerProfileDataloaderService} from './remote-peer-profile.dataloader'
 
 export interface PeerModuleAsyncOptions {
   imports?: Array<Type<any> | DynamicModule | Promise<DynamicModule>>
@@ -22,13 +23,14 @@ export interface PeerModuleAsyncOptions {
 }
 
 @Module({
-  imports: [PrismaModule, ImageModule],
+  imports: [PrismaModule, ImageModule, CacheModule.register()],
   providers: [
     {
       provide: PEER_MODULE_OPTIONS,
       useValue: {hostURL: 'http://localhost:4000', websiteURL: 'http://localhost:3000'}
     },
     PeerDataloaderService,
+    RemotePeerProfileDataloaderService,
     PeerService,
     PeerProfileService,
     PeerResolver,
@@ -36,11 +38,7 @@ export interface PeerModuleAsyncOptions {
     HasPeerResolver,
     HasPeerLcResolver,
     HasOptionalPeerResolver,
-    HasOptionalPeerLcResolver,
-    {
-      provide: 'PeerColorScalar',
-      useValue: ColorScalar
-    }
+    HasOptionalPeerLcResolver
   ],
   exports: [PeerDataloaderService, PeerService, PeerProfileService]
 })

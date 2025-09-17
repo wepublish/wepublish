@@ -17,6 +17,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
+import {sortBy} from 'ramda'
 import {useMemo} from 'react'
 
 /**
@@ -38,23 +39,18 @@ export type SubscribeContainerProps<
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'
+    | 'hidePaymentAmount'
   > & {
+    sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
   }
 
 export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
-  className,
-  defaults,
-  fields,
-  schema,
-  filter,
+  filter = memberPlan => memberPlan,
+  sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
   deactivateSubscriptionId,
-  termsOfServiceUrl,
-  donate,
-  transactionFee,
-  transactionFeeText,
-  returningUserId
+  ...props
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -80,12 +76,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const [resubscribe] = useResubscribeMutation({})
 
-  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe({
-    onError() {
-      userSubscriptions.refetch()
-      userInvoices.refetch()
-    }
-  })
+  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe()
 
   const [register] = useRegisterMutation({
     onError: () => challenge.refetch(),
@@ -102,30 +93,22 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
-      if (filter && draftList.data?.memberPlans) {
-        draftList.data.memberPlans.nodes = filter(draftList.data.memberPlans.nodes)
+      if (draftList.data?.memberPlans) {
+        draftList.data.memberPlans.nodes = filter(sort(draftList.data.memberPlans.nodes))
       }
     })
-  }, [memberPlanList, filter])
+  }, [memberPlanList, filter, sort])
 
   return (
     <>
       <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
 
       <Subscribe
-        className={className}
-        defaults={defaults}
-        fields={fields}
-        schema={schema}
         challenge={challenge}
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
-        termsOfServiceUrl={termsOfServiceUrl}
-        donate={donate}
-        transactionFee={transactionFee}
-        transactionFeeText={transactionFeeText}
-        returningUserId={returningUserId}
+        {...props}
         onSubscribe={async formData => {
           const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
             mb => mb.id === formData.memberPlanId

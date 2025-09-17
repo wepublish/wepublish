@@ -16,7 +16,7 @@ export class SessionWithToken {
   user!: User
 }
 
-@ObjectType('UserSession')
+@ObjectType()
 export class SessionWithTokenWithoutUser extends OmitType(
   SessionWithToken,
   ['user'] as const,

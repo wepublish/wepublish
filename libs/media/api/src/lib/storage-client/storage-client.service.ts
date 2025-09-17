@@ -9,7 +9,7 @@ export type StorageClientConfig = ClientOptions
   scope: Scope.REQUEST
 })
 export class StorageClient {
-  private readonly logger = new Logger('StorageClient')
+  private logger = new Logger('StorageClient')
 
   private client: Client
 

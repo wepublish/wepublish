@@ -43,19 +43,20 @@ import {mockComment} from './comment'
 import {mockArticle, mockArticleRevision} from './article'
 import {mockPage, mockPageRevision} from './page'
 import nanoid from 'nanoid'
-import {partial} from 'ramda'
 import {mockCrowdfunding} from './crowdfunding'
 
 export const mockTitleBlock = ({
   title = 'Title Block',
-  lead = 'Lead'
+  lead = 'Lead',
+  preTitle = 'Pre-Title'
 }: Partial<TitleBlock> = {}): TitleBlock => ({
   type: BlockType.Title,
   __typename: 'TitleBlock',
   blockStyle: null,
   blockStyleName: null,
   lead,
-  title
+  title,
+  preTitle
 })
 
 export const mockImageBlock = ({
@@ -450,11 +451,12 @@ export const mockTeaserGridBlock = ({
     mockCustomTeaser(),
     mockPageTeaser(),
     mockArticleTeaser()
-  ]
+  ],
+  blockStyle
 }: Partial<FullTeaserGridBlockFragment> = {}): FullTeaserGridBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserGridBlock',
-  blockStyle: null,
+  blockStyle,
   teasers,
   numColumns
 })

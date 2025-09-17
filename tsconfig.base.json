@@ -18,7 +18,6 @@
     "baseUrl": ".",
     "paths": {
       "@wepublish/action/api": ["libs/action/api/src/index.ts"],
-      "@wepublish/authprovider/api": ["libs/authprovider/api/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
@@ -30,8 +29,6 @@
       "@wepublish/banner/api": ["libs/banner/api/src/index.ts"],
       "@wepublish/banner/editor": ["libs/banner/editor/src/index.ts"],
       "@wepublish/banner/website": ["libs/banner/website/src/index.ts"],
-      "@wepublish/crowdfunding/api": ["libs/crowdfunding/api/src/index.ts"],
-      "@wepublish/crowdfunding/editor": ["libs/crowdfunding/editor/src/index.ts"],
       "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/challenge/api": ["libs/challenge/api/src/index.ts"],
@@ -40,6 +37,8 @@
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/content/website": ["libs/content/website/src/index.ts"],
+      "@wepublish/crowdfunding/api": ["libs/crowdfunding/api/src/index.ts"],
+      "@wepublish/crowdfunding/editor": ["libs/crowdfunding/editor/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
       "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
@@ -88,6 +87,7 @@
       "@wepublish/storybook/mocks": ["libs/storybook/mocks/src/index.ts"],
       "@wepublish/system-info": ["libs/system-info/api/src/index.ts"],
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
+      "@wepublish/tag/website": ["libs/tag/website/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
@@ -109,7 +109,9 @@
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"],
-      "@wepublish/website/translations/*": ["libs/website/translations/src/lib/*"]
+      "@wepublish/website/translations/*": ["libs/website/translations/src/lib/*"],
+      "@wepublish/paywall/api": ["libs/paywall/api/src/index.ts"],
+      "@wepublish/paywall/website": ["libs/paywall/website/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

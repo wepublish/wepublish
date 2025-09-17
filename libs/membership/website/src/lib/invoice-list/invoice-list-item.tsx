@@ -41,11 +41,6 @@ export const InvoiceListItemMetaItem = styled('li')`
 export const InvoiceListItemActions = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
-
-  @container (min-width: 45ch) {
-    display: flex;
-    justify-content: center;
-  }
 `
 
 export function InvoiceListItem({

@@ -13,7 +13,7 @@ import {NotFoundException} from '@nestjs/common'
 export class AuthorResolver {
   constructor(
     private authorService: AuthorService,
-    private readonly authorDataloader: AuthorDataloaderService,
+    private authorDataloader: AuthorDataloaderService,
     private tagService: TagService,
     private urlAdapter: URLAdapter
   ) {}

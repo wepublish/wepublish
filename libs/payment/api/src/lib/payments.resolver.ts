@@ -5,7 +5,7 @@ import {PaymentsService} from './payments.service'
 
 @Resolver(() => Payment)
 export class PaymentsResolver {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(private paymentsService: PaymentsService) {}
 
   @Authenticated()
   @Mutation(() => Payment, {

@@ -1,6 +1,5 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common'
 import {PeerDataloaderService} from './peer-dataloader.service'
-import {Peer} from './peer.model'
 import {PrismaClient} from '@prisma/client'
 import {PrimeDataLoader} from '@wepublish/utils/api'
 
@@ -9,10 +8,11 @@ export class PeerService {
   constructor(private peerDataloaderService: PeerDataloaderService, private prisma: PrismaClient) {}
 
   @PrimeDataLoader(PeerDataloaderService)
-  async getPeerByIdOrSlug(id?: string, slug?: string): Promise<Peer | null> {
+  async getPeerByIdOrSlug(id?: string, slug?: string) {
     if ((!id && !slug) || (id && slug)) {
       throw new BadRequestException('You must provide either `id` or `slug`.')
     }
+
     let peer
     if (id) {
       peer = await this.peerDataloaderService.load(id)
