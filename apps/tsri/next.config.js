@@ -31,7 +31,7 @@ const nextConfig = {
     return [
       ...((await wepNextConfig.redirects?.()) ?? []),
       {
-        source: '/a/:id((?!tag|preview).*)/:slug',
+        source: '/a/:id((?!tag|preview|id).*)/:slug',
         destination: '/a/:slug',
         permanent: false
       },
