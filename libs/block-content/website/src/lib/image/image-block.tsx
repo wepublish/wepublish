@@ -40,8 +40,6 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
 
   const img = image && <Image image={image} fetchPriority="high" css={imageStyles} />
 
-  const unescapeSlashes = (str: string) => str.replace(/&#x2F;/g, '/')
-
   return (
     <ImageBlockWrapper className={className}>
       <ImageBlockInnerWrapper>
@@ -55,14 +53,10 @@ export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlo
 
         {(caption || image?.source) && (
           <ImageBlockCaption>
-            {unescapeSlashes(
-              t('blocks.image.caption', {
-                caption,
-                source: image?.source
-                  ? t('blocks.image.captionSource', {source: image.source})
-                  : null
-              })
-            )}
+            {t('blocks.image.caption', {
+              caption,
+              source: image?.source ? t('blocks.image.captionSource', {source: image.source}) : null
+            })}
           </ImageBlockCaption>
         )}
       </ImageBlockInnerWrapper>
