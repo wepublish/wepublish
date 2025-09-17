@@ -724,7 +724,7 @@ export function mapTeaserToTeaserInput(teaser: Teaser | null | undefined): Tease
           title: teaser.title || undefined,
           lead: teaser.lead || undefined,
           contentUrl: teaser.contentUrl || undefined,
-          openInNewTab: teaser.openInNewTab || undefined,
+          openInNewTab: teaser.openInNewTab ?? false,
           properties: teaser.properties || []
         }
       }
