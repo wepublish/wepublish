@@ -638,6 +638,7 @@ type CustomTeaser implements BaseTeaser & HasImage {
   image: Image
   imageID: String
   lead: String
+  openInNewTab: Boolean
   preTitle: String
   properties: [NonDbProperty!]
   title: String
@@ -648,6 +649,7 @@ input CustomTeaserInput {
   contentUrl: String
   imageID: String
   lead: String
+  openInNewTab: Boolean = false
   preTitle: String
   properties: [PropertyInput!] = []
   title: String

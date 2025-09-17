@@ -43,7 +43,6 @@ import {mockComment} from './comment'
 import {mockArticle, mockArticleRevision} from './article'
 import {mockPage, mockPageRevision} from './page'
 import nanoid from 'nanoid'
-import {partial} from 'ramda'
 import {mockCrowdfunding} from './crowdfunding'
 
 export const mockTitleBlock = ({
@@ -423,7 +422,8 @@ export const mockCustomTeaser = ({
   title,
   preTitle,
   properties: [],
-  contentUrl: 'https://example.com'
+  contentUrl: 'https://example.com',
+  openInNewTab: false
 })
 
 export const mockTeaserListBlock = ({

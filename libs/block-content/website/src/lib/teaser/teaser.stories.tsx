@@ -45,7 +45,9 @@ const customTeaser = {
   title: 'Teambesprechung vom 23.05.',
   lead: 'Lead',
   contentUrl: 'https://example.com',
+  openInNewTab: false,
   properties: [],
+  type: 'Custom' as const,
   __typename: 'CustomTeaser'
 } as CustomTeaser
 

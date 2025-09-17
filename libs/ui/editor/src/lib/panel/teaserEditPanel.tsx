@@ -73,6 +73,9 @@ export function TeaserEditPanel({
   const [contentUrl, setContentUrl] = useState(
     initialTeaser.type === TeaserType.Custom ? initialTeaser.contentUrl : undefined
   )
+  const [openInNewTab, setOpenInNewTab] = useState(
+    initialTeaser.type === TeaserType.Custom ? initialTeaser.openInNewTab : false
+  )
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
   const [title, setTitle] = useState(initialTeaser.title)
   const [lead, setLead] = useState(initialTeaser.lead)
@@ -107,6 +110,7 @@ export function TeaserEditPanel({
                 image,
                 ...(initialTeaser.type === TeaserType.Custom && {
                   contentUrl: contentUrl || undefined,
+                  openInNewTab: openInNewTab || false,
                   properties: metaDataProperties.map(({value}) => value) || undefined
                 })
               })
@@ -147,6 +151,15 @@ export function TeaserEditPanel({
                     name="content-url"
                     value={contentUrl}
                     onChange={(contentUrl: string) => setContentUrl(contentUrl)}
+                  />
+                </Group>
+                <Group controlId="openInNewTab">
+                  <ControlLabel>{t('articleEditor.panels.openInNewTab')}</ControlLabel>
+                  <Toggle
+                    checked={!!openInNewTab}
+                    onChange={(isChecked: boolean) => setOpenInNewTab(isChecked)}
+                    checkedChildren={t('articleEditor.panels.yes')}
+                    unCheckedChildren={t('articleEditor.panels.no')}
                   />
                 </Group>
                 <Group controlId="properties">
@@ -215,6 +228,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
   let type: string
   let imageURL: string | undefined | null
   let contentUrl: string | undefined | null
+  let openInNewTab: boolean | undefined | null
   let preTitle: string | undefined | null
   let title: string | undefined | null
   let lead: string | undefined | null
@@ -249,6 +263,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       lead = teaser.lead ?? undefined
       preTitle = teaser.preTitle ?? undefined
       contentUrl = teaser.contentUrl
+      openInNewTab = teaser.openInNewTab
       break
   }
 
@@ -259,6 +274,11 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
         {contentUrl && (
           <DescriptionListItem label={t('articleEditor.panels.contentUrl')}>
             {contentUrl}
+          </DescriptionListItem>
+        )}
+        {openInNewTab !== undefined && (
+          <DescriptionListItem label={t('articleEditor.panels.openInNewTab')}>
+            {openInNewTab ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
           </DescriptionListItem>
         )}
         <DescriptionListItem label={t('articleEditor.panels.type')}>

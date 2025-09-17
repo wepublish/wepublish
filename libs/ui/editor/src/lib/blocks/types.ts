@@ -226,6 +226,7 @@ export interface CustomTeaserLink extends BaseTeaser {
   type: TeaserType.Custom
   contentUrl?: string | null
   properties?: TeaserMetadataProperty[]
+  openInNewTab?: boolean | null
 }
 
 export type TeaserLink = ArticleTeaserLink | PageTeaserLink | CustomTeaserLink | EventTeaserLink
@@ -723,6 +724,7 @@ export function mapTeaserToTeaserInput(teaser: Teaser | null | undefined): Tease
           title: teaser.title || undefined,
           lead: teaser.lead || undefined,
           contentUrl: teaser.contentUrl || undefined,
+          openInNewTab: teaser.openInNewTab || undefined,
           properties: teaser.properties || []
         }
       }
@@ -1145,6 +1147,7 @@ const mapTeaserToQueryTeaser = (teaser: FullTeaserFragment | null | undefined): 
             title: teaser.title ?? undefined,
             lead: teaser.lead ?? undefined,
             contentUrl: teaser.contentUrl ?? undefined,
+            openInNewTab: teaser.openInNewTab ?? undefined,
             properties: teaser?.properties ?? undefined
           }
         : null

@@ -103,6 +103,9 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
   @Field({nullable: true})
   contentUrl?: string
 
+  @Field({nullable: true})
+  openInNewTab?: boolean
+
   @Field(() => [NonDbProperty], {defaultValue: [], nullable: true})
   properties!: NonDbProperty[]
 }
@@ -110,11 +113,13 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
 @InputType()
 export class CustomTeaserInput extends OmitType(
   CustomTeaser,
-  ['image', 'properties', 'type'] as const,
+  ['image', 'properties', 'type', 'openInNewTab'] as const,
   InputType
 ) {
   @Field(() => [PropertyInput], {defaultValue: [], nullable: true})
   properties!: PropertyInput[]
+  @Field(() => Boolean, {defaultValue: false, nullable: true})
+  openInNewTab!: boolean
 }
 
 export const Teaser = createUnionType({
