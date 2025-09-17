@@ -85,7 +85,7 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
 }
 
 export const selectTeaserTarget = (teaser: TeaserType): string | undefined => {
-  if (teaser.__typename === 'CustomTeaser' && teaser.openInNewTab) {
+  if (teaser.__typename === 'CustomTeaser') {
     return teaser.openInNewTab ? '_blank' : undefined
   }
   return undefined
