@@ -1,3 +1,5 @@
+import styled from '@emotion/styled'
+import {Box, Typography} from '@mui/material'
 import {
   ArrowButton,
   hasBlockStyle,
@@ -15,17 +17,15 @@ import {
   TeaserTitle,
   TeaserWrapper
 } from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
-import styled from '@emotion/styled'
-import {Box, Typography} from '@mui/material'
 import {
   OnlineReportsBaseTeaserStyled,
   OnlineReportsTeaserPreTitleWrapper,
   OnlineReportsTeaserTitleWrapper
 } from '../onlinereports-base-teaser'
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const IsAktuelleBildTeasers = (
   block: BlockContent
@@ -64,7 +64,13 @@ export const AktuelleBild = ({
           teasers={filledTeasers}
           blockStyle={blockStyle}
           numColumns={numColumns}
-          useSlidesPerView={() => 1}
+          slidesPerViewConfig={{
+            xs: 1,
+            sm: 1,
+            md: 1,
+            lg: 1,
+            xl: 1
+          }}
         />
       </TeaserSliderWrapper>
     </AktuelleBildWrapper>

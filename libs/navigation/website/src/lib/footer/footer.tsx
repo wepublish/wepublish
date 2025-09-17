@@ -215,7 +215,9 @@ const FooterPaper = ({
                           color="inherit"
                           underline="none"
                           css={footerPaperLinkStyling(theme)}>
-                          <H6 component="span">{link.label}</H6>
+                          <H6 component="span" css={{fontWeight: '700'}}>
+                            {link.label}
+                          </H6>
                         </Link>
                       )
                     })}
