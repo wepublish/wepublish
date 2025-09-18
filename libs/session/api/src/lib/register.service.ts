@@ -47,7 +47,7 @@ export class RegisterService {
       false
     )
 
-    await this.mailContext.sendMail({
+    await this.mailContext.sendMl({
       externalMailTemplateId,
       recipient: user,
       optionalData: {},
