@@ -2804,7 +2804,7 @@ export type Query = {
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** This query returns a list of tags */
-  tags?: Maybe<TagConnection>;
+  tags: TagConnection;
   /**
    *
    *       Returns a single userConsent by id.

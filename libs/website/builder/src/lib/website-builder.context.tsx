@@ -416,6 +416,10 @@ export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<Website
             ...parentComponents.elements,
             ...components.elements
           },
+          richtext: {
+            ...parentComponents.richtext,
+            ...components.richtext
+          },
           date: {
             ...parentComponents.date,
             ...components.date

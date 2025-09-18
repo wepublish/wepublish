@@ -2224,7 +2224,7 @@ type Query {
 
     """Number of items to fetch"""
     take: Int! = 10
-  ): TagConnection
+  ): TagConnection!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
