@@ -3,10 +3,9 @@ import {
   ArticleListQueryVariables,
   ArticleSort,
   getV1ApiClient,
-  Page,
+  PageListDocument,
   PageListQueryVariables,
   PageSort,
-  SitemapPageListDocument,
   SortOrder
 } from '@wepublish/website/api'
 import {generateSitemap} from '@wepublish/website/server'
@@ -37,7 +36,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
       } as ArticleListQueryVariables
     }),
     client.query({
-      query: SitemapPageListDocument,
+      query: PageListDocument,
       variables: {
         take: 100,
         sort: PageSort.PublishedAt,
@@ -46,12 +45,11 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     })
   ])
 
-  return generate(articleData.articles.nodes ?? [], [
+  return generate(articleData.articles.nodes ?? [], pageData.pages.nodes ?? [], [
     `${siteUrl}/author`,
     `${siteUrl}/event`,
     `${siteUrl}/login`,
     `${siteUrl}/signup`,
-    `${siteUrl}/mitmachen`,
-    ...(pageData.pages.nodes ?? []).map((page: Page) => page.url)
+    `${siteUrl}/mitmachen`
   ])
 }

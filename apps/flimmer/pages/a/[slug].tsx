@@ -22,8 +22,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
-import TsriAdHeader from '../../src/components/tsri-ad-header'
-
 const AfterArticleTitle = styled(H2)`
   ${({theme}) => theme.breakpoints.down('sm')} {
     font-size: 2rem;
@@ -38,9 +36,9 @@ export const AuthorWrapper = styled(ContentWrapper)`
   }
 `
 
-export default function ArticleBySlugIdOrToken() {
+export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id, token}
+    query: {slug, id}
   } = useRouter()
 
   const {data} = useArticleQuery({
@@ -53,14 +51,11 @@ export default function ArticleBySlugIdOrToken() {
 
   const containerProps = {
     slug,
-    id,
-    token
+    id
   } as ComponentProps<typeof ArticleContainer>
 
   return (
     <>
-      <TsriAdHeader authors={data?.article?.latest.authors} />
-
       <ArticleContainer {...containerProps}>
         {data?.article?.latest.authors.map(author => (
           <AuthorWrapper key={author.id} fullWidth>
@@ -78,7 +73,9 @@ export default function ArticleBySlugIdOrToken() {
 
             <ArticleListContainer
               variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-              filter={articles => articles.filter(article => article.id !== data.article?.id)}
+              filter={articles =>
+                articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+              }
             />
           </ArticleWrapper>
 
@@ -104,7 +101,7 @@ export default function ArticleBySlugIdOrToken() {
 export const getStaticPaths = getArticlePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug, id, token} = params || {}
+  const {id, slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -113,9 +110,8 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query({
       query: ArticleDocument,
       variables: {
-        slug,
         id,
-        token
+        slug
       }
     }),
     client.query({
@@ -125,6 +121,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   if (article.data?.article) {
     await Promise.all([
@@ -150,6 +154,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

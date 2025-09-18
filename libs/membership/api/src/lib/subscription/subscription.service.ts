@@ -36,10 +36,7 @@ interface PeriodBounds {
 
 @Injectable()
 export class SubscriptionService {
-  constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly payments: PaymentsService
-  ) {}
+  constructor(private prismaService: PrismaClient, private payments: PaymentsService) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
     runDate: Date,
@@ -83,6 +80,41 @@ export class SubscriptionService {
         paymentMethod: true,
         memberPlan: true,
         invoices: true
+      }
+    })
+  }
+
+  /**
+   * Get all invoices that are open
+   * @returns All invoices that are due.
+   */
+  public async findAllOpenInvoices() {
+    return this.prismaService.invoice.findMany({
+      where: {
+        canceledAt: null,
+        paidAt: null,
+        // skip invoices where the subscription has been deleted
+        subscriptionID: {
+          not: null
+        },
+        subscription: {
+          confirmed: true
+        }
+      },
+      include: {
+        subscription: {
+          include: {
+            paymentMethod: true,
+            memberPlan: true,
+            user: {
+              include: {
+                paymentProviderCustomers: true
+              }
+            }
+          }
+        },
+        subscriptionPeriods: true,
+        items: true
       }
     })
   }
@@ -297,12 +329,15 @@ export class SubscriptionService {
    * Deactivates the subscription belonging to an invoice.
    * @param invoice the invoice belonging to subscription.
    */
-  public async deactivateSubscription(invoice: Invoice) {
+  public async deactivateSubscription(invoice: Invoice & {subscription: Subscription | null}) {
+    if (!invoice.subscription) {
+      throw new BadRequestException(`Invoice ${invoice.id} has no subscription assigned!`)
+    }
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {
-          subscriptionID: invoice.subscriptionID!,
-          date: new Date(),
+          subscriptionID: invoice.subscription.id || invoice.subscriptionID!,
+          date: invoice.subscription.paidUntil ?? invoice.subscription.startsAt,
           reason: SubscriptionDeactivationReason.invoiceNotPaid
         }
       }),
@@ -356,6 +391,46 @@ export class SubscriptionService {
     return {
       action: undefined,
       errorCode: ''
+    }
+  }
+
+  /**
+   * Check state of remote invoice via payment provider
+   * @param invoice The invoice to charge.
+   * @returns The transaction status.
+   */
+  public async checkInvoiceState(
+    invoice: Invoice & {
+      subscription:
+        | (Subscription & {
+            paymentMethod: PaymentMethod
+            memberPlan: MemberPlan
+            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+          })
+        | null
+      items: InvoiceItem[]
+      subscriptionPeriods: SubscriptionPeriod[]
+    }
+  ): Promise<undefined> {
+    const paymentProvider = this.payments.findById(
+      invoice.subscription!.paymentMethod.paymentProviderID
+    )
+
+    if (!paymentProvider) {
+      throw new NotFoundException(
+        `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
+      )
+    }
+    const payments = await this.payments.findByInvoiceId(invoice.id)
+    for (const payment of payments) {
+      if (!payment || !payment.intentID) continue
+      const intentState = await paymentProvider.checkIntentStatus({
+        intentID: payment.intentID,
+        paymentID: payment.id
+      })
+      await paymentProvider.updatePaymentWithIntentState({
+        intentState
+      })
     }
   }
 

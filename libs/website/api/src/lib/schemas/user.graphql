@@ -1,14 +1,3 @@
-fragment FullPublicProperty on PublicProperties {
-  key
-  value
-}
-
-fragment FullOAuth2Account on OAuth2Account {
-  type
-  provider
-  scope
-}
-
 fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
   paymentProviderID
   customerID
@@ -31,16 +20,12 @@ fragment FullUser on User {
     ...FullPaymentProviderCustomer
   }
 
-  oauth2Accounts {
-    ...FullOAuth2Account
-  }
-
   image {
     ...FullImage
   }
 
   properties {
-    ...FullPublicProperty
+    ...FullProperty
   }
 }
 
@@ -53,7 +38,7 @@ fragment FullAddress on UserAddress {
   country
 }
 
-fragment FullUserSession on UserSession {
+fragment FullSessionWithTokenWithoutUser on SessionWithTokenWithoutUser {
   token
   expiresAt
   createdAt
@@ -110,7 +95,7 @@ mutation Register(
     }
 
     session {
-      ...FullUserSession
+      ...FullSessionWithTokenWithoutUser
     }
   }
 }

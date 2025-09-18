@@ -1,11 +1,11 @@
-import {SortOrder} from '@wepublish/website/api'
+import {generateFeed} from '@wepublish/feed/website'
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient
+  getV1ApiClient,
+  SortOrder
 } from '@wepublish/website/api'
-import {generateFeed} from '@wepublish/feed/website'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 import process from 'node:process'
@@ -16,10 +16,10 @@ export const getFeed = async (req: NextApiRequest) => {
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
     link: siteUrl,
-    title: 'We.Publish',
+    title: 'OnlineReports',
     ttl: 10, // in minutes
-    copyright: 'We.Publish',
-    categories: ['OSS', 'CMS', 'Journalism'],
+    copyright: 'OnlineReports',
+    categories: ['Basel', 'Basel Stadt', 'Basel Land', 'Journalism'],
     updated: new Date(),
     feedLinks: {
       json: `${siteUrl + req.url}/api/json-feed`,

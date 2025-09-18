@@ -3,15 +3,14 @@ import {
   Field,
   Int,
   ObjectType,
-  PartialType,
   OmitType,
-  registerEnumType,
-  PickType
+  PartialType,
+  PickType,
+  registerEnumType
 } from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
-import {Image} from '@wepublish/image/api'
-import {GraphQLSlug} from '@wepublish/utils/api'
-import {GraphQLRichText} from '@wepublish/richtext/api'
+import {MemberPlan} from '@wepublish/member-plan/api'
+import {PaymentMethod} from '@wepublish/payment-method/api'
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity'
@@ -28,108 +27,6 @@ export class MailTemplateRef {
 
   @Field()
   name!: string
-}
-
-enum Currency {
-  CHF = 'CHF',
-  EUR = 'EUR'
-}
-
-registerEnumType(Currency, {
-  name: 'Currency'
-})
-
-@ObjectType()
-class AvailablePaymentMethod {
-  @Field(() => [PaymentMethod])
-  paymentMethods!: PaymentMethod[]
-
-  @Field(() => [PaymentPeriodicity])
-  paymentPeriodicities!: PaymentPeriodicity[]
-
-  @Field()
-  forceAutoRenewal!: boolean
-}
-
-@ObjectType()
-class MemberPlan {
-  @Field()
-  id!: string
-
-  @Field()
-  name!: string
-
-  @Field()
-  slug!: string
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
-
-  @Field(() => GraphQLRichText, {nullable: true})
-  description?: Node[]
-
-  @Field(() => [String], {nullable: true})
-  tags?: string[]
-
-  @Field(() => Currency)
-  currency!: Currency
-
-  @Field(() => Int)
-  amountPerMonthMin!: number
-
-  @Field(() => Int, {nullable: true})
-  amountPerMonthTarget?: number
-
-  @Field(() => Int, {nullable: true})
-  maxCount?: number
-
-  @Field()
-  extendable!: boolean
-
-  @Field(() => [AvailablePaymentMethod])
-  availablePaymentMethods!: AvailablePaymentMethod[]
-
-  @Field(() => String, {nullable: true})
-  successPageId?: string
-
-  // @Field({nullable: true})
-  // successPage?: Page
-
-  @Field(() => String, {nullable: true})
-  failPageId?: string
-
-  // @Field({nullable: true})
-  // failPage?: Page
-
-  @Field(() => String, {nullable: true})
-  confirmationPageId?: string
-
-  // @Field({nullable: true})
-  // confirmationPage?: Page
-}
-
-@ObjectType()
-export class PaymentMethod {
-  @Field()
-  id!: string
-
-  @Field()
-  name!: string
-
-  @Field()
-  paymentProviderID!: string
-
-  @Field(() => GraphQLSlug)
-  slug!: typeof GraphQLSlug
-
-  @Field()
-  description!: string
-
-  @Field({nullable: true})
-  imageId?: string
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
 }
 
 @ObjectType()

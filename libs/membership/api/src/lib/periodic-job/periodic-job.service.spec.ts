@@ -2,18 +2,7 @@ import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
 import {Currency, PaymentPeriodicity, PrismaClient, SubscriptionEvent, User} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {
-  clearDatabase,
-  clearFullDatabase,
-  defineInvoiceFactory,
-  defineMemberPlanFactory,
-  definePaymentMethodFactory,
-  definePeriodicJobFactory,
-  defineSubscriptionFlowFactory,
-  defineSubscriptionIntervalFactory,
-  defineUserFactory,
-  initialize
-} from '@wepublish/testing'
+import {clearDatabase, clearFullDatabase} from '@wepublish/testing'
 import {add, startOfDay, sub} from 'date-fns'
 import {matches} from 'lodash'
 import nock from 'nock'
@@ -30,24 +19,6 @@ import {PeriodicJobService} from './periodic-job.service'
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService
   const prismaClient = new PrismaClient()
-  initialize({prisma: prismaClient})
-
-  const MemberPlanFactory = defineMemberPlanFactory()
-  const PaymentMethodFactory = definePaymentMethodFactory()
-  const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
-    defaultData: {
-      memberPlan: MemberPlanFactory,
-      intervals: {connect: []}
-    } as any
-  })
-  const UserFactory = defineUserFactory()
-  const InvoiceFactory = defineInvoiceFactory()
-  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
-    defaultData: {
-      subscriptionFlow: SubscriptionFlowFactory
-    }
-  })
-  const PeriodicJobFactory = definePeriodicJobFactory()
 
   beforeAll(async () => {
     await clearFullDatabase(prismaClient)
@@ -83,44 +54,65 @@ describe('PeriodicJobService', () => {
     ])
 
     // Base data
-    await PaymentMethodFactory.create({
-      id: 'payrexx',
-      name: 'payrexx',
-      paymentProviderID: 'payrexx',
-      slug: 'payrexx',
-      active: true
+    await prismaClient.paymentMethod.create({
+      data: {
+        id: 'payrexx',
+        name: 'payrexx',
+        description: 'payrexx',
+        paymentProviderID: 'payrexx',
+        slug: 'payrexx',
+        active: true
+      }
     })
-    await PaymentMethodFactory.create({
-      id: 'payrexx-subscription',
-      name: 'payrexx-subscription',
-      paymentProviderID: 'payrexx-subscription',
-      slug: 'payrexx-subscription',
-      active: true
-    })
-
-    await PaymentMethodFactory.create({
-      id: 'stripe',
-      name: 'stripe',
-      paymentProviderID: 'stripe',
-      slug: 'stripe',
-      active: true
+    await prismaClient.paymentMethod.create({
+      data: {
+        id: 'payrexx-subscription',
+        name: 'payrexx-subscription',
+        description: 'payrexx-subscription',
+        paymentProviderID: 'payrexx-subscription',
+        slug: 'payrexx-subscription',
+        active: true
+      }
     })
 
-    await MemberPlanFactory.create({
-      name: 'yearly',
-      slug: 'yearly'
-    })
-    await MemberPlanFactory.create({
-      name: 'customMessageMemberPlanNoMailTemplate',
-      slug: 'customMessageMemberPlanNoMailTemplate'
+    await prismaClient.paymentMethod.create({
+      data: {
+        id: 'stripe',
+        name: 'stripe',
+        description: 'stripe',
+        paymentProviderID: 'stripe',
+        slug: 'stripe',
+        active: true
+      }
     })
 
-    const defaultFlow = await SubscriptionFlowFactory.create({
-      default: true,
-      memberPlan: {},
-      autoRenewal: [],
-      periodicities: [],
-      paymentMethods: {}
+    await prismaClient.memberPlan.create({
+      data: {
+        name: 'yearly',
+        slug: 'yearly',
+        description: 'yearly plan',
+        active: true,
+        currency: Currency.CHF,
+        amountPerMonthMin: 1000
+      }
+    })
+    await prismaClient.memberPlan.create({
+      data: {
+        name: 'customMessageMemberPlanNoMailTemplate',
+        slug: 'customMessageMemberPlanNoMailTemplate',
+        description: 'custom message plan',
+        active: true,
+        currency: Currency.CHF,
+        amountPerMonthMin: 1000
+      }
+    })
+
+    const defaultFlow = await prismaClient.subscriptionFlow.create({
+      data: {
+        default: true,
+        autoRenewal: [],
+        periodicities: []
+      }
     })
 
     const subscriptionFLowIntervals = [
@@ -170,19 +162,18 @@ describe('PeriodicJobService', () => {
     ]
 
     for (const sfi of subscriptionFLowIntervals) {
-      await SubscriptionIntervalFactory.create({
-        subscriptionFlow: {
-          connect: {
-            id: sfi.subscriptionFlowId
-          }
-        },
-        event: sfi.event,
-        daysAwayFromEnding: sfi.daysAwayFromEnding,
-        mailTemplate: {
-          create: {
-            externalMailTemplateId: sfi.mailTemplateName,
-            name: sfi.mailTemplateName
-          }
+      const mailTemplate = await prismaClient.mailTemplate.create({
+        data: {
+          externalMailTemplateId: sfi.mailTemplateName,
+          name: sfi.mailTemplateName
+        }
+      })
+      await prismaClient.subscriptionInterval.create({
+        data: {
+          subscriptionFlowId: sfi.subscriptionFlowId,
+          event: sfi.event,
+          daysAwayFromEnding: sfi.daysAwayFromEnding,
+          mailTemplateId: mailTemplate.id
         }
       })
     }
@@ -201,47 +192,55 @@ describe('PeriodicJobService', () => {
   it('create invoice', async () => {
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 13})
-    const invoice = await InvoiceFactory.create({
-      dueAt: sub(renewalDate, {months: 12}),
-      paidAt: sub(renewalDate, {months: 12}),
-      mail,
-      scheduledDeactivationAt: sub(renewalDate, {months: 11, days: 20})
+    const invoice = await prismaClient.invoice.create({
+      data: {
+        dueAt: sub(renewalDate, {months: 12}),
+        paidAt: sub(renewalDate, {months: 12}),
+        mail,
+        scheduledDeactivationAt: sub(renewalDate, {months: 11, days: 20}),
+        currency: Currency.CHF
+      }
     })
 
-    const testUserAndData = await UserFactory.create({
-      email: mail,
-      subscriptions: {
-        create: {
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          paidUntil: renewalDate,
-          autoRenew: true,
-          monthlyAmount: 200,
-          startsAt: sub(renewalDate, {months: 12}),
-          paymentMethod: {
-            connect: {
-              id: 'stripe'
-            }
-          },
-          memberPlan: {
-            connect: {
-              slug: 'yearly'
-            }
-          },
-          invoices: {
-            connect: {
-              id: invoice.id
-            }
-          },
-          periods: {
-            create: {
-              startsAt: sub(renewalDate, {months: 12}),
-              endsAt: renewalDate,
-              paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2300,
-              invoice: {
-                connect: {
-                  id: invoice.id
+    const testUserAndData = await prismaClient.user.create({
+      data: {
+        name: 'test user',
+        email: mail,
+        password: 'password',
+        active: true,
+        subscriptions: {
+          create: {
+            currency: Currency.CHF,
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            paidUntil: renewalDate,
+            autoRenew: true,
+            monthlyAmount: 200,
+            startsAt: sub(renewalDate, {months: 12}),
+            paymentMethod: {
+              connect: {
+                id: 'stripe'
+              }
+            },
+            memberPlan: {
+              connect: {
+                slug: 'yearly'
+              }
+            },
+            invoices: {
+              connect: {
+                id: invoice.id
+              }
+            },
+            periods: {
+              create: {
+                startsAt: sub(renewalDate, {months: 12}),
+                endsAt: renewalDate,
+                paymentPeriodicity: PaymentPeriodicity.yearly,
+                amount: 2300,
+                invoice: {
+                  connect: {
+                    id: invoice.id
+                  }
                 }
               }
             }
@@ -320,59 +319,68 @@ describe('PeriodicJobService', () => {
     mail: string,
     paymentProviderID: string
   ) => {
-    const invoice = await InvoiceFactory.create({
-      dueAt: renewalDate,
-      mail,
-      scheduledDeactivationAt: add(renewalDate, {days: 5}),
-      items: {
-        create: {
-          amount: 2400,
-          quantity: 1,
-          name: 'Yearly Sub'
+    const invoice = await prismaClient.invoice.create({
+      data: {
+        dueAt: renewalDate,
+        mail,
+        scheduledDeactivationAt: add(renewalDate, {days: 5}),
+        currency: Currency.CHF,
+        items: {
+          create: {
+            amount: 2400,
+            quantity: 1,
+            name: 'Yearly Sub',
+            description: 'Yearly Sub'
+          }
         }
       }
     })
 
-    await UserFactory.create({
-      email: mail,
-      paymentProviderCustomers: {
-        create: {
-          paymentProviderID,
-          customerID: 'testId'
-        }
-      },
-      subscriptions: {
-        create: {
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          paidUntil: renewalDate,
-          autoRenew: true,
-          monthlyAmount: 200,
-          startsAt: sub(renewalDate, {months: 12}),
-          paymentMethod: {
-            connect: {
-              id: paymentProviderID
-            }
-          },
-          memberPlan: {
-            connect: {
-              slug: 'yearly'
-            }
-          },
-          invoices: {
-            connect: {
-              id: invoice.id
-            }
-          },
-          periods: {
-            create: {
-              startsAt: renewalDate,
-              endsAt: add(renewalDate, {months: 12}),
-              paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2400,
-              invoice: {
-                connect: {
-                  id: invoice.id
+    await prismaClient.user.create({
+      data: {
+        name: 'test user',
+        email: mail,
+        password: 'password',
+        active: true,
+        paymentProviderCustomers: {
+          create: {
+            paymentProviderID,
+            customerID: 'testId'
+          }
+        },
+        subscriptions: {
+          create: {
+            currency: Currency.CHF,
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            paidUntil: renewalDate,
+            autoRenew: true,
+            monthlyAmount: 200,
+            startsAt: sub(renewalDate, {months: 12}),
+            paymentMethod: {
+              connect: {
+                id: paymentProviderID
+              }
+            },
+            memberPlan: {
+              connect: {
+                slug: 'yearly'
+              }
+            },
+            invoices: {
+              connect: {
+                id: invoice.id
+              }
+            },
+            periods: {
+              create: {
+                startsAt: renewalDate,
+                endsAt: add(renewalDate, {months: 12}),
+                paymentPeriodicity: PaymentPeriodicity.yearly,
+                amount: 2400,
+                invoice: {
+                  connect: {
+                    id: invoice.id
+                  }
                 }
               }
             }
@@ -502,53 +510,62 @@ describe('PeriodicJobService', () => {
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = sub(new Date(), {days: 1})
     const subscriptionValidUntil = sub(renewalDate, {days: 5})
-    const invoice = await InvoiceFactory.create({
-      dueAt: renewalDate,
-      mail,
-      scheduledDeactivationAt: renewalDate,
-      items: {
-        create: {
-          amount: 2400,
-          quantity: 1,
-          name: 'Yearly Sub'
+    const invoice = await prismaClient.invoice.create({
+      data: {
+        dueAt: renewalDate,
+        mail,
+        scheduledDeactivationAt: renewalDate,
+        currency: Currency.CHF,
+        items: {
+          create: {
+            amount: 2400,
+            quantity: 1,
+            name: 'Yearly Sub',
+            description: 'Yearly Sub'
+          }
         }
       }
     })
 
-    await UserFactory.create({
-      email: mail,
-      subscriptions: {
-        create: {
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          paidUntil: subscriptionValidUntil,
-          autoRenew: true,
-          monthlyAmount: 200,
-          startsAt: sub(subscriptionValidUntil, {months: 12}),
-          paymentMethod: {
-            connect: {
-              id: 'payrexx'
-            }
-          },
-          memberPlan: {
-            connect: {
-              slug: 'yearly'
-            }
-          },
-          invoices: {
-            connect: {
-              id: invoice.id
-            }
-          },
-          periods: {
-            create: {
-              startsAt: add(subscriptionValidUntil, {days: 10}),
-              endsAt: add(subscriptionValidUntil, {months: 12}),
-              paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2400,
-              invoice: {
-                connect: {
-                  id: invoice.id
+    await prismaClient.user.create({
+      data: {
+        name: 'test user',
+        email: mail,
+        password: 'password',
+        active: true,
+        subscriptions: {
+          create: {
+            currency: Currency.CHF,
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            paidUntil: subscriptionValidUntil,
+            autoRenew: true,
+            monthlyAmount: 200,
+            startsAt: sub(subscriptionValidUntil, {months: 12}),
+            paymentMethod: {
+              connect: {
+                id: 'payrexx'
+              }
+            },
+            memberPlan: {
+              connect: {
+                slug: 'yearly'
+              }
+            },
+            invoices: {
+              connect: {
+                id: invoice.id
+              }
+            },
+            periods: {
+              create: {
+                startsAt: add(subscriptionValidUntil, {days: 10}),
+                endsAt: add(subscriptionValidUntil, {months: 12}),
+                paymentPeriodicity: PaymentPeriodicity.yearly,
+                amount: 2400,
+                invoice: {
+                  connect: {
+                    id: invoice.id
+                  }
                 }
               }
             }
@@ -581,53 +598,62 @@ describe('PeriodicJobService', () => {
   it('send custom email', async () => {
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 15})
-    const invoice = await InvoiceFactory.create({
-      dueAt: renewalDate,
-      mail,
-      scheduledDeactivationAt: add(renewalDate, {days: 5}),
-      items: {
-        create: {
-          amount: 2400,
-          quantity: 1,
-          name: 'Yearly Sub'
+    const invoice = await prismaClient.invoice.create({
+      data: {
+        dueAt: renewalDate,
+        mail,
+        scheduledDeactivationAt: add(renewalDate, {days: 5}),
+        currency: Currency.CHF,
+        items: {
+          create: {
+            amount: 2400,
+            quantity: 1,
+            name: 'Yearly Sub',
+            description: 'Yearly Sub'
+          }
         }
       }
     })
 
-    await UserFactory.create({
-      email: mail,
-      subscriptions: {
-        create: {
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          paidUntil: renewalDate,
-          autoRenew: true,
-          monthlyAmount: 200,
-          startsAt: sub(renewalDate, {months: 12}),
-          paymentMethod: {
-            connect: {
-              id: 'payrexx-subscription'
-            }
-          },
-          memberPlan: {
-            connect: {
-              slug: 'yearly'
-            }
-          },
-          invoices: {
-            connect: {
-              id: invoice.id
-            }
-          },
-          periods: {
-            create: {
-              startsAt: sub(renewalDate, {months: 12}),
-              endsAt: renewalDate,
-              paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2400,
-              invoice: {
-                connect: {
-                  id: invoice.id
+    await prismaClient.user.create({
+      data: {
+        name: 'test user',
+        email: mail,
+        password: 'password',
+        active: true,
+        subscriptions: {
+          create: {
+            currency: Currency.CHF,
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            paidUntil: renewalDate,
+            autoRenew: true,
+            monthlyAmount: 200,
+            startsAt: sub(renewalDate, {months: 12}),
+            paymentMethod: {
+              connect: {
+                id: 'payrexx-subscription'
+              }
+            },
+            memberPlan: {
+              connect: {
+                slug: 'yearly'
+              }
+            },
+            invoices: {
+              connect: {
+                id: invoice.id
+              }
+            },
+            periods: {
+              create: {
+                startsAt: sub(renewalDate, {months: 12}),
+                endsAt: renewalDate,
+                paymentPeriodicity: PaymentPeriodicity.yearly,
+                amount: 2400,
+                invoice: {
+                  connect: {
+                    id: invoice.id
+                  }
                 }
               }
             }
@@ -644,12 +670,14 @@ describe('PeriodicJobService', () => {
 
   it('Periodic after error rerun', async () => {
     const today = new Date()
-    await PeriodicJobFactory.create({
-      date: sub(today, {days: 1}),
-      executionTime: sub(today, {days: 1}),
-      finishedWithError: sub(today, {days: 1}),
-      tries: 1,
-      error: 'error Message'
+    await prismaClient.periodicJob.create({
+      data: {
+        date: sub(today, {days: 1}),
+        executionTime: sub(today, {days: 1}),
+        finishedWithError: sub(today, {days: 1}),
+        tries: 1,
+        error: 'error Message'
+      }
     })
     await service.execute()
     const periodicJobs = await prismaClient.periodicJob.findMany()
@@ -671,11 +699,13 @@ describe('PeriodicJobService', () => {
 
   it('Test failing periodic job with recovery', async () => {
     const today = new Date()
-    await PeriodicJobFactory.create({
-      date: sub(today, {days: 1}),
-      executionTime: sub(today, {days: 1}),
-      successfullyFinished: sub(today, {days: 1}),
-      tries: 1
+    await prismaClient.periodicJob.create({
+      data: {
+        date: sub(today, {days: 1}),
+        executionTime: sub(today, {days: 1}),
+        successfullyFinished: sub(today, {days: 1}),
+        tries: 1
+      }
     })
 
     await nock('https://mandrillapp.com:443')
@@ -689,46 +719,54 @@ describe('PeriodicJobService', () => {
       )
     const mail = 'dev-mail@test.wepublish.com'
     const renewalDate = add(new Date(), {days: 13})
-    const invoice = await InvoiceFactory.create({
-      dueAt: sub(renewalDate, {months: 12}),
-      paidAt: sub(renewalDate, {months: 12}),
-      mail,
-      scheduledDeactivationAt: sub(renewalDate, {months: 11, days: 20})
+    const invoice = await prismaClient.invoice.create({
+      data: {
+        dueAt: sub(renewalDate, {months: 12}),
+        paidAt: sub(renewalDate, {months: 12}),
+        mail,
+        scheduledDeactivationAt: sub(renewalDate, {months: 11, days: 20}),
+        currency: Currency.CHF
+      }
     })
-    await UserFactory.create({
-      email: mail,
-      subscriptions: {
-        create: {
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          paidUntil: renewalDate,
-          autoRenew: true,
-          monthlyAmount: 200,
-          startsAt: sub(renewalDate, {months: 12}),
-          paymentMethod: {
-            connect: {
-              id: 'stripe'
-            }
-          },
-          memberPlan: {
-            connect: {
-              slug: 'yearly'
-            }
-          },
-          invoices: {
-            connect: {
-              id: invoice.id
-            }
-          },
-          periods: {
-            create: {
-              startsAt: sub(renewalDate, {months: 12}),
-              endsAt: renewalDate,
-              paymentPeriodicity: PaymentPeriodicity.yearly,
-              amount: 2300,
-              invoice: {
-                connect: {
-                  id: invoice.id
+    await prismaClient.user.create({
+      data: {
+        name: 'test user',
+        email: mail,
+        password: 'password',
+        active: true,
+        subscriptions: {
+          create: {
+            currency: Currency.CHF,
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            paidUntil: renewalDate,
+            autoRenew: true,
+            monthlyAmount: 200,
+            startsAt: sub(renewalDate, {months: 12}),
+            paymentMethod: {
+              connect: {
+                id: 'stripe'
+              }
+            },
+            memberPlan: {
+              connect: {
+                slug: 'yearly'
+              }
+            },
+            invoices: {
+              connect: {
+                id: invoice.id
+              }
+            },
+            periods: {
+              create: {
+                startsAt: sub(renewalDate, {months: 12}),
+                endsAt: renewalDate,
+                paymentPeriodicity: PaymentPeriodicity.yearly,
+                amount: 2300,
+                invoice: {
+                  connect: {
+                    id: invoice.id
+                  }
                 }
               }
             }
@@ -786,18 +824,15 @@ describe('PeriodicJobService', () => {
       }
     })
 
-    await SubscriptionIntervalFactory.create({
-      subscriptionFlow: {
-        connect: {
-          id: defaultFlow!.id
-        }
-      },
-      event: SubscriptionEvent.INVOICE_CREATION,
-      daysAwayFromEnding: -14,
-      mailTemplate: {
-        connect: {
-          externalMailTemplateId: 'default-INVOICE_CREATION'
-        }
+    const mailTemplate = await prismaClient.mailTemplate.findFirst({
+      where: {externalMailTemplateId: 'default-INVOICE_CREATION'}
+    })
+    await prismaClient.subscriptionInterval.create({
+      data: {
+        subscriptionFlowId: defaultFlow!.id,
+        event: SubscriptionEvent.INVOICE_CREATION,
+        daysAwayFromEnding: -14,
+        mailTemplateId: mailTemplate!.id
       }
     })
 
@@ -867,10 +902,12 @@ describe('PeriodicJobService', () => {
   })
 
   it('Get outstanding runs if for one week not run', async () => {
-    await PeriodicJobFactory.create({
-      date: sub(new Date(), {days: 7}),
-      successfullyFinished: sub(new Date(), {days: 7}),
-      tries: 1
+    await prismaClient.periodicJob.create({
+      data: {
+        date: sub(new Date(), {days: 7}),
+        successfullyFinished: sub(new Date(), {days: 7}),
+        tries: 1
+      }
     })
     const runs = await service['getOutstandingRuns'](new Date())
 
@@ -884,10 +921,12 @@ describe('PeriodicJobService', () => {
   })
 
   it('Get outstanding runs with last run has failed', async () => {
-    await PeriodicJobFactory.create({
-      date: sub(new Date(), {days: 3}),
-      finishedWithError: sub(new Date(), {days: 3}),
-      tries: 1
+    await prismaClient.periodicJob.create({
+      data: {
+        date: sub(new Date(), {days: 3}),
+        finishedWithError: sub(new Date(), {days: 3}),
+        tries: 1
+      }
     })
     const runs = await service['getOutstandingRuns'](new Date())
     expect(runs.length).toEqual(4)
@@ -938,8 +977,11 @@ describe('PeriodicJobService', () => {
 
   it('Concurrent execute with already running process', async () => {
     service['randomNumberRangeForConcurrency'] = 500
-    await PeriodicJobFactory.create({
-      executionTime: new Date()
+    await prismaClient.periodicJob.create({
+      data: {
+        date: new Date(),
+        executionTime: new Date()
+      }
     })
     await service.concurrentExecute()
     const pj = await prismaClient.periodicJob.findMany({})
@@ -969,22 +1011,41 @@ describe('PeriodicJobService', () => {
   })
 
   it('Invoice creation missing invoice creation or invoice deletion object', async () => {
-    const mp = await MemberPlanFactory.create({})
-    const pm = await PaymentMethodFactory.create({})
-    const sf = await SubscriptionFlowFactory.create({
-      default: false,
-      memberPlan: {
-        connect: {
-          id: mp.id
-        }
-      },
-      paymentMethods: {
-        connect: {
-          id: pm.id
-        }
-      },
-      autoRenewal: [true],
-      periodicities: [PaymentPeriodicity.biannual]
+    const mp = await prismaClient.memberPlan.create({
+      data: {
+        name: 'test',
+        slug: 'test',
+        description: 'test',
+        active: true,
+        currency: Currency.CHF,
+        amountPerMonthMin: 1000
+      }
+    })
+    const pm = await prismaClient.paymentMethod.create({
+      data: {
+        name: 'test',
+        slug: 'test',
+        description: 'test',
+        paymentProviderID: 'test',
+        active: true
+      }
+    })
+    const sf = await prismaClient.subscriptionFlow.create({
+      data: {
+        default: false,
+        memberPlan: {
+          connect: {
+            id: mp.id
+          }
+        },
+        paymentMethods: {
+          connect: {
+            id: pm.id
+          }
+        },
+        autoRenewal: [true],
+        periodicities: [PaymentPeriodicity.biannual]
+      }
     })
     const runDate = startOfDay(new Date())
     const pjo: any = {
@@ -1002,14 +1063,12 @@ describe('PeriodicJobService', () => {
     } catch (e) {
       expect((e as Error).toString()).toEqual('NotFoundException: No invoice creation found!')
     }
-    await SubscriptionIntervalFactory.create({
-      subscriptionFlow: {
-        connect: {
-          id: sf.id
-        }
-      },
-      daysAwayFromEnding: -10,
-      event: SubscriptionEvent.INVOICE_CREATION
+    await prismaClient.subscriptionInterval.create({
+      data: {
+        subscriptionFlowId: sf.id,
+        daysAwayFromEnding: -10,
+        event: SubscriptionEvent.INVOICE_CREATION
+      }
     })
     try {
       await service['createInvoice'](pjo, invoice)
@@ -1019,13 +1078,11 @@ describe('PeriodicJobService', () => {
         'NotFoundException: No invoice deactivation event found!'
       )
     }
-    await SubscriptionIntervalFactory.create({
-      subscriptionFlow: {
-        connect: {
-          id: sf.id
-        }
-      },
-      event: SubscriptionEvent.DEACTIVATION_UNPAID
+    await prismaClient.subscriptionInterval.create({
+      data: {
+        subscriptionFlowId: sf.id,
+        event: SubscriptionEvent.DEACTIVATION_UNPAID
+      }
     })
     invoice.paidUntil = add(runDate, {days: 11})
     await service['createInvoice'](pjo, invoice)
@@ -1063,22 +1120,41 @@ describe('PeriodicJobService', () => {
   })
 
   it('Deactivate subscription missing invoice deletion object', async () => {
-    const mp = await MemberPlanFactory.create({})
-    const pm = await PaymentMethodFactory.create({})
-    await SubscriptionFlowFactory.create({
-      default: false,
-      memberPlan: {
-        connect: {
-          id: mp.id
-        }
-      },
-      paymentMethods: {
-        connect: {
-          id: pm.id
-        }
-      },
-      autoRenewal: [true],
-      periodicities: [PaymentPeriodicity.biannual]
+    const mp = await prismaClient.memberPlan.create({
+      data: {
+        name: 'test2',
+        slug: 'test2',
+        description: 'test2',
+        active: true,
+        currency: Currency.CHF,
+        amountPerMonthMin: 1000
+      }
+    })
+    const pm = await prismaClient.paymentMethod.create({
+      data: {
+        name: 'test2',
+        slug: 'test2',
+        description: 'test2',
+        paymentProviderID: 'test2',
+        active: true
+      }
+    })
+    await prismaClient.subscriptionFlow.create({
+      data: {
+        default: false,
+        memberPlan: {
+          connect: {
+            id: mp.id
+          }
+        },
+        paymentMethods: {
+          connect: {
+            id: pm.id
+          }
+        },
+        autoRenewal: [true],
+        periodicities: [PaymentPeriodicity.biannual]
+      }
     })
     const runDate = startOfDay(new Date())
     const pjo: any = {
@@ -1128,5 +1204,100 @@ describe('PeriodicJobService', () => {
     date2.setSeconds(0)
     date2.setMilliseconds(0)
     expect(pj[0].date).toEqual(date2)
+  })
+
+  it('checkStateOfOpenInvoices should call checkInvoiceState for each open invoice', async () => {
+    const openInvoices = [
+      {
+        id: 'inv1',
+        subscription: {
+          id: 'sub1',
+          paymentMethod: {},
+          memberPlan: {},
+          user: {}
+        },
+        items: [],
+        subscriptionPeriods: []
+      },
+      {
+        id: 'inv2',
+        subscription: {
+          id: 'sub2',
+          paymentMethod: {},
+          memberPlan: {},
+          user: {}
+        },
+        items: [],
+        subscriptionPeriods: []
+      }
+    ]
+    const mockSubscriptionController = {
+      findAllOpenInvoices: jest.fn().mockResolvedValue(openInvoices),
+      checkInvoiceState: jest.fn().mockResolvedValue(undefined)
+    }
+    // @ts-expect-error override private property for test
+    service.subscriptionController = mockSubscriptionController
+
+    await service['checkStateOfOpenInvoices']()
+
+    expect(mockSubscriptionController.findAllOpenInvoices).toHaveBeenCalled()
+    expect(mockSubscriptionController.checkInvoiceState).toHaveBeenCalledTimes(openInvoices.length)
+    expect(mockSubscriptionController.checkInvoiceState).toHaveBeenCalledWith(openInvoices[0])
+    expect(mockSubscriptionController.checkInvoiceState).toHaveBeenCalledWith(openInvoices[1])
+  })
+
+  it('should throw if invoice has no subscription', async () => {
+    const openInvoices = [
+      {
+        id: 'inv1',
+        subscription: null,
+        items: [],
+        subscriptionPeriods: []
+      }
+    ]
+    const mockSubscriptionController = {
+      findAllOpenInvoices: jest.fn().mockResolvedValue(openInvoices),
+      checkInvoiceState: jest.fn()
+    }
+    // @ts-expect-error override private property for test
+    service.subscriptionController = mockSubscriptionController
+
+    await expect(service['checkStateOfOpenInvoices']()).rejects.toThrow(
+      /Invoice inv1 has no subscription assigned!/
+    )
+  })
+  it('checkInvoiceState should call subscriptionController.checkInvoiceState with the correct invoice', async () => {
+    const invoice = {
+      id: 'invoice1',
+      subscription: {
+        id: 'sub1',
+        paymentMethod: {},
+        memberPlan: {},
+        user: {}
+      },
+      items: [],
+      subscriptionPeriods: []
+    } as any
+
+    const checkInvoiceStateSpy = jest
+      .spyOn(service['subscriptionController'], 'checkInvoiceState')
+      .mockResolvedValue(undefined)
+
+    await service['checkInvoiceState'](invoice)
+
+    expect(checkInvoiceStateSpy).toHaveBeenCalledWith(invoice)
+  })
+
+  it('checkInvoiceState should throw if invoice has no subscription', async () => {
+    const invoice = {
+      id: 'invoice2',
+      subscription: null,
+      items: [],
+      subscriptionPeriods: []
+    } as any
+
+    await expect(service['checkInvoiceState'](invoice)).rejects.toThrow(
+      `Invoice ${invoice.id} has no subscription assigned!`
+    )
   })
 })

@@ -7,7 +7,7 @@ import {
   User,
   UserAddress
 } from '@prisma/client'
-import {mapPaymentPeriodToMonths, logger} from '@wepublish/utils/api'
+import {logger, mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 import Bexio, {ContactsStatic, InvoicesStatic} from 'bexio'
 import {MappedReplacer} from 'mapped-replacer'
 import {
@@ -68,7 +68,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   private invoiceMailSubjectRenewalMembership: string
   private invoiceMailBodyRenewalMembership: string
   private markInvoiceAsOpen: boolean
-  private prisma: PrismaClient
 
   constructor(props: BexioPaymentProviderProps) {
     super(props)
@@ -87,7 +86,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.invoiceMailSubjectRenewalMembership = props.invoiceMailSubjectRenewalMembership
     this.invoiceMailBodyRenewalMembership = props.invoiceMailBodyRenewalMembership
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
-    this.prisma = props.prisma
     this.bexio = new Bexio(this.apiKey)
   }
 
@@ -238,7 +236,12 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         state: PaymentState.submitted
       }
     } catch (e) {
-      console.error(e)
+      logger('bexioPaymentProvider').error(
+        'Failed to create Bexio invoice for invoiceId %s (renewal: %s): %s',
+        invoiceId,
+        isRenewal,
+        e instanceof Error ? e.message : String(e)
+      )
       throw e
     }
   }

@@ -6,6 +6,9 @@ export type Setting<T = unknown> = {
 }
 
 export enum SettingName {
+  NEW_ARTICLE_PAYWALL = 'newArticlePaywall',
+  NEW_ARTICLE_PEERING = 'newArticlePeering',
+
   ALLOW_GUEST_COMMENTING = 'allowGuestCommenting',
   ALLOW_GUEST_COMMENT_RATING = 'allowGuestCommentRating',
   ALLOW_GUEST_POLL_VOTING = 'allowGuestPollVoting',
@@ -23,7 +26,9 @@ export enum SettingName {
   MAKE_REVENUE_API_PUBLIC = 'makeRevenueApiPublic',
   COMMENT_CHAR_LIMIT = 'commentCharLimit',
 
-  ALLOW_COMMENT_EDITING = 'allowCommentEditing'
+  ALLOW_COMMENT_EDITING = 'allowCommentEditing',
+
+  SHOW_PENDING_WHEN_NOT_PUBLISHED = 'showPendingWhenNotPublished'
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>

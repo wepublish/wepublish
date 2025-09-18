@@ -5,13 +5,11 @@ import {UpdateTag} from '../api/private/index'
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
 
 let testClientPrivate: ApolloServer
-let testClientPublic: ApolloServer
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
     testClientPrivate = setupClient.testServerPrivate
-    testClientPublic = setupClient.testServerPublic
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -24,6 +22,7 @@ describe('Tags', () => {
       query: CreateTag,
       variables: {
         tag: generateRandomString(),
+        description: [],
         type: TagType.Comment
       }
     })
@@ -32,7 +31,8 @@ describe('Tags', () => {
       data: {
         createTag: {
           id: expect.any(String),
-          tag: expect.any(String)
+          tag: expect.any(String),
+          description: expect.any(Array)
         }
       }
     })
@@ -102,33 +102,6 @@ describe('Tags', () => {
         ])
 
         const res = await testClientPrivate.executeOperation({
-          query: TagList
-        })
-
-        expect(res.data.tags.totalCount).toBeGreaterThanOrEqual(2)
-      })
-    })
-
-    describe('public', () => {
-      test('can query a list of tags', async () => {
-        await Promise.all([
-          testClientPrivate.executeOperation({
-            query: CreateTag,
-            variables: {
-              tag: generateRandomString(),
-              type: TagType.Comment
-            }
-          }),
-          testClientPrivate.executeOperation({
-            query: CreateTag,
-            variables: {
-              tag: generateRandomString(),
-              type: TagType.Event
-            }
-          })
-        ])
-
-        const res = await testClientPublic.executeOperation({
           query: TagList
         })
 

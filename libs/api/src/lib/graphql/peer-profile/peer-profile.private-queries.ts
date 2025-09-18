@@ -41,7 +41,7 @@ export const getRemotePeerProfile = async (
   })
 
   const peerTimeout =
-    (peerTimeoutSetting?.value as number) ?? parseInt(process.env.PEERING_TIMEOUT_IN_MS ?? '')
+    (peerTimeoutSetting?.value as number) ?? parseInt(process.env['PEERING_TIMEOUT_IN_MS'] ?? '')
 
   if (!peerTimeout) {
     throw new Error('No value set for PEERING_TIMEOUT_IN_MS')

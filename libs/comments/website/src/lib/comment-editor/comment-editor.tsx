@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, Modal, Theme, css, useTheme} from '@mui/material'
+import {css, IconButton, Modal, Theme, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {
   Challenge,
@@ -8,8 +8,8 @@ import {
   LoginFormContainer,
   useUser
 } from '@wepublish/authentication/website'
-import {toPlaintext} from '@wepublish/richtext'
-import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BlockFormat, toPlaintext} from '@wepublish/richtext'
+import {BuilderCommentEditorProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
 import {add} from 'date-fns'
 import {useMemo, useState} from 'react'
@@ -107,13 +107,13 @@ export const registerIconStyles = (theme: Theme) => css`
   margin-right: ${theme.spacing(1)};
 `
 
-export const linkStyles = (theme: Theme) => css`
-  color: ${theme.palette.common.white};
+export const SignupLink = styled(Link)`
+  color: ${({theme}) => theme.palette.common.white};
   text-decoration: none;
-  font-size: ${theme.typography.body1.fontSize};
+  font-size: ${({theme}) => theme.typography.body1.fontSize};
 
-  ${theme.breakpoints.up('md')} {
-    font-size: ${theme.typography.h4.fontSize};
+  ${({theme}) => theme.breakpoints.up('md')} {
+    font-size: ${({theme}) => theme.typography.h4.fontSize};
   }
 `
 
@@ -181,7 +181,6 @@ export const CommentEditor = ({
 
   const buttonStyles = useMemo(() => registerStyles(theme), [theme])
   const iconStyles = useMemo(() => registerIconStyles(theme), [theme])
-  const aStyles = useMemo(() => linkStyles(theme), [theme])
   const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme])
   const initialButtonsStyles = useMemo(() => initialButtonStyles(theme), [theme])
 
@@ -230,7 +229,7 @@ export const CommentEditor = ({
       ...data,
       text: [
         {
-          type: 'paragraph',
+          type: BlockFormat.Paragraph,
           children: [
             {
               text: comment
@@ -363,9 +362,14 @@ export const CommentEditor = ({
               <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
 
               <InitialModalContent>
-                <Button onClick={handleGuestComment} variant="outlined" css={initialButtonsStyles}>
-                  als gast kommentieren
-                </Button>
+                {anonymousCanComment && (
+                  <Button
+                    onClick={handleGuestComment}
+                    variant="outlined"
+                    css={initialButtonsStyles}>
+                    als gast kommentieren
+                  </Button>
+                )}
 
                 <Button onClick={handleLoginRegister} css={initialButtonsStyles}>
                   anmelden/registieren
@@ -382,9 +386,7 @@ export const CommentEditor = ({
                 <Button css={buttonStyles} onClick={registerRedirect}>
                   <MdLogin aria-label="Register" css={iconStyles} />
 
-                  <Link href={signUpUrl} css={aStyles}>
-                    Jetzt registrieren
-                  </Link>
+                  <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
                 </Button>
               </Register>
             </LoginWrapper>

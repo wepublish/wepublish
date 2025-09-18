@@ -2,7 +2,7 @@ import {ApolloError} from '@apollo/client'
 import {action} from '@storybook/addon-actions'
 import {useArgs} from '@storybook/preview-api'
 import {Meta, StoryObj} from '@storybook/react'
-import {userEvent, within} from '@storybook/testing-library'
+import {userEvent, within} from '@storybook/test'
 import {User} from '@wepublish/website/api'
 import {ComponentProps} from 'react'
 import z from 'zod'
@@ -23,7 +23,6 @@ const mockUser = {
     country: 'Australia'
   },
   image: mockImage(),
-  oauth2Accounts: [],
   paymentProviderCustomers: [],
   properties: [],
   permissions: []

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {
   AuthorLink,
   AuthorListDocument,
@@ -26,22 +27,23 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-import {RichTextBlock, RichTextBlockValue, createDefaultValue} from '../blocks'
-import {generateID, getOperationNameFromDocument} from '../utility'
+import FormControl from 'rsuite/FormControl'
+import {Descendant} from 'slate'
+
 import {
   ChooseEditImage,
+  createCheckedPermissionComponent,
   ListInput,
   ListValue,
   PermissionControl,
-  createCheckedPermissionComponent,
-  useAuthorisation,
-  SelectTags
+  SelectTags,
+  useAuthorisation
 } from '../atoms'
+import {createDefaultValue, RichTextBlock, RichTextBlockValue} from '../blocks'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ImageSelectPanel} from './imageSelectPanel'
+import {generateID, getOperationNameFromDocument} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
-import FormControl from 'rsuite/FormControl'
-import styled from '@emotion/styled'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 const {ControlLabel: RControlLabel, Group, Control} = RForm
 
@@ -60,7 +62,7 @@ const Form = styled(RForm)`
 `
 
 const ControlLabel = styled(RControlLabel)`
-  padding-top: ${({theme}) => theme.spacing(2)};
+  padding-top: 16px;
 `
 
 export interface AuthorEditPanelProps {
@@ -76,7 +78,9 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<FullImageFragment>>()
-  const [bio, setBio] = useState<RichTextBlockValue['richText']>(createDefaultValue())
+  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(() =>
+    !id ? createDefaultValue() : undefined
+  )
   const [hideOnArticle, setHideOnArticle] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(undefined)
   const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(undefined)
@@ -270,11 +274,13 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
             <Panel header={t('authors.panels.bioInformation')}>
               <div className="richTextFrame">
-                <RichTextBlock
-                  disabled={isDisabled}
-                  value={bio}
-                  onChange={value => setBio(value)}
-                />
+                {bio && (
+                  <RichTextBlock
+                    disabled={isDisabled}
+                    value={bio}
+                    onChange={value => setBio(value as Descendant[])}
+                  />
+                )}
               </div>
             </Panel>
 

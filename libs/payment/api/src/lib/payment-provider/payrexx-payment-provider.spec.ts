@@ -5,7 +5,7 @@ import {IntentState, InvoiceWithItems} from './payment-provider'
 import express from 'express'
 import Mock = jest.Mock
 import {PartialDeep} from 'type-fest'
-import {Currency} from '@prisma/client'
+import {Currency, PrismaClient} from '@prisma/client'
 
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
   return new (jest.fn().mockImplementation(() => implementation) as Mock<Type>)() as Type
@@ -24,6 +24,8 @@ describe('PayrexxPaymentProvider', () => {
       chargePreAuthorizedTransaction: jest.fn()
     })
 
+    const mockPrisma = mockInstance<PrismaClient>()
+
     payrexx = new PayrexxPaymentProvider({
       id: 'payrexx',
       name: 'Payrexx',
@@ -33,7 +35,8 @@ describe('PayrexxPaymentProvider', () => {
       psp: [14],
       offSessionPayments: true,
       webhookApiKey: 'secret',
-      pm: ['foo']
+      pm: ['foo'],
+      prisma: mockPrisma
     })
   })
 

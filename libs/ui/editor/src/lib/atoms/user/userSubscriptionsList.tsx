@@ -7,8 +7,8 @@ import {
   SubscriptionDeactivationReason,
   UserSubscriptionFragment
 } from '@wepublish/editor/api'
-import {useTranslation} from 'react-i18next'
 import {TFunction} from 'i18next'
+import {useTranslation} from 'react-i18next'
 import {
   MdAdd,
   MdCreditCard,
@@ -176,6 +176,10 @@ function UserSubscriptionsList({subscriptions, userId}: UserSubscriptionsProps) 
         return t('memberPlanList.paymentPeriodicity.biannual')
       case PaymentPeriodicity.Yearly:
         return t('memberPlanList.paymentPeriodicity.yearly')
+      case PaymentPeriodicity.Biennial:
+        return t('memberPlanList.paymentPeriodicity.biennial')
+      case PaymentPeriodicity.Lifetime:
+        return t('memberPlanList.paymentPeriodicity.lifetime')
       default:
         return 'Unknown Error'
     }

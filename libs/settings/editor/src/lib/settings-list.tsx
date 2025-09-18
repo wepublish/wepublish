@@ -181,6 +181,21 @@ function SettingList() {
       value: false,
       name: SettingName.AllowCommentEditing,
       label: 'settingList.allowCommentEditing'
+    },
+    [SettingName.ShowPendingWhenNotPublished]: {
+      value: false,
+      name: SettingName.ShowPendingWhenNotPublished,
+      label: 'settingList.showPendingWhenNotPublished'
+    },
+    [SettingName.NewArticlePaywall]: {
+      value: false,
+      name: SettingName.NewArticlePaywall,
+      label: 'settingList.newArticlePaywall'
+    },
+    [SettingName.NewArticlePeering]: {
+      value: false,
+      name: SettingName.NewArticlePeering,
+      label: 'settingList.newArticlePeering'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -197,7 +212,6 @@ function SettingList() {
     settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
       []
   )
-
   useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {
@@ -668,6 +682,71 @@ function SettingList() {
                   </Panel>
                 </Col>
               </Row>
+
+              {/* articlePage */}
+              <Col xs={24}>
+                <Panel bordered header={t('settingList.articlePage')}>
+                  <Form.Group controlId={SettingName.NewArticlePeering}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.NewArticlePeering].label)}
+                        <SettingInfo text={t('settingList.warnings.newArticlePeering')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.NewArticlePeering].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.NewArticlePeering],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId={SettingName.NewArticlePaywall}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.NewArticlePaywall].label)}
+                        <SettingInfo text={t('settingList.warnings.newArticlePaywall')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.NewArticlePaywall].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.NewArticlePaywall],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId={SettingName.ShowPendingWhenNotPublished}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.ShowPendingWhenNotPublished].label)}
+                        <SettingInfo text={t('settingList.warnings.showPendingWhenNotPublished')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.ShowPendingWhenNotPublished].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.ShowPendingWhenNotPublished],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+                </Panel>
+              </Col>
             </Col>
           </Row>
         </Grid>
@@ -683,7 +762,9 @@ function SettingList() {
         <Modal.Body>
           <DescriptionList>
             {changedSetting.map(setting => (
-              <DescriptionListItemWrapper label={t(settings[setting.name].label)}>
+              <DescriptionListItemWrapper
+                label={t(settings[setting.name].label)}
+                key={setting.name}>
                 <s>{valueText(setting.value)}</s> {valueText(settings[setting.name].value)}
               </DescriptionListItemWrapper>
             ))}

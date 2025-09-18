@@ -11,6 +11,11 @@ import {
   UserConsentEditView,
   UserConsentList
 } from '@wepublish/consent/editor'
+import {
+  CreateCrowdfundingForm,
+  CrowdfundingList,
+  EditCrowdfundingForm
+} from '@wepublish/crowdfunding/editor'
 import {TagType} from '@wepublish/editor/api'
 import {LocalStorageKey} from '@wepublish/editor/api-v2'
 import {ImportableEventListView} from '@wepublish/event/import/editor'
@@ -35,6 +40,7 @@ import fr from './locales/rsuiteFr'
 import {Login} from './login'
 import {ArticleEditor} from './routes/articles/articleEditor'
 import {ArticleList} from './routes/articles/articleList'
+import {AudienceDashboard} from './routes/audience/audience-dashboard'
 import {AuthorList} from './routes/authors/authorList'
 import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
@@ -50,6 +56,7 @@ import {NavigationList} from './routes/navigations/navigationList'
 import {PageEditor} from './routes/pages/pageEditor'
 import {PageList} from './routes/pages/pageList'
 import {PaymentMethodList} from './routes/paymentMethods/paymentMethodList'
+import {PaywallEditView} from './routes/paywall/paywallEditView'
 import {PeerArticleList} from './routes/peerArticles/peerArticleList'
 import {PeerList} from './routes/peers/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
@@ -57,6 +64,8 @@ import {PollList} from './routes/polls/pollList'
 import {PollVoteListContainer} from './routes/polls/PollVotesListContainer'
 import {SubscriptionEditView} from './routes/subscriptions/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptions/subscriptionList'
+import {TagCreateView} from './routes/tags/tagCreateView'
+import {TagEditView} from './routes/tags/tagEditView'
 import {TagList} from './routes/tags/tagList'
 import {TokenList} from './routes/tokens/tokenList'
 import {UserRoleList} from './routes/userRoles/userRoleList'
@@ -266,6 +275,30 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="articles/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Article} />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywall"
+              element={
+                <Base>
+                  <PaywallEditView />
+                </Base>
+              }
+            />
             {/* Pages Routes */}
             <Route
               path="pages"
@@ -285,12 +318,54 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="pages/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Page} />
+                </Base>
+              }
+            />
+            <Route
+              path="pages/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
             {/* BlockStyle Routes */}
             <Route
               path="block-content/styles"
               element={
                 <Base>
                   <BlockStyleList />
+                </Base>
+              }
+            />
+
+            {/* Crowdfunding Routes */}
+            <Route
+              path="crowdfundings"
+              element={
+                <Base>
+                  <CrowdfundingList />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/create"
+              element={
+                <Base>
+                  <CreateCrowdfundingForm />
+                </Base>
+              }
+            />
+            <Route
+              path="crowdfundings/edit/:id"
+              element={
+                <Base>
+                  <EditCrowdfundingForm />
                 </Base>
               }
             />
@@ -348,6 +423,22 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="comments/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Comment} />
+                </Base>
+              }
+            />
+            <Route
+              path="comments/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
 
             <Route
               path="comments/rating"
@@ -391,6 +482,22 @@ export function App() {
               element={
                 <Base>
                   <TagList type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Event} />
+                </Base>
+              }
+            />
+            <Route
+              path="events/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
                 </Base>
               }
             />
@@ -512,6 +619,22 @@ export function App() {
                 </Base>
               }
             />
+            <Route
+              path="authors/tags/create"
+              element={
+                <Base>
+                  <TagCreateView type={TagType.Author} />
+                </Base>
+              }
+            />
+            <Route
+              path="authors/tags/edit/:id"
+              element={
+                <Base>
+                  <TagEditView />
+                </Base>
+              }
+            />
 
             {/* Users Routes */}
             <Route
@@ -563,6 +686,17 @@ export function App() {
                 </Base>
               }
             />
+
+            {/* Audience Routes */}
+            <Route
+              path="audience/dashboard"
+              element={
+                <Base>
+                  <AudienceDashboard />
+                </Base>
+              }
+            />
+
             {/* Subscription Routes */}
             <Route
               path="subscriptions"

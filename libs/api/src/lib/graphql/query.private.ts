@@ -13,7 +13,7 @@ import {UserSort} from '../db/user'
 import {UserRoleSort} from '../db/userRole'
 import {GivenTokeExpiryToLongError, UserIdNotFound} from '../error'
 
-import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
+import {GraphQLJWTToken} from './auth'
 import {
   GraphQLAuthor,
   GraphQLAuthorConnection,
@@ -80,8 +80,6 @@ import {PollSort, getPolls} from './poll/poll.private-queries'
 import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
-import {GraphQLSetting} from './setting'
-import {getSetting, getSettings} from './setting/setting.private-queries'
 import {GraphQLSlug} from '@wepublish/utils/api'
 import {
   GraphQLSubscribersPerMonth,
@@ -96,8 +94,8 @@ import {
   getSubscriptionById,
   getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
-import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags} from './tag/tag.private-query'
+import {GraphQLTag, GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
+import {getTags, getTag} from './tag/tag.private-query'
 import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
@@ -164,6 +162,26 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createJWTForWebsiteLogin: {
+      type: GraphQLJWTToken,
+      args: {},
+      async resolve(root, _, {authenticateUser, generateJWT}) {
+        const expiresInMinutes = 1
+        const {user} = authenticateUser()
+
+        const expiresAt = new Date(
+          new Date().getTime() + expiresInMinutes * 60 * 1000
+        ).toISOString()
+
+        const token = generateJWT({id: user.id, expiresInMinutes})
+
+        return {
+          token,
+          expiresAt
+        }
+      }
+    },
+
     peerProfile: {
       type: new GraphQLNonNull(GraphQLPeerProfile),
       resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {peerProfile}}) =>
@@ -196,27 +214,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSession))),
       resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
         getSessionsForUser(authenticateUser, session, userRole)
-    },
-
-    authProviders: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthProvider))),
-      args: {redirectUri: {type: GraphQLString}},
-      async resolve(root, {redirectUri}, {getOauth2Clients}) {
-        const clients = await getOauth2Clients()
-        return clients.map(client => {
-          const url = client.client.authorizationUrl({
-            scope: client.provider.scopes.join(),
-            response_mode: 'query',
-            redirect_uri: `${redirectUri}/${client.name}`,
-            state: 'fakeRandomString'
-          })
-
-          return {
-            name: client.name,
-            url
-          }
-        })
-      }
     },
 
     // Users
@@ -514,21 +511,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) => getAdminPayments(filter, sort, order, cursor, skip, take, authenticate, payment)
     },
 
-    // Setting
-    // ======
-
-    setting: {
-      type: GraphQLSetting,
-      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
-      resolve: (root, {name}, {authenticate, prisma: {setting}}) =>
-        getSetting(name, authenticate, setting)
-    },
-
-    settings: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSetting))),
-      resolve: (root, _, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
-    },
-
     // Rating System
     // ==========
 
@@ -553,6 +535,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {filter, sort, order, cursor, take, skip}, {authenticate, prisma}) =>
         getTags(filter, sort, order, cursor, skip, take, authenticate, prisma.tag)
+    },
+
+    tag: {
+      type: GraphQLTag,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve: (root, {id}, {authenticate, prisma}) => getTag(id, authenticate, prisma.tag)
     },
 
     // Polls

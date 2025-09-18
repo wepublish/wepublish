@@ -8,21 +8,22 @@ import {
   PaginatedArticles,
   UpdateArticleInput
 } from './article.model'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagService} from '@wepublish/tag/api'
 import {ArticleService} from './article.service'
 import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Article as PArticle} from '@prisma/client'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, NotFoundException} from '@nestjs/common'
 import {
   CanCreateArticle,
   CanDeleteArticle,
-  CanPublishArticle,
-  CanGetArticle
+  CanGetArticle,
+  CanPublishArticle
 } from '@wepublish/permissions'
-import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
+import {Permissions, PreviewMode} from '@wepublish/permissions/api'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
+import {SettingDataloaderService, SettingName} from '@wepublish/settings/api'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -31,7 +32,9 @@ export class ArticleResolver {
     private articleRevisionsDataloader: ArticleRevisionDataloaderService,
     private articleService: ArticleService,
     private trackingPixelService: TrackingPixelService,
-    private urlAdapter: URLAdapter
+    private urlAdapter: URLAdapter,
+    private settings: SettingDataloaderService,
+    private tagService: TagService
   ) {}
 
   @Public()
@@ -43,6 +46,10 @@ export class ArticleResolver {
     if (id != null) {
       const article = await this.articleDataloader.load(id)
 
+      if (!article) {
+        throw new NotFoundException(`Article with id ${id} was not found.`)
+      }
+
       if (!article?.peerId) {
         await this.trackingPixelService.addMissingArticleTrackingPixels(id)
       }
@@ -51,18 +58,28 @@ export class ArticleResolver {
     }
 
     if (slug != null) {
-      return this.articleService.getArticleBySlug(slug)
+      const article = await this.articleService.getArticleBySlug(slug)
+
+      if (!article) {
+        throw new NotFoundException(`Article with slug ${slug} was not found.`)
+      }
+
+      if (!article?.peerId) {
+        await this.trackingPixelService.addMissingArticleTrackingPixels(article.id)
+      }
+
+      return article
     }
 
-    throw new BadRequestException('id or slug required.')
+    throw new BadRequestException('Article id or slug required.')
   }
 
   @Public()
   @Query(() => PaginatedArticles, {
     description: `Returns a paginated list of articles based on the filters given.`
   })
-  public articles(@Args() args: ArticleListArgs, @CurrentUser() user: UserSession | undefined) {
-    if (!hasPermission(CanGetArticle, user?.roles ?? [])) {
+  public articles(@Args() args: ArticleListArgs, @PreviewMode() isPreview: boolean) {
+    if (!isPreview) {
       args.filter = {
         ...args.filter,
         draft: undefined,
@@ -145,16 +162,19 @@ export class ArticleResolver {
   }
 
   @ResolveField(() => ArticleRevision)
-  async latest(
-    @Parent() parent: PArticle,
-    @CurrentUser() user: UserSession | undefined,
-    @PreviewMode() isPreview: boolean
-  ) {
+  async latest(@Parent() parent: PArticle, @PreviewMode() isPreview: boolean) {
     const {id: articleId} = parent
     const {draft, pending, published} = await this.articleRevisionsDataloader.load(articleId)
 
-    if (!isPreview || !hasPermission(CanGetArticle, user?.roles ?? [])) {
-      return published
+    if (!isPreview) {
+      if (published) {
+        return published
+      }
+
+      const showPending = !!(await this.settings.load(SettingName.SHOW_PENDING_WHEN_NOT_PUBLISHED))
+        ?.value
+
+      return showPending && pending
     }
 
     return draft ?? pending ?? published
@@ -199,9 +219,7 @@ export class ArticleResolver {
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PArticle) {
     const {id: articleId} = parent
-    const tagIds = await this.articleService.getTagIds(articleId)
-
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    return this.tagService.getTagsByArticleId(articleId)
   }
 
   @ResolveField(() => String, {nullable: true})

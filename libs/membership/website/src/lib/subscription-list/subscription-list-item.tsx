@@ -17,7 +17,8 @@ import {
 } from 'react-icons/md'
 import {formatCurrency} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
-import {MembershipModal} from '../membership-modal/membership-modal'
+import {Modal} from '@wepublish/website/builder'
+import {useTranslation} from 'react-i18next'
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -52,7 +53,7 @@ export const SubscriptionListItemActions = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 
-  @container (min-width: 45ch) {
+  @container (min-width: 35ch) {
     display: flex;
     justify-content: space-between;
   }
@@ -77,6 +78,7 @@ export function SubscriptionListItem({
     elements: {Image, H6, Button, Link, Alert, H5, Paragraph},
     date
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
@@ -146,7 +148,7 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> Abo ist unbezahlt
+              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung ist unbezahlt
             </SubscriptionListItemMetaItem>
           )}
 
@@ -193,38 +195,35 @@ export function SubscriptionListItem({
         )}
       </SubscriptionListItemContent>
 
-      <MembershipModal
+      <Modal
         open={!!confirmCancel}
         onSubmit={async () => {
           setConfirmCancel(false)
           await callAction(cancel)()
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={`Abo kündigen`}>
-        <H5 id="modal-modal-title" component="h1">
-          {name} wirklich kündigen?
-        </H5>
+        submitText={t('subscription.cancelSubscription')}>
+        <H5 component="h1">{name} wirklich kündigen?</H5>
 
         <Paragraph gutterBottom={false}>
-          Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
-          Rechnungen des Abos werden storniert.
+          {t('subscription.cancelSubscriptionConfirmationText')}
         </Paragraph>
-      </MembershipModal>
+      </Modal>
 
-      <MembershipModal
+      <Modal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}
         onSubmit={async () => {
           setConfirmExtend(false)
           await callAction(extend)()
         }}
-        submitText={'Jetzt Verlängern'}>
+        submitText={`Jetzt um ${subscriptionDuration} Verlängern`}>
         <H5 component="h1">Abo frühzeitig verlängern?</H5>
+
         <Paragraph gutterBottom={false}>
-          Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern
-          willst. Weiterfahren?
+          {t('subscription.renewSubscriptionConfirmationText', {subscriptionDuration})}
         </Paragraph>
-      </MembershipModal>
+      </Modal>
     </SubscriptionListItemWrapper>
   )
 }

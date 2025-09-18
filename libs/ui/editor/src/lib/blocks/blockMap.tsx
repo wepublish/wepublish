@@ -1,3 +1,9 @@
+import {
+  EditorBlockType,
+  TeaserListBlockSort,
+  TeaserSlotType,
+  TeaserType
+} from '@wepublish/editor/api-v2'
 import nanoid from 'nanoid'
 import {
   MdAccountBox,
@@ -5,12 +11,14 @@ import {
   MdCoffee,
   MdComment,
   MdEvent,
+  MdFilter,
   MdFilter1,
   MdFilter6,
   MdFilter9Plus,
   MdFormatColorText,
   MdFormatQuote,
   MdIntegrationInstructions,
+  MdMoney,
   MdPhoto,
   MdPhotoLibrary,
   MdQueryStats,
@@ -20,7 +28,9 @@ import {
 } from 'react-icons/md'
 
 import {BlockMapForValue} from '../atoms/blockList'
+import {isFunctionalUpdate} from '../utility'
 import {CommentBlock} from './commentBlock'
+import {CrowdfundingBlock} from './CrowdfundingBlock'
 import {EmbedBlock} from './embedBlock'
 import {EventBlock} from './eventBlock'
 import {HTMLBlock} from './htmlBlock'
@@ -31,19 +41,18 @@ import {ListicleBlock} from './listicleBlock'
 import {PollBlock} from './pollBlock'
 import {QuoteBlock} from './quoteBlock'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/rich-text-block'
+import {SubscribeBlock} from './subscribeBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
+import {TeaserListBlock} from './teaserListBlock'
+import {TeaserSlotsBlock} from './teaserSlotsBlock'
 import {TitleBlock} from './titleBlock'
 import {BlockValue, EmbedType} from './types'
-import {EditorBlockType, TeaserListBlockSort, TeaserType} from '@wepublish/editor/api-v2'
-import {isFunctionalUpdate} from '../utility'
-import {TeaserListBlock} from './teaserListBlock'
-import {SubscribeBlock} from './subscribeBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
     field: props => <TitleBlock {...props} />,
-    defaultValue: {title: '', lead: '', blockStyle: undefined},
+    defaultValue: {title: '', lead: '', preTitle: '', blockStyle: undefined},
     label: 'blocks.title.label',
     icon: <MdTitle />
   },
@@ -174,6 +183,34 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: <MdFilter6 />
   },
 
+  [EditorBlockType.TeaserSlots]: {
+    field: props => <TeaserSlotsBlock {...props} />,
+    defaultValue: {
+      title: null,
+      blockStyle: undefined,
+      autofillConfig: {
+        enabled: false,
+        filter: {
+          tags: []
+        },
+        sort: TeaserListBlockSort.PublishedAt,
+        teaserType: TeaserType.Article
+      },
+      slots: [
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual},
+        {type: TeaserSlotType.Manual}
+      ],
+      autofillTeasers: [],
+      teasers: []
+    },
+    label: 'blocks.teaserSlots.label',
+    icon: <MdFilter />
+  },
+
   [EditorBlockType.TeaserGridFlex]: {
     field: props => <TeaserGridFlexBlock {...props} />,
     defaultValue: {
@@ -220,6 +257,13 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {poll: null, blockStyle: undefined},
     label: 'blocks.poll.label',
     icon: <MdQueryStats />
+  },
+
+  [EditorBlockType.Crowdfunding]: {
+    field: props => <CrowdfundingBlock {...props} />,
+    defaultValue: {crowdfunding: null, blockStyle: undefined},
+    label: 'blocks.crowdfunding.label',
+    icon: <MdMoney />
   },
 
   [EditorBlockType.Comment]: {

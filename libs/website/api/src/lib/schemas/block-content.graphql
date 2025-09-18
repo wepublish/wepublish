@@ -61,6 +61,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on TitleBlock {
     blockStyle: blockStyleName
+    preTitle
     title
     lead
   }
@@ -118,6 +119,13 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle: blockStyleName
     poll {
       ...FullPoll
+    }
+  }
+
+  ... on CrowdfundingBlock {
+    blockStyle: blockStyleName
+    crowdfunding {
+      ...CrowdfundingWithActiveGoal
     }
   }
 
@@ -278,6 +286,15 @@ fragment FullTeaserListBlock on TeaserListBlock {
   }
 }
 
+fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
+  title
+  type
+  blockStyle: blockStyleName
+  teasers {
+    ...FullTeaser
+  }
+}
+
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
@@ -291,5 +308,9 @@ fragment FullBlock on BlockContent {
 
   ... on TeaserListBlock {
     ...FullTeaserListBlock
+  }
+
+  ... on TeaserSlotsBlock {
+    ...FullTeaserSlotsBlock
   }
 }

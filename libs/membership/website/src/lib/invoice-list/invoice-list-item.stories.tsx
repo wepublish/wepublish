@@ -8,7 +8,7 @@ import {
 import {InvoiceListItem} from './invoice-list-item'
 import {Meta, StoryObj} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
-import {userEvent, within} from '@storybook/testing-library'
+import {userEvent, within} from '@storybook/test'
 import {ApolloError} from '@apollo/client'
 import {mockImage} from '@wepublish/storybook/mocks'
 
@@ -60,7 +60,7 @@ const invoice = {
   subscriptionID: subscription.id
 } as Exact<FullInvoiceFragment>
 
-export const Default: StoryObj = {
+export const Default: StoryObj<typeof InvoiceListItem> = {
   args: {
     ...invoice,
     canPay: false,
@@ -68,7 +68,7 @@ export const Default: StoryObj = {
   }
 }
 
-export const Unpaid: StoryObj = {
+export const Unpaid: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
@@ -77,7 +77,7 @@ export const Unpaid: StoryObj = {
   }
 }
 
-export const Canceled: StoryObj = {
+export const Canceled: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
@@ -86,7 +86,7 @@ export const Canceled: StoryObj = {
   }
 }
 
-export const WithPayLoading: StoryObj = {
+export const WithPayLoading: StoryObj<typeof InvoiceListItem> = {
   ...Unpaid,
   args: {
     ...Unpaid.args,
@@ -101,7 +101,7 @@ export const WithPayLoading: StoryObj = {
   play: clickPay
 }
 
-export const WithPayError: StoryObj = {
+export const WithPayError: StoryObj<typeof InvoiceListItem> = {
   ...Unpaid,
   args: {
     ...Unpaid.args,
@@ -116,33 +116,40 @@ export const WithPayError: StoryObj = {
   play: clickPay
 }
 
-export const WithPayrexxSubscriptionsWarning: StoryObj = {
+export const WithBexio: StoryObj<typeof InvoiceListItem> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    isBexio: true
+  }
+}
+
+export const WithSepa: StoryObj<typeof InvoiceListItem> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    isSepa: true
+  }
+}
+
+export const WithPayrexxSubscriptionsWarning: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
     paidAt: null,
-    canceledAt: null,
-    subscription: {
-      ...subscription,
-      paymentMethod: {
-        slug: 'payrexx-subscription'
-      }
-    }
+    canceledAt: null
   }
 }
 
-export const WithCurrency: StoryObj = {
+export const WithCurrency: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
-    invoice: {
-      ...invoice,
-      subscription: {
-        ...invoice.subscription,
-        memberPlan: {
-          ...invoice.subscription!.memberPlan,
-          currency: Currency.Eur
-        }
+    subscription: {
+      ...invoice.subscription,
+      memberPlan: {
+        ...invoice.subscription!.memberPlan,
+        currency: Currency.Eur
       }
     }
   }

@@ -101,13 +101,10 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
   return (
     <Head>
       <title key="title">{title}</title>
-
       <meta key={'og:type'} property="og:type" content={seo.type} />
-
       {seo.socialMediaTitle && (
         <meta key={'og:title'} property="og:title" content={seo.socialMediaTitle} />
       )}
-
       {seo.socialMediaDescription && (
         <meta
           key={'og:description'}
@@ -115,12 +112,9 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
           content={seo.socialMediaDescription}
         />
       )}
-
       {seo.description && <meta key={'description'} name="description" content={seo.description} />}
-
       <meta key={'og:url'} property="og:url" content={seo.url} />
       <link key={'canonical'} rel="canonical" href={seo.url} />
-
       {seo.image && (
         <>
           <meta key={'og:image:xl'} property="og:image" content={seo.image.xl ?? ''} />
@@ -142,7 +136,6 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
           <meta key={'og:image:width:l'} property="og:image:width" content="1000" />
         </>
       )}
-
       <meta key={'twitter:card'} name="twitter:card" content="summary_large_image" />
       <meta key={'max-image-preview'} name="robots" content="max-image-preview:large" />
 
@@ -154,12 +147,16 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
         />
       )}
 
-      {seo.publishedAt && (
-        <meta
-          key={`og:article:modified_time`}
-          property="og:article:modified_time"
-          content={seo.publishedAt}
-        />
+      {seo.updatedAt && (
+        <>
+          <meta
+            key={`og:article:modified_time`}
+            property="og:article:modified_time"
+            content={seo.updatedAt}
+          />
+
+          <meta key={`og:updated_time`} property="og:updated_time" content={seo.updatedAt} />
+        </>
       )}
 
       {seo.authors.map(author => (
@@ -173,11 +170,9 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
           />
         </Fragment>
       ))}
-
       {seo.tags.map(tag => (
         <meta key={`og:article:tag:${tag.id}`} property="og:article:tag" content={tag.tag ?? ''} />
       ))}
-
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{__html: JSON.stringify(seo.schema)}}

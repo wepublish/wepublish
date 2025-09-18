@@ -6,6 +6,9 @@ fragment FullPeerProfile on PeerProfile {
   logo {
     ...FullImage
   }
+  squareLogo {
+    ...FullImage
+  }
   callToActionText
   callToActionURL
   callToActionImage {
@@ -20,6 +23,7 @@ fragment FullPeer on Peer {
   slug
   isDisabled
   hostURL
+  information
   profile {
     ...FullPeerProfile
   }

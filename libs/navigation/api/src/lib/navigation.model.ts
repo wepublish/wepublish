@@ -43,8 +43,8 @@ export class Navigation {
 
 @InterfaceType({
   isAbstract: true,
-  resolveType(value) {
-    switch (value.type) {
+  resolveType(value: BaseNavigationLink) {
+    switch (value.type.toLowerCase()) {
       case NavigationLinkType.Article:
         return ArticleNavigationLink
       case NavigationLinkType.Page:

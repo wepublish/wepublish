@@ -2,20 +2,22 @@ import {useKeenSlider} from 'keen-slider/react'
 import {allPass} from 'ramda'
 import {useState} from 'react'
 
-import {hasBlockStyle} from '../../blocks'
+import {hasBlockStyle} from '../../has-blockstyle'
 import {isImageGalleryBlock} from '../../image-gallery/image-gallery-block'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {
-  useSlidesPerView,
-  useSlidesPadding,
-  SliderWrapper,
-  SliderInnerContainer,
-  SlidesContainer,
-  SliderBallContainer,
+  SliderArrow,
   SliderBall,
-  SliderBallFill
+  SliderBallContainer,
+  SliderBallFill,
+  SliderInnerContainer,
+  SliderWrapper,
+  SlidesContainer,
+  useSlidesPadding,
+  useSlidesPerViewResponsive
 } from '../teaser-slider/teaser-slider'
 import {BlockContent, ImageGalleryBlock} from '@wepublish/website/api'
+import {MdArrowBackIos, MdArrowForwardIos} from 'react-icons/md'
 
 export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => {
   const {
@@ -24,7 +26,7 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
-  const slidesPerView = useSlidesPerView()
+  const slidesPerView = useSlidesPerViewResponsive()
   const slidePadding = useSlidesPadding()
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
@@ -64,6 +66,14 @@ export const ImageSlider = ({images}: BuilderBlockStyleProps['ImageSlider']) => 
                   {currentSlide === idx && <SliderBallFill />}
                 </SliderBall>
               ))}
+
+              <SliderArrow onClick={() => sliderRef.current?.prev()} aria-label="Previous slide">
+                <MdArrowBackIos size={22} />
+              </SliderArrow>
+
+              <SliderArrow onClick={() => sliderRef.current?.next()} aria-label="Next slide">
+                <MdArrowForwardIos size={22} />
+              </SliderArrow>
             </SliderBallContainer>
           )}
         </SliderInnerContainer>

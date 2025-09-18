@@ -1,5 +1,20 @@
 import styled from '@emotion/styled'
 import {PageInfo} from '@wepublish/editor/api'
+import {
+  ArticleFilter,
+  ArticleListQueryVariables,
+  ArticleSort,
+  EventFilter,
+  getApiClientV2,
+  PageFilter,
+  PageListQueryVariables,
+  PageSort,
+  SortOrder,
+  TeaserType,
+  useArticleListQuery,
+  useEventListQuery,
+  usePageListQuery
+} from '@wepublish/editor/api-v2'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDashboard, MdDescription, MdEvent, MdSearch, MdSettings} from 'react-icons/md'
@@ -11,12 +26,12 @@ import {
   Input,
   InputGroup as RInputGroup,
   List as RList,
+  Loader as RLoader,
   Nav as RNav,
   Notification,
   Panel,
   toaster,
-  Toggle as RToggle,
-  Loader as RLoader
+  Toggle as RToggle
 } from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -26,16 +41,6 @@ import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
-import {
-  ArticleFilter,
-  EventFilter,
-  getApiClientV2,
-  PageFilter,
-  TeaserType,
-  useArticleListQuery,
-  useEventListQuery,
-  usePageListQuery
-} from '@wepublish/editor/api-v2'
 
 const List = styled(RList)`
   box-shadow: none;
@@ -178,8 +183,18 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   /**
    * PAGES & ARTICLES
    */
-  const listVariables = {filter: filter || undefined, take: 20}
-  const pageListVariables = {filter: filter as PageFilter, take: 20}
+  const listVariables = {
+    filter: filter || undefined,
+    take: 20,
+    sort: ArticleSort.ModifiedAt,
+    order: SortOrder.Descending
+  } as ArticleListQueryVariables
+  const pageListVariables = {
+    filter: filter as PageFilter,
+    take: 20,
+    sort: PageSort.ModifiedAt,
+    order: SortOrder.Descending
+  } as PageListQueryVariables
 
   const {
     data: articleListData,

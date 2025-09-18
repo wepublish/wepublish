@@ -4,6 +4,7 @@ import {BannerService} from './banner.service'
 import {BannerActionService} from './banner-action.service'
 import {Banner, BannerDocumentType} from './banner.model'
 import {LoginStatus} from '@prisma/client'
+import {ImageDataloaderService} from '@wepublish/image/api'
 
 describe('BannerResolver', () => {
   let resolver: BannerResolver
@@ -12,6 +13,7 @@ describe('BannerResolver', () => {
     id: '1',
     imageId: '123',
     active: true,
+    delay: 0,
     title: '',
     text: '',
     showOnArticles: false,
@@ -32,6 +34,11 @@ describe('BannerResolver', () => {
     findAll: jest.fn()
   }
 
+  const mockImageDataloaderService = {
+    load: jest.fn().mockReturnValue({__typename: 'Image', id: '123'}),
+    prime: jest.fn()
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -43,6 +50,10 @@ describe('BannerResolver', () => {
         {
           provide: BannerActionService,
           useValue: mockBannerActionService
+        },
+        {
+          provide: ImageDataloaderService,
+          useValue: mockImageDataloaderService
         }
       ]
     }).compile()
@@ -85,8 +96,10 @@ describe('BannerResolver', () => {
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,
         documentId: '1',
-        loggedIn: true
+        loggedIn: true,
+        hasSubscription: false
       })
+
       expect(result).toEqual(mockBanner)
     })
 
@@ -95,8 +108,10 @@ describe('BannerResolver', () => {
       const result = await resolver.primaryBanner({
         documentType: BannerDocumentType.ARTICLE,
         documentId: '1',
-        loggedIn: true
+        loggedIn: true,
+        hasSubscription: false
       })
+
       expect(result).toEqual(null)
     })
   })
@@ -137,6 +152,7 @@ describe('BannerResolver', () => {
       const createInput = {
         name: 'New Banner',
         active: true,
+        delay: 0,
         title: 'New Banner Title',
         text: 'New Banner Text',
         showOnArticles: false,
@@ -153,6 +169,7 @@ describe('BannerResolver', () => {
         title: 'Updated Banner Title',
         text: 'Updated Banner Text',
         active: true,
+        delay: 0,
         showOnArticles: false,
         showForLoginStatus: LoginStatus.ALL,
         actions: []

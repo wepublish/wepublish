@@ -1,6 +1,17 @@
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
+  BuilderBreakBlockProps,
+  BuilderCommentBlockProps,
+  BuilderCrowdfundingBlockProps,
+  BuilderEventBlockProps,
+  BuilderHTMLBlockProps,
+  BuilderListicleBlockProps,
+  BuilderPollBlockProps,
+  BuilderQuoteBlockProps,
+  BuilderRichTextBlockProps,
+  BuilderSubscribeBlockProps,
+  BuilderTitleBlockProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {isHtmlBlock} from './html/html-block'
@@ -36,11 +47,14 @@ import {isImageSliderBlockStyle} from './block-styles/image-slider/image-slider'
 import {isFocusTeaserBlockStyle} from './block-styles/focus-teaser/focus-teaser'
 import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
-
-export const hasBlockStyle =
-  (blockStyle: string) =>
-  <T extends {blockStyle?: string | null}>(block: T) =>
-    block.blockStyle === blockStyle
+import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
+import {ImageContext} from '@wepublish/image/website'
+import {
+  isAlternatingTeaserGridBlockStyle,
+  isAlternatingTeaserListBlockStyle,
+  isAlternatingTeaserSlotsBlockStyle
+} from './block-styles/alternating/is-alternating'
+import {isTeaserSlotsBlock} from './teaser/teaser-slots-block'
 
 export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const {blocks, blockStyles} = useWebsiteBuilder()
@@ -50,7 +64,10 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
     [isTeaserSliderBlockStyle, block => <blockStyles.TeaserSlider {...block} />],
     [isFocusTeaserBlockStyle, block => <blockStyles.FocusTeaser {...block} />],
     [isContextBoxBlockStyle, block => <blockStyles.ContextBox {...block} />],
-    [isBannerBlockStyle, block => <blockStyles.Banner {...block} />]
+    [isBannerBlockStyle, block => <blockStyles.Banner {...block} />],
+    [isAlternatingTeaserGridBlockStyle, block => <blockStyles.AlternatingTeaserGrid {...block} />],
+    [isAlternatingTeaserListBlockStyle, block => <blockStyles.AlternatingTeaserList {...block} />],
+    [isAlternatingTeaserSlotsBlockStyle, block => <blockStyles.AlternatingTeaserSlots {...block} />]
   ])
 
   const facebookEmbedCond = cond([
@@ -73,7 +90,8 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const teaserCond = cond([
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
     [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
-    [isTeaserListBlock, block => <blocks.TeaserList {...block} />]
+    [isTeaserListBlock, block => <blocks.TeaserList {...block} />],
+    [isTeaserSlotsBlock, block => <blocks.TeaserSlots {...block} />]
   ])
 
   const imageCond = cond([
@@ -88,21 +106,25 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
     teaserCond(block) ??
     imageCond(block) ??
     cond([
-      [isTitleBlock, block => <blocks.Title {...block} />],
-      [isQuoteBlock, block => <blocks.Quote {...block} />],
-      [isBreakBlock, block => <blocks.Break {...block} />],
-      [isRichTextBlock, block => <blocks.RichText {...block} />],
-      [isHtmlBlock, block => <blocks.HTML {...block} />],
-      [isSubscribeBlock, block => <blocks.Subscribe {...block} />],
-      [isEventBlock, block => <blocks.Event {...block} />],
-      [isPollBlock, block => <blocks.Poll {...block} />],
-      [isListicleBlock, block => <blocks.Listicle {...block} />],
-      [isCommentBlock, block => <blocks.Comment {...block} />]
+      [
+        isCrowdfundingBlock,
+        block => <blocks.Crowdfunding {...(block as BuilderCrowdfundingBlockProps)} />
+      ],
+      [isTitleBlock, block => <blocks.Title {...(block as BuilderTitleBlockProps)} />],
+      [isQuoteBlock, block => <blocks.Quote {...(block as BuilderQuoteBlockProps)} />],
+      [isBreakBlock, block => <blocks.Break {...(block as BuilderBreakBlockProps)} />],
+      [isRichTextBlock, block => <blocks.RichText {...(block as BuilderRichTextBlockProps)} />],
+      [isHtmlBlock, block => <blocks.HTML {...(block as BuilderHTMLBlockProps)} />],
+      [isSubscribeBlock, block => <blocks.Subscribe {...(block as BuilderSubscribeBlockProps)} />],
+      [isEventBlock, block => <blocks.Event {...(block as BuilderEventBlockProps)} />],
+      [isPollBlock, block => <blocks.Poll {...(block as BuilderPollBlockProps)} />],
+      [isListicleBlock, block => <blocks.Listicle {...(block as BuilderListicleBlockProps)} />],
+      [isCommentBlock, block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />]
     ])(block)
   )
 })
 
-export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
+export const Blocks = memo(({blocks, type}: BuilderBlocksProps) => {
   const {
     blocks: {Renderer}
   } = useWebsiteBuilder()
@@ -110,8 +132,20 @@ export const Blocks = ({blocks, type}: BuilderBlocksProps) => {
   return (
     <>
       {blocks.map((block, index) => (
-        <Renderer key={index} block={block} index={index} count={blocks.length} type={type} />
+        <ImageContext.Provider
+          key={index}
+          value={
+            // Above the fold images should be loaded with a high priority
+            3 > index
+              ? {
+                  fetchPriority: 'high',
+                  loading: 'eager'
+                }
+              : {}
+          }>
+          <Renderer block={block} index={index} count={blocks.length} type={type} />
+        </ImageContext.Provider>
       ))}
     </>
   )
-}
+})

@@ -39,6 +39,8 @@ export type BuilderSubscriptionListProps = Pick<
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
   className?: string
   isSepa?: boolean
+  isBexio?: boolean
+  isPayrexxSubscription?: boolean
   canPay: boolean
   pay?: () => Promise<void>
 }
@@ -61,9 +63,9 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
-  'amountPerMonthMin' | 'currency' | 'extendable'
+  'amountPerMonthMin' | 'currency' | 'extendable' | 'shortDescription' | 'tags'
 > &
-  RadioProps & {className?: string} & {slug: string}
+  Omit<RadioProps, 'ref'> & {className?: string} & {slug: string}
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined
@@ -128,6 +130,7 @@ export type BuilderSubscribeProps<
   }>
   deactivateSubscriptionId?: string
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean
+  hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean
   termsOfServiceUrl?: string
   transactionFee?: (monthlyAmount: number) => number
   transactionFeeText?: string

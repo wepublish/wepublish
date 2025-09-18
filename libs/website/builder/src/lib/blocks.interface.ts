@@ -1,33 +1,33 @@
 import {
+  BildwurfAdBlock,
   BlockContent,
+  BreakBlock,
+  CommentBlock,
+  CrowdfundingBlock,
   EventBlock,
-  FlexAlignment,
+  FacebookPostBlock,
+  FacebookVideoBlock,
   HtmlBlock,
+  IFrameBlock,
   ImageBlock,
   ImageGalleryBlock,
+  InstagramPostBlock,
+  ListicleBlock,
+  PolisConversationBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
-  Teaser,
-  TeaserGridBlock,
-  TwitterTweetBlock,
-  FacebookPostBlock,
-  FacebookVideoBlock,
-  InstagramPostBlock,
-  VimeoVideoBlock,
-  YouTubeVideoBlock,
   SoundCloudTrackBlock,
-  PolisConversationBlock,
-  TikTokVideoBlock,
-  BildwurfAdBlock,
-  IFrameBlock,
-  ListicleBlock,
+  SubscribeBlock,
+  TeaserGridBlock,
   TeaserGridFlexBlock,
-  TitleBlock,
-  BreakBlock,
-  CommentBlock,
   TeaserListBlock,
-  SubscribeBlock
+  TeaserSlotsBlock,
+  TikTokVideoBlock,
+  TitleBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {
@@ -66,6 +66,7 @@ export type BuilderTikTokVideoBlockProps = Omit<TikTokVideoBlock, 'type'> & {cla
 export type BuilderBildwurfAdBlockProps = Omit<BildwurfAdBlock, 'type'> & {className?: string}
 export type BuilderIFrameBlockProps = Omit<IFrameBlock, 'type'> & {className?: string}
 export type BuilderPollBlockProps = Omit<PollBlock, 'type'> & {className?: string}
+export type BuilderCrowdfundingBlockProps = Omit<CrowdfundingBlock, 'type'> & {className?: string}
 export type BuilderListicleBlockProps = Omit<ListicleBlock, 'type'> & {className?: string}
 export type BuilderCommentBlockProps = Omit<CommentBlock, 'type'> & {className?: string}
 export type BuilderSubscribeBlockProps = Omit<SubscribeBlock, 'type'> & {className?: string}
@@ -80,18 +81,6 @@ export type BuilderTeaserListBlockProps = Omit<TeaserListBlock, 'type'> & {
   className?: string
 }
 
-type TeaserTypeProps =
-  | {
-      blockStyle: string | null | undefined
-      teaser?: Teaser | null | undefined
-      alignment: FlexAlignment
-      numColumns?: never
-    }
-  | {
-      blockStyle: string | null | undefined
-      teaser: Teaser | null | undefined
-      alignment: FlexAlignment
-      numColumns: number
-    }
-
-export type BuilderTeaserProps = TeaserTypeProps & {className?: string}
+export type BuilderTeaserSlotsBlockProps = Omit<TeaserSlotsBlock, 'type'> & {
+  className?: string
+}

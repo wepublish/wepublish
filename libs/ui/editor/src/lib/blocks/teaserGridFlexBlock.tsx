@@ -65,7 +65,7 @@ export function FlexTeaserBlock({
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
           <Teaser>
-            {ContentForTeaser(teaser)}
+            <ContentForTeaser teaser={teaser} />
 
             <IconWrapper>
               <IconButtonTooltip caption={i18next.t('blocks.flexTeaser.chooseTeaser')}>

@@ -1,12 +1,13 @@
-import {AppBar, Box, GlobalStyles, SxProps, Theme, Toolbar, css, useTheme} from '@mui/material'
+import {AppBar, Box, css, GlobalStyles, SxProps, Theme, Toolbar, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {TextToIcon} from '@wepublish/ui'
+import {useTranslation} from 'react-i18next'
+import {ButtonProps, TextToIcon} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -69,7 +70,9 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   `}
 `
 
-export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarLinks = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen?: boolean}>`
   display: none;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
@@ -88,12 +91,12 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
   }
 `
 
-const navbarLinkStyles = (theme: Theme) => css`
+export const NavbarLink = styled(Link)`
   font-size: 1rem;
   text-decoration: none;
-  color: ${theme.palette.common.black};
+  color: ${({theme}) => theme.palette.common.black};
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     font-size: 1.3rem;
   }
 `
@@ -112,7 +115,9 @@ export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
     `}
 `
 
-export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarActions = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen?: boolean}>`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -154,23 +159,25 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
-  css`
-    color: unset;
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    justify-self: center;
+export const NavbarLoginLink = styled(Link, {
+  shouldForwardProp: propName => propName !== 'isMenuOpen'
+})<{isMenuOpen: boolean}>`
+  color: unset;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
 
-    ${isMenuOpen &&
+  ${({isMenuOpen}) =>
+    isMenuOpen &&
     css`
       z-index: -1;
     `}
-  `
+`
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
-    fontSize: '1.1em',
+    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
     padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
   }
 })
@@ -197,6 +204,12 @@ const imageStyles = (theme: Theme) => css`
   }
 `
 
+export interface ExtendedNavbarProps extends BuilderNavbarProps {
+  isMenuOpen?: boolean
+  onMenuToggle?: (isOpen: boolean) => void
+  navPaperClassName?: string
+}
+
 export function Navbar({
   className,
   children,
@@ -208,12 +221,26 @@ export function Navbar({
   logo,
   hasRunningSubscription,
   hasUnpaidInvoices,
-  loginUrl = '/login',
-  profileUrl = '/profile',
-  subscribeUrl = '/mitmachen'
-}: BuilderNavbarProps) {
-  const [isMenuOpen, setMenuOpen] = useState(false)
-  const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
+  loginBtn = {href: '/login'},
+  profileBtn = {href: '/profile'},
+  subscribeBtn = {href: '/mitmachen'},
+  isMenuOpen: controlledIsMenuOpen,
+  onMenuToggle,
+  navPaperClassName
+}: ExtendedNavbarProps) {
+  const [internalIsMenuOpen, setInternalMenuOpen] = useState(false)
+
+  const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
+
+  const toggleMenu = useCallback(() => {
+    const newState = !isMenuOpen
+    if (controlledIsMenuOpen === undefined) {
+      setInternalMenuOpen(newState)
+    }
+    onMenuToggle?.(newState)
+  }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle])
+
+  const {t} = useTranslation()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
@@ -236,7 +263,7 @@ export function Navbar({
   )
 
   const {
-    elements: {IconButton, Image, Link, Button}
+    elements: {IconButton, Image, Button}
   } = useWebsiteBuilder()
 
   return (
@@ -256,42 +283,43 @@ export function Navbar({
             {!!headerItems?.links.length && (
               <NavbarLinks isMenuOpen={isMenuOpen}>
                 {headerItems.links.map((link, index) => (
-                  <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                  <NavbarLink key={index} href={navigationLinkToUrl(link)}>
                     {link.label}
-                  </Link>
+                  </NavbarLink>
                 ))}
               </NavbarLinks>
             )}
           </NavbarMain>
 
-          <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
+          <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
             <NavbarLogoWrapper>
               {!!logo && (
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
               )}
             </NavbarLogoWrapper>
-          </Link>
+          </NavbarLoginLink>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUnpaidInvoices && profileUrl && (
+            {hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
-                href={profileUrl}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}>
+                sx={buttonStyles}
+                size="medium"
+                {...profileBtn}>
                 <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
               </Button>
             )}
 
-            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeUrl && (
-              <Button LinkComponent={Link} href={subscribeUrl} sx={buttonStyles}>
-                Member werden
+            {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
+              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...subscribeBtn}>
+                {t('navbar.subscribe')}
               </Button>
             )}
 
-            {hasRunningSubscription && !hasUnpaidInvoices && profileUrl && (
-              <Button LinkComponent={Link} href={profileUrl} sx={buttonStyles}>
+            {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
+              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
                 Mein Konto
               </Button>
             )}
@@ -299,18 +327,29 @@ export function Navbar({
         </NavbarInnerWrapper>
       </AppBar>
 
-      {isMenuOpen && Boolean(mainItems || categories?.length) && (
+      {Boolean(mainItems || categories?.length) && (
         <NavPaper
           hasRunningSubscription={hasRunningSubscription}
           hasUnpaidInvoices={hasUnpaidInvoices}
-          subscribeUrl={subscribeUrl}
-          profileUrl={profileUrl}
-          loginUrl={loginUrl}
+          subscribeBtn={subscribeBtn}
+          profileBtn={profileBtn}
+          loginBtn={loginBtn}
           main={mainItems}
           categories={categories}
-          closeMenu={toggleMenu}>
+          closeMenu={toggleMenu}
+          isMenuOpen={isMenuOpen}
+          className={navPaperClassName}>
           {iconItems?.links.map((link, index) => (
-            <Link key={index} href={navigationLinkToUrl(link)} color="inherit">
+            <Link
+              key={index}
+              href={navigationLinkToUrl(link)}
+              onClick={() => {
+                if (controlledIsMenuOpen === undefined) {
+                  setInternalMenuOpen(false)
+                }
+                onMenuToggle?.(false)
+              }}
+              color="inherit">
               <TextToIcon title={link.label} size={32} />
             </Link>
           ))}
@@ -378,7 +417,7 @@ export const NavPaperLinksGroup = styled('div')`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   `}
 `
@@ -431,31 +470,42 @@ export const NavPaperActions = styled('div')`
 const NavPaper = ({
   main,
   categories,
-  loginUrl,
-  profileUrl,
-  subscribeUrl,
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
   closeMenu,
   hasRunningSubscription,
   hasUnpaidInvoices,
+  isMenuOpen,
+  className,
   children
 }: PropsWithChildren<{
-  loginUrl?: string | null
-  profileUrl?: string | null
-  subscribeUrl?: string | null
+  loginBtn?: ButtonProps | null
+  profileBtn?: ButtonProps | null
+  subscribeBtn?: ButtonProps | null
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
   hasRunningSubscription: boolean
   hasUnpaidInvoices: boolean
+  isMenuOpen: boolean
+  className?: string
 }>) => {
   const {
     elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
   const {hasUser, logout} = useUser()
   const theme = useTheme()
 
+  const showMenu = className ? true : isMenuOpen // For custom styling (like Hauptstadt), always show. For default, show when open.
+
+  if (!showMenu) {
+    return null
+  }
+
   return (
-    <NavPaperWrapper>
+    <NavPaperWrapper className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
 
       <NavPaperMainLinks>
@@ -472,36 +522,36 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
-          {hasUnpaidInvoices && profileUrl && (
+          {hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}
-              href={profileUrl}
               variant="contained"
               color="warning"
               onClick={closeMenu}
-              startIcon={<MdWarning />}>
+              startIcon={<MdWarning />}
+              {...profileBtn}>
               Offene Rechnung
             </Button>
           )}
 
-          {!hasRunningSubscription && subscribeUrl && (
+          {!hasRunningSubscription && subscribeBtn && (
             <Button
               LinkComponent={Link}
-              href={subscribeUrl}
               variant="contained"
               color="secondary"
-              onClick={closeMenu}>
-              Member werden
+              onClick={closeMenu}
+              {...subscribeBtn}>
+              {t('navbar.subscribe')}
             </Button>
           )}
 
-          {hasUser && profileUrl && (
+          {hasUser && profileBtn && (
             <Button
               LinkComponent={Link}
-              href={profileUrl}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...profileBtn}>
               Mein Konto
             </Button>
           )}
@@ -518,13 +568,13 @@ const NavPaper = ({
             </Button>
           )}
 
-          {!hasUser && loginUrl && (
+          {!hasUser && loginBtn && (
             <Button
               LinkComponent={Link}
-              href={loginUrl}
               variant="outlined"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+              {...loginBtn}>
               Login
             </Button>
           )}

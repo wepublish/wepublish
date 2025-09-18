@@ -1,4 +1,5 @@
 import {css, GlobalStyles} from '@mui/material'
+import {memo} from 'react'
 
 const globalCSS = css`
   html {
@@ -8,4 +9,6 @@ const globalCSS = css`
   }
 `
 
-export const MannschaftGlobalStyles = () => <GlobalStyles styles={globalCSS} />
+export const MannschaftGlobalStyles = memo(function MannschaftGlobalStyles() {
+  return <GlobalStyles styles={globalCSS} />
+})

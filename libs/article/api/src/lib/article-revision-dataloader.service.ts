@@ -13,62 +13,38 @@ type RevisionMap = Partial<{
   scope: Scope.REQUEST
 })
 export class ArticleRevisionDataloaderService implements Primeable<RevisionMap> {
-  private readonly dataloader = new DataLoader<string, RevisionMap>(
+  private dataloader = new DataLoader<string, RevisionMap>(
     async (articleIds: readonly string[]) => {
-      const revisionPromises = []
-
-      for (const articleId of articleIds) {
-        revisionPromises.push(
-          this.prisma.articleRevision.findFirst({
-            where: {
-              articleId
-              // on purpose not checking for publishedAt
-              // so we only get the latest revision, we check for it later on
-            },
-            orderBy: {
-              createdAt: 'desc'
+      const articles = await this.prisma.article.findMany({
+        where: {
+          id: {
+            in: articleIds as string[]
+          }
+        },
+        include: {
+          ArticleRevisionPublished: {
+            include: {
+              articleRevision: true
             }
-          }),
-          this.prisma.articleRevision.findFirst({
-            where: {
-              articleId,
-              publishedAt: {
-                gt: new Date()
-              }
-            },
-            orderBy: {
-              createdAt: 'desc'
+          },
+          ArticleRevisionDraft: {
+            include: {
+              articleRevision: true
             }
-          }),
-          this.prisma.articleRevision.findFirst({
-            where: {
-              articleId,
-              publishedAt: {
-                lte: new Date()
-              }
-            },
-            orderBy: {
-              createdAt: 'desc'
+          },
+          ArticleRevisionPending: {
+            include: {
+              articleRevision: true
             }
-          })
-        )
-      }
-
-      const revisions = (await Promise.all(revisionPromises)).filter(
-        (rev): rev is ArticleRevision => Boolean(rev)
-      )
+          }
+        }
+      })
 
       return articleIds.map((articleId): RevisionMap => {
-        const published = revisions.find(
-          rev =>
-            rev.articleId === articleId && rev.publishedAt && new Date() > new Date(rev.publishedAt)
-        )
-
-        const draft = revisions.find(rev => rev.articleId === articleId && !rev.publishedAt)
-        const pending = revisions.find(
-          rev =>
-            rev.articleId === articleId && rev.publishedAt && new Date(rev.publishedAt) > new Date()
-        )
+        const rev = articles.find(rev => rev.id === articleId)
+        const published = rev?.ArticleRevisionPublished?.articleRevision
+        const draft = rev?.ArticleRevisionDraft?.articleRevision
+        const pending = rev?.ArticleRevisionPending?.articleRevision
 
         return {draft, pending, published}
       })

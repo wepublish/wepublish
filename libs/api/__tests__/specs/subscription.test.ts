@@ -11,18 +11,13 @@ import {
   SubscriptionPeriod,
   User
 } from '@prisma/client'
-import {
-  PaymentPeriodicity,
-  RegisterMemberAndReceivePayment,
-  RegisterMemberAndReceivePaymentMutationVariables
-} from '../api/public'
+import {PaymentPeriodicity} from '../api/public'
 import {
   AlgebraicCaptchaChallenge,
   TestingChallengeAnswer
 } from '../../src/lib/challenges/algebraicCaptchaChallenge'
 
 let testServerPrivate: ApolloServer
-let testServerPublic: ApolloServer
 let prisma: PrismaClient
 let challenge: AlgebraicCaptchaChallenge
 
@@ -38,7 +33,6 @@ beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma()
     testServerPrivate = setupClient.testServerPrivate
-    testServerPublic = setupClient.testServerPublic
 
     prisma = setupClient.prisma
     challenge = setupClient.challenge
@@ -70,7 +64,14 @@ beforeAll(async () => {
           create: {
             forceAutoRenewal: false,
             paymentMethodIDs: [paymentMethod.id],
-            paymentPeriodicities: ['biannual', 'monthly', 'quarterly', 'yearly']
+            paymentPeriodicities: [
+              'biannual',
+              'monthly',
+              'quarterly',
+              'yearly',
+              'biennial',
+              'lifetime'
+            ]
           }
         },
         currency: Currency.CHF
@@ -128,56 +129,6 @@ beforeAll(async () => {
 })
 
 describe('Subscriptions', () => {
-  describe('PUBLIC', () => {
-    test('can be created', async () => {
-      const publicSubscription: RegisterMemberAndReceivePaymentMutationVariables = {
-        autoRenew: false,
-        monthlyAmount: 100,
-        paymentPeriodicity: PaymentPeriodicity.Monthly,
-        email: 'public-subscription-user@wepublish.dev',
-        name: 'Public Subscription User',
-        memberPlanId: memberPlan.id,
-        paymentMethodId: paymentMethod.id,
-        challengeAnswer: {
-          ...testingChallengeResponse
-        }
-      }
-
-      const result = await testServerPublic.executeOperation({
-        query: RegisterMemberAndReceivePayment,
-        variables: {
-          ...publicSubscription
-        }
-      })
-
-      const subscription = result.data.registerMemberAndReceivePayment
-
-      const payment = await prisma.payment.findFirstOrThrow({
-        where: {
-          id: subscription.payment.id
-        }
-      })
-
-      const invoice = await prisma.invoice.findFirstOrThrow({
-        where: {
-          id: payment.invoiceID
-        }
-      })
-
-      // expects a session
-      expect(subscription.session.token).toBeTruthy()
-
-      // expects a payment
-      expect(subscription.payment.id).toBeTruthy()
-
-      // expects a user
-      expect(subscription.user.id).toBeTruthy()
-
-      // expects an invoice
-      expect(invoice.id).toBeTruthy()
-    })
-  })
-
   describe('PRIVATE', () => {
     test('can be created', async () => {
       const subscriptionInput: SubscriptionInput = {

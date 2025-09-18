@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {CanPreview} from '@wepublish/permissions'
+import {CanCreatePaywall, CanPreview, CanUpdatePaywall} from '@wepublish/permissions'
 import {PermissionControl, Version} from '@wepublish/ui/editor'
 import {de, enUS, fr} from 'date-fns/locale'
 import {forwardRef, ReactNode, useEffect, useState} from 'react'
@@ -25,8 +25,11 @@ import {
   MdLocationPin,
   MdLogout,
   MdMail,
+  MdMoney,
+  MdMultilineChart,
   MdOutgoingMail,
   MdOutlineGridView,
+  MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
   MdPieChartOutline,
@@ -180,7 +183,9 @@ export function Base({children}: BaseProps) {
                     CanPreview.id,
                     'CAN_GET_PEER_ARTICLES',
                     'CAN_GET_PEER_ARTICLE',
-                    'CAN_GET_TAGS'
+                    'CAN_GET_TAGS',
+                    CanCreatePaywall.id,
+                    CanUpdatePaywall.id
                   ]}>
                   <Nav.Menu
                     eventKey={'articles'}
@@ -230,6 +235,17 @@ export function Base({children}: BaseProps) {
                         {t('navbar.articleTags')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[CanCreatePaywall.id, CanUpdatePaywall.id]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/paywall"
+                        icon={<MdPayment />}
+                        active={path === 'articles/paywall'}>
+                        {t('paywall.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
 
@@ -257,7 +273,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/pages"
                         icon={<MdDashboard />}
-                        active={path === 'page'}>
+                        active={path === 'pages'}>
                         {t('navbar.pages')}
                       </Nav.Item>
                     </PermissionControl>
@@ -305,6 +321,22 @@ export function Base({children}: BaseProps) {
                         active={path === 'polls'}
                         icon={<MdQueryStats />}>
                         {t('navbar.blocks.polls')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_CROWDFUNDINGS',
+                        'CAN_GET_CROWDFUNDING',
+                        'CAN_CREATE_CROWDFUNDING',
+                        'CAN_UPDATE_CROWDFUNDING'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/crowdfundings"
+                        active={path === 'crowdfundings'}
+                        icon={<MdMoney />}>
+                        {t('navbar.blocks.crowdfundings')}
                       </Nav.Item>
                     </PermissionControl>
 
@@ -529,12 +561,20 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_SUBSCRIPTION',
                     'CAN_GET_SUBSCRIPTIONS',
                     'CAN_GET_SUBSCRIPTION',
-                    'CAN_DELETE_SUBSCRIPTION'
+                    'CAN_DELETE_SUBSCRIPTION',
+                    'CAN_GET_AUDIENCE_STATS'
                   ]}>
-                  <Nav.Menu
-                    eventKey={'usersAndMembers'}
-                    title={t('navbar.usersAndMembers')}
-                    icon={<MdGroups />}>
+                  <Nav.Menu eventKey={'audience'} title={t('navbar.audience')} icon={<MdGroups />}>
+                    <PermissionControl qualifyingPermissions={['CAN_GET_AUDIENCE_STATS']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/audience/dashboard"
+                        active={path.includes('audience/dashboard')}
+                        icon={<MdMultilineChart />}>
+                        {t('navbar.audienceDashboard')}
+                      </Nav.Item>
+                    </PermissionControl>
+
                     <Nav.Item
                       as={NavLink}
                       href="/users"

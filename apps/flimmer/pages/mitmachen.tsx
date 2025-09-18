@@ -1,9 +1,6 @@
-import styled from '@emotion/styled'
-import {AuthTokenStorageKey, UserFormWrapper} from '@wepublish/authentication/website'
-import {SubscribeWrapper} from '@wepublish/membership/website'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {PageContainer} from '@wepublish/page/website'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {SubscribePage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -14,47 +11,20 @@ import {
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
-  UserSession
+  SessionWithTokenWithoutUser
 } from '@wepublish/website/api'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-const MitmachenPage = styled(PageContainer)`
-  ${SubscribeWrapper} {
-    grid-row: 2;
-
-    ${({theme}) => theme.breakpoints.up('md')} {
-      grid-column: 2/12;
-    }
-  }
-
-  ${UserFormWrapper} {
-    ${({theme}) => theme.breakpoints.up('md')} {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-  }
-`
-
-export const MitmachenInner = () => (
-  <SubscribePage
-    fields={['firstName']}
-    filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
-  />
-)
-
 export default function Mitmachen() {
-  return (
-    <MitmachenPage slug={'mitmachen'}>
-      <MitmachenInner />
-    </MitmachenPage>
-  )
+  return <PageContainer slug={'mitmachen'} />
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -65,15 +35,19 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict'
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   const dataPromises = [
     client.query({

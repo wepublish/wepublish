@@ -4,6 +4,7 @@ fragment BlockWithoutTeaser on BlockContent {
   ... on TitleBlock {
     blockStyle
     type
+    preTitle
     title
     lead
   }
@@ -84,6 +85,22 @@ fragment BlockWithoutTeaser on BlockContent {
     type
     poll {
       ...FullPoll
+    }
+  }
+
+  ... on CrowdfundingBlock {
+    blockStyle
+    type
+    crowdfunding {
+      id
+      name
+      activeCrowdfundingGoal {
+        id
+        title
+        description
+        amount
+        progress
+      }
     }
   }
 
@@ -200,6 +217,7 @@ fragment FullTeaser on Teaser {
       ...FullImage
     }
 
+    type
     preTitle
     title
     lead
@@ -228,6 +246,7 @@ fragment FullTeaser on Teaser {
       ...FullImage
     }
 
+    type
     preTitle
     title
     lead
@@ -242,6 +261,7 @@ fragment FullTeaser on Teaser {
       ...FullImage
     }
 
+    type
     preTitle
     title
     lead
@@ -256,6 +276,7 @@ fragment FullTeaser on Teaser {
       ...FullImage
     }
 
+    type
     preTitle
     title
     lead
@@ -272,7 +293,6 @@ fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
-    type
     blockStyle
     type
     flexTeasers {
@@ -292,7 +312,6 @@ fragment FullBlock on BlockContent {
   }
 
   ... on TeaserGridBlock {
-    type
     blockStyle
     type
     teasers {
@@ -317,6 +336,34 @@ fragment FullBlock on BlockContent {
       }
     }
     teasers {
+      ...FullTeaser
+    }
+  }
+
+  ... on TeaserSlotsBlock {
+    title
+    blockStyle
+    type
+    autofillConfig {
+      enabled
+      filter {
+        tags
+        tagObjects {
+          id
+          tag
+        }
+      }
+      sort
+      teaserType
+    }
+    slots {
+      type
+      teaser {
+        __typename
+        ...FullTeaser
+      }
+    }
+    autofillTeasers {
       ...FullTeaser
     }
   }

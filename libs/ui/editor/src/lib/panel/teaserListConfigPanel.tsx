@@ -1,13 +1,13 @@
+import {css} from '@emotion/react'
+import styled from '@emotion/styled'
 import {TagType} from '@wepublish/editor/api'
+import {TeaserListBlockSort, TeaserType} from '@wepublish/editor/api-v2'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Schema, SelectPicker} from 'rsuite'
 
 import {SelectTags} from '../atoms/tag/selectTags'
 import {TeaserListBlockValue} from '../blocks/types'
-import styled from '@emotion/styled'
-import {css} from '@emotion/react'
-import {TeaserListBlockSort, TeaserType} from '@wepublish/editor/api-v2'
 
 const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
@@ -130,6 +130,10 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
               {
                 label: t(`resources.teaserSort.${TeaserListBlockSort.PublishedAt}`),
                 value: TeaserListBlockSort.PublishedAt
+              },
+              {
+                label: t(`resources.teaserSort.${TeaserListBlockSort.UpdatedAt}`),
+                value: TeaserListBlockSort.UpdatedAt
               },
               ...(teaserType === TeaserType.Article
                 ? [

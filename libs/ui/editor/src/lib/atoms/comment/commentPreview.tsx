@@ -207,6 +207,7 @@ export function CommentPreview({
             {/* comment text */}
             <Col xs={24} style={{marginTop: '20px'}}>
               <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
+
               <Panel bordered style={{backgroundColor: 'white'}}>
                 <RichTextBlock
                   value={revision?.text || []}

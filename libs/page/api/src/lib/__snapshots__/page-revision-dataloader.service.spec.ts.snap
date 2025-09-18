@@ -4,72 +4,29 @@ exports[`PageRevisionDataloaderService load should load many 1`] = `
 [
   [
     {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "gt": 2023-01-01T00:00:00.000Z,
+      "include": {
+        "PagesRevisionDraft": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPending": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPublished": {
+          "include": {
+            "pageRevision": true,
+          },
         },
       },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
       "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "lte": 2023-01-01T00:00:00.000Z,
-        },
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "321",
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "321",
-        "publishedAt": {
-          "gt": 2023-01-01T00:00:00.000Z,
-        },
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "321",
-        "publishedAt": {
-          "lte": 2023-01-01T00:00:00.000Z,
+        "id": {
+          "in": [
+            "123",
+            "321",
+          ],
         },
       },
     },
@@ -81,36 +38,28 @@ exports[`PageRevisionDataloaderService load should load one 1`] = `
 [
   [
     {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-      },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
-      "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "gt": 2023-01-01T00:00:00.000Z,
+      "include": {
+        "PagesRevisionDraft": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPending": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPublished": {
+          "include": {
+            "pageRevision": true,
+          },
         },
       },
-    },
-  ],
-  [
-    {
-      "orderBy": {
-        "createdAt": "desc",
-      },
       "where": {
-        "pageId": "123",
-        "publishedAt": {
-          "lte": 2023-01-01T00:00:00.000Z,
+        "id": {
+          "in": [
+            "123",
+          ],
         },
       },
     },

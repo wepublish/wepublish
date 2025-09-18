@@ -1,3 +1,4 @@
+import {generateFeed} from '@wepublish/feed/website'
 import {SortOrder} from '@wepublish/website/api'
 import {
   ArticleListDocument,
@@ -5,7 +6,6 @@ import {
   ArticleSort,
   getV1ApiClient
 } from '@wepublish/website/api'
-import {generateFeed} from '@wepublish/feed/website'
 import {Feed} from 'feed'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'

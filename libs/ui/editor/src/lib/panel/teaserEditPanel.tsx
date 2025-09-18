@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import {TeaserType} from '@wepublish/editor/api-v2'
+import {TFunction} from 'i18next'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {TFunction} from 'i18next'
 import {Button, Drawer, Form, Input, Panel as RPanel, Toggle as RToggle} from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'

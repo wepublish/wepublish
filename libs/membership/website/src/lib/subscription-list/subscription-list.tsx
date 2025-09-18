@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
+import {useTranslation} from 'react-i18next'
 
 export const SubscriptionListWrapper = styled('article')`
   display: grid;
@@ -21,6 +22,7 @@ export const SubscriptionList = ({
     SubscriptionListItem,
     elements: {Alert, Link}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   return (
     <SubscriptionListWrapper className={className}>
@@ -28,7 +30,8 @@ export const SubscriptionList = ({
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
             <strong>
-              Du hast noch kein aktives Abo. <Link href={subscribeUrl}>Jetzt ein Abo lösen.</Link>
+              {t('subscription.noActiveSubscriptions')}{' '}
+              <Link href={subscribeUrl}>{t('subscription.subscribeNow')}</Link>
             </strong>
           </SubscriptionListItemContent>
         </SubscriptionListItemWrapper>

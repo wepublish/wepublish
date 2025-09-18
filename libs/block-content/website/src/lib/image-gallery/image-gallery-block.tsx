@@ -1,7 +1,9 @@
-import {ImageList, ImageListItem} from '@mui/material'
+import {ImageList, ImageListItem, Typography} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
 import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {ImageBlockCaption, ImageBlockSource} from '../image/image-block'
+import {Trans} from 'react-i18next'
 
 export const isImageGalleryBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -26,7 +28,7 @@ export const ImageGalleryBlockImageList = styled(ImageList)`
 
 export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockProps) => {
   const {
-    elements: {Image, Paragraph}
+    elements: {Image}
   } = useWebsiteBuilder()
   const nonEmptyImages = images.filter(image => image.image)
 
@@ -37,10 +39,18 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
           <ImageListItem key={index}>
             <Image image={image.image!} />
 
-            <Paragraph gutterBottom={false}>
-              {image.caption ?? image.image?.title}{' '}
-              {image.image?.source ? <>(Bild: {image.image.source})</> : null}
-            </Paragraph>
+            <Typography variant="caption" component={ImageBlockCaption}>
+              <Trans
+                i18nKey="image.caption"
+                values={{
+                  caption: image.caption ?? image.image?.title,
+                  source: image.image?.source || 'EMPTY'
+                }}
+                components={{
+                  ImageSource: <ImageBlockSource />
+                }}
+              />
+            </Typography>
           </ImageListItem>
         ))}
       </ImageGalleryBlockImageList>

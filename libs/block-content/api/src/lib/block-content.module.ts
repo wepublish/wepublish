@@ -11,6 +11,8 @@ import {ArticleModule} from '@wepublish/article/api'
 import {PageModule} from '@wepublish/page/api'
 import {TeaserListBlockFilterResolver, TeaserListBlockResolver} from './teaser/teaser-list.resolver'
 import {BaseBlockResolver} from './base-block.resolver'
+import {SlotTeasersLoader} from './teaser/slot-teasers-loader'
+import {TagModule} from '@wepublish/tag/api'
 
 @Module({
   imports: [
@@ -21,14 +23,17 @@ import {BaseBlockResolver} from './base-block.resolver'
     forwardRef(() => PageModule),
     EventModule,
     PeerModule,
-    CommentModule
+    CommentModule,
+    TagModule
   ],
   providers: [
     BaseBlockResolver,
     EventBlockResolver,
     CommentBlockResolver,
     TeaserListBlockResolver,
-    TeaserListBlockFilterResolver
-  ]
+    TeaserListBlockFilterResolver,
+    SlotTeasersLoader
+  ],
+  exports: [SlotTeasersLoader]
 })
 export class BlockContentModule {}

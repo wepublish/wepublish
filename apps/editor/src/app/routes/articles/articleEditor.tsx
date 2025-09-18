@@ -1,13 +1,19 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment} from '@wepublish/editor/api'
+import {
+  AuthorRefFragment,
+  FullImageFragment,
+  useCreateJwtForWebsiteLoginLazyQuery
+} from '@wepublish/editor/api'
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
   getApiClientV2,
-  getSettings,
+  SettingName,
   useArticleQuery,
   useCreateArticleMutation,
+  usePaywallListQuery,
   usePublishArticleMutation,
+  useSettingsListQuery,
   useUpdateArticleMutation
 } from '@wepublish/editor/api-v2'
 import {CanPreview} from '@wepublish/permissions'
@@ -22,6 +28,7 @@ import {
   EditorTemplate,
   InfoData,
   ListicleBlockListValue,
+  mapBlockValueToBlockInput,
   NavigationBar,
   PermissionControl,
   PublishArticlePanel,
@@ -30,7 +37,6 @@ import {
   StateColor,
   TitleBlockListValue,
   TitleBlockValue,
-  unionMapForBlock,
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
@@ -54,9 +60,7 @@ import {
   Tag as RTag,
   toaster
 } from 'rsuite'
-import {Node} from 'slate'
-
-import {ClientSettings} from '../../../shared/types'
+import {type Node, Descendant, Element, Text} from 'slate'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -89,19 +93,21 @@ const Tag = styled(RTag, {
 `
 
 const InitialArticleBlocks: BlockValue[] = [
-  {key: '0', type: EditorBlockType.Title, value: {title: '', lead: ''}},
+  {key: '0', type: EditorBlockType.Title, value: {preTitle: '', title: '', lead: ''}},
   {key: '1', type: EditorBlockType.Image, value: {image: null, caption: ''}}
 ]
 
 function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
   return nodes.reduce((charLength: number, node) => {
-    if (!node.text && !node.children) return charLength
-    // node either has text (leaf node) or children (element node)
-    if (node.text) {
+    if (!Element.isElement(node) && !Text.isText(node)) {
+      return charLength
+    }
+
+    if (Text.isText(node)) {
       return charLength + (node.text as string).length
     }
 
-    return countRichtextChars(charLength, node.children as Node[])
+    return countRichtextChars(charLength, node.children as Descendant[])
   }, blocksCharLength)
 }
 
@@ -111,8 +117,6 @@ function ArticleEditor() {
   const {id} = params
 
   const {t} = useTranslation()
-
-  const {peerByDefault}: ClientSettings = getSettings()
 
   const client = getApiClientV2()
   const [createArticle, {data: createData, loading: isCreating, error: createError}] =
@@ -141,7 +145,8 @@ function ArticleEditor() {
     url: '',
     properties: [],
     canonicalUrl: '',
-    shared: peerByDefault,
+    shared: undefined,
+    paywall: undefined,
     hidden: false,
     disableComments: false,
     breaking: false,
@@ -153,6 +158,24 @@ function ArticleEditor() {
     socialMediaImage: undefined,
     likes: 0,
     trackingPixels: undefined
+  })
+
+  useSettingsListQuery({
+    client,
+    onCompleted(data) {
+      setMetadata(meta => ({
+        ...meta,
+        shared:
+          meta.shared ??
+          !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)?.value,
+        paywall:
+          meta.paywall ??
+          !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)?.value
+      }))
+    }
+  })
+  const {data: paywallData} = usePaywallListQuery({
+    client
   })
 
   const isNew = id === undefined
@@ -168,7 +191,12 @@ function ArticleEditor() {
     client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: {id: articleID!}
+    variables: {id: articleID!},
+    skip: !articleID
+  })
+
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const isNotFound = articleData && !articleData.article
@@ -193,12 +221,12 @@ function ArticleEditor() {
         shared,
         hidden,
         disableComments,
-        pending,
         tags,
         url,
         slug,
         trackingPixels,
-        likes
+        likes,
+        paywallId
       } = articleData.article
       const {
         preTitle,
@@ -234,18 +262,19 @@ function ArticleEditor() {
         properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
+        paywall: !!paywallId,
         hidden,
         disableComments,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image || undefined,
+        image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],
-        socialMediaImage: socialMediaImage || undefined,
+        socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
         likes: likes ?? 0,
         trackingPixels: trackingPixels || undefined
       })
@@ -265,11 +294,11 @@ function ArticleEditor() {
           date: new Date(articleData?.article?.pending?.publishedAt ?? '')
         })
       )
-    } else if (articleData?.article?.published) {
+    } else if (articleData?.article?.latest.publishedAt) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('articleEditor.overview.published', {
-          date: new Date(articleData?.article?.published?.publishedAt ?? '')
+          date: new Date(articleData?.article?.latest?.publishedAt ?? '')
         })
       )
     } else {
@@ -346,13 +375,14 @@ function ArticleEditor() {
       authorIds: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
-      shared: metadata.shared,
+      shared: !!metadata.shared,
+      paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,
       canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,
-      blocks: blocks.map(unionMapForBlock),
+      blocks: blocks.map(mapBlockValueToBlockInput),
       hideAuthor: metadata.hideAuthor,
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
@@ -368,6 +398,7 @@ function ArticleEditor() {
       metadata.title === '' &&
       metadata.lead === '' &&
       metadata.seoTitle === '' &&
+      metadata.preTitle === '' &&
       blocks.length > 0
     ) {
       const titleBlock = blocks.find(block => block.type === EditorBlockType.Title)
@@ -376,6 +407,7 @@ function ArticleEditor() {
         const titleBlockValue = titleBlock.value as TitleBlockValue
         setMetadata({
           ...metadata,
+          preTitle: titleBlockValue.preTitle,
           title: titleBlockValue.title,
           lead: titleBlockValue.lead,
           seoTitle: titleBlockValue.title
@@ -471,7 +503,7 @@ function ArticleEditor() {
         </Message>
       )
     }
-  }, [isNotFound])
+  }, [isNotFound, t])
 
   const [infoData, setInfoData] = useState<InfoData>({
     charCount: 0
@@ -567,14 +599,23 @@ function ArticleEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={articleData?.article.previewUrl ?? ''} className="actionButton">
-                    <IconButtonMarginTop
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('articleEditor.overview.preview')}
-                    </IconButtonMarginTop>
-                  </Link>
+                  <IconButtonMarginTop
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${articleData!.article.previewUrl}&jwt=${
+                          jwt?.createJWTForWebsiteLogin?.token
+                        }`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('articleEditor.overview.preview')}
+                  </IconButtonMarginTop>
                 </PermissionControl>
               }
             />

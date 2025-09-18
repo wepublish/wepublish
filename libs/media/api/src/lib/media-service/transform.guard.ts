@@ -1,10 +1,13 @@
 import sharp from 'sharp'
-import {TransformationsDto} from './transformations.dto'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, ForbiddenException} from '@nestjs/common'
+import {
+  timeConstantCompare,
+  getSignatureForImage,
+  TransformationsDto
+} from '@wepublish/media-transform-guard'
 
 const M_PIXEL_LIMIT = 20
 // WebP Max
-const M_PIXEL_LIMIT_ANIMATED = 60
 const IMAGE_SIZE_LIMIT = 10
 const MAX_IMAGE_QUALITY = 80
 const DEFAULT_IMAGE_QUALITY = 65
@@ -47,17 +50,23 @@ export class TransformGuard {
     return metadata.pages && metadata.pages > 1
   }
 
+  public validateSignature(imageId: string, t: TransformationsDto) {
+    const {sig, ...dataWithoutSignature} = t
+    const validationSignature = getSignatureForImage(imageId, dataWithoutSignature)
+
+    if (!timeConstantCompare(sig ?? '', validationSignature)) {
+      throw new ForbiddenException('Invalid signature!')
+    }
+    return true
+  }
+
   public checkDimensions(metadata: sharp.Metadata, transformations: TransformationsDto): number {
-    const originalHeight = metadata.height
+    const originalHeight = metadata.pageHeight ?? metadata.height
     const resizeHeight = transformations.resize?.height
     const originalWidth = metadata.width
     const resizeWidth = transformations.resize?.width
     const hasAnimation = this.isAnimatedImage(metadata)
-
-    let mpLimit = M_PIXEL_LIMIT
-    if (hasAnimation) {
-      mpLimit = M_PIXEL_LIMIT_ANIMATED
-    }
+    const mpLimit = M_PIXEL_LIMIT
 
     // Ensure that original picture is not more than M_PIXEL_LIMIT
     if (this.dimensionAutoResizeCheck(transformations)) {
@@ -88,13 +97,16 @@ export class TransformGuard {
       }
     }
 
-    const totalHeight =
-      (height ?? 0) + (transformations.extend?.top ?? 0) + (transformations.extend?.bottom ?? 0)
+    const extendedHeight =
+      (transformations.extend?.top ?? 0) + (transformations.extend?.bottom ?? 0)
+    const extendedWidth = (transformations.extend?.left ?? 0) + (transformations.extend?.right ?? 0)
 
-    const totalWidth =
-      (width ?? 0) + (transformations.extend?.left ?? 0) + (transformations.extend?.right ?? 0)
+    const totalHeight = (height ?? 0) + extendedHeight
+
+    const totalWidth = (width ?? 0) + extendedWidth
 
     const mPixel = this.calculateMegaPixel(totalHeight, totalWidth)
+
     if (mPixel > mpLimit) {
       throw new BadRequestException(`Transformation exceeds pixel limit!`)
     }

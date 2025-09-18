@@ -5,7 +5,7 @@ import {timingSafeEqual} from 'crypto'
 
 @Controller('systemInfo')
 export class SystemInfoController {
-  constructor(@Inject('SYSTEM_INFO_KEY') private readonly key: string) {}
+  constructor(@Inject('SYSTEM_INFO_KEY') private key: string) {}
 
   @Get()
   getSystemInfo(@Query('key') key: string): {
@@ -25,11 +25,11 @@ export class SystemInfoController {
     const hostname = os.hostname()
     const ips = this.getIps()
     const isKubernetes = this.isRunningInKubernetes()
-    const database = this.getDatabaseName(process.env.DATABASE_URL || '')
-    const mediaServer = process.env.MEDIA_SERVER_URL || ''
-    const configFilePath = process.env.CONFIG_FILE_PATH || ''
-    const apiUrl = process.env.API_URL || ''
-    const websiteUrl = process.env.WEBSITE_URL || ''
+    const database = this.getDatabaseName(process.env['DATABASE_URL'] || '')
+    const mediaServer = process.env['MEDIA_SERVER_URL'] || ''
+    const configFilePath = process.env['CONFIG_FILE_PATH'] || ''
+    const apiUrl = process.env['API_URL'] || ''
+    const websiteUrl = process.env['WEBSITE_URL'] || ''
     return {hostname, ips, isKubernetes, database, mediaServer, configFilePath, apiUrl, websiteUrl}
   }
 

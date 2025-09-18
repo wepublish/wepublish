@@ -21,11 +21,11 @@ export const BannerActionList = ({actions, onAdd, onRemove, onUpdate}: BannerAct
     <>
       <Grid fluid>
         <Row>
-          <Col xs={5}>Label</Col>
-          <Col xs={5}>URL</Col>
-          <Col xs={5}>Style</Col>
-          <Col xs={5}>Role</Col>
-          <Col xs={4}>Actions</Col>
+          <Col xs={5}>{t('banner.form.action.label')}</Col>
+          <Col xs={5}>{t('banner.form.action.url')}</Col>
+          <Col xs={5}>{t('banner.form.action.style')}</Col>
+          <Col xs={5}>{t('banner.form.action.role')}</Col>
+          <Col xs={4}>{t('banner.form.actions')}</Col>
         </Row>
         {actions.map((action, index) => (
           <Row>
@@ -62,7 +62,7 @@ export const BannerActionList = ({actions, onAdd, onRemove, onUpdate}: BannerAct
               />
             </Col>
             <Col xs={4}>
-              <Button onClick={() => onRemove(index)}>Remove</Button>
+              <Button onClick={() => onRemove(index)}>{t('banner.list.delete')}</Button>
             </Col>
           </Row>
         ))}
@@ -71,7 +71,7 @@ export const BannerActionList = ({actions, onAdd, onRemove, onUpdate}: BannerAct
           <Col xs={24}>
             <Button
               onClick={() => onAdd({label: '', url: '', style: '', role: BannerActionRole.Other})}>
-              Add Action
+              {t('banner.actions.add')}
             </Button>
           </Col>
         </Row>

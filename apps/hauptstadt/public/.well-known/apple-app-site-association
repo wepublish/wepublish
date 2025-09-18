@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appID": "68X2T4YTGN.be.hauptstadt.ios",
+        "paths": [
+          "NOT /mitmachen",
+          "NOT /login/*invoiceId*",
+          "/*"
+        ]
+      },
+      {
+        "appID": "432YL7M6PK.be.hauptstadt.ios",
+        "paths": [
+          "NOT /mitmachen",
+          "NOT /login/*invoiceId*",
+          "/*"
+        ]
+      }
+    ]
+  }
+}

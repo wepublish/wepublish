@@ -33,14 +33,14 @@ const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 export class PeriodicJobService {
   private subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
   private runningJob?: PeriodicJob
-  private readonly logger = new Logger('PeriodicJobService')
+  private logger = new Logger('PeriodicJobService')
   private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS
 
   constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly mailContext: MailContext,
-    private readonly subscriptionController: SubscriptionService,
-    private readonly payments: PaymentsService
+    private prismaService: PrismaClient,
+    private mailContext: MailContext,
+    private subscriptionController: SubscriptionService,
+    private payments: PaymentsService
   ) {}
 
   getJobLog(take: number, skip?: number) {
@@ -89,6 +89,8 @@ export class PeriodicJobService {
         this.logger.log('Executing periodic job...')
         this.logger.log('Processing custom mails...')
         await this.sendCustomSubscriptionEmails(periodicJobRunObject)
+        this.logger.log('Processing invoice state changes...')
+        await this.checkStateOfOpenInvoices()
         this.logger.log('Processing invoice creation...')
         await this.createMissingInvoicesForActiveSubscriptions(periodicJobRunObject)
         this.logger.log('Processing charge of invoices...')
@@ -125,7 +127,7 @@ export class PeriodicJobService {
         data: {
           deactivation: {
             create: {
-              date: new Date(),
+              date: subscription.paidUntil ?? subscription.startsAt,
               reason: SubscriptionDeactivationReason.userSelfDeactivated
             }
           },
@@ -166,6 +168,13 @@ export class PeriodicJobService {
     )
     for (const invoice of invoices) {
       await this.chargeInvoice(periodicJobRunObject, invoice)
+    }
+  }
+
+  private async checkStateOfOpenInvoices() {
+    const invoices = await this.subscriptionController.findAllOpenInvoices()
+    for (const invoice of invoices) {
+      await this.checkInvoiceState(invoice)
     }
   }
 
@@ -379,6 +388,26 @@ export class PeriodicJobService {
         periodicJobRunObject.date
       )
     }
+  }
+
+  private async checkInvoiceState(
+    invoiceToCheck: Invoice & {
+      subscription:
+        | (Subscription & {
+            paymentMethod: PaymentMethod
+            memberPlan: MemberPlan
+            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+          })
+        | null
+      items: InvoiceItem[]
+      subscriptionPeriods: SubscriptionPeriod[]
+    }
+  ) {
+    if (!invoiceToCheck.subscription) {
+      throw new Error(`Invoice ${invoiceToCheck.id} has no subscription assigned!`)
+    }
+
+    await this.subscriptionController.checkInvoiceState(invoiceToCheck)
   }
 
   private async deactivateSubscriptionByInvoice(

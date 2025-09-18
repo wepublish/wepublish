@@ -1,15 +1,14 @@
+import {generateSitemap} from '@wepublish/feed/website'
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
   getV1ApiClient,
-  Page,
+  PageListDocument,
   PageListQueryVariables,
   PageSort,
-  SitemapPageListDocument,
   SortOrder
 } from '@wepublish/website/api'
-import {generateSitemap} from '@wepublish/feed/website'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 import process from 'node:process'
@@ -37,7 +36,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
       } as ArticleListQueryVariables
     }),
     client.query({
-      query: SitemapPageListDocument,
+      query: PageListDocument,
       variables: {
         take: 100,
         sort: PageSort.PublishedAt,
@@ -46,11 +45,10 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     })
   ])
 
-  return generate(articleData.articles.nodes ?? [], [
+  return generate(articleData.articles.nodes ?? [], pageData.pages.nodes ?? [], [
     `${siteUrl}/author`,
     `${siteUrl}/login`,
     `${siteUrl}/signup`,
-    `${siteUrl}/abo`,
-    ...(pageData.pages.nodes ?? []).map((page: Page) => page.url)
+    `${siteUrl}/abo`
   ])
 }

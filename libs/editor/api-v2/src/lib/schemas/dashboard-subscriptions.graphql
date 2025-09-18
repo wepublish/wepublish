@@ -1,0 +1,41 @@
+query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: [String!]) {
+  dailySubscriptionStats(start: $start, end: $end, memberPlanIds: $memberPlanIds) {
+    date
+    totalActiveSubscriptionCount
+    createdSubscriptionCount
+    createdSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    replacedSubscriptionCount
+    replacedSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    renewedSubscriptionCount
+    renewedSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    deactivatedSubscriptionCount
+    deactivatedSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+    overdueSubscriptionCount
+    overdueSubscriptionUsers {
+      id
+      name
+      firstName
+      email
+    }
+  }
+}

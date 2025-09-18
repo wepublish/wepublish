@@ -4,36 +4,25 @@ import {ArticleDataloaderService} from '@wepublish/article/api'
 import {
   BlockContentInput,
   BlockType,
-  CommentBlockInput,
-  EventBlockInput,
   ImageGalleryBlockInput,
   ImageGalleryImageInput,
   ListicleBlockInput,
-  ListicleItemInput,
-  PollBlockInput,
-  TeaserGridBlockInput,
-  TeaserListBlockInput
+  ListicleItemInput
 } from '@wepublish/block-content/api'
 import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
-import {createSafeHostUrl} from '@wepublish/peering/api'
+import {createSafeHostUrl, remote} from '@wepublish/peering/api'
 import {DateFilter, PrimeDataLoader} from '@wepublish/utils/api'
 import {GraphQLClient} from 'graphql-request'
 import {pipe, replace, toLower} from 'ramda'
 import {ValueOf} from 'type-fest'
 import {
-  Article,
-  ArticleList,
-  ArticleListQuery,
-  ArticleListQueryVariables,
-  ArticleQuery,
-  ArticleQueryVariables,
-  FullImageFragment,
-  ArticleFilter as GqlArticleFilter,
-  DateFilter as GqlDateFilter
-} from './graphql'
-import {ImportArticleOptions, PeerArticleFilter, PeerArticleListArgs} from './peer-article.model'
+  ImportArticleOptions,
+  PaginatedPeerArticle,
+  PeerArticleFilter,
+  PeerArticleListArgs
+} from './peer-article.model'
 
-const dateFilterToGqlDateFilter = (comparison: DateFilter): GqlDateFilter => ({
+const dateFilterToGqlDateFilter = (comparison: DateFilter): remote.DateFilter => ({
   comparison: comparison.comparison,
   date: comparison.date?.toDateString()
 })
@@ -41,7 +30,7 @@ const dateFilterToGqlDateFilter = (comparison: DateFilter): GqlDateFilter => ({
 const peerArticleFilterToGqlArticleFilter = ({
   peerId: _peerId,
   ...filter
-}: Partial<PeerArticleFilter>): GqlArticleFilter => ({
+}: Partial<PeerArticleFilter>): remote.ArticleFilter => ({
   ...filter,
   publicationDateFrom:
     filter.publicationDateFrom && dateFilterToGqlDateFilter(filter.publicationDateFrom),
@@ -56,16 +45,22 @@ export class ImportPeerArticleService {
     private mediaAdapter: MediaAdapter
   ) {}
 
-  async getArticles({filter, sort, order, take = 10, skip = 0}: PeerArticleListArgs) {
-    const peers = (
-      await this.prisma.peer.findMany({
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-    )
-      .filter(({id}) => (filter?.peerId ? id === filter?.peerId : true))
-      .filter(({isDisabled}) => !isDisabled)
+  async getArticles({
+    filter,
+    sort,
+    order,
+    take = 10,
+    skip = 0
+  }: PeerArticleListArgs): Promise<PaginatedPeerArticle> {
+    const peers = await this.prisma.peer.findMany({
+      where: {
+        id: filter?.peerId ?? undefined,
+        isDisabled: false
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
 
     const articleToTakeFromEachPeer = Math.ceil(take / peers.length)
     const articleToSkipFromEachPeer = Math.ceil(skip / peers.length)
@@ -81,22 +76,30 @@ export class ImportPeerArticleService {
           }
         })
 
-        const data = await client.request<ArticleListQuery, ArticleListQueryVariables>(
-          ArticleList,
-          {
-            filter: {
-              ...peerArticleFilterToGqlArticleFilter(filter ?? {}),
-              shared: true,
-              published: true
-            },
-            order,
-            sort,
-            take: articleToTakeFromEachPeer,
-            skip: articleToSkipFromEachPeer
-          }
-        )
+        const data = await client.request<
+          remote.ArticleListQuery,
+          remote.ArticleListQueryVariables
+        >(remote.ArticleList, {
+          filter: {
+            ...peerArticleFilterToGqlArticleFilter(filter ?? {}),
+            shared: true,
+            published: true
+          },
+          order,
+          sort,
+          take: articleToTakeFromEachPeer,
+          skip: articleToSkipFromEachPeer
+        })
 
-        return data.articles
+        return {
+          ...data.articles,
+          nodes: data.articles.nodes.map(article => ({
+            ...article,
+            createdAt: new Date(article.createdAt),
+            modifiedAt: new Date(article.modifiedAt),
+            publishedAt: article.publishedAt ? new Date(article.publishedAt) : article.publishedAt
+          }))
+        } as unknown as PaginatedPeerArticle
       })
     )
 
@@ -158,9 +161,12 @@ export class ImportPeerArticleService {
       }
     })
 
-    const {article} = await client.request<ArticleQuery, ArticleQueryVariables>(Article, {
-      id: articleId
-    })
+    const {article} = await client.request<remote.ArticleQuery, remote.ArticleQueryVariables>(
+      remote.Article,
+      {
+        id: articleId
+      }
+    )
 
     const authors = options.importAuthors
       ? await this.importAuthors(peerId, article.published!.authors)
@@ -177,6 +183,7 @@ export class ImportPeerArticleService {
         peerArticleId: articleId,
         slug: article.slug,
 
+        paywallId: null,
         shared: false,
         hidden: false,
         disableComments: false,
@@ -211,7 +218,7 @@ export class ImportPeerArticleService {
 
   private async importAuthors(
     peerId: string,
-    authors: Exclude<ArticleQuery['article']['published'], undefined | null>['authors']
+    authors: Exclude<remote.ArticleQuery['article']['published'], undefined | null>['authors']
   ): Promise<Prisma.ArticleRevisionAuthorCreateManyRevisionInput[]> {
     const res = await Promise.all(
       authors
@@ -229,14 +236,14 @@ export class ImportPeerArticleService {
             create: {
               name: author.name,
               slug: author.slug,
-              bio: author.bio as Prisma.JsonArray,
+              bio: author.bio as any[],
               hideOnTeam: true,
               imageID: imageId,
               peerId
             },
             update: {
               name: author.name,
-              bio: author.bio as Prisma.JsonArray,
+              bio: author.bio as any[],
               imageID: imageId
             }
           })
@@ -250,7 +257,7 @@ export class ImportPeerArticleService {
 
   private async importTags(
     peerId: string,
-    tags: ArticleQuery['article']['tags']
+    tags: remote.ArticleQuery['article']['tags']
   ): Promise<Prisma.TaggedArticlesUncheckedCreateWithoutArticleInput[]> {
     const existingTags = await this.prisma.tag.findMany({
       where: {
@@ -285,12 +292,12 @@ export class ImportPeerArticleService {
 
   private async prepareBlocksForImport(
     peerId: string,
-    blocks: Exclude<ArticleQuery['article']['published'], undefined | null>['blocks'],
+    blocks: Exclude<remote.ArticleQuery['article']['published'], undefined | null>['blocks'],
     options: ImportArticleOptions
   ) {
     //@TODO: Maybe copy block style? (search for identical blockStyleName + blockType)
 
-    return Promise.all(
+    const updatedBlocks = await Promise.all(
       blocks.map(async block => {
         switch (block.__typename) {
           case 'BreakBlock':
@@ -349,60 +356,7 @@ export class ImportPeerArticleService {
             } as ImageGalleryBlockInput
           }
 
-          case 'CommentBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.Comment,
-              filter: {
-                comments: [],
-                tags: []
-              }
-            } as CommentBlockInput
-          }
-
-          case 'EventBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.Event,
-              filter: {
-                events: [],
-                tags: []
-              }
-            } as EventBlockInput
-          }
-
-          case 'PollBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.Poll,
-              pollId: undefined
-            } as PollBlockInput
-          }
-
-          case 'TeaserGridBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.TeaserGrid,
-              teasers: []
-            } as TeaserGridBlockInput
-          }
-
-          case 'TeaserListBlock': {
-            return {
-              ...stripUnwantedProperties(block),
-              type: BlockType.TeaserList,
-              filter: {
-                tags: []
-              },
-              teaserType: lower(block.teaserType),
-              sort: block.sort ? lower(block.sort) : null
-            } as TeaserListBlockInput
-          }
-
-          case 'UnknownBlock':
           case 'TitleBlock':
-          case 'TeaserGridFlexBlock':
-          case 'BildwurfAdBlock':
           case 'IFrameBlock':
           case 'PolisConversationBlock':
           case 'YouTubeVideoBlock':
@@ -413,9 +367,7 @@ export class ImportPeerArticleService {
           case 'SoundCloudTrackBlock':
           case 'TikTokVideoBlock':
           case 'TwitterTweetBlock':
-          case 'HTMLBlock':
-          case 'RichTextBlock':
-          case 'SubscribeBlock': {
+          case 'RichTextBlock': {
             return {
               ...stripUnwantedProperties(block),
               type: lower(block.type)
@@ -425,17 +377,18 @@ export class ImportPeerArticleService {
           }
 
           default: {
-            const _exhaustiveCheck: never = block
-            throw new Error(`Unhandled case: ${block}`)
+            return []
           }
         }
       })
     )
+
+    return updatedBlocks.flat()
   }
 
   private async importImage(
     peerId: string,
-    originImage: FullImageFragment | null | undefined
+    originImage: remote.RemoteImageFragment | null | undefined
   ): Promise<string | null | undefined> {
     let imageId: string | undefined
 
@@ -470,7 +423,17 @@ const stripBlockStyle = <T extends {[key: string]: unknown}>({
 const stripType = <T extends {[key: string]: unknown}>({type, ...rest}: T): Omit<T, 'type'> => rest
 const stripImage = <T extends {[key: string]: unknown}>({image, ...rest}: T): Omit<T, 'image'> =>
   rest
+const stripCrowdfunding = <T extends {[key: string]: unknown}>({
+  crowdfunding,
+  ...rest
+}: T): Omit<T, 'crowdfunding'> => rest
 
-const stripUnwantedProperties = pipe(stripType, stripTypename, stripBlockStyle, stripImage)
+const stripUnwantedProperties = pipe(
+  stripType,
+  stripTypename,
+  stripBlockStyle,
+  stripImage,
+  stripCrowdfunding
+)
 
 const lower = replace(/^./, toLower)

@@ -15,6 +15,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
+      GTM_ID: process.env.GTM_ID || '',
       GA_ID: process.env.GA_ID || '',
       SPARKLOOP_ID: process.env.SPARKLOOP_ID || '',
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || ''
@@ -30,7 +31,7 @@ const nextConfig = {
     return [
       ...((await wepNextConfig.redirects?.()) ?? []),
       {
-        source: '/a/:id((?!tag|preview).*)/:slug',
+        source: '/a/:id((?!tag|preview|id).*)/:slug',
         destination: '/a/:slug',
         permanent: false
       },
@@ -77,6 +78,11 @@ const nextConfig = {
       {
         source: '/tipp',
         destination: '/a/crowdfunding-tsueritipp',
+        permanent: false
+      },
+      {
+        source: '/wohnen2025',
+        destination: '/a/save-the-date-fokus-wohnen-2025',
         permanent: false
       }
     ]

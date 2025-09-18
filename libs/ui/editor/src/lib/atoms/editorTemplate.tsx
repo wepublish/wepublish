@@ -4,7 +4,7 @@ import {ReactNode} from 'react'
 const Children = styled.div`
   display: flex;
   width: 100%;
-  max-width: 920px;
+  max-width: 1220px;
 `
 
 const ChildrenWrapper = styled.div`

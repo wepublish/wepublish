@@ -3,12 +3,24 @@ import {
   AuthorRefFragment,
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
+  TagType,
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
-  useTagListLazyQuery,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
+import {
+  ArticleFilter,
+  DateFilterComparison,
+  EventFilter,
+  getApiClientV2,
+  InputMaybe,
+  PageFilter,
+  PeerArticleFilter,
+  PollVoteFilter,
+  Scalars,
+  useEventProvidersLazyQuery
+} from '@wepublish/editor/api-v2'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
@@ -22,20 +34,8 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
+import {SelectTags} from '../atoms/tag/selectTags'
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
-import {
-  ArticleFilter,
-  InputMaybe,
-  PageFilter,
-  PollVoteFilter,
-  Scalars,
-  useEventProvidersLazyQuery,
-  DateFilterComparison,
-  EventFilter,
-  PeerArticleFilter
-} from '@wepublish/editor/api-v2'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
-import {TagCheckPicker, TagRefFragment} from '../panel/tagCheckPicker'
 
 const {Group} = RForm
 
@@ -118,9 +118,16 @@ export interface ListViewFiltersProps {
   isLoading: boolean
   onSetFilter(filter: Filter): void
   className?: string
+  tagType?: TagType
 }
 
-export function ListViewFilters({fields, filter, onSetFilter, className}: ListViewFiltersProps) {
+export function ListViewFilters({
+  fields,
+  filter,
+  onSetFilter,
+  className,
+  tagType
+}: ListViewFiltersProps) {
   const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
@@ -144,10 +151,6 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
   })
 
   const [pollFetch, {data: pollData}] = usePollLazyQuery({
-    fetchPolicy: 'network-only'
-  })
-
-  const [tagFetch, {data: tagData}] = useTagListLazyQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -286,7 +289,6 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
   }
 
   const authorsData = filter?.authors?.map(author => ({id: author})) || []
-  const tagsData = filter?.tags?.map(tag => ({id: tag})) || []
   return (
     <>
       <Form className={className}>
@@ -432,11 +434,11 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
 
         {fields.includes('tags') && (
           <Group style={formInputStyle}>
-            <TagCheckPicker
-              list={tagsData as TagRefFragment[]}
-              onChange={value => {
-                return updateFilter({tags: value ? value.map(tag => tag.id) : []})
-              }}
+            <SelectTags
+              defaultTags={[]}
+              tagType={tagType ?? TagType.Article}
+              setSelectedTags={tags => updateFilter({tags})}
+              placeholder={t('navbar.articleTags')}
             />
           </Group>
         )}
@@ -474,6 +476,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.draft}
+              checked={!!filter.draft}
               onChange={value => updateFilter({draft: value || null})}
               checkedChildren={t('articleList.filter.isDraft')}
               unCheckedChildren={t('articleList.filter.isDraft')}
@@ -485,6 +488,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.pending}
+              checked={!!filter.pending}
               onChange={value => updateFilter({pending: value || null})}
               checkedChildren={t('articleList.filter.isPending')}
               unCheckedChildren={t('articleList.filter.isPending')}
@@ -496,6 +500,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.published}
+              checked={!!filter.published}
               onChange={value => updateFilter({published: value || null})}
               checkedChildren={t('articleList.filter.isPublished')}
               unCheckedChildren={t('articleList.filter.isPublished')}
@@ -581,6 +586,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.includeHidden}
+              checked={!!filter.includeHidden}
               onChange={value => updateFilter({includeHidden: value || null})}
               checkedChildren={t('articleList.filter.includeHidden')}
               unCheckedChildren={t('articleList.filter.includeHidden')}

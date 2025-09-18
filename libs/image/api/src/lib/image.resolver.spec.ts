@@ -6,6 +6,7 @@ import {PrismaClient} from '@prisma/client'
 import request from 'supertest'
 import {ImageResolver} from './image.resolver'
 import {ImageDataloaderService} from './image-dataloader.service'
+import {MediaAdapter} from './media-adapter'
 
 const imageQuery = `
   query Image($id: String!) {
@@ -19,10 +20,15 @@ const imageQuery = `
 describe('ImageService', () => {
   let app: INestApplication
   let imageDataloaderServiceMock: {[method in keyof ImageDataloaderService]?: jest.Mock}
+  let mediaAdapterMock: {getImageURL: jest.Mock}
 
   beforeEach(async () => {
     imageDataloaderServiceMock = {
       load: jest.fn()
+    }
+
+    mediaAdapterMock = {
+      getImageURL: jest.fn().mockReturnValue('https://example.com/image.jpg')
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +45,10 @@ describe('ImageService', () => {
         {
           provide: ImageDataloaderService,
           useValue: imageDataloaderServiceMock
+        },
+        {
+          provide: MediaAdapter,
+          useValue: mediaAdapterMock
         },
         {
           provide: PrismaClient,

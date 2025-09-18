@@ -10,12 +10,12 @@ import {
 import {BannerActionService} from './banner-action.service'
 import {BannerAction} from './banner-action.model'
 import {PaginationArgs} from './pagination.model'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {
   CanCreateBanner,
-  CanUpdateBanner,
   CanDeleteBanner,
-  CanGetBanner
+  CanGetBanner,
+  CanUpdateBanner
 } from '@wepublish/permissions'
 import {Public} from '@wepublish/authentication/api'
 import {NotFoundException} from '@nestjs/common'
@@ -24,8 +24,9 @@ import {Permissions} from '@wepublish/permissions/api'
 @Resolver(() => Banner)
 export class BannerResolver {
   constructor(
-    private readonly bannerService: BannerService,
-    private readonly bannerActionService: BannerActionService
+    private bannerService: BannerService,
+    private bannerActionService: BannerActionService,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @Permissions(CanGetBanner)
@@ -71,7 +72,7 @@ export class BannerResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageId}
+    return this.imageDataloaderService.load(imageId)
   }
 
   @Permissions(CanCreateBanner)

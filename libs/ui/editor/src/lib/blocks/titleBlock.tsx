@@ -8,25 +8,28 @@ import {TitleBlockValue} from './types'
 export type TitleBlockProps = BlockProps<TitleBlockValue>
 
 export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockProps) {
-  const {title, lead} = value
+  const {title, lead, preTitle} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (autofocus) focusRef.current?.focus()
-  }, [])
+    if (autofocus) {
+      focusRef.current?.focus()
+    }
+  }, [autofocus])
 
   return (
     <>
-      {/* TODO: Meta sync */}
-      {/* <Layer right={0} top={0}>
-          <IconButton
-            icon={MaterialIconSyncAlt}
-            title="Use as Meta Title &amp; Lead"
-            onClick={() => {}}
-          />
-        </Layer> */}
+      <TypographicTextArea
+        variant="subtitle1"
+        align="center"
+        placeholder={t('blocks.title.preTitle')}
+        value={preTitle}
+        disabled={disabled}
+        onChange={e => onChange({...value, preTitle: e.target.value})}
+      />
+
       <TypographicTextArea
         ref={focusRef}
         variant="title"

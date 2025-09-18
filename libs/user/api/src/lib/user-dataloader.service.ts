@@ -1,13 +1,14 @@
 import {Injectable, Scope} from '@nestjs/common'
-import {User, PrismaClient} from '@prisma/client'
-import {Primeable, createOptionalsArray} from '@wepublish/utils/api'
+import {PrismaClient} from '@prisma/client'
+import {createOptionalsArray, Primeable} from '@wepublish/utils/api'
 import DataLoader from 'dataloader'
+import {User} from './user.model'
 
 @Injectable({
   scope: Scope.REQUEST
 })
 export class UserDataloaderService implements Primeable<User> {
-  private readonly dataloader = new DataLoader<string, User | null>(
+  private dataloader = new DataLoader<string, User | null>(
     async (ids: readonly string[]) => {
       return createOptionalsArray(
         ids as string[],

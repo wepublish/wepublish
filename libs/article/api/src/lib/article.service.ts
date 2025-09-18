@@ -15,14 +15,8 @@ import {
   PrimeDataLoader,
   SortOrder
 } from '@wepublish/utils/api'
-import {
-  BlockContent,
-  mapBlockUnionMap,
-  RichTextBlock,
-  BlockType
-} from '@wepublish/block-content/api'
+import {mapBlockUnionMap} from '@wepublish/block-content/api'
 import {TrackingPixelService} from '@wepublish/tracking-pixel/api'
-import {toPlaintext} from '@wepublish/richtext'
 
 @Injectable()
 export class ArticleService {
@@ -32,10 +26,13 @@ export class ArticleService {
   async getArticleBySlug(slug: string) {
     return this.prisma.article.findFirst({
       where: {
-        slug,
-        publishedAt: {
-          not: null
+        slug: {
+          equals: slug,
+          mode: 'insensitive'
         }
+      },
+      orderBy: {
+        publishedAt: 'asc' // there might be an unpublished article with the same slug
       }
     })
   }
@@ -49,6 +46,13 @@ export class ArticleService {
     take = 10,
     skip
   }: ArticleListArgs) {
+    if (filter?.body) {
+      const articleIds = await this.performFullTextSearch(filter.body)
+      if (articleIds.length > 0) {
+        filter.ids = articleIds
+      }
+    }
+
     const orderBy = createArticleOrder(sort, order)
     const where = createArticleFilter(filter ?? {})
 
@@ -98,15 +102,16 @@ export class ArticleService {
       tagIds,
       properties,
       blocks,
+      paywallId,
       ...revision
     }: CreateArticleInput,
     userId: string | null | undefined
   ) {
     const mappedBlocks = blocks.map(mapBlockUnionMap)
-    const searchPlainText = blocksToSearchText(mappedBlocks)
 
     const article = await this.prisma.article.create({
       data: {
+        paywallId,
         likes,
         slug,
         shared,
@@ -125,7 +130,6 @@ export class ArticleService {
             ...revision,
             userId,
             blocks: mappedBlocks as any[],
-            searchPlainText,
             properties: {
               createMany: {
                 data: properties
@@ -163,6 +167,7 @@ export class ArticleService {
       likes,
       slug,
       shared,
+      paywallId,
       hidden,
       disableComments,
       authorIds,
@@ -186,21 +191,29 @@ export class ArticleService {
     }
 
     const mappedBlocks = blocks.map(mapBlockUnionMap)
-    const searchPlainText = blocksToSearchText(mappedBlocks)
 
     return this.prisma.article.update({
       where: {id},
       data: {
         likes,
         slug,
+        paywallId,
         shared,
         hidden,
         disableComments,
         revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null
+            },
+            data: {
+              archivedAt: new Date()
+            }
+          },
           create: {
             ...revision,
             blocks: mappedBlocks as any[],
-            searchPlainText,
             userId,
             properties: {
               createMany: {
@@ -278,7 +291,8 @@ export class ArticleService {
     // Unpublish existing pending revisions
     await this.prisma.articleRevision.updateMany({
       data: {
-        publishedAt: null
+        publishedAt: null,
+        archivedAt: new Date()
       },
       where: {
         articleId: id,
@@ -288,12 +302,20 @@ export class ArticleService {
       }
     })
 
+    const articlePublishedAtInTheFuture = article.publishedAt && article.publishedAt > new Date()
+    const newPublishedAtEarlier = article.publishedAt && article.publishedAt > publishedAt
+
+    const articlePublishedAt =
+      articlePublishedAtInTheFuture || newPublishedAtEarlier
+        ? publishedAt
+        : article.publishedAt ?? publishedAt
+
     return this.prisma.article.update({
       where: {
         id
       },
       data: {
-        publishedAt: article.publishedAt ?? publishedAt,
+        publishedAt: articlePublishedAt,
         modifiedAt: new Date(),
         revisions: {
           update: {
@@ -319,7 +341,7 @@ export class ArticleService {
       throw new NotFoundException(`Article with id ${id} not found`)
     }
 
-    return this.prisma.article.update({
+    const updatedArticle = await this.prisma.article.update({
       where: {
         id
       },
@@ -333,12 +355,35 @@ export class ArticleService {
               }
             },
             data: {
-              publishedAt: null
+              publishedAt: null,
+              archivedAt: new Date()
             }
+          }
+        }
+      },
+      include: {
+        revisions: {
+          take: 1,
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
     })
+
+    if (updatedArticle.revisions[0]) {
+      // Latest revision should not be archived
+      await this.prisma.articleRevision.update({
+        where: {
+          id: updatedArticle.revisions[0].id
+        },
+        data: {
+          archivedAt: null
+        }
+      })
+    }
+
+    return updatedArticle
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -383,6 +428,7 @@ export class ArticleService {
 
     return this.prisma.article.create({
       data: {
+        paywallId: article.paywallId,
         shared: article.shared,
         hidden: article.hidden,
         disableComments: article.disableComments,
@@ -462,21 +508,6 @@ export class ArticleService {
     })
   }
 
-  async getTagIds(articleId: string) {
-    return this.prisma.tag.findMany({
-      select: {
-        id: true
-      },
-      where: {
-        articles: {
-          some: {
-            articleId
-          }
-        }
-      }
-    })
-  }
-
   async getTrackingPixels(articleId: string) {
     return this.prisma.articleTrackingPixels.findMany({
       where: {
@@ -486,6 +517,34 @@ export class ArticleService {
         trackingPixelMethod: true
       }
     })
+  }
+
+  async performFullTextSearch(searchQuery: string): Promise<string[]> {
+    try {
+      const formattedQuery = searchQuery.replace(/\s+/g, '&')
+
+      const foundArticleIds = await this.prisma.$queryRaw<Array<{id: string}>>`
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ${formattedQuery});
+      `
+
+      return foundArticleIds.map(item => item.id)
+    } catch (error) {
+      console.error('Error performing full-text search:', error)
+      return []
+    }
   }
 }
 
@@ -511,72 +570,132 @@ export const createArticleOrder = (
   }
 }
 
-const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.title) {
+const createIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.ids) {
     return {
-      revisions: {
-        some: {
-          title: {
-            contains: filter.title,
-            mode: 'insensitive'
-          }
-        }
+      id: {
+        in: filter.ids
       }
     }
   }
 
+  return {}
+}
+
+const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.title) {
+    const titleFilter: Prisma.ArticleRevisionWhereInput = {
+      title: {
+        contains: filter.title,
+        mode: 'insensitive'
+      }
+    }
+
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: titleFilter
+        }
+      }
+    }
+    if (filter?.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: titleFilter
+        }
+      }
+    }
+
+    if (filter?.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: titleFilter
+        }
+      }
+    }
+
+    return {
+      revisions: {
+        some: titleFilter
+      }
+    }
+  }
   return {}
 }
 
 const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.preTitle) {
-    return {
-      revisions: {
-        some: {
-          preTitle: {
-            contains: filter.preTitle,
-            mode: 'insensitive'
-          }
+    const preTitleFilter: Prisma.ArticleRevisionWhereInput = {
+      preTitle: {
+        contains: filter.preTitle,
+        mode: 'insensitive'
+      }
+    }
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: preTitleFilter
         }
       }
     }
+    if (filter.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: preTitleFilter
+        }
+      }
+    }
+    if (filter.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: preTitleFilter
+        }
+      }
+    }
+    return {
+      revisions: {
+        some: preTitleFilter
+      }
+    }
   }
-
   return {}
 }
 
 const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.lead) {
-    return {
-      revisions: {
-        some: {
-          lead: {
-            contains: filter.lead,
-            mode: 'insensitive'
-          }
+    const leadFilter: Prisma.ArticleRevisionWhereInput = {
+      lead: {
+        contains: filter.lead,
+        mode: 'insensitive'
+      }
+    }
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: leadFilter
         }
       }
     }
-  }
-
-  return {}
-}
-
-const createBodyFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.body) {
-    return {
-      revisions: {
-        some: {
-          searchPlainText: {
-            contains: filter.body,
-            mode: 'insensitive'
-          }
+    if (filter.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: leadFilter
         }
       }
     }
+    if (filter.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: leadFilter
+        }
+      }
+    }
+    return {
+      revisions: {
+        some: leadFilter
+      }
+    }
   }
-
-  return {}
 
   return {}
 }
@@ -618,11 +737,7 @@ const createPublicationDateToFilter = (
 const createPublishedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.published != null) {
     return {
-      revisions: {
-        some: {
-          publishedAt: filter.published ? {lte: new Date()} : {not: {lte: new Date()}}
-        }
-      }
+      publishedAt: filter.published ? {lte: new Date()} : {not: {lte: new Date()}}
     }
   }
 
@@ -634,7 +749,8 @@ const createDraftFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
     return {
       revisions: {
         some: {
-          publishedAt: filter.draft ? null : {not: null}
+          publishedAt: filter.draft ? null : {not: null},
+          archivedAt: null
         }
       }
     }
@@ -689,17 +805,39 @@ const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
 
 const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
   if (filter?.authors) {
-    return {
-      revisions: {
+    const authorFilter: Prisma.ArticleRevisionWhereInput = {
+      authors: {
         some: {
-          authors: {
-            some: {
-              authorId: {
-                in: filter.authors
-              }
-            }
+          authorId: {
+            in: filter.authors
           }
         }
+      }
+    }
+    if (filter?.published) {
+      return {
+        ArticleRevisionPublished: {
+          articleRevision: authorFilter
+        }
+      }
+    }
+    if (filter.draft) {
+      return {
+        ArticleRevisionDraft: {
+          articleRevision: authorFilter
+        }
+      }
+    }
+    if (filter.pending) {
+      return {
+        ArticleRevisionPending: {
+          articleRevision: authorFilter
+        }
+      }
+    }
+    return {
+      revisions: {
+        some: authorFilter
       }
     }
   }
@@ -727,45 +865,34 @@ const createPeerIdFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
   return {}
 }
 
+const createExcludeIdsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.excludeIds) {
+    return {
+      id: {
+        notIn: filter.excludeIds
+      }
+    }
+  }
+
+  return {}
+}
+
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
+    createIdsFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createLeadFilter(filter),
-    createBodyFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
     createAuthorFilter(filter),
     createHiddenFilter(filter),
     createPeerIdFilter(filter),
+    createExcludeIdsFilter(filter),
     {
       OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
     }
   ]
 })
-
-/**
- * Parse rich text blocks to plain text. It allows to search in articles and pages for the whole content.
- * TODO: write migration for existing articles and pages. Implement function on all page mutations.
- * @param blocks
- * @returns
- */
-export function blocksToSearchText(blocks: Array<typeof BlockContent>): string | undefined {
-  if (!blocks) {
-    return
-  }
-
-  try {
-    const richTextBlocks = blocks.filter(
-      (block): block is RichTextBlock => block.type === BlockType.RichText
-    )
-
-    return richTextBlocks.map(richTextBlock => toPlaintext(richTextBlock.richText)).join(' ')
-  } catch (error) {
-    console.log(error)
-  }
-
-  return undefined
-}

@@ -12,7 +12,7 @@ import {PageService, PageSort} from '@wepublish/page/api'
 import {Article} from '@prisma/client'
 import {SortOrder} from '@wepublish/utils/api'
 import {EventService, EventSort} from '@wepublish/event/api'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagDataloader} from '@wepublish/tag/api'
 
 @Resolver(() => TeaserListBlock)
 export class TeaserListBlockResolver {
@@ -45,7 +45,10 @@ export class TeaserListBlockResolver {
               tags: filter.tags,
               published: true
             },
-            sort: ArticleSort.PublishedAt,
+            sort:
+              sort === TeaserListBlockSort.UpdatedAt
+                ? ArticleSort.ModifiedAt
+                : ArticleSort.PublishedAt,
             order: SortOrder.Descending,
             skip,
             take
@@ -71,7 +74,7 @@ export class TeaserListBlockResolver {
           tags: filter.tags,
           published: true
         },
-        sort: PageSort.PublishedAt,
+        sort: sort === TeaserListBlockSort.UpdatedAt ? PageSort.ModifiedAt : PageSort.PublishedAt,
         order: SortOrder.Descending,
         skip,
         take
@@ -90,17 +93,17 @@ export class TeaserListBlockResolver {
     }
 
     if (teaserType === TeaserType.Event) {
-      const pages = await this.eventService.getEvents({
+      const events = await this.eventService.getEvents({
         filter: {
           tags: filter.tags
         },
-        sort: EventSort.StartsAt,
+        sort: sort === TeaserListBlockSort.UpdatedAt ? EventSort.ModifiedAt : EventSort.StartsAt,
         order: SortOrder.Descending,
         skip,
         take
       })
 
-      return pages.nodes.map(
+      return events.nodes.map(
         event =>
           ({
             eventID: event.id,
@@ -118,8 +121,10 @@ export class TeaserListBlockResolver {
 
 @Resolver(() => TeaserListBlockFilter)
 export class TeaserListBlockFilterResolver {
+  public constructor(private tagDataloader: TagDataloader) {}
+
   @ResolveField(() => [Tag])
   async tagObjects(@Parent() parent: TeaserListBlockFilter) {
-    return parent.tags.map(id => ({__typename: 'Tag', id}))
+    return this.tagDataloader.loadMany(parent.tags)
   }
 }

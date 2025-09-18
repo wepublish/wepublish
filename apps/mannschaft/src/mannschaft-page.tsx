@@ -19,10 +19,11 @@ const StyledMannschaftPage = styled(Page)`
   }
 `
 
+const pageGlobalStyles = <GlobalStyles styles={fullWidthMainSpacer} />
 export const MannschaftPage = (props: BuilderPageProps) => {
   return (
     <ContentWidthProvider fullWidth>
-      <GlobalStyles styles={fullWidthMainSpacer} />
+      {pageGlobalStyles}
 
       <StyledMannschaftPage {...props} />
     </ContentWidthProvider>

@@ -1,6 +1,6 @@
 import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {createContext, useContext, PropsWithChildren, ComponentProps} from 'react'
+import {ComponentProps, createContext, PropsWithChildren, useContext} from 'react'
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
@@ -9,8 +9,13 @@ import {
   SliderWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
-  TeaserListBlockWrapper
+  TeaserListBlockWrapper,
+  TeaserSlotsBlockWrapper
 } from '@wepublish/block-content/website'
+import {
+  BuilderContentWrapperProps,
+  ContentWrapper as BuilderContentWrapper
+} from '@wepublish/website/builder'
 
 export const ContentWidthContext = createContext({
   fullWidth: false
@@ -29,9 +34,9 @@ export const useFullWidthContent = () => {
   return context.fullWidth ?? false
 }
 
-export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
+export const ContentWrapperStyled = styled('article')<BuilderContentWrapperProps>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(7)};
+  row-gap: ${({theme}) => theme.spacing(7)};
 
   ${({theme, fullWidth}) =>
     !fullWidth &&
@@ -55,6 +60,7 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
             ${TeaserGridFlexBlockWrapper},
               ${TeaserGridBlockWrapper},
               ${TeaserListBlockWrapper},
+              ${TeaserSlotsBlockWrapper},
               ${ImageGalleryBlockWrapper}
           ) {
           grid-column: -1/1;
@@ -63,8 +69,8 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
     `}
 `
 
-export const ContentWrapper = (props: ComponentProps<typeof ContentWrapperStyled>) => {
+export const ContentWrapper = (props: BuilderContentWrapperProps) => {
   const fullWidth = useFullWidthContent()
 
-  return <ContentWrapperStyled fullWidth={fullWidth} {...props} />
+  return <BuilderContentWrapper fullWidth={fullWidth} {...props} />
 }

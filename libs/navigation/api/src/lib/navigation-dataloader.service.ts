@@ -7,7 +7,7 @@ import DataLoader from 'dataloader'
   scope: Scope.REQUEST
 })
 export class NavigationDataloaderService implements Primeable<Navigation> {
-  private readonly dataloader = new DataLoader<string, Navigation | null>(
+  private dataloader = new DataLoader<string, Navigation | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
         ids as string[],

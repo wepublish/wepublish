@@ -4,9 +4,9 @@ import {SortOrder, Tag, TagSort, TagType, useTagListQuery} from '@wepublish/edit
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
+import {ItemDataType} from 'rsuite/esm/@types/common'
 
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
-import {ItemDataType} from 'rsuite/esm/@types/common'
 
 const Divider = styled(RDivider)`
   margin: '12px 0';
@@ -24,6 +24,7 @@ interface SelectTagsProps {
   defaultTags: Pick<Tag, 'id' | 'tag'>[]
   selectedTags?: string[] | null
   setSelectedTags(tags: string[]): void
+  placeholder?: string
 }
 
 export function SelectTags({
@@ -33,7 +34,8 @@ export function SelectTags({
   defaultTags,
   tagType,
   selectedTags,
-  setSelectedTags
+  setSelectedTags,
+  placeholder
 }: SelectTagsProps) {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
@@ -59,6 +61,7 @@ export function SelectTags({
   /**
    * Loading tags
    */
+  const take = 50
   const {data: tagsData, refetch} = useTagListQuery({
     variables: {
       filter: {
@@ -66,7 +69,8 @@ export function SelectTags({
       },
       sort: TagSort.Tag,
       order: SortOrder.Ascending,
-      take: 50
+      take,
+      skip: (page - 1) * take
     },
     fetchPolicy: 'cache-and-network',
     onError: showErrors
@@ -90,6 +94,7 @@ export function SelectTags({
     <TagPicker
       block
       virtualized
+      placeholder={placeholder}
       disabled={disabled}
       className={className}
       name={name}
@@ -97,6 +102,7 @@ export function SelectTags({
       data={availableTags}
       cacheData={cacheData}
       onSearch={word => {
+        setPage(1)
         refetch({
           filter: {
             tag: word,
@@ -106,11 +112,7 @@ export function SelectTags({
       }}
       onSelect={(value, item, event) => {
         setCacheData([...cacheData, item])
-        refetch({
-          filter: {
-            type: tagType
-          }
-        })
+        setPage(1)
       }}
       onChange={(value, item) => {
         setSelectedTags(value)
@@ -123,7 +125,7 @@ export function SelectTags({
             <Divider />
 
             <Pagination
-              limit={50}
+              limit={take}
               maxButtons={DEFAULT_MAX_TABLE_PAGES}
               first
               last
@@ -134,7 +136,7 @@ export function SelectTags({
               layout={['total', '-', '|', 'pager']}
               total={tagsData?.tags?.totalCount ?? 0}
               activePage={page}
-              onChangePage={page => setPage(page)}
+              onChangePage={setPage}
             />
           </>
         )

@@ -50,12 +50,14 @@ export default function ArticleBySlugOrId() {
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            filter={articles =>
+              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+            }
           />
         </ArticleWrapper>
       )}
 
-      {!data?.article?.disableComments && (
+      {data?.article && !data?.article?.disableComments && (
         <ArticleWrapper>
           <H3 component={'h2'}>Kommentare</H3>
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
@@ -89,7 +91,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  if (article.data.article) {
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
+
+  if (article.data?.article) {
     await Promise.all([
       client.query({
         query: ArticleListDocument,
@@ -113,6 +123,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

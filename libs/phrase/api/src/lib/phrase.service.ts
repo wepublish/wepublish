@@ -1,13 +1,17 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
 import {getMaxTake, SortOrder} from '@wepublish/utils/api'
-import {ArticleSort, createArticleOrder} from '@wepublish/article/api'
-import {createPageOrder, PageSort} from '@wepublish/page/api'
+import {ArticleService, ArticleSort, createArticleOrder} from '@wepublish/article/api'
+import {createPageOrder, PageService, PageSort} from '@wepublish/page/api'
 import {PhraseQueryArgs} from './phrase.model'
 
 @Injectable()
 export class PhraseService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private articleService: ArticleService,
+    private pageService: PageService
+  ) {}
 
   async queryPhrase({
     query,
@@ -17,28 +21,10 @@ export class PhraseService {
     articleSort = ArticleSort.PublishedAt,
     order = SortOrder.Descending
   }: PhraseQueryArgs) {
-    // Default add & if no specific query is given to prevent search to fail!
-    query = query.replace(/\s+/g, '&')
-
-    const [foundArticleIds, foundPageIds] = await Promise.all([
-      this.prisma.$queryRaw<{id: string}[]>`
-      SELECT a.id FROM articles a
-      JOIN public."articles.revisions" ar on a."publishedId" = ar.id
-      WHERE to_tsvector('german', ar.title) ||  to_tsvector('german', ar.lead)@@ to_tsquery('german', ${query});
-    `,
-      this.prisma.$queryRaw<{id: string}[]>`
-      SELECT p.id FROM pages p
-      JOIN public."pages.revisions" pr on p."publishedId" = pr.id
-      WHERE to_tsvector('german', pr.title) ||  jsonb_to_tsvector(
-         'german',
-         jsonb_path_query_array(blocks, 'strict $.**.text'),
-         '["string"]'
-         )@@ to_tsquery('german', ${query});
-    `
+    const [articleIds, pageIds] = await Promise.all([
+      this.articleService.performFullTextSearch(query),
+      this.pageService.performPageFullTextSearch(query)
     ])
-
-    const articleIds = foundArticleIds.map(({id}) => id)
-    const pageIds = foundPageIds.map(({id}) => id)
 
     const [articles, pages] = await Promise.all([
       this.prisma.article.findMany({

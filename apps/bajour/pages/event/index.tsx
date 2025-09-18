@@ -20,6 +20,8 @@ import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 import {z} from 'zod'
 
+import {Container} from '../../src/components/layout/container'
+
 const Filter = styled('div')`
   display: grid;
   grid-template-columns: repeat(auto-fit, 250px);
@@ -81,7 +83,7 @@ export default function EventList() {
   }, [data?.events?.totalCount])
 
   return (
-    <>
+    <Container>
       <Filter>
         <DateTimePicker
           label="Von"
@@ -149,7 +151,7 @@ export default function EventList() {
           }
         />
       )}
-    </>
+    </Container>
   )
 }
 

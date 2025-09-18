@@ -1,10 +1,34 @@
-import {ObjectType, Field, Directive} from '@nestjs/graphql'
+import {Field, ObjectType} from '@nestjs/graphql'
+import {GraphQLRichText} from '@wepublish/richtext/api'
+import {Descendant} from 'slate'
+import {RemotePeerProfile} from './peer-profile.model'
 
 @ObjectType()
-@Directive('@extends')
-@Directive('@key(fields: "id")')
 export class Peer {
   @Field()
-  @Directive('@external')
   id!: string
+
+  @Field()
+  createdAt!: Date
+
+  @Field()
+  modifiedAt!: Date
+
+  @Field()
+  name!: string
+
+  @Field()
+  slug!: string
+
+  @Field(() => Boolean, {nullable: true})
+  isDisabled?: boolean
+
+  @Field()
+  hostURL!: string
+
+  @Field(() => GraphQLRichText, {nullable: true})
+  information?: Descendant[]
+
+  @Field(() => RemotePeerProfile, {nullable: true})
+  profile?: RemotePeerProfile
 }

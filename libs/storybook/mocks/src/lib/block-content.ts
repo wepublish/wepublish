@@ -32,7 +32,8 @@ import {
   FullTeaserGridBlockFragment,
   CustomTeaser,
   FullTeaserGridFlexBlockFragment,
-  FlexAlignment
+  FlexAlignment,
+  CrowdfundingBlock
 } from '@wepublish/website/api'
 import {mockImage} from './image'
 import {mockRichText} from './richtext'
@@ -42,17 +43,20 @@ import {mockComment} from './comment'
 import {mockArticle, mockArticleRevision} from './article'
 import {mockPage, mockPageRevision} from './page'
 import nanoid from 'nanoid'
+import {mockCrowdfunding} from './crowdfunding'
 
 export const mockTitleBlock = ({
   title = 'Title Block',
-  lead = 'Lead'
+  lead = 'Lead',
+  preTitle = 'Pre-Title'
 }: Partial<TitleBlock> = {}): TitleBlock => ({
   type: BlockType.Title,
   __typename: 'TitleBlock',
   blockStyle: null,
   blockStyleName: null,
   lead,
-  title
+  title,
+  preTitle
 })
 
 export const mockImageBlock = ({
@@ -192,6 +196,16 @@ export const mockCommentBlock = ({
     comments: comments.map(({id}) => id),
     tags: []
   }
+})
+
+export const mockCrowdfundingBlock = ({
+  crowdfunding = mockCrowdfunding()
+}: Partial<CrowdfundingBlock> = {}) => ({
+  type: BlockType.Crowdfunding,
+  __typename: 'CrowdfundingBlock',
+  blockStyle: null,
+  blockStyleName: null,
+  crowdfunding
 })
 
 export const mockBildwurfBlock = ({
@@ -437,11 +451,12 @@ export const mockTeaserGridBlock = ({
     mockCustomTeaser(),
     mockPageTeaser(),
     mockArticleTeaser()
-  ]
+  ],
+  blockStyle
 }: Partial<FullTeaserGridBlockFragment> = {}): FullTeaserGridBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserGridBlock',
-  blockStyle: null,
+  blockStyle,
   teasers,
   numColumns
 })

@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TagResolver can query a list of tags 1`] = `
+[
+  [
+    {
+      "tag": "tag1",
+    },
+    "CreatedAt",
+    "Descending",
+    undefined,
+    0,
+    10,
+  ],
+]
+`;
+
+exports[`TagResolver can query a list of tags 2`] = `
+[
+  [
+    {
+      "createdAt": 2023-01-01T00:00:00.000Z,
+      "description": [],
+      "id": "id1",
+      "main": false,
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "peerId": null,
+      "tag": "tag1",
+      "type": "Article",
+    },
+  ],
+]
+`;
+
+exports[`TagResolver can query a list of tags 3`] = `
+{
+  "tags": {
+    "nodes": [
+      {
+        "id": "id1",
+        "tag": "tag1",
+        "url": "url-id1",
+      },
+    ],
+    "pageInfo": {
+      "endCursor": "endCursor",
+      "hasNextPage": false,
+      "hasPreviousPage": false,
+      "startCursor": "startCursor",
+    },
+    "totalCount": 0,
+  },
+}
+`;

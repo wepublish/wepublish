@@ -1,8 +1,8 @@
-import {Element as SlateElement, Point, Range} from 'slate'
+import {BlockFormat, InlineFormat, TextFormat} from '@wepublish/richtext'
+import {Editor, Element as SlateElement, Node as SlateNode, Point, Range} from 'slate'
 import {jsx} from 'slate-hyperscript'
-import {ReactEditor} from 'slate-react'
 
-import {BlockFormat, InlineFormat, InlineFormats, TextFormat} from './formats'
+import {InlineFormats} from './formats'
 import {WepublishEditor} from './wepublishEditor'
 
 const ElementTags: any = {
@@ -38,12 +38,13 @@ const TextTags: any = {
   SUB: () => ({[TextFormat.Subscript]: true})
 }
 
-export function withRichText<T extends ReactEditor>(editor: T): T {
+export function withRichText<T extends Editor>(editor: T): T {
   const {insertData, isInline} = editor
 
-  editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
+  editor.isInline = node =>
+    SlateNode.isNode(node) && InlineFormats.includes(node.type as string) ? true : isInline(node)
 
-  editor.insertData = (data: any) => {
+  editor.insertData = data => {
     const html = data.getData('text/html')
 
     if (html) {
@@ -58,7 +59,15 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
   return editor
 }
 
-export function withTable<T extends ReactEditor>(editor: T): T {
+export function withSoftBreak<T extends Editor>(editor: T): T {
+  editor.insertSoftBreak = () => {
+    editor.insertText('\n')
+  }
+
+  return editor
+}
+
+export function withTable<T extends Editor>(editor: T): T {
   // The delete commands are adjusted to avoid modifying the table structure directly. Some
   // unwanted  behaviour occurs when doing so.
   const {deleteForward, deleteBackward, deleteFragment} = editor

@@ -13,14 +13,14 @@ import {
 
 @Injectable()
 export class URLAdapter {
-  constructor(private baseURL: string) {}
+  constructor(protected baseURL: string) {}
 
   async getSubscriptionURL(subscription: Subscription) {
     return `${this.baseURL}/profile/subscription/${subscription.id}`
   }
 
   async getArticleUrl(article: Article) {
-    return `${this.baseURL}/a/${article.slug}`
+    return article.slug ? `${this.baseURL}/a/${article.slug}` : `${this.baseURL}/a/id/${article.id}`
   }
 
   async getArticlePreviewUrl(article: Article) {
@@ -28,7 +28,9 @@ export class URLAdapter {
   }
 
   async getPageUrl(page: Page) {
-    return `${this.baseURL}/${page.slug}`
+    return page.slug || page.publishedAt
+      ? `${this.baseURL}/${page.slug}`
+      : `${this.baseURL}/id/${page.id}`
   }
 
   async getPagePreviewUrl(page: Page) {

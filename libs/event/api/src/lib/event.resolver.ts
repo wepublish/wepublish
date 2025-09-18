@@ -9,19 +9,22 @@ import {
   UpdateEventInput
 } from './event.model'
 import {EventService} from './event.service'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {EventDataloaderService} from './event-dataloader.service'
-import {Tag} from '@wepublish/tag/api'
+import {Tag, TagService} from '@wepublish/tag/api'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Event as PEvent} from '@prisma/client'
 import {Permissions} from '@wepublish/permissions/api'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Event)
 export class EventResolver {
   constructor(
     private eventService: EventService,
     private eventDataloader: EventDataloaderService,
-    private urlAdapter: URLAdapter
+    private urlAdapter: URLAdapter,
+    private tagService: TagService,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @Public()
@@ -34,8 +37,14 @@ export class EventResolver {
 
   @Public()
   @Query(() => Event, {description: `Returns a event by id.`})
-  public event(@Args('id') id: string) {
-    return this.eventDataloader.load(id)
+  public async event(@Args('id') id: string) {
+    const event = await this.eventDataloader.load(id)
+
+    if (!event) {
+      throw new NotFoundException(`Event with id ${id} was not found.`)
+    }
+
+    return event
   }
 
   @Mutation(() => Event, {description: `Creates a new event.`})
@@ -67,14 +76,13 @@ export class EventResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageId}
+    return this.imageDataloaderService.load(imageId)
   }
 
   @ResolveField(() => [Tag], {nullable: true})
   async tags(@Parent() parent: Event) {
     const {id: eventId} = parent
-    const tagIds = await this.eventService.getEventTagIds(eventId)
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    return this.tagService.getTagsByEventId(eventId)
   }
 
   @ResolveField(() => String, {nullable: true})

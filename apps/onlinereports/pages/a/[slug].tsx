@@ -1,4 +1,5 @@
-import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
+import styled from '@emotion/styled'
+import {ArticleContainer, ArticleListContainer} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
@@ -19,12 +20,22 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
+import {Advertisement} from '../../src/components/advertisement'
+
+export const ArticleWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column: 1/12;
+  }
+`
+
 export default function ArticleBySlugOrId() {
   const {
     query: {slug, id}
   } = useRouter()
   const {
-    elements: {H3}
+    elements: {H2}
   } = useWebsiteBuilder()
 
   const {data} = useArticleQuery({
@@ -46,21 +57,25 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+          <H2 component={'h2'}>Aktuelle Beiträge</H2>
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            filter={articles =>
+              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+            }
           />
+          <div id={'comments'} />
         </ArticleWrapper>
       )}
 
-      {!data?.article?.disableComments && (
+      {data?.article && !data.article.disableComments && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
+          <H2 component={'h2'}>Kommentare</H2>
           <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
         </ArticleWrapper>
       )}
+      <Advertisement type={'small'} />
     </>
   )
 }
@@ -89,7 +104,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  if (article.data.article) {
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
+
+  if (article.data?.article) {
     await Promise.all([
       client.query({
         query: ArticleListDocument,
@@ -113,6 +136,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
   }
 }

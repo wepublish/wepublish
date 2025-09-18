@@ -14,14 +14,15 @@ describe('BannerService', () => {
 
   const banner = {
     id: '1',
-    createdAt: new Date(),
-    modifiedAt: new Date(),
+    createdAt: new Date('2023-01-01'),
+    modifiedAt: new Date('2023-01-01'),
     title: 'Test Banner',
     text: 'Test Banner Text',
     cta: null,
     imageId: null,
     active: true,
-    tags: [],
+    delay: 0,
+    html: null,
     showOnArticles: true,
     showOnPages: pages,
     showForLoginStatus: LoginStatus.ALL
@@ -75,38 +76,81 @@ describe('BannerService', () => {
     })
   })
 
-  describe('findFirst', () => {
-    it('should return the first active banner for articles', async () => {
-      jest.spyOn(prisma.banner, 'findFirst').mockResolvedValue(banner)
-      expect(
-        await service.findFirst({
-          documentType: BannerDocumentType.ARTICLE,
-          documentId: '1',
-          loggedIn: true
-        })
-      ).toEqual(banner)
-    })
+  describe('findMany', () => {
+    it.each([
+      {
+        documentType: BannerDocumentType.ARTICLE,
+        loggedIn: false,
+        hasSubscription: false
+      },
+      {
+        documentType: BannerDocumentType.ARTICLE,
+        loggedIn: true,
+        hasSubscription: false
+      },
+      {
+        documentType: BannerDocumentType.ARTICLE,
+        loggedIn: true,
+        hasSubscription: true
+      },
+      // Page
+      {
+        documentType: BannerDocumentType.PAGE,
+        loggedIn: false,
+        hasSubscription: false
+      },
+      {
+        documentType: BannerDocumentType.PAGE,
+        loggedIn: true,
+        hasSubscription: false
+      },
+      {
+        documentType: BannerDocumentType.PAGE,
+        loggedIn: true,
+        hasSubscription: true
+      }
+    ])('should return the first active banner for %o', async values => {
+      jest.spyOn(prisma.banner, 'findMany').mockResolvedValue([
+        banner,
+        {
+          ...banner,
+          showForLoginStatus: LoginStatus.LOGGED_IN
+        },
+        {
+          ...banner,
+          showForLoginStatus: LoginStatus.LOGGED_OUT
+        },
+        {
+          ...banner,
+          showForLoginStatus: LoginStatus.SUBSCRIBED
+        },
+        {
+          ...banner,
+          showForLoginStatus: LoginStatus.UNSUBSCRIBED
+        }
+      ])
 
-    it('should return the first active banner for pages', async () => {
-      jest.spyOn(prisma.banner, 'findFirst').mockResolvedValue(banner)
       expect(
         await service.findFirst({
-          documentType: BannerDocumentType.PAGE,
           documentId: '1',
-          loggedIn: true
+          ...values
         })
-      ).toEqual(banner)
+      ).toMatchSnapshot()
+      expect((prisma.banner.findMany as jest.Mock).mock.calls[0]).toMatchSnapshot()
     })
 
     it('should return null if no banner found', async () => {
-      jest.spyOn(prisma.banner, 'findFirst').mockResolvedValue(null)
+      jest.spyOn(prisma.banner, 'findMany').mockResolvedValue([])
       expect(
         await service.findFirst({
           documentType: BannerDocumentType.ARTICLE,
           documentId: '1',
-          loggedIn: true
+          loggedIn: true,
+          hasSubscription: false
         })
-      ).toBeNull()
+      ).toBeFalsy()
+
+      expect((prisma.banner.findMany as jest.Mock).mock.calls[0]).toMatchSnapshot()
     })
 
     it('should return null if document type is neither ARTICLE nor PAGE', async () => {
@@ -114,10 +158,12 @@ describe('BannerService', () => {
         await service.findFirst({
           documentType: 'INVALID' as unknown as BannerDocumentType,
           documentId: '1',
-          loggedIn: true
+          loggedIn: true,
+          hasSubscription: false
         })
-      ).toBeNull()
-      expect(prisma.banner.findFirst).not.toHaveBeenCalled()
+      ).toBeFalsy()
+
+      expect(prisma.banner.findMany).not.toHaveBeenCalled()
     })
   })
 
@@ -141,6 +187,7 @@ describe('BannerService', () => {
         text: 'Test Banner Text',
         active: true,
         showOnArticles: true,
+        delay: 0,
         actions: [],
         showOnPages: [],
         showForLoginStatus: LoginStatus.ALL
@@ -160,6 +207,7 @@ describe('BannerService', () => {
         text: 'Updated Banner Text',
         active: true,
         showOnArticles: true,
+        delay: 0,
         actions: [],
         showOnPages: [],
         showForLoginStatus: LoginStatus.ALL

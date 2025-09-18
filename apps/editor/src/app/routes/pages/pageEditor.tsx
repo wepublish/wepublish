@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {useCreateJwtForWebsiteLoginLazyQuery, useMeQuery} from '@wepublish/editor/api'
 import {
   CreatePageMutationVariables,
   getApiClientV2,
@@ -15,13 +16,13 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
+  mapBlockValueToBlockInput,
   NavigationBar,
   PageMetadata,
   PageMetadataPanel,
   PermissionControl,
   PublishPagePanel,
   StateColor,
-  unionMapForBlock,
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
@@ -124,7 +125,14 @@ function PageEditor() {
     client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: {id: pageID!}
+    variables: {id: pageID!},
+    skip: !pageID
+  })
+  const {data: user} = useMeQuery({
+    fetchPolicy: 'cache-only'
+  })
+  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+    errorPolicy: 'none'
   })
 
   const {t} = useTranslation()
@@ -191,11 +199,11 @@ function PageEditor() {
           date: new Date(pageData?.page?.pending?.publishedAt ?? '')
         })
       )
-    } else if (pageData?.page?.published) {
+    } else if (pageData?.page?.latest.publishedAt) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('pageEditor.overview.published', {
-          date: new Date(pageData?.page?.published?.publishedAt ?? '')
+          date: new Date(pageData?.page?.latest?.publishedAt ?? '')
         })
       )
     } else {
@@ -225,7 +233,7 @@ function PageEditor() {
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
       socialMediaImageID: metadata.socialMediaImage?.id || undefined,
-      blocks: blocks.map(unionMapForBlock)
+      blocks: blocks.map(mapBlockValueToBlockInput)
     }
   }
 
@@ -391,15 +399,23 @@ function PageEditor() {
               }
               rightChildren={
                 <PermissionControl qualifyingPermissions={[CanPreview.id]}>
-                  <Link to={pageData?.page.previewUrl ?? ''}>
-                    <IconButtonMTop
-                      className="actionButton"
-                      disabled={hasChanged || !id || !canPreview}
-                      size="lg"
-                      icon={<MdRemoveRedEye />}>
-                      {t('pageEditor.overview.preview')}
-                    </IconButtonMTop>
-                  </Link>
+                  <IconButtonMTop
+                    className="actionButton"
+                    disabled={hasChanged || !id || !canPreview}
+                    size="lg"
+                    icon={<MdRemoveRedEye />}
+                    // open via button not link as it contains a JWT
+                    // open via button not link as it contains a JWT
+                    onClick={async () => {
+                      const {data: jwt} = await createJWT()
+
+                      window.open(
+                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForWebsiteLogin?.token}`,
+                        '_blank'
+                      )
+                    }}>
+                    {t('pageEditor.overview.preview')}
+                  </IconButtonMTop>
                 </PermissionControl>
               }
             />

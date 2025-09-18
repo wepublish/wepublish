@@ -8,7 +8,7 @@ import {
 import {SubscriptionListItem} from './subscription-list-item'
 import {Meta, StoryObj} from '@storybook/react'
 import {action} from '@storybook/addon-actions'
-import {userEvent, within} from '@storybook/testing-library'
+import {userEvent, within} from '@storybook/test'
 import {ApolloError} from '@apollo/client'
 import {mockImage} from '@wepublish/storybook/mocks'
 
@@ -166,6 +166,38 @@ export const RenewYearlyManually: StoryObj = {
   ...RenewYearly,
   args: {
     ...RenewYearly.args,
+    autoRenew: false
+  }
+}
+
+export const RenewBiennial: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    paymentPeriodicity: PaymentPeriodicity.Biennial
+  }
+}
+
+export const RenewBiennialManually: StoryObj = {
+  ...RenewBiennial,
+  args: {
+    ...RenewBiennial.args,
+    autoRenew: false
+  }
+}
+
+export const RenewLifetime: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    paymentPeriodicity: PaymentPeriodicity.Lifetime
+  }
+}
+
+export const RenewLifetimeManually: StoryObj = {
+  ...RenewLifetime,
+  args: {
+    ...RenewLifetime.args,
     autoRenew: false
   }
 }

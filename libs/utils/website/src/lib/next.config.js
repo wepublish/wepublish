@@ -13,24 +13,10 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   compiler: {
-    // This is needed so that we can use components as selectors in Emotion
-    emotion: {
-      sourceMap: true,
-      importMap: {
-        '@mui/material': {
-          styled: {
-            canonicalImport: ['@emotion/styled', 'default'],
-            styledBaseImport: ['@mui/material', 'styled']
-          }
-        },
-        '@mui/material/styles': {
-          styled: {
-            canonicalImport: ['@emotion/styled', 'default'],
-            styledBaseImport: ['@mui/material/styles', 'styled']
-          }
-        }
-      }
-    }
+    emotion: true
+  },
+  env: {
+    DEPLOY_ENV: process.env.DEPLOY_ENV
   },
   webpack(config, {webpack}) {
     /**

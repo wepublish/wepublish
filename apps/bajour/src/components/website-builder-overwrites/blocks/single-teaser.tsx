@@ -1,4 +1,6 @@
 import styled from '@emotion/styled'
+import {ImageContext} from '@wepublish/image/website'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 
 import {TeaserOverwrite} from './teaser-overwrite'
 import {
@@ -12,7 +14,7 @@ import {
   TeaserTitlesStyled
 } from './teaser-overwrite.style'
 
-export const SingleTeaser = styled(TeaserOverwrite)`
+const SingleTeaserStyled = styled(TeaserOverwrite)`
   ${TeaserContentStyled} {
     margin-top: calc(-20px - (2 * 2 * 4px));
     padding: ${({theme}) => theme.spacing(1)};
@@ -74,3 +76,11 @@ export const SingleTeaser = styled(TeaserOverwrite)`
     }
   }
 `
+
+export const SingleTeaser = (props: BuilderTeaserProps) => {
+  return (
+    <ImageContext.Provider value={{maxWidth: 1500}}>
+      <SingleTeaserStyled {...props} />
+    </ImageContext.Provider>
+  )
+}

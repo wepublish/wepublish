@@ -15,9 +15,18 @@ import {
   HasOptionalArticleResolver
 } from './has-article/has-article.resolver'
 import {BlockContentModule} from '@wepublish/block-content/api'
+import {SettingModule} from '@wepublish/settings/api'
+import {TagModule} from '@wepublish/tag/api'
 
 @Module({
-  imports: [PrismaModule, ImageModule, AuthorModule, forwardRef(() => BlockContentModule)],
+  imports: [
+    PrismaModule,
+    ImageModule,
+    AuthorModule,
+    SettingModule,
+    TagModule,
+    forwardRef(() => BlockContentModule)
+  ],
   providers: [
     ArticleDataloaderService,
     ArticleRevisionDataloaderService,

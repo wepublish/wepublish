@@ -2,6 +2,7 @@ import {ArgsType, Field, InputType, ObjectType, OmitType, PickType} from '@nestj
 import {PaginatedType} from '@wepublish/utils/api'
 import {Article, ArticleFilter, ArticleListArgs, ArticleRevision} from '@wepublish/article/api'
 import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
+import {PeerImage} from '@wepublish/image/api'
 
 @InputType()
 export class PeerArticleFilter extends OmitType(
@@ -26,9 +27,12 @@ export class PeerArticleListArgs extends OmitType(
 @ObjectType()
 export class PeerArticleRevision extends PickType(
   ArticleRevision,
-  ['id', 'preTitle', 'title', 'seoTitle', 'image', 'lead', 'authors'] as const,
+  ['id', 'preTitle', 'title', 'seoTitle', 'lead'] as const,
   ObjectType
-) {}
+) {
+  @Field(() => PeerImage, {nullable: true})
+  image?: PeerImage
+}
 
 @ObjectType({
   implements: [HasOptionalPeerLc]
@@ -36,7 +40,7 @@ export class PeerArticleRevision extends PickType(
 export class PeerArticle
   extends PickType(
     Article,
-    ['id', 'publishedAt', 'createdAt', 'modifiedAt', 'slug', 'url', 'tags'] as const,
+    ['id', 'publishedAt', 'createdAt', 'modifiedAt', 'slug', 'url'] as const,
     ObjectType
   )
   implements HasOptionalPeerLc

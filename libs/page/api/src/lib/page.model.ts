@@ -34,6 +34,7 @@ export class PageRevision implements HasBlockContent {
 
   @Field()
   id!: string
+
   @Field()
   createdAt!: Date
 
@@ -42,11 +43,13 @@ export class PageRevision implements HasBlockContent {
 
   @Field({nullable: true})
   title?: string
+
   @Field({nullable: true})
   description?: string
 
   @Field({nullable: true})
   imageID?: string
+
   @Field(() => Image, {nullable: true})
   image?: Image
 
@@ -55,10 +58,13 @@ export class PageRevision implements HasBlockContent {
 
   @Field({nullable: true})
   socialMediaTitle?: string
+
   @Field({nullable: true})
   socialMediaDescription?: string
+
   @Field({nullable: true})
   socialMediaImageID?: string
+
   @Field(() => Image, {nullable: true})
   socialMediaImage?: Image
 }
@@ -76,6 +82,9 @@ export class Page {
 
   @Field({nullable: true})
   slug?: string
+
+  @Field()
+  hidden!: boolean
 
   @Field({nullable: true})
   publishedAt?: Date
@@ -114,6 +123,9 @@ export class CreatePageInput extends OmitType(
   @Field({nullable: true})
   slug?: string
 
+  @Field()
+  hidden!: boolean
+
   @Field(() => [BlockContentInput])
   blocks!: BlockContentInput[]
 
@@ -143,6 +155,9 @@ export class PageFilter {
   publicationDateTo?: DateFilter
 
   @Field({nullable: true})
+  includeHidden?: boolean
+
+  @Field({nullable: true})
   draft?: boolean
   @Field({nullable: true})
   published?: boolean
@@ -161,7 +176,7 @@ export class PageListArgs {
   @Field(() => PageSort, {nullable: true, defaultValue: PageSort.PublishedAt})
   sort?: PageSort
 
-  @Field(() => SortOrder, {nullable: true, defaultValue: SortOrder.Ascending})
+  @Field(() => SortOrder, {nullable: true, defaultValue: SortOrder.Descending})
   order?: SortOrder
 
   @Field(() => Int, {nullable: true, defaultValue: 10})

@@ -1,9 +1,10 @@
+import {BlockFormat, TextFormat} from '@wepublish/richtext'
 import {toArray} from 'lodash'
-import {Editor, Node, Transforms} from 'slate'
+import {Editor, Element, Node, Transforms} from 'slate'
 
 import {RichTextBlockValue} from '../../types'
 import {emptyTextParagraph} from './elements'
-import {BlockFormat, BlockFormats, Format, InlineFormats, ListFormats, TextFormats} from './formats'
+import {BlockFormats, Format, InlineFormats, ListFormats, TextFormats} from './formats'
 
 export const WepublishEditor = {
   // Extending the Editor according docs: https://docs.slatejs.org/concepts/07-plugins#helper-functions
@@ -12,12 +13,13 @@ export const WepublishEditor = {
   isFormatActive(editor: Editor, format: Format) {
     if (TextFormats.includes(format)) {
       const marks = this.marks(editor)
-      return marks ? marks[format] === true : false
+
+      return marks?.[format as TextFormat]
     }
 
     if (BlockFormats.includes(format) || InlineFormats.includes(format)) {
       const [match] = this.nodes(editor, {
-        match: node => node.type === format,
+        match: node => Element.isElement(node) && node.type === format,
         mode: 'all'
       })
 
@@ -41,15 +43,22 @@ export const WepublishEditor = {
 
     if (BlockFormats.includes(format)) {
       for (const format of ListFormats) {
-        Transforms.unwrapNodes(editor, {match: node => node.type === format, split: true})
+        Transforms.unwrapNodes(editor, {
+          match: node => Element.isElement(node) && node.type === format,
+          split: true
+        })
       }
 
       Transforms.setNodes(editor, {
-        type: isActive ? BlockFormat.Paragraph : isList ? BlockFormat.ListItem : format
+        type: isActive
+          ? BlockFormat.Paragraph
+          : isList
+          ? BlockFormat.ListItem
+          : (format as BlockFormat)
       })
 
       if (!isActive && isList) {
-        Transforms.wrapNodes(editor, {type: format, children: []})
+        Transforms.wrapNodes(editor, {type: format as BlockFormat, children: []})
       }
     }
   },

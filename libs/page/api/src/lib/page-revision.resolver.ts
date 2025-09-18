@@ -1,15 +1,22 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {PageRevision} from './page.model'
-import {Image} from '@wepublish/image/api'
+import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {PageRevisionService} from './page-revision.service'
 import {Property} from '@wepublish/utils/api'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 import {CanGetPage} from '@wepublish/permissions'
 import {hasPermission} from '@wepublish/permissions/api'
+import {BlockContent, isTeaserSlotsBlock, SlotTeasersLoader} from '@wepublish/block-content/api'
+import {forwardRef, Inject} from '@nestjs/common'
 
 @Resolver(() => PageRevision)
 export class PageRevisionResolver {
-  constructor(private revisionService: PageRevisionService) {}
+  constructor(
+    private revisionService: PageRevisionService,
+    @Inject(forwardRef(() => SlotTeasersLoader))
+    private slotTeasersLoader: SlotTeasersLoader,
+    private imageDataloaderService: ImageDataloaderService
+  ) {}
 
   @ResolveField(() => [Property])
   public async properties(
@@ -30,7 +37,7 @@ export class PageRevisionResolver {
       return null
     }
 
-    return {__typename: 'Image', id: imageID}
+    return this.imageDataloaderService.load(imageID)
   }
 
   @ResolveField(() => Image, {nullable: true})
@@ -41,6 +48,15 @@ export class PageRevisionResolver {
       return null
     }
 
-    return {__typename: 'Image', id: socialMediaImageID}
+    return this.imageDataloaderService.load(socialMediaImageID)
+  }
+
+  @ResolveField(() => [BlockContent])
+  async blocks(@Parent() revision: PageRevision): Promise<(typeof BlockContent)[]> {
+    if (revision.blocks.some(isTeaserSlotsBlock)) {
+      return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks)
+    }
+
+    return revision.blocks
   }
 }

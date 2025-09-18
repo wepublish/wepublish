@@ -1,9 +1,9 @@
-import {mergeDeepRight} from 'ramda'
 import {
   ComponentType,
   createContext,
   memo,
   PropsWithChildren,
+  PropsWithRef,
   ReactNode,
   ScriptHTMLAttributes,
   useContext,
@@ -33,12 +33,11 @@ import {
   BuilderBlocksProps,
   BuilderBreakBlockProps,
   BuilderCommentBlockProps,
-  BuilderIFrameBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
-  BuilderSubscribeBlockProps,
+  BuilderIFrameBlockProps,
   BuilderImageBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
@@ -48,15 +47,17 @@ import {
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
+  BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserListBlockProps,
-  BuilderTeaserProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
-  BuilderYouTubeVideoBlockProps
+  BuilderYouTubeVideoBlockProps,
+  BuilderCrowdfundingBlockProps,
+  BuilderTeaserSlotsBlockProps
 } from './blocks.interface'
 import {
   BuilderCommentEditorProps,
@@ -95,20 +96,29 @@ import {
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPeerProps} from './peer.interface'
-import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
+import {
+  BuilderRenderElementProps,
+  BuilderRenderLeafProps,
+  BuilderRenderRichtextProps
+} from './richText.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
+  BuilderModalProps,
   BuilderPaginationProps,
   BuilderRatingProps,
   BuilderTextFieldProps
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 import {BuilderBlockStyleProps} from './block-styles.interface'
+import {BuilderContentWrapperProps} from './content-wrapper.interface'
+import {BuilderTeaserProps} from './teaser.interface'
+import {BuilderPaywallProps} from './paywall.interface'
+import {BuilderTagProps, BuilderTagSEOProps} from './tag.interface'
 
-const NoComponent = () => null
+const NoComponent: any = () => null
 
 export type WebsiteBuilderProps = {
   Head: ComponentType<{children: ReactNode}>
@@ -117,6 +127,8 @@ export type WebsiteBuilderProps = {
   Footer: ComponentType<BuilderFooterProps>
   Page: ComponentType<BuilderPageProps>
   PageSEO: ComponentType<BuilderPageSEOProps>
+  Tag: ComponentType<BuilderTagProps>
+  TagSEO: ComponentType<BuilderTagSEOProps>
   Article: ComponentType<BuilderArticleProps>
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
   ArticleMeta: ComponentType<BuilderArticleMetaProps>
@@ -155,6 +167,8 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
   TransactionFee: ComponentType<BuilderTransactionFeeProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
+  ContentWrapper: ComponentType<BuilderContentWrapperProps>
+  Paywall: ComponentType<BuilderPaywallProps>
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>
@@ -174,13 +188,15 @@ export type WebsiteBuilderProps = {
     OrderedList: ComponentType<BuilderOrderedListProps>
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
-    Image: ComponentType<BuilderImageProps>
+    Image: ComponentType<PropsWithRef<BuilderImageProps & {ref?: any}>>
     ImageUpload: ComponentType<BuilderImageUploadProps>
+    Modal: ComponentType<BuilderModalProps>
   }
 
   richtext: {
     RenderLeaf: ComponentType<BuilderRenderLeafProps>
     RenderElement: ComponentType<BuilderRenderElementProps>
+    RenderRichtext: ComponentType<BuilderRenderRichtextProps>
   }
 
   blocks: {
@@ -207,10 +223,13 @@ export type WebsiteBuilderProps = {
     IFrame: ComponentType<BuilderIFrameBlockProps>
     Event: ComponentType<BuilderEventBlockProps>
     Poll: ComponentType<BuilderPollBlockProps>
+    Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>
     Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
+    BaseTeaser: ComponentType<BuilderTeaserProps>
+    TeaserSlots: ComponentType<BuilderTeaserSlotsBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -251,6 +270,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PeriodicityPicker: NoComponent,
   Page: NoComponent,
   PageSEO: NoComponent,
+  Tag: NoComponent,
+  TagSEO: NoComponent,
   Article: NoComponent,
   ArticleSEO: NoComponent,
   ArticleMeta: NoComponent,
@@ -278,6 +299,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  ContentWrapper: NoComponent,
+  Paywall: NoComponent,
 
   elements: {
     Rating: NoComponent,
@@ -298,12 +321,14 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     UnorderedList: NoComponent,
     ListItem: NoComponent,
     Image: NoComponent,
-    ImageUpload: NoComponent
+    ImageUpload: NoComponent,
+    Modal: NoComponent
   },
 
   richtext: {
     RenderLeaf: NoComponent,
-    RenderElement: NoComponent
+    RenderElement: NoComponent,
+    RenderRichtext: NoComponent
   },
 
   blocks: {
@@ -330,10 +355,13 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     IFrame: NoComponent,
     Event: NoComponent,
     Poll: NoComponent,
+    Crowdfunding: NoComponent,
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
     TeaserList: NoComponent,
+    BaseTeaser: NoComponent,
+    TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },
@@ -341,6 +369,10 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   blockStyles: {
     ImageSlider: NoComponent,
     TeaserSlider: NoComponent,
+    AlternatingTeaser: NoComponent,
+    AlternatingTeaserGrid: NoComponent,
+    AlternatingTeaserList: NoComponent,
+    AlternatingTeaserSlots: NoComponent,
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent
@@ -358,15 +390,45 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   thirdParty: {}
 })
 
-export const useWebsiteBuilder = () => {
-  return useContext(WebsiteBuilderContext)
-}
+export const useWebsiteBuilder = () => useContext(WebsiteBuilderContext)
 
 export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
   ({children, ...components}) => {
     const parentComponents = useWebsiteBuilder()
     const newComponents = useMemo(
-      () => mergeDeepRight(parentComponents, components) as WebsiteBuilderProps,
+      () =>
+        ({
+          ...parentComponents,
+          ...components,
+          blocks: {
+            ...parentComponents.blocks,
+            ...components.blocks
+          },
+          blockStyles: {
+            ...parentComponents.blockStyles,
+            ...components.blockStyles
+          },
+          thirdParty: {
+            ...parentComponents.thirdParty,
+            ...components.thirdParty
+          },
+          elements: {
+            ...parentComponents.elements,
+            ...components.elements
+          },
+          richtext: {
+            ...parentComponents.richtext,
+            ...components.richtext
+          },
+          date: {
+            ...parentComponents.date,
+            ...components.date
+          },
+          meta: {
+            ...parentComponents.meta,
+            ...components.meta
+          }
+        } as WebsiteBuilderProps),
       [components, parentComponents]
     )
 

@@ -26,7 +26,8 @@ const rl = readline.createInterface({
 
 function askConfirmation() {
   return new Promise(async (resolve) => {
-    const changelogCommand = `git log --color=always --graph --decorate --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%an%C(reset)' --abbrev-commit $(git describe --abbrev=0 --tags --match 'deploy_${projectName}_*' )..HEAD`
+    await execCommand(`git fetch --tags; true`,true)
+    const changelogCommand = `git log --color=always --graph --decorate --pretty=format:'%C(yellow)%h%C(reset) %s %C(cyan)%an%C(reset)' --abbrev-commit $(git tag -l 'deploy_${projectName}_*' --sort=version:refname | tail -n1 )..HEAD`
     let changelog = await execCommand(changelogCommand)
     changelog = changelog.replace(/#([0-9]+)/g, (text, number) => `\x1b]8;;https://github.com/wepublish/wepublish/pull/${number}\x1b\\${text}\x1b]8;;\x1b\\`)
     const filterCommand = `echo "${changelog}" |egrep -i "core|website|editor|api|${projectName}"`

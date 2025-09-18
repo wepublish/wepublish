@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {FullImageFragment, TeaserType} from '@wepublish/editor/api-v2'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import {ReactNode, useState} from 'react'
@@ -16,7 +17,6 @@ import {Typography} from '../atoms/typography'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {Teaser as TeaserTypeMixed, TeaserGridBlockValue} from './types'
-import {FullImageFragment, TeaserType} from '@wepublish/editor/api-v2'
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
@@ -53,6 +53,7 @@ const TeaserContentWrapper = styled.div`
 const TeaserImage = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `
 
 export const IconWrapper = styled.div`
@@ -213,8 +214,7 @@ export function TeaserBlock({
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
           <Teaser>
-            {ContentForTeaser(teaser, numColumns)}
-
+            <ContentForTeaser teaser={teaser} numColumns={numColumns} />
             <IconWrapper>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
                 <IconButton icon={<MdArticle />} onClick={onChoose} />
@@ -235,7 +235,12 @@ export function TeaserBlock({
   )
 }
 
-export function ContentForTeaser(teaser: TeaserTypeMixed, numColumns?: number) {
+export type ContentForTeaserProps = {
+  teaser: TeaserTypeMixed
+  numColumns?: number
+}
+
+export function ContentForTeaser({teaser, numColumns}: ContentForTeaserProps) {
   const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {
