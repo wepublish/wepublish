@@ -1,13 +1,21 @@
 import styled from '@emotion/styled'
-import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
-import {CommentListWrapper} from '@wepublish/comments/website'
 import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
+import {CommentListWrapper} from '@wepublish/comments/website'
+import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
+import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useEffect, useMemo} from 'react'
+
 import {useAdsContext} from '../context/ads-context'
 import {OnlineReportsContentWrapper} from './content-wrapper'
 
-const articleAdsDisabledTags = ['Anzeige', 'Publireportage', 'Monatsgespräch', 'Das Monatsgespräch']
+const articleAdsDisabledTags = [
+  'Anzeige',
+  'Publireportage',
+  'Monatsgespräch',
+  'Das Monatsgespräch',
+  'NB',
+  'No Banner'
+]
 
 export const ArticleWrapper = styled(OnlineReportsContentWrapper)`
   ${({theme}) => theme.breakpoints.up('md')} {

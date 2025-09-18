@@ -1,9 +1,9 @@
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
-import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {getSettings} from '@wepublish/editor/api-v2'
 import {de, enUS, fr} from 'date-fns/locale'
+import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {getSettings} from '@wepublish/editor/api-v2'
 
 export const addOrUpdateOneInArray = (
   array: Record<string | 'id', any>[] | null | undefined,

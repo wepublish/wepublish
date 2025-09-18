@@ -8,7 +8,7 @@ import {withAuthGuard} from '../../../auth-guard'
 import {ssrAuthLink} from '../../../auth-link'
 import {getSessionTokenProps} from '../../../get-session-token-props'
 import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
+import {SessionWithTokenWithoutUser, SubscriptionsQuery} from '@wepublish/website/api'
 import {AuthTokenStorageKey} from '@wepublish/authentication/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {SubscriptionListContainer, InvoiceListContainer} from '@wepublish/membership/website'
@@ -21,6 +21,7 @@ import {
   addClientCacheToV1Props
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {fetch404} from '../../../fetch-404'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -83,7 +84,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -94,28 +95,42 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
-    await Promise.all([
-      client.query({
-        query: MeDocument
-      }),
-      client.query({
+    const [subscriptions] = await Promise.all([
+      client.query<SubscriptionsQuery>({
         query: SubscriptionsDocument
       }),
       client.query({
         query: InvoicesDocument
+      }),
+      client.query({
+        query: MeDocument
       })
     ])
+
+    if (
+      !subscriptions.error &&
+      !subscriptions.data.subscriptions.find(subscription => subscription.id === ctx.query.id)
+    ) {
+      // {notFound: true} is not supported in getInitialProps
+      await fetch404(ctx)
+      return {}
+    }
   }
 
   const props = addClientCacheToV1Props(client, sessionProps)

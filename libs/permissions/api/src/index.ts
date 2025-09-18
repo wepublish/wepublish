@@ -1,4 +1,3 @@
-export * from './lib/permissions'
 export * from './lib/has-permission'
 export * from './lib/predefined-permissions'
 export * from './lib/permission.module'

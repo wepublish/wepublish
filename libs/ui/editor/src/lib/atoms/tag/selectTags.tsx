@@ -4,9 +4,9 @@ import {SortOrder, Tag, TagSort, TagType, useTagListQuery} from '@wepublish/edit
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
+import {ItemDataType} from 'rsuite/esm/@types/common'
 
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
-import {ItemDataType} from 'rsuite/esm/@types/common'
 
 const Divider = styled(RDivider)`
   margin: '12px 0';

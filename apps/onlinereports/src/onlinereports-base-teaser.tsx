@@ -14,8 +14,9 @@ import {
   TeaserTitle,
   TeaserWrapper
 } from '@wepublish/block-content/website'
-import {useMemo} from 'react'
 import {BuilderTeaserProps} from '@wepublish/website/builder'
+import {useMemo} from 'react'
+
 import {Advertisement} from './components/advertisement'
 
 export const useImageStyles = () => {
@@ -42,13 +43,11 @@ export const useImageStyles = () => {
   )
 }
 
-const hasSpecialTags = (teaser: BuilderTeaserProps['teaser']) => {
+const hasTags = (teaser: BuilderTeaserProps['teaser']) => {
   if (!teaser) {
     return false
   }
-  const tags = selectTeaserTags(teaser).map(({tag}) => tag)
-  const specialTags = ['Anzeige', 'Publireportage']
-  return tags.some(tag => tag && specialTags.includes(tag))
+  return selectTeaserTags(teaser).length > 0
 }
 
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
@@ -135,7 +134,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
     background-color: transparent;
     color: ${({theme}) => theme.palette.primary.main};
     font-weight: 600;
-    width: max-content;
+    width: 100%;
   }
 
   ${TeaserTitle} {
@@ -150,7 +149,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserTags} {
-    display: ${({teaser}) => (hasSpecialTags(teaser) ? 'block' : 'none')};
+    display: ${({teaser}) => (hasTags(teaser) ? 'block' : 'none')};
 
     .MuiChip-root {
       background-color: #7c7c7c;
@@ -162,7 +161,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserAuthors} {
-    display: ${({teaser}) => (hasSpecialTags(teaser) ? 'none' : 'block')};
+    display: ${({teaser}) => (hasTags(teaser) ? 'none' : 'block')};
     font-family: ${({theme}) => theme.typography.body2.fontFamily};
     font-size: ${({theme}) => theme.typography.body2.fontSize};
     font-weight: ${({theme}) => theme.typography.body2.fontWeight};

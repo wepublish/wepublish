@@ -12,8 +12,7 @@ export class TagResolver {
 
   @Public()
   @Query(() => TagConnection, {
-    description: 'This query returns a list of tags',
-    nullable: true
+    description: 'This query returns a list of tags'
   })
   async tags(@Args() args: TagsArgs) {
     const {filter, sort, order, cursor, take, skip} = args

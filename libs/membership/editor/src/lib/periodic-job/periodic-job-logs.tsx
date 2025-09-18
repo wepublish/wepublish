@@ -87,6 +87,7 @@ export function PeriodicJobsLog() {
 
       {jobs.map(periodicJob => (
         <Alert
+          key={periodicJob.id}
           sx={{mt: 1}}
           severity={getSeverity(periodicJob)}
           variant={getSeverity(periodicJob) === 'error' ? 'filled' : 'standard'}

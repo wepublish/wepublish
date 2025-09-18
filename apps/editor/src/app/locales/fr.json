@@ -131,7 +131,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Texte",
-        "default": "Default"
+        "default": "Default",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -369,8 +370,9 @@
       },
       "title": {
         "label": "Titre",
-        "leadText": "Lead ",
-        "title": "Titre"
+        "leadText": "Lead",
+        "title": "Titre",
+        "preTitle": "Pré-titre"
       }
     },
     "cancel": "Annuler",
@@ -705,6 +707,7 @@
       "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
+      "shortDescription": "Brève description",
       "editPaymentSetting": "Modifier les paramètres de paiement",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
@@ -1480,6 +1483,31 @@
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
       "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Modifier le paywall",
+        "name": "Nom du paywall (NON visible par l'utilisateur)",
+        "description": "Texte du paywall (visible par l'utilisateur)",
+        "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
+        "active": "Actif",
+        "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
+        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
+        "bypasses": "Contournements",
+        "bypassToken": "Token de contournement",
+        "newBypassToken": "Créer un nouveau token de contournement",
+        "addBypass": "Ajouter",
+        "qrCodeTitle": "Code QR pour le token de contournement",
+        "downloadSvg": "Télécharger SVG",
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Délai de paiement",
+      "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
+      "days": "Jours"
     }
   }
 }

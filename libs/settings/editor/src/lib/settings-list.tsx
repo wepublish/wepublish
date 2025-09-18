@@ -186,6 +186,16 @@ function SettingList() {
       value: false,
       name: SettingName.ShowPendingWhenNotPublished,
       label: 'settingList.showPendingWhenNotPublished'
+    },
+    [SettingName.NewArticlePaywall]: {
+      value: false,
+      name: SettingName.NewArticlePaywall,
+      label: 'settingList.newArticlePaywall'
+    },
+    [SettingName.NewArticlePeering]: {
+      value: false,
+      name: SettingName.NewArticlePeering,
+      label: 'settingList.newArticlePeering'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -676,6 +686,46 @@ function SettingList() {
               {/* articlePage */}
               <Col xs={24}>
                 <Panel bordered header={t('settingList.articlePage')}>
+                  <Form.Group controlId={SettingName.NewArticlePeering}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.NewArticlePeering].label)}
+                        <SettingInfo text={t('settingList.warnings.newArticlePeering')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.NewArticlePeering].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.NewArticlePeering],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+
+                  <Form.Group controlId={SettingName.NewArticlePaywall}>
+                    <Form.ControlLabel>
+                      <>
+                        {t(settings[SettingName.NewArticlePaywall].label)}
+                        <SettingInfo text={t('settingList.warnings.newArticlePaywall')} />
+                      </>
+                    </Form.ControlLabel>
+
+                    <Toggle
+                      disabled={isDisabled}
+                      checked={settings[SettingName.NewArticlePaywall].value}
+                      onChange={checked =>
+                        setSetting({
+                          ...settings[SettingName.NewArticlePaywall],
+                          value: checked
+                        })
+                      }
+                    />
+                  </Form.Group>
+
                   <Form.Group controlId={SettingName.ShowPendingWhenNotPublished}>
                     <Form.ControlLabel>
                       <>

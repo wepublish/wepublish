@@ -151,6 +151,7 @@ function MemberPlanEdit() {
       tags: memberPlan.tags,
       imageID: memberPlan.image?.id || null,
       description: memberPlan.description,
+      shortDescription: memberPlan.shortDescription,
       active: memberPlan.active,
       availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
         paymentPeriodicities: value.paymentPeriodicities,

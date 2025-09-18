@@ -1,5 +1,5 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {OAuth2Account, PaymentProviderCustomer, User, UserAddress} from './user.model'
+import {PaymentProviderCustomer, User, UserAddress} from './user.model'
 import {PrismaClient} from '@prisma/client'
 import {Property} from '@wepublish/utils/api'
 import {Image, ImageDataloaderService} from '@wepublish/image/api'
@@ -8,8 +8,8 @@ import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 @Resolver(() => User)
 export class UserResolver {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly imageDataloaderService: ImageDataloaderService
+    private prisma: PrismaClient,
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => Image)
@@ -43,16 +43,6 @@ export class UserResolver {
     }
 
     return this.prisma.paymentProviderCustomer.findMany({
-      where: {userId}
-    })
-  }
-
-  @ResolveField(() => [OAuth2Account])
-  public async oauth2Accounts(@Parent() {id: userId, oauth2Accounts}: User) {
-    if (oauth2Accounts !== undefined) {
-      return oauth2Accounts
-    }
-    return this.prisma.userOAuth2Account.findMany({
       where: {userId}
     })
   }

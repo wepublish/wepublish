@@ -7,14 +7,27 @@ import {Property} from '@wepublish/utils/api'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 import {CanGetArticle} from '@wepublish/permissions'
 import {hasPermission} from '@wepublish/permissions/api'
+import {SlotTeasersLoader, BlockContent, isTeaserSlotsBlock} from '@wepublish/block-content/api'
+import {forwardRef, Inject} from '@nestjs/common'
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
   constructor(
     private revisionService: ArticleRevisionService,
     private articleAuthors: ArticleAuthorsService,
-    private imageDataloaderService: ImageDataloaderService
+    private imageDataloaderService: ImageDataloaderService,
+    @Inject(forwardRef(() => SlotTeasersLoader))
+    private slotTeasersLoader: SlotTeasersLoader
   ) {}
+
+  @ResolveField(() => [BlockContent])
+  async blocks(@Parent() revision: ArticleRevision): Promise<(typeof BlockContent)[]> {
+    if (revision.blocks.some(isTeaserSlotsBlock)) {
+      return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks)
+    }
+
+    return revision.blocks
+  }
 
   @ResolveField(() => [Property])
   public async properties(

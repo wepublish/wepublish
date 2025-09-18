@@ -15,11 +15,7 @@ export type PayrexxErrorResponse = {
 export type PayrexxResponse<Data = any> = PayrexxSuccessResponse<Data> | PayrexxErrorResponse
 
 export class PayrexxClient {
-  constructor(
-    private readonly baseUrl: string,
-    private readonly instance: string,
-    private readonly secret: string
-  ) {}
+  constructor(private baseUrl: string, private instance: string, private secret: string) {}
 
   private buildSignedQueryString(queryParams = {}) {
     return qs.stringify({
@@ -39,8 +35,8 @@ export class PayrexxClient {
     const method = 'GET',
       queryStrSigned = this.buildSignedQueryString(queryParams),
       baseUrl = `${this.buildBaseUrl(path)}&${queryStrSigned}`
-    //console.log({message: 'Payrexx GET request issued', path, queryParams})
     const response = await fetch(baseUrl, {method})
+
     return await this.validateResponse(response)
   }
 
@@ -48,8 +44,8 @@ export class PayrexxClient {
     const method = 'POST',
       body = this.buildSignedQueryString(queryParams),
       baseUrl = this.buildBaseUrl(path)
-    //console.log({message: 'Payrexx POST request issued', path, queryParams})
     const response = await fetch(baseUrl, {method, body})
+
     return await this.validateResponse(response)
   }
 

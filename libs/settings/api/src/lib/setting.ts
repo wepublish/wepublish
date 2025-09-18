@@ -6,6 +6,9 @@ export type Setting<T = unknown> = {
 }
 
 export enum SettingName {
+  NEW_ARTICLE_PAYWALL = 'newArticlePaywall',
+  NEW_ARTICLE_PEERING = 'newArticlePeering',
+
   ALLOW_GUEST_COMMENTING = 'allowGuestCommenting',
   ALLOW_GUEST_COMMENT_RATING = 'allowGuestCommentRating',
   ALLOW_GUEST_POLL_VOTING = 'allowGuestPollVoting',

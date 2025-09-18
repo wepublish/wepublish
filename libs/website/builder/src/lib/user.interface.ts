@@ -14,6 +14,7 @@ import {AddressShape} from './authentication.interface'
 export type BuilderUserFormFields =
   | OptionalKeysOf<RegisterMutationVariables>
   | 'passwordRepeated'
+  | 'emailRepeated'
   | 'flair'
 
 export type BuilderUserFormProps<T extends BuilderUserFormFields> = {

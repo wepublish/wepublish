@@ -1,32 +1,34 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {setCookie} from 'cookies-next'
-import {NextPage, NextPageContext} from 'next'
-import getConfig from 'next/config'
-import {withAuthGuard} from '../../auth-guard'
-import {ssrAuthLink} from '../../auth-link'
-import {getSessionTokenProps} from '../../get-session-token-props'
-import {ComponentProps} from 'react'
+import {css} from '@mui/material'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {ContentWrapper} from '@wepublish/content/website'
+import {
+  InvoiceListContainer,
+  InvoiceListItemWrapper,
+  SubscriptionListContainer,
+  SubscriptionListItemContent,
+  SubscriptionListItemWrapper,
+  useHasUnpaidInvoices
+} from '@wepublish/membership/website'
+import {PersonalDataFormContainer} from '@wepublish/user/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  UserSession,
+  SessionWithTokenWithoutUser,
   useSubscriptionsQuery
 } from '@wepublish/website/api'
-import {AuthTokenStorageKey} from '@wepublish/authentication/website'
-import {ContentWrapper} from '@wepublish/content/website'
-import {
-  InvoiceListContainer,
-  InvoiceListItemContent,
-  SubscriptionListContainer,
-  useHasUnpaidInvoices
-} from '@wepublish/membership/website'
-import {PersonalDataFormContainer} from '@wepublish/user/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {t} from 'i18next'
+import {Button, Link, useWebsiteBuilder} from '@wepublish/website/builder'
+import {setCookie} from 'cookies-next'
+import {NextPage, NextPageContext} from 'next'
+import getConfig from 'next/config'
+import {ComponentProps} from 'react'
+import {useTranslation} from 'react-i18next'
+import {withAuthGuard} from '../../auth-guard'
+import {ssrAuthLink} from '../../auth-link'
+import {getSessionTokenProps} from '../../get-session-token-props'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -55,9 +57,9 @@ const SubscriptionListWrapper = styled('div')`
 `
 
 const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemContent} {
-    border: 8px solid ${({theme}) => theme.palette.primary.main};
-    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  ${InvoiceListItemWrapper} {
+    border-width: 4px;
+    border-color: ${({theme}) => theme.palette.error.main};
   }
 `
 
@@ -66,7 +68,7 @@ const DeactivatedSubscriptions = styled('div')`
   justify-content: center;
 `
 
-const ProfileWrapper = styled(ContentWrapper)`
+export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
@@ -74,8 +76,9 @@ type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, '
 
 function ProfilePage(props: ProfilePageProps) {
   const {
-    elements: {Link, H4}
+    elements: {H4}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   const {data: subscriptonData} = useSubscriptionsQuery({
     fetchPolicy: 'cache-only'
@@ -83,6 +86,9 @@ function ProfilePage(props: ProfilePageProps) {
 
   const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
+  )
+  const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
+    subscription => !subscription.deactivation
   )
 
   const hasUnpaidInvoices = useHasUnpaidInvoices()
@@ -113,6 +119,16 @@ function ProfilePage(props: ProfilePageProps) {
             }
           />
 
+          {hasActiveSubscriptions && (
+            <SubscriptionListItemWrapper>
+              <SubscriptionListItemContent>
+                <Button LinkComponent={Link} href={'/mitmachen'}>
+                  Anderes Abo lösen.
+                </Button>
+              </SubscriptionListItemContent>
+            </SubscriptionListItemWrapper>
+          )}
+
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
               <Link href="/profile/subscription/deactivated">
@@ -140,7 +156,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
 
   const {publicRuntimeConfig} = getConfig()
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
+    ssrAuthLink(async () => (await getSessionTokenProps(ctx)).sessionToken?.token)
   ])
 
   if (ctx.query.jwt) {
@@ -151,15 +167,20 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
+      }
+    )
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx)
 
   if (sessionProps.sessionToken) {
     await Promise.all([

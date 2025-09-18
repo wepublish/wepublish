@@ -13,7 +13,7 @@ import {PageService} from './page.service'
 import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {Page as PPage} from '@prisma/client'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, NotFoundException} from '@nestjs/common'
 import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
 import {CanCreatePage, CanDeletePage, CanGetPage, CanPublishPage} from '@wepublish/permissions'
 import {Permissions, PreviewMode} from '@wepublish/permissions/api'
@@ -35,14 +35,26 @@ export class PageResolver {
     @Args('slug', {nullable: true}) slug?: string
   ) {
     if (id != null) {
-      return this.pageDataloader.load(id)
+      const page = await this.pageDataloader.load(id)
+
+      if (!page) {
+        throw new NotFoundException(`Page with id ${id} was not found.`)
+      }
+
+      return page
     }
 
     if (slug != null) {
-      return this.pageService.getPageBySlug(slug)
+      const page = await this.pageService.getPageBySlug(slug)
+
+      if (!page) {
+        throw new NotFoundException(`Page with slug ${slug} was not found.`)
+      }
+
+      return page
     }
 
-    throw new BadRequestException('id or slug required.')
+    throw new BadRequestException('Page id or slug required.')
   }
 
   @Public()

@@ -5,7 +5,7 @@ import {timingSafeEqual} from 'crypto'
 
 @Controller('systemInfo')
 export class SystemInfoController {
-  constructor(@Inject('SYSTEM_INFO_KEY') private readonly key: string) {}
+  constructor(@Inject('SYSTEM_INFO_KEY') private key: string) {}
 
   @Get()
   getSystemInfo(@Query('key') key: string): {

@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import {useEffect, useState} from 'react'
 import styled from '@emotion/styled'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {Typography} from '@mui/material'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {useEffect, useState} from 'react'
+
 import {useAdsContext} from '../context/ads-context'
 
 const OVERLAY_KEY = 'adblock_overlay_dismissed_until'

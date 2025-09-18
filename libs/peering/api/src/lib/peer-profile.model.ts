@@ -1,10 +1,10 @@
-import {Field, ObjectType} from '@nestjs/graphql'
-import {Image} from '@wepublish/image/api'
+import {Field, ObjectType, OmitType} from '@nestjs/graphql'
+import {Image, PeerImage} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {ColorScalar} from './scalars/color.scalar'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
-@ObjectType('PeerProfile')
+@ObjectType()
 export class PeerProfile {
   @Field()
   name!: string
@@ -34,7 +34,7 @@ export class PeerProfile {
   websiteURL!: string
 
   @Field(() => GraphQLRichText)
-  callToActionText!: Node[]
+  callToActionText!: Descendant[]
 
   @Field()
   callToActionURL!: string
@@ -47,4 +47,20 @@ export class PeerProfile {
 
   @Field(() => Image, {nullable: true})
   callToActionImage?: Image
+}
+
+@ObjectType()
+export class RemotePeerProfile extends OmitType(
+  PeerProfile,
+  ['callToActionImage', 'logo', 'squareLogo'] as const,
+  ObjectType
+) {
+  @Field(() => PeerImage, {nullable: true})
+  callToActionImage?: PeerImage
+
+  @Field(() => PeerImage, {nullable: true})
+  logo?: PeerImage
+
+  @Field(() => PeerImage, {nullable: true})
+  squareLogo?: PeerImage
 }

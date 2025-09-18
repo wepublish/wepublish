@@ -127,7 +127,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -235,7 +236,9 @@
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
-          "LOGGED_OUT": "nur ausgeloggt"
+          "LOGGED_OUT": "nur ausgeloggt",
+          "SUBSCRIBED": "nur abonniert",
+          "UNSUBSCRIBED": "nicht abonniert"
         },
         "actions": "Aktionen",
         "image": "Bild",
@@ -420,8 +423,9 @@
       },
       "title": {
         "label": "Titel",
-        "leadText": "Lead-Text ",
-        "title": "Titel"
+        "leadText": "Lead-Text",
+        "title": "Titel",
+        "preTitle": "Oberzeile"
       }
     },
     "cancel": "Abbrechen",
@@ -758,6 +762,7 @@
       "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createMemberPlanHeader": "Erstelle Memberplan",
       "description": "Beschreibung",
+      "shortDescription": "Kurze Beschreibung",
       "editPaymentSetting": "Zahlungseinstellung bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Lade",
@@ -1159,6 +1164,8 @@
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
+      "newArticlePeering": "Neue erstellte Artikel werden automatisch gepeered.",
+      "newArticlePaywall": "Neue erstellte Artikel benötigen ein Abo um gelesen zu werden.",
       "warnings": {
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
@@ -1167,7 +1174,9 @@
         "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
         "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
-        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
+        "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
+        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
       }
     },
     "subscriptionFlow": {
@@ -1242,9 +1251,12 @@
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
-        "createTag": "Neuen Tag",
+        "createTag": "Neuer Tag",
+        "editTag": "{{tag}} Bearbeiten",
         "placeholder": "Name des Tags",
         "title": "Tags",
+        "name": "Name",
+        "description": "Beschreibung",
         "markAsMain": "Als Haupt-Tag verwenden"
       }
     },
@@ -1582,6 +1594,31 @@
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
       "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
       "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Paywall bearbeiten",
+        "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
+        "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
+        "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
+        "active": "Aktiv",
+        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "anyMemberPlan": "Die Paywall entfällt für alle Abos",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass-Token",
+        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
+        "newBypassToken": "Neuen Bypass-Token erstellen",
+        "addBypass": "hinzufügen",
+        "qrCodeTitle": "QR-Code für Bypass-Token",
+        "downloadSvg": "SVG herunterladen",
+        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Zahlungsfrist",
+      "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
+      "days": "Tage"
     }
   }
 }

@@ -7,8 +7,6 @@ import {HOST_URL_TOKEN, JWT_SECRET_KEY_TOKEN, JwtService, WEBSITE_URL_TOKEN} fro
 import {UserModule} from '@wepublish/user/api'
 import {UserAuthenticationService} from './user-authentication.service'
 import {JwtAuthenticationService} from './jwt-authentication.service'
-import {OAuthAuthenticationService} from './oauth-authentication.service'
-import {AuthProviderModule} from '@wepublish/authprovider/api'
 import {RegisterResolver} from './register.resolver'
 import {RegisterService} from './register.service'
 import {ChallengeModule} from '@wepublish/challenge/api'
@@ -27,7 +25,7 @@ export interface SessionModuleAsyncOptions extends Pick<ModuleMetadata, 'imports
 }
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthProviderModule, ChallengeModule, SettingModule],
+  imports: [PrismaModule, UserModule, ChallengeModule, SettingModule],
   exports: [SessionService]
 })
 export class SessionModule {
@@ -46,7 +44,6 @@ export class SessionModule {
       JwtService,
       UserAuthenticationService,
       JwtAuthenticationService,
-      OAuthAuthenticationService,
       RegisterService,
       RegisterResolver,
       {

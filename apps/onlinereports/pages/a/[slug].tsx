@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {ArticleContainer, ArticleListContainer} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
@@ -18,7 +19,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
-import styled from '@emotion/styled'
+
 import {Advertisement} from '../../src/components/advertisement'
 
 export const ArticleWrapper = styled('div')`
@@ -60,7 +61,9 @@ export default function ArticleBySlugOrId() {
 
           <ArticleListContainer
             variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-            filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            filter={articles =>
+              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+            }
           />
           <div id={'comments'} />
         </ArticleWrapper>
@@ -100,6 +103,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   if (article.data?.article) {
     await Promise.all([

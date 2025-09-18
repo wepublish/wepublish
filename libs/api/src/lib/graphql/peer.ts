@@ -79,6 +79,7 @@ export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLString)},
     hostURL: {type: new GraphQLNonNull(GraphQLString)},
+    information: {type: GraphQLRichText},
     token: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
@@ -90,6 +91,7 @@ export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
     slug: {type: GraphQLString},
     hostURL: {type: GraphQLString},
     isDisabled: {type: GraphQLBoolean},
+    information: {type: GraphQLRichText},
     token: {type: GraphQLString}
   }
 })
@@ -106,6 +108,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     slug: {type: new GraphQLNonNull(GraphQLString)},
     isDisabled: {type: GraphQLBoolean},
     hostURL: {type: new GraphQLNonNull(GraphQLString)},
+    information: {type: GraphQLRichText},
     profile: {
       type: GraphQLPeerProfile,
       resolve: createProxyingResolver(async (source, args, context, info) => {

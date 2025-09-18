@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import {Box, useMediaQuery, useTheme} from '@mui/material'
-import {ReviveAd} from './revive-ad'
 import {useRouter} from 'next/router'
 import {useEffect, useState} from 'react'
+
 import {useAdsContext} from '../context/ads-context'
+import {ReviveAd} from './revive-ad'
 
 type AdvertisementProps = {
   type: 'whiteboard' | 'half-page' | 'small'

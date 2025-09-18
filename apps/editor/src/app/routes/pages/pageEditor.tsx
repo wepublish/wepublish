@@ -125,7 +125,8 @@ function PageEditor() {
     client,
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: {id: pageID!}
+    variables: {id: pageID!},
+    skip: !pageID
   })
   const {data: user} = useMeQuery({
     fetchPolicy: 'cache-only'
@@ -198,11 +199,11 @@ function PageEditor() {
           date: new Date(pageData?.page?.pending?.publishedAt ?? '')
         })
       )
-    } else if (pageData?.page?.published) {
+    } else if (pageData?.page?.latest.publishedAt) {
       setStateColor(StateColor.published)
       setTagTitle(
         t('pageEditor.overview.published', {
-          date: new Date(pageData?.page?.published?.publishedAt ?? '')
+          date: new Date(pageData?.page?.latest?.publishedAt ?? '')
         })
       )
     } else {

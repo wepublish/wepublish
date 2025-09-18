@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
-import {t} from 'i18next'
+import {useTranslation} from 'react-i18next'
 
 export const SubscriptionListWrapper = styled('article')`
   display: grid;
@@ -22,6 +22,7 @@ export const SubscriptionList = ({
     SubscriptionListItem,
     elements: {Alert, Link}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   return (
     <SubscriptionListWrapper className={className}>

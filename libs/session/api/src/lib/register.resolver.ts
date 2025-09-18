@@ -25,6 +25,7 @@ export class RegisterResolver {
     if (!challengeValidationResult.valid) {
       throw new CommentAuthenticationError(challengeValidationResult.message)
     }
+
     return this.registerService.registerMember(input)
   }
 }

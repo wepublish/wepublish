@@ -17,18 +17,18 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   countRichtextChars,
-  hasPermission,
   InvalidStarRatingValueError,
   NotAuthorisedError,
   NotFound,
-  UserInputError,
-  UserSession
+  UserInputError
 } from '@wepublish/api'
 import {CanCreateApprovedComment} from '@wepublish/permissions'
 import {ChallengeService} from '@wepublish/challenge/api'
 import {CommentInput, CommentUpdateInput} from './comment.input'
 import {SettingName, SettingsService} from '@wepublish/settings/api'
 import {CommentWithTags} from './comment.types'
+import {hasPermission} from '@wepublish/permissions/api'
+import {UserSession} from '@wepublish/authentication/api'
 
 export interface CommentWithRevisions {
   title: string | null
@@ -41,10 +41,10 @@ export interface CommentWithRevisions {
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly ratingSystem: RatingSystemService,
-    private readonly settingsService: SettingsService,
-    private readonly challengeService: ChallengeService
+    private prisma: PrismaClient,
+    private ratingSystem: RatingSystemService,
+    private settingsService: SettingsService,
+    private challengeService: ChallengeService
   ) {}
 
   async getPublicChildrenCommentsByParentId(parentId: string, userId: string | null) {

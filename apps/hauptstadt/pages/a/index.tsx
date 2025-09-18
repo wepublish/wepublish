@@ -7,7 +7,7 @@ import {
   PeerProfileDocument,
   useArticleListQuery
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {ContentWrapper, useWebsiteBuilder} from '@wepublish/website/builder'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -50,7 +50,7 @@ export default function ArticleList() {
   }, [data?.articles.totalCount])
 
   return (
-    <>
+    <ContentWrapper>
       <ArticleListContainer variables={variables} />
 
       {pageCount > 1 && (
@@ -68,7 +68,7 @@ export default function ArticleList() {
           }
         />
       )}
-    </>
+    </ContentWrapper>
   )
 }
 

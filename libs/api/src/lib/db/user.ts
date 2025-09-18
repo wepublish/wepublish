@@ -1,10 +1,4 @@
-import {
-  PaymentProviderCustomer,
-  User,
-  UserAddress,
-  UserOAuth2Account,
-  MetadataProperty
-} from '@prisma/client'
+import {PaymentProviderCustomer, User, UserAddress, MetadataProperty} from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {DefaultBcryptHashCostFactor} from './common'
 import {randomBytes} from 'crypto'
@@ -46,6 +40,5 @@ export interface UserFilter {
 export type UserWithRelations = User & {
   address: UserAddress | null
   properties: MetadataProperty[]
-  oauth2Accounts: UserOAuth2Account[]
   paymentProviderCustomers: PaymentProviderCustomer[]
 }

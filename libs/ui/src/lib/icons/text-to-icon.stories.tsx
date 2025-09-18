@@ -59,6 +59,12 @@ export default {
       <span>
         <TextToIcon title="search" size={22} /> search{' '}
       </span>
+      <span>
+        <TextToIcon title="apple-store" size={22} /> apple-store{' '}
+      </span>
+      <span>
+        <TextToIcon title="play-store" size={22} /> play-store{' '}
+      </span>
     </Stack>
   )
 } as Meta<typeof TextToIcon>

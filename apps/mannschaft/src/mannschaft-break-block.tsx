@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import {
   BreakBlock,
+  BreakBlockHeading,
   hasBlockStyle,
-  HeadingWithoutImage,
   isBreakBlock
 } from '@wepublish/block-content/website'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
@@ -68,7 +68,7 @@ export const MannschaftBreakBlock = styled(BreakBlock)`
     gap: ${({theme}) => theme.spacing(4)};
   }
 
-  ${HeadingWithoutImage} {
+  ${BreakBlockHeading} {
     font-size: ${({theme}) => theme.typography.h3.fontSize};
   }
 `

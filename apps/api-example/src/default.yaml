@@ -2,29 +2,20 @@ general:
   apolloPlayground: true
   apolloIntrospection: true
   bcryptHashCostFactor: 12
-  urlAdapter: default
+  urlAdapter: hauptstadt
 mailProvider:
   id: slackMail # allowed is mailchimp/mailgun
   fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
   webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
-OAuthProviders:
-  - name: 'google'
-    discoverUrl: ${OAUTH_GOOGLE_DISCOVERY_URL}
-    clientId: ${OAUTH_GOOGLE_CLIENT_ID}
-    clientKey: ${OAUTH_GOOGLE_CLIENT_KEY}
-    redirectUri:
-      - ${OAUTH_GOOGLE_REDIRECT_URL}
-    scopes:
-      - 'openid profile email'
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
     name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
     offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
     secretKey: secret # Required for stripe-checkout / stripe
-    webhookApiKey: secret
-    instanceName: name  # Required for payrexx
-    instanceAPISecret: secret # Required for payrexx
+    webhookApiKey: ${PAYREXX_WEBHOOK_SECRET}
+    instanceName: ${PAYREXX_INSTANCE_NAME} # Required for payrexx
+    instanceAPISecret: ${PAYREXX_API_SECRET} # Required for payrexx
     psp: # Required for payrexx
       - 0
       - 15

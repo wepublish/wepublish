@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import {
   Banner,
   BannerCloseButton,
-  BannerContent,
-  BannerCta,
+  BannerContentWrapper,
+  BannerCtaText,
   BannerImage,
   BannerText,
   BannerTitle
@@ -11,7 +11,7 @@ import {
 
 const BajourBanner = styled(Banner)(
   ({theme}) => `
-${BannerContent} {
+${BannerContentWrapper} {
   padding: ${theme.spacing(2)};
 }
 
@@ -20,7 +20,7 @@ ${BannerCloseButton} {
   right: ${theme.spacing(2)};
 }
 
-${BannerCta} {
+${BannerCtaText} {
   display: none;
 }
 
@@ -39,7 +39,7 @@ ${BannerCta} {
     width: 20%;
   }
 
-  ${BannerCta} {
+  ${BannerCtaText} {
     display: block;
     margin-top: 0;
   }

@@ -1,5 +1,6 @@
-import {Dispatch, SetStateAction, useState} from 'react'
 import * as Apollo from '@apollo/client'
+import {Dispatch, SetStateAction, useState} from 'react'
+
 import {SortType} from '../utility'
 
 type ExtractQueryType<T> = T extends Apollo.QueryResult<infer U, any> ? U : never

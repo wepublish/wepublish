@@ -1,4 +1,4 @@
-import {ArgsType, Field, ID, InputType, ObjectType} from '@nestjs/graphql'
+import {ArgsType, Field, InputType, Int, ObjectType, PartialType, PickType} from '@nestjs/graphql'
 import {HasImageLc, Image} from '@wepublish/image/api'
 import {GraphQLSlug} from '@wepublish/utils/api'
 
@@ -27,27 +27,19 @@ export class PaymentMethod {
 
   active!: boolean
 
-  imageId!: string | null
+  @Field(() => Int)
+  gracePeriod!: number
+
+  imageId?: string
   image?: Image
 }
 
 @InputType()
-export class CreatePaymentMethodInput {
-  @Field()
-  name!: string
-
-  @Field()
-  slug!: string
-
-  @Field()
-  description!: string
-
-  @Field()
-  paymentProviderID!: string
-
-  @Field()
-  active!: boolean
-}
+export class CreatePaymentMethodInput extends PickType(
+  PaymentMethod,
+  ['name', 'slug', 'description', 'paymentProviderID', 'active', 'gracePeriod'] as const,
+  InputType
+) {}
 
 @ArgsType()
 export class CreatePaymentMethodArgs {
@@ -56,24 +48,9 @@ export class CreatePaymentMethodArgs {
 }
 
 @InputType()
-export class UpdatePaymentMethodInput {
-  @Field(() => ID)
-  id?: string
-
-  @Field({nullable: true})
-  name?: string
-
-  @Field({nullable: true})
-  slug?: string
-
-  @Field({nullable: true})
-  description?: string
-
-  @Field({nullable: true})
-  paymentProviderID?: string
-
-  @Field({nullable: true})
-  active?: boolean
+export class UpdatePaymentMethodInput extends PartialType(CreatePaymentMethodInput, InputType) {
+  @Field()
+  id!: string
 }
 
 @ArgsType()
@@ -84,6 +61,6 @@ export class UpdatePaymentMethodArgs {
 
 @ArgsType()
 export class PaymentMethodByIdArgs {
-  @Field(() => ID)
+  @Field()
   id!: string
 }
