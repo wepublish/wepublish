@@ -75,7 +75,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",
         "noImagesFound": "No Images found",
-        "openInNewTab": "Content URL opens a new Tab",
+        "openInNewTab": "Content URL opens in a new tab",
         "pagePreviewLink": "Page Preview Link",
         "peerDisabled": "Currently this peer is disabled",
         "peeredArticlePreview": "Preview",
