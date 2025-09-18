@@ -1,16 +1,16 @@
-import {Field, Int, ObjectType} from '@nestjs/graphql'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class DashboardInvoice {
-  @Field({nullable: true})
-  paidAt?: Date
+  @Field({ nullable: true })
+  paidAt?: Date;
 
   @Field()
-  dueAt!: Date
+  dueAt!: Date;
 
-  @Field({nullable: true})
-  memberPlan?: string
+  @Field({ nullable: true })
+  memberPlan?: string;
 
   @Field(type => Int)
-  amount!: number
+  amount!: number;
 }

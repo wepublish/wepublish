@@ -1,39 +1,41 @@
-import {Type} from '@nestjs/common'
-import {Field, Int, ObjectType} from '@nestjs/graphql'
+import { Type } from '@nestjs/common';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class PageInfo {
   @Field()
-  hasPreviousPage!: boolean
+  hasPreviousPage!: boolean;
 
   @Field()
-  hasNextPage!: boolean
+  hasNextPage!: boolean;
 
-  @Field({nullable: true})
-  startCursor?: string
+  @Field({ nullable: true })
+  startCursor?: string;
 
-  @Field({nullable: true})
-  endCursor?: string
+  @Field({ nullable: true })
+  endCursor?: string;
 }
 
 export interface PaginatedObjectType<T> {
-  nodes: T[]
-  totalCount: number
-  pageInfo: PageInfo
+  nodes: T[];
+  totalCount: number;
+  pageInfo: PageInfo;
 }
 
-export function PaginatedType<T>(classRef: Type<T>): Type<PaginatedObjectType<T>> {
+export function PaginatedType<T>(
+  classRef: Type<T>
+): Type<PaginatedObjectType<T>> {
   @ObjectType()
   class PaginatedObjectTypeImpl implements PaginatedObjectType<T> {
     @Field(type => [classRef])
-    nodes!: T[]
+    nodes!: T[];
 
     @Field(() => Int)
-    totalCount!: number
+    totalCount!: number;
 
     @Field(type => PageInfo)
-    pageInfo!: PageInfo
+    pageInfo!: PageInfo;
   }
 
-  return PaginatedObjectTypeImpl
+  return PaginatedObjectTypeImpl;
 }

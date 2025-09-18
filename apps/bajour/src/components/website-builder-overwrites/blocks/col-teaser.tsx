@@ -1,16 +1,16 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 
-import {TeaserOverwrite} from './teaser-overwrite'
+import { TeaserOverwrite } from './teaser-overwrite';
 import {
   AuthorsAndDate,
   fluidTypography,
   TeaserLeadStyled,
   TeaserPreTitleStyled,
-  TeaserTitlesStyled
-} from './teaser-overwrite.style'
+  TeaserTitlesStyled,
+} from './teaser-overwrite.style';
 
 export const ColTeaser = styled(TeaserOverwrite)`
-  margin-top: ${({theme}) => theme.spacing(3)};
+  margin-top: ${({ theme }) => theme.spacing(3)};
   align-self: start;
 
   ${TeaserPreTitleStyled} {
@@ -28,18 +28,18 @@ export const ColTeaser = styled(TeaserOverwrite)`
   }
 
   ${TeaserLeadStyled} {
-    margin-top: ${({theme}) => theme.spacing(1)};
-    margin-bottom: ${({theme}) => theme.spacing(1)};
+    margin-top: ${({ theme }) => theme.spacing(1)};
+    margin-bottom: ${({ theme }) => theme.spacing(1)};
     font-style: italic;
     font-weight: 300;
     font-size: ${fluidTypography(15, 22)};
   }
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: span 6;
   }
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-top: ${({theme}) => theme.spacing(5)};
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin-top: ${({ theme }) => theme.spacing(5)};
   }
-`
+`;

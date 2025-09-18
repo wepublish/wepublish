@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 
 export const Container = styled('main')`
   display: grid;
@@ -9,15 +9,15 @@ export const Container = styled('main')`
     grid-area: content;
   }
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: 1fr minmax(auto, 940px) 1fr;
   }
 
-  ${({theme}) => theme.breakpoints.up('lg')} {
+  ${({ theme }) => theme.breakpoints.up('lg')} {
     grid-template-columns: 1fr minmax(auto, 1200px) 1fr;
   }
 
-  ${({theme}) => theme.breakpoints.up('xl')} {
+  ${({ theme }) => theme.breakpoints.up('xl')} {
     grid-template-columns: 1fr minmax(auto, 1440px) 1fr;
   }
-`
+`;

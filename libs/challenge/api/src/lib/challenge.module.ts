@@ -1,17 +1,20 @@
-import {DynamicModule, Module, Provider} from '@nestjs/common'
-import {ChallengeService} from './challenge.service'
-import {ChallengeResolver} from './challenge.resolver'
-import {AlgebraicCaptchaChallenge} from './providers/algebraic-captcha.provider'
-import {CFTurnstileProvider} from './providers/cf-turnstile.provider'
-import {ChallengeProvider} from './challenge-provider.interface'
-import {ChallengeModuleAsyncOptions, ChallengeModuleOptions} from './challenge-module-options'
-import {createAsyncOptionsProvider} from '@wepublish/utils/api'
+import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { ChallengeService } from './challenge.service';
+import { ChallengeResolver } from './challenge.resolver';
+import { AlgebraicCaptchaChallenge } from './providers/algebraic-captcha.provider';
+import { CFTurnstileProvider } from './providers/cf-turnstile.provider';
+import { ChallengeProvider } from './challenge-provider.interface';
+import {
+  ChallengeModuleAsyncOptions,
+  ChallengeModuleOptions,
+} from './challenge-module-options';
+import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 
-export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS'
+export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS';
 
 @Module({
   imports: [],
-  providers: []
+  providers: [],
 })
 export class ChallengeModule {
   static registerAsync(options: ChallengeModuleAsyncOptions): DynamicModule {
@@ -19,31 +22,42 @@ export class ChallengeModule {
       module: ChallengeModule,
       global: options.global,
       imports: options.imports || [],
-      providers: [...this.createAsyncProviders(options), ChallengeService, ChallengeResolver],
-      exports: [ChallengeService]
-    }
+      providers: [
+        ...this.createAsyncProviders(options),
+        ChallengeService,
+        ChallengeResolver,
+      ],
+      exports: [ChallengeService],
+    };
   }
 
-  private static createAsyncProviders(options: ChallengeModuleAsyncOptions): Provider[] {
+  private static createAsyncProviders(
+    options: ChallengeModuleAsyncOptions
+  ): Provider[] {
     return [
-      createAsyncOptionsProvider<ChallengeModuleOptions>(CHALLENGE_MODULE_OPTIONS, options),
+      createAsyncOptionsProvider<ChallengeModuleOptions>(
+        CHALLENGE_MODULE_OPTIONS,
+        options
+      ),
       {
         provide: ChallengeProvider,
         useFactory: (challengeModuleOptions: ChallengeModuleOptions) =>
           createChallengeProviderFromConfig(challengeModuleOptions.challenge),
-        inject: [CHALLENGE_MODULE_OPTIONS]
-      }
-    ]
+        inject: [CHALLENGE_MODULE_OPTIONS],
+      },
+    ];
   }
 }
 
-const createChallengeProviderFromConfig = (challenge: ChallengeModuleOptions['challenge']) => {
+const createChallengeProviderFromConfig = (
+  challenge: ChallengeModuleOptions['challenge']
+) => {
   if (challenge.type === 'turnstile') {
-    return new CFTurnstileProvider(challenge.secret, challenge.siteKey)
+    return new CFTurnstileProvider(challenge.secret, challenge.siteKey);
   }
 
   if (challenge.type === 'algebraic') {
-    const algebraicConfig = challenge
+    const algebraicConfig = challenge;
     return new AlgebraicCaptchaChallenge(
       algebraicConfig.secret,
       algebraicConfig.validTime || 600, // default 10 minutes
@@ -57,11 +71,13 @@ const createChallengeProviderFromConfig = (challenge: ChallengeModuleOptions['ch
         operandAmount: algebraicConfig.operandAmount,
         operandTypes: algebraicConfig.operandTypes,
         mode: algebraicConfig.mode,
-        targetSymbol: algebraicConfig.targetSymbol
+        targetSymbol: algebraicConfig.targetSymbol,
       }
-    )
+    );
   }
 
-  const exhaustiveCheck: never = challenge
-  throw new Error(`Unsupported challenge type: ${(exhaustiveCheck as any).type}`)
-}
+  const exhaustiveCheck: never = challenge;
+  throw new Error(
+    `Unsupported challenge type: ${(exhaustiveCheck as any).type}`
+  );
+};

@@ -1,10 +1,10 @@
-import {Injectable, Scope} from '@nestjs/common'
-import {BlockStyle, PrismaClient} from '@prisma/client'
-import {Primeable, createOptionalsArray} from '@wepublish/utils/api'
-import DataLoader from 'dataloader'
+import { Injectable, Scope } from '@nestjs/common';
+import { BlockStyle, PrismaClient } from '@prisma/client';
+import { Primeable, createOptionalsArray } from '@wepublish/utils/api';
+import DataLoader from 'dataloader';
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
 export class BlockStylesDataloaderService implements Primeable<BlockStyle> {
   private dataloader = new DataLoader<string, BlockStyle | null>(
@@ -14,26 +14,32 @@ export class BlockStylesDataloaderService implements Primeable<BlockStyle> {
         await this.prisma.blockStyle.findMany({
           where: {
             id: {
-              in: ids as string[]
-            }
-          }
+              in: ids as string[],
+            },
+          },
         }),
         'id'
       ),
-    {name: 'BlockStylesDataloader'}
-  )
+    { name: 'BlockStylesDataloader' }
+  );
 
   constructor(private prisma: PrismaClient) {}
 
-  public prime(...parameters: Parameters<DataLoader<string, BlockStyle | null>['prime']>) {
-    return this.dataloader.prime(...parameters)
+  public prime(
+    ...parameters: Parameters<DataLoader<string, BlockStyle | null>['prime']>
+  ) {
+    return this.dataloader.prime(...parameters);
   }
 
-  public load(...parameters: Parameters<DataLoader<string, BlockStyle | null>['load']>) {
-    return this.dataloader.load(...parameters)
+  public load(
+    ...parameters: Parameters<DataLoader<string, BlockStyle | null>['load']>
+  ) {
+    return this.dataloader.load(...parameters);
   }
 
-  public loadMany(...parameters: Parameters<DataLoader<string, BlockStyle | null>['loadMany']>) {
-    return this.dataloader.loadMany(...parameters)
+  public loadMany(
+    ...parameters: Parameters<DataLoader<string, BlockStyle | null>['loadMany']>
+  ) {
+    return this.dataloader.loadMany(...parameters);
   }
 }

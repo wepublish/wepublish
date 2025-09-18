@@ -1,28 +1,39 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
-import {MemberPlan, MemberPlanSort, SortOrder, useMemberPlanListQuery} from '@wepublish/editor/api'
-import {useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
-import {ItemDataType} from 'rsuite/esm/@types/common'
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
+import {
+  MemberPlan,
+  MemberPlanSort,
+  SortOrder,
+  useMemberPlanListQuery,
+} from '@wepublish/editor/api';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Divider as RDivider,
+  Message,
+  Pagination as RPagination,
+  TagPicker,
+  toaster,
+} from 'rsuite';
+import { ItemDataType } from 'rsuite/esm/@types/common';
 
-import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
+import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
 
 const Divider = styled(RDivider)`
   margin: '12px 0';
-`
+`;
 
 const Pagination = styled(RPagination)`
   margin: 0 12px 12px;
-`
+`;
 
 interface SelectMemberPlansProps {
-  className?: string
-  disabled?: boolean
-  name?: string
-  defaultMemberPlans: Pick<MemberPlan, 'id' | 'name'>[]
-  selectedMemberPlans?: string[] | null
-  setSelectedMemberPlans(memberplans: string[]): void
+  className?: string;
+  disabled?: boolean;
+  name?: string;
+  defaultMemberPlans: Pick<MemberPlan, 'id' | 'name'>[];
+  selectedMemberPlans?: string[] | null;
+  setSelectedMemberPlans(memberplans: string[]): void;
 }
 
 export function SelectMemberPlans({
@@ -31,16 +42,16 @@ export function SelectMemberPlans({
   name,
   defaultMemberPlans,
   selectedMemberPlans,
-  setSelectedMemberPlans
+  setSelectedMemberPlans,
 }: SelectMemberPlansProps) {
-  const {t} = useTranslation()
-  const [page, setPage] = useState(1)
+  const { t } = useTranslation();
+  const [page, setPage] = useState(1);
   const [cacheData, setCacheData] = useState(
     defaultMemberPlans.map(memberplan => ({
       label: memberplan.name,
-      value: memberplan.id
+      value: memberplan.id,
     })) as ItemDataType<string | number>[]
-  )
+  );
 
   /**
    * Error handling
@@ -48,38 +59,43 @@ export function SelectMemberPlans({
    */
   const showErrors = (error: ApolloError): void => {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error.message}
       </Message>
-    )
-  }
+    );
+  };
 
   /**
    * Loading memberplans
    */
-  const {data: memberplansData, refetch} = useMemberPlanListQuery({
+  const { data: memberplansData, refetch } = useMemberPlanListQuery({
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
-      take: 50
+      take: 50,
     },
     fetchPolicy: 'cache-and-network',
-    onError: showErrors
-  })
+    onError: showErrors,
+  });
 
   /**
    * Prepare available memberplans
    */
   const availableMemberPlans = useMemo(() => {
     if (!memberplansData?.memberPlans?.nodes) {
-      return []
+      return [];
     }
 
     return memberplansData.memberPlans.nodes.map(memberplan => ({
       label: memberplan.name,
-      value: memberplan.id
-    }))
-  }, [memberplansData])
+      value: memberplan.id,
+    }));
+  }, [memberplansData]);
 
   return (
     <TagPicker
@@ -93,15 +109,15 @@ export function SelectMemberPlans({
       cacheData={cacheData}
       onSearch={word => {
         refetch({
-          filter: word
-        })
+          filter: word,
+        });
       }}
       onSelect={(value, item, event) => {
-        setCacheData([...cacheData, item])
-        refetch()
+        setCacheData([...cacheData, item]);
+        refetch();
       }}
       onChange={(value, item) => {
-        setSelectedMemberPlans(value)
+        setSelectedMemberPlans(value);
       }}
       renderMenu={menu => {
         return (
@@ -125,8 +141,8 @@ export function SelectMemberPlans({
               onChangePage={page => setPage(page)}
             />
           </>
-        )
+        );
       }}
     />
-  )
+  );
 }

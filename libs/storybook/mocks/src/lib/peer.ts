@@ -1,7 +1,7 @@
-import {FullPeerFragment, RemotePeerProfile} from '@wepublish/website/api'
-import nanoid from 'nanoid'
-import {mockRichText} from './richtext'
-import {mockPeerImage} from './image'
+import { FullPeerFragment, RemotePeerProfile } from '@wepublish/website/api';
+import nanoid from 'nanoid';
+import { mockRichText } from './richtext';
+import { mockPeerImage } from './image';
 
 export const mockRemotePeerProfile = ({
   callToActionText = mockRichText(),
@@ -14,7 +14,7 @@ export const mockRemotePeerProfile = ({
   squareLogo = mockPeerImage(),
   name = 'Peer',
   themeColor = '#faa',
-  themeFontColor = '#000'
+  themeFontColor = '#000',
 }: Partial<RemotePeerProfile> = {}): RemotePeerProfile => ({
   __typename: 'RemotePeerProfile',
   callToActionText,
@@ -27,14 +27,14 @@ export const mockRemotePeerProfile = ({
   squareLogo,
   name,
   themeColor,
-  themeFontColor
-})
+  themeFontColor,
+});
 
 export const mockPeer = ({
   name = 'Peer',
   slug = 'peer-slug',
   profile = mockRemotePeerProfile(),
-  isDisabled = false
+  isDisabled = false,
 }: Partial<FullPeerFragment> = {}): FullPeerFragment => ({
   __typename: 'Peer',
   id: nanoid(),
@@ -44,5 +44,5 @@ export const mockPeer = ({
   isDisabled,
   createdAt: new Date('2023-01-01').toISOString(),
   modifiedAt: new Date('2023-01-01').toISOString(),
-  hostURL: 'https://example.com'
-})
+  hostURL: 'https://example.com',
+});

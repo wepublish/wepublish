@@ -1,15 +1,15 @@
-import {Pagination as RsuitePagination} from 'rsuite'
+import { Pagination as RsuitePagination } from 'rsuite';
 
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
-import {PaginationState} from './paginated-query-container'
+import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
+import { PaginationState } from './paginated-query-container';
 
 type PaginationProps = {
-  state: PaginationState
-  totalCount?: number
-}
+  state: PaginationState;
+  totalCount?: number;
+};
 
-export function Pagination({state, totalCount}: PaginationProps) {
-  const {limit, setLimit, page, setPage} = state
+export function Pagination({ state, totalCount }: PaginationProps) {
+  const { limit, setLimit, page, setPage } = state;
   return (
     <RsuitePagination
       limit={limit}
@@ -27,5 +27,5 @@ export function Pagination({state, totalCount}: PaginationProps) {
       onChangePage={page => setPage(page)}
       onChangeLimit={limit => setLimit(limit)}
     />
-  )
+  );
 }

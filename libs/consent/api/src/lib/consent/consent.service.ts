@@ -1,6 +1,11 @@
-import {Injectable, NotFoundException} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {Consent, ConsentFilter, CreateConsentInput, UpdateConsentInput} from './consent.model'
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import {
+  Consent,
+  ConsentFilter,
+  CreateConsentInput,
+  UpdateConsentInput,
+} from './consent.model';
 
 @Injectable()
 export class ConsentService {
@@ -9,49 +14,52 @@ export class ConsentService {
   async consentList(filter?: ConsentFilter): Promise<Consent[]> {
     const data = await this.prisma.consent.findMany({
       where: {
-        ...filter
+        ...filter,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
-    })
+        createdAt: 'desc',
+      },
+    });
 
-    return data
+    return data;
   }
 
   async consent(id: string): Promise<Consent> {
     const data = await this.prisma.consent.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
     if (!data) {
-      throw new NotFoundException(`Consent with id ${id} not found`)
+      throw new NotFoundException(`Consent with id ${id} not found`);
     }
 
-    return data
+    return data;
   }
 
   async createConsent(consent: CreateConsentInput): Promise<Consent> {
-    return await this.prisma.consent.create({data: consent})
+    return await this.prisma.consent.create({ data: consent });
   }
 
-  async updateConsent({id, ...consent}: UpdateConsentInput): Promise<Consent> {
+  async updateConsent({
+    id,
+    ...consent
+  }: UpdateConsentInput): Promise<Consent> {
     const updated = await this.prisma.consent.update({
-      where: {id},
+      where: { id },
       data: {
-        ...consent
-      }
-    })
+        ...consent,
+      },
+    });
 
-    return updated
+    return updated;
   }
 
   async deleteConsent(id: string) {
     const deleted = this.prisma.consent.delete({
-      where: {id}
-    })
-    return deleted
+      where: { id },
+    });
+    return deleted;
   }
 }

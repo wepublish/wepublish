@@ -1,6 +1,6 @@
-import {css} from '@emotion/react'
-import styled from '@emotion/styled'
-import {Theme} from '@mui/material'
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { Theme } from '@mui/material';
 import {
   AlternatingTeaser,
   BaseTeaser,
@@ -20,14 +20,14 @@ import {
   TeaserSlider,
   TeaserSlotsBlock,
   TeaserSlotsBlockTeasers,
-  TeaserWrapper
-} from '@wepublish/block-content/website'
-import {ImageWrapper} from '@wepublish/image/website'
-import {createWithTheme} from '@wepublish/ui'
+  TeaserWrapper,
+} from '@wepublish/block-content/website';
+import { ImageWrapper } from '@wepublish/image/website';
+import { createWithTheme } from '@wepublish/ui';
 
-import {alternatingTeaserTheme} from '../theme'
+import { alternatingTeaserTheme } from '../theme';
 
-const teaserGaps = ({theme}: {theme: Theme}) => css`
+const teaserGaps = ({ theme }: { theme: Theme }) => css`
   padding-bottom: var(--page-content-row-gap);
   column-gap: ${theme.spacing(1.5)};
 
@@ -42,21 +42,21 @@ const teaserGaps = ({theme}: {theme: Theme}) => css`
   ${theme.breakpoints.up('xxl')} {
     column-gap: ${theme.spacing(7.5)};
   }
-`
+`;
 
 export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
   align-items: stretch; // Makes all teasers the same height
   row-gap: var(--page-content-row-gap);
   column-gap: var(--content-column-gap);
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: 1fr;
   }
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(12, 1fr);
   }
-`
+`;
 
 export const HauptstadtTeaserList = styled(TeaserListBlock)`
   ${TeaserListBlockTeasers} {
@@ -64,15 +64,15 @@ export const HauptstadtTeaserList = styled(TeaserListBlock)`
     row-gap: var(--page-content-row-gap);
     column-gap: var(--content-column-gap);
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
       grid-template-columns: 1fr;
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       grid-template-columns: repeat(12, 1fr);
     }
   }
-`
+`;
 
 export const HauptstadtTeaserSlots = styled(TeaserSlotsBlock)`
   ${TeaserSlotsBlockTeasers} {
@@ -80,17 +80,17 @@ export const HauptstadtTeaserSlots = styled(TeaserSlotsBlock)`
     row-gap: var(--page-content-row-gap);
     column-gap: var(--content-column-gap);
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
       grid-template-columns: 1fr;
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       grid-template-columns: repeat(12, 1fr);
     }
   }
-`
+`;
 
-const revertTeaserToDefault = ({theme}: {theme: Theme}) => css`
+const revertTeaserToDefault = ({ theme }: { theme: Theme }) => css`
   grid-template-areas:
     'image'
     'pretitle'
@@ -103,10 +103,10 @@ const revertTeaserToDefault = ({theme}: {theme: Theme}) => css`
   ${TeaserImageWrapper} {
     padding-bottom: ${theme.spacing(1.5)};
   }
-`
+`;
 
 export const HauptstadtTeaser = styled(BaseTeaser)`
-  border-bottom: 1px solid ${({theme}) => theme.palette.primary.main};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
   grid-template-rows: repeat(5, minmax(0, auto));
   grid-template-areas:
     'image .'
@@ -138,8 +138,8 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
   }
 
   &:hover ${TeaserPreTitle} {
-    color: ${({theme}) => theme.palette.accent.contrastText};
-    background-color: ${({theme}) => theme.palette.accent.main};
+    color: ${({ theme }) => theme.palette.accent.contrastText};
+    background-color: ${({ theme }) => theme.palette.accent.main};
   }
 
   &:hover ${ImageWrapper} {
@@ -159,14 +159,14 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
     display: none;
   }
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     ${revertTeaserToDefault}
 
     ${TeaserLead} {
       display: block;
     }
   }
-`
+`;
 
 export const HauptstadtAlternatingTeaser = createWithTheme(
   styled(AlternatingTeaser)`
@@ -185,7 +185,7 @@ export const HauptstadtAlternatingTeaser = createWithTheme(
       display: initial;
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       ${TeaserImageWrapper} {
         margin-bottom: 0;
         padding-bottom: 0;
@@ -193,18 +193,18 @@ export const HauptstadtAlternatingTeaser = createWithTheme(
     }
   `,
   alternatingTeaserTheme
-)
+);
 
 export const HauptstadtFocusTeaser = styled(FocusTeaser)`
   ${TeaserListBlockTeasers} {
     align-items: stretch; // Makes all teasers the same height
-    gap: ${({theme}) => theme.spacing(6)};
+    gap: ${({ theme }) => theme.spacing(6)};
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
       grid-template-columns: 1fr;
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       grid-template-columns: 1fr 1fr 1fr;
     }
   }
@@ -236,10 +236,10 @@ export const HauptstadtFocusTeaser = styled(FocusTeaser)`
   // Pretitle background is the same as the FocusTeaser background
   ${TeaserPreTitle},
   &:hover ${TeaserPreTitle} {
-    color: ${({theme}) => theme.palette.primary.contrastText};
-    background-color: ${({theme}) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.primary.contrastText};
+    background-color: ${({ theme }) => theme.palette.primary.main};
   }
-`
+`;
 
 export const HauptstadtTeaserSlider = styled(TeaserSlider)`
   ${TeaserContentWrapper} {
@@ -251,4 +251,4 @@ export const HauptstadtTeaserSlider = styled(TeaserSlider)`
     display: grid;
     align-items: stretch;
   }
-`
+`;

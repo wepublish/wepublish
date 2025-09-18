@@ -1,42 +1,42 @@
-import styled from '@emotion/styled'
-import {Typography} from '@mui/material'
+import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import {
   IntendedRouteStorageKey,
   RegistrationFormContainer,
-  useUser
-} from '@wepublish/authentication/website'
-import {ContentWrapper} from '@wepublish/content/website'
+  useUser,
+} from '@wepublish/authentication/website';
+import { ContentWrapper } from '@wepublish/content/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   NavigationListDocument,
-  PeerProfileDocument
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {deleteCookie, getCookie} from 'cookies-next'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
+  PeerProfileDocument,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { deleteCookie, getCookie } from 'cookies-next';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 
-import {Container} from '../src/components/layout/container'
+import { Container } from '../src/components/layout/container';
 
 const SignupWrapper = styled(ContentWrapper)`
   justify-content: center;
-`
+`;
 
 export default function SignUp() {
-  const {hasUser} = useUser()
-  const router = useRouter()
+  const { hasUser } = useUser();
+  const router = useRouter();
   const {
-    elements: {H3, Link}
-  } = useWebsiteBuilder()
+    elements: { H3, Link },
+  } = useWebsiteBuilder();
 
   if (hasUser && typeof window !== 'undefined') {
-    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
-    deleteCookie(IntendedRouteStorageKey)
-    const route = intendedRoute ?? '/profile'
+    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
+    deleteCookie(IntendedRouteStorageKey);
+    const route = intendedRoute ?? '/profile';
 
-    router.replace(route)
+    router.replace(route);
   }
 
   return (
@@ -45,38 +45,42 @@ export default function SignUp() {
         <div>
           <H3 component="h1">Registriere dich noch heute</H3>
 
-          <Typography variant="body1" paragraph>
-            (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
+          <Typography
+            variant="body1"
+            paragraph
+          >
+            (Falls du schon einen Account hast,{' '}
+            <Link href={'/login'}>klicke hier.</Link>)
           </Typography>
         </div>
 
         <RegistrationFormContainer fields={['firstName']} />
       </SignupWrapper>
     </Container>
-  )
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig} = getConfig()
+  const { publicRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
-    return {props: {}, revalidate: 1}
+    return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
   await Promise.all([
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
-  }
-}
+    revalidate: 60, // every 60 seconds
+  };
+};

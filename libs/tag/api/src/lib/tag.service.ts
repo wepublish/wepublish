@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common'
-import {Prisma, PrismaClient} from '@prisma/client'
-import {TagFilter, TagSort} from './tags.query'
-import {getMaxTake, PrimeDataLoader, SortOrder} from '@wepublish/utils/api'
-import {TagDataloader} from './tag.dataloader'
+import { Injectable } from '@nestjs/common';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { TagFilter, TagSort } from './tags.query';
+import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
+import { TagDataloader } from './tag.dataloader';
 
 @Injectable()
 export class TagService {
@@ -17,29 +17,29 @@ export class TagService {
     skip = 0,
     take = 10
   ) {
-    const where = createTagFilter(filter)
-    const orderBy = createTagOrder(sort, order)
+    const where = createTagFilter(filter);
+    const orderBy = createTagOrder(sort, order);
 
     const [totalCount, tags] = await Promise.all([
       this.prisma.tag.count({
         where,
-        orderBy
+        orderBy,
       }),
       this.prisma.tag.findMany({
         where,
         skip,
         take: getMaxTake(take) + 1,
         orderBy,
-        cursor: cursorId ? {id: cursorId} : undefined
-      })
-    ])
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
 
-    const nodes = tags.slice(0, take)
-    const firstTag = nodes[0]
-    const lastTag = nodes[nodes.length - 1]
+    const nodes = tags.slice(0, take);
+    const firstTag = nodes[0];
+    const lastTag = nodes[nodes.length - 1];
 
-    const hasPreviousPage = Boolean(skip)
-    const hasNextPage = tags.length > nodes.length
+    const hasPreviousPage = Boolean(skip);
+    const hasNextPage = tags.length > nodes.length;
 
     return {
       nodes,
@@ -48,9 +48,9 @@ export class TagService {
         hasPreviousPage,
         hasNextPage,
         startCursor: firstTag?.id,
-        endCursor: lastTag?.id
-      }
-    }
+        endCursor: lastTag?.id,
+      },
+    };
   }
 
   @PrimeDataLoader(TagDataloader)
@@ -59,11 +59,11 @@ export class TagService {
       where: {
         authors: {
           some: {
-            authorId
-          }
-        }
-      }
-    })
+            authorId,
+          },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(TagDataloader)
@@ -72,11 +72,11 @@ export class TagService {
       where: {
         events: {
           some: {
-            eventId
-          }
-        }
-      }
-    })
+            eventId,
+          },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(TagDataloader)
@@ -85,11 +85,11 @@ export class TagService {
       where: {
         articles: {
           some: {
-            articleId
-          }
-        }
-      }
-    })
+            articleId,
+          },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(TagDataloader)
@@ -98,11 +98,11 @@ export class TagService {
       where: {
         pages: {
           some: {
-            pageId
-          }
-        }
-      }
-    })
+            pageId,
+          },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(TagDataloader)
@@ -111,11 +111,11 @@ export class TagService {
       where: {
         comments: {
           some: {
-            commentId
-          }
-        }
-      }
-    })
+            commentId,
+          },
+        },
+      },
+    });
   }
 }
 
@@ -126,39 +126,39 @@ function createTagOrder(
   switch (field) {
     case TagSort.Tag:
       return {
-        tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-      }
+        tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
+      };
 
     case TagSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-      }
+        modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
+      };
 
     case TagSort.CreatedAt:
     default:
       return {
-        createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
-      }
+        createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
+      };
   }
 }
 
 function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
-  const conditions: Prisma.TagWhereInput[] = []
+  const conditions: Prisma.TagWhereInput[] = [];
 
   if (filter?.type) {
     conditions.push({
-      type: filter.type
-    })
+      type: filter.type,
+    });
   }
 
   if (filter?.tag) {
     conditions.push({
       tag: {
         mode: 'insensitive',
-        equals: filter.tag
-      }
-    })
+        equals: filter.tag,
+      },
+    });
   }
 
-  return conditions.length ? {AND: conditions} : {}
+  return conditions.length ? { AND: conditions } : {};
 }

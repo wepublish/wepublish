@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   FullImageFragment,
   FullPaymentMethodFragment,
@@ -6,11 +6,11 @@ import {
   useCreatePaymentMethodMutation,
   usePaymentMethodQuery,
   usePaymentProviderListQuery,
-  useUpdatePaymentMethodMutation
-} from '@wepublish/editor/api'
-import {slugify} from '@wepublish/utils'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+  useUpdatePaymentMethodMutation,
+} from '@wepublish/editor/api';
+import { slugify } from '@wepublish/utils';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Drawer,
@@ -21,68 +21,75 @@ import {
   Schema,
   SelectPicker,
   toaster,
-  Toggle
-} from 'rsuite'
+  Toggle,
+} from 'rsuite';
 
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
   PermissionControl,
-  useAuthorisation
-} from '../atoms'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ImageSelectPanel} from './imageSelectPanel'
+  useAuthorisation,
+} from '../atoms';
+import { toggleRequiredLabel } from '../toggleRequiredLabel';
+import { ImageSelectPanel } from './imageSelectPanel';
 
 export interface PaymentMethodEditPanelProps {
-  id?: string
+  id?: string;
 
-  onClose?(): void
-  onSave?(paymentMethod: FullPaymentMethodFragment): void
+  onClose?(): void;
+  onSave?(paymentMethod: FullPaymentMethodFragment): void;
 }
 
 const FormGroupWithPadding = styled(Form.Group)`
-  padding-top: ${({theme}) => theme.spacing(2)};
-`
+  padding-top: ${({ theme }) => theme.spacing(2)};
+`;
 
-function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
-  const {t} = useTranslation()
+function PaymentMethodEditPanel({
+  id,
+  onClose,
+  onSave,
+}: PaymentMethodEditPanelProps) {
+  const { t } = useTranslation();
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_PAYMENT_METHOD')
+  const isAuthorized = useAuthorisation('CAN_CREATE_PAYMENT_METHOD');
 
-  const [name, setName] = useState('')
-  const [slug, setSlug] = useState('')
-  const [description, setDescription] = useState('')
-  const [active, setActive] = useState<boolean>(true)
-  const [gracePeriod, setGracePeriod] = useState<number>(0)
-  const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
-  const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
+  const [name, setName] = useState('');
+  const [slug, setSlug] = useState('');
+  const [description, setDescription] = useState('');
+  const [active, setActive] = useState<boolean>(true);
+  const [gracePeriod, setGracePeriod] = useState<number>(0);
+  const [paymentProvider, setPaymentProvider] =
+    useState<FullPaymentProviderFragment>();
+  const [paymentProviders, setPaymentProviders] = useState<
+    FullPaymentProviderFragment[]
+  >([]);
 
-  const [imageSelectionOpen, setImageSelectionOpen] = useState(false)
-  const [image, setImage] = useState<FullImageFragment>()
+  const [imageSelectionOpen, setImageSelectionOpen] = useState(false);
+  const [image, setImage] = useState<FullImageFragment>();
 
   const {
     data,
     loading: isLoading,
-    error: loadError
+    error: loadError,
   } = usePaymentMethodQuery({
-    variables: {id: id!},
+    variables: { id: id! },
     fetchPolicy: 'network-only',
-    skip: id === undefined
-  })
+    skip: id === undefined,
+  });
 
   const {
     data: paymentProviderData,
     loading: isLoadingPaymentProvider,
-    error: loadPaymentProviderError
+    error: loadPaymentProviderError,
   } = usePaymentProviderListQuery({
-    fetchPolicy: 'network-only'
-  })
+    fetchPolicy: 'network-only',
+  });
 
-  const [createPaymentMethod, {loading: isCreating, error: createError}] =
-    useCreatePaymentMethodMutation()
+  const [createPaymentMethod, { loading: isCreating, error: createError }] =
+    useCreatePaymentMethodMutation();
 
-  const [updatePaymentMethod, {loading: isUpdating, error: updateError}] =
-    useUpdatePaymentMethodMutation()
+  const [updatePaymentMethod, { loading: isUpdating, error: updateError }] =
+    useUpdatePaymentMethodMutation();
 
   const isDisabled =
     isLoading ||
@@ -91,47 +98,52 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
     isLoadingPaymentProvider ||
     loadError !== undefined ||
     loadPaymentProviderError !== undefined ||
-    !isAuthorized
+    !isAuthorized;
 
   useEffect(() => {
     if (data?.paymentMethod) {
-      setName(data.paymentMethod.name)
-      setSlug(data.paymentMethod.slug)
-      setDescription(data.paymentMethod.description)
-      setActive(data.paymentMethod.active)
-      setPaymentProvider(data.paymentMethod.paymentProvider ?? undefined)
-      setImage(data.paymentMethod.image ?? undefined)
-      setGracePeriod(data.paymentMethod.gracePeriod)
+      setName(data.paymentMethod.name);
+      setSlug(data.paymentMethod.slug);
+      setDescription(data.paymentMethod.description);
+      setActive(data.paymentMethod.active);
+      setPaymentProvider(data.paymentMethod.paymentProvider ?? undefined);
+      setImage(data.paymentMethod.image ?? undefined);
+      setGracePeriod(data.paymentMethod.gracePeriod);
     }
-  }, [data?.paymentMethod])
+  }, [data?.paymentMethod]);
 
   useEffect(() => {
     if (paymentProviderData?.paymentProviders) {
-      setPaymentProviders(paymentProviderData.paymentProviders)
+      setPaymentProviders(paymentProviderData.paymentProviders);
     }
-  }, [paymentProviderData?.paymentProviders])
+  }, [paymentProviderData?.paymentProviders]);
 
   useEffect(() => {
     const error =
       loadError?.message ??
       createError?.message ??
       updateError?.message ??
-      loadPaymentProviderError?.message
+      loadPaymentProviderError?.message;
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={0}
+        >
           {error}
         </Message>
-      )
-  }, [loadError, createError, updateError, loadPaymentProviderError])
+      );
+  }, [loadError, createError, updateError, loadPaymentProviderError]);
 
   async function handleSave() {
     if (!paymentProvider) {
-      return // TODO: handle validation
+      return; // TODO: handle validation
     }
 
     if (id) {
-      const {data} = await updatePaymentMethod({
+      const { data } = await updatePaymentMethod({
         variables: {
           id,
           input: {
@@ -141,14 +153,14 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
             active,
             gracePeriod,
             paymentProviderID: paymentProvider.id,
-            imageId: image?.id
-          }
-        }
-      })
+            imageId: image?.id,
+          },
+        },
+      });
 
-      if (data?.updatePaymentMethod) onSave?.(data.updatePaymentMethod)
+      if (data?.updatePaymentMethod) onSave?.(data.updatePaymentMethod);
     } else {
-      const {data} = await createPaymentMethod({
+      const { data } = await createPaymentMethod({
         variables: {
           input: {
             name,
@@ -156,21 +168,23 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
             description,
             active,
             gracePeriod,
-            paymentProviderID: paymentProvider.id
-          }
-        }
-      })
+            paymentProviderID: paymentProvider.id,
+          },
+        },
+      });
 
-      if (data?.createPaymentMethod) onSave?.(data.createPaymentMethod)
+      if (data?.createPaymentMethod) onSave?.(data.createPaymentMethod);
     }
   }
 
   // Schema used for form validation
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    paymentProvider: StringType().isRequired(t('errorMessages.noPaymentProviderErrorMessage'))
-  })
+    paymentProvider: StringType().isRequired(
+      t('errorMessages.noPaymentProviderErrorMessage')
+    ),
+  });
 
   return (
     <>
@@ -178,23 +192,32 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name, paymentProvider}}>
+        formValue={{ name, paymentProvider }}
+      >
         <Drawer.Header>
           <Drawer.Title>
-            {id ? t('paymentMethodList.editTitle') : t('paymentMethodList.createTitle')}
+            {id ?
+              t('paymentMethodList.editTitle')
+            : t('paymentMethodList.createTitle')}
           </Drawer.Title>
 
           <Drawer.Actions>
-            <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
+            <PermissionControl
+              qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}
+            >
               <Button
                 appearance="primary"
                 disabled={isDisabled}
                 type="submit"
-                onClick={() => handleSave()}>
+                onClick={() => handleSave()}
+              >
                 {id ? t('save') : t('create')}
               </Button>
             </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            <Button
+              appearance={'subtle'}
+              onClick={() => onClose?.()}
+            >
               {t('close')}
             </Button>
           </Drawer.Actions>
@@ -222,19 +245,33 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
                 value={name}
                 disabled={isDisabled}
                 onChange={(value: string) => {
-                  setName(value)
-                  setSlug(slugify(value))
+                  setName(value);
+                  setSlug(slugify(value));
                 }}
               />
             </Form.Group>
             <Form.Group controlId="paymentMethodSlug">
-              <Form.ControlLabel>{t('paymentMethodList.slug')}</Form.ControlLabel>
-              <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext />
+              <Form.ControlLabel>
+                {t('paymentMethodList.slug')}
+              </Form.ControlLabel>
+              <Form.Control
+                name={t('paymentMethodList.slug')}
+                value={slug}
+                plaintext
+              />
             </Form.Group>
             <Form.Group controlId="paymentMethodIsActive">
-              <Form.ControlLabel>{t('paymentMethodList.active')}</Form.ControlLabel>
-              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-              <Form.HelpText>{t('paymentMethodList.activeDescription')}</Form.HelpText>
+              <Form.ControlLabel>
+                {t('paymentMethodList.active')}
+              </Form.ControlLabel>
+              <Toggle
+                checked={active}
+                disabled={isDisabled}
+                onChange={value => setActive(value)}
+              />
+              <Form.HelpText>
+                {t('paymentMethodList.activeDescription')}
+              </Form.HelpText>
             </Form.Group>
             <Form.Group controlId="paymentMethodAdapter">
               <Form.ControlLabel>
@@ -245,37 +282,50 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
                 virtualized
                 disabled={isDisabled}
                 value={paymentProvider?.id}
-                data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
+                data={paymentProviders.map(pp => ({
+                  value: pp.id,
+                  label: pp.name,
+                }))}
                 searchable={false}
                 block
                 accepter={SelectPicker}
                 onChange={(value: any) =>
-                  setPaymentProvider(paymentProviders.find(pp => pp.id === value))
+                  setPaymentProvider(
+                    paymentProviders.find(pp => pp.id === value)
+                  )
                 }
               />
             </Form.Group>
             <Form.Group controlId="paymentMethodDescription">
-              <Form.ControlLabel>{t('paymentMethodList.description')}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {t('paymentMethodList.description')}
+              </Form.ControlLabel>
               <Form.Control
                 name="description"
                 value={description}
                 disabled={isDisabled}
                 onChange={(value: string) => {
-                  setDescription(value)
+                  setDescription(value);
                 }}
               />
               <FormGroupWithPadding controlId="paymentMethodGracePeriod">
-                <Form.ControlLabel>{t('paymentMethodEditPanel.gracePeriod')}</Form.ControlLabel>
+                <Form.ControlLabel>
+                  {t('paymentMethodEditPanel.gracePeriod')}
+                </Form.ControlLabel>
                 <InputNumber
                   name="gracePeriod"
                   value={gracePeriod}
                   disabled={isDisabled}
                   postfix={t('paymentMethodEditPanel.days')}
                   onChange={(value: string | number) => {
-                    setGracePeriod(typeof value === 'string' ? Number(value) : value)
+                    setGracePeriod(
+                      typeof value === 'string' ? Number(value) : value
+                    );
                   }}
                 />
-                <Form.HelpText>{t('paymentMethodEditPanel.gracePeriodHelpText')}</Form.HelpText>
+                <Form.HelpText>
+                  {t('paymentMethodEditPanel.gracePeriodHelpText')}
+                </Form.HelpText>
               </FormGroupWithPadding>
             </Form.Group>
           </Panel>
@@ -285,24 +335,25 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
       <Drawer
         open={imageSelectionOpen}
         onClose={() => {
-          setImageSelectionOpen(false)
-        }}>
+          setImageSelectionOpen(false);
+        }}
+      >
         <ImageSelectPanel
           onClose={() => setImageSelectionOpen(false)}
           onSelect={(image: FullImageFragment) => {
-            setImage(image)
-            setImageSelectionOpen(false)
+            setImage(image);
+            setImageSelectionOpen(false);
           }}
         />
       </Drawer>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PAYMENT_METHOD',
   'CAN_GET_PAYMENT_METHODS',
   'CAN_CREATE_PAYMENT_METHOD',
-  'CAN_DELETE_PAYMENT_METHOD'
-])(PaymentMethodEditPanel)
-export {CheckedPermissionComponent as PaymentMethodEditPanel}
+  'CAN_DELETE_PAYMENT_METHOD',
+])(PaymentMethodEditPanel);
+export { CheckedPermissionComponent as PaymentMethodEditPanel };

@@ -1,18 +1,18 @@
-import {Meta} from '@storybook/react'
-import {PageDocument} from '@wepublish/website/api'
-import {PageContainer} from './page-container'
-import {mockPage} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { PageDocument } from '@wepublish/website/api';
+import { PageContainer } from './page-container';
+import { mockPage } from '@wepublish/storybook/mocks';
 
-const page = mockPage()
+const page = mockPage();
 
 export default {
   component: PageContainer,
-  title: 'Container/Page'
-} as Meta
+  title: 'Container/Page',
+} as Meta;
 
 export const ById = {
   args: {
-    id: page.id
+    id: page.id,
   },
 
   parameters: {
@@ -22,23 +22,23 @@ export const ById = {
           request: {
             query: PageDocument,
             variables: {
-              id: page.id
-            }
+              id: page.id,
+            },
           },
           result: {
             data: {
-              page
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              page,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const BySlug = {
   args: {
-    slug: page.slug
+    slug: page.slug,
   },
 
   parameters: {
@@ -48,23 +48,23 @@ export const BySlug = {
           request: {
             query: PageDocument,
             variables: {
-              slug: page.slug
-            }
+              slug: page.slug,
+            },
           },
           result: {
             data: {
-              page
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              page,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const ByToken = {
   args: {
-    token: 'foobar'
+    token: 'foobar',
   },
 
   parameters: {
@@ -74,24 +74,24 @@ export const ByToken = {
           request: {
             query: PageDocument,
             variables: {
-              token: 'foobar'
-            }
+              token: 'foobar',
+            },
           },
           result: {
             data: {
-              page
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              page,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const WithChildren = {
   args: {
     id: page.id,
-    children: <div>Children</div>
+    children: <div>Children</div>,
   },
   parameters: {
     apolloClient: {
@@ -100,16 +100,16 @@ export const WithChildren = {
           request: {
             query: PageDocument,
             variables: {
-              id: page.id
-            }
+              id: page.id,
+            },
           },
           result: {
             data: {
-              page
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              page,
+            },
+          },
+        },
+      ],
+    },
+  },
+};

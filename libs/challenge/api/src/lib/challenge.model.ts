@@ -1,37 +1,37 @@
-import {Field, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {GraphQLDate} from 'graphql-scalars'
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { GraphQLDate } from 'graphql-scalars';
 
 export enum CaptchaType {
   Algebraic = 'Algebraic',
-  CfTurnstile = 'CfTurnstile'
+  CfTurnstile = 'CfTurnstile',
 }
 
 registerEnumType(CaptchaType, {
-  name: 'CaptchaType'
-})
+  name: 'CaptchaType',
+});
 
 @ObjectType()
 export class Challenge {
   @Field(() => CaptchaType)
-  type!: CaptchaType
+  type!: CaptchaType;
 
-  @Field(() => String, {nullable: true})
-  challenge?: string
+  @Field(() => String, { nullable: true })
+  challenge?: string;
 
-  @Field(() => String, {nullable: true})
-  challengeID?: string
+  @Field(() => String, { nullable: true })
+  challengeID?: string;
 
-  @Field(() => GraphQLDate, {nullable: true})
-  validUntil?: Date
+  @Field(() => GraphQLDate, { nullable: true })
+  validUntil?: Date;
 }
 
 export type ChallengeValidationProps = {
-  challengeID?: string
-  solution: number | string
-}
+  challengeID?: string;
+  solution: number | string;
+};
 
 export type ChallengeValidationReturn = {
-  result: string
-  message: string
-  valid: boolean
-}
+  result: string;
+  message: string;
+  valid: boolean;
+};
