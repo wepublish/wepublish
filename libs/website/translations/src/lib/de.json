@@ -8,6 +8,7 @@
   },
   "teaser": {
     "author": {
+      "text": "Von {authors}",
       "seperator": ", "
     },
     "meta": {

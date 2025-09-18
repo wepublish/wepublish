@@ -134,7 +134,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
     background-color: transparent;
     color: ${({theme}) => theme.palette.primary.main};
     font-weight: 600;
-    width: max-content;
+    width: 100%;
   }
 
   ${TeaserTitle} {
