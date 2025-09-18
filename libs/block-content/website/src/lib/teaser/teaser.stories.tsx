@@ -1,5 +1,5 @@
 import {Meta} from '@storybook/react'
-import {CustomTeaser, FullImageFragment} from '@wepublish/website/api'
+import {CustomTeaser, FullImageFragment, TeaserType} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
