@@ -36,7 +36,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4:9.7
     platform: linux/amd64
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
       PGADMIN_DEFAULT_PASSWORD: 'root'
@@ -67,6 +66,22 @@ services:
     volumes:
       - storage_data:/data
 
+  cache:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    ports:
+      - 6379:6379
+    networks:
+      - default
+    volumes:
+      - cache_data:/data
+    ulimits:
+      memlock: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
 volumes:
   database_data:
   storage_data:
+  cache_data:
