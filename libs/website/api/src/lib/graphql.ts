@@ -2806,7 +2806,7 @@ export type Query = {
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** This query returns a list of tags */
-  tags?: Maybe<TagConnection>;
+  tags: TagConnection;
   /**
    *
    *       Returns a single userConsent by id.
@@ -4313,7 +4313,7 @@ export type TagQueryVariables = Exact<{
 }>;
 
 
-export type TagQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type?: TagType | null, main: boolean, url: string }> } | null };
+export type TagQuery = { __typename?: 'Query', tags: { __typename?: 'TagConnection', nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type?: TagType | null, main: boolean, url: string }> } };
 
 export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null };
 

@@ -2790,7 +2790,7 @@ export type Query = {
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>
   /** This query returns a list of tags */
-  tags?: Maybe<TagConnection>
+  tags: TagConnection
   /**
    *
    *       Returns a single userConsent by id.
@@ -4219,7 +4219,7 @@ export type TagListQueryVariables = Exact<{
 
 export type TagListQuery = {
   __typename?: 'Query'
-  tags?: {
+  tags: {
     __typename?: 'TagConnection'
     totalCount: number
     nodes: Array<{__typename?: 'Tag'; id: string; tag?: string | null; url: string}>
@@ -4230,7 +4230,7 @@ export type TagListQuery = {
       hasNextPage: boolean
       hasPreviousPage: boolean
     }
-  } | null
+  }
 }
 
 export type FullUserFragment = {__typename?: 'User'; name: string; email: string}

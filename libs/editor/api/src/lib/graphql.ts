@@ -922,7 +922,7 @@ export type PaymentMethod = {
   active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
-  gracePeriod?: Maybe<Scalars['Int']>;
+  gracePeriod: Scalars['Int'];
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
@@ -935,7 +935,7 @@ export type PaymentMethod = {
 export type PaymentMethodInput = {
   active: Scalars['Boolean'];
   description: Scalars['String'];
-  gracePeriod?: InputMaybe<Scalars['Int']>;
+  gracePeriod: Scalars['Int'];
   imageId?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
