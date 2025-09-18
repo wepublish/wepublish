@@ -6,6 +6,7 @@ import {
   FullPaymentMethodFragment,
   MemberPlanInput,
   PaymentMethod,
+  ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
   usePaymentMethodListQuery,
@@ -94,7 +95,8 @@ function MemberPlanEdit() {
       slug: '',
       name: '',
       extendable: true,
-      maxCount: undefined
+      maxCount: undefined,
+      productType: ProductType.Subscription
     }
 
     setMemberPlan(initMemberPlan)
@@ -162,6 +164,7 @@ function MemberPlanEdit() {
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
       maxCount: memberPlan.maxCount,
+      productType: memberPlan.productType,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,
       failPageId: memberPlan.failPageId,

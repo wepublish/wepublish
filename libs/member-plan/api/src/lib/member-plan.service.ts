@@ -137,12 +137,29 @@ const createTagsFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanW
   return {}
 }
 
+const createProductTypeFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
+  if (filter?.productType) {
+    return {
+      productType: filter.productType
+    }
+  }
+
+  return {}
+}
+
 export const createMemberPlanFilter = (
   filter?: Partial<MemberPlanFilter>
 ): Prisma.MemberPlanWhereInput => {
   if (filter) {
     return {
-      AND: [createNameFilter(filter), createActiveFilter(filter), createTagsFilter(filter)]
+      AND: [
+        createNameFilter(filter),
+        createActiveFilter(filter),
+        createTagsFilter(filter),
+        createProductTypeFilter(filter)
+      ]
     }
   }
   return {}

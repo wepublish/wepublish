@@ -1311,6 +1311,7 @@ type MemberPlan implements HasImage {
   imageID: String
   maxCount: Int
   name: String!
+  productType: ProductType!
   slug: String!
   successPageId: String
   tags: [String!]
@@ -1325,6 +1326,7 @@ type MemberPlanConnection {
 input MemberPlanFilter {
   active: Boolean
   name: String
+  productType: ProductType
   tags: [String!]
 }
 
@@ -1936,6 +1938,11 @@ input PollVoteFilter {
 
 enum PollVoteSort {
   CreatedAt
+}
+
+enum ProductType {
+  DONATION
+  SUBSCRIPTION
 }
 
 type Property {

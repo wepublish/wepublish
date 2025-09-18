@@ -559,6 +559,11 @@ enum Currency {
   EUR @map("EUR")
 }
 
+enum ProductType {
+  SUBSCRIPTION @map("SUBSCRIPTION")
+  DONATION @map("DONATION")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -577,6 +582,7 @@ model MemberPlan {
   migrateToTargetPaymentMethodID String?
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
+  productType                    ProductType              @default(SUBSCRIPTION)
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -673,8 +679,8 @@ model Page {
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
 
-  slug        String?
-  hidden      Boolean @default(false)
+  slug   String?
+  hidden Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]

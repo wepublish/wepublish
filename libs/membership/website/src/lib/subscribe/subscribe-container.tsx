@@ -2,6 +2,7 @@ import {useUser} from '@wepublish/authentication/website'
 import {PaymentForm, useSubscribe} from '@wepublish/payment/website'
 import {
   FullMemberPlanFragment,
+  ProductType,
   useChallengeQuery,
   useInvoicesQuery,
   useMemberPlanListQuery,
@@ -108,6 +109,11 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
     })
   }, [memberPlanList, filter])
 
+  const donatePredicate = useMemo<NonNullable<SubscribeContainerProps<T>['donate']>>(
+    () => donate ?? ((plan?: FullMemberPlanFragment) => plan?.productType === ProductType.Donation),
+    [donate]
+  )
+
   return (
     <>
       <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
@@ -122,7 +128,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
-        donate={donate}
+        donate={donatePredicate}
         transactionFee={transactionFee}
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}

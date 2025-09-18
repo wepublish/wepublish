@@ -43,7 +43,7 @@ function MemberPlanList() {
 
   const {data, loading: isLoading} = useMemberPlanListQuery({
     variables: {
-      filter: filter || undefined,
+      filter: filter ? {name: filter} : undefined,
       take: 50
     },
     fetchPolicy: 'network-only'
@@ -168,7 +168,7 @@ function MemberPlanList() {
                   const query = cache.readQuery<MemberPlanListQuery>({
                     query: MemberPlanListDocument,
                     variables: {
-                      filter: filter || undefined,
+                      filter: filter ? {name: filter} : undefined,
                       take: 50
                     }
                   })

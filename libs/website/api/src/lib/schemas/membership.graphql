@@ -35,7 +35,7 @@ fragment FullMemberPlan on MemberPlan {
     ...FullAvailablePaymentMethod
   }
   extendable
-
+  productType
   successPageId
   # successPage {
   #   url

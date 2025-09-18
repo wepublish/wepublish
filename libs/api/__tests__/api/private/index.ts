@@ -427,6 +427,7 @@ export type MemberPlan = {
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  productType: ProductType;
   slug: Scalars['String'];
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -442,6 +443,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -459,6 +461,7 @@ export type MemberPlanInput = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  productType: ProductType;
   slug: Scalars['String'];
   successPageId?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
@@ -1114,6 +1117,11 @@ export type PollWithAnswers = {
   opensAt: Scalars['DateTime'];
   question?: Maybe<Scalars['String']>;
 };
+
+export enum ProductType {
+  Donation = 'DONATION',
+  Subscription = 'SUBSCRIPTION'
+}
 
 export type Properties = {
   __typename?: 'Properties';
