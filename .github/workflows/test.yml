@@ -15,7 +15,8 @@ jobs:
         image: postgres:17
         env:
           POSTGRES_PASSWORD: test
-          POSTGRES_DB: wepublish
+          POSTGRES_DB: wepublish_test
+          POSTGRES_USER: postgres
         ports:
           - 5432:5432
     steps:
@@ -27,10 +28,9 @@ jobs:
       - run: npm ci
       - run: npm run test-backend -- --code-coverage
         env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: '--max-old-space-size=4096'
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
           DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
-
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
