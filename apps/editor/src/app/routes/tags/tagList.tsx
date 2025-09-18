@@ -1,12 +1,17 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   Tag,
   TagListQueryVariables,
   TagType,
   useDeleteTagMutation,
-  useTagListQuery
-} from '@wepublish/editor/api'
-import {CanCreateTag, CanDeleteTag, CanGetTags, CanUpdateTag} from '@wepublish/permissions'
+  useTagListQuery,
+} from '@wepublish/editor/api';
+import {
+  CanCreateTag,
+  CanDeleteTag,
+  CanGetTags,
+  CanUpdateTag,
+} from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -17,12 +22,12 @@ import {
   ListViewHeader,
   PaddedCell,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
-import {Link} from 'react-router-dom'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import {
   Button,
   IconButton as RIconButton,
@@ -30,46 +35,46 @@ import {
   InputGroup,
   Modal,
   Pagination,
-  Table as RTable
-} from 'rsuite'
-import {RowDataType} from 'rsuite/esm/Table'
+  Table as RTable,
+} from 'rsuite';
+import { RowDataType } from 'rsuite/esm/Table';
 
 const IconButton = styled(RIconButton)`
   margin-left: 12px;
-`
+`;
 
 export type TagListProps = {
-  type: TagType
-}
+  type: TagType;
+};
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
-function TagList({type}: TagListProps) {
-  const {t} = useTranslation()
-  const [tagToDelete, setTagToDelete] = useState<Tag | undefined>(undefined)
-  const [page, setPage] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(10)
+function TagList({ type }: TagListProps) {
+  const { t } = useTranslation();
+  const [tagToDelete, setTagToDelete] = useState<Tag | undefined>(undefined);
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
 
-  const [tagSearch, setTagSearch] = useState<string>()
+  const [tagSearch, setTagSearch] = useState<string>();
 
   const tagListVariables = {
     filter: {
       type,
-      tag: tagSearch
+      tag: tagSearch,
     },
     take: limit,
-    skip: (page - 1) * limit
-  } as TagListQueryVariables
+    skip: (page - 1) * limit,
+  } as TagListQueryVariables;
 
-  const {data, loading, refetch} = useTagListQuery({
+  const { data, loading, refetch } = useTagListQuery({
     variables: tagListVariables,
-    fetchPolicy: 'cache-and-network'
-  })
+    fetchPolicy: 'cache-and-network',
+  });
   const [deleteTag] = useDeleteTagMutation({
     onCompleted() {
-      refetch()
-    }
-  })
+      refetch();
+    },
+  });
 
   return (
     <>
@@ -80,7 +85,10 @@ function TagList({type}: TagListProps) {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton appearance="primary" loading={false}>
+            <IconButton
+              appearance="primary"
+              loading={false}
+            >
               <MdAdd />
               {t('tags.overview.createTag')}
             </IconButton>
@@ -89,7 +97,10 @@ function TagList({type}: TagListProps) {
 
         <ListViewFilterArea>
           <InputGroup>
-            <Input value={tagSearch} onChange={value => setTagSearch(value)} />
+            <Input
+              value={tagSearch}
+              onChange={value => setTagSearch(value)}
+            />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
@@ -98,18 +109,30 @@ function TagList({type}: TagListProps) {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.tags?.nodes ?? []}>
-          <Column width={300} resizable>
+        <Table
+          fillHeight
+          loading={loading}
+          data={data?.tags?.nodes ?? []}
+        >
+          <Column
+            width={300}
+            resizable
+          >
             <HeaderCell>{t('tags.overview.name')}</HeaderCell>
 
             <RCell>
               {(rowData: RowDataType<Tag>) => (
-                <Link to={`edit/${rowData.id}`}>{rowData.tag || 'Tag ohne Namen'}</Link>
+                <Link to={`edit/${rowData.id}`}>
+                  {rowData.tag || 'Tag ohne Namen'}
+                </Link>
               )}
             </RCell>
           </Column>
 
-          <Column resizable fixed="right">
+          <Column
+            resizable
+            fixed="right"
+          >
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
             <PaddedCell align={'center'}>
               {(tag: RowDataType<Tag>) => (
@@ -148,11 +171,13 @@ function TagList({type}: TagListProps) {
         open={!!tagToDelete}
         backdrop="static"
         size="xs"
-        onClose={() => setTagToDelete(undefined)}>
+        onClose={() => setTagToDelete(undefined)}
+      >
         <Modal.Title>{t('tags.overview.areYouSure')}</Modal.Title>
 
         <Modal.Body>
-          {tagToDelete && t('tags.overview.areYouSureBody', {tag: tagToDelete.tag})}
+          {tagToDelete &&
+            t('tags.overview.areYouSureBody', { tag: tagToDelete.tag })}
         </Modal.Body>
 
         <Modal.Footer>
@@ -162,28 +187,32 @@ function TagList({type}: TagListProps) {
             onClick={() => {
               deleteTag({
                 variables: {
-                  id: tagToDelete?.id ?? ''
-                }
-              })
-              setTagToDelete(undefined)
-            }}>
+                  id: tagToDelete?.id ?? '',
+                },
+              });
+              setTagToDelete(undefined);
+            }}
+          >
             {t('tags.overview.areYouSureConfirmation')}
           </Button>
 
-          <Button appearance="subtle" onClick={() => setTagToDelete(undefined)}>
+          <Button
+            appearance="subtle"
+            onClick={() => setTagToDelete(undefined)}
+          >
             {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   CanGetTags.id,
   CanCreateTag.id,
   CanUpdateTag.id,
-  CanDeleteTag.id
-])(TagList)
+  CanDeleteTag.id,
+])(TagList);
 
-export {CheckedPermissionComponent as TagList}
+export { CheckedPermissionComponent as TagList };

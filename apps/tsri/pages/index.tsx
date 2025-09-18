@@ -1,21 +1,21 @@
-import {campaigns} from '@mailchimp/mailchimp_marketing'
-import {ContentWidthProvider} from '@wepublish/content/website'
-import {PageContainer} from '@wepublish/page/website'
+import { campaigns } from '@mailchimp/mailchimp_marketing';
+import { ContentWidthProvider } from '@wepublish/content/website';
+import { PageContainer } from '@wepublish/page/website';
 
-import {DailyBriefingContext} from '../src/components/daily-briefing/daily-briefing-teaser'
+import { DailyBriefingContext } from '../src/components/daily-briefing/daily-briefing-teaser';
 
 type IndexProps = {
-  campaigns: campaigns.Campaigns[]
-}
+  campaigns: campaigns.Campaigns[];
+};
 
-export default function Index({campaigns}: IndexProps) {
+export default function Index({ campaigns }: IndexProps) {
   return (
     <DailyBriefingContext.Provider value={campaigns}>
       <ContentWidthProvider fullWidth={true}>
         <PageContainer slug={''} />
       </ContentWidthProvider>
     </DailyBriefingContext.Provider>
-  )
+  );
 }
 
 // export const getStaticProps: GetStaticProps = async () => {

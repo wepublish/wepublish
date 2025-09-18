@@ -1,21 +1,26 @@
-import {INestApplication} from '@nestjs/common'
-import {createMock, PartialMocked, TagList, TagType} from '@wepublish/testing'
-import {Test, TestingModule} from '@nestjs/testing'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {URLAdapter} from '@wepublish/nest-modules'
-import {TagResolver} from './tag.resolver'
-import {TagService} from './tag.service'
-import request from 'supertest'
+import { INestApplication } from '@nestjs/common';
+import {
+  createMock,
+  PartialMocked,
+  TagList,
+  TagType,
+} from '@wepublish/testing';
+import { Test, TestingModule } from '@nestjs/testing';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { URLAdapter } from '@wepublish/nest-modules';
+import { TagResolver } from './tag.resolver';
+import { TagService } from './tag.service';
+import request from 'supertest';
 
 describe('TagResolver', () => {
-  let app: INestApplication
-  let tagService: PartialMocked<TagService>
-  let urlAdapter: PartialMocked<URLAdapter>
+  let app: INestApplication;
+  let tagService: PartialMocked<TagService>;
+  let urlAdapter: PartialMocked<URLAdapter>;
 
   beforeEach(async () => {
-    tagService = createMock(TagService)
-    urlAdapter = createMock(URLAdapter)
+    tagService = createMock(TagService);
+    urlAdapter = createMock(URLAdapter);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -23,32 +28,32 @@ describe('TagResolver', () => {
           driver: ApolloDriver,
           autoSchemaFile: true,
           path: '/',
-          cache: 'bounded'
-        })
+          cache: 'bounded',
+        }),
       ],
       providers: [
         TagResolver,
         {
           provide: TagService,
-          useValue: tagService
+          useValue: tagService,
         },
         {
           provide: URLAdapter,
-          useValue: urlAdapter
-        }
-      ]
-    }).compile()
+          useValue: urlAdapter,
+        },
+      ],
+    }).compile();
 
-    app = module.createNestApplication()
-    await app.init()
-  })
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   test('can query a list of tags', async () => {
-    urlAdapter.getTagURL?.mockResolvedValue('url-id1')
+    urlAdapter.getTagURL?.mockResolvedValue('url-id1');
     tagService.getTags?.mockResolvedValue({
       nodes: [
         {
@@ -59,17 +64,17 @@ describe('TagResolver', () => {
           main: false,
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
-          type: TagType.Article
-        }
+          type: TagType.Article,
+        },
       ],
       pageInfo: {
         startCursor: 'startCursor',
         endCursor: 'endCursor',
         hasNextPage: false,
-        hasPreviousPage: false
+        hasPreviousPage: false,
       },
-      totalCount: 0
-    })
+      totalCount: 0,
+    });
 
     await request(app.getHttpServer())
       .post('')
@@ -77,15 +82,15 @@ describe('TagResolver', () => {
         query: TagList,
         variables: {
           filter: {
-            tag: 'tag1'
-          }
-        }
+            tag: 'tag1',
+          },
+        },
       })
       .expect(response => {
-        expect(tagService.getTags?.mock.calls).toMatchSnapshot()
-        expect(urlAdapter.getTagURL?.mock.calls).toMatchSnapshot()
-        expect(response.body.errors).toBeUndefined()
-        expect(response.body.data).toMatchSnapshot()
-      })
-  })
-})
+        expect(tagService.getTags?.mock.calls).toMatchSnapshot();
+        expect(urlAdapter.getTagURL?.mock.calls).toMatchSnapshot();
+        expect(response.body.errors).toBeUndefined();
+        expect(response.body.data).toMatchSnapshot();
+      });
+  });
+});

@@ -1,107 +1,111 @@
-import {Context} from '../../context'
-import {CanDeleteAuthor, CanCreateAuthor} from '@wepublish/permissions'
-import {authorise} from '../permissions'
-import {PrismaClient, Prisma} from '@prisma/client'
+import { Context } from '../../context';
+import { CanDeleteAuthor, CanCreateAuthor } from '@wepublish/permissions';
+import { authorise } from '../permissions';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 export const deleteAuthorById = (
   id: string,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanDeleteAuthor, roles)
+  const { roles } = authenticate();
+  authorise(CanDeleteAuthor, roles);
 
   return author.delete({
     where: {
-      id
-    }
-  })
-}
+      id,
+    },
+  });
+};
 
-type CreateAuthorInput = Omit<Prisma.AuthorUncheckedCreateInput, 'links' | 'modifiedAt'> & {
-  links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[]
-  tagIds: string[]
-}
+type CreateAuthorInput = Omit<
+  Prisma.AuthorUncheckedCreateInput,
+  'links' | 'modifiedAt'
+> & {
+  links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[];
+  tagIds: string[];
+};
 
 export const createAuthor = (
-  {id: authorId, links, tagIds, ...input}: CreateAuthorInput,
+  { id: authorId, links, tagIds, ...input }: CreateAuthorInput,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateAuthor, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateAuthor, roles);
 
   return author.create({
     data: {
       ...input,
       tags: {
         create: tagIds?.map(tagId => ({
-          tagId
-        }))
+          tagId,
+        })),
       },
       links: {
-        create: links
-      }
+        create: links,
+      },
     },
     include: {
-      links: true
-    }
-  })
-}
+      links: true,
+    },
+  });
+};
 
 type UpdateAuthorInput = Omit<
   Prisma.AuthorUncheckedUpdateInput,
   'links' | 'modifiedAt' | 'createdAt'
 > & {
-  links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[]
-  tagIds: string[]
-}
+  links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[];
+  tagIds: string[];
+};
 
 export const updateAuthor = (
   id: string,
-  {links, tagIds, ...input}: UpdateAuthorInput,
+  { links, tagIds, ...input }: UpdateAuthorInput,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateAuthor, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateAuthor, roles);
 
   return author.update({
-    where: {id},
+    where: { id },
     data: {
       ...input,
-      tags: tagIds
-        ? {
+      tags:
+        tagIds ?
+          {
             connectOrCreate: tagIds.map(tagId => ({
               where: {
                 authorId_tagId: {
                   authorId: id,
-                  tagId
-                }
+                  tagId,
+                },
               },
               create: {
-                tagId
-              }
+                tagId,
+              },
             })),
             deleteMany: {
               authorId: id,
               tagId: {
-                notIn: tagIds
-              }
-            }
+                notIn: tagIds,
+              },
+            },
           }
         : undefined,
       links: {
         deleteMany: {
           authorId: {
-            equals: id
-          }
+            equals: id,
+          },
         },
-        create: links
-      }
+        create: links,
+      },
     },
     include: {
-      links: true
-    }
-  })
-}
+      links: true,
+    },
+  });
+};

@@ -1,1 +1,1 @@
-export * from '@wepublish/feed/website'
+export * from '@wepublish/feed/website';

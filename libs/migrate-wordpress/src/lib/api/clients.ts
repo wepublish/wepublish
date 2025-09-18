@@ -1,17 +1,17 @@
-import {GraphQLClient} from 'graphql-request'
+import { GraphQLClient } from 'graphql-request';
 
-const publicGraphqlEndpoint = process.env['WEPUBLISH_API_URL'] + '/v1'
+const publicGraphqlEndpoint = process.env['WEPUBLISH_API_URL'] + '/v1';
 export const publicClient = new GraphQLClient(publicGraphqlEndpoint, {
   headers: {
-    'Content-Type': 'application/json'
-  }
-})
+    'Content-Type': 'application/json',
+  },
+});
 
-export const privateToken = process.env['WEPUBLISH_TOKEN']
-export const privateGraphqlEndpoint = publicGraphqlEndpoint + '/admin'
+export const privateToken = process.env['WEPUBLISH_TOKEN'];
+export const privateGraphqlEndpoint = publicGraphqlEndpoint + '/admin';
 export const privateClient = new GraphQLClient(privateGraphqlEndpoint, {
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${privateToken}`
-  }
-})
+    Authorization: `Bearer ${privateToken}`,
+  },
+});

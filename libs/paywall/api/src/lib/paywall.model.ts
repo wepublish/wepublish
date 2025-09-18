@@ -1,72 +1,79 @@
-import {ArgsType, Field, ObjectType, OmitType, PartialType, InputType} from '@nestjs/graphql'
-import {MemberPlan} from '@wepublish/member-plan/api'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Descendant} from 'slate'
+import {
+  ArgsType,
+  Field,
+  ObjectType,
+  OmitType,
+  PartialType,
+  InputType,
+} from '@nestjs/graphql';
+import { MemberPlan } from '@wepublish/member-plan/api';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { Descendant } from 'slate';
 
 @ObjectType()
 export class PaywallBypass {
   @Field()
-  id!: string
+  id!: string;
 
   @Field(() => Date)
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field(() => Date)
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  token!: string
+  token!: string;
 
   @Field()
-  paywallId!: string
+  paywallId!: string;
 }
 
 @ObjectType()
 export class Paywall {
   @Field()
-  id!: string
+  id!: string;
 
   @Field(() => Date)
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field(() => Date)
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
-  @Field({nullable: true})
-  name?: string
+  @Field({ nullable: true })
+  name?: string;
 
-  @Field(() => GraphQLRichText, {nullable: true})
-  description?: Descendant[]
+  @Field(() => GraphQLRichText, { nullable: true })
+  description?: Descendant[];
 
-  @Field(() => GraphQLRichText, {nullable: true})
-  circumventDescription?: Descendant[]
-
-  @Field()
-  anyMemberPlan!: boolean
+  @Field(() => GraphQLRichText, { nullable: true })
+  circumventDescription?: Descendant[];
 
   @Field()
-  active!: boolean
+  anyMemberPlan!: boolean;
+
+  @Field()
+  active!: boolean;
 
   @Field(() => [MemberPlan])
-  memberPlans!: MemberPlan[]
+  memberPlans!: MemberPlan[];
 
   @Field(() => [PaywallBypass])
-  bypasses!: PaywallBypass[]
+  bypasses!: PaywallBypass[];
 }
 
 @InputType()
 export class CreatePaywallBypassInput {
   @Field()
-  token!: string
+  token!: string;
 }
 
 @InputType()
 export class UpdatePaywallBypassInput {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  token!: string
+  token!: string;
 }
 
 @ArgsType()
@@ -75,15 +82,18 @@ export class CreatePaywallInput extends OmitType(
   ['id', 'memberPlans', 'bypasses', 'createdAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(() => [String], {defaultValue: []})
-  memberPlanIds!: string[]
+  @Field(() => [String], { defaultValue: [] })
+  memberPlanIds!: string[];
 }
 
 @ArgsType()
-export class UpdatePaywallInput extends PartialType(CreatePaywallInput, ArgsType) {
+export class UpdatePaywallInput extends PartialType(
+  CreatePaywallInput,
+  ArgsType
+) {
   @Field()
-  id!: string
+  id!: string;
 
-  @Field(() => [String], {nullable: true})
-  bypassTokens?: string[]
+  @Field(() => [String], { nullable: true })
+  bypassTokens?: string[];
 }

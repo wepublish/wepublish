@@ -1,13 +1,13 @@
-import {Meta} from '@storybook/react'
-import {mockCustomTeaser} from '@wepublish/storybook/mocks'
-import {BaseTeaser} from './base-teaser'
+import { Meta } from '@storybook/react';
+import { mockCustomTeaser } from '@wepublish/storybook/mocks';
+import { BaseTeaser } from './base-teaser';
 
 export default {
   component: BaseTeaser,
-  title: 'Blocks/Teaser/Custom'
-} as Meta
+  title: 'Blocks/Teaser/Custom',
+} as Meta;
 
-const customTeaser = mockCustomTeaser()
+const customTeaser = mockCustomTeaser();
 
 export const Default = {
   args: {
@@ -16,11 +16,11 @@ export const Default = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
-    teaser: customTeaser
-  }
-}
+    teaser: customTeaser,
+  },
+};
 
 export const WithoutPreTitle = {
   args: {
@@ -29,14 +29,14 @@ export const WithoutPreTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...customTeaser,
-      preTitle: null
-    }
-  }
-}
+      preTitle: null,
+    },
+  },
+};
 
 export const WithoutTitle = {
   args: {
@@ -45,14 +45,14 @@ export const WithoutTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...customTeaser,
-      title: null
-    }
-  }
-}
+      title: null,
+    },
+  },
+};
 
 export const WithoutImage = {
   args: {
@@ -61,11 +61,11 @@ export const WithoutImage = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...customTeaser,
-      image: null
-    }
-  }
-}
+      image: null,
+    },
+  },
+};

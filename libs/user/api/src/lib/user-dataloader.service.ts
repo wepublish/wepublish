@@ -1,11 +1,11 @@
-import {Injectable, Scope} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {createOptionalsArray, Primeable} from '@wepublish/utils/api'
-import DataLoader from 'dataloader'
-import {User} from './user.model'
+import { Injectable, Scope } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { createOptionalsArray, Primeable } from '@wepublish/utils/api';
+import DataLoader from 'dataloader';
+import { User } from './user.model';
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
 export class UserDataloaderService implements Primeable<User> {
   private dataloader = new DataLoader<string, User | null>(
@@ -15,27 +15,33 @@ export class UserDataloaderService implements Primeable<User> {
         await this.prisma.user.findMany({
           where: {
             id: {
-              in: ids as string[]
-            }
-          }
+              in: ids as string[],
+            },
+          },
         }),
         'id'
-      )
+      );
     },
-    {name: 'UserDataLoader'}
-  )
+    { name: 'UserDataLoader' }
+  );
 
   constructor(private prisma: PrismaClient) {}
 
-  public prime(...parameters: Parameters<DataLoader<string, User | null>['prime']>) {
-    return this.dataloader.prime(...parameters)
+  public prime(
+    ...parameters: Parameters<DataLoader<string, User | null>['prime']>
+  ) {
+    return this.dataloader.prime(...parameters);
   }
 
-  public load(...parameters: Parameters<DataLoader<string, User | null>['load']>) {
-    return this.dataloader.load(...parameters)
+  public load(
+    ...parameters: Parameters<DataLoader<string, User | null>['load']>
+  ) {
+    return this.dataloader.load(...parameters);
   }
 
-  public loadMany(...parameters: Parameters<DataLoader<string, User | null>['loadMany']>) {
-    return this.dataloader.loadMany(...parameters)
+  public loadMany(
+    ...parameters: Parameters<DataLoader<string, User | null>['loadMany']>
+  ) {
+    return this.dataloader.loadMany(...parameters);
   }
 }

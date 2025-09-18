@@ -19,5 +19,5 @@ export enum ErrorCode {
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
   ChallengeFailed = 'ChallengeFailed',
   InvalidSettingData = 'INVALID_SETTING_DATA',
-  PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING'
+  PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING',
 }

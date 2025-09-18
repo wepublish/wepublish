@@ -1,18 +1,31 @@
-import {AppBar, Box, css, GlobalStyles, SxProps, Theme, Toolbar, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
-import {useUser} from '@wepublish/authentication/website'
-import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderNavbarProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {MdClose, MdMenu, MdWarning} from 'react-icons/md'
-import {navigationLinkToUrl} from '../link-to-url'
-import {useTranslation} from 'react-i18next'
-import {ButtonProps, TextToIcon} from '@wepublish/ui'
+import {
+  AppBar,
+  Box,
+  css,
+  GlobalStyles,
+  SxProps,
+  Theme,
+  Toolbar,
+  useTheme,
+} from '@mui/material';
+import styled from '@emotion/styled';
+import { useUser } from '@wepublish/authentication/website';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import {
+  BuilderNavbarProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import { MdClose, MdMenu, MdWarning } from 'react-icons/md';
+import { navigationLinkToUrl } from '../link-to-url';
+import { useTranslation } from 'react-i18next';
+import { ButtonProps, TextToIcon } from '@wepublish/ui';
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface HTMLAttributes<T> {
-    fetchPriority?: 'high' | 'low' | 'auto'
+    fetchPriority?: 'high' | 'low' | 'auto';
   }
 }
 
@@ -28,7 +41,7 @@ const cssVariables = (theme: Theme) => css`
       --navbar-height: ${theme.spacing(12.5)};
     }
   }
-`
+`;
 
 export const NavbarWrapper = styled('nav')`
   position: sticky;
@@ -36,16 +49,16 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: ${({theme}) => theme.palette.background.default};
-`
+  background-color: ${({ theme }) => theme.palette.background.default};
+`;
 
 const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
-  isMenuOpen
-    ? css`
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.contrastText};
-      `
-    : null
+  isMenuOpen ?
+    css`
+      background-color: ${theme.palette.primary.main};
+      color: ${theme.palette.primary.contrastText};
+    `
+  : null;
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -56,7 +69,7 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   min-height: unset;
   padding: 0;
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
       grid-template-columns: 1fr max-content 1fr;
       min-height: unset;
@@ -68,18 +81,18 @@ export const NavbarInnerWrapper = styled(Toolbar)`
       padding: 0;
     }
   `}
-`
+`;
 
 export const NavbarLinks = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen'
-})<{isMenuOpen?: boolean}>`
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
   display: none;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
   align-items: center;
   justify-content: flex-start;
   width: 100%;
 
-  ${({isMenuOpen}) =>
+  ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
       z-index: -1;
@@ -89,105 +102,105 @@ export const NavbarLinks = styled('div', {
     // custom for maximum space usage
     display: flex;
   }
-`
+`;
 
 export const NavbarLink = styled(Link)`
   font-size: 1rem;
   text-decoration: none;
-  color: ${({theme}) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.black};
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: 1.3rem;
   }
-`
+`;
 
-export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
+export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: start;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
 
-  ${({isMenuOpen}) =>
+  ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
       z-index: -1;
     `}
-`
+`;
 
 export const NavbarActions = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen'
-})<{isMenuOpen?: boolean}>`
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-self: end;
-  gap: ${({theme}) => theme.spacing(1)};
-  padding-right: ${({theme}) => theme.spacing(1)};
+  gap: ${({ theme }) => theme.spacing(1)};
+  padding-right: ${({ theme }) => theme.spacing(1)};
   justify-self: end;
 
-  ${({isMenuOpen}) =>
+  ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
       z-index: -1;
     `}
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    gap: ${({theme}) => theme.spacing(2)};
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    gap: ${({ theme }) => theme.spacing(2)};
   }
-`
+`;
 
 export const NavbarIconButtonWrapper = styled('div')`
-  background-color: ${({theme}) => theme.palette.primary.main};
+  background-color: ${({ theme }) => theme.palette.primary.main};
   display: flex;
   justify-content: center;
   align-items: center;
   height: var(--navbar-height);
   aspect-ratio: 1;
-  color: ${({theme}) => theme.palette.common.white};
+  color: ${({ theme }) => theme.palette.common.white};
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     svg {
-      font-size: ${({theme}) => theme.spacing(4.5)};
+      font-size: ${({ theme }) => theme.spacing(4.5)};
     }
   }
 
-  ${({theme}) => theme.breakpoints.up('lg')} {
+  ${({ theme }) => theme.breakpoints.up('lg')} {
     svg {
-      font-size: ${({theme}) => theme.spacing(6.5)};
+      font-size: ${({ theme }) => theme.spacing(6.5)};
     }
   }
-`
+`;
 
 export const NavbarLoginLink = styled(Link, {
-  shouldForwardProp: propName => propName !== 'isMenuOpen'
-})<{isMenuOpen: boolean}>`
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen: boolean }>`
   color: unset;
   display: grid;
   align-items: center;
   justify-items: center;
   justify-self: center;
 
-  ${({isMenuOpen}) =>
+  ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
       z-index: -1;
     `}
-`
+`;
 
 const buttonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
     fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`
-  }
-})
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+  },
+});
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
   width: auto;
-`
+`;
 
-export const NavbarSpacer = styled('div')``
+export const NavbarSpacer = styled('div')``;
 
 const imageStyles = (theme: Theme) => css`
   max-height: ${theme.spacing(5)};
@@ -202,12 +215,12 @@ const imageStyles = (theme: Theme) => css`
     max-height: ${theme.spacing(9)};
     max-width: ${theme.spacing(38)};
   }
-`
+`;
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
-  isMenuOpen?: boolean
-  onMenuToggle?: (isOpen: boolean) => void
-  navPaperClassName?: string
+  isMenuOpen?: boolean;
+  onMenuToggle?: (isOpen: boolean) => void;
+  navPaperClassName?: string;
 }
 
 export function Navbar({
@@ -221,60 +234,75 @@ export function Navbar({
   logo,
   hasRunningSubscription,
   hasUnpaidInvoices,
-  loginBtn = {href: '/login'},
-  profileBtn = {href: '/profile'},
-  subscribeBtn = {href: '/mitmachen'},
+  loginBtn = { href: '/login' },
+  profileBtn = { href: '/profile' },
+  subscribeBtn = { href: '/mitmachen' },
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
-  navPaperClassName
+  navPaperClassName,
 }: ExtendedNavbarProps) {
-  const [internalIsMenuOpen, setInternalMenuOpen] = useState(false)
+  const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
-  const isMenuOpen = controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : internalIsMenuOpen
+  const isMenuOpen =
+    controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
+      internalIsMenuOpen
+    );
 
   const toggleMenu = useCallback(() => {
-    const newState = !isMenuOpen
+    const newState = !isMenuOpen;
     if (controlledIsMenuOpen === undefined) {
-      setInternalMenuOpen(newState)
+      setInternalMenuOpen(newState);
     }
-    onMenuToggle?.(newState)
-  }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle])
+    onMenuToggle?.(newState);
+  }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const mainItems = data?.navigations?.find(({key}) => key === slug)
-  const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
-  const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
+  const mainItems = data?.navigations?.find(({ key }) => key === slug);
+  const headerItems = data?.navigations?.find(({ key }) => key === headerSlug);
+  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = useMemo(
     () =>
       categorySlugs.map(categorySlugArray =>
         categorySlugArray.reduce((navigations, categorySlug) => {
-          const navItem = data?.navigations?.find(({key}) => key === categorySlug)
+          const navItem = data?.navigations?.find(
+            ({ key }) => key === categorySlug
+          );
 
           if (navItem) {
-            navigations.push(navItem)
+            navigations.push(navItem);
           }
 
-          return navigations
+          return navigations;
         }, [] as FullNavigationFragment[])
       ),
     [categorySlugs, data?.navigations]
-  )
+  );
 
   const {
-    elements: {IconButton, Image, Button}
-  } = useWebsiteBuilder()
+    elements: { IconButton, Image, Button },
+  } = useWebsiteBuilder();
 
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={theme => cssVariables(theme)} />
 
-      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles(isMenuOpen)}>
+      <AppBar
+        position="static"
+        elevation={0}
+        color={'transparent'}
+        css={appBarStyles(isMenuOpen)}
+      >
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton size="large" aria-label="Menu" onClick={toggleMenu} color={'inherit'}>
+              <IconButton
+                size="large"
+                aria-label="Menu"
+                onClick={toggleMenu}
+                color={'inherit'}
+              >
                 {!isMenuOpen && <MdMenu />}
                 {isMenuOpen && <MdClose />}
               </IconButton>
@@ -283,7 +311,10 @@ export function Navbar({
             {!!headerItems?.links.length && (
               <NavbarLinks isMenuOpen={isMenuOpen}>
                 {headerItems.links.map((link, index) => (
-                  <NavbarLink key={index} href={navigationLinkToUrl(link)}>
+                  <NavbarLink
+                    key={index}
+                    href={navigationLinkToUrl(link)}
+                  >
                     {link.label}
                   </NavbarLink>
                 ))}
@@ -291,10 +322,19 @@ export function Navbar({
             )}
           </NavbarMain>
 
-          <NavbarLoginLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
+          <NavbarLoginLink
+            href="/"
+            aria-label="Startseite"
+            isMenuOpen={isMenuOpen}
+          >
             <NavbarLogoWrapper>
               {!!logo && (
-                <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
+                <Image
+                  image={logo}
+                  css={imageStyles}
+                  loading="eager"
+                  fetchPriority="high"
+                />
               )}
             </NavbarLogoWrapper>
           </NavbarLoginLink>
@@ -307,19 +347,31 @@ export function Navbar({
                 startIcon={<MdWarning />}
                 sx={buttonStyles}
                 size="medium"
-                {...profileBtn}>
-                <Box sx={{display: {xs: 'none', md: 'unset'}}}>Offene</Box>&nbsp;Rechnung
+                {...profileBtn}
+              >
+                <Box sx={{ display: { xs: 'none', md: 'unset' } }}>Offene</Box>
+                &nbsp;Rechnung
               </Button>
             )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...subscribeBtn}>
+              <Button
+                LinkComponent={Link}
+                sx={buttonStyles}
+                size="medium"
+                {...subscribeBtn}
+              >
                 {t('navbar.subscribe')}
               </Button>
             )}
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button LinkComponent={Link} sx={buttonStyles} size="medium" {...profileBtn}>
+              <Button
+                LinkComponent={Link}
+                sx={buttonStyles}
+                size="medium"
+                {...profileBtn}
+              >
                 Mein Konto
               </Button>
             )}
@@ -338,19 +390,24 @@ export function Navbar({
           categories={categories}
           closeMenu={toggleMenu}
           isMenuOpen={isMenuOpen}
-          className={navPaperClassName}>
+          className={navPaperClassName}
+        >
           {iconItems?.links.map((link, index) => (
             <Link
               key={index}
               href={navigationLinkToUrl(link)}
               onClick={() => {
                 if (controlledIsMenuOpen === undefined) {
-                  setInternalMenuOpen(false)
+                  setInternalMenuOpen(false);
                 }
-                onMenuToggle?.(false)
+                onMenuToggle?.(false);
               }}
-              color="inherit">
-              <TextToIcon title={link.label} size={32} />
+              color="inherit"
+            >
+              <TextToIcon
+                title={link.label}
+                size={32}
+              />
             </Link>
           ))}
 
@@ -358,15 +415,15 @@ export function Navbar({
         </NavPaper>
       )}
     </NavbarWrapper>
-  )
+  );
 }
 
 export const NavPaperWrapper = styled('div')`
-  padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.primary.main};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  padding: ${({ theme }) => theme.spacing(2.5)};
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.primary.contrastText};
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
   position: absolute;
   bottom: 1px; // Fixes a 1px gap between navbar and paper
   left: 0;
@@ -374,9 +431,9 @@ export const NavPaperWrapper = styled('div')`
   transform: translateY(100%);
   overflow-y: scroll;
   max-height: 100vh;
-  padding-bottom: ${({theme}) => theme.spacing(10)};
+  padding-bottom: ${({ theme }) => theme.spacing(10)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(6)};
       row-gap: ${theme.spacing(12)};
@@ -384,70 +441,70 @@ export const NavPaperWrapper = styled('div')`
       padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
     }
   `}
-`
+`;
 
 export const NavPaperCategory = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({ theme }) => theme.spacing(1)};
   grid-auto-rows: max-content;
-`
+`;
 
 export const NavPaperName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body2.fontSize};
-`
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
+`;
 
 export const NavPaperSeparator = styled('hr')`
   width: 100%;
   height: 1px;
-  background-color: ${({theme}) => theme.palette.common.white};
+  background-color: ${({ theme }) => theme.palette.common.white};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
       display: none;
     }
   `}
-`
+`;
 
 export const NavPaperLinksGroup = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   `}
-`
+`;
 
 const navPaperLinkStyling = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
-`
+`;
 
 export const NavPaperCategoryLinks = styled('div')`
   display: grid;
   grid-auto-rows: max-content;
-  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
-  font-size: ${({theme}) => theme.typography.h6.fontSize};
-`
+  font-weight: ${({ theme }) => theme.typography.fontWeightMedium};
+  font-size: ${({ theme }) => theme.typography.h6.fontSize};
+`;
 
 export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
 export const NavPaperChildrenWrapper = styled('div')`
   position: relative;
-  padding: ${({theme}) => theme.spacing(1.5)};
+  padding: ${({ theme }) => theme.spacing(1.5)};
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
   justify-items: center;
   width: 100%;
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       position: absolute;
       grid-template-columns: auto;
@@ -458,14 +515,14 @@ export const NavPaperChildrenWrapper = styled('div')`
       padding-left: ${theme.spacing(2)};
     }
   `}
-`
+`;
 
 export const NavPaperActions = styled('div')`
   display: flex;
   flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(2)};
-  margin-top: ${({theme}) => theme.spacing(5)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+  margin-top: ${({ theme }) => theme.spacing(5)};
+`;
 
 const NavPaper = ({
   main,
@@ -478,47 +535,60 @@ const NavPaper = ({
   hasUnpaidInvoices,
   isMenuOpen,
   className,
-  children
+  children,
 }: PropsWithChildren<{
-  loginBtn?: ButtonProps | null
-  profileBtn?: ButtonProps | null
-  subscribeBtn?: ButtonProps | null
-  main: FullNavigationFragment | null | undefined
-  categories: FullNavigationFragment[][]
-  closeMenu: () => void
-  hasRunningSubscription: boolean
-  hasUnpaidInvoices: boolean
-  isMenuOpen: boolean
-  className?: string
+  loginBtn?: ButtonProps | null;
+  profileBtn?: ButtonProps | null;
+  subscribeBtn?: ButtonProps | null;
+  main: FullNavigationFragment | null | undefined;
+  categories: FullNavigationFragment[][];
+  closeMenu: () => void;
+  hasRunningSubscription: boolean;
+  hasUnpaidInvoices: boolean;
+  isMenuOpen: boolean;
+  className?: string;
 }>) => {
   const {
-    elements: {Link, Button, H4, H6}
-  } = useWebsiteBuilder()
-  const {t} = useTranslation()
-  const {hasUser, logout} = useUser()
-  const theme = useTheme()
+    elements: { Link, Button, H4, H6 },
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
+  const { hasUser, logout } = useUser();
+  const theme = useTheme();
 
-  const showMenu = className ? true : isMenuOpen // For custom styling (like Hauptstadt), always show. For default, show when open.
+  const showMenu = className ? true : isMenuOpen; // For custom styling (like Hauptstadt), always show. For default, show when open.
 
   if (!showMenu) {
-    return null
+    return null;
   }
 
   return (
-    <NavPaperWrapper className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}>
-      {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
+    <NavPaperWrapper
+      className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
+    >
+      {children && (
+        <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>
+      )}
 
       <NavPaperMainLinks>
         {main?.links.map((link, index) => {
-          const url = navigationLinkToUrl(link)
+          const url = navigationLinkToUrl(link);
 
           return (
-            <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-              <H4 component="span" css={{fontWeight: '700'}}>
+            <Link
+              href={url}
+              key={index}
+              color="inherit"
+              underline="none"
+              onClick={closeMenu}
+            >
+              <H4
+                component="span"
+                css={{ fontWeight: '700' }}
+              >
                 {link.label}
               </H4>
             </Link>
-          )
+          );
         })}
 
         <NavPaperActions>
@@ -529,7 +599,8 @@ const NavPaper = ({
               color="warning"
               onClick={closeMenu}
               startIcon={<MdWarning />}
-              {...profileBtn}>
+              {...profileBtn}
+            >
               Offene Rechnung
             </Button>
           )}
@@ -540,7 +611,8 @@ const NavPaper = ({
               variant="contained"
               color="secondary"
               onClick={closeMenu}
-              {...subscribeBtn}>
+              {...subscribeBtn}
+            >
               {t('navbar.subscribe')}
             </Button>
           )}
@@ -551,7 +623,8 @@ const NavPaper = ({
               variant="outlined"
               color="secondary"
               onClick={closeMenu}
-              {...profileBtn}>
+              {...profileBtn}
+            >
               Mein Konto
             </Button>
           )}
@@ -559,11 +632,12 @@ const NavPaper = ({
           {hasUser && (
             <Button
               onClick={() => {
-                logout()
-                closeMenu()
+                logout();
+                closeMenu();
               }}
               variant="contained"
-              color="primary">
+              color="primary"
+            >
               Logout
             </Button>
           )}
@@ -574,7 +648,8 @@ const NavPaper = ({
               variant="outlined"
               color="secondary"
               onClick={closeMenu}
-              {...loginBtn}>
+              {...loginBtn}
+            >
               Login
             </Button>
           )}
@@ -592,7 +667,7 @@ const NavPaper = ({
 
                 <NavPaperCategoryLinks>
                   {nav.links?.map((link, index) => {
-                    const url = navigationLinkToUrl(link)
+                    const url = navigationLinkToUrl(link);
 
                     return (
                       <Link
@@ -601,12 +676,16 @@ const NavPaper = ({
                         color="inherit"
                         underline="none"
                         css={navPaperLinkStyling(theme)}
-                        onClick={closeMenu}>
-                        <H6 component="span" css={{fontWeight: '700'}}>
+                        onClick={closeMenu}
+                      >
+                        <H6
+                          component="span"
+                          css={{ fontWeight: '700' }}
+                        >
                           {link.label}
                         </H6>
                       </Link>
-                    )
+                    );
                   })}
                 </NavPaperCategoryLinks>
               </NavPaperCategory>
@@ -614,5 +693,5 @@ const NavPaper = ({
           </NavPaperLinksGroup>
         ))}
     </NavPaperWrapper>
-  )
-}
+  );
+};

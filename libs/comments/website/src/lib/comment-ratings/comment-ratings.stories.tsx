@@ -1,23 +1,26 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {CommentRatings} from './comment-ratings'
-import {CommentRatingSystemAnswer} from '@wepublish/website/api'
-import {mockCommentRatingAnswer} from '@wepublish/storybook/mocks'
-import {WithCommentRatingsDecorators, WithUserDecorator} from '@wepublish/storybook'
-import {userEvent, within} from '@storybook/test'
-import {ComponentProps} from 'react'
-import {useArgs} from '@storybook/preview-api'
-import {CommentRatingContext} from './comment-ratings.context'
+import { Meta, StoryObj } from '@storybook/react';
+import { CommentRatings } from './comment-ratings';
+import { CommentRatingSystemAnswer } from '@wepublish/website/api';
+import { mockCommentRatingAnswer } from '@wepublish/storybook/mocks';
+import {
+  WithCommentRatingsDecorators,
+  WithUserDecorator,
+} from '@wepublish/storybook';
+import { userEvent, within } from '@storybook/test';
+import { ComponentProps } from 'react';
+import { useArgs } from '@storybook/preview-api';
+import { CommentRatingContext } from './comment-ratings.context';
 
 export default {
   component: CommentRatings,
-  title: 'Components/Comment Ratings'
-} as Meta
+  title: 'Components/Comment Ratings',
+} as Meta;
 
 const answers: CommentRatingSystemAnswer[] = [
-  mockCommentRatingAnswer({answer: 'Foobar'}),
-  mockCommentRatingAnswer({answer: 'Barfoo'}),
-  mockCommentRatingAnswer({answer: 'Foobaz'})
-]
+  mockCommentRatingAnswer({ answer: 'Foobar' }),
+  mockCommentRatingAnswer({ answer: 'Barfoo' }),
+  mockCommentRatingAnswer({ answer: 'Foobaz' }),
+];
 
 export const Default = {
   args: {
@@ -27,31 +30,31 @@ export const Default = {
         mean: 4.5,
         count: 10,
         total: 45,
-        answer: answers[0]
+        answer: answers[0],
       },
       {
         mean: 2.5,
         count: 10,
         total: 25,
-        answer: answers[1]
+        answer: answers[1],
       },
       {
         mean: 1.9,
         count: 10,
         total: 19,
-        answer: answers[2]
-      }
+        answer: answers[2],
+      },
     ],
     overriddenRatings: [],
     userRatings: [],
     ratingSystem: {
       id: '1234-1234',
       name: 'Default',
-      answers
-    }
+      answers,
+    },
   },
-  decorators: [WithCommentRatingsDecorators({}), WithUserDecorator(null)]
-} as StoryObj<typeof CommentRatings>
+  decorators: [WithCommentRatingsDecorators({}), WithUserDecorator(null)],
+} as StoryObj<typeof CommentRatings>;
 
 export const Single = {
   ...Default,
@@ -59,10 +62,10 @@ export const Single = {
     ...Default.args,
     ratingSystem: {
       ...Default.args?.ratingSystem,
-      answers: [Default.args?.ratingSystem?.answers[0]]
-    }
-  }
-} as StoryObj<typeof CommentRatings>
+      answers: [Default.args?.ratingSystem?.answers[0]],
+    },
+  },
+} as StoryObj<typeof CommentRatings>;
 
 export const Empty = {
   ...Default,
@@ -70,10 +73,10 @@ export const Empty = {
     ...Default.args,
     ratingSystem: {
       ...Default.args?.ratingSystem,
-      answers: []
-    }
-  }
-} as StoryObj<typeof CommentRatings>
+      answers: [],
+    },
+  },
+} as StoryObj<typeof CommentRatings>;
 
 export const OverridenRatings = {
   ...Default,
@@ -82,19 +85,19 @@ export const OverridenRatings = {
     overriddenRatings: [
       {
         answerId: answers[0].id,
-        value: 1.2
+        value: 1.2,
       },
       {
         answerId: answers[1].id,
-        value: 2.4
+        value: 2.4,
       },
       {
         answerId: answers[2].id,
-        value: 3.5
-      }
-    ]
-  }
-} as StoryObj<typeof CommentRatings>
+        value: 3.5,
+      },
+    ],
+  },
+} as StoryObj<typeof CommentRatings>;
 
 export const UserRatings = {
   ...Default,
@@ -106,25 +109,25 @@ export const UserRatings = {
         answer: answers[0],
         value: 2,
         createdAt: new Date('2023-01-01').toISOString(),
-        id: '111-111'
+        id: '111-111',
       },
       {
         commentId: '1234',
         answer: answers[1],
         value: 3,
         createdAt: new Date('2023-01-01').toISOString(),
-        id: '222-222'
+        id: '222-222',
       },
       {
         commentId: '1234',
         answer: answers[2],
         value: 5,
         createdAt: new Date('2023-01-01').toISOString(),
-        id: '333-333'
-      }
-    ]
-  }
-} as StoryObj<typeof CommentRatings>
+        id: '333-333',
+      },
+    ],
+  },
+} as StoryObj<typeof CommentRatings>;
 
 export const AnonymousUserRatings = {
   ...Default,
@@ -133,98 +136,102 @@ export const AnonymousUserRatings = {
       canRateAnonymously: true,
       anonymousRateResult: (commentId: string, answerId: string) => {
         if (answerId === answers[0].id) {
-          return 1
+          return 1;
         }
 
         if (answerId === answers[1].id) {
-          return 2
+          return 2;
         }
 
         if (answerId === answers[2].id) {
-          return 3
+          return 3;
         }
 
-        return 0
-      }
-    })
-  ]
-} as StoryObj<typeof CommentRatings>
+        return 0;
+      },
+    }),
+  ],
+} as StoryObj<typeof CommentRatings>;
 
 export const ReadOnly = {
   ...Default,
   decorators: [
     WithCommentRatingsDecorators({
-      canRateAnonymously: false
-    })
-  ]
-} as StoryObj<typeof CommentRatings>
+      canRateAnonymously: false,
+    }),
+  ],
+} as StoryObj<typeof CommentRatings>;
 
 export const Rate = {
   ...Single,
-  play: async ({canvasElement, step}) => {
-    const canvas = within(canvasElement)
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     const button = canvas.getByLabelText('4 Stars', {
-      exact: false
-    })
+      exact: false,
+    });
 
     await step('Click Star', async () => {
-      await userEvent.click(button)
-    })
+      await userEvent.click(button);
+    });
   },
   render: function Render() {
-    const [args, updateArgs] = useArgs<ComponentProps<typeof CommentRatings>>()
+    const [args, updateArgs] = useArgs<ComponentProps<typeof CommentRatings>>();
 
     return (
       <CommentRatingContext.Provider
         value={{
-          rate: async ({variables}) => {
+          rate: async ({ variables }) => {
             updateArgs({
               userRatings: [
                 {
-                  answer: args.ratingSystem.answers.find(({id}) => id === variables?.answerId)!,
+                  answer: args.ratingSystem.answers.find(
+                    ({ id }) => id === variables?.answerId
+                  )!,
                   commentId: variables!.commentId,
                   createdAt: new Date('2023-01-01').toISOString(),
                   id: '123',
-                  value: variables!.value
-                }
-              ]
-            })
+                  value: variables!.value,
+                },
+              ],
+            });
 
-            return {}
-          }
-        }}>
+            return {};
+          },
+        }}
+      >
         <CommentRatings {...args} />
       </CommentRatingContext.Provider>
-    )
+    );
   },
-  decorators: [WithUserDecorator(null)]
-} as StoryObj<typeof CommentRatings>
+  decorators: [WithUserDecorator(null)],
+} as StoryObj<typeof CommentRatings>;
 
 export const WithRateError = {
   ...Single,
-  play: async ({canvasElement, step}) => {
-    const canvas = within(canvasElement)
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
 
     const button = canvas.getByLabelText('4 Stars', {
-      exact: false
-    })
+      exact: false,
+    });
 
     await step('Click Star', async () => {
-      await userEvent.click(button)
-    })
+      await userEvent.click(button);
+    });
   },
   render: function Render(args) {
     return (
       <CommentRatingContext.Provider
         value={{
           rate: async () => {
-            throw new Error('Something went wrong.')
-          }
-        }}>
+            throw new Error('Something went wrong.');
+          },
+        }}
+      >
         <CommentRatings {...args} />
       </CommentRatingContext.Provider>
-    )
+    );
   },
-  decorators: [WithUserDecorator(null)]
-} as StoryObj<typeof CommentRatings>
+  decorators: [WithUserDecorator(null)],
+} as StoryObj<typeof CommentRatings>;

@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   Banner,
   BannerCloseButton,
@@ -6,11 +6,11 @@ import {
   BannerCtaText,
   BannerImage,
   BannerText,
-  BannerTitle
-} from '@wepublish/banner/website'
+  BannerTitle,
+} from '@wepublish/banner/website';
 
 const BajourBanner = styled(Banner)(
-  ({theme}) => `
+  ({ theme }) => `
 ${BannerContentWrapper} {
   padding: ${theme.spacing(2)};
 }
@@ -48,6 +48,6 @@ ${BannerCtaText} {
     display: none;
   }
 }`
-)
+);
 
-export {BajourBanner}
+export { BajourBanner };

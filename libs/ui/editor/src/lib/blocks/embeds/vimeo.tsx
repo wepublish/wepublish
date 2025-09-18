@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 
 const Iframe = styled.iframe`
   position: absolute;
@@ -6,19 +6,19 @@ const Iframe = styled.iframe`
   left: 0;
   width: 100%;
   height: 100%;
-`
+`;
 
 const VimeoEmbed = styled.div`
   position: relative;
   padding-top: 56.25%;
   width: 100%;
-`
+`;
 
 export interface VimeoVideoEmbedProps {
-  videoID: string | null | undefined
+  videoID: string | null | undefined;
 }
 
-export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
+export function VimeoVideoEmbed({ videoID }: VimeoVideoEmbedProps) {
   return (
     <VimeoEmbed>
       {videoID && (
@@ -28,5 +28,5 @@ export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
         />
       )}
     </VimeoEmbed>
-  )
+  );
 }

@@ -1,23 +1,28 @@
-import {useEffect, useRef} from 'react'
-import {useTranslation} from 'react-i18next'
+import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import {BlockProps} from '../atoms/blockList'
-import {TypographicTextArea} from '../atoms/typographicTextArea'
-import {TitleBlockValue} from './types'
+import { BlockProps } from '../atoms/blockList';
+import { TypographicTextArea } from '../atoms/typographicTextArea';
+import { TitleBlockValue } from './types';
 
-export type TitleBlockProps = BlockProps<TitleBlockValue>
+export type TitleBlockProps = BlockProps<TitleBlockValue>;
 
-export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockProps) {
-  const {title, lead, preTitle} = value
-  const focusRef = useRef<HTMLTextAreaElement>(null)
+export function TitleBlock({
+  value,
+  onChange,
+  autofocus,
+  disabled,
+}: TitleBlockProps) {
+  const { title, lead, preTitle } = value;
+  const focusRef = useRef<HTMLTextAreaElement>(null);
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (autofocus) {
-      focusRef.current?.focus()
+      focusRef.current?.focus();
     }
-  }, [autofocus])
+  }, [autofocus]);
 
   return (
     <>
@@ -27,7 +32,7 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
         placeholder={t('blocks.title.preTitle')}
         value={preTitle}
         disabled={disabled}
-        onChange={e => onChange({...value, preTitle: e.target.value})}
+        onChange={e => onChange({ ...value, preTitle: e.target.value })}
       />
 
       <TypographicTextArea
@@ -37,7 +42,7 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
         placeholder={t('blocks.title.title')}
         value={title}
         disabled={disabled}
-        onChange={e => onChange({...value, title: e.target.value})}
+        onChange={e => onChange({ ...value, title: e.target.value })}
       />
       <TypographicTextArea
         variant="body1"
@@ -45,8 +50,8 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
         placeholder={t('blocks.title.leadText')}
         value={lead}
         disabled={disabled}
-        onChange={e => onChange({...value, lead: e.target.value})}
+        onChange={e => onChange({ ...value, lead: e.target.value })}
       />
     </>
-  )
+  );
 }

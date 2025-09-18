@@ -1,5 +1,5 @@
-import styled from '@emotion/styled'
-import {Box, Typography} from '@mui/material'
+import styled from '@emotion/styled';
+import { Box, Typography } from '@mui/material';
 import {
   hasBlockStyle,
   isFilledTeaser,
@@ -15,34 +15,45 @@ import {
   TeaserPreTitleWrapper,
   TeaserSlider,
   TeaserTitle,
-  TeaserWrapper
-} from '@wepublish/block-content/website'
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {allPass} from 'ramda'
+  TeaserWrapper,
+} from '@wepublish/block-content/website';
+import {
+  BlockContent,
+  TeaserGridBlock,
+  TeaserListBlock,
+} from '@wepublish/website/api';
+import {
+  BuilderTeaserListBlockProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { allPass } from 'ramda';
 
 import {
   OnlineReportsBaseTeaserStyled,
   OnlineReportsTeaserPreTitleWrapper,
-  OnlineReportsTeaserTitleWrapper
-} from '../onlinereports-base-teaser'
+  OnlineReportsTeaserTitleWrapper,
+} from '../onlinereports-base-teaser';
 
 export const IsAktuelleBildTeasers = (
   block: BlockContent
 ): block is TeaserGridBlock | TeaserListBlock =>
-  allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block)
+  allPass([hasBlockStyle('Aktuelle Bild'), isTeaserListBlock])(block);
 
 export const AktuelleBild = ({
   teasers,
   blockStyle,
-  className
-}: Pick<BuilderTeaserListBlockProps, 'title' | 'teasers' | 'blockStyle' | 'className'>) => {
-  const filledTeasers = teasers.filter(isFilledTeaser)
-  const numColumns = 1
+  className,
+}: Pick<
+  BuilderTeaserListBlockProps,
+  'title' | 'teasers' | 'blockStyle' | 'className'
+>) => {
+  const filledTeasers = teasers.filter(isFilledTeaser);
+  const numColumns = 1;
 
   const {
-    elements: {H2}
-  } = useWebsiteBuilder()
+    elements: { H2 },
+  } = useWebsiteBuilder();
 
   return (
     <AktuelleBildWrapper className={className}>
@@ -50,7 +61,11 @@ export const AktuelleBild = ({
         <H2>Das Wort zum Bild</H2>
         <Typography>
           Ein interessantes Bild geschossen?{' '}
-          <Link href={'mailto:redaktion@onlinereports.ch?subject=Das Wort zum Build'}>
+          <Link
+            href={
+              'mailto:redaktion@onlinereports.ch?subject=Das Wort zum Build'
+            }
+          >
             Mailen Sie es uns
           </Link>{' '}
           (mit Adresse und Datum)!
@@ -70,21 +85,21 @@ export const AktuelleBild = ({
         />
       </TeaserSliderWrapper>
     </AktuelleBildWrapper>
-  )
-}
+  );
+};
 
-const SideInfo = styled(Box)``
-const TeaserSliderWrapper = styled(Box)``
+const SideInfo = styled(Box)``;
+const TeaserSliderWrapper = styled(Box)``;
 
 const AktuelleBildWrapper = styled(Box)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${({theme}) => theme.spacing(2.5)};
+  gap: ${({ theme }) => theme.spacing(2.5)};
 
   ${TeaserSliderWrapper} {
     grid-column: span 3;
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       grid-column: span 2;
     }
 
@@ -132,25 +147,25 @@ const AktuelleBildWrapper = styled(Box)`
   }
 
   ${SliderInnerContainer} {
-    gap: ${({theme}) => theme.spacing(2)};
+    gap: ${({ theme }) => theme.spacing(2)};
   }
 
   ${SideInfo} {
     grid-column: span 1;
     display: flex;
     flex-direction: column;
-    gap: ${({theme}) => theme.spacing(1)};
+    gap: ${({ theme }) => theme.spacing(1)};
 
-    ${({theme}) => theme.breakpoints.down('md')} {
+    ${({ theme }) => theme.breakpoints.down('md')} {
       grid-column: span 3;
     }
   }
 
   ${SliderBallContainer} {
-    margin-top: ${({theme}) => theme.spacing(1)};
+    margin-top: ${({ theme }) => theme.spacing(1)};
   }
 
   ${SliderArrow} {
     display: block;
   }
-`
+`;

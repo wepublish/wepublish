@@ -1,33 +1,36 @@
-import styled from '@emotion/styled'
-import {NoSsr, Typography} from '@mui/material'
-import {Article, ArticleInfoWrapper} from '@wepublish/article/website'
+import styled from '@emotion/styled';
+import { NoSsr, Typography } from '@mui/material';
+import { Article, ArticleInfoWrapper } from '@wepublish/article/website';
 import {
   ImageBlockWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper,
   TeaserSlotsBlockWrapper,
-  TitleBlockWrapper
-} from '@wepublish/block-content/website'
-import {createWithTheme} from '@wepublish/ui'
-import {Article as ArticleType, useCommentListQuery} from '@wepublish/website/api'
-import {Button} from '@wepublish/website/builder'
+  TitleBlockWrapper,
+} from '@wepublish/block-content/website';
+import { createWithTheme } from '@wepublish/ui';
+import {
+  Article as ArticleType,
+  useCommentListQuery,
+} from '@wepublish/website/api';
+import { Button } from '@wepublish/website/builder';
 import {
   BuilderArticleAuthorsProps,
   BuilderArticleMetaProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {Fragment, useState} from 'react'
-import {FaCommentSlash, FaRegComment, FaShare} from 'react-icons/fa6'
-import {MdFormatSize, MdPrint} from 'react-icons/md'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { Fragment, useState } from 'react';
+import { FaCommentSlash, FaRegComment, FaShare } from 'react-icons/fa6';
+import { MdFormatSize, MdPrint } from 'react-icons/md';
 
-import {contentTheme} from '../theme'
-import {breakoutContainerOnXs} from '../utils/breakout-container'
-import {FontSizePicker} from './font-size-picker'
+import { contentTheme } from '../theme';
+import { breakoutContainerOnXs } from '../utils/breakout-container';
+import { FontSizePicker } from './font-size-picker';
 
 export const HauptstadtArticle = createWithTheme(
   styled(Article)`
-    row-gap: ${({theme}) => theme.spacing(3.5)};
+    row-gap: ${({ theme }) => theme.spacing(3.5)};
 
     > ${ImageBlockWrapper}:first-of-type img {
       // only breakout the image so that the caption is still aligned
@@ -40,7 +43,7 @@ export const HauptstadtArticle = createWithTheme(
 
     ${ArticleInfoWrapper} {
       grid-row-start: 3;
-      gap: ${({theme}) => theme.spacing(1)};
+      gap: ${({ theme }) => theme.spacing(1)};
     }
 
     ${TeaserListBlockWrapper},
@@ -48,30 +51,35 @@ export const HauptstadtArticle = createWithTheme(
     ${TeaserSlotsBlockWrapper},
     ${TeaserGridFlexBlockWrapper} {
       padding-top: var(--article-content-row-gap);
-      border-top: 1px solid ${({theme}) => theme.palette.primary.main};
+      border-top: 1px solid ${({ theme }) => theme.palette.primary.main};
     }
   `,
   contentTheme
-)
+);
 
 const HauptstadtArticleAuthorsWrapper = styled('div')`
-  padding-bottom: ${({theme}) => theme.spacing(0.5)};
-  border-bottom: 1px solid ${({theme}) => theme.palette.primary.main};
-`
+  padding-bottom: ${({ theme }) => theme.spacing(0.5)};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
+`;
 
-export const HauptstadtArticleAuthors = ({article, className}: BuilderArticleAuthorsProps) => {
-  const {AuthorChip, ArticleDate} = useWebsiteBuilder()
-  const authors = article?.latest.authors.filter(author => !author.hideOnArticle) || []
+export const HauptstadtArticleAuthors = ({
+  article,
+  className,
+}: BuilderArticleAuthorsProps) => {
+  const { AuthorChip, ArticleDate } = useWebsiteBuilder();
+  const authors =
+    article?.latest.authors.filter(author => !author.hideOnArticle) || [];
 
   if (!authors.length) {
-    return
+    return;
   }
 
   return (
     <Typography
       variant="articleAuthors"
       component={HauptstadtArticleAuthorsWrapper}
-      className={className}>
+      className={className}
+    >
       {authors.length && (
         <>
           Von{' '}
@@ -86,41 +94,44 @@ export const HauptstadtArticleAuthors = ({article, className}: BuilderArticleAut
 
       <ArticleDate article={article as ArticleType} />
     </Typography>
-  )
-}
+  );
+};
 
 export const HauptstadtArticleMetaWrapper = styled('div')`
   display: flex;
   flex-flow: row wrap;
 
   .MuiButton-startIcon {
-    margin-right: ${({theme}) => theme.spacing(0.5)};
+    margin-right: ${({ theme }) => theme.spacing(0.5)};
   }
-`
+`;
 
 const MetaWrapperButton = styled(Button)`
   padding-top: 0;
-  color: ${({theme}) => theme.palette.common.black};
-`
+  color: ${({ theme }) => theme.palette.common.black};
+`;
 
 const MetaWrapperTypography = styled(Typography)`
   text-decoration: underline;
-`
+`;
 
-export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaProps) => {
-  const [openFontSizeModal, setOpenFontSizeModal] = useState(false)
+export const HauptstadtArticleMeta = ({
+  article,
+  className,
+}: BuilderArticleMetaProps) => {
+  const [openFontSizeModal, setOpenFontSizeModal] = useState(false);
   const {
-    elements: {Link}
-  } = useWebsiteBuilder()
-  const {data} = useCommentListQuery({
+    elements: { Link },
+  } = useWebsiteBuilder();
+  const { data } = useCommentListQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      itemId: article.id
-    }
-  })
+      itemId: article.id,
+    },
+  });
 
-  const commentCount = data?.comments.length
-  const canShare = typeof window !== 'undefined' && 'share' in navigator
+  const commentCount = data?.comments.length;
+  const canShare = typeof window !== 'undefined' && 'share' in navigator;
 
   return (
     <>
@@ -132,12 +143,15 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           LinkComponent={Link}
           href="#comments"
           startIcon={
-            article.disableComments ? <FaCommentSlash size={16} /> : <FaRegComment size={16} />
-          }>
+            article.disableComments ?
+              <FaCommentSlash size={16} />
+            : <FaRegComment size={16} />
+          }
+        >
           <MetaWrapperTypography variant="caption">
-            {!commentCount
-              ? 'Keine Beiträge'
-              : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
+            {!commentCount ?
+              'Keine Beiträge'
+            : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
           </MetaWrapperTypography>
         </MetaWrapperButton>
 
@@ -152,10 +166,13 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
                 navigator.share({
                   url: window.location.href,
                   title: article.latest.title ?? undefined,
-                  text: article.latest.lead ?? undefined
-                })
-              }}>
-              <MetaWrapperTypography variant="caption">Teilen</MetaWrapperTypography>
+                  text: article.latest.lead ?? undefined,
+                });
+              }}
+            >
+              <MetaWrapperTypography variant="caption">
+                Teilen
+              </MetaWrapperTypography>
             </MetaWrapperButton>
           </NoSsr>
         )}
@@ -165,8 +182,11 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           variant="text"
           size="medium"
           startIcon={<MdPrint size={16} />}
-          onClick={() => print()}>
-          <MetaWrapperTypography variant="caption">Drucken</MetaWrapperTypography>
+          onClick={() => print()}
+        >
+          <MetaWrapperTypography variant="caption">
+            Drucken
+          </MetaWrapperTypography>
         </MetaWrapperButton>
 
         <MetaWrapperButton
@@ -174,8 +194,11 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
           variant="text"
           size="medium"
           startIcon={<MdFormatSize size={16} />}
-          onClick={() => setOpenFontSizeModal(true)}>
-          <MetaWrapperTypography variant="caption">Schrift</MetaWrapperTypography>
+          onClick={() => setOpenFontSizeModal(true)}
+        >
+          <MetaWrapperTypography variant="caption">
+            Schrift
+          </MetaWrapperTypography>
         </MetaWrapperButton>
       </HauptstadtArticleMetaWrapper>
 
@@ -185,5 +208,5 @@ export const HauptstadtArticleMeta = ({article, className}: BuilderArticleMetaPr
         onSubmit={() => setOpenFontSizeModal(false)}
       />
     </>
-  )
-}
+  );
+};

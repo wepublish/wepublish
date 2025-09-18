@@ -1,11 +1,11 @@
-import {PrismaClient} from '@prisma/client'
-import {Context} from '../../context'
-import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
-import {UserInputError} from '../../error'
-import {authorise} from '../permissions'
-import {CanGetMemberPlan, CanGetMemberPlans} from '@wepublish/permissions'
-import {getMemberPlans} from './member-plan.queries'
-import {SortOrder} from '@wepublish/utils/api'
+import { PrismaClient } from '@prisma/client';
+import { Context } from '../../context';
+import { MemberPlanFilter, MemberPlanSort } from '../../db/memberPlan';
+import { UserInputError } from '../../error';
+import { authorise } from '../permissions';
+import { CanGetMemberPlan, CanGetMemberPlans } from '@wepublish/permissions';
+import { getMemberPlans } from './member-plan.queries';
+import { SortOrder } from '@wepublish/utils/api';
 
 export const getMemberPlanByIdOrSlug = (
   id: string | null,
@@ -14,15 +14,15 @@ export const getMemberPlanByIdOrSlug = (
   memberPlansByID: Context['loaders']['memberPlansByID'],
   memberPlansBySlug: Context['loaders']['memberPlansBySlug']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanGetMemberPlan, roles)
+  const { roles } = authenticate();
+  authorise(CanGetMemberPlan, roles);
 
   if ((!id && !slug) || (id && slug)) {
-    throw new UserInputError('You must provide either `id` or `slug`.')
+    throw new UserInputError('You must provide either `id` or `slug`.');
   }
 
-  return id ? memberPlansByID.load(id) : memberPlansBySlug.load(slug!)
-}
+  return id ? memberPlansByID.load(id) : memberPlansBySlug.load(slug!);
+};
 
 export const getAdminMemberPlans = async (
   filter: Partial<MemberPlanFilter>,
@@ -34,8 +34,16 @@ export const getAdminMemberPlans = async (
   authenticate: Context['authenticate'],
   memberPlan: PrismaClient['memberPlan']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanGetMemberPlans, roles)
+  const { roles } = authenticate();
+  authorise(CanGetMemberPlans, roles);
 
-  return getMemberPlans(filter, sortedField, order, cursorId, skip, take, memberPlan)
-}
+  return getMemberPlans(
+    filter,
+    sortedField,
+    order,
+    cursorId,
+    skip,
+    take,
+    memberPlan
+  );
+};

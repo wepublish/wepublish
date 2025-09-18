@@ -1,38 +1,38 @@
-import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
+import { PaymentPeriodicity, SubscriptionEvent } from '@prisma/client';
 
 export type Store = {
-  defaultFlow: Action[]
-  customFlow: StoreMemberPlan
-}
+  defaultFlow: Action[];
+  customFlow: StoreMemberPlan;
+};
 
 export type StoreMemberPlan = {
-  [key: string]: StorePaymentMethode
-}
+  [key: string]: StorePaymentMethode;
+};
 
 type StorePaymentMethode = {
-  [key: string]: StorePeriodicites
-}
+  [key: string]: StorePeriodicites;
+};
 
 type StorePeriodicites = {
-  [key in PaymentPeriodicity]?: StoreAutoRenewal
-}
+  [key in PaymentPeriodicity]?: StoreAutoRenewal;
+};
 
 type StoreAutoRenewal = {
-  [key: string]: Action[]
-}
+  [key: string]: Action[];
+};
 
 export type Action = {
-  type: SubscriptionEvent
-  daysAwayFromEnding: number | null
-  externalMailTemplate: string | null
-}
+  type: SubscriptionEvent;
+  daysAwayFromEnding: number | null;
+  externalMailTemplate: string | null;
+};
 
 export type LookupActionInput = {
-  memberplanId: string
-  paymentMethodId: string
-  periodicity: PaymentPeriodicity
-  autorenwal: boolean
-  daysAwayFromEnding?: number
+  memberplanId: string;
+  paymentMethodId: string;
+  periodicity: PaymentPeriodicity;
+  autorenwal: boolean;
+  daysAwayFromEnding?: number;
 
-  events?: SubscriptionEvent[]
-}
+  events?: SubscriptionEvent[];
+};

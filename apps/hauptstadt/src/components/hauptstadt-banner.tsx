@@ -1,5 +1,5 @@
-import styled from '@emotion/styled'
-import {Container, css} from '@mui/material'
+import styled from '@emotion/styled';
+import { Container, css } from '@mui/material';
 import {
   Banner,
   BannerActions,
@@ -10,42 +10,42 @@ import {
   BannerCtaText,
   BannerImage,
   BannerText,
-  BannerTitle
-} from '@wepublish/banner/website'
-import {BuilderBannerProps} from '@wepublish/website/builder'
-import {useCallback, useEffect, useState} from 'react'
+  BannerTitle,
+} from '@wepublish/banner/website';
+import { BuilderBannerProps } from '@wepublish/website/builder';
+import { useCallback, useEffect, useState } from 'react';
 
 const StyledBanner = styled(Banner)`
   z-index: unset;
   position: unset;
   top: unset;
-  background-color: ${({theme}) => theme.palette.primary.main};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.primary.contrastText};
 
   [data-role='PRIMARY'] {
     background-color: transparent;
-    border: 1px solid ${({theme}) => theme.palette.secondary.main};
-    color: ${({theme}) => theme.palette.secondary.main};
+    border: 1px solid ${({ theme }) => theme.palette.secondary.main};
+    color: ${({ theme }) => theme.palette.secondary.main};
   }
 
   ${BannerContent} {
-    ${({theme}) => theme.breakpoints.up('lg')} {
-      border-right: 1px solid ${({theme}) => theme.palette.common.white};
-      padding-right: ${({theme}) => theme.spacing(6)};
+    ${({ theme }) => theme.breakpoints.up('lg')} {
+      border-right: 1px solid ${({ theme }) => theme.palette.common.white};
+      padding-right: ${({ theme }) => theme.spacing(6)};
     }
   }
 
   &[data-collapsed='false'] {
     ${BannerContentWrapper} {
       display: grid;
-      row-gap: ${({theme}) => theme.spacing(4)};
-      padding: ${({theme}) => theme.spacing(2)};
+      row-gap: ${({ theme }) => theme.spacing(4)};
+      padding: ${({ theme }) => theme.spacing(2)};
 
-      ${({theme}) => theme.breakpoints.up('lg')} {
+      ${({ theme }) => theme.breakpoints.up('lg')} {
         grid-template-columns: 1fr 1fr;
         align-items: center;
-        padding: ${({theme}) => theme.spacing(6)};
-        padding-right: ${({theme}) => theme.spacing(12)};
+        padding: ${({ theme }) => theme.spacing(6)};
+        padding-right: ${({ theme }) => theme.spacing(12)};
       }
     }
 
@@ -54,8 +54,8 @@ const StyledBanner = styled(Banner)`
     }
 
     ${BannerCta} {
-      ${({theme}) => theme.breakpoints.up('md')} {
-        padding-left: ${({theme}) => theme.spacing(6)};
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        padding-left: ${({ theme }) => theme.spacing(6)};
       }
     }
 
@@ -69,8 +69,8 @@ const StyledBanner = styled(Banner)`
     border-radius: 4px;
     grid-template-columns: 1fr;
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
-      bottom: ${({theme}) => theme.spacing(1)};
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      bottom: ${({ theme }) => theme.spacing(1)};
     }
 
     ${BannerImage}, ${BannerTitle}, ${BannerText}, ${BannerCloseButton}, [data-role='CANCEL'], ${BannerCtaText} {
@@ -78,27 +78,30 @@ const StyledBanner = styled(Banner)`
     }
 
     ${BannerContentWrapper} {
-      padding: ${({theme}) => theme.spacing(2)};
+      padding: ${({ theme }) => theme.spacing(2)};
     }
   }
-`
+`;
 
 export const HauptstadtBannerContainer = styled(Container, {
-  shouldForwardProp: propName => propName !== 'isScrolled'
-})<{isScrolled: boolean}>`
+  shouldForwardProp: propName => propName !== 'isScrolled',
+})<{ isScrolled: boolean }>`
   padding: 0 !important;
   position: fixed;
   top: var(--changing-navbar-height);
   z-index: 100;
   left: 50%;
-  transition: transform 300ms ease-out, top 300ms ease-out;
+  transition:
+    transform 300ms ease-out,
+    top 300ms ease-out;
   transform: translate3d(
     -50%,
-    ${({isScrolled}) => (isScrolled ? `calc(var(--changing-navbar-height) / -3)` : '0')},
+    ${({ isScrolled }) =>
+      isScrolled ? `calc(var(--changing-navbar-height) / -3)` : '0'},
     0
   );
 
-  ${({isScrolled}) =>
+  ${({ isScrolled }) =>
     isScrolled &&
     css`
       clip-path: polygon(
@@ -119,10 +122,10 @@ export const HauptstadtBannerContainer = styled(Container, {
     left: 0;
     right: 0;
     transform: translateY(-100%);
-    background: ${({theme}) => theme.palette.primary.main};
+    background: ${({ theme }) => theme.palette.primary.main};
     height: 50px;
 
-    ${({isScrolled}) =>
+    ${({ isScrolled }) =>
       isScrolled &&
       css`
         content: '';
@@ -132,13 +135,14 @@ export const HauptstadtBannerContainer = styled(Container, {
   :has([data-collapsed='true']) {
     clip-path: unset;
 
-    ${({theme}) => theme.breakpoints.down('sm')} {
+    ${({ theme }) => theme.breakpoints.down('sm')} {
       transform: translate3d(
         -50%,
-        ${({isScrolled}) => (isScrolled ? `calc(var(--changing-navbar-height) / -2)` : '0')},
+        ${({ isScrolled }) =>
+          isScrolled ? `calc(var(--changing-navbar-height) / -2)` : '0'},
         0
       );
-      ${({isScrolled}) =>
+      ${({ isScrolled }) =>
         isScrolled &&
         css`
           clip-path: polygon(
@@ -175,7 +179,7 @@ export const HauptstadtBannerContainer = styled(Container, {
       }
     }
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
       transform: translateX(-50%);
 
       &::before {
@@ -185,23 +189,27 @@ export const HauptstadtBannerContainer = styled(Container, {
       width: 90vw;
       max-width: ${370 / 16}rem;
       top: unset;
-      bottom: ${({theme}) => theme.spacing(1)};
+      bottom: ${({ theme }) => theme.spacing(1)};
     }
   }
-`
+`;
 
 export const HauptstadtBanner = (props: BuilderBannerProps) => {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 1), [])
+  const [isScrolled, setIsScrolled] = useState(false);
+  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 1), []);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
-    <HauptstadtBannerContainer maxWidth="lg" isScrolled={isScrolled} data-banner>
+    <HauptstadtBannerContainer
+      maxWidth="lg"
+      isScrolled={isScrolled}
+      data-banner
+    >
       <StyledBanner {...props} />
     </HauptstadtBannerContainer>
-  )
-}
+  );
+};

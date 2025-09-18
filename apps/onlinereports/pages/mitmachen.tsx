@@ -1,10 +1,14 @@
-import styled from '@emotion/styled'
-import {SubscribeAmount, SubscribeWrapper, TransactionFeeIcon} from '@wepublish/membership/website'
-import {SubscribePage} from '@wepublish/utils/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect} from 'react'
+import styled from '@emotion/styled';
+import {
+  SubscribeAmount,
+  SubscribeWrapper,
+  TransactionFeeIcon,
+} from '@wepublish/membership/website';
+import { SubscribePage } from '@wepublish/utils/website';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { useEffect } from 'react';
 
-import {useAdsContext} from '../src/context/ads-context'
+import { useAdsContext } from '../src/context/ads-context';
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
@@ -19,36 +23,36 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       'challenge'
       'cta';
   }
-`
+`;
 
 const SubscribePageWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({theme}) => theme.spacing(2.5)};
-  margin-top: ${({theme}) => theme.spacing(4)};
+  gap: ${({ theme }) => theme.spacing(2.5)};
+  margin-top: ${({ theme }) => theme.spacing(4)};
 
   ${TransactionFeeIcon} {
     display: none;
   }
 
   ${SubscribeAmount} {
-    background: ${({theme}) => theme.palette.secondary.main};
+    background: ${({ theme }) => theme.palette.secondary.main};
   }
-`
+`;
 
-export const MitmachenInner = () => <SubscribePage fields={['firstName']} />
+export const MitmachenInner = () => <SubscribePage fields={['firstName']} />;
 
 export default function Mitmachen() {
-  const {setAdsDisabled} = useAdsContext()
+  const { setAdsDisabled } = useAdsContext();
 
   const {
-    elements: {H3}
-  } = useWebsiteBuilder()
+    elements: { H3 },
+  } = useWebsiteBuilder();
 
   useEffect(() => {
-    setAdsDisabled(true)
-    return () => setAdsDisabled(false)
-  }, [setAdsDisabled])
+    setAdsDisabled(true);
+    return () => setAdsDisabled(false);
+  }, [setAdsDisabled]);
 
   return (
     <SubscribePageWrapper>
@@ -57,7 +61,7 @@ export default function Mitmachen() {
         <MitmachenInner />
       </OnlineReportsSubscribePageWrapper>
     </SubscribePageWrapper>
-  )
+  );
 }
 
-Mitmachen.getInitialProps = SubscribePage.getInitialProps
+Mitmachen.getInitialProps = SubscribePage.getInitialProps;

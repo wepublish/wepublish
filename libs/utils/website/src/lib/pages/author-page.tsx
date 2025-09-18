@@ -1,5 +1,8 @@
-import {ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
-import {AuthorContainer} from '@wepublish/author/website'
+import {
+  ArticleListContainer,
+  ArticleWrapper,
+} from '@wepublish/article/website';
+import { AuthorContainer } from '@wepublish/author/website';
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
@@ -10,60 +13,63 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   useArticleListQuery,
-  useAuthorQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticPaths, GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {useMemo} from 'react'
-import {z} from 'zod'
+  useAuthorQuery,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { z } from 'zod';
 
-const take = 10
+const take = 10;
 
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
-  slug: z.string()
-})
+  slug: z.string(),
+});
 
 export function AuthorPage() {
   const {
-    elements: {Pagination, H3}
-  } = useWebsiteBuilder()
+    elements: { Pagination, H3 },
+  } = useWebsiteBuilder();
 
-  const {query, replace} = useRouter()
-  const {page, slug} = pageSchema.parse(query)
+  const { query, replace } = useRouter();
+  const { page, slug } = pageSchema.parse(query);
 
-  const {data} = useAuthorQuery({
+  const { data } = useAuthorQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug
-    }
-  })
+      slug,
+    },
+  });
 
   const variables = useMemo(
     () => ({
       take,
       skip: ((page ?? 1) - 1) * take,
       filter: {
-        authors: data?.author?.id ? [data?.author?.id] : []
-      }
+        authors: data?.author?.id ? [data?.author?.id] : [],
+      },
     }),
     [page, data?.author?.id]
-  )
+  );
 
-  const {data: articleListData} = useArticleListQuery({
+  const { data: articleListData } = useArticleListQuery({
     fetchPolicy: 'cache-only',
-    variables
-  })
+    variables,
+  });
 
   const pageCount = useMemo(() => {
-    if (articleListData?.articles.totalCount && articleListData?.articles.totalCount > take) {
-      return Math.ceil(articleListData.articles.totalCount / take)
+    if (
+      articleListData?.articles.totalCount &&
+      articleListData?.articles.totalCount > take
+    ) {
+      return Math.ceil(articleListData.articles.totalCount / take);
     }
 
-    return 1
-  }, [articleListData?.articles.totalCount])
+    return 1;
+  }, [articleListData?.articles.totalCount]);
 
   return (
     <ArticleWrapper>
@@ -83,10 +89,10 @@ export function AuthorPage() {
               onChange={(_, value) =>
                 replace(
                   {
-                    query: {...query, page: value}
+                    query: { ...query, page: value },
                   },
                   undefined,
-                  {shallow: true, scroll: true}
+                  { shallow: true, scroll: true }
                 )
               }
             />
@@ -94,43 +100,45 @@ export function AuthorPage() {
         </>
       )}
     </ArticleWrapper>
-  )
+  );
 }
 
 export const getAuthorStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
-  }
-}
+    fallback: 'blocking',
+  };
+};
 
-export const getAuthorStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug } = params || {};
 
-  const {publicRuntimeConfig} = getConfig()
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const { publicRuntimeConfig } = getConfig();
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
   const [author] = await Promise.all([
     client.query<AuthorQuery>({
       query: AuthorDocument,
       variables: {
-        slug
-      }
+        slug,
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const is404 = author.errors?.find(({extensions}) => extensions?.status === 404)
+  const is404 = author.errors?.find(
+    ({ extensions }) => extensions?.status === 404
+  );
 
   if (is404) {
     return {
-      notFound: true
-    }
+      notFound: true,
+    };
   }
 
   await client.query<ArticleListQuery>({
@@ -139,15 +147,15 @@ export const getAuthorStaticProps: GetStaticProps = async ({params}) => {
       take,
       skip: 0,
       filter: {
-        authors: author.data?.author?.id ? [author.data.author.id] : []
-      }
-    }
-  })
+        authors: author.data?.author?.id ? [author.data.author.id] : [],
+      },
+    },
+  });
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
-  }
-}
+    revalidate: 60, // every 60 seconds
+  };
+};

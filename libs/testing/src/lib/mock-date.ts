@@ -1,29 +1,29 @@
-const currentDate = new Date('2023-01-01')
-const realDate = Date
+const currentDate = new Date('2023-01-01');
+const realDate = Date;
 
 export const mockDate = () => {
   global.Date = class extends Date {
     constructor(date: any) {
       if (date) {
         //@ts-expect-error we are mocking here
-        return super(date)
+        return super(date);
       }
 
-      return currentDate
+      return currentDate;
     }
-  } as any
-}
+  } as any;
+};
 
 export const unmockDate = () => {
-  global.Date = realDate
-}
+  global.Date = realDate;
+};
 
 export const addDateMock = () => {
   beforeAll(() => {
-    mockDate()
-  })
+    mockDate();
+  });
 
   afterAll(() => {
-    unmockDate()
-  })
-}
+    unmockDate();
+  });
+};

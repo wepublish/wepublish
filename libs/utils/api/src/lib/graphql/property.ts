@@ -1,22 +1,26 @@
-import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Property {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  key!: string
+  key!: string;
 
   @Field()
-  value!: string
+  value!: string;
 
   @Field()
-  public!: boolean
+  public!: boolean;
 }
 
 @InputType()
-export class PropertyInput extends OmitType(Property, ['id'] as const, InputType) {
-  @Field({nullable: true})
-  id?: string
+export class PropertyInput extends OmitType(
+  Property,
+  ['id'] as const,
+  InputType
+) {
+  @Field({ nullable: true })
+  id?: string;
 }

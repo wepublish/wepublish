@@ -1,40 +1,56 @@
-import styled from '@emotion/styled'
-import PlusIcon from '@rsuite/icons/Plus'
-import TrashIcon from '@rsuite/icons/Trash'
+import styled from '@emotion/styled';
+import PlusIcon from '@rsuite/icons/Plus';
+import TrashIcon from '@rsuite/icons/Trash';
 import {
   MemberPlan,
   MutationCreatePaywallArgs,
-  MutationUpdatePaywallArgs
-} from '@wepublish/editor/api-v2'
-import {RichTextBlock, RichTextBlockValue, SelectMemberPlans} from '@wepublish/ui/editor'
-import QRCode from 'qrcode'
-import {useEffect, useMemo, useRef, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdDownload, MdQrCode} from 'react-icons/md'
-import {Button, Checkbox, FlexboxGrid, Form, IconButton, Input, Modal, Panel} from 'rsuite'
+  MutationUpdatePaywallArgs,
+} from '@wepublish/editor/api-v2';
+import {
+  RichTextBlock,
+  RichTextBlockValue,
+  SelectMemberPlans,
+} from '@wepublish/ui/editor';
+import QRCode from 'qrcode';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdDownload, MdQrCode } from 'react-icons/md';
+import {
+  Button,
+  Checkbox,
+  FlexboxGrid,
+  Form,
+  IconButton,
+  Input,
+  Modal,
+  Panel,
+} from 'rsuite';
 
 type PaywallBypass = {
-  id?: string
-  token: string
-}
+  id?: string;
+  token: string;
+};
 
-type PaywallFormData = (MutationCreatePaywallArgs | MutationUpdatePaywallArgs) & {
-  memberPlans?: Pick<MemberPlan, 'id' | 'name'>[]
-  bypasses?: PaywallBypass[]
-}
+type PaywallFormData = (
+  | MutationCreatePaywallArgs
+  | MutationUpdatePaywallArgs
+) & {
+  memberPlans?: Pick<MemberPlan, 'id' | 'name'>[];
+  bypasses?: PaywallBypass[];
+};
 
 type PaywallFormProps = {
-  create?: boolean
-  paywall: PaywallFormData
-  onChange: (changes: Partial<PaywallFormData>) => void
-}
+  create?: boolean;
+  paywall: PaywallFormData;
+  onChange: (changes: Partial<PaywallFormData>) => void;
+};
 
 const PaywallFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: start;
   gap: 12px;
-`
+`;
 
 const QRCodeContainer = styled.div`
   display: flex;
@@ -50,96 +66,107 @@ const QRCodeContainer = styled.div`
     max-width: 100%;
     height: auto;
   }
-`
+`;
 
 const TokenUrl = styled.p`
   font-family: monospace;
   word-break: break-all;
-  padding-top: ${({theme}) => theme.spacing(2)};
-`
+  padding-top: ${({ theme }) => theme.spacing(2)};
+`;
 
 const BaseUrlInput = styled(Input)`
-  margin-bottom: ${({theme}) => theme.spacing(2)};
-`
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
 
-export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
-  const {t} = useTranslation()
-  const [newBypassToken, setNewBypassToken] = useState('')
-  const [showQRModal, setShowQRModal] = useState(false)
-  const [qrBaseUrl, setQrBaseUrl] = useState<string>('https://example.com')
-  const [selectedToken, setSelectedToken] = useState('')
-  const qrCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [qrSvgString, setQrSvgString] = useState('')
+export const PaywallForm = ({
+  paywall,
+  onChange,
+  create,
+}: PaywallFormProps) => {
+  const { t } = useTranslation();
+  const [newBypassToken, setNewBypassToken] = useState('');
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [qrBaseUrl, setQrBaseUrl] = useState<string>('https://example.com');
+  const [selectedToken, setSelectedToken] = useState('');
+  const qrCanvasRef = useRef<HTMLCanvasElement>(null);
+  const [qrSvgString, setQrSvgString] = useState('');
 
   const addBypass = () => {
     if (newBypassToken.trim()) {
       const newBypass: PaywallBypass = {
-        token: newBypassToken.trim()
-      }
-      const updatedBypasses = [...(paywall.bypasses || []), newBypass]
+        token: newBypassToken.trim(),
+      };
+      const updatedBypasses = [...(paywall.bypasses || []), newBypass];
       onChange({
         bypasses: updatedBypasses,
-        bypassTokens: updatedBypasses.map(b => b.token)
-      } as Partial<PaywallFormData>)
-      setNewBypassToken('')
+        bypassTokens: updatedBypasses.map(b => b.token),
+      } as Partial<PaywallFormData>);
+      setNewBypassToken('');
     }
-  }
+  };
 
   const removeBypass = (index: number) => {
-    const updatedBypasses = [...(paywall.bypasses || [])]
-    updatedBypasses.splice(index, 1)
+    const updatedBypasses = [...(paywall.bypasses || [])];
+    updatedBypasses.splice(index, 1);
     onChange({
       bypasses: updatedBypasses,
-      bypassTokens: updatedBypasses.map(b => b.token)
-    } as Partial<PaywallFormData>)
-  }
+      bypassTokens: updatedBypasses.map(b => b.token),
+    } as Partial<PaywallFormData>);
+  };
 
   const updateBypassToken = (index: number, token: string) => {
-    const updatedBypasses = [...(paywall.bypasses || [])]
-    updatedBypasses[index] = {...updatedBypasses[index], token}
+    const updatedBypasses = [...(paywall.bypasses || [])];
+    updatedBypasses[index] = { ...updatedBypasses[index], token };
     onChange({
       bypasses: updatedBypasses,
-      bypassTokens: updatedBypasses.map(b => b.token)
-    } as Partial<PaywallFormData>)
-  }
+      bypassTokens: updatedBypasses.map(b => b.token),
+    } as Partial<PaywallFormData>);
+  };
 
   const showQRCode = (token: string) => {
-    setSelectedToken(token)
-    setShowQRModal(true)
-  }
+    setSelectedToken(token);
+    setShowQRModal(true);
+  };
 
   const downloadQRCode = () => {
     if (qrSvgString) {
-      const blob = new Blob([qrSvgString], {type: 'image/svg+xml'})
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.download = `bypass-token-${selectedToken}.svg`
-      link.href = url
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      const blob = new Blob([qrSvgString], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `bypass-token-${selectedToken}.svg`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
-  }
+  };
 
   const fullBypassUrl = useMemo<string>(
     () => `${qrBaseUrl}/?key=${selectedToken}`,
     [qrBaseUrl, selectedToken]
-  )
+  );
 
   useEffect(() => {
     if (showQRModal && fullBypassUrl && qrCanvasRef.current) {
-      QRCode.toCanvas(qrCanvasRef.current, fullBypassUrl, {width: 300, margin: 2})
+      QRCode.toCanvas(qrCanvasRef.current, fullBypassUrl, {
+        width: 300,
+        margin: 2,
+      });
 
-      QRCode.toString(fullBypassUrl, {type: 'svg', margin: 2}, (error, svg) => {
-        if (!error) {
-          setQrSvgString(svg)
+      QRCode.toString(
+        fullBypassUrl,
+        { type: 'svg', margin: 2 },
+        (error, svg) => {
+          if (!error) {
+            setQrSvgString(svg);
+          }
         }
-      })
+      );
 
-      return () => setQrSvgString('')
+      return () => setQrSvgString('');
     }
-  }, [showQRModal, fullBypassUrl])
+  }, [showQRModal, fullBypassUrl]);
 
   return (
     <PaywallFormWrapper>
@@ -149,7 +176,7 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
           <Form.Control
             name="name"
             value={paywall.name ?? ''}
-            onChange={(name: string) => onChange({name})}
+            onChange={(name: string) => onChange({ name })}
           />
         </Form.Group>
 
@@ -159,21 +186,25 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
             <Form.Control
               name="description"
               value={paywall.description || []}
-              onChange={(description: RichTextBlockValue['richText']) => onChange({description})}
+              onChange={(description: RichTextBlockValue['richText']) =>
+                onChange({ description })
+              }
               accepter={RichTextBlock}
             />
           </Panel>
         </Form.Group>
 
         <Form.Group controlId="description">
-          <Form.ControlLabel>{t('paywall.form.circumventDescription')}</Form.ControlLabel>
+          <Form.ControlLabel>
+            {t('paywall.form.circumventDescription')}
+          </Form.ControlLabel>
           <Panel bordered>
             <Form.Control
               name="circumventDescription"
               value={paywall.circumventDescription || []}
-              onChange={(circumventDescription: RichTextBlockValue['richText']) =>
-                onChange({circumventDescription})
-              }
+              onChange={(
+                circumventDescription: RichTextBlockValue['richText']
+              ) => onChange({ circumventDescription })}
               accepter={RichTextBlock}
             />
           </Panel>
@@ -183,8 +214,9 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
           <Form.Control
             name="active"
             checked={!!paywall.active}
-            onChange={() => onChange({active: !paywall.active})}
-            accepter={Checkbox}>
+            onChange={() => onChange({ active: !paywall.active })}
+            accepter={Checkbox}
+          >
             {t('paywall.form.active')}
           </Form.Control>
 
@@ -192,13 +224,17 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
         </Form.Group>
       </Panel>
 
-      <Panel bordered style={{overflow: 'initial'}}>
+      <Panel
+        bordered
+        style={{ overflow: 'initial' }}
+      >
         <Form.Group>
           <Form.Control
             name="anyMemberPlan"
             checked={!!paywall.anyMemberPlan}
-            onChange={() => onChange({anyMemberPlan: !paywall.anyMemberPlan})}
-            accepter={Checkbox}>
+            onChange={() => onChange({ anyMemberPlan: !paywall.anyMemberPlan })}
+            accepter={Checkbox}
+          >
             {t('paywall.form.anyMemberPlan')}
           </Form.Control>
 
@@ -208,7 +244,9 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
             disabled={!!paywall.anyMemberPlan}
             defaultMemberPlans={paywall.memberPlans ?? []}
             selectedMemberPlans={paywall.memberPlanIds ?? []}
-            setSelectedMemberPlans={(memberPlanIds: string[]) => onChange({memberPlanIds})}
+            setSelectedMemberPlans={(memberPlanIds: string[]) =>
+              onChange({ memberPlanIds })
+            }
             accepter={SelectMemberPlans}
           />
         </Form.Group>
@@ -217,8 +255,12 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
           <Form.ControlLabel>{t('paywall.form.bypasses')}</Form.ControlLabel>
 
           {(paywall.bypasses || []).map((bypass, index) => (
-            <FlexboxGrid key={index} align="middle" style={{gap: '8px', marginBottom: '8px'}}>
-              <FlexboxGrid.Item style={{flex: 1}}>
+            <FlexboxGrid
+              key={index}
+              align="middle"
+              style={{ gap: '8px', marginBottom: '8px' }}
+            >
+              <FlexboxGrid.Item style={{ flex: 1 }}>
                 <Input
                   value={bypass.token}
                   onChange={value => updateBypassToken(index, value)}
@@ -247,8 +289,11 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
             </FlexboxGrid>
           ))}
 
-          <FlexboxGrid align="middle" style={{gap: '8px', marginTop: '8px'}}>
-            <FlexboxGrid.Item style={{flex: 1}}>
+          <FlexboxGrid
+            align="middle"
+            style={{ gap: '8px', marginTop: '8px' }}
+          >
+            <FlexboxGrid.Item style={{ flex: 1 }}>
               <Input
                 value={newBypassToken}
                 onChange={setNewBypassToken}
@@ -261,7 +306,8 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
                 appearance="primary"
                 startIcon={<PlusIcon />}
                 onClick={addBypass}
-                disabled={!newBypassToken.trim()}>
+                disabled={!newBypassToken.trim()}
+              >
                 {t('paywall.form.addBypass')}
               </Button>
             </FlexboxGrid.Item>
@@ -269,11 +315,15 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
         </Form.Group>
       </Panel>
 
-      <Modal open={showQRModal} onClose={() => setShowQRModal(false)} size="sm">
+      <Modal
+        open={showQRModal}
+        onClose={() => setShowQRModal(false)}
+        size="sm"
+      >
         <Modal.Header>
           <Modal.Title>{t('paywall.form.qrCodeTitle')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{textAlign: 'center'}}>
+        <Modal.Body style={{ textAlign: 'center' }}>
           <BaseUrlInput
             value={qrBaseUrl}
             onChange={newUrl => setQrBaseUrl(newUrl)}
@@ -285,11 +335,15 @@ export const PaywallForm = ({paywall, onChange, create}: PaywallFormProps) => {
           <TokenUrl>{fullBypassUrl}</TokenUrl>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={downloadQRCode} appearance="primary" startIcon={<MdDownload />}>
+          <Button
+            onClick={downloadQRCode}
+            appearance="primary"
+            startIcon={<MdDownload />}
+          >
             {t('paywall.form.downloadSvg')}
           </Button>
         </Modal.Footer>
       </Modal>
     </PaywallFormWrapper>
-  )
-}
+  );
+};

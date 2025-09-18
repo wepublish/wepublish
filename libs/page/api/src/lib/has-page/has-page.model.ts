@@ -1,22 +1,22 @@
-import {Field, InterfaceType} from '@nestjs/graphql'
-import {Page} from '../page.model'
+import { Field, InterfaceType } from '@nestjs/graphql';
+import { Page } from '../page.model';
 
 @InterfaceType()
 export abstract class HasOptionalPage {
-  @Field({nullable: true})
-  pageID?: string
+  @Field({ nullable: true })
+  pageID?: string;
 
-  @Field(() => Page, {nullable: true})
-  page?: Page
+  @Field(() => Page, { nullable: true })
+  page?: Page;
 }
 
 @InterfaceType()
 export abstract class HasPage {
   @Field()
-  pageID!: string
+  pageID!: string;
 
   @Field(() => Page)
-  page!: Page
+  page!: Page;
 }
 
 // New Style
@@ -24,17 +24,17 @@ export abstract class HasPage {
 @InterfaceType()
 export abstract class HasPageLc {
   @Field()
-  pageId!: string
+  pageId!: string;
 
   @Field(() => Page)
-  page!: Page
+  page!: Page;
 }
 
 @InterfaceType()
 export abstract class HasOptionalPageLc {
-  @Field({nullable: true})
-  pageId?: string
+  @Field({ nullable: true })
+  pageId?: string;
 
-  @Field(() => Page, {nullable: true})
-  page?: Page
+  @Field(() => Page, { nullable: true })
+  page?: Page;
 }

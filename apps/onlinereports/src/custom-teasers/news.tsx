@@ -1,23 +1,34 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   selectTeaserPreTitle,
   selectTeaserTitle,
-  selectTeaserUrl
-} from '@wepublish/block-content/website'
-import {BuilderTeaserProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
-import {MdEast} from 'react-icons/md'
+  selectTeaserUrl,
+} from '@wepublish/block-content/website';
+import {
+  BuilderTeaserProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { MdEast } from 'react-icons/md';
 
-const NewsTeaserUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const title = teaser && selectTeaserTitle(teaser)
-  const preTitle = teaser && selectTeaserPreTitle(teaser)
-  const href = (teaser && selectTeaserUrl(teaser)) ?? ''
+const NewsTeaserUnstyled = ({
+  teaser,
+  alignment,
+  className,
+}: BuilderTeaserProps) => {
+  const title = teaser && selectTeaserTitle(teaser);
+  const preTitle = teaser && selectTeaserPreTitle(teaser);
+  const href = (teaser && selectTeaserUrl(teaser)) ?? '';
 
   const {
-    elements: {H4}
-  } = useWebsiteBuilder()
+    elements: { H4 },
+  } = useWebsiteBuilder();
 
   return (
-    <Link href={href} className={className}>
+    <Link
+      href={href}
+      className={className}
+    >
       <span>{preTitle}</span>
 
       <div>
@@ -25,13 +36,13 @@ const NewsTeaserUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) 
         <MdEast />
       </div>
     </Link>
-  )
-}
+  );
+};
 
 export const NewsTeaser = styled(NewsTeaserUnstyled)`
-  color: ${({theme}) => theme.palette.text.primary};
-  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(0)}`};
-  border-bottom: 1px solid ${({theme}) => theme.palette.divider};
+  color: ${({ theme }) => theme.palette.text.primary};
+  padding: ${({ theme }) => `${theme.spacing(1)} ${theme.spacing(0)}`};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   text-decoration: none;
 
   * {
@@ -59,4 +70,4 @@ export const NewsTeaser = styled(NewsTeaserUnstyled)`
   h4 {
     font-weight: 300;
   }
-`
+`;

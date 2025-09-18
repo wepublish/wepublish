@@ -1,19 +1,22 @@
-import {StripeElement} from './stripe/stripe-element'
-import {StripePayment} from './stripe/stripe-payment'
+import { StripeElement } from './stripe/stripe-element';
+import { StripePayment } from './stripe/stripe-payment';
 
 export type RedirectPages = {
-  successUrl: string
-  failUrl: string
-}
+  successUrl: string;
+  failUrl: string;
+};
 
 type PaymentFormProps = {
-  stripeClientSecret?: string | null
-  redirectPages?: RedirectPages | null
-}
+  stripeClientSecret?: string | null;
+  redirectPages?: RedirectPages | null;
+};
 
-export const PaymentForm = ({redirectPages, stripeClientSecret}: PaymentFormProps) => {
+export const PaymentForm = ({
+  redirectPages,
+  stripeClientSecret,
+}: PaymentFormProps) => {
   if (!stripeClientSecret) {
-    return null
+    return null;
   }
 
   return (
@@ -21,10 +24,11 @@ export const PaymentForm = ({redirectPages, stripeClientSecret}: PaymentFormProp
       <StripePayment
         onClose={async success => {
           if (redirectPages) {
-            window.location.href = success ? redirectPages.successUrl : redirectPages.failUrl
+            window.location.href =
+              success ? redirectPages.successUrl : redirectPages.failUrl;
           }
         }}
       />
     </StripeElement>
-  )
-}
+  );
+};
