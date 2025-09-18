@@ -1,7 +1,10 @@
-import styled from '@emotion/styled'
-import {ArticleContainer, ArticleListContainer} from '@wepublish/article/website'
-import {CommentListContainer} from '@wepublish/comments/website'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
+import styled from '@emotion/styled';
+import {
+  ArticleContainer,
+  ArticleListContainer,
+} from '@wepublish/article/website';
+import { CommentListContainer } from '@wepublish/comments/website';
+import { getArticlePathsBasedOnPage } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
@@ -12,44 +15,44 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   Tag,
-  useArticleQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
+  useArticleQuery,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { ComponentProps } from 'react';
 
-import {Advertisement} from '../../src/components/advertisement'
+import { Advertisement } from '../../src/components/advertisement';
 
 export const ArticleWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  ${({theme}) => theme.breakpoints.up('md')} {
+  gap: ${({ theme }) => theme.spacing(3)};
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 1/12;
   }
-`
+`;
 
 export default function ArticleBySlugOrId() {
   const {
-    query: {slug, id}
-  } = useRouter()
+    query: { slug, id },
+  } = useRouter();
   const {
-    elements: {H2}
-  } = useWebsiteBuilder()
+    elements: { H2 },
+  } = useWebsiteBuilder();
 
-  const {data} = useArticleQuery({
+  const { data } = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
-      id: id as string
-    }
-  })
+      id: id as string,
+    },
+  });
 
   const containerProps = {
     slug,
-    id
-  } as ComponentProps<typeof ArticleContainer>
+    id,
+  } as ComponentProps<typeof ArticleContainer>;
 
   return (
     <>
@@ -60,9 +63,14 @@ export default function ArticleBySlugOrId() {
           <H2 component={'h2'}>Aktuelle Beiträge</H2>
 
           <ArticleListContainer
-            variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
+            variables={{
+              filter: { tags: data.article.tags.map(tag => tag.id) },
+              take: 4,
+            }}
             filter={articles =>
-              articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+              articles
+                .filter(article => article.id !== data.article?.id)
+                .splice(0, 3)
             }
           />
           <div id={'comments'} />
@@ -72,44 +80,49 @@ export default function ArticleBySlugOrId() {
       {data?.article && !data.article.disableComments && (
         <ArticleWrapper>
           <H2 component={'h2'}>Kommentare</H2>
-          <CommentListContainer id={data!.article!.id} type={CommentItemType.Article} />
+          <CommentListContainer
+            id={data!.article!.id}
+            type={CommentItemType.Article}
+          />
         </ArticleWrapper>
       )}
       <Advertisement type={'small'} />
     </>
-  )
+  );
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('')
+export const getStaticPaths = getArticlePathsBasedOnPage('');
 
-export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {id, slug} = params || {}
-  const {publicRuntimeConfig} = getConfig()
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { id, slug } = params || {};
+  const { publicRuntimeConfig } = getConfig();
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
   const [article] = await Promise.all([
     client.query({
       query: ArticleDocument,
       variables: {
         id,
-        slug
-      }
+        slug,
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+  const is404 = article.errors?.find(
+    ({ extensions }) => extensions?.status === 404
+  );
 
   if (is404) {
     return {
-      notFound: true
-    }
+      notFound: true,
+    };
   }
 
   if (article.data?.article) {
@@ -118,24 +131,24 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id)
+            tags: article.data.article.tags.map((tag: Tag) => tag.id),
           },
-          take: 4
-        }
+          take: 4,
+        },
       }),
       client.query({
         query: CommentListDocument,
         variables: {
-          itemId: article.data.article.id
-        }
-      })
-    ])
+          itemId: article.data.article.id,
+        },
+      }),
+    ]);
   }
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
-  }
-}
+    revalidate: !article.data?.article ? 1 : 60, // every 60 seconds
+  };
+};

@@ -1,12 +1,12 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import {INestApplication, Module} from '@nestjs/common'
-import request from 'supertest'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {Currency, Invoice, PrismaClient} from '@prisma/client'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {DashboardInvoiceResolver} from './dashboard-invoice.resolver'
-import {DashboardInvoiceService} from './dashboard-invoice.service'
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, Module } from '@nestjs/common';
+import request from 'supertest';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { Currency, Invoice, PrismaClient } from '@prisma/client';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { DashboardInvoiceResolver } from './dashboard-invoice.resolver';
+import { DashboardInvoiceService } from './dashboard-invoice.service';
 
 @Module({
   imports: [
@@ -14,11 +14,11 @@ import {DashboardInvoiceService} from './dashboard-invoice.service'
       driver: ApolloDriver,
       autoSchemaFile: true,
       path: '/',
-      cache: 'bounded'
+      cache: 'bounded',
     }),
-    PrismaModule
+    PrismaModule,
   ],
-  providers: [DashboardInvoiceResolver, DashboardInvoiceService]
+  providers: [DashboardInvoiceResolver, DashboardInvoiceService],
 })
 export class AppModule {}
 
@@ -31,7 +31,7 @@ const revenueQuery = `
       paidAt
     }
   }
-`
+`;
 
 const expectedRevenueQuery = `
   query Dashboard($end:DateTime!, $start:DateTime!) {
@@ -42,42 +42,42 @@ const expectedRevenueQuery = `
       paidAt
     }
   }
-`
+`;
 
 describe('DashboardInvoiceResolver', () => {
-  let invoicesToDelete: Invoice[] = []
-  let app: INestApplication
-  let prisma: PrismaClient
+  let invoicesToDelete: Invoice[] = [];
+  let app: INestApplication;
+  let prisma: PrismaClient;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
+      imports: [AppModule],
+    }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient)
-    app = module.createNestApplication()
-    await app.init()
-  })
+    prisma = module.get<PrismaClient>(PrismaClient);
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   beforeEach(async () => {
-    invoicesToDelete = []
-  })
+    invoicesToDelete = [];
+  });
 
   afterEach(async () => {
-    const ids = invoicesToDelete.map(invoice => invoice.id)
+    const ids = invoicesToDelete.map(invoice => invoice.id);
 
     await prisma.invoice.deleteMany({
       where: {
         id: {
-          in: ids
-        }
-      }
-    })
-  })
+          in: ids,
+        },
+      },
+    });
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   test('revenue', async () => {
     const mockData = [
@@ -93,16 +93,16 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
+                quantity: 1,
               },
               {
                 amount: 500,
                 name: '',
-                quantity: 2
-              }
-            ]
-          }
-        }
+                quantity: 2,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -116,11 +116,11 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
+                quantity: 1,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -134,11 +134,11 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
+                quantity: 1,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -153,11 +153,11 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
+                quantity: 1,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -170,16 +170,16 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
-      }
-    ]
+                quantity: 1,
+              },
+            ],
+          },
+        },
+      },
+    ];
 
     for (const data of mockData) {
-      invoicesToDelete.push(await prisma.invoice.create({data}))
+      invoicesToDelete.push(await prisma.invoice.create({ data }));
     }
 
     await request(app.getHttpServer())
@@ -188,14 +188,14 @@ describe('DashboardInvoiceResolver', () => {
         query: revenueQuery,
         variables: {
           start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
-        }
+          end: new Date('2023-02-01').toISOString(),
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.revenue).toMatchSnapshot()
-      })
-  })
+        expect(res.body.data.revenue).toMatchSnapshot();
+      });
+  });
 
   test('expectedRevenue', async () => {
     const mockData = [
@@ -211,16 +211,16 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
+                quantity: 1,
               },
               {
                 amount: 500,
                 name: '',
-                quantity: 2
-              }
-            ]
-          }
-        }
+                quantity: 2,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -233,11 +233,11 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
+                quantity: 1,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -250,11 +250,11 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
+                quantity: 1,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -268,11 +268,11 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
+                quantity: 1,
+              },
+            ],
+          },
+        },
       },
       {
         currency: Currency.CHF,
@@ -286,16 +286,16 @@ describe('DashboardInvoiceResolver', () => {
               {
                 amount: 50,
                 name: '',
-                quantity: 1
-              }
-            ]
-          }
-        }
-      }
-    ]
+                quantity: 1,
+              },
+            ],
+          },
+        },
+      },
+    ];
 
     for (const data of mockData) {
-      invoicesToDelete.push(await prisma.invoice.create({data}))
+      invoicesToDelete.push(await prisma.invoice.create({ data }));
     }
 
     await request(app.getHttpServer())
@@ -304,12 +304,12 @@ describe('DashboardInvoiceResolver', () => {
         query: expectedRevenueQuery,
         variables: {
           start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
-        }
+          end: new Date('2023-02-01').toISOString(),
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.expectedRevenue).toMatchSnapshot()
-      })
-  })
-})
+        expect(res.body.data.expectedRevenue).toMatchSnapshot();
+      });
+  });
+});

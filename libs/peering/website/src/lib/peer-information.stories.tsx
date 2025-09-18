@@ -1,18 +1,18 @@
-import {Meta} from '@storybook/react'
-import {PeerInformation} from './peer-information'
-import {mockPeer, mockRemotePeerProfile} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { PeerInformation } from './peer-information';
+import { mockPeer, mockRemotePeerProfile } from '@wepublish/storybook/mocks';
 
 export default {
   component: PeerInformation,
-  title: 'Components/Peer Information'
-} as Meta
+  title: 'Components/Peer Information',
+} as Meta;
 
 export const Default = {
   args: {
     originUrl: 'https://example.com',
-    ...mockPeer()
-  }
-}
+    ...mockPeer(),
+  },
+};
 
 export const WithoutCtaUrl = {
   ...Default,
@@ -20,11 +20,11 @@ export const WithoutCtaUrl = {
     originUrl: 'https://example.com',
     ...mockPeer({
       profile: mockRemotePeerProfile({
-        callToActionURL: ''
-      })
-    })
-  }
-}
+        callToActionURL: '',
+      }),
+    }),
+  },
+};
 
 export const WithoutCtaText = {
   ...Default,
@@ -32,8 +32,8 @@ export const WithoutCtaText = {
     originUrl: 'https://example.com',
     ...mockPeer({
       profile: mockRemotePeerProfile({
-        callToActionText: []
-      })
-    })
-  }
-}
+        callToActionText: [],
+      }),
+    }),
+  },
+};

@@ -1,7 +1,7 @@
-import styled from '@emotion/styled'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {CircularProgress} from '@mui/material'
-import {articleToTeaser} from '@wepublish/article/website'
+import styled from '@emotion/styled';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CircularProgress } from '@mui/material';
+import { articleToTeaser } from '@wepublish/article/website';
 import {
   addClientCacheToV1Props,
   Article,
@@ -13,26 +13,26 @@ import {
   PhraseDocument,
   PhraseQuery,
   TeaserType,
-  usePhraseQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetServerSideProps, InferGetServerSidePropsType} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {useEffect, useMemo} from 'react'
-import {Controller, useForm} from 'react-hook-form'
-import {MdSearch} from 'react-icons/md'
-import {z} from 'zod'
-import {PageWrapper} from '@wepublish/page/website'
+  usePhraseQuery,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { MdSearch } from 'react-icons/md';
+import { z } from 'zod';
+import { PageWrapper } from '@wepublish/page/website';
 
 const SearchForm = styled('form')`
   display: grid;
   align-items: center;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
   grid-template-columns: 1fr max-content;
-`
+`;
 
-const SearchPageWrapper = styled(PageWrapper)``
+const SearchPageWrapper = styled(PageWrapper)``;
 
 const pageToTeaser = (page: Page): PageTeaser => ({
   __typename: 'PageTeaser',
@@ -41,82 +41,91 @@ const pageToTeaser = (page: Page): PageTeaser => ({
   image: null,
   lead: null,
   preTitle: null,
-  title: null
-})
+  title: null,
+});
 
-const ITEMS_PER_PAGE = 12
+const ITEMS_PER_PAGE = 12;
 
 const searchPageSchema = z.object({
   page: z.coerce.number().gte(1).default(1),
-  q: z.coerce.string().nullish()
-})
+  q: z.coerce.string().nullish(),
+});
 
 export const SearchPage = ({
-  query
+  query,
 }: InferGetServerSidePropsType<typeof SearchPageGetServerSideProps>) => {
   const {
-    blocks: {TeaserGrid},
-    elements: {IconButton, TextField, Pagination, Alert, H3, H4}
-  } = useWebsiteBuilder()
+    blocks: { TeaserGrid },
+    elements: { IconButton, TextField, Pagination, Alert, H3, H4 },
+  } = useWebsiteBuilder();
 
-  const router = useRouter()
-  const {page, q: phraseQuery} = searchPageSchema.parse(router.isReady ? router.query : query)
+  const router = useRouter();
+  const { page, q: phraseQuery } = searchPageSchema.parse(
+    router.isReady ? router.query : query
+  );
 
-  const {control, handleSubmit, setFocus} = useForm<z.infer<typeof searchPageSchema>>({
-    resolver: zodResolver(searchPageSchema)
-  })
+  const { control, handleSubmit, setFocus } = useForm<
+    z.infer<typeof searchPageSchema>
+  >({
+    resolver: zodResolver(searchPageSchema),
+  });
 
   useEffect(() => {
-    setFocus('q')
-  }, [setFocus])
+    setFocus('q');
+  }, [setFocus]);
 
   const {
     data: phraseData,
     loading,
-    error
+    error,
   } = usePhraseQuery({
     skip: !phraseQuery,
     variables: {
       query: phraseQuery!,
       take: ITEMS_PER_PAGE,
-      skip: (page - 1) * ITEMS_PER_PAGE
-    }
-  })
+      skip: (page - 1) * ITEMS_PER_PAGE,
+    },
+  });
 
-  const totalArticlesCount = phraseData?.phrase?.articles?.totalCount ?? 0
-  const totalPagesCount = phraseData?.phrase?.pages?.totalCount ?? 0
+  const totalArticlesCount = phraseData?.phrase?.articles?.totalCount ?? 0;
+  const totalPagesCount = phraseData?.phrase?.pages?.totalCount ?? 0;
 
-  const pageCount = Math.ceil(Math.max(totalArticlesCount, totalPagesCount) / ITEMS_PER_PAGE)
+  const pageCount = Math.ceil(
+    Math.max(totalArticlesCount, totalPagesCount) / ITEMS_PER_PAGE
+  );
   const teasers = useMemo(() => {
     if (!phraseData?.phrase) {
-      return []
+      return [];
     }
 
     const articleTeasers = phraseData.phrase.articles.nodes.map(node =>
       articleToTeaser(node as Article)
-    )
-    const pageTeasers = phraseData.phrase.pages.nodes.map(node => pageToTeaser(node as Page))
+    );
+    const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
+      pageToTeaser(node as Page)
+    );
 
-    return [...articleTeasers, ...pageTeasers]
-  }, [phraseData?.phrase])
+    return [...articleTeasers, ...pageTeasers];
+  }, [phraseData?.phrase]);
 
-  const noResultsFound = !teasers.length && !loading && !error && phraseQuery
+  const noResultsFound = !teasers.length && !loading && !error && phraseQuery;
 
   return (
     <SearchPageWrapper fullWidth>
       <H3 component="h1">Suche</H3>
 
       <SearchForm
-        onSubmit={handleSubmit(({q}) =>
+        onSubmit={handleSubmit(({ q }) =>
           router.push({
-            query: {q}
+            query: { q },
           })
-        )}>
+        )}
+      >
         <Controller
           name={'q'}
           control={control}
           defaultValue={phraseQuery}
-          render={({field}) => (
+          render={({ field }) => (
             <TextField
               type="search"
               autoComplete="search"
@@ -127,18 +136,31 @@ export const SearchPage = ({
           )}
         />
 
-        <IconButton type="submit" aria-label="Suchen">
+        <IconButton
+          type="submit"
+          aria-label="Suchen"
+        >
           <MdSearch size={28} />
         </IconButton>
       </SearchForm>
 
       {phraseQuery && <H4 component="h2">Suchergebnisse</H4>}
 
-      {loading && <CircularProgress sx={{justifySelf: 'center'}} size={48} />}
+      {loading && (
+        <CircularProgress
+          sx={{ justifySelf: 'center' }}
+          size={48}
+        />
+      )}
       {error && <Alert severity="error">{error.message}</Alert>}
-      {noResultsFound && <Alert severity="info">Keine Suchergebnisse gefunden</Alert>}
+      {noResultsFound && (
+        <Alert severity="info">Keine Suchergebnisse gefunden</Alert>
+      )}
 
-      <TeaserGrid numColumns={3} teasers={teasers} />
+      <TeaserGrid
+        numColumns={3}
+        teasers={teasers}
+      />
 
       {!!teasers.length && (
         <Pagination
@@ -146,43 +168,43 @@ export const SearchPage = ({
           count={pageCount}
           onChange={(_, value) =>
             router.push({
-              query: {page: value, q: phraseQuery}
+              query: { page: value, q: phraseQuery },
             })
           }
         />
       )}
     </SearchPageWrapper>
-  )
-}
+  );
+};
 
-export const SearchPageGetServerSideProps = (async ({query}) => {
-  const {publicRuntimeConfig} = getConfig()
+export const SearchPageGetServerSideProps = (async ({ query }) => {
+  const { publicRuntimeConfig } = getConfig();
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  const {page, q: phraseQuery} = searchPageSchema.parse(query)
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const { page, q: phraseQuery } = searchPageSchema.parse(query);
 
   await Promise.all([
-    phraseQuery
-      ? client.query<PhraseQuery>({
-          query: PhraseDocument,
-          variables: {
-            query: phraseQuery,
-            take: ITEMS_PER_PAGE,
-            skip: (page - 1) * ITEMS_PER_PAGE
-          }
-        })
-      : undefined,
+    phraseQuery ?
+      client.query<PhraseQuery>({
+        query: PhraseDocument,
+        variables: {
+          query: phraseQuery,
+          take: ITEMS_PER_PAGE,
+          skip: (page - 1) * ITEMS_PER_PAGE,
+        },
+      })
+    : undefined,
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const props = addClientCacheToV1Props(client, {query})
+  const props = addClientCacheToV1Props(client, { query });
 
   return {
-    props
-  }
-}) satisfies GetServerSideProps
+    props,
+  };
+}) satisfies GetServerSideProps;

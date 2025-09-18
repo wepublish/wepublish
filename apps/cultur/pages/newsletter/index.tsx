@@ -1,25 +1,27 @@
-import {ContentWrapper} from '@wepublish/content/website'
-import {PageContainer} from '@wepublish/page/website'
+import { ContentWrapper } from '@wepublish/content/website';
+import { PageContainer } from '@wepublish/page/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   NavigationListDocument,
   PageDocument,
-  PeerProfileDocument
-} from '@wepublish/website/api'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
+  PeerProfileDocument,
+} from '@wepublish/website/api';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 
-import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form'
+import MailchimpSubscribeForm from '../../src/components/newsletter/mailchimp-form';
 
 type NewsletterPageProps = {
-  mailchimpSignupUrl: string
-}
+  mailchimpSignupUrl: string;
+};
 
-export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps) {
-  const {query} = useRouter()
-  const {firstname, lastname, email, source} = query
+export default function NewsletterPage({
+  mailchimpSignupUrl,
+}: NewsletterPageProps) {
+  const { query } = useRouter();
+  const { firstname, lastname, email, source } = query;
   return (
     <>
       <PageContainer slug={'newsletter'} />
@@ -34,32 +36,32 @@ export default function NewsletterPage({mailchimpSignupUrl}: NewsletterPageProps
         />
       </ContentWrapper>
     </>
-  )
+  );
 }
 
-export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {publicRuntimeConfig} = getConfig()
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { publicRuntimeConfig } = getConfig();
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
   await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
-        slug: 'newsletter'
-      }
+        slug: 'newsletter',
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: 60
-  }
-}
+    revalidate: 60,
+  };
+};

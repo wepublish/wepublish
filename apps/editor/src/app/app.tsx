@@ -1,119 +1,132 @@
-import 'rsuite/styles/index.less'
+import 'rsuite/styles/index.less';
 
-import {gql, useMutation} from '@apollo/client'
-import {css, Global} from '@emotion/react'
-import {BannerList, CreateBannerForm, EditBannerForm} from '@wepublish/banner/editor'
+import { gql, useMutation } from '@apollo/client';
+import { css, Global } from '@emotion/react';
+import {
+  BannerList,
+  CreateBannerForm,
+  EditBannerForm,
+} from '@wepublish/banner/editor';
 import {
   ConsentCreateView,
   ConsentEditView,
   ConsentList,
   UserConsentCreateView,
   UserConsentEditView,
-  UserConsentList
-} from '@wepublish/consent/editor'
+  UserConsentList,
+} from '@wepublish/consent/editor';
 import {
   CreateCrowdfundingForm,
   CrowdfundingList,
-  EditCrowdfundingForm
-} from '@wepublish/crowdfunding/editor'
-import {TagType} from '@wepublish/editor/api'
-import {LocalStorageKey} from '@wepublish/editor/api-v2'
-import {ImportableEventListView} from '@wepublish/event/import/editor'
+  EditCrowdfundingForm,
+} from '@wepublish/crowdfunding/editor';
+import { TagType } from '@wepublish/editor/api';
+import { LocalStorageKey } from '@wepublish/editor/api-v2';
+import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailTemplateList,
   MemberPlanEdit,
   PlaceholderList,
   SubscriptionFlowList,
-  SystemMailList
-} from '@wepublish/membership/editor'
-import {SettingList} from '@wepublish/settings/editor'
-import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
-import {useContext, useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
-import {CustomProvider} from 'rsuite'
-import enGB from 'rsuite/locales/en_GB'
+  SystemMailList,
+} from '@wepublish/membership/editor';
+import { SettingList } from '@wepublish/settings/editor';
+import {
+  AuthContext,
+  AuthDispatchActionType,
+  AuthDispatchContext,
+} from '@wepublish/ui/editor';
+import { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { CustomProvider } from 'rsuite';
+import enGB from 'rsuite/locales/en_GB';
 
-import {Base} from './base'
-import de from './locales/rsuiteDe'
-import fr from './locales/rsuiteFr'
-import {Login} from './login'
-import {ArticleEditor} from './routes/articles/articleEditor'
-import {ArticleList} from './routes/articles/articleList'
-import {AudienceDashboard} from './routes/audience/audience-dashboard'
-import {AuthorList} from './routes/authors/authorList'
-import {BlockStyleList} from './routes/blockStyles/blockStyleList'
-import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
-import {CommentEditView} from './routes/comments/commentEditView'
-import {CommentList} from './routes/comments/commentList'
-import {Dashboard} from './routes/dashboard/dashboard'
-import {EventCreateView} from './routes/events/eventCreateView'
-import {EventEditView} from './routes/events/eventEditView'
-import {EventListView} from './routes/events/eventListView'
-import {ImageList} from './routes/images/imageList'
-import {MemberPlanList} from './routes/memberPlans/memberPlanList'
-import {NavigationList} from './routes/navigations/navigationList'
-import {PageEditor} from './routes/pages/pageEditor'
-import {PageList} from './routes/pages/pageList'
-import {PaymentMethodList} from './routes/paymentMethods/paymentMethodList'
-import {PaywallEditView} from './routes/paywall/paywallEditView'
-import {PeerArticleList} from './routes/peerArticles/peerArticleList'
-import {PeerList} from './routes/peers/peerList'
-import {PollEditView} from './routes/polls/pollEditView'
-import {PollList} from './routes/polls/pollList'
-import {PollVoteListContainer} from './routes/polls/PollVotesListContainer'
-import {SubscriptionEditView} from './routes/subscriptions/subscriptionEditView'
-import {SubscriptionList} from './routes/subscriptions/subscriptionList'
-import {TagCreateView} from './routes/tags/tagCreateView'
-import {TagEditView} from './routes/tags/tagEditView'
-import {TagList} from './routes/tags/tagList'
-import {TokenList} from './routes/tokens/tokenList'
-import {UserRoleList} from './routes/userRoles/userRoleList'
-import {UserEditView} from './routes/users/userEditView'
-import {UserList} from './routes/users/userList'
+import { Base } from './base';
+import de from './locales/rsuiteDe';
+import fr from './locales/rsuiteFr';
+import { Login } from './login';
+import { ArticleEditor } from './routes/articles/articleEditor';
+import { ArticleList } from './routes/articles/articleList';
+import { AudienceDashboard } from './routes/audience/audience-dashboard';
+import { AuthorList } from './routes/authors/authorList';
+import { BlockStyleList } from './routes/blockStyles/blockStyleList';
+import { CommentRatingEditView } from './routes/commentRatings/commentRatingEditView';
+import { CommentEditView } from './routes/comments/commentEditView';
+import { CommentList } from './routes/comments/commentList';
+import { Dashboard } from './routes/dashboard/dashboard';
+import { EventCreateView } from './routes/events/eventCreateView';
+import { EventEditView } from './routes/events/eventEditView';
+import { EventListView } from './routes/events/eventListView';
+import { ImageList } from './routes/images/imageList';
+import { MemberPlanList } from './routes/memberPlans/memberPlanList';
+import { NavigationList } from './routes/navigations/navigationList';
+import { PageEditor } from './routes/pages/pageEditor';
+import { PageList } from './routes/pages/pageList';
+import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
+import { PaywallEditView } from './routes/paywall/paywallEditView';
+import { PeerArticleList } from './routes/peerArticles/peerArticleList';
+import { PeerList } from './routes/peers/peerList';
+import { PollEditView } from './routes/polls/pollEditView';
+import { PollList } from './routes/polls/pollList';
+import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
+import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
+import { SubscriptionList } from './routes/subscriptions/subscriptionList';
+import { TagCreateView } from './routes/tags/tagCreateView';
+import { TagEditView } from './routes/tags/tagEditView';
+import { TagList } from './routes/tags/tagList';
+import { TokenList } from './routes/tokens/tokenList';
+import { UserRoleList } from './routes/userRoles/userRoleList';
+import { UserEditView } from './routes/users/userEditView';
+import { UserList } from './routes/users/userList';
 
 const LogoutMutation = gql`
   mutation Logout {
     revokeActiveSession
   }
-`
+`;
 
 const Logout = () => {
-  const [logout] = useMutation(LogoutMutation)
-  const {session} = useContext(AuthContext)
-  const authDispatch = useContext(AuthDispatchContext)
+  const [logout] = useMutation(LogoutMutation);
+  const { session } = useContext(AuthContext);
+  const authDispatch = useContext(AuthDispatchContext);
 
   useEffect(() => {
     if (session) {
-      logout().catch(error => console.warn('Error logging out ', error))
-      localStorage.removeItem(LocalStorageKey.SessionToken)
-      authDispatch({type: AuthDispatchActionType.Logout})
+      logout().catch(error => console.warn('Error logging out ', error));
+      localStorage.removeItem(LocalStorageKey.SessionToken);
+      authDispatch({ type: AuthDispatchActionType.Logout });
     }
-  }, [authDispatch, logout, session])
+  }, [authDispatch, logout, session]);
 
-  return <Navigate to="/login" replace />
-}
+  return (
+    <Navigate
+      to="/login"
+      replace
+    />
+  );
+};
 
 export function App() {
-  const {i18n} = useTranslation()
-  const [lng, setLang] = useState<Record<string, any>>(enGB)
+  const { i18n } = useTranslation();
+  const [lng, setLang] = useState<Record<string, any>>(enGB);
   const currentLanguageMap = new Map<string, any>([
     ['fr', fr],
     ['en', enGB],
-    ['de', de]
-  ])
+    ['de', de],
+  ]);
 
   i18n.on('languageChanged', lng => {
-    setLang(currentLanguageMap.get(lng))
-  })
+    setLang(currentLanguageMap.get(lng));
+  });
 
-  const {session} = useContext(AuthContext)
+  const { session } = useContext(AuthContext);
 
   useEffect(() => {
     if (session === null && window.location.pathname !== '/login') {
-      window.location.href = `/login?next=${window.location.pathname}`
+      window.location.href = `/login?next=${window.location.pathname}`;
     }
-  }, [session])
+  }, [session]);
 
   return (
     <>
@@ -230,7 +243,10 @@ export function App() {
       <CustomProvider locale={lng}>
         <BrowserRouter>
           <Routes>
-            <Route path="login" element={<Login />} />
+            <Route
+              path="login"
+              element={<Login />}
+            />
             {/* Dashboard Routes */}
             <Route
               path="dashboard"
@@ -257,8 +273,14 @@ export function App() {
                 </Base>
               }
             />
-            <Route path="articles/create" element={<ArticleEditor />} />
-            <Route path="articles/edit/:id" element={<ArticleEditor />} />
+            <Route
+              path="articles/create"
+              element={<ArticleEditor />}
+            />
+            <Route
+              path="articles/edit/:id"
+              element={<ArticleEditor />}
+            />
             <Route
               path="articles/peer"
               element={
@@ -308,8 +330,14 @@ export function App() {
                 </Base>
               }
             />
-            <Route path="pages/create" element={<PageEditor />} />
-            <Route path="pages/edit/:id" element={<PageEditor />} />
+            <Route
+              path="pages/create"
+              element={<PageEditor />}
+            />
+            <Route
+              path="pages/edit/:id"
+              element={<PageEditor />}
+            />
             <Route
               path="pages/tags"
               element={
@@ -914,10 +942,13 @@ export function App() {
               }
             />
             {/* Logout */}
-            <Route path="logout" element={<Logout />} />
+            <Route
+              path="logout"
+              element={<Logout />}
+            />
           </Routes>
         </BrowserRouter>
       </CustomProvider>
     </>
-  )
+  );
 }

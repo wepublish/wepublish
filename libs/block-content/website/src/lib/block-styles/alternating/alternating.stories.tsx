@@ -1,16 +1,16 @@
-import {Meta} from '@storybook/react'
+import { Meta } from '@storybook/react';
 import {
   mockArticle,
   mockArticleRevision,
   mockArticleTeaser,
-  mockTeaserGridBlock
-} from '@wepublish/storybook/mocks'
-import {AlternatingTeaserGridBlock} from './alternating-teaser-grid'
+  mockTeaserGridBlock,
+} from '@wepublish/storybook/mocks';
+import { AlternatingTeaserGridBlock } from './alternating-teaser-grid';
 
 export default {
   component: AlternatingTeaserGridBlock,
-  title: 'Blocks/Break/Block Styles/Alternating'
-} as Meta
+  title: 'Blocks/Break/Block Styles/Alternating',
+} as Meta;
 
 export const Teaser = {
   args: mockTeaserGridBlock({
@@ -23,20 +23,20 @@ export const Teaser = {
         article: mockArticle({
           tags: [],
           latest: mockArticleRevision({
-            preTitle: null
-          })
-        })
+            preTitle: null,
+          }),
+        }),
       }),
       mockArticleTeaser({
         preTitle: null,
         article: mockArticle({
           tags: [],
           latest: mockArticleRevision({
-            preTitle: null
-          })
-        })
+            preTitle: null,
+          }),
+        }),
       }),
-      mockArticleTeaser()
-    ]
-  })
-}
+      mockArticleTeaser(),
+    ],
+  }),
+};

@@ -1,1 +1,1 @@
-export * from './lib/content-wrapper/content-wrapper'
+export * from './lib/content-wrapper/content-wrapper';

@@ -1,5 +1,8 @@
-import {FullImageFragment, FullPeerImageFragment} from '@wepublish/website/api'
-import nanoid from 'nanoid'
+import {
+  FullImageFragment,
+  FullPeerImageFragment,
+} from '@wepublish/website/api';
+import nanoid from 'nanoid';
 
 export const mockImage = () =>
   ({
@@ -21,7 +24,7 @@ export const mockImage = () =>
     license: null,
     focalPoint: {
       x: 0.5,
-      y: 0.5
+      y: 0.5,
     },
     title: null,
     url: 'https://unsplash.it/500/281',
@@ -38,8 +41,8 @@ export const mockImage = () =>
     mSquare: 'https://unsplash.it/800/800',
     sSquare: 'https://unsplash.it/500/500',
     xsSquare: 'https://unsplash.it/300/300',
-    xxsSquare: 'https://unsplash.it/200/200'
-  } as FullImageFragment)
+    xxsSquare: 'https://unsplash.it/200/200',
+  }) as FullImageFragment;
 
 export const mockPeerImage = () =>
   ({
@@ -61,7 +64,7 @@ export const mockPeerImage = () =>
     license: null,
     focalPoint: {
       x: 0.5,
-      y: 0.5
+      y: 0.5,
     },
     title: null,
     url: 'https://unsplash.it/500/281',
@@ -78,5 +81,5 @@ export const mockPeerImage = () =>
     mSquare: 'https://unsplash.it/800/800',
     sSquare: 'https://unsplash.it/500/500',
     xsSquare: 'https://unsplash.it/300/300',
-    xxsSquare: 'https://unsplash.it/200/200'
-  } as FullPeerImageFragment)
+    xxsSquare: 'https://unsplash.it/200/200',
+  }) as FullPeerImageFragment;

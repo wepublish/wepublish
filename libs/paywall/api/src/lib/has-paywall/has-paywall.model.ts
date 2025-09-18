@@ -1,20 +1,20 @@
-import {Field, InterfaceType} from '@nestjs/graphql'
-import {Paywall} from '../paywall.model'
+import { Field, InterfaceType } from '@nestjs/graphql';
+import { Paywall } from '../paywall.model';
 
 @InterfaceType()
 export abstract class HasOptionalPaywall {
-  @Field({nullable: true})
-  paywallId?: string
+  @Field({ nullable: true })
+  paywallId?: string;
 
-  @Field(() => Paywall, {nullable: true})
-  paywall?: Paywall
+  @Field(() => Paywall, { nullable: true })
+  paywall?: Paywall;
 }
 
 @InterfaceType()
 export abstract class HasPaywall {
   @Field()
-  paywallId!: string
+  paywallId!: string;
 
   @Field(() => Paywall)
-  paywall!: Paywall
+  paywall!: Paywall;
 }

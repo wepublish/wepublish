@@ -1,5 +1,5 @@
-import {useUser} from '@wepublish/authentication/website'
-import {PaymentForm, useSubscribe} from '@wepublish/payment/website'
+import { useUser } from '@wepublish/authentication/website';
+import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
   useChallengeQuery,
@@ -8,17 +8,17 @@ import {
   usePageLazyQuery,
   useRegisterMutation,
   useResubscribeMutation,
-  useSubscriptionsQuery
-} from '@wepublish/website/api'
+  useSubscriptionsQuery,
+} from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderSubscribeProps,
   BuilderUserFormFields,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {produce} from 'immer'
-import {sortBy} from 'ramda'
-import {useMemo} from 'react'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { produce } from 'immer';
+import { sortBy } from 'ramda';
+import { useMemo } from 'react';
 
 /**
  * If you pass the "deactivateSubscriptionId" prop, this specific subscription will be canceled when
@@ -27,7 +27,10 @@ import {useMemo} from 'react'
  * Payrexx Subscription. Other use cases are possible.
  */
 export type SubscribeContainerProps<
-  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<BuilderUserFormFields, 'flair'>
+  T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
+    BuilderUserFormFields,
+    'flair'
+  >,
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
@@ -41,67 +44,76 @@ export type SubscribeContainerProps<
     | 'returningUserId'
     | 'hidePaymentAmount'
   > & {
-    sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
-    filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
-    deactivateSubscriptionId?: string
-  }
+    sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[];
+    filter?: (
+      memberPlans: FullMemberPlanFragment[]
+    ) => FullMemberPlanFragment[];
+    deactivateSubscriptionId?: string;
+  };
 
-export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
+export const SubscribeContainer = <
+  T extends Exclude<BuilderUserFormFields, 'flair'>,
+>({
   filter = memberPlan => memberPlan,
   sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
   deactivateSubscriptionId,
   ...props
 }: SubscribeContainerProps<T>) => {
-  const {setToken, hasUser} = useUser()
-  const {Subscribe} = useWebsiteBuilder()
+  const { setToken, hasUser } = useUser();
+  const { Subscribe } = useWebsiteBuilder();
   const challenge = useChallengeQuery({
-    skip: hasUser
-  })
+    skip: hasUser,
+  });
 
   const userSubscriptions = useSubscriptionsQuery({
-    skip: !hasUser
-  })
+    skip: !hasUser,
+  });
   const userInvoices = useInvoicesQuery({
-    skip: !hasUser
-  })
+    skip: !hasUser,
+  });
 
   const memberPlanList = useMemberPlanListQuery({
     variables: {
       take: 50,
       filter: {
-        active: true
-      }
-    }
-  })
+        active: true,
+      },
+    },
+  });
 
-  const [resubscribe] = useResubscribeMutation({})
+  const [resubscribe] = useResubscribeMutation({});
 
-  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe()
+  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe();
 
   const [register] = useRegisterMutation({
     onError: () => challenge.refetch(),
     onCompleted(data) {
       if (data.registerMember.session) {
-        setToken(data.registerMember.session)
+        setToken(data.registerMember.session);
       }
-    }
-  })
+    },
+  });
 
   // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
   // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
-  const [fetchPage] = usePageLazyQuery()
+  const [fetchPage] = usePageLazyQuery();
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
       if (draftList.data?.memberPlans) {
-        draftList.data.memberPlans.nodes = filter(sort(draftList.data.memberPlans.nodes))
+        draftList.data.memberPlans.nodes = filter(
+          sort(draftList.data.memberPlans.nodes)
+        );
       }
-    })
-  }, [memberPlanList, filter, sort])
+    });
+  }, [memberPlanList, filter, sort]);
 
   return (
     <>
-      <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
+      <PaymentForm
+        stripeClientSecret={stripeClientSecret}
+        redirectPages={redirectPages}
+      />
 
       <Subscribe
         challenge={challenge}
@@ -110,64 +122,67 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
         memberPlans={filteredMemberPlans}
         {...props}
         onSubscribe={async formData => {
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === formData.memberPlanId
-          )
+          const selectedMemberplan =
+            filteredMemberPlans.data?.memberPlans.nodes.find(
+              mb => mb.id === formData.memberPlanId
+            );
 
           const result = await subscribe(selectedMemberplan, {
             variables: {
               ...formData,
-              deactivateSubscriptionId
-            }
-          })
+              deactivateSubscriptionId,
+            },
+          });
 
           if (result.errors) {
-            throw result.errors
+            throw result.errors;
           }
         }}
         onSubscribeWithRegister={async formData => {
-          const {errors: registerErrors} = await register({
-            variables: formData.register
-          })
+          const { errors: registerErrors } = await register({
+            variables: formData.register,
+          });
 
           if (registerErrors) {
-            throw registerErrors
+            throw registerErrors;
           }
 
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === formData.subscribe.memberPlanId
-          )
+          const selectedMemberplan =
+            filteredMemberPlans.data?.memberPlans.nodes.find(
+              mb => mb.id === formData.subscribe.memberPlanId
+            );
 
           const result = await subscribe(selectedMemberplan, {
             variables: {
-              ...formData.subscribe
-            }
-          })
+              ...formData.subscribe,
+            },
+          });
 
           if (result.errors) {
-            throw result.errors
+            throw result.errors;
           }
         }}
         onResubscribe={async formData => {
-          const selectedMemberplan = filteredMemberPlans.data?.memberPlans.nodes.find(
-            mb => mb.id === formData.memberPlanId
-          )
+          const selectedMemberplan =
+            filteredMemberPlans.data?.memberPlans.nodes.find(
+              mb => mb.id === formData.memberPlanId
+            );
           const page = await fetchPage({
             variables: {
-              id: selectedMemberplan?.confirmationPageId
-            }
-          })
+              id: selectedMemberplan?.confirmationPageId,
+            },
+          });
 
           await resubscribe({
             variables: formData,
             async onCompleted() {
-              window.location.href = page.data?.page.url ?? ''
+              window.location.href = page.data?.page.url ?? '';
               // window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
-            }
-          })
+            },
+          });
         }}
         deactivateSubscriptionId={deactivateSubscriptionId}
       />
     </>
-  )
-}
+  );
+};

@@ -1,16 +1,19 @@
-import {Meta} from '@storybook/react'
-import {TeaserGridBlock} from './teaser-grid-block'
-import {mockArticleTeaser, mockTeaserGridBlock} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { TeaserGridBlock } from './teaser-grid-block';
+import {
+  mockArticleTeaser,
+  mockTeaserGridBlock,
+} from '@wepublish/storybook/mocks';
 
 export default {
   component: TeaserGridBlock,
-  title: 'Blocks/Teaser Grid'
-} as Meta
+  title: 'Blocks/Teaser Grid',
+} as Meta;
 
 export const OneColumn = {
-  args: mockTeaserGridBlock({numColumns: 1, teasers: [mockArticleTeaser()]})
-}
+  args: mockTeaserGridBlock({ numColumns: 1, teasers: [mockArticleTeaser()] }),
+};
 
 export const ThreeColumns = {
-  args: mockTeaserGridBlock()
-}
+  args: mockTeaserGridBlock(),
+};

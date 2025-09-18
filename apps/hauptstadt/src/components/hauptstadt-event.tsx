@@ -1,6 +1,6 @@
-import {Event} from '@wepublish/event/website'
-import {createWithTheme} from '@wepublish/ui'
+import { Event } from '@wepublish/event/website';
+import { createWithTheme } from '@wepublish/ui';
 
-import {contentTheme} from '../theme'
+import { contentTheme } from '../theme';
 
-export const HauptstadtEvent = createWithTheme(Event, contentTheme)
+export const HauptstadtEvent = createWithTheme(Event, contentTheme);

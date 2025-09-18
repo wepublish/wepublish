@@ -1,12 +1,12 @@
-import {INestApplication, Module} from '@nestjs/common'
-import request from 'supertest'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {Test, TestingModule} from '@nestjs/testing'
-import {PeriodicJobResolver} from './periodic-job.resolver'
-import {PeriodicJobService} from './periodic-job.service'
-import {PeriodicJob} from './periodic-job.model'
+import { INestApplication, Module } from '@nestjs/common';
+import request from 'supertest';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PeriodicJobResolver } from './periodic-job.resolver';
+import { PeriodicJobService } from './periodic-job.service';
+import { PeriodicJob } from './periodic-job.model';
 
 @Module({
   imports: [
@@ -14,11 +14,14 @@ import {PeriodicJob} from './periodic-job.model'
       driver: ApolloDriver,
       autoSchemaFile: true,
       path: '/',
-      cache: 'bounded'
+      cache: 'bounded',
     }),
-    PrismaModule
+    PrismaModule,
   ],
-  providers: [PeriodicJobResolver, {provide: PeriodicJobService, useValue: {getJobLog: jest.fn()}}]
+  providers: [
+    PeriodicJobResolver,
+    { provide: PeriodicJobService, useValue: { getJobLog: jest.fn() } },
+  ],
 })
 export class AppModule {}
 
@@ -32,7 +35,7 @@ const periodicJobsQuery = `
             successfullyFinished
         }
     }
-`
+`;
 
 export const mockLogs: PeriodicJob[] = [
   {
@@ -43,43 +46,45 @@ export const mockLogs: PeriodicJob[] = [
     tries: 1,
     executionTime: new Date('2023-01-01'),
     finishedWithError: new Date('2023-01-01'),
-    successfullyFinished: new Date('2023-01-01')
-  }
-]
+    successfullyFinished: new Date('2023-01-01'),
+  },
+];
 
 describe('ConsentResolver', () => {
-  let app: INestApplication
-  let service: PeriodicJobService
+  let app: INestApplication;
+  let service: PeriodicJobService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
+      imports: [AppModule],
+    }).compile();
 
-    service = module.get<PeriodicJobService>(PeriodicJobService)
-    app = module.createNestApplication()
-    await app.init()
-  })
+    service = module.get<PeriodicJobService>(PeriodicJobService);
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   it('periodic jobs query', async () => {
-    const spy = jest.spyOn(service, 'getJobLog').mockReturnValue(Promise.resolve(mockLogs) as any)
+    const spy = jest
+      .spyOn(service, 'getJobLog')
+      .mockReturnValue(Promise.resolve(mockLogs) as any);
 
     await request(app.getHttpServer())
       .post('')
       .send({
         query: periodicJobsQuery,
         variables: {
-          take: 1
-        }
+          take: 1,
+        },
       })
       .expect(res => {
-        expect(res.body.data.periodicJobLog).toMatchSnapshot()
-        expect(spy).toHaveBeenCalledWith(1, undefined)
+        expect(res.body.data.periodicJobLog).toMatchSnapshot();
+        expect(spy).toHaveBeenCalledWith(1, undefined);
       })
-      .expect(200)
-  })
-})
+      .expect(200);
+  });
+});
