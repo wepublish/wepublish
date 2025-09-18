@@ -48,7 +48,8 @@ export class ArticleService {
   }: ArticleListArgs) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body)
-      if (articleIds.length > 0) {
+
+      if (articleIds.length && !filter.ids?.length) {
         filter.ids = articleIds
       }
     }
@@ -591,33 +592,28 @@ const createTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereI
       }
     }
 
-    if (filter?.published) {
-      return {
-        ArticleRevisionPublished: {
-          articleRevision: titleFilter
-        }
-      }
-    }
-    if (filter?.draft) {
-      return {
-        ArticleRevisionDraft: {
-          articleRevision: titleFilter
-        }
-      }
-    }
-
-    if (filter?.pending) {
-      return {
-        ArticleRevisionPending: {
-          articleRevision: titleFilter
-        }
-      }
-    }
-
     return {
-      revisions: {
-        some: titleFilter
-      }
+      ArticleRevisionPublished: filter?.published
+        ? {
+            articleRevision: titleFilter
+          }
+        : undefined,
+      ArticleRevisionDraft: filter?.draft
+        ? {
+            articleRevision: titleFilter
+          }
+        : undefined,
+      ArticleRevisionPending: filter?.pending
+        ? {
+            articleRevision: titleFilter
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending
+          ? {
+              some: titleFilter
+            }
+          : undefined
     }
   }
   return {}
@@ -631,33 +627,32 @@ const createPreTitleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhe
         mode: 'insensitive'
       }
     }
-    if (filter?.published) {
-      return {
-        ArticleRevisionPublished: {
-          articleRevision: preTitleFilter
-        }
-      }
-    }
-    if (filter.draft) {
-      return {
-        ArticleRevisionDraft: {
-          articleRevision: preTitleFilter
-        }
-      }
-    }
-    if (filter.pending) {
-      return {
-        ArticleRevisionPending: {
-          articleRevision: preTitleFilter
-        }
-      }
-    }
+
     return {
-      revisions: {
-        some: preTitleFilter
-      }
+      ArticleRevisionPublished: filter?.published
+        ? {
+            articleRevision: preTitleFilter
+          }
+        : undefined,
+      ArticleRevisionDraft: filter?.draft
+        ? {
+            articleRevision: preTitleFilter
+          }
+        : undefined,
+      ArticleRevisionPending: filter?.pending
+        ? {
+            articleRevision: preTitleFilter
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending
+          ? {
+              some: preTitleFilter
+            }
+          : undefined
     }
   }
+
   return {}
 }
 
@@ -669,31 +664,29 @@ const createLeadFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereIn
         mode: 'insensitive'
       }
     }
-    if (filter?.published) {
-      return {
-        ArticleRevisionPublished: {
-          articleRevision: leadFilter
-        }
-      }
-    }
-    if (filter.draft) {
-      return {
-        ArticleRevisionDraft: {
-          articleRevision: leadFilter
-        }
-      }
-    }
-    if (filter.pending) {
-      return {
-        ArticleRevisionPending: {
-          articleRevision: leadFilter
-        }
-      }
-    }
+
     return {
-      revisions: {
-        some: leadFilter
-      }
+      ArticleRevisionPublished: filter?.published
+        ? {
+            articleRevision: leadFilter
+          }
+        : undefined,
+      ArticleRevisionDraft: filter?.draft
+        ? {
+            articleRevision: leadFilter
+          }
+        : undefined,
+      ArticleRevisionPending: filter?.pending
+        ? {
+            articleRevision: leadFilter
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending
+          ? {
+              some: leadFilter
+            }
+          : undefined
     }
   }
 
@@ -814,31 +807,29 @@ const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
         }
       }
     }
-    if (filter?.published) {
-      return {
-        ArticleRevisionPublished: {
-          articleRevision: authorFilter
-        }
-      }
-    }
-    if (filter.draft) {
-      return {
-        ArticleRevisionDraft: {
-          articleRevision: authorFilter
-        }
-      }
-    }
-    if (filter.pending) {
-      return {
-        ArticleRevisionPending: {
-          articleRevision: authorFilter
-        }
-      }
-    }
+
     return {
-      revisions: {
-        some: authorFilter
-      }
+      ArticleRevisionPublished: filter?.published
+        ? {
+            articleRevision: authorFilter
+          }
+        : undefined,
+      ArticleRevisionDraft: filter?.draft
+        ? {
+            articleRevision: authorFilter
+          }
+        : undefined,
+      ArticleRevisionPending: filter?.pending
+        ? {
+            articleRevision: authorFilter
+          }
+        : undefined,
+      revisions:
+        !filter?.draft && !filter?.published && !filter?.pending
+          ? {
+              some: authorFilter
+            }
+          : undefined
     }
   }
 
