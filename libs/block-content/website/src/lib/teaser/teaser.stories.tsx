@@ -47,7 +47,7 @@ const customTeaser = {
   contentUrl: 'https://example.com',
   openInNewTab: false,
   properties: [],
-  type: 'Custom' as const,
+  type: TeaserType.Custom,
   __typename: 'CustomTeaser'
 } as CustomTeaser
 
