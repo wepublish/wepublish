@@ -1,52 +1,61 @@
-import {Field, ObjectType, InputType, ArgsType, PartialType} from '@nestjs/graphql'
+import {
+  Field,
+  ObjectType,
+  InputType,
+  ArgsType,
+  PartialType,
+} from '@nestjs/graphql';
 
 @ObjectType()
 export class Consent {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  name!: string
+  name!: string;
 
   @Field()
-  slug!: string
+  slug!: string;
 
   @Field()
-  defaultValue!: boolean
+  defaultValue!: boolean;
 }
 
 @ArgsType()
 export class CreateConsentInput {
   @Field()
-  name!: string
+  name!: string;
 
   @Field()
-  slug!: string
+  slug!: string;
 
   @Field()
-  defaultValue!: boolean
+  defaultValue!: boolean;
 }
 
 @ArgsType()
-export class UpdateConsentInput extends PartialType(CreateConsentInput, ArgsType) {
+export class UpdateConsentInput extends PartialType(
+  CreateConsentInput,
+  ArgsType
+) {
   @Field()
-  id!: string
+  id!: string;
 }
 
 @InputType()
 export class ConsentFilter {
-  @Field({nullable: true})
-  name?: string
+  @Field({ nullable: true })
+  name?: string;
 
-  @Field({nullable: true})
-  slug?: string
+  @Field({ nullable: true })
+  slug?: string;
 
-  @Field({nullable: true})
-  defaultValue?: boolean
+  @Field({ nullable: true })
+  defaultValue?: boolean;
 }

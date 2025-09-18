@@ -1,25 +1,29 @@
-import {ApolloError} from '@apollo/client'
-import {Meta, StoryObj} from '@storybook/react'
-import {Tag} from './tag'
-import {mockArticle, mockArticleRevision, mockTag} from '@wepublish/storybook/mocks'
-import {action} from '@storybook/addon-actions'
+import { ApolloError } from '@apollo/client';
+import { Meta, StoryObj } from '@storybook/react';
+import { Tag } from './tag';
+import {
+  mockArticle,
+  mockArticleRevision,
+  mockTag,
+} from '@wepublish/storybook/mocks';
+import { action } from '@storybook/addon-actions';
 
-const tag = mockTag()
+const tag = mockTag();
 
 export default {
   component: Tag,
-  title: 'Components/Tag'
-} as Meta
+  title: 'Components/Tag',
+} as Meta;
 
 export const Default: StoryObj<typeof Tag> = {
   args: {
     tags: {
       data: {
         tags: {
-          nodes: [tag]
-        }
+          nodes: [tag],
+        },
       },
-      loading: false
+      loading: false,
     },
     articles: {
       data: {
@@ -28,8 +32,8 @@ export const Default: StoryObj<typeof Tag> = {
             mockArticle(),
             mockArticle({
               latest: mockArticleRevision({
-                title: 'Some longer article title: How will it look like?'
-              })
+                title: 'Some longer article title: How will it look like?',
+              }),
             }),
             mockArticle(),
             mockArticle(),
@@ -39,29 +43,29 @@ export const Default: StoryObj<typeof Tag> = {
             mockArticle(),
             mockArticle(),
             mockArticle(),
-            mockArticle()
+            mockArticle(),
           ],
           pageInfo: {
             hasNextPage: false,
             hasPreviousPage: false,
             endCursor: null,
-            startCursor: null
+            startCursor: null,
           },
-          totalCount: 11
-        }
+          totalCount: 11,
+        },
       },
-      loading: false
+      loading: false,
     },
     variables: {
       skip: 0,
       take: 5,
       filter: {
-        tags: [tag.id]
-      }
+        tags: [tag.id],
+      },
     },
-    onVariablesChange: action('onVariablesChange')
-  }
-}
+    onVariablesChange: action('onVariablesChange'),
+  },
+};
 
 export const WithTagLoading = {
   ...Default,
@@ -69,12 +73,12 @@ export const WithTagLoading = {
     ...Default.args,
     tags: {
       data: {
-        tag: null
+        tag: null,
       },
-      loading: true
-    }
-  }
-}
+      loading: true,
+    },
+  },
+};
 
 export const WithArticlesLoading = {
   ...Default,
@@ -82,12 +86,12 @@ export const WithArticlesLoading = {
     ...Default.args,
     articles: {
       data: {
-        articles: null
+        articles: null,
       },
-      loading: true
-    }
-  }
-}
+      loading: true,
+    },
+  },
+};
 
 export const WithTagError = {
   ...Default,
@@ -95,14 +99,14 @@ export const WithTagError = {
     ...Default.args,
     tags: {
       data: {
-        tags: null
+        tags: null,
       },
       error: new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
-  }
-}
+        errorMessage: 'Foobar',
+      }),
+    },
+  },
+};
 
 export const WithArticlesError = {
   ...Default,
@@ -110,11 +114,11 @@ export const WithArticlesError = {
     ...Default.args,
     articles: {
       data: {
-        articles: null
+        articles: null,
       },
       error: new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
-  }
-}
+        errorMessage: 'Foobar',
+      }),
+    },
+  },
+};

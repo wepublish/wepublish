@@ -1,36 +1,36 @@
-import {Field, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {TrackingPixelProviderType} from '@prisma/client'
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { TrackingPixelProviderType } from '@prisma/client';
 
 registerEnumType(TrackingPixelProviderType, {
-  name: 'TrackingPixelProviderType'
-})
+  name: 'TrackingPixelProviderType',
+});
 
 @ObjectType()
 export class TrackingPixelMethod {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  trackingPixelProviderID!: string
+  trackingPixelProviderID!: string;
 
   @Field(() => TrackingPixelProviderType)
-  trackingPixelProviderType!: TrackingPixelProviderType
+  trackingPixelProviderType!: TrackingPixelProviderType;
 }
 
 @ObjectType()
 export class TrackingPixel {
   @Field()
-  id!: string
+  id!: string;
 
   @Field(() => TrackingPixelMethod)
-  trackingPixelMethod!: TrackingPixelMethod
+  trackingPixelMethod!: TrackingPixelMethod;
 
-  @Field({nullable: true})
-  pixelUid?: string
+  @Field({ nullable: true })
+  pixelUid?: string;
 
-  @Field({nullable: true})
-  uri?: string
+  @Field({ nullable: true })
+  uri?: string;
 
-  @Field({nullable: true})
-  error?: string
+  @Field({ nullable: true })
+  error?: string;
 }

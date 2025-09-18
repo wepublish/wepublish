@@ -1,37 +1,42 @@
-import {ArticleWithoutBlocksFragment, useArticleListQuery} from '@wepublish/website/api'
+import {
+  ArticleWithoutBlocksFragment,
+  useArticleListQuery,
+} from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
   BuilderContainerProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {produce} from 'immer'
-import {useMemo} from 'react'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { produce } from 'immer';
+import { useMemo } from 'react';
 
 export type ArticleListContainerProps = BuilderContainerProps &
   Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
-    filter?: (articles: ArticleWithoutBlocksFragment[]) => ArticleWithoutBlocksFragment[]
-  }
+    filter?: (
+      articles: ArticleWithoutBlocksFragment[]
+    ) => ArticleWithoutBlocksFragment[];
+  };
 
 export function ArticleListContainer({
   className,
   variables,
   onVariablesChange,
-  filter
+  filter,
 }: ArticleListContainerProps) {
-  const {ArticleList} = useWebsiteBuilder()
-  const {data, loading, error} = useArticleListQuery({
-    variables
-  })
+  const { ArticleList } = useWebsiteBuilder();
+  const { data, loading, error } = useArticleListQuery({
+    variables,
+  });
 
   const filteredArticles = useMemo(
     () =>
       produce(data, draftData => {
         if (filter && draftData?.articles) {
-          draftData.articles.nodes = filter(draftData.articles.nodes)
+          draftData.articles.nodes = filter(draftData.articles.nodes);
         }
       }),
     [data, filter]
-  )
+  );
 
   return (
     <ArticleList
@@ -42,5 +47,5 @@ export function ArticleListContainer({
       variables={variables}
       onVariablesChange={onVariablesChange}
     />
-  )
+  );
 }

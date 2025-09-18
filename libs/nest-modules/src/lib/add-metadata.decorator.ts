@@ -1,5 +1,5 @@
-import {CustomDecorator} from '@nestjs/common'
-import {uniq} from 'ramda'
+import { CustomDecorator } from '@nestjs/common';
+import { uniq } from 'ramda';
 
 /**
  * Unlike the existing decorator SetMetadata, this decorator does not override already existing metadata but appends to it.
@@ -12,19 +12,25 @@ export const AddMetadata = <K = string, V extends unknown[] = []>(
   metadataValue: V
 ): CustomDecorator<K> => {
   const decoratorFactory = (target: object, key?: any, descriptor?: any) => {
-    const existingValue = Reflect.getMetadata(metadataKey, descriptor?.value ?? target)
-    const value = existingValue ? uniq([...existingValue, ...metadataValue]) : metadataValue
+    const existingValue = Reflect.getMetadata(
+      metadataKey,
+      descriptor?.value ?? target
+    );
+    const value =
+      existingValue ?
+        uniq([...existingValue, ...metadataValue])
+      : metadataValue;
 
     if (descriptor) {
-      Reflect.defineMetadata(metadataKey, value, descriptor.value)
-      return descriptor
+      Reflect.defineMetadata(metadataKey, value, descriptor.value);
+      return descriptor;
     }
 
-    Reflect.defineMetadata(metadataKey, value, target)
-    return target
-  }
+    Reflect.defineMetadata(metadataKey, value, target);
+    return target;
+  };
 
-  decoratorFactory.KEY = metadataKey
+  decoratorFactory.KEY = metadataKey;
 
-  return decoratorFactory
-}
+  return decoratorFactory;
+};

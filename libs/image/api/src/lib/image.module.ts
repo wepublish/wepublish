@@ -1,9 +1,12 @@
-import {Module} from '@nestjs/common'
-import {ImageResolver} from './image.resolver'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {ImageDataloaderService} from './image-dataloader.service'
-import {HasImageLcResolver, HasImageResolver} from './has-image/has-image.resolver'
-import {ImageService} from './image.service'
+import { Module } from '@nestjs/common';
+import { ImageResolver } from './image.resolver';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { ImageDataloaderService } from './image-dataloader.service';
+import {
+  HasImageLcResolver,
+  HasImageResolver,
+} from './has-image/has-image.resolver';
+import { ImageService } from './image.service';
 
 @Module({
   imports: [PrismaModule],
@@ -12,8 +15,8 @@ import {ImageService} from './image.service'
     ImageDataloaderService,
     HasImageResolver,
     HasImageLcResolver,
-    ImageService
+    ImageService,
   ],
-  exports: [ImageDataloaderService, ImageService]
+  exports: [ImageDataloaderService, ImageService],
 })
 export class ImageModule {}

@@ -1,5 +1,5 @@
-import {CrowdfundingWithActiveGoal} from '@wepublish/website/api'
-import nanoid from 'nanoid'
+import { CrowdfundingWithActiveGoal } from '@wepublish/website/api';
+import nanoid from 'nanoid';
 
 export const mockCrowdfunding = () =>
   ({
@@ -13,6 +13,6 @@ export const mockCrowdfunding = () =>
       title: 'We will start the new media',
       description: 'Lorem ipsum',
       amount: 100000 * 100,
-      progress: 73
-    }
-  } as CrowdfundingWithActiveGoal)
+      progress: 73,
+    },
+  }) as CrowdfundingWithActiveGoal;

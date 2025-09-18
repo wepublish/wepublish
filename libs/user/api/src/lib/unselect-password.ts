@@ -1,4 +1,4 @@
-import {Prisma} from '@prisma/client'
+import { Prisma } from '@prisma/client';
 
 export const unselectPassword: Record<
   keyof Omit<
@@ -34,5 +34,5 @@ export const unselectPassword: Record<
   password: false,
   active: true,
   lastLogin: true,
-  roleIDs: true
-} as const
+  roleIDs: true,
+} as const;

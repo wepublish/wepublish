@@ -1,1 +1,1 @@
-export * from './lib/action.module'
+export * from './lib/action.module';

@@ -37,5 +37,5 @@ export function slugify(str: string) {
     .replace(/[^\w\-]+/g, '') //eslint-disable-line
     .replace(/--+/g, '-')
     .replace(/^-+/, '')
-    .replace(/-+$/, '')
+    .replace(/-+$/, '');
 }

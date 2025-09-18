@@ -1,225 +1,231 @@
-import {Field, Float, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {Tag} from '@wepublish/tag/api'
-import {User} from '@wepublish/user/api'
-import {Image} from '@wepublish/image/api'
-import {Descendant} from 'slate'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {RatingSystemType as PrismaRatingSystemType} from '@prisma/client'
+import {
+  Field,
+  Float,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { Tag } from '@wepublish/tag/api';
+import { User } from '@wepublish/user/api';
+import { Image } from '@wepublish/image/api';
+import { Descendant } from 'slate';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { RatingSystemType as PrismaRatingSystemType } from '@prisma/client';
 
 export enum CommentAuthorType {
   author = 'author',
   team = 'team',
   verifiedUser = 'verifiedUser',
-  guestUser = 'guestUser'
+  guestUser = 'guestUser',
 }
 
 registerEnumType(CommentAuthorType, {
-  name: 'CommentAuthorType'
-})
+  name: 'CommentAuthorType',
+});
 
 export enum CommentItemType {
   article = 'article',
-  page = 'page'
+  page = 'page',
 }
 
 registerEnumType(CommentItemType, {
-  name: 'CommentItemType'
-})
+  name: 'CommentItemType',
+});
 
 export enum CommentState {
   approved = 'approved',
   pendingApproval = 'pendingApproval',
   pendingUserChanges = 'pendingUserChanges',
-  rejected = 'rejected'
+  rejected = 'rejected',
 }
 
 registerEnumType(CommentState, {
-  name: 'CommentState'
-})
+  name: 'CommentState',
+});
 
 export enum RatingSystemType {
-  star = 'star'
+  star = 'star',
 }
 
 registerEnumType(RatingSystemType, {
-  name: 'RatingSystemType'
-})
+  name: 'RatingSystemType',
+});
 
 export enum CommentSort {
-  rating = 'rating'
+  rating = 'rating',
 }
 
 registerEnumType(CommentSort, {
-  name: 'CommentSort'
-})
+  name: 'CommentSort',
+});
 
 @ObjectType()
 export class CommentRatingSystemAnswer {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  ratingSystemId!: string
+  ratingSystemId!: string;
 
-  @Field(() => String, {nullable: true})
-  answer?: string | null
+  @Field(() => String, { nullable: true })
+  answer?: string | null;
 
   @Field(() => RatingSystemType)
-  type!: PrismaRatingSystemType
+  type!: PrismaRatingSystemType;
 }
 
 @ObjectType()
 export class overriddenRating {
   @Field()
-  answerId!: string
+  answerId!: string;
 
-  @Field(() => Int, {nullable: true})
-  value?: number | null
+  @Field(() => Int, { nullable: true })
+  value?: number | null;
 }
 
 @ObjectType()
 export class CommentRating {
   @Field()
-  id!: string
+  id!: string;
 
-  @Field(() => String, {nullable: true})
-  userId?: string | null
+  @Field(() => String, { nullable: true })
+  userId?: string | null;
 
   @Field()
-  commentId!: string
+  commentId!: string;
 
   @Field(() => Int)
-  value!: number
+  value!: number;
 
   @Field(() => Date)
-  createdAt!: Date
+  createdAt!: Date;
 
-  @Field(() => String, {nullable: true})
-  fingerprint?: string | null
+  @Field(() => String, { nullable: true })
+  fingerprint?: string | null;
 
-  @Field(() => Boolean, {nullable: true})
-  disabled?: boolean | null
+  @Field(() => Boolean, { nullable: true })
+  disabled?: boolean | null;
 
   @Field(() => CommentRatingSystemAnswer)
-  answer!: CommentRatingSystemAnswer
+  answer!: CommentRatingSystemAnswer;
 }
 
 @ObjectType()
 export class CalculatedRating {
   @Field(() => Int)
-  count!: number
+  count!: number;
 
   @Field(() => Int)
-  total!: number
+  total!: number;
 
   @Field(() => Float)
-  mean!: number
+  mean!: number;
 
   @Field(() => CommentRatingSystemAnswer)
-  answer!: CommentRatingSystemAnswer
+  answer!: CommentRatingSystemAnswer;
 }
 
 @ObjectType()
 export class FullCommentRatingSystem {
   @Field()
-  id!: string
+  id!: string;
 
-  @Field(() => String, {nullable: true})
-  name?: string | null
+  @Field(() => String, { nullable: true })
+  name?: string | null;
 
   @Field(() => [CommentRatingSystemAnswer])
-  answers!: CommentRatingSystemAnswer[]
+  answers!: CommentRatingSystemAnswer[];
 }
 
 @ObjectType()
 export class CommentRevision {
-  @Field(() => String, {nullable: true})
-  title?: string | null
+  @Field(() => String, { nullable: true })
+  title?: string | null;
 
-  @Field(() => String, {nullable: true})
-  lead?: string | null
+  @Field(() => String, { nullable: true })
+  lead?: string | null;
 
-  @Field(() => String, {nullable: true})
-  text?: string | null
+  @Field(() => String, { nullable: true })
+  text?: string | null;
 
   @Field(() => Date)
-  createdAt!: Date
+  createdAt!: Date;
 }
 
 @ObjectType()
 export class Comment {
   @Field()
-  id!: string
+  id!: string;
 
-  @Field(() => String, {nullable: true})
-  parentID?: string | null
+  @Field(() => String, { nullable: true })
+  parentID?: string | null;
 
-  @Field(() => String, {nullable: true})
-  guestUsername?: string | null
+  @Field(() => String, { nullable: true })
+  guestUsername?: string | null;
 
-  guestUserImageID?: string | null
+  guestUserImageID?: string | null;
 
-  @Field(() => Image, {nullable: true})
-  guestUserImage?: Image | null
+  @Field(() => Image, { nullable: true })
+  guestUserImage?: Image | null;
 
-  userID?: string | null
-  @Field(() => User, {nullable: true})
-  user?: User | null
+  userID?: string | null;
+  @Field(() => User, { nullable: true })
+  user?: User | null;
 
   @Field(() => [Tag])
-  tags!: Tag[]
+  tags!: Tag[];
 
   @Field(() => CommentAuthorType)
-  authorType!: CommentAuthorType
+  authorType!: CommentAuthorType;
 
   @Field()
-  itemID!: string
+  itemID!: string;
 
   @Field(() => CommentItemType)
-  itemType!: CommentItemType
+  itemType!: CommentItemType;
 
-  @Field(() => Comment, {nullable: true})
-  parentComment?: Comment | null
+  @Field(() => Comment, { nullable: true })
+  parentComment?: Comment | null;
 
-  @Field(() => String, {nullable: true})
-  source?: string | null
+  @Field(() => String, { nullable: true })
+  source?: string | null;
 
   @Field(() => CommentState)
-  state!: CommentState
+  state!: CommentState;
 
-  @Field(() => String, {nullable: true})
-  rejectionReason?: string | null
+  @Field(() => String, { nullable: true })
+  rejectionReason?: string | null;
 
-  @Field(() => Boolean, {nullable: true})
-  featured?: boolean | null
-
-  @Field(() => Date)
-  createdAt!: Date
+  @Field(() => Boolean, { nullable: true })
+  featured?: boolean | null;
 
   @Field(() => Date)
-  modifiedAt!: Date
+  createdAt!: Date;
+
+  @Field(() => Date)
+  modifiedAt!: Date;
 
   @Field(() => [overriddenRating])
-  overriddenRatings!: overriddenRating[]
+  overriddenRatings!: overriddenRating[];
 
   @Field(() => [Comment])
-  children!: Comment[]
+  children!: Comment[];
 
-  @Field(() => String, {nullable: true})
-  title?: string | null
+  @Field(() => String, { nullable: true })
+  title?: string | null;
 
-  @Field(() => String, {nullable: true})
-  lead?: string | null
+  @Field(() => String, { nullable: true })
+  lead?: string | null;
 
-  @Field(() => GraphQLRichText, {nullable: true})
-  text?: Descendant[]
+  @Field(() => GraphQLRichText, { nullable: true })
+  text?: Descendant[];
 
   @Field(() => String)
-  url?: string
+  url?: string;
 
   @Field(() => [CalculatedRating])
-  calculatedRatings!: CalculatedRating[]
+  calculatedRatings!: CalculatedRating[];
 
   @Field(() => [CommentRating])
-  userRatings!: CommentRating[]
+  userRatings!: CommentRating[];
 }

@@ -4,5 +4,5 @@ export enum TextFormat {
   Underline = 'underline',
   Strikethrough = 'strikethrough',
   Superscript = 'superscript',
-  Subscript = 'subscript'
+  Subscript = 'subscript',
 }

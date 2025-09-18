@@ -1,5 +1,5 @@
-import {migrateAllPosts} from './lib/posts'
+import { migrateAllPosts } from './lib/posts';
 
 export async function migrate() {
-  await migrateAllPosts()
+  await migrateAllPosts();
 }

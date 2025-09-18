@@ -1,9 +1,9 @@
-import {Module} from '@nestjs/common'
-import {VersionInformationResolver} from './versionInformation.resolver'
-import {PrismaModule} from '@wepublish/nest-modules'
+import { Module } from '@nestjs/common';
+import { VersionInformationResolver } from './versionInformation.resolver';
+import { PrismaModule } from '@wepublish/nest-modules';
 
 @Module({
   imports: [PrismaModule],
-  providers: [VersionInformationResolver]
+  providers: [VersionInformationResolver],
 })
 export class VersionInformationModule {}

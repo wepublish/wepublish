@@ -1,43 +1,49 @@
-import {Descendant, Element, Node, Text} from 'slate'
-import {compose} from 'ramda'
+import { Descendant, Element, Node, Text } from 'slate';
+import { compose } from 'ramda';
 
 export const truncateParagraph =
   (maxLength: number) =>
   (paragraph: Node | undefined): Descendant | undefined => {
-    let textLength = 0
+    let textLength = 0;
 
     if (!Element.isElement(paragraph)) {
-      return
+      return;
     }
 
     const truncated = paragraph.children.reduce(
       (acc: Element, curr) => {
         if (!Text.isText(curr)) {
-          return acc
+          return acc;
         }
 
-        let newText = curr.text
+        let newText = curr.text;
 
         if (textLength + curr.text.length > maxLength) {
-          newText = curr.text.substring(0, Math.max(0, maxLength - textLength))
+          newText = curr.text.substring(0, Math.max(0, maxLength - textLength));
         }
 
         acc.children.push({
           ...curr,
-          text: newText
-        })
-        textLength += newText.length
+          text: newText,
+        });
+        textLength += newText.length;
 
-        return acc
+        return acc;
       },
-      {...paragraph, children: []}
-    )
+      { ...paragraph, children: [] }
+    );
 
-    return truncated
-  }
+    return truncated;
+  };
 
-export const findFirstParagraph = (nodes: Node[] | undefined | null): Node | undefined =>
-  nodes?.find(node => Element.isElement(node) && node.type === 'paragraph')
+export const findFirstParagraph = (
+  nodes: Node[] | undefined | null
+): Node | undefined =>
+  nodes?.find(node => Element.isElement(node) && node.type === 'paragraph');
 
 export const truncateFirstParagraph = (maxLength: number) =>
-  compose(node => (node ? [node] : node), truncateParagraph(maxLength), findFirstParagraph)
+  compose(
+    node => (node ? [node] : node),
+    truncateParagraph(maxLength),
+    findFirstParagraph
+  );

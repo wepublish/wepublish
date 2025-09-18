@@ -1,26 +1,29 @@
-import {ApolloError} from '@apollo/client'
-import {CommentItemType, useCreateCommentMutation} from '@wepublish/editor/api'
-import React from 'react'
-import {useTranslation} from 'react-i18next'
-import {IconType} from 'react-icons'
-import {MdReply} from 'react-icons/md'
-import {useNavigate} from 'react-router-dom'
-import {IconButton, Message, toaster} from 'rsuite'
-import {TypeAttributes} from 'rsuite/cjs/@types/common'
+import { ApolloError } from '@apollo/client';
+import {
+  CommentItemType,
+  useCreateCommentMutation,
+} from '@wepublish/editor/api';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { IconType } from 'react-icons';
+import { MdReply } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { IconButton, Message, toaster } from 'rsuite';
+import { TypeAttributes } from 'rsuite/cjs/@types/common';
 
-import {IconButtonTooltip} from '../iconButtonTooltip'
+import { IconButtonTooltip } from '../iconButtonTooltip';
 
 interface ReplyCommentBtnProps {
-  circle?: boolean
-  size?: TypeAttributes.Size
-  color?: TypeAttributes.Color
-  appearance?: TypeAttributes.Appearance
-  text?: string
-  itemID: string
-  itemType: CommentItemType
-  parentID?: string | null
-  icon?: React.ReactElement<IconType>
-  onCommentCreated?: () => void
+  circle?: boolean;
+  size?: TypeAttributes.Size;
+  color?: TypeAttributes.Color;
+  appearance?: TypeAttributes.Appearance;
+  text?: string;
+  itemID: string;
+  itemType: CommentItemType;
+  parentID?: string | null;
+  icon?: React.ReactElement<IconType>;
+  onCommentCreated?: () => void;
 }
 
 export function CreateCommentBtn({
@@ -33,72 +36,80 @@ export function CreateCommentBtn({
   itemType,
   parentID,
   icon,
-  onCommentCreated
+  onCommentCreated,
 }: ReplyCommentBtnProps) {
-  const {t} = useTranslation()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const onError = (error: ApolloError) => {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error.message}
       </Message>
-    )
-  }
+    );
+  };
 
   const [createComment] = useCreateCommentMutation({
-    onError
-  })
+    onError,
+  });
 
   async function createNewComment() {
     await createComment({
       variables: {
         itemID,
         itemType,
-        parentID
+        parentID,
       },
       onCompleted: data => {
-        navigate(`/comments/edit/${data?.createComment.id}`)
+        navigate(`/comments/edit/${data?.createComment.id}`);
         if (onCommentCreated) {
-          onCommentCreated()
+          onCommentCreated();
         }
-      }
-    })
+      },
+    });
   }
 
   function getIconBtn() {
     if (!text) {
       return (
         <IconButton
-          style={{marginLeft: '10px'}}
+          style={{ marginLeft: '10px' }}
           icon={icon || <MdReply />}
           size={size}
           circle={circle}
           color={color}
           appearance={appearance}
           onClick={async () => {
-            await createNewComment()
+            await createNewComment();
           }}
         />
-      )
+      );
     }
     return (
       <IconButton
-        style={{marginLeft: '10px'}}
+        style={{ marginLeft: '10px' }}
         icon={icon || <MdReply />}
         size={size}
         circle={circle}
         color={color}
         appearance={appearance}
         onClick={async () => {
-          await createNewComment()
-        }}>
+          await createNewComment();
+        }}
+      >
         {text}
       </IconButton>
-    )
+    );
   }
 
   return (
-    <IconButtonTooltip caption={t('replyCommentBtn.tooltip')}>{getIconBtn()}</IconButtonTooltip>
-  )
+    <IconButtonTooltip caption={t('replyCommentBtn.tooltip')}>
+      {getIconBtn()}
+    </IconButtonTooltip>
+  );
 }

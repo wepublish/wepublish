@@ -1,20 +1,23 @@
-import {css, GlobalStyles} from '@mui/material'
-import {ArticleWrapper} from '@wepublish/article/website'
-import {BannerWrapper} from '@wepublish/banner/website'
+import { css, GlobalStyles } from '@mui/material';
+import { ArticleWrapper } from '@wepublish/article/website';
+import { BannerWrapper } from '@wepublish/banner/website';
 import {
   ImageBlockCaption,
   ImageBlockWrapper,
   QuoteBlockWrapper,
   RichTextBlockWrapper,
-  TeaserGridBlockWrapper
-} from '@wepublish/block-content/website'
-import {FooterWrapper} from '@wepublish/navigation/website'
-import {PaywallWrapper} from '@wepublish/paywall/website'
+  TeaserGridBlockWrapper,
+} from '@wepublish/block-content/website';
+import { FooterWrapper } from '@wepublish/navigation/website';
+import { PaywallWrapper } from '@wepublish/paywall/website';
 
-import {ArticleWrapperAppendix, ArticleWrapperComments} from '../pages/a/[slug]'
-import {HauptstadtArticleMetaWrapper} from '../src/components/hauptstadt-article'
-import {HauptstadtBannerContainer} from './components/hauptstadt-banner'
-import {NavbarWrapper} from './components/hauptstadt-navbar'
+import {
+  ArticleWrapperAppendix,
+  ArticleWrapperComments,
+} from '../pages/a/[slug]';
+import { HauptstadtArticleMetaWrapper } from '../src/components/hauptstadt-article';
+import { HauptstadtBannerContainer } from './components/hauptstadt-banner';
+import { NavbarWrapper } from './components/hauptstadt-navbar';
 
 export const printStyles = (
   <GlobalStyles
@@ -58,4 +61,4 @@ export const printStyles = (
       }
     `}
   />
-)
+);
