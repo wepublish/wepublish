@@ -25,6 +25,8 @@ import {OnlineReportsAuthorChip} from '../src/components/author-chip'
 import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
 import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
 import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {OnlineReportsTeaserGridFlexBlock} from '../src/onlinereports-teaser-grid-flex-blocks'
+import {OnlineReportsTeaserGridBlock} from '../src/onlinereports-teaser-grid-block'
 import {Advertisement} from '../src/components/advertisement'
 import {Structure} from '../src/structure'
 import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
@@ -100,7 +102,11 @@ const MainContainer = styled('div')`
 const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
-  row-gap: ${({theme}) => theme.spacing(7.5)};
+  row-gap: ${({theme}) => theme.spacing(4)};
+
+  ${theme.breakpoints.up('sm')} {
+    row-gap: ${({theme}) => theme.spacing(7.5)};
+  }
 
   ${theme.breakpoints.down('lg')} {
     padding-left: ${({theme}) => theme.spacing(2.5)};
@@ -182,6 +188,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Teaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
+              TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
+              TeaserGrid: OnlineReportsTeaserGridBlock,
               Quote: OnlineReportsQuoteBlock,
               Subscribe: Mitmachen,
               Title: OnlineReportsTitle

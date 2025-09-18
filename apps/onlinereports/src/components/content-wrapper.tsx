@@ -18,7 +18,17 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   fullWidth?: boolean
 }>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(7)};
+  row-gap: ${({theme}) => theme.spacing(4)};
+  & > * {
+    max-width: calc(100vw - ${({theme}) => theme.spacing(5)});
+  }
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    gap: ${({theme}) => theme.spacing(7)};
+    & > * {
+      max-width: unset;
+    }
+  }
 
   ${({theme, fullWidth}) =>
     !fullWidth &&

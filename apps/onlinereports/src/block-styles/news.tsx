@@ -69,7 +69,12 @@ const Filler = styled(Box)``
 const NewsTeaserListWrapper = styled(Box)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${({theme}) => theme.spacing(2.5)};
+  row-gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    row-gap: ${({theme}) => theme.spacing(2.5)};
+    column-gap: ${({theme}) => theme.spacing(2.5)};
+  }
 
   ${BlueBox} {
     grid-column: span 3;
