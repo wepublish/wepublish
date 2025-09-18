@@ -2,6 +2,7 @@ import { useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
+  ProductType,
   useChallengeQuery,
   useInvoicesQuery,
   useMemberPlanListQuery,
@@ -108,6 +109,11 @@ export const SubscribeContainer = <
     });
   }, [memberPlanList, filter, sort]);
 
+  const donatePredicate = useMemo<NonNullable<SubscribeContainerProps<T>['donate']>>(
+    () => donate ?? ((plan?: FullMemberPlanFragment) => plan?.productType === ProductType.Donation),
+    [donate]
+  )
+
   return (
     <>
       <PaymentForm
@@ -120,7 +126,11 @@ export const SubscribeContainer = <
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
-        {...props}
+        termsOfServiceUrl={termsOfServiceUrl}
+        donate={donatePredicate}
+        transactionFee={transactionFee}
+        transactionFeeText={transactionFeeText}
+        returningUserId={returningUserId}
         onSubscribe={async formData => {
           const selectedMemberplan =
             filteredMemberPlans.data?.memberPlans.nodes.find(

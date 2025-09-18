@@ -12,16 +12,12 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-} from 'graphql';
-import { GraphQLDateTime } from 'graphql-scalars';
-import { GraphQLPageInfo } from './common';
-import { GraphQLPaymentMethod } from './paymentMethod';
-import {
-  AvailablePaymentMethod,
-  Currency,
-  PaymentPeriodicity,
-} from '@prisma/client';
+  GraphQLString
+} from 'graphql'
+import {GraphQLDateTime} from 'graphql-scalars'
+import {GraphQLPageInfo} from './common'
+import {GraphQLPaymentMethod} from './paymentMethod'
+import {AvailablePaymentMethod, Currency, PaymentPeriodicity, ProductType} from '@prisma/client'
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
   name: 'Currency',
@@ -30,6 +26,14 @@ export const GraphQLSupportedCurrency = new GraphQLEnumType({
     EUR: { value: Currency.EUR },
   },
 });
+
+export const GraphQLProductType = new GraphQLEnumType({
+  name: 'ProductType',
+  values: {
+    SUBSCRIPTION: {value: ProductType.SUBSCRIPTION},
+    DONATION: {value: ProductType.DONATION}
+  }
+})
 
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
@@ -93,15 +97,15 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
         return imageID ? loaders.images.load(imageID) : null;
       }),
     },
-    description: { type: GraphQLRichText },
-    shortDescription: { type: GraphQLRichText },
-    tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-    active: { type: new GraphQLNonNull(GraphQLBoolean) },
-    amountPerMonthMin: { type: new GraphQLNonNull(GraphQLInt) },
-    amountPerMonthTarget: { type: GraphQLInt },
-    currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
-    maxCount: { type: GraphQLInt },
-    extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    description: {type: GraphQLRichText},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    amountPerMonthTarget: {type: GraphQLInt},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
+    maxCount: {type: GraphQLInt},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
+    productType: {type: new GraphQLNonNull(GraphQLProductType)},
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod))
@@ -135,11 +139,12 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
 export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
   fields: () => ({
-    name: { type: GraphQLString },
-    active: { type: GraphQLBoolean },
-    tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-  }),
-});
+    name: {type: GraphQLString},
+    active: {type: GraphQLBoolean},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    productType: {type: GraphQLProductType}
+  })
+})
 
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
   name: 'MemberPlanSort',
@@ -182,18 +187,18 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
 export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   name: 'MemberPlanInput',
   fields: () => ({
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    slug: { type: new GraphQLNonNull(GraphQLString) },
-    imageID: { type: GraphQLString },
-    description: { type: GraphQLRichText },
-    shortDescription: { type: GraphQLRichText },
-    tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-    active: { type: new GraphQLNonNull(GraphQLBoolean) },
-    amountPerMonthMin: { type: new GraphQLNonNull(GraphQLInt) },
-    amountPerMonthTarget: { type: GraphQLInt },
-    currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
-    extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
-    maxCount: { type: GraphQLInt },
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLString)},
+    imageID: {type: GraphQLString},
+    description: {type: GraphQLRichText},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    amountPerMonthTarget: {type: GraphQLInt},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
+    productType: {type: new GraphQLNonNull(GraphQLProductType)},
+    maxCount: {type: GraphQLInt},
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))

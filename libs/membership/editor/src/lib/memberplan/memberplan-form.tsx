@@ -6,7 +6,8 @@ import {
   FullImageFragment,
   PaymentMethod,
   Currency,
-} from '@wepublish/editor/api';
+  ProductType
+} from '@wepublish/editor/api'
 import {
   Button,
   CheckPicker,
@@ -89,6 +90,17 @@ export function MemberPlanForm({
   const { t } = useTranslation();
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const productType = memberPlan?.productType ?? ProductType.Subscription
+  const isDonationProduct = productType === ProductType.Donation
+  const maxCountLabel = t(
+    isDonationProduct ? 'memberplanForm.maxCountDonation' : 'memberplanForm.maxCount'
+  )
+  const maxCountHelpText = t(
+    isDonationProduct
+      ? 'memberplanForm.maxCountDonationHelpText'
+      : 'memberplanForm.maxCountHelpText'
+  )
 
   const isTrialSubscription = useMemo(
     () => !memberPlan?.extendable && !!memberPlan?.maxCount,
@@ -176,6 +188,39 @@ export function MemberPlanForm({
       <Col xs={12}>
         <PanelWidth100 bordered>
           <Row>
+            {/* product type */}
+            <Col xs={24}>
+              <Form.ControlLabel>{t('memberplanForm.productType')}</Form.ControlLabel>
+              <SelectPicker
+                cleanable={false}
+                searchable={false}
+                block
+                value={memberPlan?.productType ?? ProductType.Subscription}
+                data={[
+                  {
+                    value: ProductType.Subscription,
+                    label: t('memberplanForm.productTypeSubscription')
+                  },
+                  {
+                    value: ProductType.Donation,
+                    label: t('memberplanForm.productTypeDonation')
+                  }
+                ]}
+                disabled={loading}
+                onChange={(productType: ProductType | null) => {
+                  if (!memberPlan) {
+                    return
+                  }
+
+                  setMemberPlan({
+                    ...memberPlan,
+                    productType: productType ?? ProductType.Subscription
+                  })
+                }}
+              />
+              <HelpText>{t('memberplanForm.productTypeHelpText')}</HelpText>
+            </Col>
+
             {/* image */}
             <Col xs={12}>
               <ChooseEditImage
@@ -619,9 +664,9 @@ export function MemberPlanForm({
             </Col>
             {/* max count */}
             <Col xs={12}>
-              <ControlLabel>{t('memberplanForm.maxCount')}</ControlLabel>
+              <ControlLabel>{maxCountLabel}</ControlLabel>
               <Input
-                placeholder={t('memberplanForm.maxCount')}
+                placeholder={maxCountLabel}
                 type={'number'}
                 min={0}
                 value={memberPlan?.maxCount || undefined}
@@ -635,7 +680,7 @@ export function MemberPlanForm({
                   });
                 }}
               />
-              <HelpText>{t('memberplanForm.maxCountHelpText')}</HelpText>
+              <HelpText>{maxCountHelpText}</HelpText>
             </Col>
           </RowPaddingTop>
           <RowPaddingTop>

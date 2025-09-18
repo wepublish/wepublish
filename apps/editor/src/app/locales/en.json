@@ -1513,6 +1513,8 @@
       "extendableHelpText": "Determine whether a user's subscription can be renewed - automatically or manually - or not. As a rule, trial subscriptions cannot be renewed.",
       "maxCount": "Maximum number of subscriptions per user",
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
+      "maxCountDonation": "Maximum number of donations per user",
+      "maxCountDonationHelpText": "Limit the number of donations that a user can make for this plan.",
       "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
@@ -1522,7 +1524,11 @@
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
       "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
       "confirmationPage": "Redirect to page for existing users (retargeting)",
-      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page."
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
+      "productType": "Product type",
+      "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation. Subscription is selected by default.",
+      "productTypeSubscription": "Subscription",
+      "productTypeDonation": "Donation"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",

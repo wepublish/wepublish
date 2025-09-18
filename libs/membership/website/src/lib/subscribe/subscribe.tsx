@@ -289,7 +289,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         memberPlan => memberPlan.id === selectedMemberPlanId
       ),
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
-  );
+  )
+  const isDonation = useMemo(() => !!donate?.(selectedMemberPlan), [donate, selectedMemberPlan])
 
   const selectedAvailablePaymentMethod = useMemo(
     () =>
@@ -309,14 +310,32 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
-  const paymentText = getPaymentText(
-    autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    selectedPaymentPeriodicity,
+  const paymentText = useMemo(() => {
+    if (isDonation) {
+      return `Einmalig ${formatCurrency(
+        monthlyAmount / 100,
+        selectedMemberPlan?.currency ?? Currency.Chf,
+        locale
+      )}`
+    }
+
+    return getPaymentText(
+      autoRenew,
+      selectedMemberPlan?.extendable ?? true,
+      selectedPaymentPeriodicity,
+      monthlyAmount,
+      selectedMemberPlan?.currency ?? Currency.Chf,
+      locale
+    )
+  }, [
+    isDonation,
     monthlyAmount,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
+    selectedMemberPlan?.currency,
+    locale,
+    autoRenew,
+    selectedMemberPlan?.extendable,
+    selectedPaymentPeriodicity
+  ])
 
   const monthlyPaymentText = getPaymentText(
     true,
@@ -332,9 +351,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
-      paymentPeriodicity: data.paymentPeriodicity,
-      autoRenew: data.autoRenew,
-    };
+      paymentPeriodicity: isDonation
+        ? selectedAvailablePaymentMethod?.paymentPeriodicities?.[0] ?? data.paymentPeriodicity
+        : data.paymentPeriodicity,
+      autoRenew: isDonation ? false : data.autoRenew
+    }
 
     if (hasUser) {
       return callAction(onSubscribe)(subscribeData);
@@ -395,18 +416,25 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [challenge, setValue]);
 
   useEffect(() => {
+    if (isDonation) {
+      setValue<'autoRenew'>('autoRenew', false)
+      return
+    }
+
     if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
-      setValue<'autoRenew'>('autoRenew', true);
+      setValue<'autoRenew'>('autoRenew', true)
+      return
     }
 
     if (!selectedMemberPlan?.extendable) {
       setValue<'autoRenew'>('autoRenew', false);
     }
   }, [
+    isDonation,
     selectedAvailablePaymentMethod?.forceAutoRenewal,
     selectedMemberPlan?.extendable,
-    setValue,
-  ]);
+    setValue
+  ])
 
   useEffect(() => {
     if (
@@ -429,6 +457,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       });
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity]);
+
+  useEffect(() => {
+    if (isDonation && selectedAvailablePaymentMethod?.paymentPeriodicities?.length) {
+      setValue<'paymentPeriodicity'>(
+        'paymentPeriodicity',
+        selectedAvailablePaymentMethod.paymentPeriodicities[0]
+      )
+    }
+  }, [isDonation, selectedAvailablePaymentMethod?.paymentPeriodicities, setValue])
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
@@ -516,36 +553,30 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         )}
       </SubscribeSection>
 
-      <SubscribeSection area="monthlyAmount">
-        {!hidePaymentAmount(selectedMemberPlan) && (
-          <Controller
-            name={'monthlyAmount'}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <SubscribeAmount>
-                <Paragraph
-                  component={SubscribeAmountText}
-                  gutterBottom={false}
-                >
-                  Ich unterstütze {siteTitle}{' '}
-                  {replace(/^./, toLower)(monthlyPaymentText)}
-                </Paragraph>
+      <SubscribeSection area={'monthlyAmount'}>
+        <Controller
+          name={'monthlyAmount'}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+            <SubscribeAmount>
+              <Paragraph component={SubscribeAmountText} gutterBottom={false}>
+                {isDonation
+                  ? `Ich spende an ${siteTitle}`
+                  : `Ich unterstütze ${siteTitle} ${replace(/^./, toLower)(monthlyPaymentText)}`}
+              </Paragraph>
 
-                <PaymentAmount
-                  {...field}
-                  error={error}
-                  slug={selectedMemberPlan?.slug}
-                  donate={!!donate?.(selectedMemberPlan)}
-                  amountPerMonthMin={amountPerMonthMin}
-                  amountPerMonthTarget={
-                    selectedMemberPlan?.amountPerMonthTarget ?? undefined
-                  }
-                  currency={selectedMemberPlan?.currency ?? Currency.Chf}
-                />
-              </SubscribeAmount>
-            )}
-          />
-        )}
+              <PaymentAmount
+                {...field}
+                error={error}
+                slug={selectedMemberPlan?.slug}
+                donate={isDonation}
+                amountPerMonthMin={amountPerMonthMin}
+                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
+                currency={selectedMemberPlan?.currency ?? Currency.Chf}
+              />
+            </SubscribeAmount>
+          )}
+        />
       </SubscribeSection>
 
       {!hasUserContext && (
@@ -557,8 +588,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribeSection>
       )}
 
-      <SubscribeSection area="paymentPeriodicity">
-        {allPaymentMethods && allPaymentMethods.length > 1 && (
+      <SubscribeSection area={'paymentPeriodicity'}>
+        {allPaymentMethods && allPaymentMethods.length > 1 && !isDonation && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
 
@@ -575,41 +606,41 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             )}
           />
 
-          <Controller
-            name={'paymentPeriodicity'}
-            control={control}
-            render={({ field }) => (
-              <PeriodicityPicker
-                {...field}
-                onChange={periodicity => field.onChange(periodicity)}
-                periodicities={
-                  selectedAvailablePaymentMethod?.paymentPeriodicities
-                }
-              />
-            )}
-          />
-
-          {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
-            selectedMemberPlan?.extendable && (
+          {!isDonation && (
+            <>
               <Controller
-                name={'autoRenew'}
+                name={'paymentPeriodicity'}
                 control={control}
-                render={({ field }) => (
-                  <FormControlLabel
+                render={({field}) => (
+                  <PeriodicityPicker
                     {...field}
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        disabled={
-                          selectedAvailablePaymentMethod?.forceAutoRenewal
-                        }
-                      />
-                    }
-                    label="Automatisch erneuern"
+                    onChange={periodicity => field.onChange(periodicity)}
+                    periodicities={selectedAvailablePaymentMethod?.paymentPeriodicities}
                   />
                 )}
               />
-            )}
+
+              {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
+                selectedMemberPlan?.extendable && (
+                  <Controller
+                    name={'autoRenew'}
+                    control={control}
+                    render={({field}) => (
+                      <FormControlLabel
+                        {...field}
+                        control={
+                          <Checkbox
+                            checked={field.value}
+                            disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
+                          />
+                        }
+                        label="Automatisch erneuern"
+                      />
+                    )}
+                  />
+                )}
+            </>
+          )}
         </SubscribePayment>
       </SubscribeSection>
 
@@ -680,11 +711,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               e.preventDefault();
               setOpenConfirm(true);
             }
-          }}
-        >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
-        </SubscribeButton>
+          }}>
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
+        </Button>
 
         {autoRenew && termsOfServiceUrl ?
           <Link
@@ -710,12 +739,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} Abonnieren`}
-      >
-        <H5
-          id="modal-modal-title"
-          component="h1"
-        >
+        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}>
+        <H5 id="modal-modal-title" component="h1">
           Bist du dir sicher?
         </H5>
 

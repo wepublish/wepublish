@@ -5,6 +5,7 @@ fragment MemberPlanRef on MemberPlan {
   shortDescription
   slug
   active
+  productType
   tags
   image {
     ...FullImage
@@ -44,22 +45,8 @@ fragment FullMemberPlan on MemberPlan {
   migrateToTargetPaymentMethodID
 }
 
-query MemberPlanList(
-  $filter: String
-  $cursor: String
-  $take: Int
-  $skip: Int
-  $order: SortOrder
-  $sort: MemberPlanSort
-) {
-  memberPlans(
-    filter: {name: $filter}
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
+query MemberPlanList($filter: MemberPlanFilter, $cursor: String, $take: Int, $skip: Int) {
+  memberPlans(filter: $filter, cursor: $cursor, take: $take, skip: $skip) {
     nodes {
       ...FullMemberPlan
     }

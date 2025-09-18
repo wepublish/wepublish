@@ -30,6 +30,15 @@ registerEnumType(Currency, {
   name: 'Currency',
 });
 
+export enum ProductType {
+  SUBSCRIPTION = 'SUBSCRIPTION',
+  DONATION = 'DONATION'
+}
+
+registerEnumType(ProductType, {
+  name: 'ProductType'
+})
+
 @ObjectType()
 export class AvailablePaymentMethod {
   paymentMethodIDs!: string[];
@@ -86,8 +95,11 @@ export class MemberPlan {
   @Field(() => [AvailablePaymentMethod])
   availablePaymentMethods!: AvailablePaymentMethod[];
 
-  @Field({ nullable: true })
-  successPageId?: string;
+  @Field(() => ProductType)
+  productType!: ProductType
+
+  @Field({nullable: true})
+  successPageId?: string
 
   @Field({ nullable: true })
   failPageId?: string;
@@ -107,6 +119,9 @@ export class MemberPlanFilter {
   @Field({ nullable: true })
   active?: boolean;
 
-  @Field(() => [String], { nullable: true })
-  tags?: string[];
+  @Field(() => [String], {nullable: true})
+  tags?: string[]
+
+  @Field(() => ProductType, {nullable: true})
+  productType?: ProductType
 }
