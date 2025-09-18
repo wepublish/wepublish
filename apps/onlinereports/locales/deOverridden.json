@@ -2,6 +2,11 @@
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>({source})</ImageSource>}}"
   },
+  "teaser": {
+    "author": {
+      "text": "{authors}"
+    }
+  },
   "subscription": {
     "subscriptionIsUnpaid": "Rechnung ist unbezahlt",
     "cancelSubscription": "Zahlung kündigen",

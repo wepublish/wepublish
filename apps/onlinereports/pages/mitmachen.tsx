@@ -40,7 +40,11 @@ const SubscribePageWrapper = styled('div')`
   }
 `;
 
-export const MitmachenInner = () => <SubscribePage fields={['firstName']} />;
+export const MitmachenInner = () => (
+  <OnlineReportsSubscribePageWrapper>
+    <SubscribePage fields={['firstName']} />
+  </OnlineReportsSubscribePageWrapper>
+);
 
 export default function Mitmachen() {
   const { setAdsDisabled } = useAdsContext();
@@ -57,9 +61,7 @@ export default function Mitmachen() {
   return (
     <SubscribePageWrapper>
       <H3 component="h1">Herzlichen Dank für Ihre Unterstützung!</H3>
-      <OnlineReportsSubscribePageWrapper>
-        <MitmachenInner />
-      </OnlineReportsSubscribePageWrapper>
+      <MitmachenInner />
     </SubscribePageWrapper>
   );
 }

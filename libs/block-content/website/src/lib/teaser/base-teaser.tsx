@@ -1,5 +1,5 @@
-import { Chip, css, SxProps, Typography } from '@mui/material';
 import styled from '@emotion/styled';
+import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
 import { FlexAlignment, Teaser as TeaserType } from '@wepublish/website/api';
 import {
@@ -7,10 +7,10 @@ import {
   Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { isImageBlock } from '../image/image-block';
-import { isTitleBlock } from '../title/title-block';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isImageBlock } from '../image/image-block';
+import { isTitleBlock } from '../title/title-block';
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -455,7 +455,9 @@ export const BaseTeaser = ({
         >
           {authors && authors?.length ?
             <TeaserAuthors>
-              Von {authors?.join(t('teaser.author.seperator'))}
+              {t('teaser.author.text', {
+                authors: authors?.join(t('teaser.author.seperator')),
+              })}
             </TeaserAuthors>
           : null}
 
