@@ -612,14 +612,18 @@ export class MemberContext implements MemberContextInterface {
   ) {
     if (
       !memberPlan.availablePaymentMethods.some(apm => {
-        if (apm.forceAutoRenewal && !autoRenew) return false
+        if (apm.forceAutoRenewal && !autoRenew) {
+          return false
+        }
+
         return (
           apm.paymentPeriodicities.includes(paymentPeriodicity) &&
           apm.paymentMethodIDs.includes(paymentMethod.id)
         )
       })
-    )
+    ) {
       throw new PaymentConfigurationNotAllowed()
+    }
   }
 
   async processSubscriptionProperties(

@@ -1,8 +1,6 @@
 import styled from '@emotion/styled'
-import {useVersionInformationQuery} from '@wepublish/editor/api-v2'
+import {getApiClientV2, useVersionInformationQuery} from '@wepublish/editor/api-v2'
 import {useEffect, useMemo, useState} from 'react'
-
-import {getApiClientV2} from '@wepublish/editor/api-v2'
 
 const StyledVersion = styled.div`
   padding: 5px;

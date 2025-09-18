@@ -5,17 +5,13 @@ import {InvalidCredentialsError, NotActiveError} from './session.errors'
 import nanoid from 'nanoid/generate'
 import {UserAuthenticationService} from './user-authentication.service'
 import {JwtAuthenticationService} from './jwt-authentication.service'
-import {OAuthAuthenticationService} from './oauth-authentication.service'
 import {UserSession} from '@wepublish/authentication/api'
-import {
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
-  logger,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND
-} from '@wepublish/api'
+import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '@wepublish/api'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {SettingName, SettingsService} from '@wepublish/settings/api'
 import {Validator} from './validator'
 import {User} from '@wepublish/user/api'
+import {logger} from '@wepublish/utils/api'
 
 const IDAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -24,11 +20,10 @@ export const SESSION_TTL_TOKEN = 'SESSION_TTL_TOKEN'
 @Injectable()
 export class SessionService {
   constructor(
-    private readonly prisma: PrismaClient,
-    @Inject(SESSION_TTL_TOKEN) private readonly sessionTTL: number,
+    private prisma: PrismaClient,
+    @Inject(SESSION_TTL_TOKEN) private sessionTTL: number,
     private userAuthenticationService: UserAuthenticationService,
     private jwtAuthenticationService: JwtAuthenticationService,
-    private oAuthAuthenticationService: OAuthAuthenticationService,
     private settingsService: SettingsService,
     private mailContext: MailContext
   ) {}
@@ -50,19 +45,6 @@ export class SessionService {
 
   async createSessionWithJWT(jwt: string): Promise<SessionWithToken> {
     const user = await this.jwtAuthenticationService.authenticateUserWithJWT(jwt)
-
-    if (!user) throw new InvalidCredentialsError()
-    if (!user.active) throw new NotActiveError()
-
-    return this.createUserSession(user)
-  }
-
-  async createOAuth2Session(providerName: string, code: string, redirectUri: string) {
-    const user = await this.oAuthAuthenticationService.authenticateUser(
-      providerName,
-      code,
-      redirectUri
-    )
 
     if (!user) throw new InvalidCredentialsError()
     if (!user.active) throw new NotActiveError()

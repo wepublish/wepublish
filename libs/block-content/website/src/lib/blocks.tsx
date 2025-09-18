@@ -49,12 +49,12 @@ import {isContextBoxBlockStyle} from './block-styles/context-box/context-box'
 import {isBannerBlockStyle} from './block-styles/banner/banner'
 import {isCrowdfundingBlock} from './crowdfunding/crowdfunding-block'
 import {ImageContext} from '@wepublish/image/website'
+import {
+  isAlternatingTeaserGridBlockStyle,
+  isAlternatingTeaserListBlockStyle,
+  isAlternatingTeaserSlotsBlockStyle
+} from './block-styles/alternating/is-alternating'
 import {isTeaserSlotsBlock} from './teaser/teaser-slots-block'
-
-export const hasBlockStyle =
-  (blockStyle: string) =>
-  <T extends {blockStyle?: string | null}>(block: T) =>
-    block.blockStyle === blockStyle
 
 export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const {blocks, blockStyles} = useWebsiteBuilder()
@@ -64,7 +64,10 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
     [isTeaserSliderBlockStyle, block => <blockStyles.TeaserSlider {...block} />],
     [isFocusTeaserBlockStyle, block => <blockStyles.FocusTeaser {...block} />],
     [isContextBoxBlockStyle, block => <blockStyles.ContextBox {...block} />],
-    [isBannerBlockStyle, block => <blockStyles.Banner {...block} />]
+    [isBannerBlockStyle, block => <blockStyles.Banner {...block} />],
+    [isAlternatingTeaserGridBlockStyle, block => <blockStyles.AlternatingTeaserGrid {...block} />],
+    [isAlternatingTeaserListBlockStyle, block => <blockStyles.AlternatingTeaserList {...block} />],
+    [isAlternatingTeaserSlotsBlockStyle, block => <blockStyles.AlternatingTeaserSlots {...block} />]
   ])
 
   const facebookEmbedCond = cond([

@@ -1,31 +1,5 @@
 import styled from '@emotion/styled'
 import {PageInfo} from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdDashboard, MdDescription, MdEvent, MdSearch, MdSettings} from 'react-icons/md'
-import {
-  Button,
-  Drawer,
-  FlexboxGrid,
-  Form,
-  Input,
-  InputGroup as RInputGroup,
-  List as RList,
-  Nav as RNav,
-  Notification,
-  Panel,
-  toaster,
-  Toggle as RToggle,
-  Loader as RLoader
-} from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ListInput, ListValue} from '../atoms/listInput'
-import {Teaser, TeaserLink} from '../blocks/types'
-import {generateID} from '../utility'
-import {ImageEditPanel} from './imageEditPanel'
-import {ImageSelectPanel} from './imageSelectPanel'
-import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
 import {
   ArticleFilter,
   ArticleListQueryVariables,
@@ -41,6 +15,32 @@ import {
   useEventListQuery,
   usePageListQuery
 } from '@wepublish/editor/api-v2'
+import {useEffect, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdDashboard, MdDescription, MdEvent, MdSearch, MdSettings} from 'react-icons/md'
+import {
+  Button,
+  Drawer,
+  FlexboxGrid,
+  Form,
+  Input,
+  InputGroup as RInputGroup,
+  List as RList,
+  Loader as RLoader,
+  Nav as RNav,
+  Notification,
+  Panel,
+  toaster,
+  Toggle as RToggle
+} from 'rsuite'
+
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ListInput, ListValue} from '../atoms/listInput'
+import {Teaser, TeaserLink} from '../blocks/types'
+import {generateID} from '../utility'
+import {ImageEditPanel} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
+import {previewForTeaser, TeaserMetadataProperty} from './teaserEditPanel'
 
 const List = styled(RList)`
   box-shadow: none;

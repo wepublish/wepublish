@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import {ImageContext} from '@wepublish/image/website'
+import {BuilderTeaserProps} from '@wepublish/website/builder'
 
 import {TeaserOverwrite} from './teaser-overwrite'
-import {BuilderTeaserProps} from '@wepublish/website/builder'
 import {
   AuthorsAndDate,
   fluidTypography,

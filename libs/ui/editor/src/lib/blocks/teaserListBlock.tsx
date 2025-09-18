@@ -1,15 +1,15 @@
+import styled from '@emotion/styled'
 import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton as RSIconButton, Panel} from 'rsuite'
 
+import {TypographicTextArea} from '../atoms'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
-import {TeaserListBlockValue} from './types'
-import styled from '@emotion/styled'
-import {ContentForTeaser} from './teaserGridBlock'
 import {TeaserListConfigPanel, useTeaserTypeText} from '../panel/teaserListConfigPanel'
-import {TypographicTextArea} from '../atoms'
+import {ContentForTeaser} from './teaserGridBlock'
+import {TeaserListBlockValue} from './types'
 
 const TeaserListBlockWrapper = styled.div`
   display: grid;

@@ -55,29 +55,32 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>
 }
 
-export type Article = HasOptionalPeerLc & {
-  __typename?: 'Article'
-  createdAt: Scalars['DateTime']
-  disableComments: Scalars['Boolean']
-  draft?: Maybe<ArticleRevision>
-  hidden: Scalars['Boolean']
-  id: Scalars['String']
-  latest: ArticleRevision
-  likes: Scalars['Int']
-  modifiedAt: Scalars['DateTime']
-  peer?: Maybe<Peer>
-  peerArticleId?: Maybe<Scalars['String']>
-  peerId?: Maybe<Scalars['String']>
-  pending?: Maybe<ArticleRevision>
-  previewUrl: Scalars['String']
-  published?: Maybe<ArticleRevision>
-  publishedAt?: Maybe<Scalars['DateTime']>
-  shared: Scalars['Boolean']
-  slug?: Maybe<Scalars['String']>
-  tags: Array<Tag>
-  trackingPixels: Array<TrackingPixel>
-  url: Scalars['String']
-}
+export type Article = HasOptionalPaywall &
+  HasOptionalPeerLc & {
+    __typename?: 'Article'
+    createdAt: Scalars['DateTime']
+    disableComments: Scalars['Boolean']
+    draft?: Maybe<ArticleRevision>
+    hidden: Scalars['Boolean']
+    id: Scalars['String']
+    latest: ArticleRevision
+    likes: Scalars['Int']
+    modifiedAt: Scalars['DateTime']
+    paywall?: Maybe<Paywall>
+    paywallId?: Maybe<Scalars['String']>
+    peer?: Maybe<Peer>
+    peerArticleId?: Maybe<Scalars['String']>
+    peerId?: Maybe<Scalars['String']>
+    pending?: Maybe<ArticleRevision>
+    previewUrl: Scalars['String']
+    published?: Maybe<ArticleRevision>
+    publishedAt?: Maybe<Scalars['DateTime']>
+    shared: Scalars['Boolean']
+    slug?: Maybe<Scalars['String']>
+    tags: Array<Tag>
+    trackingPixels: Array<TrackingPixel>
+    url: Scalars['String']
+  }
 
 export type ArticleCreatedAction = BaseAction &
   HasArticleLc & {
@@ -171,12 +174,6 @@ export type ArticleTeaserInput = {
   title?: InputMaybe<Scalars['String']>
 }
 
-export type AuthProvider = {
-  __typename?: 'AuthProvider'
-  name: Scalars['String']
-  url: Scalars['String']
-}
-
 export type Author = HasImage &
   HasOptionalPeerLc & {
     __typename?: 'Author'
@@ -198,13 +195,6 @@ export type Author = HasImage &
     tags: Array<Tag>
     url: Scalars['String']
   }
-
-export type AuthorConnection = {
-  __typename?: 'AuthorConnection'
-  nodes: Array<Author>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
 
 export type AuthorCreatedAction = BaseAction &
   HasAuthor & {
@@ -692,7 +682,7 @@ export type CrowdfundingGoal = {
   amount: Scalars['Float']
   createdAt: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   modifiedAt: Scalars['DateTime']
   title: Scalars['String']
 }
@@ -702,7 +692,7 @@ export type CrowdfundingGoalWithProgress = {
   amount: Scalars['Float']
   createdAt: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
-  id: Scalars['ID']
+  id: Scalars['String']
   modifiedAt: Scalars['DateTime']
   progress?: Maybe<Scalars['Float']>
   title: Scalars['String']
@@ -1035,6 +1025,11 @@ export type FocalPoint = {
   y: Scalars['Float']
 }
 
+export type FocalPointInput = {
+  x: Scalars['Float']
+  y: Scalars['Float']
+}
+
 export type FullCommentRatingSystem = {
   __typename?: 'FullCommentRatingSystem'
   answers: Array<CommentRatingSystemAnswer>
@@ -1124,6 +1119,11 @@ export type HasOptionalEvent = {
 export type HasOptionalPage = {
   page?: Maybe<Page>
   pageID?: Maybe<Scalars['String']>
+}
+
+export type HasOptionalPaywall = {
+  paywall?: Maybe<Paywall>
+  paywallId?: Maybe<Scalars['String']>
 }
 
 export type HasOptionalPeerLc = {
@@ -1327,11 +1327,6 @@ export type ImportedEventsDocument = {
   totalCount: Scalars['Int']
 }
 
-export type InputPoint = {
-  x: Scalars['Float']
-  y: Scalars['Float']
-}
-
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock'
   blockStyle?: Maybe<Scalars['String']>
@@ -1404,7 +1399,9 @@ export type ListicleItemInput = {
 export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
-  LoggedOut = 'LOGGED_OUT'
+  LoggedOut = 'LOGGED_OUT',
+  Subscribed = 'SUBSCRIBED',
+  Unsubscribed = 'UNSUBSCRIBED'
 }
 
 export type MailProviderModel = {
@@ -1444,6 +1441,7 @@ export type MemberPlan = HasImage & {
   imageID?: Maybe<Scalars['String']>
   maxCount?: Maybe<Scalars['Int']>
   name: Scalars['String']
+  shortDescription?: Maybe<Scalars['RichText']>
   slug: Scalars['String']
   successPageId?: Maybe<Scalars['String']>
   tags?: Maybe<Array<Scalars['String']>>
@@ -1496,9 +1494,12 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>
   /** This mutation allows to create payment by referencing a subscription. */
   createPaymentFromSubscription?: Maybe<Payment>
+  /** Creates a paywall. */
+  createPaywall: Paywall
+  /** Creates a paywall bypass token. */
+  createPaywallBypass: PaywallBypass
   createSession: SessionWithToken
   createSessionWithJWT: SessionWithToken
-  createSessionWithOAuth2Code: SessionWithToken
   /** Allows authenticated users to create additional subscriptions */
   createSubscription: Payment
   /** Create a new subscription flow */
@@ -1532,6 +1533,10 @@ export type Mutation = {
   deleteNavigation: Navigation
   /** Deletes an page. */
   deletePage: Scalars['String']
+  /** Deletes a paywall. */
+  deletePaywall: Paywall
+  /** Deletes a paywall bypass token. */
+  deletePaywallBypass: Scalars['String']
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult
   /** Delete an existing subscription flow */
@@ -1608,6 +1613,8 @@ export type Mutation = {
   updatePassword: User
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>
+  /** Updates a paywall. */
+  updatePaywall: Paywall
   /** Updates an existing setting. */
   updateSetting: Setting
   /** Update an existing subscription flow */
@@ -1652,6 +1659,7 @@ export type MutationCreateArticleArgs = {
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   likes?: InputMaybe<Scalars['Int']>
+  paywallId?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   seoTitle?: InputMaybe<Scalars['String']>
@@ -1705,6 +1713,7 @@ export type MutationCreateNavigationArgs = {
 export type MutationCreatePageArgs = {
   blocks: Array<BlockContentInput>
   description?: InputMaybe<Scalars['String']>
+  hidden: Scalars['Boolean']
   imageID?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   slug?: InputMaybe<Scalars['String']>
@@ -1725,6 +1734,20 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
   successURL?: InputMaybe<Scalars['String']>
 }
 
+export type MutationCreatePaywallArgs = {
+  active: Scalars['Boolean']
+  anyMemberPlan: Scalars['Boolean']
+  circumventDescription?: InputMaybe<Scalars['RichText']>
+  description?: InputMaybe<Scalars['RichText']>
+  memberPlanIds?: Array<Scalars['String']>
+  name?: InputMaybe<Scalars['String']>
+}
+
+export type MutationCreatePaywallBypassArgs = {
+  paywallId: Scalars['String']
+  token: Scalars['String']
+}
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String']
   password: Scalars['String']
@@ -1732,12 +1755,6 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String']
-}
-
-export type MutationCreateSessionWithOAuth2CodeArgs = {
-  code: Scalars['String']
-  provider: Scalars['String']
-  redirectUri: Scalars['String']
 }
 
 export type MutationCreateSubscriptionArgs = {
@@ -1815,6 +1832,14 @@ export type MutationDeleteNavigationArgs = {
 }
 
 export type MutationDeletePageArgs = {
+  id: Scalars['String']
+}
+
+export type MutationDeletePaywallArgs = {
+  id: Scalars['String']
+}
+
+export type MutationDeletePaywallBypassArgs = {
   id: Scalars['String']
 }
 
@@ -1921,6 +1946,7 @@ export type MutationUpdateArticleArgs = {
   imageID?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
   likes?: InputMaybe<Scalars['Int']>
+  paywallId?: InputMaybe<Scalars['String']>
   preTitle?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
   seoTitle?: InputMaybe<Scalars['String']>
@@ -1982,6 +2008,7 @@ export type MutationUpdateNavigationArgs = {
 export type MutationUpdatePageArgs = {
   blocks: Array<BlockContentInput>
   description?: InputMaybe<Scalars['String']>
+  hidden: Scalars['Boolean']
   id: Scalars['String']
   imageID?: InputMaybe<Scalars['String']>
   properties: Array<PropertyInput>
@@ -2000,6 +2027,17 @@ export type MutationUpdatePasswordArgs = {
 
 export type MutationUpdatePaymentProviderCustomersArgs = {
   input: Array<PaymentProviderCustomerInput>
+}
+
+export type MutationUpdatePaywallArgs = {
+  active?: InputMaybe<Scalars['Boolean']>
+  anyMemberPlan?: InputMaybe<Scalars['Boolean']>
+  bypassTokens?: InputMaybe<Array<Scalars['String']>>
+  circumventDescription?: InputMaybe<Scalars['RichText']>
+  description?: InputMaybe<Scalars['RichText']>
+  id: Scalars['String']
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>
+  name?: InputMaybe<Scalars['String']>
 }
 
 export type MutationUpdateSettingArgs = {
@@ -2078,17 +2116,11 @@ export type NonDbProperty = {
   value: Scalars['String']
 }
 
-export type OAuth2Account = {
-  __typename?: 'OAuth2Account'
-  provider: Scalars['String']
-  scope: Scalars['String']
-  type: Scalars['String']
-}
-
 export type Page = {
   __typename?: 'Page'
   createdAt: Scalars['DateTime']
   draft?: Maybe<PageRevision>
+  hidden: Scalars['Boolean']
   id: Scalars['String']
   latest: PageRevision
   modifiedAt: Scalars['DateTime']
@@ -2113,6 +2145,7 @@ export type PageCreatedAction = BaseAction &
 export type PageFilter = {
   description?: InputMaybe<Scalars['String']>
   draft?: InputMaybe<Scalars['Boolean']>
+  includeHidden?: InputMaybe<Scalars['Boolean']>
   pending?: InputMaybe<Scalars['Boolean']>
   publicationDateFrom?: InputMaybe<DateFilter>
   publicationDateTo?: InputMaybe<DateFilter>
@@ -2202,6 +2235,13 @@ export type PaginatedArticles = {
   totalCount: Scalars['Int']
 }
 
+export type PaginatedAuthors = {
+  __typename?: 'PaginatedAuthors'
+  nodes: Array<Author>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
 export type PaginatedEvents = {
   __typename?: 'PaginatedEvents'
   nodes: Array<Event>
@@ -2250,6 +2290,7 @@ export type PaymentFromInvoiceInput = {
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod'
   description: Scalars['String']
+  gracePeriod: Scalars['Int']
   id: Scalars['String']
   image?: Maybe<Image>
   imageId?: Maybe<Scalars['String']>
@@ -2288,15 +2329,39 @@ export enum PaymentState {
   Submitted = 'submitted'
 }
 
+export type Paywall = {
+  __typename?: 'Paywall'
+  active: Scalars['Boolean']
+  anyMemberPlan: Scalars['Boolean']
+  bypasses: Array<PaywallBypass>
+  circumventDescription?: Maybe<Scalars['RichText']>
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['RichText']>
+  id: Scalars['String']
+  memberPlans: Array<MemberPlan>
+  modifiedAt: Scalars['DateTime']
+  name?: Maybe<Scalars['String']>
+}
+
+export type PaywallBypass = {
+  __typename?: 'PaywallBypass'
+  createdAt: Scalars['DateTime']
+  id: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  paywallId: Scalars['String']
+  token: Scalars['String']
+}
+
 export type Peer = {
   __typename?: 'Peer'
   createdAt: Scalars['DateTime']
   hostURL: Scalars['String']
   id: Scalars['String']
+  information?: Maybe<Scalars['RichText']>
   isDisabled?: Maybe<Scalars['Boolean']>
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
-  profile?: Maybe<PeerProfile>
+  profile?: Maybe<RemotePeerProfile>
   slug: Scalars['String']
 }
 
@@ -2310,7 +2375,6 @@ export type PeerArticle = HasOptionalPeerLc & {
   peerId?: Maybe<Scalars['String']>
   publishedAt: Scalars['DateTime']
   slug?: Maybe<Scalars['String']>
-  tags: Array<Tag>
   url: Scalars['String']
 }
 
@@ -2330,7 +2394,6 @@ export type PeerArticleFilter = {
 
 export type PeerArticleRevision = {
   __typename?: 'PeerArticleRevision'
-  authors: Array<Author>
   id: Scalars['String']
   image?: Maybe<PeerImage>
   lead?: Maybe<Scalars['String']>
@@ -2341,10 +2404,38 @@ export type PeerArticleRevision = {
 
 export type PeerImage = {
   __typename?: 'PeerImage'
+  createdAt: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  extension: Scalars['String']
+  fileSize: Scalars['Int']
+  filename?: Maybe<Scalars['String']>
+  focalPoint?: Maybe<FocalPoint>
+  format: Scalars['String']
+  height: Scalars['Int']
   id: Scalars['String']
+  l?: Maybe<Scalars['String']>
+  lSquare?: Maybe<Scalars['String']>
   license?: Maybe<Scalars['String']>
+  link?: Maybe<Scalars['String']>
+  m?: Maybe<Scalars['String']>
+  mSquare?: Maybe<Scalars['String']>
+  mimeType: Scalars['String']
+  modifiedAt: Scalars['DateTime']
+  s?: Maybe<Scalars['String']>
+  sSquare?: Maybe<Scalars['String']>
   source?: Maybe<Scalars['String']>
-  url: Scalars['String']
+  tags: Array<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  url?: Maybe<Scalars['String']>
+  width: Scalars['Int']
+  xl?: Maybe<Scalars['String']>
+  xlSquare?: Maybe<Scalars['String']>
+  xs?: Maybe<Scalars['String']>
+  xsSquare?: Maybe<Scalars['String']>
+  xxl?: Maybe<Scalars['String']>
+  xxlSquare?: Maybe<Scalars['String']>
+  xxs?: Maybe<Scalars['String']>
+  xxsSquare?: Maybe<Scalars['String']>
 }
 
 export type PeerProfile = {
@@ -2527,12 +2618,10 @@ export type Query = {
   article: Article
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles
-  /** This query returns available OAuth providers with their authorization URLs. */
-  authProviders: Array<AuthProvider>
   /** Get an author by ID or slug */
   author?: Maybe<Author>
   /** Get a paginated list of authors with optional filtering and sorting */
-  authors: AuthorConnection
+  authors: PaginatedAuthors
   banner: Banner
   banners: Array<Banner>
   /** Returns a list of block styles. */
@@ -2642,6 +2731,10 @@ export type Query = {
   pages: PaginatedPages
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>
+  /** Returns an paywall by id. */
+  paywall: Paywall
+  /** Returns a list of paywalls based on the filters given. */
+  paywalls: Array<Paywall>
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>
   /** Returns a paginated list of peer articles based on the filters given. */
@@ -2697,7 +2790,7 @@ export type Query = {
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>
   /** This query returns a list of tags */
-  tags?: Maybe<TagConnection>
+  tags: TagConnection
   /**
    *
    *       Returns a single userConsent by id.
@@ -2726,10 +2819,6 @@ export type QueryArticlesArgs = {
   skip?: InputMaybe<Scalars['Int']>
   sort?: InputMaybe<ArticleSort>
   take?: InputMaybe<Scalars['Int']>
-}
-
-export type QueryAuthProvidersArgs = {
-  redirectUri?: InputMaybe<Scalars['String']>
 }
 
 export type QueryAuthorArgs = {
@@ -2864,6 +2953,10 @@ export type QueryPagesArgs = {
   take?: InputMaybe<Scalars['Int']>
 }
 
+export type QueryPaywallArgs = {
+  id: Scalars['String']
+}
+
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>
   slug?: InputMaybe<Scalars['Slug']>
@@ -2907,6 +3000,7 @@ export type QueryPollVotesArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String']
   documentType: BannerDocumentType
+  hasSubscription: Scalars['Boolean']
   loggedIn: Scalars['Boolean']
 }
 
@@ -2986,8 +3080,26 @@ export enum RatingSystemType {
 
 export type Registration = {
   __typename?: 'Registration'
-  session: UserSession
+  session: SessionWithTokenWithoutUser
   user: User
+}
+
+export type RemotePeerProfile = {
+  __typename?: 'RemotePeerProfile'
+  callToActionImage?: Maybe<PeerImage>
+  callToActionImageID?: Maybe<Scalars['String']>
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
+  hostURL: Scalars['String']
+  logo?: Maybe<PeerImage>
+  logoID?: Maybe<Scalars['String']>
+  name: Scalars['String']
+  squareLogo?: Maybe<PeerImage>
+  squareLogoId?: Maybe<Scalars['String']>
+  themeColor: Scalars['Color']
+  themeFontColor: Scalars['Color']
+  websiteURL: Scalars['String']
 }
 
 export type RichTextBlock = BaseBlock & {
@@ -3010,6 +3122,13 @@ export type SessionWithToken = {
   expiresAt: Scalars['DateTime']
   token: Scalars['String']
   user: User
+}
+
+export type SessionWithTokenWithoutUser = {
+  __typename?: 'SessionWithTokenWithoutUser'
+  createdAt: Scalars['DateTime']
+  expiresAt: Scalars['DateTime']
+  token: Scalars['String']
 }
 
 export type Setting = {
@@ -3037,6 +3156,8 @@ export enum SettingName {
   MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
   MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
   MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  NewArticlePaywall = 'NEW_ARTICLE_PAYWALL',
+  NewArticlePeering = 'NEW_ARTICLE_PEERING',
   PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
   ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
   SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN',
@@ -3155,6 +3276,7 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag'
+  description?: Maybe<Scalars['RichText']>
   id: Scalars['String']
   main: Scalars['Boolean']
   tag?: Maybe<Scalars['String']>
@@ -3351,6 +3473,7 @@ export type TitleBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>
   blockStyleName?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
+  preTitle?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   type: BlockType
 }
@@ -3359,6 +3482,7 @@ export type TitleBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>
   blockStyleName?: InputMaybe<Scalars['String']>
   lead?: InputMaybe<Scalars['String']>
+  preTitle?: InputMaybe<Scalars['String']>
   title?: InputMaybe<Scalars['String']>
 }
 
@@ -3434,7 +3558,7 @@ export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>
   file: Scalars['Upload']
   filename?: InputMaybe<Scalars['String']>
-  focalPoint?: InputMaybe<InputPoint>
+  focalPoint?: InputMaybe<FocalPointInput>
   license?: InputMaybe<Scalars['String']>
   link?: InputMaybe<Scalars['String']>
   source?: InputMaybe<Scalars['String']>
@@ -3452,7 +3576,6 @@ export type User = {
   id: Scalars['String']
   image?: Maybe<Image>
   name: Scalars['String']
-  oauth2Accounts: Array<OAuth2Account>
   paymentProviderCustomers: Array<PaymentProviderCustomer>
   permissions: Array<Scalars['String']>
   properties: Array<Property>
@@ -3511,13 +3634,6 @@ export type UserInput = {
   flair?: InputMaybe<Scalars['String']>
   name: Scalars['String']
   uploadImageInput?: InputMaybe<UploadImageInput>
-}
-
-export type UserSession = {
-  __typename?: 'UserSession'
-  createdAt: Scalars['DateTime']
-  expiresAt: Scalars['DateTime']
-  token: Scalars['String']
 }
 
 export type UserSubscriptionInput = {
@@ -3634,7 +3750,7 @@ export type AuthorListQueryVariables = Exact<{
 export type AuthorListQuery = {
   __typename?: 'Query'
   authors: {
-    __typename?: 'AuthorConnection'
+    __typename?: 'PaginatedAuthors'
     totalCount: number
     nodes: Array<{
       __typename?: 'Author'
@@ -3856,19 +3972,29 @@ export type FullImageFragment = {
 export type FullPeerProfileFragment = {
   __typename?: 'PeerProfile'
   name: string
-  hostURL: string
   themeColor: string
   themeFontColor: string
+  hostURL: string
+  websiteURL: string
+  callToActionText: Descendant[]
+  callToActionURL: string
+  callToActionImageURL?: string | null
   logo?: {
     __typename?: 'Image'
     id: string
-    link?: string | null
+    createdAt: string
+    modifiedAt: string
     filename?: string | null
     extension: string
-    title?: string | null
-    description?: string | null
     width: number
     height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
     url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
@@ -3877,17 +4003,24 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
   squareLogo?: {
     __typename?: 'Image'
     id: string
-    link?: string | null
+    createdAt: string
+    modifiedAt: string
     filename?: string | null
     extension: string
-    title?: string | null
-    description?: string | null
     width: number
     height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
     url?: string | null
     largeURL?: string | null
     mediumURL?: string | null
@@ -3896,7 +4029,49 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null
     column1URL?: string | null
     column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
   } | null
+  callToActionImage?: {
+    __typename?: 'Image'
+    id: string
+    createdAt: string
+    modifiedAt: string
+    filename?: string | null
+    extension: string
+    width: number
+    height: number
+    fileSize: number
+    description?: string | null
+    tags: Array<string>
+    source?: string | null
+    link?: string | null
+    license?: string | null
+    title?: string | null
+    url?: string | null
+    largeURL?: string | null
+    mediumURL?: string | null
+    thumbURL?: string | null
+    squareURL?: string | null
+    previewURL?: string | null
+    column1URL?: string | null
+    column6URL?: string | null
+    focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
+  } | null
+}
+
+export type FullRemotePeerProfileFragment = {
+  __typename?: 'RemotePeerProfile'
+  name: string
+  themeColor: string
+  themeFontColor: string
+  hostURL: string
+  websiteURL: string
+  callToActionText: Descendant[]
+  callToActionURL: string
+  callToActionImageURL?: string | null
+  logo?: {__typename?: 'PeerImage'; id: string} | null
+  squareLogo?: {__typename?: 'PeerImage'; id: string} | null
+  callToActionImage?: {__typename?: 'PeerImage'; id: string} | null
 }
 
 export type PeerRefFragment = {
@@ -3914,49 +4089,18 @@ export type PeerWithProfileFragment = {
   slug: string
   hostURL: string
   profile?: {
-    __typename?: 'PeerProfile'
+    __typename?: 'RemotePeerProfile'
     name: string
-    hostURL: string
     themeColor: string
     themeFontColor: string
-    logo?: {
-      __typename?: 'Image'
-      id: string
-      link?: string | null
-      filename?: string | null
-      extension: string
-      title?: string | null
-      description?: string | null
-      width: number
-      height: number
-      url?: string | null
-      largeURL?: string | null
-      mediumURL?: string | null
-      thumbURL?: string | null
-      squareURL?: string | null
-      previewURL?: string | null
-      column1URL?: string | null
-      column6URL?: string | null
-    } | null
-    squareLogo?: {
-      __typename?: 'Image'
-      id: string
-      link?: string | null
-      filename?: string | null
-      extension: string
-      title?: string | null
-      description?: string | null
-      width: number
-      height: number
-      url?: string | null
-      largeURL?: string | null
-      mediumURL?: string | null
-      thumbURL?: string | null
-      squareURL?: string | null
-      previewURL?: string | null
-      column1URL?: string | null
-      column6URL?: string | null
-    } | null
+    hostURL: string
+    websiteURL: string
+    callToActionText: Descendant[]
+    callToActionURL: string
+    callToActionImageURL?: string | null
+    logo?: {__typename?: 'PeerImage'; id: string} | null
+    squareLogo?: {__typename?: 'PeerImage'; id: string} | null
+    callToActionImage?: {__typename?: 'PeerImage'; id: string} | null
   } | null
 }
 
@@ -3967,19 +4111,29 @@ export type PeerProfileQuery = {
   peerProfile: {
     __typename?: 'PeerProfile'
     name: string
-    hostURL: string
     themeColor: string
     themeFontColor: string
+    hostURL: string
+    websiteURL: string
+    callToActionText: Descendant[]
+    callToActionURL: string
+    callToActionImageURL?: string | null
     logo?: {
       __typename?: 'Image'
       id: string
-      link?: string | null
+      createdAt: string
+      modifiedAt: string
       filename?: string | null
       extension: string
-      title?: string | null
-      description?: string | null
       width: number
       height: number
+      fileSize: number
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      title?: string | null
       url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
@@ -3988,17 +4142,24 @@ export type PeerProfileQuery = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
     squareLogo?: {
       __typename?: 'Image'
       id: string
-      link?: string | null
+      createdAt: string
+      modifiedAt: string
       filename?: string | null
       extension: string
-      title?: string | null
-      description?: string | null
       width: number
       height: number
+      fileSize: number
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      title?: string | null
       url?: string | null
       largeURL?: string | null
       mediumURL?: string | null
@@ -4007,6 +4168,33 @@ export type PeerProfileQuery = {
       previewURL?: string | null
       column1URL?: string | null
       column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
+    } | null
+    callToActionImage?: {
+      __typename?: 'Image'
+      id: string
+      createdAt: string
+      modifiedAt: string
+      filename?: string | null
+      extension: string
+      width: number
+      height: number
+      fileSize: number
+      description?: string | null
+      tags: Array<string>
+      source?: string | null
+      link?: string | null
+      license?: string | null
+      title?: string | null
+      url?: string | null
+      largeURL?: string | null
+      mediumURL?: string | null
+      thumbURL?: string | null
+      squareURL?: string | null
+      previewURL?: string | null
+      column1URL?: string | null
+      column6URL?: string | null
+      focalPoint?: {__typename?: 'FocalPoint'; x: number; y: number} | null
     } | null
   }
 }
@@ -4031,7 +4219,7 @@ export type TagListQueryVariables = Exact<{
 
 export type TagListQuery = {
   __typename?: 'Query'
-  tags?: {
+  tags: {
     __typename?: 'TagConnection'
     totalCount: number
     nodes: Array<{__typename?: 'Tag'; id: string; tag?: string | null; url: string}>
@@ -4042,7 +4230,7 @@ export type TagListQuery = {
       hasNextPage: boolean
       hasPreviousPage: boolean
     }
-  } | null
+  }
 }
 
 export type FullUserFragment = {__typename?: 'User'; name: string; email: string}
@@ -4192,6 +4380,27 @@ export const FullImage = `
   ...ImageRef
 }
     ${ImageRef}`
+export const FullPeerProfile = `
+    fragment FullPeerProfile on PeerProfile {
+  name
+  logo {
+    ...FullImage
+  }
+  squareLogo {
+    ...FullImage
+  }
+  themeColor
+  themeFontColor
+  hostURL
+  websiteURL
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullImage
+  }
+}
+    ${FullImage}`
 export const PeerRef = `
     fragment PeerRef on Peer {
   id
@@ -4200,29 +4409,36 @@ export const PeerRef = `
   hostURL
 }
     `
-export const FullPeerProfile = `
-    fragment FullPeerProfile on PeerProfile {
+export const FullRemotePeerProfile = `
+    fragment FullRemotePeerProfile on RemotePeerProfile {
   name
-  hostURL
-  themeColor
-  themeFontColor
   logo {
-    ...ImageRef
+    id
   }
   squareLogo {
-    ...ImageRef
+    id
+  }
+  themeColor
+  themeFontColor
+  hostURL
+  websiteURL
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    id
   }
 }
-    ${ImageRef}`
+    `
 export const PeerWithProfile = `
     fragment PeerWithProfile on Peer {
   ...PeerRef
   profile {
-    ...FullPeerProfile
+    ...FullRemotePeerProfile
   }
 }
     ${PeerRef}
-${FullPeerProfile}`
+${FullRemotePeerProfile}`
 export const FullUser = `
     fragment FullUser on User {
   name

@@ -5,7 +5,7 @@ import {PaymentsService} from '@wepublish/payment/api'
 
 @Injectable()
 export class InvoiceService {
-  constructor(private readonly prisma: PrismaClient, private paymentsService: PaymentsService) {}
+  constructor(private prisma: PrismaClient, private paymentsService: PaymentsService) {}
 
   async getInvoicesByUser(userId: string) {
     return this.prisma.invoice.findMany({

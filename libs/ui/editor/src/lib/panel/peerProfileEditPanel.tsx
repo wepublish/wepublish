@@ -11,18 +11,19 @@ import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message as RMessage, Panel, Schema, toaster} from 'rsuite'
 import {FormInstance} from 'rsuite/esm/Form'
+
 import {
   ChooseEditImage,
   ColorPicker,
-  PermissionControl,
   createCheckedPermissionComponent,
+  PermissionControl,
   useAuthorisation
 } from '../atoms'
-import {RichTextBlock, RichTextBlockValue, createDefaultValue} from '../blocks'
-import {getOperationNameFromDocument} from '../utility'
+import {createDefaultValue, RichTextBlock, RichTextBlockValue} from '../blocks'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ImageSelectPanel} from './imageSelectPanel'
+import {getOperationNameFromDocument} from '../utility'
 import {ImageEditPanel, ImageEditPanelProps} from './imageEditPanel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -270,7 +271,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               />
             </Group>
           </BoxWrapper>
+
           <br />
+
           <ControlLabel>{toggleRequiredLabel(t('peerList.panels.callToActionImage'))}</ControlLabel>
           <BoxWrapper>
             <Group controlId="peerListImage">

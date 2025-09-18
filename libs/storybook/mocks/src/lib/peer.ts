@@ -1,22 +1,22 @@
-import {FullPeerFragment, PeerProfile} from '@wepublish/website/api'
+import {FullPeerFragment, RemotePeerProfile} from '@wepublish/website/api'
 import nanoid from 'nanoid'
 import {mockRichText} from './richtext'
-import {mockImage} from './image'
+import {mockPeerImage} from './image'
 
-export const mockPeerProfile = ({
+export const mockRemotePeerProfile = ({
   callToActionText = mockRichText(),
   callToActionURL = 'https://example.com',
   hostURL = 'https://example.com',
   websiteURL = 'https://example.com',
-  callToActionImage = mockImage(),
-  callToActionImageURL = mockImage().url,
-  logo = mockImage(),
-  squareLogo = mockImage(),
+  callToActionImage = mockPeerImage(),
+  callToActionImageURL = mockPeerImage().url,
+  logo = mockPeerImage(),
+  squareLogo = mockPeerImage(),
   name = 'Peer',
   themeColor = '#faa',
   themeFontColor = '#000'
-}: Partial<PeerProfile> = {}): PeerProfile => ({
-  __typename: 'PeerProfile',
+}: Partial<RemotePeerProfile> = {}): RemotePeerProfile => ({
+  __typename: 'RemotePeerProfile',
   callToActionText,
   callToActionURL,
   hostURL,
@@ -33,7 +33,7 @@ export const mockPeerProfile = ({
 export const mockPeer = ({
   name = 'Peer',
   slug = 'peer-slug',
-  profile = mockPeerProfile(),
+  profile = mockRemotePeerProfile(),
   isDisabled = false
 }: Partial<FullPeerFragment> = {}): FullPeerFragment => ({
   __typename: 'Peer',

@@ -19,7 +19,10 @@ export class PageService {
   async getPageBySlug(slug: string) {
     return this.prisma.page.findFirst({
       where: {
-        slug
+        slug: {
+          equals: slug,
+          mode: 'insensitive'
+        }
       },
       orderBy: {
         publishedAt: 'asc' // there might be an unpublished page with the same slug
@@ -74,12 +77,13 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async createPage(
-    {slug, tagIds, properties, blocks, ...revision}: CreatePageInput,
+    {slug, hidden, tagIds, properties, blocks, ...revision}: CreatePageInput,
     userId: string | null | undefined
   ) {
     return this.prisma.page.create({
       data: {
         slug,
+        hidden,
         tags: {
           createMany: {
             data: tagIds.map(tagId => ({
@@ -106,7 +110,7 @@ export class PageService {
 
   @PrimeDataLoader(PageDataloaderService)
   async updatePage(
-    {id, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
+    {id, hidden, slug, tagIds, properties, blocks, ...revision}: UpdatePageInput,
     userId: string | null | undefined
   ) {
     const page = await this.prisma.page.findUnique({
@@ -124,6 +128,7 @@ export class PageService {
       where: {id},
       data: {
         slug,
+        hidden,
         revisions: {
           updateMany: {
             where: {
@@ -336,6 +341,7 @@ export class PageService {
 
     return this.prisma.page.create({
       data: {
+        hidden: page.hidden,
         tags: {
           createMany: {
             data: page.tags.map(({tagId}) => ({
@@ -369,20 +375,19 @@ export class PageService {
       const formattedQuery = searchQuery.replace(/\s+/g, '&')
 
       const foundPageIds = await this.prisma.$queryRaw<Array<{id: string}>>`
-          SELECT p.id
-          FROM pages p
-                   JOIN public."pages.revisions" pr
-                        ON p."id" = pr."pageId"
-                            AND pr."publishedAt" IS NOT NULL
-                            AND pr."publishedAt" < NOW()
-          WHERE to_tsvector('german', coalesce(pr.title, '')) ||
-                to_tsvector('german', coalesce(pr.description, '')) ||
-                jsonb_to_tsvector(
-                        'german',
-                        jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
-                        '["string"]'
-                ) @@ to_tsquery('german'
-              , ${formattedQuery});
+        SELECT p.id
+        FROM pages p
+          JOIN public."pages.revisions" pr
+            ON p."id" = pr."pageId"
+            AND pr."publishedAt" IS NOT NULL
+            AND pr."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(pr.title, '')) ||
+              to_tsvector('german', coalesce(pr.description, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
+                '["string"]'
+              ) @@ to_tsquery('german', ${formattedQuery});
       `
 
       return foundPageIds.map(item => item.id)
@@ -587,6 +592,16 @@ const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput =>
   return {}
 }
 
+const createHiddenFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
+  if (filter?.includeHidden) {
+    return {}
+  }
+
+  return {
+    hidden: false
+  }
+}
+
 export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -594,6 +609,7 @@ export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereI
     createPublicationDateToFilter(filter),
     createDescriptionFilter(filter),
     createTagsFilter(filter),
+    createHiddenFilter(filter),
     {
       OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
     }

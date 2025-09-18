@@ -1,6 +1,6 @@
 import {Meta} from '@storybook/react'
 import {PeerInformation} from './peer-information'
-import {mockPeer, mockPeerProfile} from '@wepublish/storybook/mocks'
+import {mockPeer, mockRemotePeerProfile} from '@wepublish/storybook/mocks'
 
 export default {
   component: PeerInformation,
@@ -19,7 +19,7 @@ export const WithoutCtaUrl = {
   args: {
     originUrl: 'https://example.com',
     ...mockPeer({
-      profile: mockPeerProfile({
+      profile: mockRemotePeerProfile({
         callToActionURL: ''
       })
     })
@@ -31,7 +31,7 @@ export const WithoutCtaText = {
   args: {
     originUrl: 'https://example.com',
     ...mockPeer({
-      profile: mockPeerProfile({
+      profile: mockRemotePeerProfile({
         callToActionText: []
       })
     })

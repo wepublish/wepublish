@@ -48,15 +48,6 @@ export const GraphQLPaymentProviderCustomer = new GraphQLObjectType({
   }
 })
 
-export const GraphQLOAuth2Account = new GraphQLObjectType({
-  name: 'OAuth2Account',
-  fields: {
-    type: {type: new GraphQLNonNull(GraphQLString)},
-    provider: {type: new GraphQLNonNull(GraphQLString)},
-    scope: {type: new GraphQLNonNull(GraphQLString)}
-  }
-})
-
 const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'UserSubscription',
   fields: {
@@ -149,9 +140,6 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
     paymentProviderCustomers: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer)))
     },
-    oauth2Accounts: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLOAuth2Account)))
-    },
     subscriptions: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLUserSubscription))),
       resolve: createProxyingResolver(({id: userId}, _, {prisma}) => {
@@ -199,12 +187,6 @@ export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Contex
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer))),
       resolve: createProxyingResolver(({id, paymentProviderCustomers}, _, {session}) =>
         id && isMeBySession(id, session) ? paymentProviderCustomers : []
-      )
-    },
-    oauth2Accounts: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLOAuth2Account))),
-      resolve: createProxyingResolver(({id, oauth2Accounts}, _, {session}) =>
-        id && isMeBySession(id, session) ? oauth2Accounts : []
       )
     },
     image: {

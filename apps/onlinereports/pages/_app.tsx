@@ -1,36 +1,12 @@
 import {EmotionCache} from '@emotion/cache'
-import {CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {WebsiteProvider} from '@wepublish/website'
-import {previewLink} from '@wepublish/website/admin'
-import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
-import {format, setDefaultOptions} from 'date-fns'
-import {de} from 'date-fns/locale'
-import deTranlations from '@wepublish/website/translations/de.json'
-import i18next from 'i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import resourcesToBackend from 'i18next-resources-to-backend'
-import {AppProps} from 'next/app'
-import getConfig from 'next/config'
-import Head from 'next/head'
-import Script from 'next/script'
-import {initReactI18next} from 'react-i18next'
-import {z} from 'zod'
-import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
-import theme from '../src/theme'
-import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
-import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
-import {OnlineReportsAuthorChip} from '../src/components/author-chip'
-import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
-import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
-import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
-import {Advertisement} from '../src/components/advertisement'
-import {Structure} from '../src/structure'
-import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
-import {OnlineReportsArticle} from '../src/components/article'
-import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
 import styled from '@emotion/styled'
+import {CssBaseline, ThemeProvider} from '@mui/material'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v13-pagesRouter'
+import {GoogleTagManager} from '@next/third-parties/google'
+import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
+import {withErrorSnackbar} from '@wepublish/errors/website'
+import {NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -38,20 +14,47 @@ import {
   withJwtHandler,
   withSessionProvider
 } from '@wepublish/utils/website'
-import {NavbarContainer} from '@wepublish/navigation/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
-import {AdblockOverlay} from '../src/components/adblock-detector'
-import {OnlineReportsFooter} from '../src/components/footer'
-import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
-import {OnlineReportsRenderElement} from '../src/render-element'
-import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
-import {GoogleTagManager} from '@next/third-parties/google'
-import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import deTranlations from '@wepublish/website/translations/de.json'
+import {format, setDefaultOptions} from 'date-fns'
+import {de} from 'date-fns/locale'
+import i18next from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import {AppProps} from 'next/app'
+import getConfig from 'next/config'
+import Head from 'next/head'
+import Script from 'next/script'
 import {mergeDeepRight} from 'ramda'
+import {initReactI18next} from 'react-i18next'
+import {z} from 'zod'
+import {zodI18nMap} from 'zod-i18n-map'
+
 import deOverridden from '../locales/deOverridden.json'
+import {AdblockOverlay} from '../src/components/adblock-detector'
+import {Advertisement} from '../src/components/advertisement'
+import {OnlineReportsArticle} from '../src/components/article'
+import {OnlineReportsAuthorChip} from '../src/components/author-chip'
+import {OnlineReportsFooter} from '../src/components/footer'
+import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
+import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
 import {OnlineReportsPage} from '../src/components/page'
+import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
 import {AdsProvider} from '../src/context/ads-context'
+import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
+import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
+import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
+import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {OnlineReportsRenderElement} from '../src/render-element'
+import {Structure} from '../src/structure'
+import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
 setDefaultOptions({
@@ -59,6 +62,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverridden)))
@@ -67,11 +71,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
-    resources: {
-      de: {zod: translation}
-    },
     interpolation: {
       escapeValue: false
+    },
+    resources: {
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -155,11 +159,16 @@ const AdvertisementPlacer = styled('div')`
 `
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
+
+  // Emotion cache from _document is not supplied when client side rendering
+  // Compat removes certain warnings that are irrelevant to us
+  const cache = emotionCache ?? createEmotionCache()
+  cache.compat = true
 
   return (
     <AppCacheProvider emotionCache={emotionCache}>
@@ -242,9 +251,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <RoutedAdminBar />
               {publicRuntimeConfig.env.GTM_ID && (
-                <>
-                  <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-                </>
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
@@ -255,9 +262,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withSessionProvider(withJwtHandler(CustomApp)))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
+)
 
 export {ConnectedApp as default}

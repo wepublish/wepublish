@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {getApiClientV2, RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api-v2'
 import {formatDistanceToNow} from 'date-fns'
 import {ReactNode, useEffect} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
@@ -15,9 +16,8 @@ import {
 import {Link} from 'react-router-dom'
 import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
 
-import {AVAILABLE_LANG} from '../../utility'
 import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
-import {getApiClientV2, RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api-v2'
+import {AVAILABLE_LANG} from '../../utility'
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;

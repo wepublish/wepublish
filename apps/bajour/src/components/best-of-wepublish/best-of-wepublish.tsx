@@ -107,6 +107,7 @@ export const BestOfWePublish = ({teasers, numColumns, blockStyle}: BuilderTeaser
                 key={index}
                 teaser={teaser}
                 numColumns={numColumns}
+                index={index}
                 alignment={alignmentForTeaserBlock(index, numColumns)}
                 blockStyle={blockStyle}
               />

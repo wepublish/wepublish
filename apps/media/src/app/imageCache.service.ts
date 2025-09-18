@@ -132,7 +132,7 @@ export class ImageCacheService {
     const oldSize = meta?.size ?? 0
     this.currentCacheSizeBytes += sizeBytes - oldSize
 
-    this.keyMeta.set(key, {size: sizeBytes, httpStatusCode: httpStatusCode, lastAccessed: now})
+    this.keyMeta.set(key, {size: sizeBytes, httpStatusCode, lastAccessed: now})
 
     const sizeKB = sizeBytes / 1024
     let ttl = sizeKB > 200 ? 300 : 3600

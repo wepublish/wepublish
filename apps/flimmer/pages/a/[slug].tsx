@@ -73,7 +73,9 @@ export default function ArticleBySlugOrId() {
 
             <ArticleListContainer
               variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-              filter={articles => articles.filter(article => article.id !== data.article?.id)}
+              filter={articles =>
+                articles.filter(article => article.id !== data.article?.id).splice(0, 3)
+              }
             />
           </ArticleWrapper>
 
@@ -99,7 +101,7 @@ export default function ArticleBySlugOrId() {
 export const getStaticPaths = getArticlePathsBasedOnPage('')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug, id} = params || {}
+  const {id, slug} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
@@ -108,8 +110,8 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query({
       query: ArticleDocument,
       variables: {
-        slug,
-        id
+        id,
+        slug
       }
     }),
     client.query({
@@ -119,6 +121,14 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       query: PeerProfileDocument
     })
   ])
+
+  const is404 = article.errors?.find(({extensions}) => extensions?.status === 404)
+
+  if (is404) {
+    return {
+      notFound: true
+    }
+  }
 
   if (article.data?.article) {
     await Promise.all([

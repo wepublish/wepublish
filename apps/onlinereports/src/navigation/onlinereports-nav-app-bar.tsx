@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import {AppBar, Box, css} from '@mui/material'
-import {Structure} from '../structure'
 import {NavbarLinks, NavbarMain} from '@wepublish/navigation/website'
+
+import {Structure} from '../structure'
 import {
   BuilderNavAppBarProps,
   HomeLogoButton,

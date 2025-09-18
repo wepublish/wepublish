@@ -236,7 +236,12 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         state: PaymentState.submitted
       }
     } catch (e) {
-      console.error(e)
+      logger('bexioPaymentProvider').error(
+        'Failed to create Bexio invoice for invoiceId %s (renewal: %s): %s',
+        invoiceId,
+        isRenewal,
+        e instanceof Error ? e.message : String(e)
+      )
       throw e
     }
   }

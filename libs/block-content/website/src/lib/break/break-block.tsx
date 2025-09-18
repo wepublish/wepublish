@@ -1,7 +1,13 @@
-import {Theme, css, useTheme} from '@mui/material'
+import {Theme, Typography, css, useTheme} from '@mui/material'
 import styled from '@emotion/styled'
 import {BlockContent, BreakBlock as BreakBlockType} from '@wepublish/website/api'
-import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderBreakBlockProps,
+  Button,
+  Image,
+  Link,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 
 export const isBreakBlock = (block: Pick<BlockContent, '__typename'>): block is BreakBlockType =>
   block.__typename === 'BreakBlock'
@@ -26,63 +32,30 @@ export const BreakBlockSegment = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-const imageStyles = (theme: Theme) => css`
+export const BreakBlockImage = styled(Image)`
   object-fit: cover;
   width: 100%;
-  max-width: ${theme.spacing(60)};
+  max-width: ${({theme}) => theme.spacing(60)};
   margin: 0 auto;
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     width: 80%;
   }
 `
 
-export const HeadingWithImage = styled('div')`
-  font-size: 40px;
-  font-weight: 600;
-  text-transform: uppercase;
+export const BreakBlockHeading = styled('div')``
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    font-style: italic;
-    font-size: 45px;
-  }
-`
-
-export const HeadingWithoutImage = styled('div')`
-  font-size: 40px;
-  font-weight: 600;
-  text-transform: uppercase;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    font-style: italic;
-    font-size: 84px;
-  }
-`
-
-const buttonStyles = (theme: Theme) => css`
-  text-transform: none;
-  background-color: ${theme.palette.common.black};
-  margin-top: ${theme.spacing(2)};
+export const BreakBlockButton = styled(Button)`
+  margin-top: ${({theme}) => theme.spacing(2)};
+  padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(3)};
   width: fit-content;
-  padding: ${theme.spacing(1)} ${theme.spacing(3)};
-  border-radius: ${theme.spacing(4)};
-
-  :hover {
-    background-color: ${theme.palette.common.black};
-  }
 `
 
 const richTextStyles = (theme: Theme) => css`
   max-width: ${theme.spacing(55)};
 
   p {
-    font-size: 16px;
-  }
-
-  ${theme.breakpoints.up('md')} {
-    p {
-      font-size: 22px;
-    }
+    ${theme.typography.blockBreakBody}
   }
 `
 
@@ -97,7 +70,6 @@ export const BreakBlock = ({
   linkURL
 }: BuilderBreakBlockProps) => {
   const {
-    elements: {H2, H4, Image, Button, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
@@ -105,24 +77,36 @@ export const BreakBlock = ({
 
   return (
     <BreakBlockWrapper className={className}>
-      <BreakBlockSegment>
-        {!image && <H2 component={HeadingWithoutImage}>{text}</H2>}
-        {image && <Image image={image} css={imageStyles(theme)} />}
-      </BreakBlockSegment>
+      {(image || text) && (
+        <BreakBlockSegment>
+          {!image && text && (
+            <Typography variant="blockBreakTitle" component={BreakBlockHeading}>
+              {text}
+            </Typography>
+          )}
+
+          {image && <BreakBlockImage image={image} />}
+        </BreakBlockSegment>
+      )}
 
       <BreakBlockSegment>
-        {image && <H4 component={HeadingWithImage}>{text}</H4>}
+        {image && text && (
+          <Typography variant="blockBreakTitle" component={BreakBlockHeading}>
+            {text}
+          </Typography>
+        )}
         <RichText richText={richText} css={richTextStyles(theme)} />
 
         {!hideButton && linkURL && linkText && (
-          <Button
+          <BreakBlockButton
+            color="accent"
             variant="contained"
+            size="medium"
             LinkComponent={Link}
             href={linkURL ?? ''}
-            target={linkTarget ?? '_blank'}
-            css={buttonStyles(theme)}>
+            target={linkTarget ?? '_blank'}>
             {linkText}
-          </Button>
+          </BreakBlockButton>
         )}
       </BreakBlockSegment>
     </BreakBlockWrapper>

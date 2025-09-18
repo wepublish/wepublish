@@ -1,23 +1,25 @@
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
+  RoutedAdminBar,
   withJwtHandler,
   withSessionProvider
 } from '@wepublish/utils/website'
-import {RoutedAdminBar} from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
 import {previewLink} from '@wepublish/website/admin'
-import {UserSession} from '@wepublish/website/api'
-import {createWithV1ApiClient} from '@wepublish/website/api'
+import {createWithV1ApiClient, SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -26,9 +28,7 @@ import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
@@ -37,6 +37,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => deTranlations))
@@ -45,11 +46,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
-    resources: {
-      de: {zod: translation}
-    },
     interpolation: {
       escapeValue: false
+    },
+    resources: {
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -73,22 +74,6 @@ const MainSpacer = styled(Container)`
   `}
 `
 
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
-`
-
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
@@ -100,7 +85,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
     : format(date, 'dd. MMMM yyyy')
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
@@ -154,11 +139,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </MainSpacer>
             </main>
 
-            <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-              <LogoLink href="/" aria-label="Startseite">
-                <LogoWrapper />
-              </LogoLink>
-            </FooterContainer>
+            <FooterContainer
+              slug="footer"
+              categorySlugs={[['categories', 'about-us']]}
+              iconSlug="icons"
+            />
           </Spacer>
 
           <RoutedAdminBar />
@@ -169,9 +154,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink
-])(withSessionProvider(withJwtHandler(CustomApp)))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
+)
 
 export {ConnectedApp as default}

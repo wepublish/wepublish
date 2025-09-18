@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {BreakBlock, HeadingWithImage, HeadingWithoutImage} from '@wepublish/block-content/website'
+import {BreakBlock, BreakBlockHeading} from '@wepublish/block-content/website'
 
 export const TsriBreakBlock = styled(BreakBlock)`
   background-color: ${({theme}) => theme.palette.accent.main};
@@ -10,12 +10,18 @@ export const TsriBreakBlock = styled(BreakBlock)`
     padding: ${({theme}) => theme.spacing(10)};
   }
 
-  ${HeadingWithoutImage}, ${HeadingWithImage} {
+  .MuiButton-root,
+  .MuiButton-root:hover {
+    background-color: ${({theme}) => theme.palette.secondary.main};
+    color: ${({theme}) => theme.palette.secondary.contrastText};
+  }
+
+  ${BreakBlockHeading} {
     font-size: 2rem;
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    ${HeadingWithoutImage}, ${HeadingWithImage} {
+    ${BreakBlockHeading} {
       font-size: ${({theme}) => theme.typography.h3.fontSize};
     }
   }

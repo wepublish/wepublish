@@ -1,10 +1,12 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {Container, css, CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
 import {RichTextBlockWrapper, TitleBlock, TitleBlockTitle} from '@wepublish/block-content/website'
+import {withErrorSnackbar} from '@wepublish/errors/website'
 import {PaymentAmountPicker} from '@wepublish/membership/website'
 import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
+import {withPaywallBypassToken} from '@wepublish/paywall/website'
 import {
   authLink,
   NextWepublishLink,
@@ -13,13 +15,15 @@ import {
   withSessionProvider
 } from '@wepublish/utils/website'
 import {WebsiteProvider} from '@wepublish/website'
-import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, SessionWithTokenWithoutUser} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import deTranlations from '@wepublish/website/translations/de.json'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import ICU from 'i18next-icu'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
@@ -30,14 +34,12 @@ import {ComponentProps} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import deOverriden from '../locales/deOverriden.json'
 import {FlimmerBreakBlock} from '../src/components/flimmer-break-block'
 import {FlimmerNavbar} from '../src/components/flimmer-navbar'
 import {FlimmerRichText} from '../src/components/flimmer-richtext'
 import {FlimmerTeaser} from '../src/components/flimmer-teaser'
-import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 
 setDefaultOptions({
@@ -45,6 +47,7 @@ setDefaultOptions({
 })
 
 i18next
+  .use(ICU)
   .use(LanguageDetector)
   .use(initReactI18next)
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
@@ -53,11 +56,11 @@ i18next
     lng: 'de',
     fallbackLng: 'de',
     supportedLngs: ['de'],
-    resources: {
-      de: {zod: translation}
-    },
     interpolation: {
       escapeValue: false
+    },
+    resources: {
+      de: {zod: deTranlations.zod}
     }
   })
 z.setErrorMap(zodI18nMap)
@@ -80,22 +83,6 @@ const MainSpacer = styled(Container)`
       gap: ${theme.spacing(10)};
     }
   `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
 `
 
 const FlimmerTitle = styled(TitleBlock)`
@@ -126,14 +113,19 @@ const MitmachenInnerStyled = styled(MitmachenInner)`
 `
 
 type CustomAppProps = AppProps<{
-  sessionToken?: UserSession
+  sessionToken?: SessionWithTokenWithoutUser
 }> & {emotionCache?: EmotionCache}
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'Flimmer'
 
+  // Emotion cache from _document is not supplied when client side rendering
+  // Compat removes certain warnings that are irrelevant to us
+  const cache = emotionCache ?? createEmotionCache()
+  cache.compat = true
+
   return (
-    <AppCacheProvider emotionCache={emotionCache}>
+    <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
@@ -192,12 +184,13 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories', 'about-us']]}
+                iconSlug="icons"
+              />
             </Spacer>
+
             <Script id="piwik-pro">
               {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '12ae360b-6011-4db9-bf9f-f4ade84f8a6e');`}
             </Script>
@@ -209,8 +202,9 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 }
 
 const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  withSessionProvider(withJwtHandler(CustomApp))
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const ConnectedApp = withApollo(
+  withErrorSnackbar(withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp))))
 )
 
 export {ConnectedApp as default}

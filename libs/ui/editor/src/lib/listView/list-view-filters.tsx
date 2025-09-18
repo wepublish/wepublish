@@ -9,6 +9,18 @@ import {
   UserFilter,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
+import {
+  ArticleFilter,
+  DateFilterComparison,
+  EventFilter,
+  getApiClientV2,
+  InputMaybe,
+  PageFilter,
+  PeerArticleFilter,
+  PollVoteFilter,
+  Scalars,
+  useEventProvidersLazyQuery
+} from '@wepublish/editor/api-v2'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
@@ -22,20 +34,8 @@ import {
   Toggle as RToggle
 } from 'rsuite'
 
-import {AuthorCheckPicker} from '../panel/authorCheckPicker'
-import {
-  ArticleFilter,
-  InputMaybe,
-  PageFilter,
-  PollVoteFilter,
-  Scalars,
-  useEventProvidersLazyQuery,
-  DateFilterComparison,
-  EventFilter,
-  PeerArticleFilter
-} from '@wepublish/editor/api-v2'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
 import {SelectTags} from '../atoms/tag/selectTags'
+import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 
 const {Group} = RForm
 
@@ -476,6 +476,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.draft}
+              checked={!!filter.draft}
               onChange={value => updateFilter({draft: value || null})}
               checkedChildren={t('articleList.filter.isDraft')}
               unCheckedChildren={t('articleList.filter.isDraft')}
@@ -487,6 +488,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.pending}
+              checked={!!filter.pending}
               onChange={value => updateFilter({pending: value || null})}
               checkedChildren={t('articleList.filter.isPending')}
               unCheckedChildren={t('articleList.filter.isPending')}
@@ -498,6 +500,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.published}
+              checked={!!filter.published}
               onChange={value => updateFilter({published: value || null})}
               checkedChildren={t('articleList.filter.isPublished')}
               unCheckedChildren={t('articleList.filter.isPublished')}
@@ -583,6 +586,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.includeHidden}
+              checked={!!filter.includeHidden}
               onChange={value => updateFilter({includeHidden: value || null})}
               checkedChildren={t('articleList.filter.includeHidden')}
               unCheckedChildren={t('articleList.filter.includeHidden')}

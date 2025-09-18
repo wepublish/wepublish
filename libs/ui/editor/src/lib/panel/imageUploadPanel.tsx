@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import {useTranslation} from 'react-i18next'
 import {MdUploadFile} from 'react-icons/md'
 import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
+
 import {FileDropInput} from '../atoms'
 import {getImgMinSizeToCompress} from '../utility'
 

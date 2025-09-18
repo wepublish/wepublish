@@ -1,12 +1,13 @@
 import styled from '@emotion/styled'
 import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {allPass} from 'ramda'
+import {allPass, anyPass} from 'ramda'
 import {alignmentForTeaserBlock} from '../../teaser/teaser-grid-block'
 import {TeaserListBlockTeasers, isTeaserListBlock} from '../../teaser/teaser-list-block'
-import {BlockContent, TeaserListBlock} from '@wepublish/website/api'
-import {hasBlockStyle} from '../../blocks'
-import {selectTeaserTags} from '../../teaser/teaser'
+import {BlockContent, TeaserListBlock, TeaserSlotsBlock} from '@wepublish/website/api'
+import {hasBlockStyle} from '../../has-blockstyle'
+import {selectTeaserTags} from '../../teaser/base-teaser'
 import {ImageWrapper} from '@wepublish/image/website'
+import {isTeaserSlotsBlock} from '../../teaser/teaser-slots-block'
 
 export const FocusTeaserWrapper = styled('section')`
   grid-column: -1/1;
@@ -57,10 +58,10 @@ export const FocusedTeaser = styled('div')`
 
 export const FocusTeaser = ({
   teasers,
-  filter,
   blockStyle,
   title,
-  className
+  className,
+  ...props
 }: BuilderBlockStyleProps['FocusTeaser']) => {
   const {
     blocks: {Teaser},
@@ -71,7 +72,10 @@ export const FocusTeaser = ({
 
   const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>
   const tags =
-    focusedTeaser && selectTeaserTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
+    'filter' in props
+      ? focusedTeaser &&
+        selectTeaserTags(focusedTeaser).filter(({id}) => props.filter.tags?.includes(id))
+      : []
 
   return (
     <FocusTeaserWrapper className={className}>
@@ -91,6 +95,7 @@ export const FocusTeaser = ({
             teaser={focusedTeaser}
             alignment={alignmentForTeaserBlock(0, 1)}
             blockStyle={blockStyle}
+            index={1}
           />
         </FocusedTeaser>
       </FocusedTeaserContent>
@@ -103,6 +108,7 @@ export const FocusTeaser = ({
               teaser={teaser}
               alignment={alignmentForTeaserBlock(index, 4)}
               blockStyle={blockStyle}
+              index={index}
             />
           ))}
         </TeaserListBlockTeasers>
@@ -113,4 +119,5 @@ export const FocusTeaser = ({
 
 export const isFocusTeaserBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlock => allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
+): block is TeaserListBlock | TeaserSlotsBlock =>
+  allPass([hasBlockStyle('Focus'), anyPass([isTeaserListBlock, isTeaserSlotsBlock])])(block)

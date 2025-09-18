@@ -15,6 +15,7 @@ import {DateFilter, PaginatedType, Property, PropertyInput, SortOrder} from '@we
 import {BlockContent, BlockContentInput, HasBlockContent} from '@wepublish/block-content/api'
 import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
 import {TrackingPixel} from '@wepublish/tracking-pixel/api'
+import {HasOptionalPaywall, Paywall} from '@wepublish/paywall/api'
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -85,10 +86,10 @@ export class ArticleRevision implements HasBlockContent {
 }
 
 @ObjectType({
-  implements: [HasOptionalPeerLc]
+  implements: [HasOptionalPeerLc, HasOptionalPaywall]
 })
 @Directive('@key(fields: "id")')
-export class Article implements HasOptionalPeerLc {
+export class Article implements HasOptionalPeerLc, HasOptionalPaywall {
   @Field()
   id!: string
 
@@ -145,6 +146,9 @@ export class Article implements HasOptionalPeerLc {
 
   peerId?: string
   peer?: Peer
+
+  paywall?: Paywall
+  paywallId?: string
 }
 
 @ObjectType()
@@ -168,6 +172,8 @@ export class CreateArticleInput extends OmitType(
 ) {
   @Field()
   shared!: boolean
+  @Field({nullable: true})
+  paywallId?: string
   @Field()
   hidden!: boolean
   @Field()

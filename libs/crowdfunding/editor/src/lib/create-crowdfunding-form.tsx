@@ -47,7 +47,6 @@ export const CreateCrowdfundingForm = () => {
     client,
     onError: showError,
     onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
-      console.log('should close', shouldClose)
       if (shouldClose) {
         navigate(closePath)
       } else {

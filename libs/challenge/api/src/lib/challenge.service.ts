@@ -4,7 +4,7 @@ import {Challenge, ChallengeValidationProps, ChallengeValidationReturn} from './
 
 @Injectable()
 export class ChallengeService {
-  constructor(private readonly challengeProvider: ChallengeProvider) {}
+  constructor(private challengeProvider: ChallengeProvider) {}
 
   async generateChallenge(): Promise<Challenge> {
     return this.challengeProvider.generateChallenge()
