@@ -649,7 +649,7 @@ input CustomTeaserInput {
   contentUrl: String
   imageID: String
   lead: String
-  openInNewTab: Boolean = false
+  openInNewTab: Boolean
   preTitle: String
   properties: [PropertyInput!] = []
   title: String
