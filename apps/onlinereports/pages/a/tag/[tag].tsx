@@ -5,8 +5,11 @@ import {ComponentProps} from 'react'
 const TagArticleListWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({theme}) => theme.spacing(2.5)};
-  margin-top: ${({theme}) => theme.spacing(4)};
+  gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    margin-top: ${({theme}) => theme.spacing(4)};
+  }
 `
 
 export default function Tags(props: ComponentProps<typeof TagPage>) {

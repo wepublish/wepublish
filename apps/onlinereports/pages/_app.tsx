@@ -33,7 +33,6 @@ import {mergeDeepRight} from 'ramda'
 import {initReactI18next} from 'react-i18next'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
-
 import deOverridden from '../locales/deOverridden.json'
 import {AdblockOverlay} from '../src/components/adblock-detector'
 import {Advertisement} from '../src/components/advertisement'
@@ -44,6 +43,8 @@ import {OnlineReportsArticleAuthors} from '../src/components/online-reports-arti
 import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
 import {OnlineReportsPage} from '../src/components/page'
 import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import {OnlineReportsTeaserGridFlexBlock} from '../src/onlinereports-teaser-grid-flex-blocks'
+import {OnlineReportsTeaserGridBlock} from '../src/onlinereports-teaser-grid-block'
 import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
 import {AdsProvider} from '../src/context/ads-context'
 import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
@@ -104,7 +105,11 @@ const MainContainer = styled('div')`
 const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
-  row-gap: ${({theme}) => theme.spacing(7.5)};
+  row-gap: ${({theme}) => theme.spacing(4)};
+
+  ${theme.breakpoints.up('sm')} {
+    row-gap: ${({theme}) => theme.spacing(7.5)};
+  }
 
   ${theme.breakpoints.down('lg')} {
     padding-left: ${({theme}) => theme.spacing(2.5)};
@@ -164,7 +169,6 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
   const siteTitle = 'OnlineReports'
-
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache()
@@ -191,6 +195,8 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
               Teaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
+              TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
+              TeaserGrid: OnlineReportsTeaserGridBlock,
               Quote: OnlineReportsQuoteBlock,
               Subscribe: Mitmachen,
               Title: OnlineReportsTitle
