@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import {capitalize} from '@mui/material'
 import {ArticleListContainer} from '@wepublish/article/website'
 import {
@@ -16,7 +17,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 import {z} from 'zod'
-import styled from '@emotion/styled'
 
 const take = 25
 
@@ -32,7 +32,7 @@ type ArticleListByTagProps = {
 const TagArticleListWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({theme}) => theme.spacing(2.5)};
+  gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     margin-top: ${({theme}) => theme.spacing(4)};

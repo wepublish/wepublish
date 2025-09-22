@@ -1,6 +1,5 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {ComponentProps} from 'react'
+import {css} from '@mui/material'
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
@@ -13,6 +12,7 @@ import {
   SliderWrapper
 } from '@wepublish/block-content/website'
 import {ContentWrapperStyled, useFullWidthContent} from '@wepublish/content/website'
+import {ComponentProps} from 'react'
 
 export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   fullWidth?: boolean
@@ -33,9 +33,7 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   ${({theme, fullWidth}) =>
     !fullWidth &&
     css`
-      ${theme.breakpoints.down('md')} {
-        row-gap: ${theme.spacing(5)};
-      }
+      row-gap: ${theme.spacing(3)};
 
       ${theme.breakpoints.up('md')} {
         row-gap: ${theme.spacing(4)};
