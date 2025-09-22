@@ -117,7 +117,7 @@ const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
   row-gap: ${({ theme }) => theme.spacing(4)};
-  
+
   ${theme.breakpoints.up('sm')} {
     row-gap: ${({ theme }) => theme.spacing(7.5)};
   }
@@ -180,7 +180,6 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const siteTitle = 'OnlineReports';
-
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
