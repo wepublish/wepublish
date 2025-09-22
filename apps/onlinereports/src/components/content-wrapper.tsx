@@ -20,11 +20,11 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   fullWidth?: boolean;
 }>`
   display: grid;
-  row-gap: ${({ theme }) => theme.spacing(4)};
+  row-gap: ${({ theme })  => theme.spacing(4)};
   & > * {
     max-width: calc(100vw - ${({theme}) => theme.spacing(5)});
   }
-  ${({ theme }) => theme.breakpoints.up('sm')} {
+  ${({ theme })  => theme.breakpoints.up('sm')} {
   gap: ${({ theme }) => theme.spacing(7)};
     & > * {
       max-width: unset;
@@ -79,6 +79,7 @@ export const OnlineReportsContentWrapper = (
   props: ComponentProps<typeof OnlineReportsContentWrapperStyled>
 ) => {
   const fullWidth = useFullWidthContent();
+
   return (
 
     <OnlineReportsContentWrapperStyled

@@ -78,7 +78,7 @@ export function OnlineReportsArticle({
     const el = document.getElementById('comments');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-    }
+  }
   };
 
   const adsDisabled = useMemo(
