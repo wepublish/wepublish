@@ -10,7 +10,7 @@ concurrency:
 
 
 env:
-  RUN_REVIEW: ${{ !(
+  NOT_RUN_REVIEW: ${{ !(
     (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
     (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')) }}
   API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
@@ -52,7 +52,7 @@ jobs:
 
   helm_deployment_deps:
     name: Helm deployment dependencies
-    if: ${{ env.RUN_REVIEW == 'true' }}
+    if: ${{ env.NOT_RUN_REVIEW == 'false' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
