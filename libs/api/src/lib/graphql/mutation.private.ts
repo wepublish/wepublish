@@ -1,7 +1,6 @@
-import {CommentState, Prisma, RatingSystemType} from '@prisma/client'
+import {CommentState, RatingSystemType, UserEvent} from '@prisma/client'
 import {
   GraphQLBoolean,
-  GraphQLID,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -9,30 +8,18 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
-import {Block, BlockMap, BlockType} from '../db/block'
 import {SettingName} from '@wepublish/settings/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {NotFound} from '../error'
-import {SendMailType} from '../mails/mailContext'
 import {Validator} from '../validator'
-import {GraphQLArticle, GraphQLArticleInput} from './article'
-import {
-  createArticle,
-  deleteArticleById,
-  duplicateArticle,
-  publishArticle,
-  unpublishArticle,
-  updateArticle
-} from './article/article.private-mutation'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.private-mutation'
-import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {
   GraphQLComment,
-  GraphQLCommentRejectionReason,
   GraphQLCommentItemType,
-  GraphQLCommentRevisionUpdateInput,
-  GraphQLCommentRatingOverrideUpdateInput
+  GraphQLCommentRatingOverrideUpdateInput,
+  GraphQLCommentRejectionReason,
+  GraphQLCommentRevisionUpdateInput
 } from './comment/comment'
 import {
   GraphQLCommentRatingSystemAnswer,
@@ -55,28 +42,18 @@ import {
 import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {createImage, deleteImageById, updateImage} from './image/image.private-mutation'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {createInvoice, deleteInvoiceById, updateInvoice} from './invoice/invoice.private-mutation'
+import {
+  createInvoice,
+  deleteInvoiceById,
+  markInvoiceAsPaid,
+  updateInvoice
+} from './invoice/invoice.private-mutation'
 import {
   createMemberPlan,
   deleteMemberPlanById,
   updateMemberPlan
 } from './member-plan/member-plan.private-mutation'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
-import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
-import {
-  createNavigation,
-  deleteNavigationById,
-  updateNavigation
-} from './navigation/navigation.private-mutation'
-import {GraphQLPage, GraphQLPageInput} from './page'
-import {
-  createPage,
-  deletePageById,
-  duplicatePage,
-  publishPage,
-  unpublishPage,
-  updatePage
-} from './page/page.private-mutation'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {
   createPaymentMethod,
@@ -113,22 +90,18 @@ import {
   deletePollExternalVoteSource,
   updatePoll
 } from './poll/poll.private-mutation'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
-import {
-  createJWTSession,
-  createOAuth2Session,
-  createSession,
-  revokeSessionByToken
-} from './session/session.mutation'
+import {createJWTSession, createSession, revokeSessionByToken} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
-import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
-import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
+  cancelSubscriptionById,
   createSubscription,
   deleteSubscriptionById,
+  importSubscription,
+  renewSubscription,
   updateAdminSubscription
 } from './subscription/subscription.private-mutation'
 import {GraphQLTag, GraphQLTagType} from './tag/tag'
@@ -148,93 +121,10 @@ import {
   updateAdminUser
 } from './user/user.private-mutation'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
-import {GraphQLEvent, GraphQLEventStatus} from './event/event'
-import {
-  createEvent,
-  deleteEvent,
-  updateEvent,
-  UpdateOrCreateEventInput
-} from './event/event.private-mutation'
-import {CanSendJWTLogin} from '@wepublish/permissions/api'
 
-function mapTeaserUnionMap(value: any) {
-  if (!value) return null
-
-  const valueKeys = Object.keys(value)
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no teaser types in ${GraphQLTeaserInput.name}.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple teaser types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLTeaserInput.name
-      }, they're mutually exclusive.`
-    )
-  }
-
-  const type = Object.keys(value)[0] as keyof BlockMap
-  const teaserValue = value[type]
-
-  return {type, ...teaserValue} as Block
-}
-
-function mapBlockUnionMap(value: any) {
-  const valueKeys = Object.keys(value)
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no block types in ${GraphQLBlockInput.name}.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLBlockInput.name
-      }, they're mutually exclusive.`
-    )
-  }
-
-  const type = Object.keys(value)[0] as keyof BlockMap
-  const blockValue = value[type]
-
-  switch (type) {
-    case BlockType.TeaserGrid:
-      return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
-
-    case BlockType.TeaserGridFlex:
-      return {
-        type,
-        ...blockValue,
-        flexTeasers: blockValue.flexTeasers.map(({teaser, ...value}: any) => ({
-          ...value,
-          teaser: mapTeaserUnionMap(teaser)
-        }))
-      }
-
-    default:
-      return {type, ...blockValue} as Block
-  }
-}
-
-function mapNavigationLinkInput(value: any) {
-  const valueKeys = Object.keys(value)
-
-  if (valueKeys.length === 0) {
-    throw new Error(`Received no navigation link types in ${GraphQLNavigationLinkInput.name}.`)
-  }
-
-  if (valueKeys.length > 1) {
-    throw new Error(
-      `Received multiple navigation link  types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLNavigationLinkInput.name
-      }, they're mutually exclusive.`
-    )
-  }
-
-  const key = Object.keys(value)[0] as keyof BlockMap
-  return {type: key, ...value[key]} as Block
-}
+import {CanSendJWTLogin} from '@wepublish/permissions'
+import {mailLogType} from '@wepublish/mail/api'
+import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -243,24 +133,24 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     updatePeerProfile: {
-      type: GraphQLNonNull(GraphQLPeerProfile),
-      args: {input: {type: GraphQLNonNull(GraphQLPeerProfileInput)}},
+      type: new GraphQLNonNull(GraphQLPeerProfile),
+      args: {input: {type: new GraphQLNonNull(GraphQLPeerProfileInput)}},
       resolve: (root, {input}, {hostURL, authenticate, prisma: {peerProfile}}) =>
         upsertPeerProfile(input, hostURL, authenticate, peerProfile)
     },
 
     createPeer: {
-      type: GraphQLNonNull(GraphQLPeer),
-      args: {input: {type: GraphQLNonNull(GraphQLCreatePeerInput)}},
+      type: new GraphQLNonNull(GraphQLPeer),
+      args: {input: {type: new GraphQLNonNull(GraphQLCreatePeerInput)}},
       resolve: (root, {input}, {authenticate, prisma: {peer}}) =>
         createPeer(input, authenticate, peer)
     },
 
     updatePeer: {
-      type: GraphQLNonNull(GraphQLPeer),
+      type: new GraphQLNonNull(GraphQLPeer),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUpdatePeerInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLUpdatePeerInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {peer}}) =>
         updatePeer(id, input, authenticate, peer)
@@ -268,7 +158,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     deletePeer: {
       type: GraphQLPeer,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLString)}},
       resolve: (root, {id}, {authenticate, prisma: {peer}}) =>
         deletePeerById(id, authenticate, peer)
     },
@@ -277,77 +167,57 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createSession: {
-      type: GraphQLNonNull(GraphQLSessionWithToken),
+      type: new GraphQLNonNull(GraphQLSessionWithToken),
       args: {
-        email: {type: GraphQLNonNull(GraphQLString)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        email: {type: new GraphQLNonNull(GraphQLString)},
+        password: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {email, password}, {sessionTTL, prisma}) =>
         createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
-      type: GraphQLNonNull(GraphQLSessionWithToken),
+      type: new GraphQLNonNull(GraphQLSessionWithToken),
       args: {
-        jwt: {type: GraphQLNonNull(GraphQLString)}
+        jwt: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
         createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
-    createSessionWithOAuth2Code: {
-      type: GraphQLNonNull(GraphQLSessionWithToken),
-      args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
-        code: {type: GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
-    },
-
     revokeSession: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      type: new GraphQLNonNull(GraphQLBoolean),
+      args: {id: {type: new GraphQLNonNull(GraphQLString)}},
       resolve: (root, {id}, {authenticateUser, prisma: {session}}) =>
         revokeSessionById(id, authenticateUser, session)
     },
 
     revokeActiveSession: {
-      type: GraphQLNonNull(GraphQLBoolean),
+      type: new GraphQLNonNull(GraphQLBoolean),
       args: {},
       resolve: (root, _, {authenticateUser, prisma: {session}}) =>
         revokeSessionByToken(authenticateUser, session)
     },
 
     sessions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSession))),
       args: {},
       resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
         getSessionsForUser(authenticateUser, session, userRole)
     },
 
     sendJWTLogin: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       args: {
-        url: {type: GraphQLNonNull(GraphQLString)},
-        email: {type: GraphQLNonNull(GraphQLString)}
+        url: {type: new GraphQLNonNull(GraphQLString)},
+        email: {type: new GraphQLNonNull(GraphQLString)}
       },
       async resolve(root, {url, email}, {authenticate, prisma, generateJWT, mailContext}) {
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login.parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},
@@ -360,34 +230,27 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         })
         const jwtExpires =
           (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '')
 
         if (!jwtExpires) {
           throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
         }
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: jwtExpires
-        })
-
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
         await mailContext.sendMail({
-          type: SendMailType.LoginLink,
-          recipient: email,
-          data: {
-            url: `${url}?jwt=${token}`,
-            user
-          }
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
-
         return email
       }
     },
 
     sendWebsiteLogin: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       args: {
-        email: {type: GraphQLNonNull(GraphQLString)}
+        email: {type: new GraphQLNonNull(GraphQLString)}
       },
       async resolve(
         root,
@@ -395,7 +258,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         {authenticate, prisma, generateJWT, mailContext, urlAdapter}
       ) {
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login.parse({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
@@ -404,7 +267,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         })
         const jwtExpires =
           (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env.SEND_LOGIN_JWT_EXPIRES_MIN ?? '')
+          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '')
 
         if (!jwtExpires) throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
 
@@ -415,18 +278,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!user) throw new NotFound('User', email)
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: jwtExpires
-        })
-
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
         await mailContext.sendMail({
-          type: SendMailType.LoginLink,
-          recipient: email,
-          data: {
-            url: urlAdapter.getLoginURL(token),
-            user
-          }
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
 
         return email
@@ -437,15 +294,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =====
 
     createToken: {
-      type: GraphQLNonNull(GraphQLCreatedToken),
-      args: {input: {type: GraphQLNonNull(GraphQLTokenInput)}},
+      type: new GraphQLNonNull(GraphQLCreatedToken),
+      args: {input: {type: new GraphQLNonNull(GraphQLTokenInput)}},
       resolve: (root, {input}, {authenticate, prisma: {token}}) =>
         createToken({...input, roleIDs: ['peer']}, authenticate, token)
     },
 
     deleteToken: {
       type: GraphQLCreatedToken,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLString)}},
       resolve: (root, {id}, {authenticate, prisma: {token}}) =>
         deleteTokenById(id, authenticate, token)
     },
@@ -456,18 +313,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createUser: {
       type: GraphQLUser,
       args: {
-        input: {type: GraphQLNonNull(GraphQLUserInput)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        input: {type: new GraphQLNonNull(GraphQLUserInput)},
+        password: {type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
-        createAdminUser({...input, password}, authenticate, hashCostFactor, user)
+      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma, mailContext}) =>
+        createAdminUser({...input, password}, authenticate, hashCostFactor, prisma, mailContext)
     },
 
     updateUser: {
       type: GraphQLUser,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUserInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLUserInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {user}}) =>
         updateAdminUser(id, input, authenticate, user)
@@ -476,8 +333,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     resetUserPassword: {
       type: GraphQLUser,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        password: {type: GraphQLNonNull(GraphQLString)},
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        password: {type: new GraphQLNonNull(GraphQLString)},
         sendMail: {type: GraphQLBoolean}
       },
       resolve: (
@@ -491,7 +348,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteUser: {
       type: GraphQLUser,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {user}}) =>
         deleteUserById(id, authenticate, user)
@@ -503,36 +360,71 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createSubscription: {
       type: GraphQLSubscription,
       args: {
-        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+        input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve: (root, {input}, {authenticate, prisma: {subscription}, memberContext}) =>
-        createSubscription(input, authenticate, memberContext, subscription)
+      resolve: (root, {input}, {authenticate, prisma, memberContext}) =>
+        createSubscription(input, authenticate, memberContext, prisma)
+    },
+
+    importSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
+      },
+      resolve: (root, {input}, {authenticate, prisma, memberContext}) =>
+        importSubscription(input, authenticate, memberContext, prisma)
+    },
+
+    renewSubscription: {
+      type: GraphQLInvoice,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve: (root, {id}, {authenticate, prisma: {subscription, invoice}, memberContext}) =>
+        renewSubscription(id, authenticate, subscription, invoice, memberContext)
     },
 
     updateSubscription: {
       type: GraphQLSubscription,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma, memberContext}) =>
+      resolve: (
+        root,
+        {id, input},
+        {authenticate, prisma, memberContext, paymentProviders, loaders}
+      ) =>
         updateAdminSubscription(
           id,
           input,
           authenticate,
           memberContext,
+          loaders,
           prisma.subscription,
-          prisma.user
+          prisma.user,
+          paymentProviders,
+          prisma.memberPlan
         )
     },
 
     deleteSubscription: {
       type: GraphQLSubscription,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
         deleteSubscriptionById(id, authenticate, subscription)
+    },
+
+    cancelSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        reason: {type: new GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+      },
+      resolve: (root, {id, reason}, {authenticate, prisma: {subscription}, memberContext}) =>
+        cancelSubscriptionById(id, reason, authenticate, subscription, memberContext)
     },
 
     // UserRole
@@ -540,7 +432,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createUserRole: {
       type: GraphQLUserRole,
-      args: {input: {type: GraphQLNonNull(GraphQLUserRoleInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLUserRoleInput)}},
       resolve: (root, {input}, {authenticate, prisma: {userRole}}) =>
         createUserRole(input, authenticate, userRole)
     },
@@ -548,8 +440,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateUserRole: {
       type: GraphQLUserRole,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUserRoleInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLUserRoleInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {userRole}}) =>
         updateUserRole(id, input, authenticate, userRole)
@@ -558,51 +450,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteUserRole: {
       type: GraphQLUserRole,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {userRole}}) =>
         deleteUserRoleById(id, authenticate, userRole)
-    },
-
-    // Navigation
-    // ==========
-
-    createNavigation: {
-      type: GraphQLNavigation,
-      args: {input: {type: GraphQLNonNull(GraphQLNavigationInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {navigation}}) =>
-        createNavigation(
-          {
-            ...input,
-            links: input.links.map(mapNavigationLinkInput)
-          },
-          authenticate,
-          navigation
-        )
-    },
-
-    updateNavigation: {
-      type: GraphQLNavigation,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLNavigationInput)}
-      },
-      resolve: (root, {id, input}, {authenticate, prisma: {navigation}}) =>
-        updateNavigation(
-          id,
-          {...input, links: input.links.map(mapNavigationLinkInput)},
-          authenticate,
-          navigation
-        )
-    },
-
-    deleteNavigation: {
-      type: GraphQLNavigation,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {authenticate, prisma: {navigation}}) =>
-        deleteNavigationById(id, authenticate, navigation)
     },
 
     // Author
@@ -610,7 +461,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createAuthor: {
       type: GraphQLAuthor,
-      args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLAuthorInput)}},
       resolve: (root, {input}, {authenticate, prisma: {author}}) =>
         createAuthor(input, authenticate, author)
     },
@@ -618,8 +469,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateAuthor: {
       type: GraphQLAuthor,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLAuthorInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLAuthorInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {author}}) =>
         updateAuthor(id, input, authenticate, author)
@@ -628,7 +479,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteAuthor: {
       type: GraphQLAuthor,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {author}}) =>
         deleteAuthorById(id, authenticate, author)
@@ -639,7 +490,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     uploadImage: {
       type: GraphQLImage,
-      args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLUploadImageInput)}},
       resolve: (root, {input}, {authenticate, mediaAdapter, prisma: {image}}) =>
         createImage(input, authenticate, mediaAdapter, image)
     },
@@ -647,8 +498,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateImage: {
       type: GraphQLImage,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLUpdateImageInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {image}}) =>
         updateImage(id, input, authenticate, image)
@@ -656,121 +507,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     deleteImage: {
       type: GraphQLImage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLString)}},
       resolve: (root, {id}, {authenticate, mediaAdapter, prisma: {image}}) =>
         deleteImageById(id, authenticate, image, mediaAdapter)
-    },
-
-    // Article
-    // =======
-
-    createArticle: {
-      type: GraphQLNonNull(GraphQLArticle),
-      args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {article}}) =>
-        createArticle({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, article)
-    },
-
-    updateArticle: {
-      type: GraphQLArticle,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLArticleInput)}
-      },
-      resolve: (root, {id, input}, {authenticate, prisma: {article}}) =>
-        updateArticle(
-          id,
-          {...input, blocks: input.blocks.map(mapBlockUnionMap)},
-          authenticate,
-          article
-        )
-    },
-
-    deleteArticle: {
-      type: GraphQLArticle,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma}) => deleteArticleById(id, authenticate, prisma)
-    },
-
-    publishArticle: {
-      type: GraphQLArticle,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        publishAt: {type: GraphQLDateTime},
-        updatedAt: {type: GraphQLDateTime},
-        publishedAt: {type: GraphQLDateTime}
-      },
-      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {article}}) =>
-        publishArticle(id, {publishAt, updatedAt, publishedAt}, authenticate, article)
-    },
-
-    unpublishArticle: {
-      type: GraphQLArticle,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {article}}) =>
-        unpublishArticle(id, authenticate, article)
-    },
-
-    duplicateArticle: {
-      type: GraphQLNonNull(GraphQLArticle),
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {authenticate, prisma: {article}, loaders: {articles}}) =>
-        duplicateArticle(id, authenticate, articles, article)
-    },
-
-    // Page
-    // =======
-
-    createPage: {
-      type: GraphQLNonNull(GraphQLPage),
-      args: {input: {type: GraphQLNonNull(GraphQLPageInput)}},
-      resolve: (root, {input}, {authenticate, prisma: {page}}) =>
-        createPage({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
-    },
-
-    updatePage: {
-      type: GraphQLPage,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPageInput)}
-      },
-      resolve: (root, {id, input}, {authenticate, prisma: {page}}) =>
-        updatePage(id, {...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
-    },
-
-    deletePage: {
-      type: GraphQLPage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma}) => deletePageById(id, authenticate, prisma)
-    },
-
-    publishPage: {
-      type: GraphQLPage,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        publishAt: {type: GraphQLDateTime},
-        updatedAt: {type: GraphQLDateTime},
-        publishedAt: {type: GraphQLDateTime}
-      },
-      resolve: (root, {id, publishAt, updatedAt, publishedAt}, {authenticate, prisma: {page}}) =>
-        publishPage(id, {publishAt, updatedAt, publishedAt}, authenticate, page)
-    },
-
-    unpublishPage: {
-      type: GraphQLPage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {page}}) => unpublishPage(id, authenticate, page)
-    },
-
-    duplicatePage: {
-      type: GraphQLNonNull(GraphQLPage),
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {prisma: {page}, loaders: {pages}, authenticate}) =>
-        duplicatePage(id, authenticate, pages, page)
     },
 
     // MemberPlan
@@ -778,7 +517,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createMemberPlan: {
       type: GraphQLMemberPlan,
-      args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLMemberPlanInput)}},
       resolve: (root, {input}, {authenticate, prisma: {memberPlan}}) =>
         createMemberPlan(input, authenticate, memberPlan)
     },
@@ -786,8 +525,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateMemberPlan: {
       type: GraphQLMemberPlan,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLMemberPlanInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {memberPlan}}) =>
         updateMemberPlan(id, input, authenticate, memberPlan)
@@ -796,7 +535,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteMemberPlan: {
       type: GraphQLMemberPlan,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {memberPlan}}) =>
         deleteMemberPlanById(id, authenticate, memberPlan)
@@ -808,7 +547,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentMethod: {
       type: GraphQLPaymentMethod,
       args: {
-        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+        input: {type: new GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
       resolve: (root, {input}, {authenticate, prisma: {paymentMethod}}) =>
         createPaymentMethod(input, authenticate, paymentMethod)
@@ -817,8 +556,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePaymentMethod: {
       type: GraphQLPaymentMethod,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {paymentMethod}}) =>
         updatePaymentMethod(id, input, authenticate, paymentMethod)
@@ -827,7 +566,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePaymentMethod: {
       type: GraphQLPaymentMethod,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {paymentMethod}}) =>
         deletePaymentMethodById(id, authenticate, paymentMethod)
@@ -838,30 +577,36 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createInvoice: {
       type: GraphQLInvoice,
-      args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLInvoiceInput)}},
       resolve: (root, {input}, {authenticate, prisma: {invoice}}) =>
         createInvoice(input, authenticate, invoice)
     },
 
     createPaymentFromInvoice: {
       type: GraphQLPayment,
-      args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
-      resolve: (root, {input}, {authenticate, loaders, paymentProviders, prisma: {payment}}) =>
+      args: {input: {type: new GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
+      resolve: (
+        root,
+        {input},
+        {authenticate, loaders, paymentProviders, prisma: {payment, memberPlan, subscription}}
+      ) =>
         createPaymentFromInvoice(
           input,
           authenticate,
           paymentProviders,
           loaders.invoicesByID,
           loaders.paymentMethodsByID,
-          payment
+          memberPlan,
+          payment,
+          subscription
         )
     },
 
     updateInvoice: {
       type: GraphQLInvoice,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLInvoiceInput)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        input: {type: new GraphQLNonNull(GraphQLInvoiceInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {invoice}}) =>
         updateInvoice(id, input, authenticate, invoice)
@@ -870,31 +615,51 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteInvoice: {
       type: GraphQLInvoice,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {invoice}}) =>
         deleteInvoiceById(id, authenticate, invoice)
     },
 
+    markInvoiceAsPaid: {
+      type: GraphQLInvoice,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve: (root, {id}, {authenticate, prisma, authenticateUser}) =>
+        markInvoiceAsPaid(id, authenticate, authenticateUser, prisma)
+    },
+
     // Comment
     // ======
     updateComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLString)},
         revision: {type: GraphQLCommentRevisionUpdateInput},
-        userID: {type: GraphQLID},
+        userID: {type: GraphQLString},
         guestUsername: {type: GraphQLString},
-        guestUserImageID: {type: GraphQLID},
+        guestUserImageID: {type: GraphQLString},
+        featured: {type: GraphQLBoolean},
         source: {type: GraphQLString},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+        tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
         ratingOverrides: {
-          type: GraphQLList(GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput))
+          type: new GraphQLList(new GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput))
         }
       },
       resolve: (
         root,
-        {id, revision, ratingOverrides, userID, guestUsername, guestUserImageID, source, tagIds},
+        {
+          id,
+          revision,
+          ratingOverrides,
+          userID,
+          guestUsername,
+          guestUserImageID,
+          featured,
+          source,
+          tagIds
+        },
         {authenticate, prisma: {comment, commentRatingSystemAnswer}}
       ) =>
         updateComment(
@@ -904,6 +669,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           guestUsername,
           guestUserImageID,
           source,
+          featured,
           tagIds,
           ratingOverrides,
           authenticate,
@@ -913,14 +679,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     createComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
         text: {type: GraphQLRichText},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-        itemID: {type: GraphQLNonNull(GraphQLID)},
-        parentID: {type: GraphQLID},
+        tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+        itemID: {type: new GraphQLNonNull(GraphQLString)},
+        parentID: {type: GraphQLString},
         itemType: {
-          type: GraphQLNonNull(GraphQLCommentItemType)
+          type: new GraphQLNonNull(GraphQLCommentItemType)
         }
       },
       resolve: (
@@ -931,18 +697,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     approveComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
         takeActionOnComment(id, {state: CommentState.approved}, authenticate, comment)
     },
 
     rejectComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLString)},
         rejectionReason: {type: GraphQLCommentRejectionReason}
       },
       resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
@@ -955,10 +721,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     requestChangesOnComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        rejectionReason: {type: new GraphQLNonNull(GraphQLCommentRejectionReason)}
       },
       resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
         takeActionOnComment(
@@ -970,33 +736,21 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
         deleteComment(id, authenticate, comment)
-    },
-
-    // Settings
-    // ==========
-
-    updateSettingList: {
-      type: GraphQLList(GraphQLSetting),
-      args: {
-        value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
-      },
-      resolve: (root, {value}, {authenticate, prisma}) =>
-        updateSettings(value, authenticate, prisma)
     },
 
     // Rating System
     // ==========
 
     createRatingSystemAnswer: {
-      type: GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
+      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
       args: {
-        ratingSystemId: {type: GraphQLNonNull(GraphQLID)},
+        ratingSystemId: {type: new GraphQLNonNull(GraphQLString)},
         type: {type: GraphQLRatingSystemType, defaultValue: RatingSystemType.star},
         answer: {type: GraphQLString}
       },
@@ -1015,11 +769,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     updateRatingSystem: {
-      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
       args: {
-        ratingSystemId: {type: GraphQLNonNull(GraphQLID)},
+        ratingSystemId: {type: new GraphQLNonNull(GraphQLString)},
         name: {type: GraphQLString},
-        answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer))}
+        answers: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer))}
       },
       resolve: (
         root,
@@ -1029,9 +783,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteRatingSystemAnswer: {
-      type: GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
+      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {commentRatingSystemAnswer}}) =>
         deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer)
@@ -1054,7 +808,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPollAnswer: {
       type: GraphQLPollAnswer,
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)},
+        pollId: {type: new GraphQLNonNull(GraphQLString)},
         answer: {type: GraphQLString}
       },
       resolve: (
@@ -1067,7 +821,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPollExternalVoteSource: {
       type: GraphQLPollExternalVoteSource,
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)},
+        pollId: {type: new GraphQLNonNull(GraphQLString)},
         source: {type: GraphQLString}
       },
       resolve: (
@@ -1087,14 +841,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePoll: {
       type: GraphQLFullPoll,
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)},
+        pollId: {type: new GraphQLNonNull(GraphQLString)},
         opensAt: {type: GraphQLDateTime},
         closedAt: {type: GraphQLDateTime},
         question: {type: GraphQLString},
         infoText: {type: GraphQLRichText},
-        answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollAnswer))},
+        answers: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollAnswer))},
         externalVoteSources: {
-          type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))
+          type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))
         }
       },
       resolve: (
@@ -1107,7 +861,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePoll: {
       type: GraphQLFullPoll,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {poll}}) => deletePoll(id, authenticate, poll)
     },
@@ -1115,7 +869,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePollAnswer: {
       type: GraphQLPollAnswerWithVoteCount,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {pollAnswer}}) =>
         deletePollAnswer(id, authenticate, pollAnswer)
@@ -1124,7 +878,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePollExternalVoteSource: {
       type: GraphQLPollExternalVoteSource,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {pollExternalVoteSource}}) =>
         deletePollExternalVoteSource(id, authenticate, pollExternalVoteSource)
@@ -1137,82 +891,32 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLTag,
       args: {
         tag: {type: GraphQLString},
-        type: {type: GraphQLNonNull(GraphQLTagType)}
+        description: {type: GraphQLRichText},
+        type: {type: new GraphQLNonNull(GraphQLTagType)},
+        main: {type: GraphQLBoolean}
       },
-      resolve: (root, {tag, type}, {authenticate, prisma}) =>
-        createTag(tag, type, authenticate, prisma.tag)
+      resolve: (root, {tag, description, type, main}, {authenticate, prisma}) =>
+        createTag(tag, description, type, main, authenticate, prisma.tag)
     },
 
     updateTag: {
       type: GraphQLTag,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        tag: {type: GraphQLString}
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        tag: {type: GraphQLString},
+        description: {type: GraphQLRichText},
+        main: {type: GraphQLBoolean}
       },
-      resolve: (root, {id, tag}, {authenticate, prisma}) =>
-        updateTag(id, tag, authenticate, prisma.tag)
+      resolve: (root, {id, tag, description, main}, {authenticate, prisma}) =>
+        updateTag(id, tag, description, main, authenticate, prisma.tag)
     },
 
     deleteTag: {
       type: GraphQLTag,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {id}, {authenticate, prisma: {tag}}) => deleteTag(id, authenticate, tag)
-    },
-
-    // Event
-    // ==========
-
-    createEvent: {
-      type: GraphQLEvent,
-      args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
-        description: {type: GraphQLRichText},
-        location: {type: GraphQLString},
-        startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
-        endsAt: {type: GraphQLDateTime},
-        imageId: {type: GraphQLID},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
-      },
-      resolve: (root, {tagIds, ...input}, {authenticate, prisma: {event}}) =>
-        createEvent(
-          input as UpdateOrCreateEventInput<Prisma.EventUncheckedCreateInput>,
-          tagIds,
-          authenticate,
-          event
-        )
-    },
-
-    updateEvent: {
-      type: GraphQLEvent,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        name: {type: GraphQLString},
-        description: {type: GraphQLRichText},
-        status: {type: GraphQLEventStatus},
-        location: {type: GraphQLString},
-        startsAt: {type: GraphQLDateTime},
-        endsAt: {type: GraphQLDateTime},
-        imageId: {type: GraphQLID},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
-      },
-      resolve: (root, {id, tagIds, ...input}, {authenticate, prisma: {event}}) =>
-        updateEvent(
-          id,
-          input as UpdateOrCreateEventInput<Prisma.EventUncheckedUpdateInput>,
-          tagIds,
-          authenticate,
-          event
-        )
-    },
-
-    deleteEvent: {
-      type: GraphQLEvent,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      resolve: (root, {id}, {authenticate, prisma: {event}}) => deleteEvent(id, authenticate, event)
     }
   }
 })

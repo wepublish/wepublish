@@ -3,8 +3,9 @@ import {Context} from '../../context'
 import {UserRoleFilter, UserRoleSort} from '../../db/userRole'
 import {UserInputError} from '../../error'
 import {authorise} from '../permissions'
-import {CanGetUserRole, CanGetUserRoles} from '@wepublish/permissions/api'
+import {CanGetUserRole, CanGetUserRoles} from '@wepublish/permissions'
 import {getUserRoles} from './user-role.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getUserRoleById = (
   id: string,
@@ -24,7 +25,7 @@ export const getUserRoleById = (
 export const getAdminUserRoles = async (
   filter: Partial<UserRoleFilter>,
   sortedField: UserRoleSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

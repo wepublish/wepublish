@@ -2,101 +2,101 @@
   "translation": {
     "articleEditor": {
       "overview": {
+        "articlePending": "Artikel geplant",
         "articlePublished": "Artikel publiziert",
         "back": "Zurück",
+        "createComment": "Kommentar erstellen",
         "draft": "Entwurf",
         "draftCreated": "Artikelentwurf erstellt",
         "draftSaved": "Artikelentwurf gespeichert",
+        "duplicate": "Duplizieren",
         "metadata": "Metadaten",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "noSlug": "Artikel nicht publiziert. Bitte Slug erfassen.",
         "notFound": "Artikel nicht gefunden",
         "pending": "Publikation des Artikels geplant am {{date, ccc PP p}}",
-        "publish": "Publizieren",
-        "previewDisabled": "Alle Änderungen an diesem Artikel wurden bereits publiziert.",
         "preview": "Vorschau",
-        "createComment": "Kommentar erstellen",
+        "publish": "Publizieren",
         "published": "Artikel publiziert am {{date, ccc PP p}}.",
-        "unpublished": "Nicht publiziert",
         "publishedAt": "{{publicationDate, ccc PP p}}",
-        "modifiedAt": "{{modificationDate, ccc PP pp}}",
-        "warningLabel": "Warnung",
-        "unpublishWarningMessage": "Bei Bestätigung wird bei allen publizierten und geplanten Artikel die Publikation widerrufen",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
-        "duplicate": "Duplizieren",
-        "articlePending": "Artikel geplant"
+        "unpublished": "Nicht publiziert",
+        "unpublishWarningMessage": "Bei Bestätigung wird bei allen publizierten und geplanten Artikel die Publikation widerrufen",
+        "warningLabel": "Warnung"
       },
       "panels": {
-        "addTag": "Enter drücken, um Tag hinzuzufügen",
+        "addSlug": "Bitte Slug erfassen",
         "allowPeerPublishing": "Peers erlauben, diesen Artikel zu publizieren.",
-        "article": "Artikel",
+        "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese.",
         "articlePreviewLink": "Vorschau-Link",
         "articlePreviewLinkDesc": "Vorschau-Links zeigen immer die neuesten Änderungen im Entwurf des Artikels an. Vorschau-Links funktionieren nicht mehr, nachdem der Artikel publiziert oder geplant wurde.",
         "articlePreviewLinkField": "Vorschau Link",
+        "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
         "authors": "Autor*innen",
         "back": "Zurück",
         "breakingNews": "Breaking News",
+        "canonicalUrl": "Kanonische URL",
+        "canonicalUrLHelpBlock": "Ein kanonisches Link-Element ist ein HTML-Element, das Webmastern hilft, Probleme mit doppeltem Inhalt bei der Suchmaschinenoptimierung zu vermeiden, indem es die \"kanonische\" oder \"bevorzugte\" Version einer Webseite angibt. <2>Canonical Url Guide</2>",
         "charCountWarning": "Die maximale Zeichenanzahl sollte {{charCountWarning}} sein",
-        "chooseArticle": "Artikel wählen",
         "chooseImage": "Bild wählen",
         "chooseTeaser": "Teaser wählen",
         "close": "Schliessen",
+        "comments": "Kommentare",
         "confirm": "Bestätigen",
-        "createdAt": "{{createdAt, ccc PP p}}",
-        "default": "Default",
-        "displayOptions": "Anzeigeoptionen",
-        "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern. <2>Slug Guide</2>",
-        "draft": "Entwurf",
-        "custom": "benutzerdefinierte",
         "contentUrl": "Inhalt URL",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
+        "displayOptions": "Anzeigeoptionen",
+        "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern.",
+        "draft": "Entwurf",
         "dropImage": "Bild hier droppen",
-        "editImage": "Bild bearbeiten",
         "editTeaser": "Teaser bearbeiten",
-        "emptyImage": "Leer lassen, um das Originalbild zu verwenden.",
-        "emptyLead": "Leer lassen, um das Originallead zu verwenden.",
-        "emptyPreTitle": "Leer lassen, um Original-Oberzeile zu verwenden",
-        "emptyTitle": "Leer lassen, um Original-Titel zu verwenden",
+        "enterAuthors": "Bitte Autor:in hinzufügen",
+        "enterImage": "Bitte Bild hinzufügen",
+        "enterSeoTitle": "Bitte SEO-Titel eingeben",
+        "enterSocialMediaAuthors": "Bitte Autor:in für Social-Media hinzufügen",
+        "enterSocialMediaDescription": "Bitte Social-Media-Beschreibung eingeben",
+        "enterSocialMediaTitle": "Bitte Titel für Social Media hinzufügen",
+        "enterTag": "Bitte Tag eingeben",
+        "enterTitle": "Bitte Titel eingeben",
         "general": "Allgemein",
         "hideAuthors": "Autor*in verbergen",
         "image": "Bild",
         "images": "Bilder",
-        "invalidDate": "Ungültiges Datum",
         "invalidImage": "Ungültiges Bild",
         "key": "Key",
         "lead": "Lead",
         "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
-        "light": "Light",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
+        "noDataToDisplay": "Keine Daten zum Anzeigen",
         "metadata": "Metadaten",
-        "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social Media Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab \"Allgemein\" verwendet.",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
-        "noAuthorsFound": "Kein*e Autor*in gefunden",
         "noImagesFound": "Keine Bilder gefunden",
-        "outlined": "Skizziert",
-        "page": "Seite",
         "pagePreviewLink": "Vorschau Link",
-        "peerArticle": "Artikel peeren",
+        "peerDisabled": "Dieser Peer ist momentan deaktiviert",
         "peeredArticlePreview": "Vorschau",
         "peering": "Peering",
-        "peerShare": "Mit Peers teilen",
         "pending": "Geplant",
         "postImage": "Bild für Post",
         "preTitle": "Oberzeile",
         "private": "Privat",
         "properties": "Eigenschaften",
+        "propertiesInfo": "Properties können pro Artikel eingestellt werden. Public Properties sind über die public API zugänglich.",
         "public": "Öffentlich",
         "publishArticle": "Artikel publizieren",
+        "publishAt": "Online verfügbar ab",
+        "publishAtDateCheckbox": "Wähle ein anderes Datum für die online Verfügbarkeit",
         "publishDate": "Publikationsdatum",
         "published": "Publiziert",
-        "removeImage": "Bild entfernen",
-        "removeTeaser": "Teaser entfernen",
-        "search": "Suchen",
         "seoTitle": "SEO-Titel",
         "seoTitleHelpBlock": "Verwende einen SEO-optimierten Titel <2>SEO Guide</2>",
         "sharedWithPeers": "Geteilt mit Peers",
         "slug": "Slug",
+        "slugGuide": "Slug Guide",
+        "slugifySeoTitle": "Slug aus den SEO-Titel generieren",
         "socialMedia": "Social Media",
         "socialMediaAuthors": "Autor*innen für Social Media",
         "socialMediaDescription": "Beschreibung für Social Media",
@@ -106,45 +106,47 @@
         "statePending": "Status: Geplant",
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
-        "style": "Style",
         "tags": "Tags",
-        "teaserStyle": "Style: {{label}}",
-        "text": "Text",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
+        "likeCount": "Likes {{likeCount}}",
         "type": "Typ",
         "untitled": "Ohne Titel",
-        "Untitled": "Ohne Titel",
         "updateDate": "Update-Datum",
+        "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "uploadImage": "Bild hochladen",
+        "url": "URL",
+        "urlPlaceholder": "https://canonical-url.com",
         "value": "Wert",
         "yes": "Ja",
-        "propertiesInfo": "Properties können pro Artikel eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese.",
-        "slugifySeoTitle": "Slug aus den SEO-Titel generieren",
-        "articlePreviewLinkHours": "Gültigkeitsdauer des Links",
-        "canonicalUrLHelpBlock": "Ein kanonisches Link-Element ist ein HTML-Element, das Webmastern hilft, Probleme mit doppeltem Inhalt bei der Suchmaschinenoptimierung zu vermeiden, indem es die \"kanonische\" oder \"bevorzugte\" Version einer Webseite angibt. <2>Canonical Url Guide</2>",
-        "canonicalUrl": "Kanonische URL",
-        "enterImage": "Bitte Bild hinzufügen",
-        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
-        "enterTag": "Bitte Tag eingeben",
-        "publishAt": "Online verfügbar ab",
-        "enterTitle": "Bitte Titel eingeben",
-        "enterSeoTitle": "Bitte SEO-Titel eingeben",
-        "urlPlaceholder": "https://canonical-url.com",
-        "addSlug": "Bitte Slug erfassen",
-        "publishAtDateCheckbox": "Wähle ein anderes Datum für die online Verfügbarkeit",
-        "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
-        "url": "URL",
-        "enterSocialMediaDescription": "Bitte Social-Media-Beschreibung eingeben",
-        "enterSocialMediaAuthors": "Bitte Autor:in für Social-Media hinzufügen",
-        "enterSocialMediaTitle": "Bitte Titel für Social Media hinzufügen",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
-        "enterAuthors": "Bitte Autor:in hinzufügen",
-        "peerDisabled": "Dieser Peer ist momentan deaktiviert",
-        "comments": "Kommentare",
-        "loadingPeerArticles": "Artikel von Peers laden..."
+        "hidden": "Ausblenden",
+        "setAsHidden": "Ausgeblendete Artikel werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
+        "disableComments": "Kommentare für diesen Artikel deaktivieren",
+        "light": "Light",
+        "style": "Style",
+        "text": "Text",
+        "default": "Default",
+        "tracking": "Tracking",
+        "paywall": "Paywall"
+      }
+    },
+    "articleList": {
+      "filter": {
+        "dates": "Daten",
+        "description": "Nach Beschreibung filtern",
+        "isDraft": "Entwurf",
+        "isPending": "Geplant",
+        "isPublished": "Publiziert",
+        "lead": "Nach Lead filtern",
+        "location": "Veranstaltungsort",
+        "name": "Name",
+        "preTitle": "Nach Pre-Titel filtern",
+        "providers": "Anbieter",
+        "publicationDate": "Publikationsdatum",
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "includeHidden": "Ausgeblendete Artikel"
       }
     },
     "articles": {
@@ -152,16 +154,12 @@
         "action": "Aktion",
         "articles": "Artikel",
         "authors": "Autor*innen",
-        "created": "Erstellt",
         "draft": "Entwurf",
-        "loadMore": "Mehr laden",
         "newArticle": "Neuer Artikel",
-        "noArticlesFound": "Keine Artikel gefunden",
         "notPublished": "Noch nicht publiziert",
         "pending": "Geplant",
         "publicationDate": "Publikationsdatum",
         "published": "Publiziert",
-        "search": "Suchen",
         "states": "Status",
         "title": "Titel",
         "untitled": "Ohne Titel",
@@ -169,7 +167,6 @@
       },
       "panels": {
         "cancel": "Abbrechen",
-        "close": "Schliessen",
         "confirm": "Bestätigen",
         "createAuthorProfile": "Autor*innenprofil erstellen für {{name}}",
         "createdAt": "Erstellt am",
@@ -180,7 +177,6 @@
         "publishedAt": "Publiziert am",
         "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titel",
-        "unpublish": "Publikation rückgängig machen",
         "unpublishArticle": "Artikelpublikation rückgängig machen?",
         "untitled": "Ohne Titel",
         "updatedAt": "Aktualisiert am",
@@ -189,63 +185,121 @@
     },
     "authors": {
       "overview": {
+        "action": "Aktion",
         "authors": "Autor*innen",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
         "created": "Erstellt",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "deleteAuthor": "Autor*in löschen?",
-        "loadMore": "Mehr laden",
         "name": "Name",
         "newAuthor": "Neue*r Autor*in",
-        "noAuthorsFound": "Kein*e Autor*in gefunden",
-        "search": "Suchen",
-        "unknown": "Unbekannt",
-        "action": "Aktion",
-        "createdAt": "{{createdAt, ccc PP p}}"
+        "unknown": "Unbekannt"
       },
       "panels": {
         "bioInformation": "Biographie",
-        "chooseImage": "Bild wählen",
         "close": "Schliessen",
         "createAuthor": "Autor*in erstellen",
         "editAuthor": "Autor*in bearbeiten",
-        "editImage": "Bild entfernen",
         "image": "Bild",
         "jobTitle": "Jobtitel",
         "link": "Link",
         "links": "Links",
         "name": "Name",
-        "removeImage": "Bild entfernen",
-        "title": "Titel"
+        "title": "Titel",
+        "tags": "Tags"
+      }
+    },
+    "banner": {
+      "edit": {
+        "title": "Banner bearbeiten"
+      },
+      "create": {
+        "title": "Banner hinzufügen"
+      },
+      "delete": {
+        "title": "Banner löschen",
+        "body": "Willst Du den Banner wirklich löschen?",
+        "delete": "Banner löschen"
+      },
+      "form": {
+        "displayOptions": "Anzeigeoptionen",
+        "title": "Titel",
+        "text": "Text",
+        "cta": "Call to action",
+        "delay": "Verzögerung in Sekunden",
+        "active": "Aktiv",
+        "showOnArticles": "Auf Artikeln anzeigen",
+        "showOnPages": "Auf Seiten anzeigen",
+        "showForLoginStatus": "Anzeigen für",
+        "html": "HTML-Code",
+        "loginStatus": {
+          "ALL": "alle",
+          "LOGGED_IN": "nur eingeloggt",
+          "LOGGED_OUT": "nur ausgeloggt",
+          "SUBSCRIBED": "nur abonniert",
+          "UNSUBSCRIBED": "nicht abonniert"
+        },
+        "actions": "Aktionen",
+        "image": "Bild",
+        "action": {
+          "add": "Aktion hinzufügen",
+          "label": "Beschriftung",
+          "url": "URL",
+          "style": "Stil",
+          "role": "Funktion"
+        }
+      },
+      "list": {
+        "title": "Banner",
+        "text": "Text",
+        "createNew": "Neu erstellen",
+        "active": "Aktiv",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "actions": {
+        "add": "Aktion hinzufügen",
+        "role": {
+          "PRIMARY": "Primär",
+          "CANCEL": "Abbrechen",
+          "OTHER": "Andere"
+        }
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Bearbeiten",
+        "label": "Crowdfunding",
+        "title": "Crowdfunding auswählen",
+        "name": "Name des Crowdfundings",
+        "select": "Auswählen",
+        "open": "öffnen"
+      },
       "comment": {
-        "title": "Kommentarblock Bearbeiten",
+        "cherryPick": "Spezifische Kommentare auswählen",
+        "comments": "{{count}} Kommentar",
+        "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
+        "displayName": "Anzeigename",
         "edit": "Bearbeiten",
         "filterByTag": "Kommentare filtern nach Tag",
-        "commentsFilterByTagInformation": "Alle untenstehenden Kommentare werden angezeigt",
-        "cherryPick": "Spezifische Kommentare auswählen",
-        "displayName": "Anzeigename",
-        "comments": "{{count}} Kommentar",
-        "comments_plural": "{{count}} Kommentare",
-        "label": "Kommentare"
+        "label": "Kommentare",
+        "title": "Kommentarblock Bearbeiten"
       },
-      "poll": {
-        "title": "Umfrageblock Bearbeiten",
-        "edit": "Bearbeiten",
-        "select": "Auswählen",
-        "label": "Umfrage"
-      },
-      "event": {
-        "title": "Eventblock Bearbeiten",
-        "edit": "Bearbeiten",
-        "filterByTag": "Events filtern nach Tag",
-        "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
-        "cherryPick": "Spezifische Events auswählen",
-        "events": "{{count}} Event",
-        "events_plural": "{{count}} Events",
-        "label": "Events"
+      "teaserList": {
+        "label": "Teaser Liste",
+        "teasers": "{{count}} Teaser geladen",
+        "teaserType": "{{teaserType}} Teaser werden geladen",
+        "teaserTypeLabel": "Teaser-Typ",
+        "skip": "Die ersten {{skip}} Teaser überspringen",
+        "skipLabel": "Wieviele Teaser sollen übersprungen werden",
+        "take": "Bis zu {{take}} Teaser anzeigen",
+        "takeLabel": "Wieviele Teaser sollten geladen werden",
+        "tags": "Nur mit diesen Tags anzeigen: {{tags}}",
+        "tagsLabel": "Welche Tags sollten geladen werden",
+        "edit": "Teaser Liste bearbeiten",
+        "sort": "Sortiert nach {{sort}}",
+        "sortLabel": "Sortieren nach"
       },
       "embeds": {
         "label": "Embed",
@@ -253,19 +307,48 @@
           "editEmbed": "Embed bearbeiten"
         },
         "panels": {
+          "alternativeStyling": "Setze <code>style</code> alternativ als Attribut, um die Voreinstellungen zu überschreiben und die automatische Grössenskalierung zu deaktivieren z.B.",
           "close": "Schliessen",
           "confirm": "Bestätigen",
           "editEmbed": "Embed bearbeiten",
           "embed": "Einbinden",
+          "embedCodeAttributes": "Embed-Code-Attribute <code>title, src, width, heigh</code> werden z.B. validiert.",
           "fbPosts": "https://www.facebook.com/id/posts/id/",
+          "GDPRInfo": "Aufgrund von Validierung, Shareable Peers und GDPR-Konformität sind die Embed-Blocks derzeit auf einfache iframes und die oben aufgeführten unterstützten Einbettungen beschränkt.",
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
           "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
           "invalidURL": "Ungültige URL oder iFrame-Code",
-          "GDPRInfo": "Aufgrund von Validierung, Shareable Peers und GDPR-Konformität sind die Embed-Blocks derzeit auf einfache iframes und die oben aufgeführten unterstützten Einbettungen beschränkt.",
-          "embedCodeAttributes": "Embed-Code-Attribute <code>title, src, width, heigh</code> werden z.B. validiert.",
-          "alternativeStyling": "Setze <code>style</code> alternativ als Attribut, um die Voreinstellungen zu überschreiben und die automatische Grössenskalierung zu deaktivieren z.B.",
           "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, TikTok Video, Polis Conversation formatiert wie z.B."
         }
+      },
+      "event": {
+        "cherryPick": "Spezifische Events auswählen",
+        "edit": "Bearbeiten",
+        "events": "{{count}} Event",
+        "eventsFilterByTagInformation": "Alle untenstehenden Events werden angezeigt",
+        "filterByTag": "Events filtern nach Tag",
+        "label": "Events",
+        "title": "Eventblock Bearbeiten"
+      },
+      "flexTeaser": {
+        "addBlock": "Block hinzufügen",
+        "chooseTeaser": "Teaser wählen",
+        "deleteTeaser": "Teaser löschen",
+        "editTeaser": "Teaser bearbeiten",
+        "lockBlock": "Sperren",
+        "removeBlock": "Block entfernen",
+        "unlockBlock": "Entsperren"
+      },
+      "html": {
+        "close": "Schliessen",
+        "confirm": "Bestätigen",
+        "edit": "HTML bearbeiten",
+        "label": "HTML",
+        "placeholder": "Füge hier deinen HTML Block ein",
+        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
+      },
+      "subscribe": {
+        "label": "Abonnieren"
       },
       "image": {
         "label": "Bild",
@@ -278,79 +361,56 @@
       "imageGallery": {
         "label": "Bildgalerie",
         "overview": {
-          "add": "Hinzufügen",
-          "caption": "Bildunterschrift",
-          "chooseImage": "Bild wählen",
-          "editImage": "Bild bearbeiten",
-          "next": "Nächstes",
-          "previous": "Vorheriges",
-          "removeImage": "Bild entfernen",
-          "editGalleryList": "Galerie-Liste bearbeiten"
+          "caption": "Bildunterschrift"
         },
         "panels": {
           "caption": "Bildunterschrift",
-          "chooseImage": "Bild wählen",
           "close": "Schliessen",
-          "editGallery": "Galerie bearbeiten",
-          "editImage": "Bild bearbeiten",
-          "removeImage": "Bild entfernen"
+          "editGallery": "Galerie bearbeiten"
         }
       },
       "linkPageBreak": {
         "label": "Umbruch",
-        "linkText": "Link-Text",
-        "linkURL": "Link-URL",
-        "text": "Text",
         "title": "Titel"
       },
       "listicle": {
-        "label": "Listicle",
-        "chooseImage": "Bild wählen",
-        "editImage": "Bild bearbeiten",
-        "removeImage": "Bild entfernen",
-        "title": "Titel"
+        "title": "Titel",
+        "label": "Listicle"
+      },
+      "poll": {
+        "edit": "Bearbeiten",
+        "label": "Umfrage",
+        "select": "Auswählen",
+        "title": "Umfrageblock Bearbeiten"
       },
       "quote": {
-        "label": "Zitat",
         "author": "Autor*in",
+        "label": "Zitat",
         "quote": "Zitat"
       },
       "richText": {
-        "label": "Rich text",
-        "apply": "Anwenden",
-        "cancel": "Abbrechen",
         "charCount": "Anzahl Zeichen {{charCount}}",
         "insert": "Einfügen",
+        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
+        "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen.",
+        "label": "Rich text",
         "link": "Link",
-        "optionalDescription": "Optionale Beschreibung für Link",
         "remove": "Entfernen",
         "startWriting": "Beginne zu schreiben ...",
         "text": "Text",
-        "invalidLink": "Dieser Link ist ungültig. URL überprüfen und nochmals versuchen.",
-        "invalidMail": "Diese Mailadresse ist ungültig. Mail überprüfen und nochmals versuchen."
-      },
-      "html": {
-        "label": "HTML",
-        "edit": "HTML bearbeiten",
-        "confirm": "Bestätigen",
-        "close": "Schliessen",
-        "placeholder": "Füge hier deinen HTML Block ein",
-        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
+        "id": "ID"
       },
       "richTextTable": {
-        "label": "Rich text Tabelle",
         "addBorders": "Rahmen hinzufügen",
+        "border": "Rand",
         "cancel": "Abbrechen",
         "columns": "Spalten",
         "deleteTable": "Tabelle löschen",
         "insertTable": "Tabelle einfügen",
-        "rows": "Zeilen",
-        "border": "Rand"
+        "rows": "Zeilen"
       },
-      "title": {
-        "label": "Titel",
-        "leadText": "Lead-Text ",
-        "title": "Titel"
+      "teaserFlexGrid": {
+        "label": "Flexible Teaser Grids"
       },
       "teaserGrid1": {
         "label": "1 Kol"
@@ -358,17 +418,14 @@
       "teaserGrid6": {
         "label": "6 Kol"
       },
-      "teaserFlexGrid": {
-        "label": "Flexible Teaser Grids"
+      "teaserSlots": {
+        "label": "Teaser Slots"
       },
-      "flexTeaser": {
-        "removeBlock": "Block entfernen",
-        "lockBlock": "Sperren",
-        "unlockBlock": "Entsperren",
-        "chooseTeaser": "Teaser wählen",
-        "editTeaser": "Teaser bearbeiten",
-        "deleteTeaser": "Teaser löschen",
-        "addBlock": "Block hinzufügen"
+      "title": {
+        "label": "Titel",
+        "leadText": "Lead-Text",
+        "title": "Titel",
+        "preTitle": "Oberzeile"
       }
     },
     "cancel": "Abbrechen",
@@ -379,151 +436,239 @@
       "removeImage": "Bild entfernen"
     },
     "close": "Schliessen",
+    "commentDeleteBtn": {
+      "modalBody": "Wenn Du diesen Kommentar löscht, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden.",
+      "modalTitle": "Wirklich löschen?"
+    },
+    "commentEditView": {
+      "featured": "Hervorgehoben",
+      "actions": "Aktionen",
+      "comment": "Text Kommentar",
+      "commentContextHeader": "Kommentar-Historie",
+      "goToArticle": "Zum Artikel",
+      "lead": "Lead",
+      "noOverride": "Nicht überschreiben",
+      "ratingOverrides": "Kommentarbewertung überschreiben",
+      "source": "Quelle",
+      "tags": "Tags",
+      "title": "Titel",
+      "userPanelHeader": "Verfasser:in des Kommentars",
+      "variousPanelHeader": "Tags & Quelle",
+      "featuredHelpText": "Der Kommentar erscheint zu oberst in der Liste der Kommentare."
+    },
+    "commentHistory": {
+      "addComment": "Neuen Kommentar erstellen",
+      "guestUser": "Unauthentifizierter Gast",
+      "unknownUser": "Benutzer ohne Namen"
+    },
+    "commentPreview": {
+      "editComment": "Kommentar bearbeiten",
+      "noContent": "Dieser Kommentar hat keinen Inhalt.",
+      "noSource": "Keine Quelle",
+      "noTags": "Keine Tags",
+      "source": "Quelle"
+    },
     "comments": {
+      "edit": {
+        "success": "Kommentar erfolgreich editiert",
+        "title": "Kommentar editieren",
+        "unnamedTag": "<Unbennanter Tag>"
+      },
       "overview": {
         "action": "Aktion",
-        "moderation": "Moderation",
-        "edit": "Kommentar editieren",
         "comments": "Kommentare",
-        "created": "Erstellt",
-        "loadMore": "Mehr laden",
-        "search": "Suchen",
-        "state": "Status",
-        "text": "Text",
-        "title": "Titel",
-        "untitled": "Ohne Titel",
-        "updated": "Bearbeitet",
+        "edit": "Kommentar editieren",
+        "editState": "Status bearbeiten",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
-        "userName": "User Name",
-        "requestChange": "Änderung verlangen",
-        "reject": "Ablehnen",
-        "approve": "Freigeben",
-        "editState": "Status bearbeiten"
-      },
-      "edit": {
-        "title": "Kommentar editieren",
-        "tags": "Tags",
-        "unnamedTag": "<Unbennanter Tag>",
-        "loading": "Laden",
-        "success": "Kommentar erfolgreich editiert"
+        "text": "Text",
+        "updated": "Bearbeitet",
+        "userName": "User Name"
       },
       "panels": {
         "approve": "Annehmen",
         "approveComment": "Kommentar freischalten",
         "cancel": "Abbrechen",
-        "chooseRejectionReason": "Wähle einen Ablehnungsgrund",
-        "close": "Schliessen",
-        "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "id": "ID",
+        "modifiedAt": "{{modifiedAt, ccc PP p}}",
+        "noUserName": "Kein Benutzername",
+        "parent": "Elter",
+        "parentDate": "{{parentDate,ccc PP p}}",
         "reject": "Ablehnen",
         "rejectComment": "Kommentar ablehnen",
         "rejectionReason": "Ablehnungsgrund",
         "requestChanges": "Änderungen beantragen",
         "requestChangesOnComment": "Änderungen am Kommentar beantragen",
         "requestChangesReason": "Grund",
-        "revisionCreatedAt": "Revision erstellt am",
         "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Revisionen",
-        "untitled": "Kein Titel",
-        "updatedAt": "Aktualisiert am",
-        "userName": "User Name",
-        "parent": "Elter",
-        "parentDate": "{{parentDate,ccc PP p}}",
-        "modifiedAt": "{{modifiedAt, ccc PP p}}",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}",
         "unregisteredUser": "(Nicht registrierter Benutzer)",
-        "noUserName": "Kein Benutzername"
+        "updatedAt": "Aktualisiert am",
+        "userName": "User Name"
+      },
+      "ratingEdit": {
+        "areYouSure": "Bist Du sicher?",
+        "areYouSureBody": "Die Bewertung \"{{ answer }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Berwertung löschen",
+        "loading": "Laden",
+        "newAnswer": "Berwertung hinzufügen",
+        "placeholder": "Name der Berwertung",
+        "title": "Bewertungssystem",
+        "updateSuccessful": "Bewertungssystem erfolgreich gespeichert."
       },
       "state": {
         "approved": "Angenommen",
         "pendingApproval": "Freigabe ausstehend",
         "pendingUserChanges": "Useränderung ausstehend",
         "rejected": "Abgelehnt"
-      },
-      "ratingEdit": {
-        "title": "Bewertungssystem",
-        "loading": "Laden",
-        "areYouSure": "Bist Du sicher?",
-        "areYouSureBody": "Die Bewertung \"{{ answer }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
-        "areYouSureConfirmation": "Berwertung löschen",
-        "placeholder": "Name der Berwertung",
-        "newAnswer": "Berwertung hinzufügen",
-        "updateSuccessful": "Bewertungssystem erfolgreich gespeichert."
       }
     },
-    "commentEditView": {
-      "title": "Titel",
-      "lead": "Lead",
-      "comment": "Text Kommentar",
-      "variousPanelHeader": "Tags & Quelle",
-      "tags": "Tags",
-      "source": "Quelle",
-      "userPanelHeader": "Verfasser:in des Kommentars",
-      "actions": "Aktionen",
-      "ratingOverrides": "Kommentarbewertung überschreiben",
-      "noOverride": "Nicht überschreiben",
-      "commentContextHeader": "Kommentar-Historie",
-      "goToArticle": "Zum Artikel"
-    },
-    "commentHistory": {
-      "guestUser": "Unauthentifizierter Gast",
-      "unknownUser": "Benutzer ohne Namen",
-      "addComment": "Neuen Kommentar erstellen"
-    },
-    "commentPreview": {
-      "noTags": "Keine Tags",
-      "source": "Quelle",
-      "noSource": "Keine Quelle",
-      "editComment": "Kommentar bearbeiten",
-      "noContent": "Dieser Kommentar hat keinen Inhalt."
-    },
     "commentUser": {
-      "selectExistingUser": "Registrierte Benutzer:in wählen",
       "guestUser": "Gast (Benutzername)",
+      "selectExistingUser": "Registrierte Benutzer:in wählen",
       "selectImage": "Profilbild des Gastes wählen oder hochladen"
     },
-    "replyCommentBtn": {
-      "reply": "Auf Kommentar antworten",
-      "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
-    },
-    "commentDeleteBtn": {
-      "modalTitle": "Wirklich löschen?",
-      "modalBody": "Wenn Du diesen Kommentar löscht, ist dies unwiderruflich. Der Kommentar kann nicht wiederhergestellt werden."
-    },
     "confirm": "Bestätigen",
+    "consents": {
+      "create": "Neuer Konsens erstellen",
+      "defaultValue": "Standardwert",
+      "defaultValueTitle": "Default value (checked by default)",
+      "name": "Name",
+      "slug": "Slug",
+      "title": "Konsens",
+      "titleCreate": "Konsens erstellen",
+      "titleEdit": "Konsens bearbeiten",
+      "uniqueConstraint": "A consent with slug '\"{{slug}}\"' already exists. Please choose a different slug."
+    },
     "create": "Erstellen",
+    "createAndClose": "Erstellen & Schliessen",
+    "createOrEditUserPassword": {
+      "sendLoginLink": "Login-Link per E-Mail versenden?",
+      "sendLoginLinkContent": "Willst Du {{email}} einen Link senden, mit der sich {{firstName}} {{name}} mit seinen bestehenden Rechten einloggen kann?"
+    },
+    "createOrUpdateUserPassword": {
+      "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"
+    },
+    "currency": {
+      "chf": "chf"
+    },
+    "dashboard": {
+      "activity": "Letzte Aktivitäten",
+      "dashboard": "Dashboard",
+      "greeting": "Hallo, {{name}}!",
+      "newArticle": "Neuer <0>Artikel</0> erstellt",
+      "newAuthor": "Neuer <0>Author</0> erstellt",
+      "newComment": "Neuer <0>Kommentar</0>",
+      "newEvent": "Neues <0>event</0>",
+      "newPage": "Neue <0>Seite</0> erstellt",
+      "newPoll": "Neue <0>Umfrage</0>",
+      "newSubscription": "Neues <0>Abo</0>",
+      "newUser": "Neuer <0>User</0> erstellt",
+      "noData": "Keine aktuellen Abo-Daten",
+      "user": "Benutzer",
+      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Zum Audience Dashboard"
+    },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
+      "nextMonday": "Nächsten Montag",
       "nextSaturday": "Nächster Samstag",
       "now": "Jetzt",
       "today": "Heute",
-      "tomorrow": "Morgen",
-      "nextMonday": "Nächsten Montag"
+      "tomorrow": "Morgen"
+    },
+    "delete": "Löschen",
+    "deletePollModal": {
+      "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
+      "deleteBtn": "Ja, löschen",
+      "title": "Umfrage löschen?"
+    },
+    "draggableSubscriptionInterval": {
+      "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
+    },
+    "errorMessages": {
+      "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
+      "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
+      "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
+      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} {{currency}}.",
+      "noAmountErrorMessage": "Der Betrag ist 5, wenn Du nichts eingibst",
+      "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
+      "noEmailErrorMessage": "Bitte E-Mail eingeben",
+      "noImageErrorMessage": "Bild fehlt",
+      "noMemberPlanErrorMessage": "Bitte gib den Member-Plan ein",
+      "noNameErrorMessage": "Bitte Namen eingeben",
+      "noPasswordErrorMessage": "Bitte Passwort eingeben",
+      "noPaymentMethodErrorMessage": "Bitte gib eine Bezahl-Methode ein",
+      "noPaymentPeriodicityErrorMessage": "Bitte gib die Bezahl-Periodizität ein",
+      "noPaymentProviderErrorMessage": "Bitte gib den Zahlungs-Anbieter ein",
+      "noTokenErrorMessage": "Bitte gib den Token ein",
+      "noUrlErrorMessage": "Bitte URL eingeben",
+      "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
+      "passwordTooShortErrorMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
+      "required": "Dieses Feld ist erforderlich",
+      "invalidCountry": "Bitte ein gültiges Land auswählen"
+    },
+    "event": {
+      "create": {
+        "title": "Event Erstellen"
+      },
+      "delete": {
+        "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
+        "delete": "Ja, lösche das Event",
+        "title": "Event Löschen?"
+      },
+      "edit": {
+        "title": "Event Bearbeiten"
+      },
+      "form": {
+        "cancelled": "Abgesagt",
+        "description": "Beschreibung",
+        "endsAt": "Ended um",
+        "externalSource": "External source (for imported events)",
+        "image": "Bild",
+        "location": "Veranstaltungsort",
+        "name": "Name",
+        "lead": "Lead",
+        "postponed": "Verschoben",
+        "rescheduled": "Verlegt",
+        "scheduled": "Geplant",
+        "startsAt": "Startet um",
+        "status": "Status",
+        "tags": "Tags"
+      },
+      "list": {
+        "create": "Neues Event erstellen",
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "endsAt": "Ended um {{endsAt, ccc PP p}}",
+        "endsAtNone": "Offenes Ende",
+        "name": "Name",
+        "startsAt": "Startet um {{startsAt, ccc PP p}}",
+        "title": "Events"
+      }
     },
     "images": {
       "overview": {
-        "imageLibrary": "Bilder",
-        "loadMore": "Mehr laden",
-        "noImagesFound": "Keine Bilder gefunden",
-        "search": "Suchen",
-        "uploadImage": "Bild hochladen",
         "actions": "Aktionen",
-        "image": "Bild",
+        "description": "Beschreibung",
+        "edit": "Bearbeiten",
         "filename": "Filename",
+        "image": "Bild",
+        "imageLibrary": "Bilder",
+        "noDescription": "Keine Beschreibung",
         "title": "Titel",
         "untitled": "Ohne Titel",
-        "noDescription": "Keine Beschreibung",
-        "description": "Beschreibung",
-        "edit": "Bearbeiten"
+        "uploadImage": "Bild hochladen"
       },
       "panels": {
-        "addTag": "Enter drücken, um Tag hinzuzufügen",
+        "attribution": "Attribut",
         "cancel": "Abbrechen",
-        "chooseIMage": "Bild wählen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "created": "Erstellt",
+        "createdAt": "{{createdAt, ccc PP p}}",
         "deleteImage": "Bild löschen?",
         "description": "Beschreibung",
         "dimension": "Dimension",
@@ -535,7 +680,9 @@
         "information": "Information",
         "license": "Lizenz",
         "link": "Link",
+        "linkUrl": "Zieladresse",
         "notFound": "Bild nicht gefunden!",
+        "resizedImage": "Die Bildgrösse wird beim Hochladen automatisch auf ca. {{sizeMB}} MB reduziert.",
         "source": "Quelle",
         "sourceLink": "Link zur Original-Quelle des Bildes.",
         "tags": "Tags",
@@ -543,24 +690,35 @@
         "untitled": "Ohne Titel",
         "Untitled": "Ohne Titel",
         "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Hochladen",
         "uploadImage": "Bild hochladen",
-        "attribution": "Attribut",
-        "updatedAt": "{{updatedAt, ccc PP p}}",
-        "createdAt": "{{createdAt, ccc PP p}}",
-        "resizedImage": "Die Bildgrösse wird beim Hochladen automatisch auf ca. {{sizeMB}} MB reduziert.",
         "urlPlaceholder": "https://www.link.com"
       }
     },
-    "linkPageBreakEditPanel": {
-      "layout": {
-        "center": "Zentriert",
-        "default": "Standardlayout",
-        "image-left": "Bild links",
-        "image-right": "Bild rechts",
-        "label": "Layouts",
-        "right": "Rechtsbündig"
+    "importableEvent": {
+      "import": "Import",
+      "imported": "Imported",
+      "title": "Importable events"
+    },
+    "invoice": {
+      "areYouSure": "Bist Du sicher?",
+      "canceledAt": "Storniert am",
+      "invoiceNo": "Rechnung Nr.",
+      "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
+      "paidAt": "Bezahlt am",
+      "panel": {
+        "invoiceHistory": "Rechnungsverlauf",
+        "missingSubscriptionId": "Unerwarteter Fehler: Die subscriptionId konnte nicht gefunden werden.",
+        "noInvoices": "Keine Rechnungen vorhanden."
       },
+      "payManually": "Manuell bezahlen",
+      "total": "Rechnungsbetrag",
+      "unpaid": "(unbezahlt)",
+      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden."
+    },
+    "linkPageBreakEditPanel": {
+      "close": "Schliessen",
       "link": {
         "buttonLabel": "CTA-Button-Label",
         "hideToggleLabel": "CTA-Button ausblenden",
@@ -568,162 +726,119 @@
         "targetLabel": "Link öffnen in",
         "targetLabelBlank": "Neuer Browser-Tab",
         "targetLabelSelf": "Dieser Browser-Tab",
-        "urlLabel": "CTA-URL",
-        "urlPlaceholder": "https://..."
+        "urlLabel": "CTA-URL"
       },
-      "style": {
-        "dark": "Dark Style",
-        "default": "Standardstyle",
-        "image": "Bildhintergrund",
-        "label": "Styles"
-      },
-      "template": {
-        "donation": "Spende",
-        "label": "Vorlagen",
-        "subscription": "Abonnement",
-        "none": "Keine",
-        "membership": "Mitgliedschaft"
-      },
-      "title": "Einstellungen",
-      "close": "Schliessen"
+      "title": "Einstellungen"
     },
     "login": {
-      "alternativeLogin": "Oder einloggen mit: ",
-      "currentPassword": "Aktuelles Passwort",
+      "email": "Email",
       "login": "Login",
       "password": "Passwort",
-      "username": "Username",
-      "O2Auth": "Authentifizierung mit OAuth2: ",
-      "unauthorized": "User hat keine Berechtigung fürs Login",
-      "email": "Email"
+      "unauthorized": "User hat keine Berechtigung fürs Login"
+    },
+    "mailTemplates": {
+      "availableTemplates": "Verfügbare E-Mail-Templates",
+      "content": "Inhalt",
+      "description": "Beschreibung",
+      "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
+      "goToPlaceholders": "Verfügbare Placeholders",
+      "name": "Name",
+      "showPlaceholders": "Placeholder Dokumentation",
+      "status": "Status",
+      "synchronize": "Templates synchronisieren",
+      "view": "Auf {{provider}} ansehen"
+    },
+    "mailTemplateSelect": {
+      "noMailSentSelectNow": "Kein Mailversand"
+    },
+    "memberPlanEdit": {
+      "active": "Aktiv",
+      "activeDescription": "Plan verfügbar machen",
+      "currency": "Währung",
+      "currencyRequired": "Währung erforderlich",
+      "amountPerMonthMin": "Minimaler Betrag / Monat",
+      "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
+      "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
+      "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
+      "createMemberPlanHeader": "Erstelle Memberplan",
+      "description": "Beschreibung",
+      "shortDescription": "Kurze Beschreibung",
+      "editPaymentSetting": "Zahlungseinstellung bearbeiten",
+      "forceAutoRenewal": "Automatische Erneuerung erzwingen",
+      "loadingTitle": "Lade",
+      "name": "Name",
+      "nameRequired": "Name erforderlich",
+      "noMemberPlanName": "Memberplan ohne Namen",
+      "paymentConfigs": "Zahlungseinstellungen",
+      "saveAndCloseBtnTitle": "Speichern & Schliessen",
+      "saveBtnTitle": "Speichern",
+      "slug": "Slug",
+      "slugRequired": "Slug erforderlich",
+      "tags": "Tags",
+      "savedChanges": "Gespeichert",
+      "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
     },
     "memberPlanList": {
       "action": "Aktionen",
-      "active": "Aktiv",
-      "activeDescription": "Plan verfügbar machen",
-      "adapter": "Zahlungsadapter",
-      "autoRenewal": "Automatische Erneuerung erzwingen",
-      "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createNew": "Neuer Memberplan",
-      "createTitle": "Memberplan erstellen",
       "deleteModalTitle": "Memberplan löschen",
-      "description": "Beschreibung",
-      "editTitle": "Memberplan bearbeiten",
-      "fixPrice": "Fixpreis",
+      "editFlow": "Kommunikationsfluss bearbeiten",
+      "editFlowShort": "Kommunikationsfluss",
       "name": "Name",
       "paymentMethods": "Mögliche Zahlungsmethoden",
       "paymentPeriodicities": "Zahlungsperiodizitäten",
       "paymentPeriodicity": {
-        "BIANNUAL": "Halbjährlich",
-        "QUARTERLY": "Vierteljährlich",
-        "YEARLY": "Jährlich",
-        "MONTHLY": "Monatlich"
+        "biannual": "Halbjährlich",
+        "monthly": "Monatlich",
+        "quarterly": "Vierteljährlich",
+        "yearly": "Jährlich",
+        "biennial": "Zweijährlich",
+        "lifetime": "Lebenslang"
       },
-      "priceRange": "Preis-(spanne) in CHF",
-      "title": "Memberpläne",
-      "fixPriceDescription": "Bei false kann der Preis eine Preisspanne sein",
-      "minimumMonthlyAmount": "Minimaler monatlicher Betrag CHF",
-      "slug": "Slug",
-      "errorMessage": "Gib eine Nummer ein"
-    },
-    "pollList": {
-      "title": "Umfragen",
-      "createNew": "Umfrage erstellen",
-      "question": "Frage",
-      "opensAt": "Beginnt am",
-      "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
-      "pollWillOpenAt": "Beginnt am {{opensAt, ccc PP p}}",
-      "noQuestion": "Keine Frage erfasst",
-      "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
-      "closedAt": "Geschlossen am",
-      "closedAtNone": "Nicht geschlossen",
-      "answersCount": "Erfasste Antworten",
-      "state": "Status",
-      "delete": "Löschen",
-      "pollDeleted": "Umfrage gelöscht."
-    },
-    "deletePollModal": {
-      "title": "Umfrage löschen?",
-      "body": "Willst Du die Umfrage \"{{pollQuestion}}\" wirklich löschen?",
-      "deleteBtn": "Ja, löschen"
-    },
-    "pollEditView": {
-      "loadingTitle": "Lade Umfrage...",
-      "saveTitle": "Speichern",
-      "saveAndCloseTitle": "Speichern & Schliessen",
-      "question": "Frage",
-      "toBeOrNotToBe": "Sein oder nicht sein?",
-      "questionRequired": "Bitte gib Deine Frage ein.",
-      "savedSuccessfully": "Umfrage gespeichert.",
-      "questionPanelHeader": "Frage",
-      "answerPanelHeader": "Mögliche Antworten",
-      "addAndSaveNewAnswer": "Antwort hinzufügen",
-      "settingsPanelHeader": "Einstellungen Publikation",
-      "opensAtLabel": "Startet am",
-      "closesAtLabel": "Schliesst am",
-      "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
-      "infoText": "Info-Text",
-      "defaultAnswer": "Standardantwort"
-    },
-    "pollAnswer": {
-      "insertYourNewAnswer": "Neue Antwort eingeben",
-      "deleteModalTitle": "Löschen?",
-      "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
-      "deleteBtn": "Löschen",
-      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
-      "copyVoteUrl": "Kopiere Abstimmungs-Link",
-      "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
-      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
-      "votes": "Stimmen"
-    },
-    "pollExternalVotes": {
-      "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
-      "addSourceBtn": "Hinzufügen",
-      "sourceHeaderCell": "Quelle",
-      "deleteTitle": "Löschen?",
-      "deleteBody": "Willst Du die Quelle \"{{source}}\" unwiderruflich löschen?",
-      "deleteExternalVoteBtn": "Löschen",
-      "emptySource": "Bitte Name der Quelle eingeben."
-    },
-    "pollStateIndication": {
-      "closed": "Umfrage geschlossen",
-      "open": "Umfrage läuft",
-      "waiting": "Umfrage wartet auf Öffnung am {{date, ccc PP p}}"
+      "title": "Abo Pläne"
     },
     "navbar": {
+      "articles": "Artikel",
+      "authors": "Autor*innen",
+      "banners": "Banner",
+      "blocks": {
+        "polls": "Umfrage",
+        "blockStyles": "Block Styling",
+        "topMenu": "Inhalts-Blöcke",
+        "crowdfundings": "Crowdfundings"
+      },
+      "commentRating": "Bewertungssystem",
+      "comments": "Kommentare",
+      "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
+      "consents": "Konsens",
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
-      "articles": "Artikel",
-      "blocks": {
-        "topMenu": "Inhalts-Blöcke",
-        "polls": "Umfrage"
-      },
-      "authors": "Autor*innen",
-      "comments": "Kommentare",
-      "commentRating": "Bewertungssystem",
-      "commentTags": "Tags",
       "imageLibrary": "Bilder",
-      "settings": "Einstellungen",
-      "languageSwitch": {
-        "close": "Schliessen",
-        "currentLanguage": "Englisch",
-        "selectNewLanguage": "Neue Sprache auswählen"
-      },
+      "importableEvents": "Importable Events",
       "logout": "Logout",
-      "memberPlans": "Memberpläne",
+      "mailTemplates": "E-Mail-Vorlagen",
+      "memberPlans": "Abo Pläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
       "paymentMethods": "Zahlungsmethoden",
+      "peerArticles": "Peerbare Artikel",
       "peering": "Peering",
+      "peers": "Peers",
+      "settings": "Einstellungen",
+      "subscriptionPlans": "Abo Pläne",
+      "subscriptions": "Abonnements",
+      "subscriptionSettings": "Default Mailing",
+      "tokens": "Tokens",
+      "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
       "users": "User",
-      "usersAndMembers": "User & Member",
-      "tokens": "Tokens",
-      "myPeerInfo": "Meine Peer Infos",
-      "peers": "Peers",
-      "subscriptions": "Abonnements",
-      "peerArticles": "Peerbare Artikel"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -734,68 +849,68 @@
         "name": "Name",
         "navigations": "Navigationen",
         "newNavigation": "Neue Navigation",
-        "noNavigationsFound": "Keine Navigation gefunden",
-        "search": "Suchen",
         "unknown": "Unbekannt"
       },
       "panels": {
-        "article": "Artikel",
         "close": "Schliessen",
         "createNavigation": "Navigation erstellen",
         "editNavigation": "Navigation bearbeiten",
         "key": "Key",
         "label": "Label",
-        "links": "Links",
         "name": "Name",
-        "page": "Seite",
         "selectArticle": "Artikel auswählen",
         "selectPage": "Seite auswählen",
-        "url": "URL",
-        "createdAt": "{{testDate}} hallo"
+        "url": "URL"
       }
     },
+    "no": "Nein",
     "pageEditor": {
       "overview": {
-        "back": "Zurück",
-        "draft": "Entwurf",
+        "createComment": "Kommentar erstellen",
+        "duplicate": "Duplizieren",
         "metadata": "Metadaten",
+        "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "pageDraftCreated": "Seiten Entwurf erstellt",
         "pageDraftSaved": "Seiten Entwurf gespeichert",
         "pageNotFound": "Seite nicht gefunden",
-        "pending": "Publikation der Seite geplant am {{date, ccc PP p}}",
-        "publish": "Publizieren",
-        "preview": "Vorschau",
-        "previewDisabled": "Alle Änderungen an dieser Seite wurden bereits publiziert.",
-        "createComment": "Kommentar erstellen",
-        "unpublished": "Nicht publiziert",
-        "published": "Seite publiziert am {{date, ccc PP p}}",
+        "pagePending": "Seite geplant",
         "pagePublished": "Seite publiziert",
+        "pending": "Publikation der Seite geplant am {{date, ccc PP p}}",
+        "preview": "Vorschau",
+        "publish": "Publizieren",
+        "published": "Seite publiziert am {{date, ccc PP p}}",
         "publishedAt": "{{publicationDate, ccc PP p}}",
-        "modifiedAt": "{{modificationDate, ccc PP pp}}",
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Publikation widerrufen",
-        "pagePending": "Seite geplant",
-        "duplicate": "Duplizieren"
+        "unpublished": "Nicht publiziert"
       },
       "panels": {
-        "addTag": "Enter drücken um Tag hinzuzufügen",
-        "chooseImage": "Bild wählen",
         "close": "Schliessen",
         "confirm": "Bestätigen",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
         "description": "SEO Beschreibung",
         "descriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
-        "editImage": "Bild bearbeiten",
+        "enterDescription": "Bitte SEO-Beschreibung hinzufügen",
+        "enterImage": "Biite Bild hinzufügen",
+        "enterSocialMediaDescription": "Bitte Beschreibung für Social Media eingeben",
+        "enterSocialMediaTitle": "Bitte Titel für Social Media eingeben",
+        "enterTitle": "Bitte SEO-Titel eingeben",
         "image": "Bild",
-        "invalidDate": "Ungültiges Datum",
         "key": "Key",
         "metadata": "Metadaten",
         "metadataInfo": "Informationen aus diesen Feldern werden für Vorschauen in Social Media Posts verwendet. Wenn sie leer bleiben, werden stattdessen Informationen aus dem Tab \"Allgemein\" verwendet.",
+        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
+        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes publizieren überschreibt diese.",
         "postImage": "Bild für Post",
         "private": "Privat",
         "properties": "Eigenschaften",
+        "propertiesInfo": "Properties können pro Seite eingestellt werden. Public Properties sind über die public API zugänglich.",
         "public": "Öffentlich",
+        "publishAt": "Online verfügbar ab",
+        "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "publishDate": "Publikationsdatum",
-        "removeImage": "Bild entfernen",
+        "publishPage": "Seite publizieren",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -804,39 +919,21 @@
         "title": "SEO-Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "updateDate": "Update-Datum",
-        "value": "Wert",
-        "publishPage": "Seite publizieren",
-        "propertiesInfo": "Properties können pro Seite eingestellt werden. Public Properties sind über die public API zugänglich.",
-        "pagePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Ein erneutes publizieren überschreibt diese.",
-        "modifiedAt": "{{modifiedAt, ccc PP pp}}",
-        "createdAt": "{{createdAt, ccc PP p}}",
-        "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "updateDateWarning": "Das Update-Datum darf nicht vor dem Publikations-Datum liegen.",
         "url": "URL",
-        "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
-        "enterSocialMediaDescription": "Bitte Beschreibung für Social Media eingeben",
-        "enterDescription": "Bitte SEO-Beschreibung hinzufügen",
-        "enterImage": "Biite Bild hinzufügen",
-        "enterSocialMediaTitle": "Bitte Titel für Social Media eingeben",
-        "enterTitle": "Bitte SEO-Titel eingeben",
-        "enterSocialMediaImage": "Bitte Bild für Social Media hinzufügen",
-        "publishAt": "Online verfügbar ab"
+        "value": "Wert"
       }
     },
     "pages": {
       "overview": {
         "action": "Aktion",
-        "created": "Erstellt",
         "draft": "Entwurf",
-        "loadMore": "Mehr laden",
         "newPage": "Neue Seite",
-        "noPages": "Keine Seite gefunden",
         "notPublished": "Noch nicht publiziert",
         "pages": "Seiten",
         "pending": "Geplant",
         "publicationDate": "Publikationsdatum",
         "published": "Publiziert",
-        "search": "Suchen",
         "states": "Status",
         "title": "Titel",
         "untitled": "Kein Titel",
@@ -844,7 +941,6 @@
       },
       "panels": {
         "cancel": "Abbrechen",
-        "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "Erstellt am",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -854,7 +950,6 @@
         "publishedAt": "Publiziert am",
         "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titel",
-        "unpublish": "Publikation rückgängig machen",
         "unpublishPage": "Seitenpublikation rückgängig machen?",
         "untitled": "Kein Titel",
         "updatedAt": "Aktualisiert am",
@@ -863,77 +958,308 @@
     },
     "paymentMethodList": {
       "action": "Aktionen",
+      "active": "Aktiv",
       "activeDescription": "Macht die Methode verfügbar",
       "adapter": "Zahlungsadapter",
+      "providerName": "Zahlungsanbieter",
       "createNew": "Neue Zahlungsmethode",
       "createTitle": "Zahlungsmethode erstellen",
       "deleteModalTitle": "Zahlungsmethode löschen",
       "description": "Beschreibung",
       "editTitle": "Zahlungsmethode bearbeiten",
       "name": "Name",
+      "slug": "Slug",
       "title": "Zahlungsmethoden",
-      "active": "Aktiv",
-      "slug": "Slug"
+      "selectImage": "Vorschau Bild auswählen"
+    },
+    "peerArticles": {
+      "articleImage": "Teaserbild",
+      "filterByPeer": "Nach Peer filtern",
+      "lead": "Lead",
+      "peer": "Peer",
+      "peerArticles": "Peerbare Artikel",
+      "publicationDate": "{{publicationDate, ccc PP p}}",
+      "publishedAt": "Publikations Datum",
+      "title": "Titel",
+      "import": {
+        "import": "Importieren",
+        "title": "Artikel importieren",
+        "includeAuthors": "Autoren des Artikels importieren",
+        "includeAuthorsHint": "Importiert oder updated Autoren des Artikels. Falls eine andere Person bei euch den gleichen Namen trägt, werden die unterschieden.",
+        "includeTags": "Tags des Artikels importieren",
+        "includeTagsHint": "Importiert die Tags des Artikels solange sie nicht schon existieren.",
+        "includeImages": "Bilder des Artikels importieren",
+        "includeImagesHint": "Bilder welche in den Metadaten oder Blöcken des Artikels vorkommen werden auch importiert. Ist das gleiche Bild mehrmals vorhanden, wird dieses auch mehrmals importiert.",
+        "confirm": "Ja, Artikel importieren"
+      }
     },
     "peerList": {
       "overview": {
-        "newPeer": "Neuer Peer",
-        "noPeersFound": "Keine Peers gefunden",
-        "peers": "Peers",
-        "validURLTooltip": "Gültige URL",
+        "disable": "Deaktivieren",
+        "editProfile": "Profil bearbeiten",
+        "enable": "Aktivieren",
         "invalidURLTooltip": "Ungültige URL",
         "myPeerProfile": "Mein Peer Profil",
-        "editProfile": "Profil bearbeiten",
-        "disable": "Deaktivieren",
-        "enable": "Aktivieren"
+        "newPeer": "Neuer Peer",
+        "noPeersFound": "Keine Peers gefunden",
+        "peers": "Peers"
       },
       "panels": {
-        "callToAction": "Call to Action",
+        "callToActionImage": "Call To Action Bild",
+        "callToActionImageURL": "Call To Action Bild URL",
         "callToActionText": "Call to Action Text",
         "callToActionURL": "Call to Action URL",
         "cancel": "Abbrechen",
-        "chooseImage": "Bild wählen",
+        "checkOwnPeerProfileHelpBlock": "Vorschau deines eigenen Profils:",
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createPeer": "Peer erstellen",
+        "ctaImageInfo": "Empfohlene Call To Action Bildgrösse 728x90",
         "deletePeer": "Peer löschen",
-        "editImage": "Bild bearbeiten",
         "editPeer": "Peer bearbeiten",
         "editPeerInfo": "Peer-Info bearbeiten",
+        "getRemote": "Peer Profil abrufen",
         "image": "Bild",
-        "infoEditError": "Token Fehler bearbeiten",
+        "squareImage": "Quadratisches Bild",
         "information": "Information",
-        "invalidURL": "Ungültige URL",
+        "leaveEmpty": "Leer lassen, falls keine Änderungen erwünscht",
         "name": "Name",
         "peerCreated": "Peer erstellt",
-        "peeredToHost": "Sich selbst peeren nicht möglich",
         "peerInfoUpdated": "Peer-Info aktualisiert",
+        "peeringPreviewGuide": "Peering preview guide",
         "peerUpdated": "Peer aktualisiert",
-        "removeImage": "Bild entfernen",
+        "text": "Text",
         "themeColor": "Theme Farbe",
         "themeFontColor": "Schrift Farbe",
         "token": "Token",
-        "Unknown": "Unbekannt",
-        "URL": "URL: https://www.url.com",
-        "validateToken": "Bitte vor dem Speichern bestätigen, dass das Token korrekt ist",
-        "text": "Text",
-        "callToActionImage": "Call To Action Bild",
-        "leaveEmpty": "Leer lassen, falls keine Änderungen erwünscht",
-        "unnamed": "Unbenannt",
         "unknown": "Unbekannt",
-        "getRemote": "Peer Profil abrufen",
-        "logo": "Logo",
-        "ctaImageInfo": "Empfohlene Call To Action Bildgrösse 728x90",
-        "callToActionImageURL": "Call To Action Bild URL",
-        "checkOwnPeerProfileHelpBlock": "Vorschau deines eigenen Profils: <2>Peering preview guide</2>"
+        "unnamed": "Unbenannt",
+        "URL": "URL: https://www.url.com"
       }
     },
+    "periodicJobsLog": {
+      "concerns": "Betrifft: u.a. Abo-Erneuerung.",
+      "failedJob": "Fehlgeschlagen! Umgehend mit IT Kontakt aufnehmen.",
+      "jobFailedTitle": "Automatische Jobs ausgefallen! Umgehend mit IT Kontakt aufnehmen.",
+      "lastRunSuccessful": "Im letzten Durchlauf erfolgreich.",
+      "noRun": "Die automatische Erneuerung der Abos wurde nie ausgeführt.",
+      "startTime": "Gestarted: {{date, ccc PP p}}",
+      "successTime": "Erfolgreich: {{date, ccc PP p}}",
+      "title": "Automatische Job-Logs",
+      "tries": "Versuche: {{tries}}"
+    },
+    "permissions": {
+      "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}",
+      "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen."
+    },
+    "placeholderList": {
+      "description": {
+        "jwt": "jwt steht für JSON Web Token. Mit diesem Token kann sich der User einloggen. Hierzu muss das Token in der URL an das Frontend übergeben werden. In der Regel in dem man ?jwt=TOKEN an die URL anhängt. Rechter Hand findest du ein Beispiel.",
+        "optional_subscription_autoRenew": "Ob das Abo automatisch erneuert wird. Die Werte sind true oder false",
+        "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
+        "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
+        "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
+        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly, biennial, lifetime",
+        "optional_subscriptionID": "Eindeutige ID der Subscription.",
+        "user_email": "E-Mail des Users.",
+        "user_firstName": "Vorname des Users",
+        "user_id": "Eindeutige ID des Users.",
+        "user_name": "Nachname des Users."
+      },
+      "descriptionTitle": "Beschreibung",
+      "example": "Beispiel im Template",
+      "header": "Liste der verfügbaren Placeholder",
+      "placeholder": "Placeholder",
+      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos."
+    },
+    "pollAnswer": {
+      "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
+      "copyVoteUrl": "Kopiere Abstimmungs-Link",
+      "deleteBtn": "Löschen",
+      "deleteModalBody": "Willst Du die Antwort \"{{answer}}\" unwiderruflich löschen? Die Umfrageresultate gehen dabei verloren.",
+      "deleteModalTitle": "Löschen?",
+      "insertYourNewAnswer": "Neue Antwort eingeben",
+      "urlCopied": "Abstimmungs-Link in die Zwischenablage kopiert.",
+      "urlCopyingFailed": "Abstimmungs-Link konnte nicht kopiert werden.",
+      "votes": "Stimmen"
+    },
+    "pollEditView": {
+      "addAndSaveNewAnswer": "Antwort hinzufügen",
+      "answerPanelHeader": "Mögliche Antworten",
+      "closesAtLabel": "Schliesst am",
+      "infoText": "Info-Text",
+      "loadingTitle": "Lade Umfrage...",
+      "opensAtLabel": "Startet am",
+      "pollExternalVotesPanelHeader": "Externe Abstimmungsquellen",
+      "questionPanelHeader": "Frage",
+      "questionRequired": "Bitte gib Deine Frage ein.",
+      "saveAndCloseTitle": "Speichern & Schliessen",
+      "savedSuccessfully": "Umfrage gespeichert.",
+      "saveTitle": "Speichern",
+      "settingsPanelHeader": "Einstellungen Publikation",
+      "toBeOrNotToBe": "Sein oder nicht sein?"
+    },
+    "pollExternalVotes": {
+      "addSourceBtn": "Hinzufügen",
+      "deleteBody": "Willst Du die Quelle \"{{source}}\" unwiderruflich löschen?",
+      "deleteExternalVoteBtn": "Löschen",
+      "deleteTitle": "Löschen?",
+      "emptySource": "Bitte Name der Quelle eingeben.",
+      "newSourcePlaceholder": "Name der Abstimmungsquelle (z.B. Facebook)",
+      "sourceHeaderCell": "Quelle"
+    },
+    "pollList": {
+      "closedAt": "Geschlossen am",
+      "closedAtNone": "Nicht geschlossen",
+      "createNew": "Umfrage erstellen",
+      "delete": "Löschen",
+      "showVotes": "Stimmen anzeigen",
+      "hasBeenClosedAt": "Geschlossen am {{closedAt, ccc PP p}}",
+      "noQuestion": "Keine Frage erfasst",
+      "openedAt": "Begonnen am {{openedAt, ccc PP p}}",
+      "opensAt": "Beginnt am",
+      "pollDeleted": "Umfrage gelöscht.",
+      "pollWillOpenAt": "Beginnt am {{opensAt, ccc PP p}}",
+      "question": "Frage",
+      "state": "Status",
+      "title": "Umfragen"
+    },
+    "pollVoteList": {
+      "createdAt": "Erstellt am",
+      "answerId": "Antwort",
+      "userId": "Benutzer-ID",
+      "fingerprint": "Fingerabdruck",
+      "deleteItems": "Elemente löschen"
+    },
+    "pollStateIndication": {
+      "closed": "Umfrage geschlossen",
+      "open": "Umfrage läuft",
+      "waiting": "Umfrage wartet auf Öffnung am {{date, ccc PP p}}"
+    },
+    "replyCommentBtn": {
+      "reply": "Auf Kommentar antworten",
+      "tooltip": "Erstellt einen neuen Kommentar, welcher auf diesen Kommentar antwortet."
+    },
+    "resetUserPasswordForm": {
+      "sendMail": "Mail an User:in senden (Registration System Mail)"
+    },
     "save": "Speichern",
-    "delete": "Löschen",
     "saveAndClose": "Speichern & Schliessen",
-    "createAndClose": "Erstellen & Schliessen",
-    "yes": "Ja",
-    "no": "Nein",
+    "settingList": {
+      "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
+      "comments": "Kommentare",
+      "days": "Tage",
+      "errorTitle": "Fehler",
+      "guestCommenting": "Gastkommentare erlauben",
+      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
+      "login": "Login",
+      "loginMinutes": "Gültigkeitsdauer Email-Login-Token",
+      "minutes": "Minuten",
+      "ms": "Milisekunden",
+      "passwordToken": "Gültigkeitsdauer Email-Passwort-Reset-Token",
+      "payment": "Zahlung",
+      "peering": "Peering",
+      "peerToken": "Peering timeout",
+      "polls": "Umfragen",
+      "settings": "Einstellungen",
+      "successMessage": "Einstellungen erfolgreich aktualisiert!",
+      "successTitle": "Gespeichert",
+      "newArticlePeering": "Neue erstellte Artikel werden automatisch gepeered.",
+      "newArticlePaywall": "Neue erstellte Artikel benötigen ein Abo um gelesen zu werden.",
+      "warnings": {
+        "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
+        "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
+        "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
+        "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
+        "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
+        "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
+        "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
+        "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
+        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
+      }
+    },
+    "subscriptionFlow": {
+      "subscribe": "Abonnieren",
+      "renewal_success": "Verlängerung erfolgreich",
+      "renewal_failed": "Verlängerung fehlgeschlagen",
+      "deactivation_by_user": "Vom Benutzer deaktiviert",
+      "reactivation": "Reaktiviert",
+      "invoice_creation": "Rechnungserstellung",
+      "deactivation_unpaid": "Deaktivierung wegen unbezahlter Rechnung",
+      "custom": "Benutzerdefiniertes Ereignis",
+      "settings": "Abonnement-Ablauf Einstellungen",
+      "edit": "Abonnement-Ablauf bearbeiten",
+      "titleDefaultSettings": "Standard-Abonnement Einstellungen",
+      "settingsDescription": "Sie können diese Einstellungen für jeden Abonnementplan überschreiben.",
+      "addNew": "Neuen Ablauf erstellen",
+      "dayWithNumber": "Tag {{day}}",
+      "days": "Tage",
+      "savedChange": "Änderung erfolgreich gespeichert",
+      "add": "Hinzufügen",
+      "memberplan": "Mitgliedsplan",
+      "paymentMethod": "Zahlungsmethode",
+      "periodicity": "Periodizität",
+      "autoRenewal": "Automatische Verlängerung?",
+      "booleanFilter": {
+        "true": "Ja",
+        "false": "Nein"
+      },
+      "deleteFlowQuestion": "Das Löschen dieses Ablaufs ist permanent und kann nicht rückgängig gemacht werden. Möchten Sie trotzdem fortfahren?",
+      "deletePermanently": "Permanent löschen",
+      "dropHere": "Hier ablegen",
+      "filters": "Filter",
+      "subscriptionEvents": "Statische Abonnement-Ereignisse",
+      "timeline": "Zeitleiste",
+      "actions": "Aktionen",
+      "dayOfRenewal": "Tag der Verlängerung / Abonnement endet",
+      "subscriptionsAffected": "Filter gilt für {{numberOfSubscriptions}} Abonnements",
+      "confirm_subscription": "Abonnementbestätigung"
+    },
+    "subscriptionList": {
+      "filter": {
+        "deactivationReason": "Grund Deaktivierung",
+        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
+        "reasonNone": "Kein Grund",
+        "reasonUserSelfDeactivated": "Durch Benutzer:in",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
+        "reset": "Filter zurücksetzen",
+        "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
+      },
+      "overview": {
+        "createdAt": "Erstellt",
+        "createdAtDate": "{{createdAtDate, ccc PP p}}",
+        "deleted": "Gelöschte:r Benutzer:in",
+        "downloadCsv": "CSV herunterladen",
+        "email": "Email",
+        "memberPlan": "Member-Plan",
+        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
+        "name": "Name",
+        "newSubscription": "Neue Subscription",
+        "subscription": "Subscription"
+      },
+      "panels": {
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
+        "deleteSubscription": "Subscription löschen?",
+        "name": "Name",
+        "unknown": "Unbekannt"
+      }
+    },
+    "tags": {
+      "overview": {
+        "areYouSure": "Bist Du sicher?",
+        "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Tag löschen",
+        "createTag": "Neuer Tag",
+        "editTag": "{{tag}} Bearbeiten",
+        "placeholder": "Name des Tags",
+        "title": "Tags",
+        "name": "Name",
+        "description": "Beschreibung",
+        "markAsMain": "Als Haupt-Tag verwenden"
+      }
+    },
     "tokenList": {
       "overview": {
         "generateToken": "Token generieren",
@@ -948,81 +1274,75 @@
         "deleteToken": "Token löschen?",
         "deleteTokenText": "Willst du {{name}} löschen?",
         "generate": "Generieren",
-        "generateError": "Token konnte nicht erstellt werden",
         "generateToken": "Token generieren",
         "name": "Name",
-        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort.",
-        "Unknown": "Unbekannt"
+        "tokenWarning": "Token können später nicht mehr abgerufen werden. Speichere sie an einem sicheren Ort."
       }
     },
     "untitled": "Kein Titel",
-    "subscriptionList": {
-      "overview": {
-        "createdAt": "Erstellt",
-        "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "modifiedAt": "Zuletzt bearbeitet",
-        "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
-        "name": "Name",
-        "newSubscription": "Neue Subscription",
-        "exportSubscriptionsCsv": "CSV exportieren",
-        "unknown": "Unbekannt",
-        "deleted": "Gelöschte:r Benutzer:in",
-        "subscription": "Subscription",
-        "email": "Email",
-        "memberPlan": "Member-Plan",
-        "downloadCsv": "CSV herunterladen"
-      },
-      "filter": {
-        "deactivationReason": "Grund Deaktivierung",
-        "reasonNone": "Kein Grund",
-        "reasonUserSelfDeactivated": "Durch Benutzer:in",
-        "reasonInvoiceNotPaid": "Rechnung nicht bezahlt",
-        "reset": "Filter zurücksetzen",
-        "searchPlaceholder": "Suche nach Vorname, Name, E-Mail, Adresse, PLZ, Ort"
-      },
-      "panels": {
-        "deleteSubscription": "Subscription löschen?",
-        "name": "Name",
-        "unknown": "Unbekannt",
-        "cancel": "Abbrechen",
-        "confirm": "Bestätigen"
-      }
+    "userConsents": {
+      "consentName": "Konsensname",
+      "consentSlug": "Konsens-Slug",
+      "create": "Neuer User-Konsens erstellen",
+      "title": "User-Konsens",
+      "titleCreate": "User-Konsens erstellen",
+      "titleEdit": "User-Konsens bearbeiten",
+      "user": "Benutzer",
+      "value": "Wert"
     },
-    "articleList": {
-      "filter": {
-        "reset": "Filter zurücksetzen",
-        "title": "Nach Titel filtern",
-        "description": "Nach Beschreibung filtern",
-        "preTitle": "Nach Pre-Titel filtern",
-        "lead": "Nach Lead filtern",
-        "isPending": "Geplant",
-        "isDraft": "Entwurf",
-        "isPublished": "Publiziert",
-        "publicationDate": "Publikationsdatum"
-      }
+    "userCreateOrEditView": {
+      "active": "Aktiv",
+      "cancel": "Abbrechen",
+      "city": "Stadt",
+      "company": "Firma",
+      "confirm": "Bestätigen",
+      "country": "Land",
+      "createNewUser": "Neue:n Benutzer:in erstellen",
+      "deleteUser": "User löschen?",
+      "email": "Email",
+      "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
+      "errorOnUpdate": "Fehler beim Aktualisieren des Users: {{error}}",
+      "firstName": "Vorname",
+      "flair": "Funktionsbeschreibung",
+      "foreignKeySubscription": "Benutzer kann nicht gelöscht werden. Dieser Benutzer ist mit einem bestehenden Abonnement verknüpft.",
+      "name": "Name",
+      "password": "Passwort",
+      "passwordChangeSuccess": "Passwort erfolgreich geändert!",
+      "passwordHeader": "Passwörter & Zugänge",
+      "properties": "Eigenschaften",
+      "resetPassword": "Passwort zurücksetzen",
+      "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
+      "selectUserImage": "Profilbild wählen",
+      "sendWebsiteLogin": "Login-Link versenden",
+      "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
+      "streetAddress": "Strasse",
+      "streetAddress2": "Strasse 2",
+      "subscriptionsHeader": "Abonnemente",
+      "successfullyCreatedUser": "Benutzer:in erstellt",
+      "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
+      "Unknown": "Unbekannt",
+      "userDataTitle": "Userdaten",
+      "userRoles": "Userrollen",
+      "zipCode": "PLZ",
+      "birthday": "Geburtstag"
     },
     "userList": {
       "overview": {
         "action": "Aktion",
+        "amountOfSubscriptions": "{{amount}} Abos",
         "createdAt": "Erstellt",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "description": "Beschreibung",
+        "firstName": "Vorname",
         "modifiedAt": "Zuletzt bearbeitet",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
-        "firstName": "Vorname",
         "newUser": "Neuer User",
-        "noDescription": "Keine Beschreibung",
-        "noUsersFound": "Keine User gefunden",
-        "resetPassword": "Passwort zurücksetzen",
-        "search": "Suchen",
-        "unknown": "Unbekannt",
-        "users": "User",
-        "subscriptions": "Abos",
         "noSubscriptions": "Keine Abos",
         "oneSubscription": "1 Abo",
-        "amountOfSubscriptions": "{{amount}} Abos",
-        "exportSubscriptionsCsv": "CSV exportieren"
+        "resetPassword": "Passwort zurücksetzen",
+        "subscriptions": "Abos",
+        "unknown": "Unbekannt",
+        "users": "User"
       }
     },
     "userRoles": {
@@ -1031,10 +1351,6 @@
         "description": "Beschreibung",
         "name": "Name",
         "newUserRole": "Neue Userrolle",
-        "noDescription": "Keine Beschreibung",
-        "noUserRolesFound": "Keine Userrollen gefunden",
-        "search": "Suchen",
-        "Unknown": "Unbekannt",
         "userRoles": "Userrollen"
       },
       "panels": {
@@ -1047,315 +1363,262 @@
         "editUserRole": "Userrolle bearbeiten",
         "name": "Name",
         "permissions": "Berechtigungen",
-        "Unknown": "Unbekannt",
-        "systemRole": "ist eine Systemrolle und kann nicht bearbeitet werden"
+        "systemRole": "ist eine Systemrolle und kann nicht bearbeitet werden",
+        "Unknown": "Unbekannt"
       }
-    },
-    "userCreateOrEditView": {
-      "passwordHeader": "Passwörter & Zugänge",
-      "userDataTitle": "Userdaten",
-      "loadingUser": "Lade Benutzer:in",
-      "subscriptionsHeader": "Abonnemente",
-      "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
-      "errorOnUpdate": "Fehler beim Aktualisieren des Users: {{error}}",
-      "successfullyCreatedUser": "Benutzer:in erstellt",
-      "errorCreatingUser": "Benutzer:in konnte nicht erstellt werden. Unerwarteter Fehler: {{error}}",
-      "createNewUser": "Neue:n Benutzer:in erstellen",
-      "csvData": "CSV-Daten",
-      "exportSubscriptions": "Exportieren",
-      "generateCSV": "Generieren",
-      "actions": "Aktionen",
-      "download": "Herunterladen",
-      "noUsersWithSubscriptions": "Keine Benutzer mit Abonnementen",
-      "active": "Aktiv",
-      "addUserRole": "Userrolle hinzufügen",
-      "cancel": "Abbrechen",
-      "close": "Schliessen",
-      "confirm": "Bestätigen",
-      "createUser": "User erstellen",
-      "deleteUser": "User löschen?",
-      "editUser": "User bearbeiten",
-      "email": "Email",
-      "memberPlan": "Memberplan",
-      "name": "Name",
-      "password": "Passwort",
-      "passwordChangeSuccess": "Passwort erfolgreich geändert!",
-      "paidUntil": "Bezahlt bis",
-      "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
-      "preferredName": "Bevorzugter Name",
-      "firstName": "Vorname",
-      "remove": "Entfernen",
-      "resetPassword": "Passwort zurücksetzen",
-      "sendWebsiteLogin": "Login-Link versenden",
-      "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
-      "sendWebsiteLoginFailureMessage": "Login-Link konnte nicht versendet werden. {{error}}",
-      "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
-      "selectUserRole": "Userrolle wählen",
-      "startedAt": "Gestartet",
-      "startedAtDate": "{{startedAtDate, ccc PP p}}",
-      "subEdit": "Bearbeiten",
-      "subTitle": "Abonnement",
-      "Unknown": "Unbekannt",
-      "userRoles": "Userrollen",
-      "properties": "Eigenschaften",
-      "subDisableDescription": "Das Abonnement kann erst hinzugefügt werden, wenn der User erstellt ist.",
-      "company": "Firma",
-      "streetAddress": "Strasse",
-      "streetAddress2": "Strasse 2",
-      "zipCode": "PLZ",
-      "city": "Stadt",
-      "country": "Land",
-      "selectUserImage": "Profilbild wählen"
-    },
-    "userSubscriptionList": {
-      "deactivationReason": {
-        "None": "Keiner",
-        "InvoiceNotPaid": "Rechnung nicht bezahlt",
-        "UserSelfDeactivated": "Benutzer wollte das Abonnement deaktivieren"
-      },
-      "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
-      "deactivationString": "Deaktiviert am {{date}}. Grund: {{reason}}",
-      "noDeactivation": "Keine Deaktivierung.",
-      "paidUntil": "Bezahlt bis am {{date}}",
-      "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
-      "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden.",
-      "invoiceNr": "Rechnung Nr. {{invoiceId}}",
-      "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
-      "editSubscription": "Abo bearbeiten",
-      "aboDetails": "Abo-Details",
-      "subscriptionCreatedAt": "Erstellt {{date}}",
-      "subscriptionStartsAt": "Abo startet am {{date}}",
-      "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
-      "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} CHF",
-      "periods": "Perioden",
-      "periodCreatedAt": "Erstellt am {{date}}",
-      "periodStartsAt": "Gültig von {{date}}",
-      "periodEndsAt": "bis {{date}}",
-      "periodAmount": "Betrag: {{amount}} CHF",
-      "invoiceUnpaid": "unbezahlt",
-      "invoicePaid": "bezahlt"
-    },
-    "createOrEditUserPassword": {
-      "sendLoginLink": "Login-Link per E-Mail versenden?",
-      "sendLoginLinkContent": "Willst Du {{email}} einen Link senden, mit der sich {{firstName}} {{name}} mit seinen bestehenden Rechten einloggen kann?"
     },
     "userSubscriptionEdit": {
-      "active": "Aktiv",
-      "activeDescription": "Macht die Methode verfügbar",
-      "autoRenew": "Automatische Verlängerung",
+      "autoRenew": "Automatische Erneuerung",
       "autoRenewDescription": "Abonnement automatisch verlängern",
-      "deactivatedAt": "Deaktiviert",
-      "description": "Beschreibung",
-      "editTitle": "Abonnement bearbeiten",
-      "memberPlanMonthlyAmount": "Monatlicher Betrag (CHF)",
-      "monthlyAmount": "Monatlicher Betrag",
-      "name": "Name",
-      "paidUntil": "Bezahlt bis",
-      "paymentMethod": "Zahlungsmethode",
-      "selectMemberPlan": "Memberplan",
-      "startsAt": "Abonnements-Beginn",
       "createTitle": "Abonnement erstellen",
-      "adapter": "Zahlungs-Adapter",
-      "selectUser": "Benutzer:in wählen",
       "deactivation": {
-        "date": "Deaktivierung",
-        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert",
-        "modalMessage": {
-          "deactivated": "Willst du das Abonnement von \"{{userName}}\" reaktiviern mit der Emailadresse \"{{userEmail}}\"?",
-          "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
-        },
-        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerun gewählt ist",
-        "modalTitle": {
-          "deactivated": "Abonnement aktivieren?",
-          "activated": "Abonnement deaktivieren?"
-        },
-        "title": {
-          "deactivated": "Abonnement reaktivieren",
-          "activated": "Abonnement deaktivieren"
-        },
         "action": {
-          "deactivated": "Reaktivieren",
           "activated": "Deaktivieren"
         },
-        "dateFrom": "Deaktivierungs Datum (von)",
-        "dateTo": "Deaktivierungs Datum (bis)",
+        "date": "Deaktivierung",
+        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
+        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Grund: {{reason}}. Allenfalls kann ein neues Abo gelöst werden.",
+        "cancellation": "Stornierungsdatum",
+        "modalMessage": {
+          "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
+        },
+        "modalTitle": {
+          "activated": "Abonnement deaktivieren?"
+        },
         "reason": "Deaktivierungs Grund",
+        "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
+        "reasonUserReplacedSubscription": "Ersetzt durch anderes Abo",
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
-        "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
-        "isDeactivated": "Das Abonnement is seit {{date, ccc PP p}} deaktiviert und muss vor dem Bearbeiten reaktiviert werden."
+        "title": {
+          "activated": "Abonnement deaktivieren"
+        },
+        "willBeDeactivated": "Das Abonnement wird am {{date, ccc PP p}} deaktiviert"
       },
-      "hasAddress": "User hat Adresse"
+      "editTitle": "Abonnement bearbeiten",
+      "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
+      "monthlyAmount": "Monatlicher Betrag",
+      "paidUntil": "Bezahlt bis",
+      "paymentMethod": "Zahlungsmethode",
+      "renewNow": "Jetzt verlängern",
+      "selectMemberPlan": "Memberplan",
+      "selectUser": "Benutzer:in wählen",
+      "startsAt": "Abonnements-Beginn",
+      "uniqueSubscription": "Unique-Abo",
+      "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich."
     },
-    "errorMessages": {
-      "noFirstNameErrorMessage": "Bitte Vornamen eingeben",
-      "noNameErrorMessage": "Bitte Namen eingeben",
-      "noEmailErrorMessage": "Bitte E-Mail eingeben",
-      "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
-      "noUrlErrorMessage": "Bitte URL eingeben",
-      "invalidUrlErrorMessage": "Bitte eine gültige URL eingeben",
-      "noImageErrorMessage": "Bild fehlt",
-      "noCallToActionTextErrorMessage": "Bitte erfasse einen Call-To-Action-Text",
-      "noCallToActionImageErrorMessage": "Bitte erfasse einen Call-To-Action-Bild",
-      "noAmountErrorMessage": "Der Betrag ist 5 CHF, wenn Du nichts eingibst",
-      "noPasswordErrorMessage": "Bitte Passwort eingeben",
-      "passwordTooShortErrorMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
-      "noPaymentProviderErrorMessage": "Bitte gib den Zahlungs-Anbieter ein",
-      "noMemberPlanErrorMessage": "Bitte gib den Member-Plan ein",
-      "noPaymentPeriodicityErrorMessage": "Bitte gib die Bezahl-Periodizität ein",
-      "noPaymentMethodErrorMessage": "Bitte gib eine Bezahl-Methode ein",
-      "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
-      "noTokenErrorMessage": "Bitte gib den Token ein",
-      "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
-      "required": "Dieses Feld ist erforderlich"
+    "userSubscriptionList": {
+      "aboDetails": "Abo-Details",
+      "deactivationReason": {
+        "InvoiceNotPaid": "Rechnung nicht bezahlt",
+        "None": "Keiner",
+        "UserSelfDeactivated": "Benutzer wollte das Abonnement deaktivieren"
+      },
+      "deactivationString": "Deaktiviert am {{date}}. Grund: {{reason}}",
+      "editSubscription": "Abo bearbeiten",
+      "invoiceNr": "Rechnung Nr. {{invoiceId}}",
+      "invoicePaid": "bezahlt",
+      "invoiceUnpaid": "unbezahlt",
+      "confirmed": "bestätigt",
+      "unconfirmed": "unbestätigt",
+      "monthlyAmount": "Monatlicher Betrag: {{monthlyAmount}} {{currency}}",
+      "noAutoRenew": "Subscription läuft aus, keine automatische Erneuerung",
+      "noDeactivation": "Keine Deaktivierung.",
+      "paidUntil": "Bezahlt bis am {{date}}",
+      "paymentPeriodicity": "Zahlungsperiodizität: {{paymentPeriodicity}}",
+      "periodAmount": "Betrag: {{amount}} {{currency}}",
+      "periodCreatedAt": "Erstellt am {{date}}",
+      "periodEndsAt": "bis {{date}}",
+      "periods": "Perioden",
+      "periodStartsAt": "Gültig von {{date}}",
+      "subscriptionCreatedAt": "Erstellt {{date}}",
+      "subscriptionIsAutoRenewed": "Subscription wird automatisch erneuert",
+      "subscriptionStartsAt": "Abo startet am {{date}}",
+      "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
+      "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
-    "invoice": {
-      "manuallyPaidByAdmin": "Durch Administrator als bezahlt markiert.",
-      "invoiceNo": "Rechnung Nr.",
-      "total": "Rechnungsbetrag",
-      "paidAt": "Bezahlt am",
-      "canceledAt": "Storniert am",
-      "payManually": "Manuell bezahlen",
-      "areYouSure": "Bist Du sicher?",
-      "manuallyPaidModalBody": "Die Rechnung wird als bezahlt markiert, obwohl keine Zahlung durch den oder die Benutzer:in eingegangen ist. Du solltest dein Vorhaben mit dem:r Buchführer:in besprechen.",
-      "userNotLoaded": "Unerwarteter Fehler: Deine Benutzerdaten konnten nicht geladen werden.",
-      "unpaid": "unbezahlt",
-      "seeInvoiceHistory": "Siehe Rechnungsverlauf",
-      "panel": {
-        "invoiceHistory": "Rechnungsverlauf",
-        "missingSubscriptionId": "Unerwarteter Fehler: Die subscriptionId konnte nicht gefunden werden.",
-        "noInvoices": "Keine Rechnungen vorhanden."
+    "yes": "Ja",
+    "memberplanForm": {
+      "trialSubscription": "Erweiterte Einstellungen",
+      "configureTrialBtn": "Für Probeabos konfigurieren",
+      "extendableToggle": "Verlängerbar",
+      "extendableHelpText": "Bestimme, ob ein Abo eines Benutzers - automatisch oder manuell - verlängert werden kann oder nicht. Probeabos können in der Regel nicht verlängert werden.",
+      "maxCount": "Maximale Anzahl Abos pro Benutzer:in",
+      "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",
+      "trialMemberplanAlert": "Dieser Abo-Plan ist für Probeabos konfiguriert.",
+      "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
+      "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
+      "migratePMTitle": "Migraton der Abos zu Ziel-Zahlungsmethode",
+      "migratePMHelptext": "Migriere die Abos dieses Planes zu einer neuen Zahlungsmethode. Abos, die noch automatisch abgebucht werden, werden nicht migriert. Die Migration findet erst dann statt, wenn ein User selbst tätig wird und in seinem Profil etwa eine offene Rechnung bezahlen will oder ein Abo frühzeitig verlängert.",
+      "amountPerMonthTarget": "Ziel-Betrag / Monat",
+      "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
+      "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
+    },
+    "subscriptionEditView": {
+      "additionalSettingsTitle": "Erweiterte Einstellungen",
+      "trialSubscriptionConfigured": "Dieses Abo ist als Probeabo konfiguriert.",
+      "nonExtendableNotCompatibleWithAutoRenew": "Ein automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
+      "configureAsTrialSubscription": "Als Probeabo konfigurieren",
+      "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
+      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst.",
+      "extendModalTitle": "Abo frühzeitig verlängern?",
+      "extendModalBody": "Das Abo wird frühzeitig um die nächst mögliche Periode verlängert. Es wird eine Rechnung erstellt."
+    },
+    "subscriptionListFilter": {
+      "extendable": "Verlängerbar"
+    },
+    "resources": {
+      "teaserType": {
+        "article": "Artikel",
+        "page": "Seite",
+        "event": "Event",
+        "custom": "Benutzerdefinierte"
+      },
+      "teaserSort": {
+        "HotAndTrending": "Beliebtheit",
+        "PublishedAt": "Publikationsdatum"
       }
     },
-    "currency": {
-      "chf": "chf"
+    "authorEditPanel": {
+      "hideAuthor": "Autor:innen ausblenden",
+      "hideOnTeam": "Auf der Team-Seite ausblenden",
+      "hideOnArticle": "Auf den Artikeln ausblenden",
+      "hideOnTeaser": "Auf den Teasern ausblenden"
     },
-    "settingList": {
-      "settings": "Einstellungen",
-      "successMessage": "Einstellungen erfolgreich aktualisiert!",
-      "successTitle": "Gespeichert",
-      "errorTitle": "Fehler",
-      "editSettings": "Einstellungen ändern",
-      "guestCommenting": "Gastkommentare erlauben",
-      "loginMinutes": "Gültigkeitsdauer Email-Login-Token",
-      "passwordToken": "Gültigkeitsdauer Email-Passwort-Reset-Token",
-      "peerToken": "Peering timeout",
-      "invoiceReminders": "Anzahl Rechnungserinnerungen",
-      "invoiceFrequency": "Rechnungserinnerungsintervall",
-      "minutes": "Minuten",
-      "ms": "Milisekunden",
-      "comments": "Kommentare",
-      "login": "Login",
-      "peering": "Peering",
-      "payment": "Zahlung",
-      "days": "Tage",
-      "allowGuestCommentRating": "Erlaube Gast-Bewertungen von Kommentaren",
-      "polls": "Umfragen",
-      "guestPollVote": "Erlaube Gast-Abstimmungen bei Umfragen",
-      "warnings": {
-        "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
-        "guestCommentRating": "Erlaube (nicht eingeloggten) Gastbesuchern, die Kommentare anderer Personen zu bewerten.",
-        "guestPollVote": "Erlaube Gastbesuchern (nicht eingeloggt), an Umfragen teilzunehmen.",
-        "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
-        "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
-        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
-        "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
-        "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren."
-      }
+    "selectableItemsActions": {
+      "selectedItems": "{{numberOfItems}} Elemente ausgewählt"
     },
-    "createOrUpdateUserPassword": {
-      "unexpectedErrorNoUserFound": "Unerwartetet Fehler: kein User gefunden"
+    "trackingPixels": {
+      "noPixelInfoHeader": "Keine Tracking-Integration vorhanden",
+      "noPixelInfoDescription": "Dies ist etwa der Fall, wenn kein Tracking konfiguriert ist oder bei alten Artikeln.",
+      "errorHeader": "Fehler"
     },
-    "peerArticles": {
-      "peerArticles": "Peerbare Artikel",
-      "title": "Titel",
-      "lead": "Lead",
-      "peer": "Peer",
-      "publishedAt": "Publikations Datum",
-      "publicationDate": "{{publicationDate, ccc PP p}}",
-      "authors": "Autor:innen",
-      "articleImage": "Teaserbild",
-      "originalArticle": "Original Artikel",
-      "notPublished": "Noch nicht publiziert",
-      "toOriginalArticle": "Zum Original Artikel",
-      "filterByPeer": "Nach Peer filtern"
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
     },
-    "tags": {
-      "overview": {
-        "title": "Tags",
-        "createTag": "Neuen Tag",
-        "placeholder": "Name des Tags",
-        "areYouSure": "Bist Du sicher?",
-        "areYouSureConfirmation": "Tag löschen",
-        "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden."
-      }
-    },
-    "permissions": {
-      "noAccess": "Du verfügst nicht über genügend Berechtigungen, um den Inhalt zu sehen.",
-      "contactAdmin": "Bitte kontaktiere den Administrator, um Dir folgende Berechtigungen zu erteilen: {{permissions}}"
-    },
-    "event": {
+    "crowdfunding": {
       "list": {
-        "title": "Events",
+        "title": "Crowdfundings",
         "name": "Name",
-        "edit": "Bearbeiten",
         "delete": "Löschen",
-        "create": "Neues Event erstellen",
-        "startsAt": "Startet um {{startsAt, ccc PP p}}",
-        "endsAt": "Ended um {{endsAt, ccc PP p}}",
-        "endsAtNone": "Offenes Ende"
-      },
-      "create": {
-        "title": "Event Erstellen"
-      },
-      "edit": {
-        "title": "Event Bearbeiten"
-      },
-      "form": {
-        "name": "Name",
-        "location": "Veranstaltungsort",
-        "status": "Status",
-        "startsAt": "Startet um",
-        "endsAt": "Ended um",
-        "description": "Beschreibung",
-        "tags": "Tags",
-        "image": "Bild",
-        "scheduled": "Geplant",
-        "cancelled": "Abgesagt",
-        "postponed": "Verschoben",
-        "rescheduled": "Verlegt"
+        "createNew": "Erstellen"
       },
       "delete": {
-        "title": "Event Löschen?",
-        "body": "Willst Du das Event \"{{name}}\" wirklich löschen?",
-        "delete": "Ja, lösche das Event"
+        "title": "Unwiderruflich löschen?",
+        "body": "Soll das Crowdfunding unwiderruflich gelöscht werden?",
+        "delete": "Löschen"
+      },
+      "create": {
+        "title": "Neues Crowdfunding erstellen"
+      },
+      "edit": {
+        "title": "{{crowdfundingName}} bearbeiten"
+      },
+      "form": {
+        "name": "Bezeichnung des Crowdfundings (wird nicht publiziert)",
+        "memberPlans": "Abo Pläne",
+        "filter": "Einnahmen filtern",
+        "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "selectMemberPlans": "Abo Pläne wählen",
+        "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
+        "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
+        "revenue": "Bereits CHF {{revenue}} finanziert",
+        "goals": "Ziele"
+      },
+      "goalsForm": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "amount": "Zielbetrag",
+        "remove": "Entfernen",
+        "add": "Ziel hinzufügen"
       }
     },
-    "general": {
-      "deletedSuccess": "Erfolgreich gelöscht",
-      "created": "Erfolgreich erstellt",
-      "updated": "Erfolgreich aktualisiert",
-      "errorOnUpdate": "Fehler, bitte nochmal versuchen"
+    "audienceFilter": {
+      "daily": "Täglich",
+      "monthly": "Monatlich",
+      "rangePickerPlaceholder": "von - bis",
+      "filterSubscriptionPlans": "Nach Abo Pläne filtern",
+      "chart": "Diagramm",
+      "table": "Tabelle",
+      "panelHeader": "Auswahl der Daten",
+      "rangeLastWeek": "Letzte Woche",
+      "rangeLastMonth": "Letzter Monat",
+      "rangeLastQuarter": "Letztes Quartal",
+      "rangeLastYear": "Letztes Jahr"
     },
-    "dashboard": {
-      "dashboard": "Dashboard",
-      "greeting": "Hallo, {{name}}!",
-      "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
-      "activity": "Letzte Aktivitäten",
-      "event": "Event",
-      "summary": "Zusammenfassung",
-      "noData": "Keine aktuellen Abo-Daten",
-      "newArticle": "Neuer <0>Artikel</0> erstellt",
-      "newPage": "Neue <0>Seite</0> erstellt",
-      "newComment": "Neuer <0>Kommentar</0>",
-      "newPoll": "Neue <0>Umfrage</0>",
-      "newSubscription": "Neues <0>Abo</0>",
-      "newAuthor": "Neuer <0>Author</0> erstellt",
-      "newUser": "Neuer <0>User</0> erstellt",
-      "newEvent": "Neues <0>event</0>",
-      "createdBy": " von {{creator}}",
-      "user": "Benutzer",
-      "memberPlan": "Memberplan: {{plan}}"
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Abos, die am Stichtag aktiv und bezahlt waren.",
+          "overdueSubscriptionCount": "Erneuerte Abos, deren Bezahlung fällig und offen ist. Nicht eingerechnet sind erstmalig gelöste Abos, die nicht bezahlt wurden.",
+          "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
+          "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
+          "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+        },
+        "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
+        "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
+        "renewedSubscriptionCount": "Erneuerte bezahlte Abos",
+        "createdSubscriptionCount": "Neue bezahlte Abos",
+        "deactivatedSubscriptionCount": "Deaktivierte Abos",
+        "replacedSubscriptionCount": "Ersetzte Abos",
+        "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
+        "renewalRate": "Erneuerungsrate",
+        "cancellationRate": "Kündigungsrate",
+        "createdSubscriptionUsers": "Neue bezahlte Abos",
+        "overdueSubscriptionUsers": "Erneuerte nicht bezahlte Abos",
+        "deactivatedSubscriptionUsers": "Deaktivierte Abos",
+        "renewedSubscriptionUsers": "Erneuerte bezahlte Abos",
+        "replacedSubscriptionUsers": "Ersetzte Abos"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Benutzer filtern nach",
+      "id": "ID",
+      "firstName": "Vorname",
+      "name": "Nachname",
+      "email": "E-Mail",
+      "goToUser": "Link zum Benutzer",
+      "close": "Schliessen",
+      "userBtn": "Link zum Benutzer"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Datum",
+        "actions": "Aktionen"
+      },
+      "showUsers": "Details anzeigen",
+      "byDate": "Per",
+      "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
+      "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Paywall bearbeiten",
+        "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
+        "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
+        "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
+        "active": "Aktiv",
+        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "anyMemberPlan": "Die Paywall entfällt für alle Abos",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass-Token",
+        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
+        "newBypassToken": "Neuen Bypass-Token erstellen",
+        "addBypass": "hinzufügen",
+        "qrCodeTitle": "QR-Code für Bypass-Token",
+        "downloadSvg": "SVG herunterladen",
+        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Zahlungsfrist",
+      "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
+      "days": "Tage"
     }
   }
 }

@@ -1,56 +1,56 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLFloat,
   GraphQLEnumType,
+  GraphQLFloat,
   GraphQLInputObjectType,
-  GraphQLID
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLUpload} from 'graphql-upload'
 
 import {Context} from '../context'
-import {ImageRotation, ImageOutput, ImageSort, ImageWithTransformURL} from '../db/image'
+import {ImageSort, ImageWithTransformURL} from '../db/image'
+import {ImageOutput, ImageRotation} from '@wepublish/image/api'
 import {GraphQLPageInfo} from './common'
 import {createProxyingResolver} from '../utility'
 
 export const GraphQLInputPoint = new GraphQLInputObjectType({
   name: 'InputPoint',
   fields: {
-    x: {type: GraphQLNonNull(GraphQLFloat)},
-    y: {type: GraphQLNonNull(GraphQLFloat)}
+    x: {type: new GraphQLNonNull(GraphQLFloat)},
+    y: {type: new GraphQLNonNull(GraphQLFloat)}
   }
 })
 
-export const GraphQLPoint = new GraphQLObjectType<any, Context>({
-  name: 'Point',
+export const GraphQLFocalPoint = new GraphQLObjectType<any, Context>({
+  name: 'FocalPoint',
   fields: {
-    x: {type: GraphQLNonNull(GraphQLFloat)},
-    y: {type: GraphQLNonNull(GraphQLFloat)}
+    x: {type: new GraphQLNonNull(GraphQLFloat)},
+    y: {type: new GraphQLNonNull(GraphQLFloat)}
   }
 })
 
 export const GraphQLImageRotation = new GraphQLEnumType({
   name: 'ImageRotation',
   values: {
-    AUTO: {value: ImageRotation.Auto},
-    ROTATE_0: {value: ImageRotation.Rotate0},
-    ROTATE_90: {value: ImageRotation.Rotate90},
-    ROTATE_180: {value: ImageRotation.Rotate180},
-    ROTATE_270: {value: ImageRotation.Rotate270}
+    Auto: {value: ImageRotation.Auto},
+    Rotate0: {value: ImageRotation.Rotate0},
+    Rotate90: {value: ImageRotation.Rotate90},
+    Rotate180: {value: ImageRotation.Rotate180},
+    Rotate270: {value: ImageRotation.Rotate270}
   }
 })
 
 export const GraphQLImageOutput = new GraphQLEnumType({
   name: 'ImageOutput',
   values: {
-    PNG: {value: ImageOutput.PNG},
-    JPEG: {value: ImageOutput.JPEG},
-    WEBP: {value: ImageOutput.WEBP}
+    [ImageOutput.png]: {value: ImageOutput.png},
+    [ImageOutput.jpeg]: {value: ImageOutput.jpeg},
+    [ImageOutput.webp]: {value: ImageOutput.webp}
   }
 })
 
@@ -69,12 +69,12 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
   name: 'UploadImageInput',
   fields: {
     // @ts-expect-error graphql-upload has outdated typings
-    file: {type: GraphQLNonNull(GraphQLUpload)},
+    file: {type: new GraphQLNonNull(GraphQLUpload)},
     filename: {type: GraphQLString},
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
 
     link: {type: GraphQLString},
     source: {type: GraphQLString},
@@ -91,7 +91,7 @@ export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
 
     link: {type: GraphQLString},
     source: {type: GraphQLString},
@@ -105,42 +105,42 @@ export const GraphQLImageFilter = new GraphQLInputObjectType({
   name: 'ImageFilter',
   fields: {
     title: {type: GraphQLString},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
 export const GraphQLImageSort = new GraphQLEnumType({
   name: 'ImageSort',
   values: {
-    CREATED_AT: {value: ImageSort.CreatedAt},
-    MODIFIED_AT: {value: ImageSort.ModifiedAt}
+    [ImageSort.CreatedAt]: {value: ImageSort.CreatedAt},
+    [ImageSort.ModifiedAt]: {value: ImageSort.ModifiedAt}
   }
 })
 
 export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context>({
   name: 'Image',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
     filename: {type: GraphQLString},
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
     link: {type: GraphQLString},
     source: {type: GraphQLString},
     license: {type: GraphQLString},
 
-    fileSize: {type: GraphQLNonNull(GraphQLInt)},
-    extension: {type: GraphQLNonNull(GraphQLString)},
-    mimeType: {type: GraphQLNonNull(GraphQLString)},
-    format: {type: GraphQLNonNull(GraphQLString)},
-    width: {type: GraphQLNonNull(GraphQLInt)},
-    height: {type: GraphQLNonNull(GraphQLInt)},
-    focalPoint: {type: GraphQLPoint},
+    fileSize: {type: new GraphQLNonNull(GraphQLInt)},
+    extension: {type: new GraphQLNonNull(GraphQLString)},
+    mimeType: {type: new GraphQLNonNull(GraphQLString)},
+    format: {type: new GraphQLNonNull(GraphQLString)},
+    width: {type: new GraphQLNonNull(GraphQLInt)},
+    height: {type: new GraphQLNonNull(GraphQLInt)},
+    focalPoint: {type: GraphQLFocalPoint},
 
     url: {
       type: GraphQLString,
@@ -162,8 +162,17 @@ export const GraphQLImage = new GraphQLObjectType<ImageWithTransformURL, Context
 export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
   name: 'ImageConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage)))},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLImage)))},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)}
   }
 })
+
+export const GraphQLImageResolver = {
+  __resolveReference: async (reference: {id: string}, {loaders}: Context) => {
+    const {id} = reference
+    const image = await loaders.images.load(id)
+    if (!image) throw new Error('Image not found')
+    return image
+  }
+}

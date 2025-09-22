@@ -7,25 +7,39 @@ import {
   usePollQuery,
   useUpdatePollMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  PollAnswers,
+  PollExternalVotes,
+  RichTextBlock,
+  SingleViewTitle
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 
-import {ModelTitle} from '../../atoms/modelTitle'
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {PollAnswers} from '../../atoms/poll/pollAnswers'
-import {PollExternalVotes} from '../../atoms/poll/pollExternalVotes'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-
-const OpensAtLabel = styled(Form.ControlLabel)`
-  margin-right: 5px;
+const DateLabel = styled(Form.ControlLabel)`
+  margin-right: 8px;
 `
 
-const ClosesAtLabel = styled(Form.ControlLabel)`
-  margin-left: 20px;
-  margin-right: 5px;
+const PollEditor = styled(FlexboxGrid.Item)`
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
+  width: 70%;
+`
+
+const DatesWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const DateItem = styled.div`
+  padding: 5px;
 `
 
 function PollEditView() {
@@ -59,7 +73,7 @@ function PollEditView() {
       pollId: params.id
     },
     onError: onErrorToast,
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'cache-and-network'
   })
 
   // updating poll
@@ -76,16 +90,12 @@ function PollEditView() {
   useEffect(() => {
     if (data?.poll) {
       setPoll(data.poll)
-    } else {
-      setPoll(undefined)
     }
   }, [data])
 
   useEffect(() => {
     if (updateData?.updatePoll) {
       setPoll(updateData.updatePoll)
-    } else {
-      setPoll(undefined)
     }
   }, [updateData])
 
@@ -147,7 +157,7 @@ function PollEditView() {
       <FlexboxGrid>
         {/* model title */}
         <FlexboxGrid.Item colspan={24}>
-          <ModelTitle
+          <SingleViewTitle
             loading={loading}
             title={poll?.question || t('pollList.noQuestion')}
             loadingTitle={t('pollEditView.loadingTitle')}
@@ -159,7 +169,7 @@ function PollEditView() {
         </FlexboxGrid.Item>
 
         {/* content */}
-        <FlexboxGrid.Item colspan={12}>
+        <PollEditor>
           <Row>
             {/* question */}
             <Col xs={24}>
@@ -179,6 +189,7 @@ function PollEditView() {
                 </Form.Group>
               </Panel>
             </Col>
+
             {/* answers */}
             <Col xs={24}>
               <Panel header={t('pollEditView.answerPanelHeader')} bordered>
@@ -190,39 +201,46 @@ function PollEditView() {
                 />
               </Panel>
             </Col>
+
             {/* settings */}
             <Col xs={24}>
               <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
                 {/* opens at */}
-                <OpensAtLabel>{t('pollEditView.opensAtLabel')}</OpensAtLabel>
-                <DatePicker
-                  value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
-                  format="yyyy-MM-dd HH:mm"
-                  onChange={(opensAt: Date | null) => {
-                    if (!poll) {
-                      return
-                    }
-                    setPoll({
-                      ...poll,
-                      opensAt: opensAt?.toISOString() || new Date().toISOString()
-                    })
-                  }}
-                />
-
-                {/* closes at */}
-                <ClosesAtLabel>{t('pollEditView.closesAtLabel')}</ClosesAtLabel>
-                <DatePicker
-                  value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
-                  format="yyyy-MM-dd HH:mm"
-                  onChange={(closedAt: Date | null) => {
-                    if (!poll) {
-                      return
-                    }
-                    setPoll({...poll, closedAt: closedAt?.toISOString()})
-                  }}
-                />
+                <DatesWrapper>
+                  <DateItem>
+                    <DateLabel>{t('pollEditView.opensAtLabel')}</DateLabel>
+                    <DatePicker
+                      value={poll?.opensAt ? new Date(poll.opensAt) : undefined}
+                      format="yyyy-MM-dd HH:mm"
+                      onChange={(opensAt: Date | null) => {
+                        if (!poll) {
+                          return
+                        }
+                        setPoll({
+                          ...poll,
+                          opensAt: opensAt?.toISOString() || new Date().toISOString()
+                        })
+                      }}
+                    />
+                  </DateItem>
+                  <DateItem>
+                    {/* closes at */}
+                    <DateLabel>{t('pollEditView.closesAtLabel')}</DateLabel>
+                    <DatePicker
+                      value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
+                      format="yyyy-MM-dd HH:mm"
+                      onChange={(closedAt: Date | null) => {
+                        if (!poll) {
+                          return
+                        }
+                        setPoll({...poll, closedAt: closedAt?.toISOString()})
+                      }}
+                    />
+                  </DateItem>
+                </DatesWrapper>
               </Panel>
             </Col>
+
             {/* poll external votes */}
             <Col xs={24}>
               <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
@@ -234,23 +252,23 @@ function PollEditView() {
                 />
               </Panel>
             </Col>
+
             <Col xs={24}>
               <Panel header={t('pollEditView.infoText')} bordered>
                 <div className="richTextFrame">
-                  <RichTextBlock
-                    value={poll?.infoText ? poll?.infoText : []}
-                    onChange={value => {
-                      if (!poll) {
-                        return
-                      }
-                      setPoll({...poll, infoText: value as Node[]})
-                    }}
-                  />
+                  {poll && (
+                    <RichTextBlock
+                      value={poll?.infoText ? poll?.infoText : []}
+                      onChange={value => {
+                        setPoll({...poll, infoText: value as Descendant[]})
+                      }}
+                    />
+                  )}
                 </div>
               </Panel>
             </Col>
           </Row>
-        </FlexboxGrid.Item>
+        </PollEditor>
       </FlexboxGrid>
     </Form>
   )

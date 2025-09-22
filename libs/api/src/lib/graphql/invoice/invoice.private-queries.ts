@@ -1,9 +1,10 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
-import {CanGetInvoice, CanGetInvoices} from '@wepublish/permissions/api'
+import {CanGetInvoice, CanGetInvoices} from '@wepublish/permissions'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
 import {PrismaClient} from '@prisma/client'
 import {getInvoices} from './invoice.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getInvoiceById = (
   id: string,
@@ -19,7 +20,7 @@ export const getInvoiceById = (
 export const getAdminInvoices = async (
   filter: Partial<InvoiceFilter>,
   sortedField: InvoiceSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

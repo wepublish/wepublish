@@ -1,0 +1,16 @@
+fragment FullTag on Tag {
+  id
+  tag
+  description
+  type
+  main
+  url
+}
+
+query Tag($tag: String!, $type: TagType!) {
+  tags(filter: {tag: $tag, type: $type}, take: 1) {
+    nodes {
+      ...FullTag
+    }
+  }
+}

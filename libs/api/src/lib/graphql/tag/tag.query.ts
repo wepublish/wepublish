@@ -1,6 +1,5 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
-import {MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export type TagFilter = {
   type: TagType
@@ -20,18 +19,18 @@ export const createTagOrder = (
   switch (field) {
     case TagSort.Tag:
       return {
-        tag: sortOrder
+        tag: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case TagSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case TagSort.CreatedAt:
     default:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -51,7 +50,7 @@ const createTagNameFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput 
     return {
       tag: {
         mode: 'insensitive',
-        contains: filter.tag
+        equals: filter.tag
       }
     }
   }
@@ -66,13 +65,13 @@ export const createTagFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInp
 export const getTags = async (
   filter: Partial<TagFilter>,
   sortedField: TagSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   tag: PrismaClient['tag']
 ) => {
-  const orderBy = createTagOrder(sortedField, getSortOrder(order))
+  const orderBy = createTagOrder(sortedField, order)
   const where = createTagFilter(filter)
 
   const [totalCount, tags] = await Promise.all([
@@ -83,7 +82,7 @@ export const getTags = async (
     tag.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

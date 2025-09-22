@@ -1,19 +1,42 @@
 const {setFailed} = require('@actions/core')
-const {GITHUB_REF_SHORT} = require('./notify-utils')
+const {readdir} = require("fs/promises");
 
 async function main() {
-  const {BRANCH_NAME, PR_NUMBER} = process.env
+    const {
+        BRANCH_NAME,
+        PR_NUMBER,
+        API_URL,
+        EDITOR_URL,
+        WEBSITE_URL,
+        MEDIA_SERVER_URL,
+        PROJECTS,
+        PROJECT_URL_SUFFIX,
+    } = process.env
 
-  const deploymentMessage = `<a href="https://github.com/wepublish/wepublish/pull/${PR_NUMBER}">PR ${PR_NUMBER}</a> with branch \`${BRANCH_NAME}\` has been deployed to:
-  - Website: https://${GITHUB_REF_SHORT}.wepublish.dev
-  - Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
-  - Public API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
-  - Privat API: https://api.${GITHUB_REF_SHORT}.wepublish.dev/admin
-  - Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev`
+    let deploymentMessage = `<a href="https://github.com/wepublish/wepublish/pull/${PR_NUMBER}">PR ${PR_NUMBER}</a> with branch \`${BRANCH_NAME}\` has been deployed to:
 
-  console.log(deploymentMessage)
+<h2>Main</h2>
+
+  - Website: ${WEBSITE_URL}
+  - Editor: ${EDITOR_URL}
+  - Public API: ${API_URL}/v1
+  - Private API: ${API_URL}/v1/admin
+  - Media: ${MEDIA_SERVER_URL}
+
+<h2>Projects:</h2>
+
+To deploy frontend create a label with the prefix "deploy_" followed by the project name eg. deploy_bajour
+ 
+`
+
+    const projects = JSON.parse(PROJECTS);
+    for (const project of projects.target) {
+        deploymentMessage += `
+  - ${project}: https://${project}${PROJECT_URL_SUFFIX}`
+    }
+    console.log(deploymentMessage)
 }
 
 main().catch(error => {
-  setFailed(error)
+    setFailed(error)
 })

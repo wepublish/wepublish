@@ -54,13 +54,41 @@ spec:
       {{- end }}
       containers:
         - name: {{ include "helm.fullname" . }}
-          image: {{ .Values.deployment.image }}
+          image: {{ .Values.editor.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['node', 'dist/apps/editor/main.js']
+          {{- $res := .Values.editor.resources }}
+          {{- if or (and $res.requests (or $res.requests.cpu $res.requests.memory)) (and $res.limits (or $res.limits.cpu $res.limits.memory)) }}
+          resources:
+            {{- if and $res.requests (or $res.requests.cpu $res.requests.memory) }}
+            requests:
+              {{- if $res.requests.cpu }}
+              cpu: {{ $res.requests.cpu }}
+              {{- end }}
+              {{- if $res.requests.memory }}
+              memory: {{ $res.requests.memory }}
+              {{- end }}
+            {{- end }}
+            {{- if and $res.limits (or $res.limits.cpu $res.limits.memory) }}
+            limits:
+              {{- if $res.limits.cpu }}
+              cpu: {{ $res.limits.cpu }}
+              {{- end }}
+              {{- if $res.limits.memory }}
+              memory: {{ $res.limits.memory }}
+              {{- end }}
+          {{- end }}
+          {{- end }}
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: 3000
               protocol: TCP
+          env:
+            {{- if .Values.editor.dynamicEnv }}
+            {{- range $key, $value := .Values.editor.dynamicEnv }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-editor-environment-{{ .Release.Revision }}
@@ -71,6 +99,32 @@ spec:
           {{- with .Values.editor.properties }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
 
 
 ---
@@ -88,9 +142,6 @@ metadata:
     {{- end }}
 type: Opaque
 data:
-  {{- range $name, $value := .Values.deployment.env }}
-  {{ $name }}: "{{ $value | b64enc }}"
-  {{- end }}
-  {{- range $name, $value := .Values.editor.env }}
+  {{- range $name, $value := merge .Values.editor.env .Values.deployment.env }}
   {{ $name }}: "{{ $value | b64enc }}"
   {{- end }}

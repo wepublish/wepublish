@@ -1,10 +1,11 @@
 import {Context} from '../../context'
 import {UserInputError} from '../../error'
 import {authorise} from '../permissions'
-import {CanGetAuthor, CanGetAuthors} from '@wepublish/permissions/api'
+import {CanGetAuthor, CanGetAuthors} from '@wepublish/permissions'
 import {PrismaClient} from '@prisma/client'
 import {AuthorFilter, AuthorSort} from '../../db/author'
 import {getAuthors} from './author.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getAuthorByIdOrSlug = (
   id: string | null,
@@ -26,7 +27,7 @@ export const getAuthorByIdOrSlug = (
 export const getAdminAuthors = async (
   filter: Partial<AuthorFilter>,
   sortedField: AuthorSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

@@ -11,15 +11,19 @@ export const getRatingSystem = (commentRatingSystem: PrismaClient['commentRating
 
 export const userCommentRating = async (
   commentId: string,
-  authenticateUser: Context['authenticateUser'],
+  optionalAuthenticateUser: Context['optionalAuthenticateUser'],
   commentRating: PrismaClient['commentRating']
 ) => {
-  const {user} = authenticateUser()
+  const session = optionalAuthenticateUser()
+
+  if (!session) {
+    return []
+  }
 
   return await commentRating.findMany({
     where: {
       commentId,
-      userId: user.id
+      userId: session.user.id
     },
     include: {
       answer: true

@@ -1,11 +1,4 @@
-import {
-  BaseMailProvider,
-  MailLogStatus,
-  MailProviderProps,
-  SendMailProps,
-  WebhookForSendMailProps
-} from '@wepublish/api'
-
+import {MailProviderProps, BaseMailProvider, SendMailProps} from '@wepublish/mail/api'
 import fetch from 'cross-fetch'
 
 export interface SlackMailProviderProps extends MailProviderProps {
@@ -20,8 +13,8 @@ export class SlackMailProvider extends BaseMailProvider {
     this.webhookURL = props.webhookURL
   }
 
-  async webhookForSendMail({req}: WebhookForSendMailProps): Promise<MailLogStatus[]> {
-    return Promise.resolve([])
+  async webhookForSendMail() {
+    return []
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
@@ -31,11 +24,14 @@ export class SlackMailProvider extends BaseMailProvider {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Subject*: ${props.subject}\n\`\`\`${props.message}\`\`\``
+            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Template*: ${
+              props.template
+            }\n\`\`\`${JSON.stringify(props.templateData)}\`\`\``
           }
         }
       ]
     }
+
     await fetch(this.webhookURL, {
       method: 'POST',
       headers: {
@@ -43,5 +39,18 @@ export class SlackMailProvider extends BaseMailProvider {
       },
       body: JSON.stringify(message)
     })
+  }
+
+  async getTemplates() {
+    return [...Array(10).keys()].map(key => ({
+      name: `Slack Template ${key + 1}`,
+      uniqueIdentifier: `slack-template-${key + 1}`,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }))
+  }
+
+  getTemplateUrl() {
+    return 'http://example.com/'
   }
 }

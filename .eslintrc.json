@@ -1,18 +1,23 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx", "unused-imports"],
+  "plugins": ["@nx", "unused-imports"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": "off",
-        "unused-imports/no-unused-imports": "error",
-        "object-shorthand": "warn",
-        "@nrwl/nx/enforce-module-boundaries": [
+        "@typescript-eslint/no-unused-vars": [
           "error",
           {
-            "enforceBuildableLibDependency": true,
+            "args": "none"
+          }
+        ],
+        "unused-imports/no-unused-imports": "error",
+        "object-shorthand": "warn",
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": false,
             "allow": [],
             "depConstraints": [
               {
@@ -21,18 +26,36 @@
               }
             ]
           }
+        ],
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@mui/material",
+                "importNames": ["styled"],
+                "message": "Please import 'styled' from '@emotion/styled' instead."
+              }
+            ]
+          }
         ]
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
-      "rules": {}
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
     },
     {
       "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
@@ -41,5 +64,6 @@
       },
       "rules": {}
     }
-  ]
+  ],
+  "extends": ["plugin:storybook/recommended"]
 }

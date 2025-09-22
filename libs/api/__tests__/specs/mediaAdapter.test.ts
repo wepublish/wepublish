@@ -1,13 +1,13 @@
 import {KarmaMediaAdapter, MediaServerError} from '../../src'
 import {URL} from 'url'
 import * as fs from 'fs'
-import {ArrayBufferUpload} from '../../src/lib/media/mediaAdapter'
 import {
-  ImageWithFocalPoint,
+  ArrayBufferUpload,
   ImageOutput,
   ImageRotation,
-  ImageTransformation
-} from '../../src/lib/db/image'
+  ImageTransformation,
+  ImageWithFocalPoint
+} from '@wepublish/image/api'
 import type {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import {resolve} from 'path'
@@ -43,15 +43,16 @@ const TEST_UPLOAD_IMAGE: ImageWithFocalPoint = {
   license: null,
   link: null,
   source: null,
-  title: null
+  title: null,
+  peerId: null
 }
 
 const TEST_TRANSFORMATION: ImageTransformation = {
   height: '1024px',
   width: '1024px',
   rotation: ImageRotation.Rotate0,
-  output: ImageOutput.JPEG,
-  quality: 100
+  output: ImageOutput.jpeg,
+  quality: 80
 }
 
 let karmaMediaAdapter: KarmaMediaAdapter
@@ -79,7 +80,7 @@ describe('Karma Media Adapter', () => {
           filename: 'test.jpg',
           mimetype: 'image/jpeg',
           encoding: 'fakeEncoding',
-          createReadStream: () => imageStream
+          createReadStream: () => imageStream as any
         })
       })
     })

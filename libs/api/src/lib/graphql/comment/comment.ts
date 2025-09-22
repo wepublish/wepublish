@@ -4,96 +4,79 @@ import {
   CommentRejectionReason,
   CommentState
 } from '@prisma/client'
+import {unselectPassword} from '@wepublish/authentication/api'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLFloat,
-  GraphQLID,
   GraphQLInputObjectType,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
-import {
-  CommentRevision,
-  PublicComment,
-  Comment,
-  CommentSort,
-  PublicCommentSort
-} from '../../db/comment'
-import {unselectPassword} from '@wepublish/user/api'
+import {CalculatedRating, Comment, CommentRevision, CommentSort} from '../../db/comment'
 import {createProxyingResolver} from '../../utility'
-import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
 import {GraphQLPageInfo} from '../common'
-import {GraphQLRichText} from '../richText'
-import {GraphQLPublicUser, GraphQLUser} from '../user'
-import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
-import {GraphQLCommentRatingSystemAnswer} from '../comment-rating/comment-rating'
+import {GraphQLTag} from '../tag/tag'
+import {GraphQLUser} from '../user'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
   values: {
-    Approved: {value: CommentState.approved},
-    PendingApproval: {value: CommentState.pendingApproval},
-    PendingUserChanges: {value: CommentState.pendingUserChanges},
-    Rejected: {value: CommentState.rejected}
+    [CommentState.approved]: {value: CommentState.approved},
+    [CommentState.pendingApproval]: {value: CommentState.pendingApproval},
+    [CommentState.pendingUserChanges]: {value: CommentState.pendingUserChanges},
+    [CommentState.rejected]: {value: CommentState.rejected}
   }
 })
 
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    Misconduct: {value: CommentRejectionReason.misconduct},
-    Spam: {value: CommentRejectionReason.spam}
+    [CommentRejectionReason.misconduct]: {value: CommentRejectionReason.misconduct},
+    [CommentRejectionReason.spam]: {value: CommentRejectionReason.spam}
   }
 })
 
 export const GraphQLCommentAuthorType = new GraphQLEnumType({
   name: 'CommentAuthorType',
   values: {
-    Author: {value: CommentAuthorType.author},
-    Team: {value: CommentAuthorType.team},
-    VerifiedUser: {value: CommentAuthorType.verifiedUser},
-    GuestUser: {value: CommentAuthorType.guestUser}
+    [CommentAuthorType.author]: {value: CommentAuthorType.author},
+    [CommentAuthorType.team]: {value: CommentAuthorType.team},
+    [CommentAuthorType.verifiedUser]: {value: CommentAuthorType.verifiedUser},
+    [CommentAuthorType.guestUser]: {value: CommentAuthorType.guestUser}
   }
 })
 
 export const GraphQLCommentItemType = new GraphQLEnumType({
   name: 'CommentItemType',
   values: {
-    Article: {value: CommentItemType.article},
-    PeerArticle: {value: CommentItemType.peerArticle},
-    Page: {value: CommentItemType.page}
+    [CommentItemType.article]: {value: CommentItemType.article},
+    [CommentItemType.page]: {value: CommentItemType.page}
   }
 })
 
 export const GraphQLCommentSort = new GraphQLEnumType({
   name: 'CommentSort',
   values: {
-    ModifiedAt: {value: CommentSort.ModifiedAt},
-    CreatedAt: {value: CommentSort.CreatedAt}
-  }
-})
-
-export const GraphQLPublicCommentSort = new GraphQLEnumType({
-  name: 'CommentSort',
-  values: {
-    RATING: {value: PublicCommentSort.Rating}
+    [CommentSort.ModifiedAt]: {value: CommentSort.ModifiedAt},
+    [CommentSort.CreatedAt]: {value: CommentSort.CreatedAt}
   }
 })
 
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
-    item: {type: GraphQLID},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-    states: {type: GraphQLList(GraphQLNonNull(GraphQLCommentState))},
+    item: {type: GraphQLString},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    states: {type: new GraphQLList(new GraphQLNonNull(GraphQLCommentState))},
     itemType: {type: GraphQLCommentItemType},
-    itemID: {type: GraphQLID}
+    itemID: {type: GraphQLString}
   }
 })
 
@@ -103,7 +86,7 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
     text: {type: GraphQLRichText},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)}
   }
 })
 
@@ -119,18 +102,8 @@ export const GraphQLCommentRevisionUpdateInput = new GraphQLInputObjectType({
 export const GraphQLCommentRatingOverrideUpdateInput = new GraphQLInputObjectType({
   name: 'CommentRatingOverrideUpdateInput',
   fields: {
-    answerId: {type: GraphQLNonNull(GraphQLID)},
+    answerId: {type: new GraphQLNonNull(GraphQLString)},
     value: {type: GraphQLInt}
-  }
-})
-
-export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
-  name: 'CommentUpdateInput',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    text: {
-      type: new GraphQLNonNull(GraphQLRichText)
-    }
   }
 })
 
@@ -138,30 +111,10 @@ export const GraphQLChallengeInput = new GraphQLInputObjectType({
   name: 'ChallengeInput',
   fields: {
     challengeID: {
-      type: GraphQLNonNull(GraphQLString)
+      type: GraphQLString
     },
     challengeSolution: {
-      type: GraphQLNonNull(GraphQLString)
-    }
-  }
-})
-
-export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
-  name: 'CommentInput',
-  fields: {
-    parentID: {type: GraphQLID},
-    guestUsername: {type: GraphQLString},
-    challenge: {
-      type: GraphQLChallengeInput
-    },
-    itemID: {type: GraphQLNonNull(GraphQLID)},
-    itemType: {
-      type: GraphQLNonNull(GraphQLCommentItemType)
-    },
-    title: {type: GraphQLString},
-    peerId: {type: GraphQLID},
-    text: {
-      type: new GraphQLNonNull(GraphQLRichText)
+      type: new GraphQLNonNull(GraphQLString)
     }
   }
 })
@@ -169,7 +122,7 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
 export const GraphQLoverriddenRating = new GraphQLObjectType<CalculatedRating, Context>({
   name: 'overriddenRating',
   fields: {
-    answerId: {type: GraphQLNonNull(GraphQLID)},
+    answerId: {type: new GraphQLNonNull(GraphQLString)},
     value: {type: GraphQLInt}
   }
 })
@@ -180,7 +133,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
 >({
   name: 'Comment',
   fields: () => ({
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     guestUsername: {type: GraphQLString},
     guestUserImage: {
       type: GraphQLImage,
@@ -208,7 +161,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       )
     },
     tags: {
-      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
         const tags = await tag.findMany({
           where: {
@@ -223,12 +176,11 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
         return tags
       })
     },
-    authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
-    itemID: {type: GraphQLNonNull(GraphQLID)},
+    authorType: {type: new GraphQLNonNull(GraphQLCommentAuthorType)},
+    itemID: {type: new GraphQLNonNull(GraphQLString)},
     itemType: {
-      type: GraphQLNonNull(GraphQLCommentItemType)
+      type: new GraphQLNonNull(GraphQLCommentItemType)
     },
-    peerId: {type: GraphQLID},
     parentComment: {
       type: GraphQLComment,
       resolve: createProxyingResolver(({parentID}, _, {prisma: {comment}}) =>
@@ -245,122 +197,27 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       )
     },
     revisions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLCommentRevision)))
     },
     source: {
       type: GraphQLString
     },
-    state: {type: GraphQLNonNull(GraphQLCommentState)},
+    state: {type: new GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    featured: {type: GraphQLBoolean},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     overriddenRatings: {
-      type: GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))
+      type: new GraphQLList(new GraphQLNonNull(GraphQLoverriddenRating))
     }
   })
 })
 
-export const GraphQLCalculatedRating = new GraphQLObjectType<CalculatedRating, Context>({
-  name: 'CalculatedRating',
-  fields: {
-    count: {type: GraphQLNonNull(GraphQLInt)},
-    total: {type: GraphQLNonNull(GraphQLInt)},
-    mean: {type: GraphQLNonNull(GraphQLFloat)},
-    answer: {type: GraphQLCommentRatingSystemAnswer}
-  }
-})
-
-export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
-  new GraphQLObjectType<PublicComment, Context>({
-    name: 'Comment',
-    fields: () => ({
-      id: {type: GraphQLNonNull(GraphQLID)},
-      parentID: {type: GraphQLID},
-      guestUsername: {type: GraphQLString},
-      guestUserImage: {
-        type: GraphQLImage,
-        resolve: createProxyingResolver(({guestUserImageID}, _, {prisma: {image}}) =>
-          guestUserImageID ? image.findUnique({where: {id: guestUserImageID}}) : null
-        )
-      },
-      user: {
-        type: GraphQLPublicUser,
-        resolve: createProxyingResolver(({userID}, _, {prisma: {user}}) =>
-          userID
-            ? user.findUnique({
-                where: {
-                  id: userID
-                },
-                select: unselectPassword
-              })
-            : null
-        )
-      },
-      tags: {
-        type: GraphQLList(GraphQLNonNull(GraphQLTag)),
-        resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
-          const tags = await taggedComments.findMany({
-            where: {
-              commentId: id
-            },
-            include: {
-              tag: true
-            }
-          })
-
-          return tags.map(({tag}) => tag)
-        })
-      },
-      authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
-
-      itemID: {type: GraphQLNonNull(GraphQLID)},
-      itemType: {
-        type: GraphQLNonNull(GraphQLCommentItemType)
-      },
-      peerId: {type: GraphQLID},
-
-      children: {
-        type: GraphQLList(GraphQLPublicComment),
-        resolve: createProxyingResolver(({id, userID}, _, {prisma: {comment}}) =>
-          getPublicChildrenCommentsByParentId(id, userID ?? null, comment)
-        )
-      },
-
-      title: {type: GraphQLString},
-      lead: {type: GraphQLString},
-      text: {type: GraphQLRichText},
-
-      state: {type: GraphQLNonNull(GraphQLCommentState)},
-      source: {type: GraphQLString},
-
-      rejectionReason: {type: GraphQLString},
-      createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-      modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-      calculatedRatings: {
-        type: GraphQLList(GraphQLCalculatedRating)
-      },
-      overriddenRatings: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLoverriddenRating))),
-        resolve: comment =>
-          comment.overriddenRatings?.filter(ratings => ratings.value != null) ?? []
-      }
-    })
-  })
-
 export const GraphQLCommentConnection = new GraphQLObjectType({
   name: 'CommentConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLComment)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
-  }
-})
-
-export const GraphQLPublicCommentConnection = new GraphQLObjectType({
-  name: 'CommentConnection',
-  fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLComment)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })

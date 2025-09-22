@@ -1,0 +1,299 @@
+fragment FullPaymentMethod on PaymentMethod {
+  id
+  paymentProviderID
+  name
+  slug
+  description
+  gracePeriod
+  image {
+    ...FullImage
+  }
+}
+
+fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+  paymentPeriodicities
+  forceAutoRenewal
+}
+
+fragment FullMemberPlan on MemberPlan {
+  id
+  slug
+
+  name
+  tags
+  description
+  shortDescription
+  image {
+    ...FullImage
+  }
+
+  amountPerMonthMin
+  amountPerMonthTarget
+  currency
+  availablePaymentMethods {
+    ...FullAvailablePaymentMethod
+  }
+  extendable
+
+  successPageId
+  # successPage {
+  #   url
+  # }
+
+  failPageId
+  # failPage {
+  #   url
+  # }
+
+  confirmationPageId
+  # confirmationPage {
+  #   url
+  # }
+}
+
+fragment FullPayment on Payment {
+  id
+
+  intentSecret
+  state
+
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+}
+
+fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+
+fragment FullSubscription on PublicSubscription {
+  id
+  url
+
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  extendable
+
+  paidUntil
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+
+  deactivation {
+    ...FullSubscriptionDeactivation
+  }
+
+  memberPlan {
+    ...FullMemberPlan
+  }
+
+  properties {
+    ...FullProperty
+  }
+
+  canExtend
+}
+
+fragment FullInvoiceItem on InvoiceItem {
+  createdAt
+  modifiedAt
+
+  name
+  description
+
+  quantity
+  amount
+  total
+}
+
+fragment FullInvoice on Invoice {
+  id
+  createdAt
+  modifiedAt
+  mail
+
+  paidAt
+  dueAt
+  canceledAt
+
+  subscriptionID
+  subscription {
+    ...FullSubscription
+  }
+
+  description
+  items {
+    ...FullInvoiceItem
+  }
+  total
+}
+
+mutation Subscribe(
+  $memberPlanId: String
+  $memberPlanSlug: Slug
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $subscriptionProperties: [PropertyInput!]
+  $successURL: String
+  $failureURL: String
+  $deactivateSubscriptionId: String
+) {
+  createSubscription(
+    memberPlanID: $memberPlanId
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+    successURL: $successURL
+    failureURL: $failureURL
+    deactivateSubscriptionId: $deactivateSubscriptionId
+  ) {
+    ...FullPayment
+  }
+}
+
+mutation Resubscribe(
+  $userId: String
+  $memberPlanId: String
+  $memberPlanSlug: Slug
+  $autoRenew: Boolean!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $monthlyAmount: Int!
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $subscriptionProperties: [PropertyInput!]
+) {
+  createSubscriptionWithConfirmation(
+    userId: $userId
+    memberPlanID: $memberPlanId
+    memberPlanSlug: $memberPlanSlug
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    paymentMethodID: $paymentMethodId
+    paymentMethodSlug: $paymentMethodSlug
+    subscriptionProperties: $subscriptionProperties
+  )
+}
+
+mutation PayInvoice(
+  $invoiceId: String!
+  $paymentMethodId: String
+  $paymentMethodSlug: Slug
+  $successURL: String
+  $failureURL: String
+) {
+  createPaymentFromInvoice(
+    input: {
+      invoiceID: $invoiceId
+      paymentMethodID: $paymentMethodId
+      paymentMethodSlug: $paymentMethodSlug
+      successURL: $successURL
+      failureURL: $failureURL
+    }
+  ) {
+    ...FullPayment
+  }
+}
+
+mutation PaySubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
+  createPaymentFromSubscription(
+    subscriptionId: $subscriptionId
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
+mutation CancelSubscription($subscriptionId: String!) {
+  cancelUserSubscription(id: $subscriptionId) {
+    ...FullSubscription
+  }
+}
+
+mutation ExtendSubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
+  extendSubscription(
+    subscriptionId: $subscriptionId
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
+query Invoices {
+  invoices {
+    ...FullInvoice
+  }
+}
+
+query Subscriptions {
+  subscriptions {
+    ...FullSubscription
+  }
+}
+
+query CheckInvoiceStatus($id: String!) {
+  checkInvoiceStatus(id: $id) {
+    ...FullInvoice
+  }
+}
+
+query MemberPlanList(
+  $filter: MemberPlanFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: MemberPlanSort
+) {
+  memberPlans(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullMemberPlan
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Revenue($start: DateTime!, $end: DateTime) {
+  revenue(start: $start, end: $end) {
+    amount
+    paidAt
+    memberPlan
+  }
+}
+
+query NewSubscribers($start: DateTime!, $end: DateTime) {
+  newSubscribers(start: $start, end: $end) {
+    monthlyAmount
+    memberPlan
+  }
+}

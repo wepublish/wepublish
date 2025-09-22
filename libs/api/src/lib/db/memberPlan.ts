@@ -3,13 +3,15 @@ import {
   PaymentPeriodicity,
   AvailablePaymentMethod
 } from '@prisma/client'
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
   PaymentPeriodicity.monthly,
   PaymentPeriodicity.quarterly,
   PaymentPeriodicity.biannual,
-  PaymentPeriodicity.yearly
+  PaymentPeriodicity.yearly,
+  PaymentPeriodicity.biennial,
+  PaymentPeriodicity.lifetime
 ]
 
 export interface MemberPlan extends Omit<PrismaMemberPlan, 'description'> {
@@ -17,7 +19,7 @@ export interface MemberPlan extends Omit<PrismaMemberPlan, 'description'> {
 }
 
 export enum MemberPlanSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
 }
 

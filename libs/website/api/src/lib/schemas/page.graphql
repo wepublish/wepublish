@@ -1,0 +1,82 @@
+fragment PageRevisionWithoutBlocks on PageRevision {
+  id
+  createdAt
+  publishedAt
+  description
+  title
+  image {
+    ...FullImage
+  }
+
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment FullPageRevision on PageRevision {
+  ...PageRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
+fragment PageWithoutBlocks on Page {
+  id
+  publishedAt
+  modifiedAt
+  url
+  slug
+
+  tags {
+    ...FullTag
+  }
+
+  latest {
+    ...PageRevisionWithoutBlocks
+  }
+}
+
+fragment FullPage on Page {
+  ...PageWithoutBlocks
+
+  latest {
+    ...FullPageRevision
+  }
+}
+
+query Page($slug: String, $id: String) {
+  page(slug: $slug, id: $id) {
+    ...FullPage
+  }
+}
+
+query PageList(
+  $filter: PageFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PageSort
+) {
+  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullPage
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}

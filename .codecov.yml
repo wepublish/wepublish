@@ -1,0 +1,13 @@
+coverage:
+  status:
+    patch:
+      default:
+        target: 90%
+        if_not_found: error
+        if_ci_failed: error
+    changes:
+      default:
+        if_no_uploads: error
+        target: 35%
+        if_not_found: success
+        if_ci_failed: error

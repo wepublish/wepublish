@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["fullTextSearch", "views"]
 }
 
 datasource db {
@@ -32,17 +32,15 @@ model MetadataProperty {
 }
 
 model ArticleRevision {
-  id                     String                             @id @default(cuid())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
   preTitle               String?
   title                  String?
   lead                   String?
   seoTitle               String?
-  slug                   String?
-  tags                   String[]
   canonicalUrl           String?
   properties             MetadataProperty[]
-  image                  Image?                             @relation("articleRevisionImage", fields: [imageID], references: [id])
-  imageID                String?
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
@@ -50,25 +48,56 @@ model ArticleRevision {
   socialMediaTitle       String?
   socialMediaDescription String?
   socialMediaAuthors     ArticleRevisionSocialMediaAuthor[]
-  socialMediaImage       Image?                             @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
-  socialMediaImageID     String?
+  publishedAt            DateTime?
+  archivedAt             DateTime?
 
-  revision    Int       @default(0)
-  createdAt   DateTime  @default(now())
-  modifiedAt  DateTime? @updatedAt
-  updatedAt   DateTime?
-  publishAt   DateTime?
-  publishedAt DateTime?
+  image   Image?  @relation("articleRevisionImage", fields: [imageID], references: [id])
+  imageID String?
 
-  PublishedArticle Article[] @relation("publishedArticleRevision")
-  PendingArticle   Article[] @relation("pendingArticleRevision")
-  DraftArticle     Article[] @relation("draftArticleRevision")
+  socialMediaImage   Image?  @relation("articleRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+  socialMediaImageID String?
 
-  @@index([publishAt])
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  userId                   String?
+  user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ArticleRevisionPublished ArticleRevisionPublished[]
+  ArticleRevisionPending   ArticleRevisionPending[]
+  ArticleRevisionDraft     ArticleRevisionDraft[]
+
   @@index([publishedAt])
-  @@index([updatedAt])
-  @@index([tags])
   @@map("articles.revisions")
+}
+
+view ArticleRevisionPublished {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.published")
+}
+
+view ArticleRevisionPending {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.pending")
+}
+
+view ArticleRevisionDraft {
+  id              String          @unique
+  articleRevision ArticleRevision @relation(fields: [id], references: [id])
+
+  articleId String  @unique
+  article   Article @relation(fields: [articleId], references: [id])
+
+  @@map("articles.revisions.draft")
 }
 
 model ArticleRevisionAuthor {
@@ -94,31 +123,80 @@ model ArticleRevisionSocialMediaAuthor {
 }
 
 model Article {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  modifiedAt  DateTime  @updatedAt
+  publishedAt DateTime?
 
-  // The better way in the future to go around draft, pending, published is to have the articleId and a state on the revision
-  // There should then be a unique constraint on id + state.
-  // This would allow us to
-  //  cascade the revisions on article delete
-  //  promoting/demoting a revision to a different state easily
-  publishedId String?          @unique
-  published   ArticleRevision? @relation("publishedArticleRevision", fields: [publishedId], references: [id], onDelete: SetNull)
+  slug            String?
+  shared          Boolean
+  hidden          Boolean @default(false)
+  disableComments Boolean @default(false)
+  likes           Int     @default(0)
 
-  pendingId String?          @unique
-  pending   ArticleRevision? @relation("pendingArticleRevision", fields: [pendingId], references: [id], onDelete: SetNull)
+  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId        String?
+  peerArticleId String?
 
-  draftId String?          @unique
-  draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?  @db.Uuid
 
-  shared Boolean
-
-  navigations NavigationLink[]
+  navigations              NavigationLink[]
+  tags                     TaggedArticles[]
+  revisions                ArticleRevision[]
+  trackingPixels           ArticleTrackingPixels[]
+  ArticleRevisionPublished ArticleRevisionPublished?
+  ArticleRevisionPending   ArticleRevisionPending?
+  ArticleRevisionDraft     ArticleRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
+  @@index([publishedAt])
   @@map("articles")
+}
+
+enum TrackingPixelProviderType {
+  prolitteris @map("prolitteris")
+}
+
+model ArticleTrackingPixels {
+  id                   String              @id @default(cuid())
+  article              Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId            String
+  createdAt            DateTime            @default(now())
+  modifiedAt           DateTime            @updatedAt
+  tackingPixelMethodID String
+  trackingPixelMethod  TrackingPixelMethod @relation(fields: [tackingPixelMethodID], references: [id])
+
+  uri      String? @unique
+  pixelUid String? @unique
+  error    String?
+
+  @@map("articles.tracking-pixels")
+}
+
+model TrackingPixelMethod {
+  id                        String                    @id @default(cuid())
+  createdAt                 DateTime                  @default(now())
+  modifiedAt                DateTime                  @updatedAt
+  trackingPixelProviderID   String                    @unique
+  trackingPixelProviderType TrackingPixelProviderType
+
+  ArticleTrackingPixels ArticleTrackingPixels[]
+
+  @@map("tracking.pixels.methods")
+}
+
+model TaggedArticles {
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId  String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([articleId, tagId])
+  @@map("articles.tagged-articles")
 }
 
 model AuthorsLinks {
@@ -140,20 +218,42 @@ model Author {
   createdAt  DateTime       @default(now())
   modifiedAt DateTime       @updatedAt
   name       String
-  slug       String         @unique
+  slug       String
   jobTitle   String?
   links      AuthorsLinks[]
-  bio        Json
+  bio        Json?
 
   imageID                     String?
   image                       Image?                             @relation(fields: [imageID], references: [id])
   articlesAsAuthor            ArticleRevisionAuthor[]
   articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId String?
+
+  tags TaggedAuthors[]
+
+  hideOnArticle Boolean @default(false)
+  hideOnTeaser  Boolean @default(false)
+  hideOnTeam    Boolean @default(false)
+
+  @@unique([slug, peerId])
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([name])
   @@map("authors")
+}
+
+model TaggedAuthors {
+  author     Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([authorId, tagId])
+  @@map("authors.tagged-authors")
 }
 
 model FocalPoint {
@@ -185,10 +285,9 @@ model Image {
   height      Int
   width       Int
 
-  Author      Author[]
-  MemberPlan  MemberPlan[]
-  PeerProfile PeerProfile[]
-  Comment     Comment[]
+  Author     Author[]
+  MemberPlan MemberPlan[]
+  Comment    Comment[]
 
   articleRevisionSocialMediaImages ArticleRevision[] @relation("articleRevisionSocialMediaImage")
   articleRevisionImages            ArticleRevision[] @relation("articleRevisionImage")
@@ -196,8 +295,16 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
-  users  User[]
-  events Event[]
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId String?
+
+  users          User[]
+  events         Event[]
+  paymentMethods PaymentMethod[]
+
+  banners               Banner[]
+  peerProfileLogo       PeerProfile[] @relation("logo")
+  peerProfileSquareLogo PeerProfile[] @relation("squareLogo")
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -207,9 +314,8 @@ model Image {
 }
 
 enum CommentItemType {
-  peerArticle @map("peerArticle")
-  article     @map("article")
-  page        @map("page")
+  article @map("article")
+  page    @map("page")
 }
 
 enum CommentRejectionReason {
@@ -252,9 +358,6 @@ model Comment {
 
   itemID           String
   itemType         CommentItemType
-  /// only populated when itemType is peerArticle
-  peerId           String?
-  peer             Peer?                   @relation(fields: [peerId], references: [id])
   parentID         String?
   revisions        CommentsRevisions[]
   rejectionReason  CommentRejectionReason?
@@ -271,6 +374,7 @@ model Comment {
 
   ratings           CommentRating[]
   overriddenRatings CommentRatingOverride[]
+  featured          Boolean                 @default(false)
 
   @@index([createdAt])
   @@map("comments")
@@ -356,7 +460,7 @@ model CommentRatingOverride {
 
   value Int?
 
-  @@unique([answerId, commentId])
+  @@id([answerId, commentId])
   @@map("comments.rating-override")
 }
 
@@ -386,15 +490,13 @@ model Invoice {
   description               String?
   paidAt                    DateTime?
   canceledAt                DateTime?
-  sentReminderAt            DateTime?
+  scheduledDeactivationAt   DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
+  currency                  Currency
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
-
-  userID String?
-  user   User?   @relation(fields: [userID], references: [id])
 
   subscriptionPeriods SubscriptionPeriod[]
 
@@ -412,17 +514,22 @@ enum MailLogState {
 }
 
 model MailLog {
-  id         String   @id @default(cuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  recipient      String
-  subject        String
+  recipientID    String
+  recipient      User         @relation(fields: [recipientID], references: [id], onDelete: Cascade)
   state          MailLogState
-  mailData       String?
+  sentDate       DateTime
   mailProviderID String
+  mailIdentifier String
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId String
+  mailData       String?
+  subject        String?
 
-  @@index([subject])
+  @@index([mailIdentifier])
   @@map("mail.log")
 }
 
@@ -431,6 +538,8 @@ enum PaymentPeriodicity {
   quarterly @map("quarterly")
   biannual  @map("biannual")
   yearly    @map("yearly")
+  biennial  @map("biennial")
+  lifetime  @map("lifetime")
 }
 
 model AvailablePaymentMethod {
@@ -448,23 +557,48 @@ model AvailablePaymentMethod {
   @@map("member.plans.payment-methods")
 }
 
+enum Currency {
+  CHF @map("CHF")
+  EUR @map("EUR")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                    String
-  slug                    String                   @unique
-  tags                    String[]
-  description             Json
-  active                  Boolean
-  amountPerMonthMin       Float
-  availablePaymentMethods AvailablePaymentMethod[]
+  name                           String
+  slug                           String                   @unique
+  tags                           String[]
+  shortDescription               Json?
+  description                    Json
+  active                         Boolean
+  currency                       Currency
+  amountPerMonthMin              Float
+  amountPerMonthTarget           Float?
+  availablePaymentMethods        AvailablePaymentMethod[]
+  migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
+  migrateToTargetPaymentMethodID String?
+  extendable                     Boolean                  @default(true)
+  maxCount                       Int?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
 
-  Subscription Subscription[]
+  successPageId String?
+  successPage   Page?   @relation("successPage", fields: [successPageId], references: [id])
+
+  failPageId String?
+  failPage   Page?   @relation("failPage", fields: [failPageId], references: [id])
+
+  confirmationPageId String?
+  confirmationPage   Page?   @relation("confirmationPage", fields: [confirmationPageId], references: [id])
+
+  subscription      Subscription[]
+  subscriptionFlows SubscriptionFlow[]
+
+  crowdfundings Crowdfunding[]
+  paywalls      PaywallMemberplan[]
 
   @@index([name])
   @@map("member.plans")
@@ -507,55 +641,103 @@ model Navigation {
 }
 
 model PageRevision {
-  id                     String             @id @default(cuid())
-  revision               Int                @default(0)
-  createdAt              DateTime           @default(now())
-  modifiedAt             DateTime?          @updatedAt
-  updatedAt              DateTime?
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
   publishedAt            DateTime?
-  publishAt              DateTime?
-  slug                   String?
-  title                  String
+  archivedAt             DateTime?
+  title                  String?
   description            String?
-  tags                   String[]
   properties             MetadataProperty[]
-  imageID                String?
-  image                  Image?             @relation("pageRevisionImage", fields: [imageID], references: [id])
   socialMediaTitle       String?
   socialMediaDescription String?
-  socialMediaImageID     String?
-  socialMediaImage       Image?             @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
   blocks                 Json
-  PublishedPage          Page[]             @relation("publishedPageRevision")
-  PendingPage            Page[]             @relation("pendingPageRevision")
-  DraftPage              Page[]             @relation("draftPageRevision")
 
-  @@index([publishAt])
+  imageID String?
+  image   Image?  @relation("pageRevisionImage", fields: [imageID], references: [id])
+
+  socialMediaImageID String?
+  socialMediaImage   Image?  @relation("pageRevisionSocialMediaImage", fields: [socialMediaImageID], references: [id])
+
+  pageId String
+  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  userId                 String?
+  user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PagesRevisionPublished PagesRevisionPublished[]
+  PagesRevisionPending   PagesRevisionPending[]
+  PagesRevisionDraft     PagesRevisionDraft[]
+
   @@index([publishedAt])
-  @@index([updatedAt])
-  @@index([tags])
   @@map("pages.revisions")
 }
 
 model Page {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  modifiedAt  DateTime  @updatedAt
+  publishedAt DateTime?
 
-  publishedId String?       @unique
-  published   PageRevision? @relation("publishedPageRevision", fields: [publishedId], references: [id], onDelete: SetNull)
+  slug        String?
+  hidden      Boolean @default(false)
 
-  pendingId String?       @unique
-  pending   PageRevision? @relation("pendingPageRevision", fields: [pendingId], references: [id], onDelete: SetNull)
-
-  draftId String?       @unique
-  draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
-
-  navigations NavigationLink[]
+  revisions               PageRevision[]
+  navigations             NavigationLink[]
+  tags                    TaggedPages[]
+  memberPlansSuccess      MemberPlan[]            @relation("successPage")
+  memberPlansFail         MemberPlan[]            @relation("failPage")
+  memberPlansConfirmation MemberPlan[]            @relation("confirmationPage")
+  banners                 Banner[]
+  PagesRevisionPublished  PagesRevisionPublished?
+  PagesRevisionPending    PagesRevisionPending?
+  PagesRevisionDraft      PagesRevisionDraft?
 
   @@index([createdAt])
   @@index([modifiedAt])
+  @@index([publishedAt])
   @@map("pages")
+}
+
+model TaggedPages {
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId     String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([pageId, tagId])
+  @@map("pages.tagged-pages")
+}
+
+view PagesRevisionPublished {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.published")
+}
+
+view PagesRevisionPending {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.pending")
+}
+
+view PagesRevisionDraft {
+  id           String       @unique
+  pageRevision PageRevision @relation(fields: [id], references: [id])
+
+  pageId String @unique
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  @@map("pages.revisions.draft")
 }
 
 model PaymentMethod {
@@ -567,9 +749,15 @@ model PaymentMethod {
   description       String
   paymentProviderID String
   active            Boolean
+  gracePeriod       Int      @default(0)
 
-  Subscription Subscription[]
-  Payment      Payment[]
+  image   Image?  @relation(fields: [imageId], references: [id])
+  imageId String?
+
+  Subscription      Subscription[]
+  Payment           Payment[]
+  subscriptionFlows SubscriptionFlow[]
+  migrateFromPlans  MemberPlan[]       @relation("PaymentMethodMigration")
 
   @@map("payment.methods")
 }
@@ -613,7 +801,10 @@ model PeerProfile {
   callToActionImageID  String?
 
   logoID String?
-  logo   Image?  @relation(fields: [logoID], references: [id])
+  logo   Image?  @relation("logo", fields: [logoID], references: [id])
+
+  squareLogoId String?
+  squareLogo   Image?  @relation("squareLogo", fields: [squareLogoId], references: [id])
 
   @@map("peerProfiles")
 }
@@ -623,13 +814,17 @@ model Peer {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name       String
-  slug       String  @unique
-  hostURL    String
-  token      String
-  isDisabled Boolean @default(false)
+  name        String
+  slug        String  @unique
+  hostURL     String
+  token       String
+  isDisabled  Boolean @default(false)
+  information Json?
 
-  comments Comment[]
+  articles Article[]
+  images   Image[]
+  tags     Tag[]
+  authors  Author[]
 
   @@map("peers")
 }
@@ -681,9 +876,10 @@ model SubscriptionPeriod {
 }
 
 enum SubscriptionDeactivationReason {
-  none                @map("none")
-  userSelfDeactivated @map("userSelfDeactivated")
-  invoiceNotPaid      @map("invoiceNotPaid")
+  none                     @map("none")
+  userSelfDeactivated      @map("userSelfDeactivated")
+  invoiceNotPaid           @map("invoiceNotPaid")
+  userReplacedSubscription @map("userReplacedSubscription")
 }
 
 model SubscriptionDeactivation {
@@ -712,6 +908,9 @@ model Subscription {
   periods            SubscriptionPeriod[]
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
+  extendable         Boolean                   @default(true)
+  currency           Currency
+  confirmed          Boolean                   @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -721,6 +920,10 @@ model Subscription {
 
   userID String
   user   User   @relation(fields: [userID], references: [id])
+
+  replacesSubscriptionID String?
+  replacesSubscription   Subscription?  @relation(name: "ReplacementHistory", fields: [replacesSubscriptionID], references: [id])
+  replacedBy             Subscription[] @relation("ReplacementHistory")
 
   invoices Invoice[]
 
@@ -744,30 +947,6 @@ model UserAddress {
   @@map("users.addresses")
 }
 
-model UserOAuth2Account {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-
-  type              String
-  provider          String
-  providerAccountId String
-  refreshToken      String?
-  accessToken       String
-  expiresAt         Int
-  tokenType         String
-  scope             String
-  idToken           String
-  oauthTokenSecret  String?
-  oauthToken        String?
-  sessionState      String?
-
-  userId String?
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("users.oauth2-accounts")
-}
-
 model PaymentProviderCustomer {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -786,11 +965,12 @@ model User {
   id              String    @id @default(cuid())
   createdAt       DateTime  @default(now())
   modifiedAt      DateTime  @updatedAt
+  birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
   name            String
   firstName       String?
-  preferredName   String?
+  flair           String?
   password        String
   active          Boolean
   lastLogin       DateTime?
@@ -800,15 +980,17 @@ model User {
 
   address                  UserAddress?
   properties               MetadataProperty[]
-  oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  Comment       Comment[]
-  Session       Session[]
-  Subscription  Subscription[]
-  Invoice       Invoice[]
-  CommentRating CommentRating[]
-  PollVote      PollVote[]
+  comments         Comment[]
+  sessions         Session[]
+  subscriptions    Subscription[]
+  commentRatings   CommentRating[]
+  pollVotes        PollVote[]
+  mailSent         MailLog[]
+  consents         UserConsent[]
+  articleRevisions ArticleRevision[]
+  pageRevisions    PageRevision[]
 
   @@map("users")
 }
@@ -840,6 +1022,9 @@ model Setting {
 enum TagType {
   Comment @map("comment")
   Event   @map("event")
+  Author  @map("author")
+  Article @map("article")
+  Page    @map("page")
 }
 
 model Tag {
@@ -847,11 +1032,19 @@ model Tag {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type TagType
-  tag  String?
+  type        TagType
+  tag         String?
+  description Json?
+  main        Boolean @default(false)
+
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peerId String?
 
   comments TaggedComments[]
   events   TaggedEvents[]
+  authors  TaggedAuthors[]
+  articles TaggedArticles[]
+  pages    TaggedPages[]
 
   @@unique([type, tag])
   @@map("tags")
@@ -953,11 +1146,12 @@ enum EventStatus {
 }
 
 model Event {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   name        String
+  lead        String?
   description Json[]
   status      EventStatus @default(Scheduled)
 
@@ -968,6 +1162,9 @@ model Event {
   startsAt DateTime
   endsAt   DateTime?
 
+  externalSourceName String?
+  externalSourceId   String?
+
   tags TaggedEvents[]
 
   @@map("events")
@@ -975,7 +1172,7 @@ model Event {
 
 model TaggedEvents {
   event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId    String   @db.Uuid
+  eventId    String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
   createdAt  DateTime @default(now())
@@ -983,4 +1180,295 @@ model TaggedEvents {
 
   @@id([eventId, tagId])
   @@map("events.tagged-events")
+}
+
+model Consent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name         String
+  slug         String        @unique
+  defaultValue Boolean
+  userConsents UserConsent[]
+
+  @@map("consents")
+}
+
+model UserConsent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
+  consentId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  value Boolean
+
+  @@unique([userId, consentId])
+  @@map("user-consents")
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  PASSWORD_RESET
+  LOGIN_LINK
+  TEST_MAIL
+}
+
+model UserFlowMail {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  event UserEvent @unique
+
+  mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+  mailTemplateId String?
+
+  @@map("user_communication_flows")
+}
+
+enum SubscriptionEvent {
+  SUBSCRIBE
+  CONFIRM_SUBSCRIPTION
+  INVOICE_CREATION
+  RENEWAL_SUCCESS
+  RENEWAL_FAILED
+  DEACTIVATION_UNPAID
+  DEACTIVATION_BY_USER
+  CUSTOM
+}
+
+model SubscriptionFlow {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  default Boolean @default(false)
+
+  memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
+  memberPlanId String?
+
+  paymentMethods PaymentMethod[]
+  periodicities  PaymentPeriodicity[]
+  autoRenewal    Boolean[]
+
+  intervals SubscriptionInterval[] // send some more e-mails such as reminders
+
+  @@map("subscription_communication_flows")
+}
+
+model SubscriptionInterval {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt          DateTime          @default(now())
+  modifiedAt         DateTime          @updatedAt
+  event              SubscriptionEvent
+  daysAwayFromEnding Int?              @db.SmallInt
+  mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId     String?
+
+  subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
+  subscriptionFlowId String
+
+  @@map("subscriptions.intervals")
+}
+
+model MailTemplate {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name                   String
+  description            String?
+  externalMailTemplateId String  @unique
+  remoteMissing          Boolean @default(false)
+
+  subscriptionIntervals SubscriptionInterval[]
+
+  userFlowMails UserFlowMail[]
+
+  mailLog MailLog[]
+
+  @@map("mail_templates")
+}
+
+model PeriodicJob {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  date                 DateTime  @unique @db.Date
+  executionTime        DateTime?
+  successfullyFinished DateTime?
+  finishedWithError    DateTime?
+  tries                Int       @default(0)
+  error                String?
+
+  @@map("periodic_jobs")
+}
+
+enum BlockType {
+  RichText       @map("richText")
+  Title          @map("title")
+  Image          @map("image")
+  ImageGallery   @map("imageGallery")
+  Listicle       @map("listicle")
+  Quote          @map("quote")
+  Embed          @map("embed")
+  LinkPageBreak  @map("linkPageBreak")
+  TeaserGrid1    @map("teaserGrid1")
+  TeaserGrid6    @map("teaserGrid6")
+  TeaserGridFlex @map("teaserGridFlex")
+  TeaserList     @map("teaserList")
+  TeaserSlots    @map("teaserSlots")
+  HTML           @map("html")
+  Subscribe      @map("subscribe")
+  Crowdfunding   @map("crowdfunding")
+  Poll           @map("poll")
+  Comment        @map("comment")
+  Event          @map("event")
+}
+
+model BlockStyle {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name   String      @unique
+  blocks BlockType[]
+
+  @@map("block-content.styles")
+}
+
+model Banner {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  title String
+  text  String
+  cta   String?
+  html  String?
+
+  imageId String?
+  image   Image?  @relation(fields: [imageId], references: [id])
+
+  active Boolean @default(true)
+
+  delay Int @default(0)
+
+  showOnArticles     Boolean     @default(true)
+  showOnPages        Page[]
+  showForLoginStatus LoginStatus @default(ALL)
+
+  actions BannerAction[]
+
+  @@map("banners")
+}
+
+enum LoginStatus {
+  UNSUBSCRIBED @map("unsubscribed")
+  SUBSCRIBED   @map("subscribed")
+  LOGGED_IN    @map("logged_in")
+  LOGGED_OUT   @map("logged_out")
+  ALL          @map("all")
+}
+
+model BannerAction {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  bannerId String
+
+  label String
+  url   String
+
+  style String           @default("")
+  role  BannerActionRole @default(OTHER)
+
+  @@map("banner_actions")
+}
+
+enum BannerActionRole {
+  PRIMARY @map("primary")
+  CANCEL  @map("cancel")
+  OTHER   @map("other")
+}
+
+model Crowdfunding {
+  id                      String             @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt               DateTime           @default(now())
+  modifiedAt              DateTime           @updatedAt
+  name                    String
+  countSubscriptionsFrom  DateTime?
+  countSubscriptionsUntil DateTime?
+  additionalRevenue       Int?
+  memberPlans             MemberPlan[]
+  goals                   CrowdfundingGoal[]
+
+  @@map("crowdfundings")
+}
+
+model CrowdfundingGoal {
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt      DateTime     @default(now())
+  modifiedAt     DateTime     @updatedAt
+  title          String
+  description    String?
+  amount         Int
+  Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
+  crowdfundingId String
+
+  @@map("crowdfunding_goals")
+}
+
+model Paywall {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name                  String? @unique
+  description           Json?
+  circumventDescription Json?
+  anyMemberPlan         Boolean @default(false)
+  active                Boolean @default(true)
+
+  memberPlans PaywallMemberplan[]
+  articles    Article[]
+  bypasses    PaywallBypass[]
+
+  @@map("paywalls")
+}
+
+model PaywallMemberplan {
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@id([paywallId, memberPlanId])
+  @@map("paywalls.memberPlans")
+}
+
+model PaywallBypass {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  token String @unique
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@map("paywall_bypasses")
 }

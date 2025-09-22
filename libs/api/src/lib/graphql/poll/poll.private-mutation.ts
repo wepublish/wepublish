@@ -3,7 +3,7 @@ import {GraphQLError} from 'graphql'
 import {Context} from '../../context'
 import {NotFound} from '../../error'
 import {authorise} from '../permissions'
-import {CanCreatePoll, CanDeletePoll, CanUpdatePoll} from '@wepublish/permissions/api'
+import {CanCreatePoll, CanDeletePoll, CanUpdatePoll} from '@wepublish/permissions'
 
 export const deletePoll = (
   pollId: string,
@@ -55,7 +55,7 @@ export const createPoll = (
 
 type UpdatePollPollInput = Pick<
   Prisma.PollUncheckedCreateInput,
-  'question' | 'opensAt' | 'closedAt'
+  'question' | 'opensAt' | 'closedAt' | 'infoText'
 >
 
 type UpdatePollAnswer = {id: string; answer: string}
@@ -86,6 +86,7 @@ export const updatePoll = (
     where: {id: pollId},
     data: {
       ...pollInput,
+      infoText: pollInput.infoText || [],
       answers: {
         update: answers?.map(answer => ({
           where: {id: answer.id},

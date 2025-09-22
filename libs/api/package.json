@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "9.3.0",
+  "version": "10.2.0",
   "description": "API core for we.publish.",
   "keywords": [
     "api",
@@ -24,15 +24,9 @@
   "license": "MIT",
   "prisma": {
     "schema": "prisma/schema.prisma",
-    "seed": "npx ts-node __tests__/seed.ts"
+    "seed": "npx tsx __tests__/seed.ts"
   },
   "publishConfig": {
     "directory": "../../dist/libs/api"
-  },
-  "devDependencies": {
-    "prisma": "^3.14.0"
-  },
-  "dependencies": {
-    "@prisma/client": "^3.14.0"
   }
 }

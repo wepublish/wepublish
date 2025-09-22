@@ -8,7 +8,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {AllPermissions, EditorPermissions, PeerPermissions} from '@wepublish/permissions/api'
+import {AllPermissions, EditorPermissions, PeerPermissions} from '@wepublish/permissions'
 import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {UserRoleSort} from '../db/userRole'
@@ -16,21 +16,21 @@ import {UserRoleSort} from '../db/userRole'
 export const GraphQLPermission = new GraphQLObjectType({
   name: 'Permission',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
-    deprecated: {type: GraphQLNonNull(GraphQLBoolean)}
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    description: {type: new GraphQLNonNull(GraphQLString)},
+    deprecated: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
 export const GraphQLUserRole = new GraphQLObjectType({
   name: 'UserRole',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    name: {type: GraphQLNonNull(GraphQLString)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    systemRole: {type: GraphQLNonNull(GraphQLBoolean)},
+    systemRole: {type: new GraphQLNonNull(GraphQLBoolean)},
     permissions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPermission))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPermission))),
       resolve({id, permissionIDs}) {
         switch (id) {
           case 'admin':
@@ -50,18 +50,18 @@ export const GraphQLUserRole = new GraphQLObjectType({
 export const GraphQLUserRoleConnection = new GraphQLObjectType<any, Context>({
   name: 'UserRoleConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLUserRole)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
 export const GraphQLUserRoleInput = new GraphQLInputObjectType({
   name: 'UserRoleInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
-    permissionIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    description: {type: new GraphQLNonNull(GraphQLString)},
+    permissionIDs: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
@@ -75,7 +75,7 @@ export const GraphQLUserRoleFilter = new GraphQLInputObjectType({
 export const GraphQLUserRoleSort = new GraphQLEnumType({
   name: 'UserRoleSort',
   values: {
-    CREATED_AT: {value: UserRoleSort.CreatedAt},
-    MODIFIED_AT: {value: UserRoleSort.ModifiedAt}
+    [UserRoleSort.CreatedAt]: {value: UserRoleSort.CreatedAt},
+    [UserRoleSort.ModifiedAt]: {value: UserRoleSort.ModifiedAt}
   }
 })

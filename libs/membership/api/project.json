@@ -3,33 +3,18 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/membership/api/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/membership/api",
-        "tsConfig": "libs/membership/api/tsconfig.lib.json",
-        "packageJson": "libs/membership/api/package.json",
-        "main": "libs/membership/api/src/index.ts",
-        "assets": ["libs/membership/api/*.md"]
-      }
-    },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/membership/api/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/membership/api/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/membership/api/jest.config.ts"
       }
     }
-  },
-  "tags": []
+  }
 }

@@ -1,0 +1,35 @@
+fragment FullPoll on FullPoll {
+  id
+  question
+  opensAt
+  closedAt
+  infoText
+
+  answers {
+    id
+    pollId
+    answer
+    votes
+  }
+
+  externalVoteSources {
+    id
+
+    voteAmounts {
+      id
+      answerId
+      amount
+    }
+  }
+}
+
+query UserPollVote($pollId: String!) {
+  userPollVote(pollId: $pollId)
+}
+
+mutation PollVote($answerId: String!) {
+  voteOnPoll(answerId: $answerId) {
+    answerId
+    pollId
+  }
+}

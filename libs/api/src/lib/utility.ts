@@ -1,16 +1,12 @@
 import {MemberPlan, PaymentMethod} from '@prisma/client'
 import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
-import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
+import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'
+import {ExecutionResult} from '@graphql-tools/utils'
 import {Context} from './context'
-import {TeaserStyle} from './db/block'
-import {SettingRestriction} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
-import {InvalidSettingValueError} from './error'
-
-export const MAX_COMMENT_LENGTH = 1000
-export const MAX_PAYLOAD_SIZE = '1MB'
+import {format} from 'date-fns'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
@@ -31,7 +27,7 @@ export function mapSubscriptionsAsCsv(
       'id',
       'firstName',
       'name',
-      'preferredName',
+      'birthday',
       'email',
       'active',
       'createdAt',
@@ -49,6 +45,7 @@ export function mapSubscriptionsAsCsv(
       'paymentPeriodicity',
       'monthlyAmount',
       'autoRenew',
+      'extendable',
       'startsAt',
       'paidUntil',
       'paymentMethod',
@@ -67,7 +64,7 @@ export function mapSubscriptionsAsCsv(
         user?.id,
         `${sanitizeCsvContent(user?.firstName)}`,
         `${sanitizeCsvContent(user?.name)}`,
-        `${sanitizeCsvContent(user?.preferredName)}`,
+        `${user?.birthday ? format(user?.birthday, 'yyyy-MM-dd') : ''}`,
         `${user?.email ?? ''}`,
         user?.active,
         user?.createdAt ? formatISO(user.createdAt, {representation: 'date'}) : '',
@@ -83,6 +80,7 @@ export function mapSubscriptionsAsCsv(
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
         subscription?.autoRenew ?? '',
+        subscription?.extendable ?? '',
         subscription?.startsAt ? formatISO(subscription.startsAt, {representation: 'date'}) : '',
         subscription?.paidUntil
           ? formatISO(subscription.paidUntil, {representation: 'date'})
@@ -109,43 +107,6 @@ function sanitizeCsvContent(input: string | undefined | null) {
   const escapeDoubleQuotes = (input || '').toString().replace(/[#"]/g, '""')
   // according rfc 4180 2.5. / 2.6.
   return `"${escapeDoubleQuotes}"`
-}
-
-// https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
-export function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
-    .replace(/[ÇĆĈČ]/gi, 'c')
-    .replace(/[ÐĎĐÞ]/gi, 'd')
-    .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
-    .replace(/[ĜĞĢǴ]/gi, 'g')
-    .replace(/[ĤḦ]/gi, 'h')
-    .replace(/[ÌÍÎÏĨĪĮİỈỊ]/gi, 'i')
-    .replace(/[Ĵ]/gi, 'j')
-    .replace(/[Ĳ]/gi, 'ij')
-    .replace(/[Ķ]/gi, 'k')
-    .replace(/[ĹĻĽŁ]/gi, 'l')
-    .replace(/[Ḿ]/gi, 'm')
-    .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[Œ]/gi, 'oe')
-    .replace(/[ṕ]/gi, 'p')
-    .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ßŚŜŞŠ]/gi, 's')
-    .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
-    .replace(/[ẂŴẀẄ]/gi, 'w')
-    .replace(/[ẍ]/gi, 'x')
-    .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')
-    .replace(/[ŹŻŽ]/gi, 'z')
-    .replace(/[·/_,:;\\']/gi, '-')
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '')
 }
 
 export function base64Encode(str: string): string {
@@ -208,21 +169,7 @@ export function mapEnumsBack(result: any) {
       mapEnumsBack(value)
     }
   }
-  if (
-    result.__typename === 'ArticleTeaser' ||
-    result.__typename === 'PeerArticleTeaser' ||
-    result.__typename === 'PageTeaser' ||
-    result.__typename === 'CustomTeaser'
-  ) {
-    switch (result.style) {
-      case 'DEFAULT':
-        return Object.assign(result, {style: TeaserStyle.Default})
-      case 'LIGHT':
-        return Object.assign(result, {style: TeaserStyle.Light})
-      case 'TEXT':
-        return Object.assign(result, {style: TeaserStyle.Text})
-    }
-  }
+
   return result
 }
 
@@ -256,6 +203,10 @@ export async function delegateToPeerSchema(
 
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export function lowercaseFirstLetter(str: string): string {
+  return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
 export function countRichtextChars(blocksCharLength: number, nodes: any) {
@@ -292,43 +243,8 @@ export function isBoolean(unknown: unknown): unknown is boolean {
   return typeof unknown === 'boolean'
 }
 
-export function checkSettingRestrictions(
-  val: unknown,
-  currentVal: unknown,
-  restriction: SettingRestriction | undefined
-) {
-  if (!restriction) {
-    return
-  }
-
-  if (typeof val !== typeof currentVal) {
-    throw new InvalidSettingValueError()
-  }
-
-  if (restriction.allowedValues?.boolChoice && typeof val !== 'boolean') {
-    throw new InvalidSettingValueError()
-  }
-
-  if (typeof val === 'number') {
-    if (restriction.maxValue && val > restriction.maxValue) {
-      throw new InvalidSettingValueError()
-    }
-
-    if (restriction.minValue && val < restriction.minValue) {
-      throw new InvalidSettingValueError()
-    }
-  }
-
-  if (typeof val === 'string') {
-    if (restriction.inputLength && val.length > restriction.inputLength) {
-      throw new InvalidSettingValueError()
-    }
-
-    if (
-      restriction.allowedValues?.stringChoice &&
-      !restriction.allowedValues.stringChoice.includes(val)
-    ) {
-      throw new InvalidSettingValueError()
-    }
-  }
+export function mapEnumToGraphQLEnumValues(enumObject: Record<string, unknown>) {
+  return Object.fromEntries(
+    Object.keys(enumObject).map(key => [enumObject[key], {values: enumObject[key]}])
+  )
 }

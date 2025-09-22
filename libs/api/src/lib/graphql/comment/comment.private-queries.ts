@@ -1,9 +1,10 @@
 import {authorise} from '../permissions'
-import {CanGetComments} from '@wepublish/permissions/api'
+import {CanGetComments} from '@wepublish/permissions'
 import {Context} from '../../context'
 import {CommentFilter, CommentSort} from '../../db/comment'
 import {PrismaClient} from '@prisma/client'
 import {getComments} from './comment.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getComment = (
   commentId: string,
@@ -27,7 +28,7 @@ export const getComment = (
 export const getAdminComments = async (
   filter: Partial<CommentFilter>,
   sortedField: CommentSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

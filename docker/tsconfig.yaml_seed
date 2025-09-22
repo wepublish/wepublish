@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "files": [
+      "api/prisma/run-seed.ts",
+      "settings/api/src/lib/setting.ts",
+      "api/prisma/seed.ts"
+      ],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "importHelpers": false,
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": "."
+    }
+}

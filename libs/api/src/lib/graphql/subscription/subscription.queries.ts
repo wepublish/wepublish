@@ -1,8 +1,12 @@
 import {Prisma, PrismaClient, Subscription} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
-import {getSortOrder, SortOrder} from '../queries/sort'
-import {mapDateFilterToPrisma} from '../utils'
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+  mapDateFilterToPrisma
+} from '@wepublish/utils/api'
 
 export const createSubscriptionOrder = (
   field: SubscriptionSort,
@@ -11,12 +15,12 @@ export const createSubscriptionOrder = (
   switch (field) {
     case SubscriptionSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case SubscriptionSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -131,6 +135,48 @@ const createDeactivationDateToFilter = (
   return {}
 }
 
+const createCancellationDateFromFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.cancellationDateFrom) {
+    const {comparison, date} = filter.cancellationDateFrom
+    const compare = mapDateFilterToPrisma(comparison)
+
+    return {
+      deactivation: {
+        is: {
+          createdAt: {
+            [compare]: date
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
+const createCancellationDateToFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.cancellationDateTo) {
+    const {comparison, date} = filter.cancellationDateTo
+    const compare = mapDateFilterToPrisma(comparison)
+
+    return {
+      deactivation: {
+        is: {
+          createdAt: {
+            [compare]: date
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 const createDeactivationReasonFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => {
@@ -151,6 +197,18 @@ const createAutoRenewFilter = (
   if (filter?.autoRenew != null) {
     return {
       autoRenew: filter.autoRenew
+    }
+  }
+
+  return {}
+}
+
+const createExtendableFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.extendable != null) {
+    return {
+      extendable: filter.extendable
     }
   }
 
@@ -209,6 +267,17 @@ const createHasAddressFilter = (
   return {}
 }
 
+const createUserFilter = (filter: Partial<SubscriptionFilter>): Prisma.SubscriptionWhereInput => {
+  if (filter?.userID) {
+    return {
+      user: {
+        id: filter.userID
+      }
+    }
+  }
+  return {}
+}
+
 export const createSubscriptionFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => ({
@@ -219,25 +288,29 @@ export const createSubscriptionFilter = (
     createPaidUntilToFilter(filter),
     createDeactivationDateFromFilter(filter),
     createDeactivationDateToFilter(filter),
+    createCancellationDateToFilter(filter),
+    createCancellationDateFromFilter(filter),
     createDeactivationReasonFilter(filter),
     createAutoRenewFilter(filter),
     createPaymentPeriodicityFilter(filter),
     createPaymentMethodFilter(filter),
     createMemberPlanFilter(filter),
-    createHasAddressFilter(filter)
+    createHasAddressFilter(filter),
+    createUserFilter(filter),
+    createExtendableFilter(filter)
   ]
 })
 
 export const getSubscriptions = async (
   filter: Partial<SubscriptionFilter>,
   sortedField: SubscriptionSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   subscription: PrismaClient['subscription']
 ): Promise<ConnectionResult<Subscription>> => {
-  const orderBy = createSubscriptionOrder(sortedField, getSortOrder(order))
+  const orderBy = createSubscriptionOrder(sortedField, order)
   const where = createSubscriptionFilter(filter)
 
   const [totalCount, subscriptions] = await Promise.all([
@@ -248,7 +321,7 @@ export const getSubscriptions = async (
     subscription.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

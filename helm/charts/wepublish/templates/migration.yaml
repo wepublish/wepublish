@@ -1,0 +1,87 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "helm.fullname" . }}-migration-{{ .Release.Revision }}
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}-migration-{{ .Release.Revision }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "helm.name" . }}-migration
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      {{- if .Values.deployment.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.deployment.imagePullSecret }}
+      {{- end }}
+      containers:
+        - name: {{ include "helm.fullname" . }}
+          image: {{ .Values.migration.image }}
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          {{- $res := .Values.migration.resources }}
+          {{- if or (and $res.requests (or $res.requests.cpu $res.requests.memory)) (and $res.limits (or $res.limits.cpu $res.limits.memory)) }}
+          resources:
+            {{- if and $res.requests (or $res.requests.cpu $res.requests.memory) }}
+            requests:
+              {{- if $res.requests.cpu }}
+              cpu: {{ $res.requests.cpu }}
+              {{- end }}
+              {{- if $res.requests.memory }}
+              memory: {{ $res.requests.memory }}
+              {{- end }}
+            {{- end }}
+            {{- if and $res.limits (or $res.limits.cpu $res.limits.memory) }}
+            limits:
+              {{- if $res.limits.cpu }}
+              cpu: {{ $res.limits.cpu }}
+              {{- end }}
+              {{- if $res.limits.memory }}
+              memory: {{ $res.limits.memory }}
+              {{- end }}
+          {{- end }}
+          {{- end }}
+          env:
+            {{- if .Values.migration.dynamicEnv }}
+            {{- range $key, $value := .Values.migration.dynamicEnv }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+            {{- if .Values.migration.envFromSecretRefName }}
+            - secretRef:
+                name: {{ .Values.migration.envFromSecretRefName }}
+            {{- end }}
+          {{- with .Values.api.properties }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+  backoffLimit: 4
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+  labels:
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+type: Opaque
+data:
+  {{- range $name, $value := merge .Values.migration.env .Values.deployment.env }}
+  {{ $name }}: "{{ $value | b64enc }}"
+  {{- end }}

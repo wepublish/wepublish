@@ -1,0 +1,5 @@
+query HotAndTrending($take: Int, $start: DateTime) {
+  hotAndTrending(take: $take, start: $start) {
+    ...ArticleWithoutBlocks
+  }
+}

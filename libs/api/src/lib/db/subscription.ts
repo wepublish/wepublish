@@ -1,4 +1,3 @@
-import {DateFilter} from './common'
 import {
   MetadataProperty,
   PaymentPeriodicity,
@@ -7,6 +6,7 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionPeriod
 } from '@prisma/client'
+import {DateFilter} from '@wepublish/utils/api'
 
 export enum SubscriptionSort {
   CreatedAt = 'createdAt',
@@ -20,6 +20,8 @@ export interface SubscriptionFilter {
   readonly paidUntilTo?: DateFilter
   readonly deactivationDateFrom?: DateFilter
   readonly deactivationDateTo?: DateFilter
+  readonly cancellationDateFrom?: DateFilter
+  readonly cancellationDateTo?: DateFilter
   readonly deactivationReason?: SubscriptionDeactivationReason
   readonly autoRenew?: boolean
   readonly paymentMethodID?: string
@@ -27,6 +29,7 @@ export interface SubscriptionFilter {
   readonly paymentPeriodicity?: PaymentPeriodicity
   readonly userHasAddress?: boolean
   readonly userID?: string
+  readonly extendable?: boolean
 }
 
 export type SubscriptionWithRelations = Subscription & {

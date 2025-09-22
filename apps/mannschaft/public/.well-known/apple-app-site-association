@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appID": "6HHMLZ678E.com.ios.Mannschaft",
+        "paths": ["NOT /mitmachen", "NOT /login/*invoiceId*", "/*"]
+      }
+    ]
+  }
+}

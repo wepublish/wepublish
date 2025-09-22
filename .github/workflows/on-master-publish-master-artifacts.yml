@@ -1,0 +1,82 @@
+name: Publish master or development artifacts
+
+on:
+  push:
+    branches:
+      - master
+      - development
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  date_sha_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - id: image_tag
+        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+
+  setup-website-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: set-matrix
+        run: deployment/read_deployment_config.sh '.website.staging.deployment' true
+
+  publish-docker-base-image:
+    name: ${{ needs.get-tag.outputs.project }} base image
+    if: ${{ needs.date_sha_tag.result == 'success' }}
+    needs: date_sha_tag
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    secrets: inherit
+
+  publish_master_docker:
+    needs: [date_sha_tag, publish-docker-base-image]
+    if: ${{ needs.publish-docker-base-image.result == 'success' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+    with:
+      migration_tags: |
+        ghcr.io/wepublish/migration:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/migration:${{ github.ref_name }}
+        wepublishch/migration:${{ github.ref_name }}
+      api_tags: |
+        ghcr.io/wepublish/api:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/api:${{ github.ref_name }}
+        wepublishch/api:${{ github.ref_name }}
+      editor_tags: |
+        ghcr.io/wepublish/editor:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/editor:${{ github.ref_name }}
+        wepublishch/editor:${{ github.ref_name }}
+      media_tags: |
+        ghcr.io/wepublish/media:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/media:${{ github.ref_name }}
+        wepublishch/media:${{ github.ref_name }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/storybook:${{ github.ref_name }}
+        wepublishch/storybook:${{ github.ref_name }}
+    secrets: inherit
+
+  publish_master_docker_website:
+    name: Website
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image]
+    if: ${{ needs.publish_master_docker.result == 'success' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+    with:
+      website_project: ${{ matrix.target }}
+      api_url: https://api-${{ matrix.target }}.wepublish.dev
+      environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
+      website_tags: |
+        ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit

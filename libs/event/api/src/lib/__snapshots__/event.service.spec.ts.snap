@@ -1,0 +1,350 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventService should create an event 1`] = `
+[
+  {
+    "data": {
+      "description": [],
+      "endsAt": 2023-01-01T00:00:00.000Z,
+      "imageId": "123",
+      "location": "Location",
+      "name": "Name",
+      "startsAt": 2023-01-01T00:00:00.000Z,
+      "tags": {
+        "createMany": {
+          "data": [
+            {
+              "tagId": "123",
+            },
+            {
+              "tagId": "321",
+            },
+          ],
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`EventService should delete an event 1`] = `
+[
+  {
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`EventService should query an event by id 1`] = `
+[
+  {
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`EventService should query events based on filter 1`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "endsAt": "asc",
+    },
+    "skip": 5,
+    "take": 6,
+    "where": {
+      "AND": [
+        {
+          "OR": [
+            {
+              "startsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "endsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+          ],
+        },
+        {
+          "OR": [
+            {
+              "startsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "endsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+          ],
+        },
+        {
+          "OR": [
+            {
+              "startsAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "endsAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+          ],
+        },
+        {
+          "tags": {
+            "some": {
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
+              },
+            },
+          },
+        },
+        {
+          "OR": [
+            {
+              "name": {
+                "contains": "name",
+                "mode": "insensitive",
+              },
+            },
+          ],
+        },
+        {
+          "OR": [
+            {
+              "location": {
+                "contains": "location",
+                "mode": "insensitive",
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`EventService should query events based on filter 2`] = `
+[
+  {
+    "orderBy": {
+      "endsAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {
+          "OR": [
+            {
+              "startsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "endsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+          ],
+        },
+        {
+          "OR": [
+            {
+              "startsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "endsAt": {
+                "gte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+          ],
+        },
+        {
+          "OR": [
+            {
+              "startsAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "endsAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+          ],
+        },
+        {
+          "tags": {
+            "some": {
+              "tagId": {
+                "in": [
+                  "1234",
+                ],
+              },
+            },
+          },
+        },
+        {
+          "OR": [
+            {
+              "name": {
+                "contains": "name",
+                "mode": "insensitive",
+              },
+            },
+          ],
+        },
+        {
+          "OR": [
+            {
+              "location": {
+                "contains": "location",
+                "mode": "insensitive",
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`EventService should query events using cursor based pagination 1`] = `
+[
+  {
+    "cursor": {
+      "id": "1234",
+    },
+    "orderBy": {
+      "startsAt": "asc",
+    },
+    "skip": undefined,
+    "take": 11,
+    "where": {
+      "AND": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+      ],
+    },
+  },
+]
+`;
+
+exports[`EventService should query events using cursor based pagination 2`] = `
+[
+  {
+    "orderBy": {
+      "startsAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+      ],
+    },
+  },
+]
+`;
+
+exports[`EventService should return paginated events 1`] = `
+{
+  "nodes": [
+    {
+      "id": "123",
+    },
+  ],
+  "pageInfo": {
+    "endCursor": "123",
+    "hasNextPage": true,
+    "hasPreviousPage": true,
+    "startCursor": "123",
+  },
+  "totalCount": 1000,
+}
+`;
+
+exports[`EventService should update an event 1`] = `
+[
+  {
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`EventService should update an event 2`] = `
+[
+  {
+    "data": {
+      "description": [],
+      "endsAt": 2023-01-01T00:00:00.000Z,
+      "imageId": "123",
+      "location": "Location",
+      "name": "Name",
+      "startsAt": 2023-01-01T00:00:00.000Z,
+      "tags": {
+        "connectOrCreate": [
+          {
+            "create": {
+              "tagId": "123",
+            },
+            "where": {
+              "eventId_tagId": {
+                "eventId": "123",
+                "tagId": "123",
+              },
+            },
+          },
+          {
+            "create": {
+              "tagId": "321",
+            },
+            "where": {
+              "eventId_tagId": {
+                "eventId": "123",
+                "tagId": "321",
+              },
+            },
+          },
+        ],
+        "deleteMany": {
+          "eventId": "123",
+          "tagId": {
+            "notIn": [
+              "123",
+              "321",
+            ],
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;

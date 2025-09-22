@@ -1,11 +1,12 @@
 import {Context} from '../../context'
 import {ImageFilter, ImageSort} from '../../db/image'
 import {authorise} from '../permissions'
-import {CanGetImage, CanGetImages} from '@wepublish/permissions/api'
+import {CanGetImage, CanGetImages} from '@wepublish/permissions'
 import {PrismaClient} from '@prisma/client'
 import {getImages} from './image.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
-export const getImageById = (
+export const getImageById = async (
   id: string,
   authenticate: Context['authenticate'],
   imageLoader: Context['loaders']['images']
@@ -19,7 +20,7 @@ export const getImageById = (
 export const getAdminImages = async (
   filter: Partial<ImageFilter>,
   sortedField: ImageSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

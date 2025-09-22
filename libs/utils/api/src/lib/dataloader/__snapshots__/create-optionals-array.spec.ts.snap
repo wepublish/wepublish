@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should return missing keys as null 1`] = `
+[
+  null,
+  {
+    "id": "1234",
+  },
+]
+`;

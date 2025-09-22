@@ -1,41 +1,50 @@
 import {MemberPlan, MemberPlanSort} from '../db/memberPlan'
 
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLImage} from './image'
 import {Context} from '../context'
 import {createProxyingResolver} from '../utility'
 import {
-  GraphQLID,
+  GraphQLBoolean,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLInt,
-  GraphQLInputObjectType,
-  GraphQLEnumType
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {GraphQLPageInfo} from './common'
-import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
-import {AvailablePaymentMethod, PaymentPeriodicity} from '@prisma/client'
+import {GraphQLPaymentMethod} from './paymentMethod'
+import {AvailablePaymentMethod, Currency, PaymentPeriodicity} from '@prisma/client'
+
+export const GraphQLSupportedCurrency = new GraphQLEnumType({
+  name: 'Currency',
+  values: {
+    CHF: {value: Currency.CHF},
+    EUR: {value: Currency.EUR}
+  }
+})
 
 export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
   name: 'PaymentPeriodicity',
   values: {
-    MONTHLY: {value: PaymentPeriodicity.monthly},
-    QUARTERLY: {value: PaymentPeriodicity.quarterly},
-    BIANNUAL: {value: PaymentPeriodicity.biannual},
-    YEARLY: {value: PaymentPeriodicity.yearly}
+    [PaymentPeriodicity.monthly]: {value: PaymentPeriodicity.monthly},
+    [PaymentPeriodicity.quarterly]: {value: PaymentPeriodicity.quarterly},
+    [PaymentPeriodicity.biannual]: {value: PaymentPeriodicity.biannual},
+    [PaymentPeriodicity.yearly]: {value: PaymentPeriodicity.yearly},
+    [PaymentPeriodicity.biennial]: {value: PaymentPeriodicity.biennial},
+    [PaymentPeriodicity.lifetime]: {value: PaymentPeriodicity.lifetime}
   }
 })
 
 export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaymentMethod, Context>(
   {
     name: 'AvailablePaymentMethod',
-    fields: {
+    fields: () => ({
       paymentMethods: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentMethod))),
         async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
           const paymentMethods = await paymentMethod.findMany({
             where: {
@@ -52,54 +61,23 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
         }
       },
       paymentPeriodicities: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentPeriodicity)))
       },
-      forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
-    }
+      forceAutoRenewal: {type: new GraphQLNonNull(GraphQLBoolean)}
+    })
   }
 )
 
-export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
-  AvailablePaymentMethod,
-  Context
->({
-  name: 'AvailablePaymentMethod',
-  fields: {
-    paymentMethods: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPaymentMethod))),
-      async resolve({paymentMethodIDs}, args, {prisma: {paymentMethod}}) {
-        const paymentMethods = await paymentMethod.findMany({
-          where: {
-            id: {
-              in: paymentMethodIDs
-            },
-            active: true
-          },
-          orderBy: {
-            createdAt: 'desc'
-          }
-        })
-
-        return paymentMethods
-      }
-    },
-    paymentPeriodicities: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
-    },
-    forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
-  }
-})
-
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+  fields: () => ({
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
@@ -107,95 +85,104 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
       })
     },
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-    active: {type: GraphQLNonNull(GraphQLBoolean)},
-    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
+    shortDescription: {type: GraphQLRichText},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    amountPerMonthTarget: {type: GraphQLInt},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
+    maxCount: {type: GraphQLInt},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     availablePaymentMethods: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAvailablePaymentMethod)))
-    }
-  }
-})
-
-export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
-  name: 'MemberPlan',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
-    image: {
-      type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
-        return imageID ? loaders.images.load(imageID) : null
-      })
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     },
-    description: {type: GraphQLRichText},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
-    availablePaymentMethods: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicAvailablePaymentMethod)))
-    }
-  }
+    migrateToTargetPaymentMethodID: {type: GraphQLString},
+    successPageId: {type: GraphQLString},
+    // successPage: {
+    //   type: GraphQLPage,
+    //   resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
+    //     return successPageId ? loaders.pages.load(successPageId) : null
+    //   })
+    // },
+    failPageId: {type: GraphQLString},
+    // failPage: {
+    //   type: GraphQLPage,
+    //   resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
+    //     return failPageId ? loaders.pages.load(failPageId) : null
+    //   })
+    // },
+    confirmationPageId: {type: GraphQLString}
+    // confirmationPage: {
+    //   type: GraphQLPage,
+    //   resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
+    //     return confirmationPageId ? loaders.pages.load(confirmationPageId) : null
+    //   })
+    // }
+  })
 })
 
 export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
-  fields: {
+  fields: () => ({
     name: {type: GraphQLString},
     active: {type: GraphQLBoolean},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
-  }
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+  })
 })
 
 export const GraphQLMemberPlanSort = new GraphQLEnumType({
   name: 'MemberPlanSort',
   values: {
-    CREATED_AT: {value: MemberPlanSort.CreatedAt},
-    MODIFIED_AT: {value: MemberPlanSort.ModifiedAt}
+    [MemberPlanSort.CreatedAt]: {value: MemberPlanSort.CreatedAt},
+    [MemberPlanSort.ModifiedAt]: {value: MemberPlanSort.ModifiedAt}
   }
 })
 
 export const GraphQLMemberPlanConnection = new GraphQLObjectType<any, Context>({
   name: 'MemberPlanConnection',
-  fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMemberPlan)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
-  }
-})
-
-export const GraphQLPublicMemberPlanConnection = new GraphQLObjectType<any, Context>({
-  name: 'MemberPlanConnection',
-  fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicMemberPlan)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
-  }
+  fields: () => ({
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMemberPlan)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
+  })
 })
 
 export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   name: 'AvailablePaymentMethodInput',
-  fields: {
-    paymentMethodIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    paymentPeriodicities: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+  fields: () => ({
+    paymentMethodIDs: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))
     },
-    forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
-  }
+    paymentPeriodicities: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentPeriodicity)))
+    },
+    forceAutoRenewal: {type: new GraphQLNonNull(GraphQLBoolean)}
+  })
 })
 
 export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   name: 'MemberPlanInput',
-  fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
-    imageID: {type: GraphQLID},
+  fields: () => ({
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLString)},
+    imageID: {type: GraphQLString},
     description: {type: GraphQLRichText},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-    active: {type: GraphQLNonNull(GraphQLBoolean)},
-    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
+    shortDescription: {type: GraphQLRichText},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    amountPerMonthTarget: {type: GraphQLInt},
+    currency: {type: new GraphQLNonNull(GraphQLSupportedCurrency)},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
+    maxCount: {type: GraphQLInt},
     availablePaymentMethods: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAvailablePaymentMethodInput)))
-    }
-  }
+      type: new GraphQLNonNull(
+        new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
+      )
+    },
+    migrateToTargetPaymentMethodID: {type: GraphQLString},
+    successPageId: {type: GraphQLString},
+    failPageId: {type: GraphQLString},
+    confirmationPageId: {type: GraphQLString}
+  })
 })

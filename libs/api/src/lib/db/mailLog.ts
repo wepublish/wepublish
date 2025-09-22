@@ -1,5 +1,5 @@
 export enum MailLogSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
 }
 

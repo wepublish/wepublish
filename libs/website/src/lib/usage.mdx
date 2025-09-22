@@ -1,0 +1,164 @@
+import {Meta} from '@storybook/blocks'
+import {Alert} from "@mui/material"
+
+<Meta title="Getting Started/Usage" />
+
+# Usage
+
+## Overriding Components
+
+The Website builder allows to override any base component (even when nested) in case the implemented features, logic, design or HTML structure is not desired by the media. This allows for flexibility without having to rewrite everything.
+
+For example purposes lets assume that [Bajour](https://bajour.ch) wants to use a different [PollBlock](../?path=/story/blocks-poll--default) than the one given by the Website Builder:
+
+If there would be no overriding, Bajour would need to implement their own Article & Page components, as the blocks are nested inside of them. This also means they have to write their own API bindings and write their own block renderer. This would defeat the purpose of having a library managed by someone else as it would need too much time investment.
+
+Since overriding exists, we can simply switch out the underlying implementation of the block via a [Context Provider](https://react.dev/learn/passing-data-deeply-with-context). An example can be found here:
+
+<Alert severity="info">The `WebsiteBuilderProvider` performs a deep merge on the given props, which means you only have to specify the ones you want to override.</Alert>
+
+```tsx
+import {PollBlockProps, WebsiteBuilderProvider} from "@wepublish/website";
+
+const BajourPollBlock = (props: PollBlockProps) => {
+    return <div>Bajour Poll Block implementation</div>
+}
+
+export const App = () => {
+    return <WebsiteBuilderProvider blocks={{Poll: BajourPollBlock}}>
+        ...
+    </WebsiteBuilderProvider>
+}
+```
+
+Since the Website Builder is using a React Context, you can override these for the whole Application or for specific components only by adjusting the level of nesting the `WebsiteBuilderProvider`.
+
+## Styling
+
+There's a few ways you can style the Website Builder each having their own use cases, advantages & disadvantages.
+
+- Theming which is for changing variables that the component styles use
+- CSS (in JS via [Emotion](https://emotion.sh/docs/introduction)) which is for overriding the styling and layout of components
+
+### Theming
+
+The Website Builder uses [MUI](https://mui.com/material-ui/getting-started/) and thus [Emotion](https://emotion.sh/docs/introduction) for the implementation of the components which has integrated theming support. You can use the `ThemeProvider` exposed by the `@mui/material` package to change the theme.
+
+<Alert severity="info">The `createTheme` performs a deep merge on the given object, which means you only have to specify the ones you want to override.</Alert>
+
+```tsx
+import {createTheme, ThemeProvider} from '@mui/material'
+import {WebsiteBuilderProvider, theme} from "@wepublish/website";
+
+// createTheme also accepts only a single argument if you do not want to inherit
+// from the Website Builder default theme and want to inherit from the MUI defaults
+const websiteExampleTheme = createTheme(theme, {
+  palette: {
+    primary: {
+        main: '#f00'
+    }
+  },
+  typography: {
+    h1: {
+      fontWeight: theme.typography.fontWeightBold
+    },
+  },
+})
+
+export const App = () => {
+    return <ThemeProvider theme={websiteExampleTheme}>
+        ...
+    </ThemeProvider>
+}
+```
+
+There also exists [theme builders](https://bareynol.github.io/mui-theme-creator/) for MUI or [paid themes](https://mui.com/store/) that can be used. But be aware this will still need a some manual changes.
+
+### Scoped CSS
+
+Due to the nature of [Emotion](https://emotion.sh/docs/styled) we can change the styling of components (that expose a `className` prop) via the `styled` utility. Combined with the possibility to override components we can scope the CSS for only when it is used.
+
+An example of how to do this by enriching the `Article` component with higher font-sizes can be found here:
+
+```tsx
+import {Article, ArticleInfoWrapper, WebsiteBuilderProvider} from "@wepublish/website";
+
+const StyledArticle = styled(Article)`
+    font-size: 1.25em;
+
+    // We can also use component selectors to target children
+    ${ArticleInfoWrapper} {
+        font-size: 0.875em;
+    }
+`
+
+export const App = () => {
+    return <WebsiteBuilderProvider Article={StyledArticle}>
+        ...
+    </WebsiteBuilderProvider>
+}
+```
+
+### Global CSS
+
+If you want to inject some global CSS you can do this by using [MUI's `GlobalStyles`](https://mui.com/material-ui/api/global-styles/). This can be used in case you want to change the styling of a particular component outside of the website builder or regardless of it's scope.
+
+<Alert severity="warning">Global CSS gets included on *every* page load even when unused and should thus be avoided if possible.</Alert>
+
+```tsx
+import {ArticleWrapper, WebsiteBuilderProvider} from "@wepublish/website";
+
+const globalStyling = <GlobalStyles styles={css`
+    ${ArticleWrapper} {
+        font-size: 0.875em;
+    }
+`} />
+
+export const App = () => {
+    return <>
+        {globalStyling}
+        ...
+    </>
+}
+```
+
+### Conditional CSS
+
+
+## Tips
+
+### Extend when possible
+
+Ideally one would extend the Website Builder when overriding components instead of completely replacing them. The most obvious use case would be for the [Block Renderer](../?path=/story/blocks-blocks--default) component as often we need special cases to support the medias needs.
+
+```tsx
+import {BlockRenderer, WebsiteBuilderProvider, BuilderBlockRendererProps} from "@wepublish/website";
+
+const MyBlockRenderer = (props: BuilderBlockRendererProps) => {
+    const {block} = props;
+
+    if (block.__typename === "LinkPageBreakBlock" && block.url === "https://example.com") {
+        return <SpecialBreakBlock {...props.block} />;
+    }
+
+    // We return the original BlockRenderer here so that we fallback to the default behaviour.
+    // This allows to automatically get future block updates but still have our own logic.
+    return <BlockRenderer {...props} />
+}
+
+export const App = () => {
+    return <WebsiteBuilderProvider block={{Renderer: MyBlockRenderer}}>
+        ...
+    </WebsiteBuilderProvider>
+}
+```
+
+### Use the power of CSS Grid
+
+The Website Builder rigorously uses [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/grid) which is a very powerful layouting tool that requires no prop drilling. You can use this to your advantage in various use cases:
+
+- Ensuring that a `TitleBlock` is always the first block to render via [grid-row: 1;](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row)
+- Stickying a block to the screen by using a combination of [grid-row](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row), [grid-column](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) & [position: sticky;](https://developer.mozilla.org/en-US/docs/Web/CSS/position)
+- Changing the layout of the component by using [grid-template-columns](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns), [grid-template-rows](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-rows) or even go as far as using [grid-template-area](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-area). Let your imagination go wild!
+- etc
+

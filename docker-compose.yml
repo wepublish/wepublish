@@ -5,73 +5,55 @@ networks:
     driver: bridge
 
 services:
-  website:
-    build:
-      context: .
-    ports:
-      - 4200:8000
-    command: ['npx', '@wepublish/website-example']
+  migration:
+    image: wepublishch/migration:master
+    platform: linux/amd64
     environment:
       NODE_ENV: production
-      CANONICAL_HOST: http://localhost:4200
-      API_URL: http://api:8000
-      ALLOWED_HOSTS: localhost
-      NUM_WORKERS: 1
+      DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
     depends_on:
-      - api
+      - database
+    restart: on-failure
     networks:
       - app-tier
   api:
-    build:
-      context: .
+    image: wepublishch/api:master
+    platform: linux/amd64
     ports:
-      - 4000:8000
-    command: ['node', 'dist/apps/api-example/main.js']
+      - '127.0.0.1:4000:4000'
     environment:
-      NODE_ENV: production
+      CONFIG_FILE_PATH: /config.yaml
+      DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
       HOST_URL: http://localhost:4000
       MEDIA_SERVER_URL: http://localhost:4100
       MEDIA_SERVER_INTERNAL_URL: http://media:4100
       MEDIA_SERVER_TOKEN: secret
-      DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
-      OAUTH_GOOGLE_CLIENT_ID: 617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com
-      OAUTH_GOOGLE_CLIENT_KEY: t267ZLqkV9dacrkPQp_pF-G2
-      OAUTH_GOOGLE_REDIRECT_URL: http://localhost:4000/auth/google
       WEBSITE_URL: http://localhost:4200
       JWT_SECRET_KEY: ThisIsSuperSecret
+    env_file: .env
+    volumes:
+      - ./apps/api-example/src/default.yaml:/config.yaml
     depends_on:
       - database
-      - media
+      - migration
     networks:
       - app-tier
   editor:
-    build:
-      context: .
+    image: wepublishch/editor:master
+    platform: linux/amd64
     ports:
-      - 3006:8000
-    command: ['node', 'dist/apps/editor/main.js']
+      - '127.0.0.1:3000:3000'
     environment:
       NODE_ENV: production
       ADDRESS: 0.0.0.0
       API_URL: http://localhost:4000
     depends_on:
       - api
-
-  media:
-    image: ghcr.io/wepublish/karma-media-server:latest
-    ports:
-      - 4100:4100
-      - 4101:4100
-    environment:
-      NUM_CLUSTERS: 1
-      STORAGE_PATH: ./.media
-      TOKEN: secret
-
   database:
     image: bitnami/postgresql:14
     platform: linux/amd64
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - 'database_data:/bitnami/postgresql'
     environment:
@@ -79,9 +61,24 @@ services:
       - POSTGRESQL_DATABASE=wepublish
     networks:
       - app-tier
-
+  media:
+    image: wepublishch/media:master
+    platform: linux/amd64
+    ports:
+      - '127.0.0.1:4100:4100'
+    environment:
+      TOKEN: secret
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_ENDPOINT: 'storage'
+      S3_PORT: '9000'
+    depends_on:
+      - storage
+    networks:
+      - app-tier
   pgadmin:
     image: dpage/pgadmin4
+    platform: linux/amd64
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
@@ -89,12 +86,26 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "8000:80"
+      - '127.0.0.1:8000:80'
     depends_on:
       - database
     networks:
       - app-tier
 
+  storage:
+    image: bitnami/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+      - MINIO_DEFAULT_BUCKETS=${S3_BUCKETS}
+    volumes:
+      - storage_data:/data
+
 volumes:
   database_data:
+    driver: local
+  storage_data:
     driver: local

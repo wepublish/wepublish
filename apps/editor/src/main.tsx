@@ -1,55 +1,31 @@
 import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
 import {onError} from '@apollo/client/link/error'
 import {CssBaseline, ThemeProvider} from '@mui/material'
+import * as Sentry from '@sentry/react'
+import {possibleTypes} from '@wepublish/editor/api'
+import {getSettings, LocalStorageKey} from '@wepublish/editor/api-v2'
 import {theme} from '@wepublish/ui'
+import {
+  AuthProvider,
+  FacebookProvider,
+  InstagramProvider,
+  TwitterProvider
+} from '@wepublish/ui/editor'
 import {createUploadLink} from 'apollo-upload-client'
-import ReactDOM from 'react-dom'
+import {createRoot} from 'react-dom/client'
 import {IconContext} from 'react-icons'
 
 import {App} from './app/app'
-import {AuthProvider} from './app/authContext'
-import {FacebookProvider} from './app/blocks/embeds/facebook'
-import {InstagramProvider} from './app/blocks/embeds/instagram'
-import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
-import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
 
-// See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
-export async function fetchIntrospectionQueryResultData(url: string) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      variables: {},
-      query: `
-      {
-        __schema {
-          types {
-            kind
-            name
-            possibleTypes {
-              name
-            }
-          }
-        }
-      }
-    `
-    })
-  })
-
-  const result = await response.json()
-
-  const possibleTypes: any = {}
-
-  result.data.__schema.types.forEach((supertype: any) => {
-    if (supertype.possibleTypes) {
-      possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype: any) => subtype.name)
-    }
-  })
-
-  return possibleTypes
-}
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0
+})
 
 const onDOMContentLoaded = async () => {
   const {apiURL} = getSettings()
@@ -63,6 +39,7 @@ const onDOMContentLoaded = async () => {
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : '',
+        preview: 'preview',
         ...context.headers
       },
       credentials: 'include',
@@ -76,7 +53,9 @@ const onDOMContentLoaded = async () => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
         if (
-          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
+          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(
+            (extensions?.code as string | undefined) ?? ''
+          ) &&
           !(
             window.location.pathname.includes('/logout') ||
             window.location.pathname.includes('/login')
@@ -96,14 +75,17 @@ const onDOMContentLoaded = async () => {
   const client = new ApolloClient({
     link: authLink.concat(authErrorLink).concat(mainLink),
     cache: new InMemoryCache({
-      possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
+      possibleTypes: possibleTypes.possibleTypes
     })
   })
 
   window.addEventListener('dragover', e => e.preventDefault())
   window.addEventListener('drop', e => e.preventDefault())
 
-  ReactDOM.render(
+  const container = document.getElementById(ElementID.ReactRoot)
+  const root = createRoot(container!)
+
+  root.render(
     <ApolloProvider client={client}>
       <AuthProvider>
         <IconContext.Provider value={{className: 'rs-icon'}}>
@@ -119,8 +101,7 @@ const onDOMContentLoaded = async () => {
           </FacebookProvider>
         </IconContext.Provider>
       </AuthProvider>
-    </ApolloProvider>,
-    document.getElementById(ElementID.ReactRoot)
+    </ApolloProvider>
   )
 }
 

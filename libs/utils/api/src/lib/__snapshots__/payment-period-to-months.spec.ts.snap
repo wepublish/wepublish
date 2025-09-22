@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mapPaymentPeriodToMonths should format payment period for biannual 1`] = `6`;
+
+exports[`mapPaymentPeriodToMonths should format payment period for biennial 1`] = `24`;
+
+exports[`mapPaymentPeriodToMonths should format payment period for lifetime 1`] = `1200`;
+
+exports[`mapPaymentPeriodToMonths should format payment period for monthly 1`] = `1`;
+
+exports[`mapPaymentPeriodToMonths should format payment period for quarterly 1`] = `3`;
+
+exports[`mapPaymentPeriodToMonths should format payment period for yearly 1`] = `12`;

@@ -3,43 +3,33 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/src",
   "projectType": "library",
+  "tags": ["publishable"],
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/api/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/api/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/api/jest.config.ts"
       }
     },
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/api",
         "tsConfig": "libs/api/tsconfig.lib.json",
         "packageJson": "libs/api/package.json",
         "main": "libs/api/src/index.ts",
-        "assets": ["libs/api/*.md", "libs/api/prisma/**/*"]
-      }
-    },
-    "generate-api": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx graphql-codegen -r dotenv/config --config codegen.yml"
-          }
-        ]
+        "assets": ["libs/api/*.md", "libs/api/prisma/**/*"],
+        "external": "all",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "rootDir": ".",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
-  },
-  "tags": []
+  }
 }

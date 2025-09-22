@@ -1,6 +1,6 @@
 query TagList(
   $filter: TagFilter
-  $cursor: ID
+  $cursor: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -10,6 +10,7 @@ query TagList(
     nodes {
       id
       tag
+      description
     }
 
     pageInfo {
@@ -23,23 +24,26 @@ query TagList(
   }
 }
 
-mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
     id
     tag
+    description
   }
 }
 
-mutation UpdateTag($id: ID!, $tag: String) {
-  updateTag(id: $id, tag: $tag) {
+mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
+  updateTag(id: $id, tag: $tag, description: $description) {
     id
     tag
+    description
   }
 }
 
-mutation DeleteTag($id: ID!) {
+mutation DeleteTag($id: String!) {
   deleteTag(id: $id) {
     id
     tag
+    description
   }
 }

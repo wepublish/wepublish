@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConsentResolver periodic jobs query 1`] = `
+[
+  {
+    "executionTime": "2023-01-01T00:00:00.000Z",
+    "finishedWithError": "2023-01-01T00:00:00.000Z",
+    "id": "1234",
+    "successfullyFinished": "2023-01-01T00:00:00.000Z",
+    "tries": 1,
+  },
+]
+`;

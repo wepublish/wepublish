@@ -1,4 +1,4 @@
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export interface AuthorLink {
   title: string
@@ -15,6 +15,7 @@ export interface Author {
   imageID?: string | null
   links: AuthorLink[]
   bio: RichTextNode[]
+  peerId?: string | null
 }
 
 export interface AuthorInput {
@@ -29,11 +30,13 @@ export interface AuthorInput {
 export type OptionalAuthor = Author | null
 
 export enum AuthorSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  Name = 'name'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
 }
 
 export interface AuthorFilter {
   name?: string
+  tagIds?: string[]
+  hideOnTeam?: boolean
 }

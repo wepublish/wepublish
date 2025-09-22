@@ -1,32 +1,60 @@
-import {MailchimpMailProvider} from '../../src'
-
-const mockSend = jest.fn().mockImplementationOnce(cb => cb())
-const mockSendTemplate = jest.fn().mockImplementationOnce(cb => cb())
-jest.mock('mandrill-api', () => {
-  return {
-    Mandrill: jest.fn().mockImplementation(() => {
-      return {
-        messages: {
-          send: mockSend,
-          sendTemplate: mockSendTemplate
-        }
-      }
-    })
-  }
-})
-
-jest.mock('../../src/lib/server', () => {
-  const originalModule = jest.requireActual('../../src/lib/server')
-  return {
-    __esModule: true,
-    ...originalModule,
-    logger: jest.fn(() => ({error: jest.fn()}))
-  }
-})
+import {MailchimpMailProvider, MailProviderTemplate} from '@wepublish/mail/api'
+import nock from 'nock'
 
 let mailChimpMailProvider: MailchimpMailProvider
 
+let listTemplates: nock.Scope
+let listTemplatesInvalidKey: nock.Scope
+let sendMail: nock.Scope
+let sendTemplate: nock.Scope
+
 describe('Mailchimp Mail Provider', () => {
+  beforeAll(() => {
+    listTemplates = nock('https://mandrillapp.com')
+      .persist()
+      .post('/api/1.0/templates/list', {key: 'md-12345678'})
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-templates-list-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+
+    listTemplatesInvalidKey = nock('https://mandrillapp.com')
+      .persist()
+      .post('/api/1.0/templates/list', {key: 'invalid-key'})
+      .replyWithFile(
+        500,
+        __dirname + '/__fixtures__/mailchimp-templates-list-error-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+
+    sendMail = nock('https://mandrillapp.com')
+      .persist()
+      .post('/api/1.0/messages/send')
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+
+    sendTemplate = nock('https://mandrillapp.com')
+      .persist()
+      .post('/api/1.0/messages/send-template')
+      .replyWithFile(
+        200,
+        __dirname + '/__fixtures__/mailchimp-messages-send-success-response.json',
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+  })
+
   test('should be able to be created', () => {
     mailChimpMailProvider = new MailchimpMailProvider({
       baseURL: 'https://mailchimp.com',
@@ -44,79 +72,57 @@ describe('Mailchimp Mail Provider', () => {
     await mailChimpMailProvider.sendMail({
       message: 'hello Test',
       subject: 'test subject',
-      recipient: 'test@test.com',
-      replyToAddress: 'dev@test.com',
+      recipient: 'test@wepublish.ch',
+      replyToAddress: 'dev@wepublish.ch',
       mailLogID: 'fakeMailLogID'
     })
 
-    expect(mockSend).toHaveBeenCalledTimes(1)
-    expect(mockSend).toHaveBeenCalledWith(
-      {
-        message: {
-          html: undefined,
-          text: 'hello Test',
-          subject: 'test subject',
-          from_email: 'dev@wepublish.ch',
-          to: [
-            {
-              email: 'test@test.com',
-              type: 'to'
-            }
-          ],
-          metadata: {
-            mail_log_id: 'fakeMailLogID'
-          }
-        }
-      },
-      expect.any(Function),
-      expect.any(Function)
+    expect(sendMail.isDone()).toEqual(true)
+  })
+
+  test('sendMail with template should call mandrill sendTemplate', async () => {
+    await mailChimpMailProvider.sendMail({
+      subject: 'test subject',
+      recipient: 'test@wepublish.ch',
+      replyToAddress: 'dev@wepublish.ch',
+      mailLogID: 'fakeMailLogID',
+      template: 'test-mail',
+      templateData: {message: 'hello Test'}
+    })
+
+    expect(sendTemplate.isDone()).toEqual(true)
+  })
+
+  test('loads templates', async () => {
+    mailChimpMailProvider = new MailchimpMailProvider({
+      baseURL: 'https://mailchimp.com',
+      apiKey: 'md-12345678',
+      webhookEndpointSecret: 'fakeSecret',
+      fromAddress: 'dev@wepublish.ch',
+      id: 'mailchimp',
+      name: 'Mailchimp'
+    })
+
+    const response = await mailChimpMailProvider.getTemplates()
+    const templates = response as MailProviderTemplate[]
+    expect(templates.length).toEqual(2)
+    expect(templates.map(t => t.name).sort()).toEqual(
+      ['Subscription Creation', 'Subscription Expiration'].sort()
     )
-  })
-})
-
-test('sendMail with template should call mandrill sendTemplate', async () => {
-  await mailChimpMailProvider.sendMail({
-    subject: 'test subject',
-    recipient: 'test@test.com',
-    replyToAddress: 'dev@test.com',
-    mailLogID: 'fakeMailLogID',
-    template: 'test-mail',
-    templateData: {message: 'hello Test'}
+    expect(listTemplates.isDone()).toEqual(true)
   })
 
-  expect(mockSendTemplate).toHaveBeenCalledTimes(1)
-  expect(mockSendTemplate).toHaveBeenCalledWith(
-    {
-      template_name: 'test-mail',
-      template_content: [],
-      message: {
-        html: undefined,
-        text: undefined,
-        subject: 'test subject',
-        from_email: 'dev@wepublish.ch',
-        to: [
-          {
-            email: 'test@test.com',
-            type: 'to'
-          }
-        ],
-        merge_vars: [
-          {
-            rcpt: 'test@test.com',
-            vars: [
-              {
-                name: 'message',
-                content: 'hello Test'
-              }
-            ]
-          }
-        ],
-        metadata: {
-          mail_log_id: 'fakeMailLogID'
-        }
-      }
-    },
-    expect.any(Function),
-    expect.any(Function)
-  )
+  test('returns error when using invalid key', async () => {
+    mailChimpMailProvider = new MailchimpMailProvider({
+      baseURL: 'https://mailchimp.com',
+      apiKey: 'invalid-key',
+      webhookEndpointSecret: 'fakeSecret',
+      fromAddress: 'dev@wepublish.ch',
+      id: 'mailchimp',
+      name: 'Mailchimp'
+    })
+
+    await expect(mailChimpMailProvider.getTemplates()).rejects.toThrow('Invalid API key')
+    expect(listTemplatesInvalidKey.isDone()).toEqual(true)
+  })
 })

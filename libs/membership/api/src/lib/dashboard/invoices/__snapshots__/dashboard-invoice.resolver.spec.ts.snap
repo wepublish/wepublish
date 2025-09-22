@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DashboardInvoiceResolver expectedRevenue 1`] = `
-Array [
-  Object {
+[
+  {
     "amount": 50,
     "dueAt": "2023-01-02T12:00:00.000Z",
     "memberPlan": null,
     "paidAt": null,
   },
-  Object {
+  {
     "amount": 1050,
     "dueAt": "2023-01-01T12:00:00.000Z",
     "memberPlan": null,
@@ -18,14 +18,14 @@ Array [
 `;
 
 exports[`DashboardInvoiceResolver revenue 1`] = `
-Array [
-  Object {
+[
+  {
     "amount": 50,
     "dueAt": "2023-01-01T12:00:00.000Z",
     "memberPlan": null,
     "paidAt": "2023-01-02T12:00:00.000Z",
   },
-  Object {
+  {
     "amount": 1050,
     "dueAt": "2023-01-01T12:00:00.000Z",
     "memberPlan": null,

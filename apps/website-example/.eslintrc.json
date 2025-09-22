@@ -1,11 +1,20 @@
 {
-  "extends": ["plugin:@nrwl/nx/react", "../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
-  "plugins": ["i18next", "simple-import-sort"],
+  "extends": [
+    "plugin:@nx/react-typescript",
+    "next",
+    "next/core-web-vitals",
+    "../../.eslintrc.json"
+  ],
+  "ignorePatterns": ["!**/*", ".next/**/*"],
+  "plugins": ["simple-import-sort"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
+      "rules": {
+        "@next/next/no-html-link-for-pages": ["error", "apps/website-example/pages"],
+        "simple-import-sort/imports": 1,
+        "simple-import-sort/exports": 1
+      }
     },
     {
       "files": ["*.ts", "*.tsx"],
@@ -15,5 +24,11 @@
       "files": ["*.js", "*.jsx"],
       "rules": {}
     }
-  ]
+  ],
+  "rules": {
+    "@next/next/no-html-link-for-pages": "off"
+  },
+  "env": {
+    "jest": true
+  }
 }

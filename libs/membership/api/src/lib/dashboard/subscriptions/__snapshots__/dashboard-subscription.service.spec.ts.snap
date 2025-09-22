@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DashboardSubscriptionService should get all active subscribers 1`] = `
-Array [
-  Object {
+[
+  {
     "deactivationDate": undefined,
     "endsAt": undefined,
     "memberPlan": "foo",
@@ -12,7 +12,7 @@ Array [
     "renewsAt": undefined,
     "startsAt": "2023-02-03T00:00:00.000Z",
   },
-  Object {
+  {
     "deactivationDate": "2023-01-20T14:12:34.832Z",
     "endsAt": "2023-02-03T00:00:00.000Z",
     "memberPlan": "Bar",
@@ -22,7 +22,7 @@ Array [
     "renewsAt": undefined,
     "startsAt": "2023-02-02T00:00:00.000Z",
   },
-  Object {
+  {
     "deactivationDate": undefined,
     "endsAt": "2023-02-01T00:00:00.000Z",
     "memberPlan": "foo",
@@ -36,26 +36,29 @@ Array [
 `;
 
 exports[`DashboardSubscriptionService should get all active subscribers 2`] = `
-Object {
-  "include": Object {
+{
+  "include": {
     "deactivation": true,
-    "memberPlan": Object {
-      "select": Object {
+    "memberPlan": {
+      "select": {
         "name": true,
       },
     },
   },
-  "orderBy": Object {
+  "orderBy": {
     "startsAt": "desc",
   },
-  "where": Object {
-    "OR": Array [
-      Object {
+  "where": {
+    "OR": [
+      {
         "deactivation": null,
+        "paidUntil": {
+          "gte": 2023-01-01T00:00:00.000Z,
+        },
       },
-      Object {
-        "deactivation": Object {
-          "date": Object {
+      {
+        "deactivation": {
+          "date": {
             "gte": 2023-01-01T00:00:00.000Z,
           },
         },
@@ -66,8 +69,8 @@ Object {
 `;
 
 exports[`DashboardSubscriptionService should get the new deactivations 1`] = `
-Array [
-  Object {
+[
+  {
     "deactivationDate": "2023-01-01T00:00:00.000Z",
     "endsAt": "2023-02-03T00:00:00.000Z",
     "memberPlan": "foo",
@@ -80,23 +83,23 @@ Array [
 `;
 
 exports[`DashboardSubscriptionService should get the new deactivations 2`] = `
-Object {
-  "include": Object {
+{
+  "include": {
     "deactivation": true,
-    "memberPlan": Object {
-      "select": Object {
+    "memberPlan": {
+      "select": {
         "name": true,
       },
     },
   },
-  "orderBy": Object {
-    "deactivation": Object {
+  "orderBy": {
+    "deactivation": {
       "createdAt": "desc",
     },
   },
-  "where": Object {
-    "deactivation": Object {
-      "createdAt": Object {
+  "where": {
+    "deactivation": {
+      "createdAt": {
         "gte": 2023-01-01T00:00:00.000Z,
         "lt": 2023-02-01T00:00:00.000Z,
       },
@@ -106,8 +109,8 @@ Object {
 `;
 
 exports[`DashboardSubscriptionService should get the new subscribers 1`] = `
-Array [
-  Object {
+[
+  {
     "deactivationDate": "2023-01-20T14:11:26.283Z",
     "endsAt": "2023-02-02T00:00:00.000Z",
     "memberPlan": "Bar",
@@ -117,7 +120,7 @@ Array [
     "renewsAt": undefined,
     "startsAt": "2023-01-02T00:00:00.000Z",
   },
-  Object {
+  {
     "deactivationDate": undefined,
     "endsAt": "2023-02-01T00:00:00.000Z",
     "memberPlan": "foo",
@@ -131,20 +134,20 @@ Array [
 `;
 
 exports[`DashboardSubscriptionService should get the new subscribers 2`] = `
-Object {
-  "include": Object {
+{
+  "include": {
     "deactivation": true,
-    "memberPlan": Object {
-      "select": Object {
+    "memberPlan": {
+      "select": {
         "name": true,
       },
     },
   },
-  "orderBy": Object {
+  "orderBy": {
     "startsAt": "desc",
   },
-  "where": Object {
-    "startsAt": Object {
+  "where": {
+    "startsAt": {
       "gte": 2023-01-01T00:00:00.000Z,
       "lt": 2023-02-01T00:00:00.000Z,
     },
@@ -153,8 +156,8 @@ Object {
 `;
 
 exports[`DashboardSubscriptionService should get the renewing subscribers 1`] = `
-Array [
-  Object {
+[
+  {
     "memberPlan": "foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
@@ -165,21 +168,21 @@ Array [
 `;
 
 exports[`DashboardSubscriptionService should get the renewing subscribers 2`] = `
-Object {
-  "include": Object {
-    "memberPlan": Object {
-      "select": Object {
+{
+  "include": {
+    "memberPlan": {
+      "select": {
         "name": true,
       },
     },
   },
-  "orderBy": Object {
+  "orderBy": {
     "paidUntil": "desc",
   },
-  "where": Object {
+  "where": {
     "autoRenew": true,
     "deactivation": null,
-    "paidUntil": Object {
+    "paidUntil": {
       "gte": 2023-01-01T00:00:00.000Z,
       "lt": 2023-02-01T00:00:00.000Z,
     },

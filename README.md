@@ -41,7 +41,7 @@
     <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>-->
     <br />
     <br />
-    <a href="#demo">View Demo</a>
+    <a href="#demo-stable">View Demo</a>
     ·
     <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
     ·
@@ -55,7 +55,7 @@
 
 - [About the Project](#about-the-project)
   - [Built With](#built-with)
-- [Demo](#demo)
+- [Demo](#demo-stable)
 - [Packages](#packages)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -63,6 +63,7 @@
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Docs](#docs)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 - [Contact](#contact)
@@ -83,13 +84,14 @@ TBD
 - [TypeScript](https://www.typescriptlang.org/)
 - :green_heart:
 
-## Demo
+## Demo (Stable)
 
-- [Editor](https://editor.demo.wepublish.media)
+- [Editor](https://editor-demo.wepublish.media)
   - username: `dev@wepublish.ch`
   - password: `123`
 - [Website](https://demo.wepublish.media)
-- [API](https://api.demo.wepublish.media)
+- [API V1](https://api-demo.wepublish.media/v1)
+- [API Admin](https://api-demo.wepublish.media/v1/admin)
 
 ## Packages
 
@@ -104,7 +106,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-- [Node v16.x.x][node-download-url]
+- [Node v18.x.x][node-download-url]
 - [Docker v19.x.x][docker-download-url]
 
 ### Installation
@@ -128,7 +130,13 @@ npm i
 npm run build
 ```
 
-4. Run the project (starts a postgresql with Docker)
+4a. Test wepublish (the initial admin login is red printed in the log at first startup)
+
+```sh
+npm run try
+```
+
+4b. Run the project (starts a postgresql with Docker)
 
 ```sh
 npm run dev
@@ -231,4 +239,3 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [faq-md-url]: FAQ.md
 [code-of-conduct-url]: CODE_OF_CONDUCT.md
 [documentation-url]: docs/README.md
-

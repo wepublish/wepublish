@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StatsService should query for article count 1`] = `
+[
+  {
+    "where": {
+      "revisions": {
+        "some": {
+          "publishedAt": {
+            "not": null,
+          },
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`StatsService should query for articleRevision findFirst 1`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "select": {
+      "publishedAt": true,
+    },
+    "where": {
+      "publishedAt": {
+        "not": null,
+      },
+    },
+  },
+]
+`;
+
+exports[`StatsService should query for author count 1`] = `[]`;

@@ -1,7 +1,7 @@
 import {Image, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {ImageFilter, ImageSort} from '../../db/image'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createImageOrder = (
   field: ImageSort,
@@ -10,12 +10,12 @@ export const createImageOrder = (
   switch (field) {
     case ImageSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case ImageSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -44,7 +44,7 @@ const createTitleFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput
 }
 
 const createTagsFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     return {
       tags: {
         hasSome: filter.tags
@@ -62,13 +62,13 @@ export const createImageFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhe
 export const getImages = async (
   filter: Partial<ImageFilter>,
   sortedField: ImageSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   image: PrismaClient['image']
 ): Promise<ConnectionResult<Image>> => {
-  const orderBy = createImageOrder(sortedField, getSortOrder(order))
+  const orderBy = createImageOrder(sortedField, order)
   const where = createImageFilter(filter)
 
   const [totalCount, images] = await Promise.all([
@@ -79,7 +79,7 @@ export const getImages = async (
     image.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

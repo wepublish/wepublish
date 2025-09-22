@@ -1,24 +1,27 @@
+import {FullImageFragment, Tag, TagType} from '@wepublish/editor/api'
 import {
   EventStatus,
-  ImageRefFragment,
   MutationCreateEventArgs,
-  MutationUpdateEventArgs,
-  TagType
-} from '@wepublish/editor/api'
+  MutationUpdateEventArgs
+} from '@wepublish/editor/api-v2'
+import {
+  ChooseEditImage,
+  DateTimePicker,
+  ImageEditPanel,
+  ImageSelectPanel,
+  RichTextBlock,
+  RichTextBlockValue,
+  SelectTags,
+  Textarea
+} from '@wepublish/ui/editor'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
 
-import {ChooseEditImage} from '../../atoms/chooseEditImage'
-import {DateTimePicker} from '../../atoms/dateTimePicker'
-import {SelectTags} from '../../atoms/tag/selectTags'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../../blocks/types'
-import {ImageEditPanel} from '../../panel/imageEditPanel'
-import {ImageSelectPanel} from '../../panel/imageSelectPanel'
-
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
-  image?: ImageRefFragment | null
+  image?: FullImageFragment | null
+  tags?: Pick<Tag, 'id' | 'tag'>[]
+  externalSourceName?: string
 }
 
 type EventFormProps = {
@@ -45,6 +48,17 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
               onChange={(name: string) => onChange({name})}
             />
           </Form.Group>
+
+          {event.externalSourceName && (
+            <Form.Group controlId="externalSourceName">
+              <Form.ControlLabel>{t('event.form.externalSource')}</Form.ControlLabel>
+              <Form.Control
+                name="externalSourceName"
+                value={event.externalSourceName ?? ''}
+                disabled
+              />
+            </Form.Group>
+          )}
 
           <Form.Group controlId="location">
             <Form.ControlLabel>{t('event.form.location')}</Form.ControlLabel>
@@ -83,13 +97,24 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
             </Form.Group>
           </div>
 
+          <Form.Group controlId="lead">
+            <Form.ControlLabel>{t('event.form.lead')}</Form.ControlLabel>
+            <Form.Control
+              name="lead"
+              rows={3}
+              value={event.lead ?? ''}
+              onChange={(lead: string) => onChange({lead})}
+              accepter={Textarea}
+            />
+          </Form.Group>
+
           <Form.Group controlId="description">
             <Form.ControlLabel>{t('event.form.description')}</Form.ControlLabel>
             <Panel bordered>
               <Form.Control
                 name="description"
                 value={event.description || []}
-                onChange={(description: RichTextBlockValue) => onChange({description})}
+                onChange={(description: RichTextBlockValue['richText']) => onChange({description})}
                 accepter={RichTextBlock}
               />
             </Panel>
@@ -123,6 +148,7 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
             <Form.ControlLabel>{t('event.form.tags')}</Form.ControlLabel>
             <Form.Control
               name="tagIds"
+              defaultTags={event.tags ?? []}
               selectedTags={event.tagIds ?? []}
               setSelectedTags={(tagIds: string[]) => onChange({tagIds})}
               tagType={TagType.Event}

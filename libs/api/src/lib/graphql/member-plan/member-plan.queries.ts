@@ -1,7 +1,7 @@
 import {MemberPlan, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createMemberPlanOrder = (
   field: MemberPlanSort,
@@ -10,12 +10,12 @@ export const createMemberPlanOrder = (
   switch (field) {
     case MemberPlanSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case MemberPlanSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -41,7 +41,7 @@ const createActiveFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPla
 }
 
 const createTagsFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     return {
       tags: {
         hasSome: filter.tags
@@ -61,13 +61,13 @@ export const createMemberPlanFilter = (
 export const getMemberPlans = async (
   filter: Partial<MemberPlanFilter>,
   sortedField: MemberPlanSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   memberPlan: PrismaClient['memberPlan']
 ): Promise<ConnectionResult<MemberPlan>> => {
-  const orderBy = createMemberPlanOrder(sortedField, getSortOrder(order))
+  const orderBy = createMemberPlanOrder(sortedField, order)
   const where = createMemberPlanFilter(filter)
 
   const [totalCount, memberplans] = await Promise.all([
@@ -78,7 +78,7 @@ export const getMemberPlans = async (
     memberPlan.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

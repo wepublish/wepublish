@@ -1,9 +1,14 @@
 import {URL} from 'url'
 import FormData from 'form-data'
-import {ImageTransformation, ImageWithFocalPoint, UploadImage} from '../db/image'
 import fetch from 'node-fetch'
 import type {FileUpload} from 'graphql-upload'
-import {ArrayBufferUpload, MediaAdapter} from './mediaAdapter'
+import {
+  ArrayBufferUpload,
+  Image,
+  ImageTransformation,
+  MediaAdapter,
+  UploadImage
+} from '@wepublish/image/api'
 
 export class MediaServerError extends Error {
   constructor(message: string) {
@@ -91,7 +96,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
   }
 
   async getImageURL(
-    {id, filename, extension, focalPoint}: ImageWithFocalPoint,
+    {id, filename, extension, focalPoint}: Image,
     transformation?: ImageTransformation
   ): Promise<string> {
     filename = filename || 'untitled'

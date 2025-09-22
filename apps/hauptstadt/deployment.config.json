@@ -1,0 +1,28 @@
+{
+  "website": {
+    "production": {
+      "deployment": true,
+      "env": {
+        "GA_ID": "G-44TZTJNQ6H",
+        "GTM_ID": "GTM-KBR8Z6M8",
+        "DEPLOY_ENV": "production"
+      },
+      "secret_env": [],
+      "custom_domain": "https://www.hauptstadt.be"
+    },
+    "staging": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
+      "secret_env": []
+    }
+  }
+}

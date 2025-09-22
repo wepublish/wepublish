@@ -10,11 +10,13 @@ import {NotFound} from '../../error'
 import {validateCommentRatingValue} from '../comment-rating/comment-rating.public-mutation'
 import {authorise} from '../permissions'
 import {
+  CanCreateApprovedComment,
   CanDeleteComments,
   CanTakeActionOnComment,
   CanUpdateComments
-} from '@wepublish/permissions/api'
-import {RichTextNode} from '../richText'
+} from '@wepublish/permissions'
+import {hasPermission} from '@wepublish/permissions/api'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export const takeActionOnComment = (
   id: string,
@@ -52,6 +54,7 @@ export const updateComment = async (
   guestUsername: string,
   guestUserImageID: string,
   source: string,
+  featured: boolean,
   tagIds: string[] | undefined,
   ratingOverrides: CommentRatingOverrideInput[] | undefined,
   authenticate: Context['authenticate'],
@@ -88,6 +91,7 @@ export const updateComment = async (
       userID,
       guestUsername,
       guestUserImageID,
+      featured,
       source,
       revisions: revision
         ? {
@@ -156,9 +160,11 @@ export const createAdminComment = async (
   const {roles} = authenticate()
   authorise(CanUpdateComments, roles)
 
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
+
   return commentClient.create({
     data: {
-      state: CommentState.pendingApproval,
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
       authorType: CommentAuthorType.team,
       itemID: itemId,
       itemType,

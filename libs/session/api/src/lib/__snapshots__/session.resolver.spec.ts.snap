@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SessionResolver can be create via JWT 1`] = `
+[
+  [
+    "this-is-special-token",
+  ],
+]
+`;
+
+exports[`SessionResolver can be created via mail and password 1`] = `
+[
+  [
+    "dev@wepublish.ch",
+    "123",
+  ],
+]
+`;

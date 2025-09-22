@@ -1,5 +1,5 @@
 import {Context} from '../../context'
-import {CanDeleteAuthor, CanCreateAuthor} from '@wepublish/permissions/api'
+import {CanDeleteAuthor, CanCreateAuthor} from '@wepublish/permissions'
 import {authorise} from '../permissions'
 import {PrismaClient, Prisma} from '@prisma/client'
 
@@ -20,10 +20,11 @@ export const deleteAuthorById = (
 
 type CreateAuthorInput = Omit<Prisma.AuthorUncheckedCreateInput, 'links' | 'modifiedAt'> & {
   links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[]
+  tagIds: string[]
 }
 
 export const createAuthor = (
-  {links, ...input}: CreateAuthorInput,
+  {id: authorId, links, tagIds, ...input}: CreateAuthorInput,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
@@ -33,6 +34,11 @@ export const createAuthor = (
   return author.create({
     data: {
       ...input,
+      tags: {
+        create: tagIds?.map(tagId => ({
+          tagId
+        }))
+      },
       links: {
         create: links
       }
@@ -48,11 +54,12 @@ type UpdateAuthorInput = Omit<
   'links' | 'modifiedAt' | 'createdAt'
 > & {
   links: Prisma.AuthorsLinksUncheckedCreateWithoutAuthorInput[]
+  tagIds: string[]
 }
 
 export const updateAuthor = (
   id: string,
-  {links, ...input}: UpdateAuthorInput,
+  {links, tagIds, ...input}: UpdateAuthorInput,
   authenticate: Context['authenticate'],
   author: PrismaClient['author']
 ) => {
@@ -63,6 +70,27 @@ export const updateAuthor = (
     where: {id},
     data: {
       ...input,
+      tags: tagIds
+        ? {
+            connectOrCreate: tagIds.map(tagId => ({
+              where: {
+                authorId_tagId: {
+                  authorId: id,
+                  tagId
+                }
+              },
+              create: {
+                tagId
+              }
+            })),
+            deleteMany: {
+              authorId: id,
+              tagId: {
+                notIn: tagIds
+              }
+            }
+          }
+        : undefined,
       links: {
         deleteMany: {
           authorId: {

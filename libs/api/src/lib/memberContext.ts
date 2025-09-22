@@ -1,6 +1,5 @@
 import {
   Invoice,
-  MemberPlan,
   MetadataProperty,
   Payment,
   PaymentMethod,
@@ -10,25 +9,20 @@ import {
   PrismaClient,
   Subscription,
   SubscriptionDeactivationReason,
+  SubscriptionEvent,
   User
 } from '@prisma/client'
+import {MailContext, mailLogType} from '@wepublish/mail/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {DataLoaderContext} from './context'
-import {MaxResultsPerPage} from './db/common'
-import {InvoiceWithItems} from './db/invoice'
+import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
-import {SettingName} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
-import {unselectPassword} from '@wepublish/user/api'
 import {InternalError, NotFound, PaymentConfigurationNotAllowed, UserInputError} from './error'
-import {MailContext, SendMailType} from './mails/mailContext'
-import {PaymentProvider} from './payments/paymentProvider'
-import {logger} from './server'
-import {
-  ONE_DAY_IN_MILLISECONDS,
-  ONE_HOUR_IN_MILLISECONDS,
-  ONE_MONTH_IN_MILLISECONDS
-} from './utility'
-import {add} from 'date-fns'
+import {logger} from '@wepublish/utils/api'
+import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
+import {Action, LookupActionInput, SubscriptionEventDictionary} from '@wepublish/membership/api'
+import {add, format} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -38,11 +32,6 @@ export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations
 }
 
-export interface RenewSubscriptionForUsersProps {
-  startDate?: Date // defaults to today
-  daysToLookAhead: number
-}
-
 export interface ChargeInvoiceProps {
   user: User
   invoice: InvoiceWithItems
@@ -50,56 +39,35 @@ export interface ChargeInvoiceProps {
   customer: PaymentProviderCustomer
 }
 
-export interface SendReminderForInvoiceProps {
-  invoice: InvoiceWithItems
-  replyToAddress: string
-}
-
-export interface SendReminderForInvoicesProps {
-  replyToAddress: string
-}
-
-export interface CheckOpenInvoiceProps {
-  invoice: Invoice
-}
-
 export interface DeactivateSubscriptionForUserProps {
-  subscriptionID: string
-  deactivationDate?: Date
-  deactivationReason?: SubscriptionDeactivationReason
+  subscription: Subscription
+  deactivationReason: SubscriptionDeactivationReason
 }
 
-export interface MemberContext {
+type MemberContextDataLoaders = Pick<
+  DataLoaderContext,
+  'activePaymentMethodsByID' | 'activePaymentMethodsBySlug'
+>
+
+export interface MemberContextInterface {
   prisma: PrismaClient
-  loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
   mailContext: MailContext
-  getLoginUrlForUser(user: User): string
 
   handleSubscriptionChange(props: HandleSubscriptionChangeProps): Promise<Subscription>
 
   renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<Invoice | null>
-  renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
-
-  checkOpenInvoices(): Promise<void>
-  checkOpenInvoice(props: CheckOpenInvoiceProps): Promise<void>
 
   chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
-  chargeOpenInvoices(): Promise<void>
 
-  sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
-  sendReminderForInvoices(props: SendReminderForInvoicesProps): Promise<void>
-
-  deactivateSubscriptionForUser(props: DeactivateSubscriptionForUserProps): Promise<void>
+  deactivateSubscription(props: DeactivateSubscriptionForUserProps): Promise<Subscription>
 }
 
 export interface MemberContextProps {
   readonly prisma: PrismaClient
-  readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
   readonly mailContext: MailContext
-  getLoginUrlForUser(user: User): string
 }
 
 export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
@@ -113,6 +81,10 @@ export function getNextDateForPeriodicity(start: Date, periodicity: PaymentPerio
       return new Date(start.setMonth(start.getMonth() + 6))
     case PaymentPeriodicity.yearly:
       return new Date(start.setMonth(start.getMonth() + 12))
+    case PaymentPeriodicity.biennial:
+      return new Date(start.setMonth(start.getMonth() + 24))
+    case PaymentPeriodicity.lifetime:
+      return new Date(start.setMonth(start.getMonth() + 1200))
   }
 }
 
@@ -129,63 +101,24 @@ export function calculateAmountForPeriodicity(
       return monthlyAmount * 6
     case PaymentPeriodicity.yearly:
       return monthlyAmount * 12
+    case PaymentPeriodicity.biennial:
+      return monthlyAmount * 24
+    case PaymentPeriodicity.lifetime:
+      return monthlyAmount * 1200
   }
 }
 
-interface GetNextReminderAndDeactivationDateProps {
-  sentReminderAt: Date
-  createdAt: Date
-  frequency: number
-  maxAttempts: number
-}
-
-interface ReminderAndDeactivationDate {
-  nextReminder: Date
-  deactivateSubscription: Date
-}
-
-function getNextReminderAndDeactivationDate({
-  sentReminderAt,
-  createdAt,
-  frequency,
-  maxAttempts
-}: GetNextReminderAndDeactivationDateProps): ReminderAndDeactivationDate {
-  const invoiceReminderFrequencyInDays = frequency || 3
-  const invoiceReminderMaxTries = maxAttempts || 5
-
-  const nextReminder = new Date(
-    sentReminderAt.getTime() +
-      invoiceReminderFrequencyInDays * ONE_DAY_IN_MILLISECONDS -
-      ONE_HOUR_IN_MILLISECONDS
-  )
-
-  const deactivateSubscription = new Date(
-    createdAt.getTime() +
-      invoiceReminderFrequencyInDays * invoiceReminderMaxTries * ONE_DAY_IN_MILLISECONDS -
-      ONE_HOUR_IN_MILLISECONDS
-  )
-
-  return {
-    nextReminder,
-    deactivateSubscription
-  }
-}
-
-export class MemberContext implements MemberContext {
-  loaders: DataLoaderContext
+export class MemberContext implements MemberContextInterface {
   paymentProviders: PaymentProvider[]
+  prisma: PrismaClient
 
   mailContext: MailContext
-  getLoginUrlForUser: (user: User) => string
 
   constructor(props: MemberContextProps) {
-    this.loaders = props.loaders
     this.paymentProviders = props.paymentProviders
     this.prisma = props.prisma
 
     this.mailContext = props.mailContext
-
-    this.getLoginUrlForUser = props.getLoginUrlForUser
   }
 
   async handleSubscriptionChange({
@@ -285,7 +218,7 @@ export class MemberContext implements MemberContext {
           }
         })
 
-        // only return the invoice if it hasn't been canceled. Otherwise
+        // only return the invoice if it hasn't been canceled. Otherwise,
         // create a new period and a new invoice
         if (!invoice?.canceledAt) {
           return invoice
@@ -318,12 +251,44 @@ export class MemberContext implements MemberContext {
         return null
       }
 
+      const subscriptionFlows = await this.getActionsForSubscriptions({
+        memberplanId: subscription.memberPlanID,
+        paymentMethodId: subscription.paymentMethodID,
+        periodicity: subscription.paymentPeriodicity,
+        autorenwal: subscription.autoRenew,
+        events: [SubscriptionEvent.DEACTIVATION_UNPAID]
+      })
+      const subscriptionFlowActionDeactivationUnpaid = subscriptionFlows.find(
+        a => a.type === SubscriptionEvent.DEACTIVATION_UNPAID
+      )
+
+      if (!subscriptionFlowActionDeactivationUnpaid) {
+        logger('memberContext').info(
+          'Subscription flow for subscription with id "%s" not found',
+          subscription.id
+        )
+        return null
+      }
+      const deactivationDate = add(subscription.paidUntil || new Date(), {
+        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding ?? 0
+      })
+
+      const memberplan = await this.prisma.memberPlan.findUnique({
+        where: {id: subscription.memberPlanID}
+      })
+
+      if (!memberplan) {
+        throw new Error('Memberplan not found')
+      }
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
-          description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
+          description: `${memberplan.name}: ${format(startDate, 'dd-MM-yyyy')}`,
           mail: user.email,
           dueAt: startDate,
+          scheduledDeactivationAt: deactivationDate,
+          currency: subscription.currency,
           items: {
             create: {
               name: 'Membership',
@@ -349,7 +314,10 @@ export class MemberContext implements MemberContext {
         }
       })
 
-      logger('memberContext').info('Renewed subscription with id %s', subscription.id)
+      logger('memberContext').info(
+        'Renewed or created fresh subscription with id %s',
+        subscription.id
+      )
 
       return newInvoice
     } catch (error) {
@@ -363,344 +331,10 @@ export class MemberContext implements MemberContext {
     return null
   }
 
-  async renewSubscriptionForUsers({
-    startDate = new Date(),
-    daysToLookAhead
-  }: RenewSubscriptionForUsersProps): Promise<void> {
-    if (daysToLookAhead < 1) {
-      throw Error('Days to look ahead must not be lower than 1')
-    }
-    const lookAheadDate = new Date(startDate.getTime() + daysToLookAhead * ONE_DAY_IN_MILLISECONDS)
-
-    const subscriptionsPaidUntil: SubscriptionWithRelations[] = []
-    // max batches is a security feature, which prevents in case of an auto-renew bug too many people are going to be charged unintentionally.
-    const maxSubscriptionBatch = parseInt(process.env.MAX_AUTO_RENEW_SUBSCRIPTION_BATCH || 'false')
-    const batchSize = Math.min(maxSubscriptionBatch, MaxResultsPerPage) || MaxResultsPerPage
-
-    let hasMore = true
-    let cursor: string | null = null
-    while (hasMore) {
-      const subscriptions: SubscriptionWithRelations[] = await this.prisma.subscription.findMany({
-        where: {
-          autoRenew: true,
-          paidUntil: {
-            lte: lookAheadDate
-          },
-          deactivation: null
-        },
-        orderBy: {
-          createdAt: 'asc'
-        },
-        skip: cursor ? 1 : 0,
-        take: 100,
-        cursor: cursor
-          ? {
-              id: cursor
-            }
-          : undefined,
-        include: {
-          deactivation: true,
-          periods: true,
-          properties: true
-        }
-      })
-
-      hasMore = Boolean(subscriptions?.length)
-      cursor = subscriptions?.length ? subscriptions[subscriptions.length - 1].id : null
-      subscriptionsPaidUntil.push(...subscriptions)
-    }
-
-    const subscriptionPaidNull: SubscriptionWithRelations[] = []
-    hasMore = true
-    cursor = null
-    while (hasMore) {
-      const subscriptions: SubscriptionWithRelations[] = await this.prisma.subscription.findMany({
-        where: {
-          autoRenew: true,
-          paidUntil: null,
-          deactivation: null
-        },
-        orderBy: {
-          createdAt: 'asc'
-        },
-        skip: cursor ? 1 : 0,
-        take: batchSize,
-        cursor: cursor
-          ? {
-              id: cursor
-            }
-          : undefined,
-        include: {
-          deactivation: true,
-          periods: true,
-          properties: true
-        }
-      })
-
-      hasMore = Boolean(subscriptions?.length)
-      cursor = subscriptions?.length ? subscriptions[subscriptions.length - 1].id : null
-      subscriptionPaidNull.push(...subscriptions)
-    }
-
-    for (const subscription of [...subscriptionsPaidUntil, ...subscriptionPaidNull]) {
-      await this.renewSubscriptionForUser({subscription})
-    }
-  }
-
-  async checkOpenInvoices(): Promise<void> {
-    const openInvoices = await this.getAllOpenInvoices()
-    for (const invoice of openInvoices) {
-      const subscription = await this.prisma.subscription.findUnique({
-        where: {
-          id: invoice.subscriptionID ?? ''
-        }
-      })
-
-      if (!subscription) {
-        logger('memberContext').warn('subscription "%s" not found', invoice.subscriptionID)
-        continue
-      }
-
-      await this.checkOpenInvoice({invoice})
-    }
-  }
-
-  async checkOpenInvoice({invoice}: CheckOpenInvoiceProps): Promise<void> {
-    const paymentMethods = await this.prisma.paymentMethod.findMany()
-    const payments = await this.prisma.payment.findMany({
-      where: {
-        invoiceID: invoice.id
-      }
-    })
-
-    for (const payment of payments) {
-      if (!payment?.intentID) {
-        logger('memberContext').error('Payment %s does not have an intentID', payment?.id)
-        continue
-      }
-
-      const paymentMethod = paymentMethods.find(method => method.id === payment.paymentMethodID)
-
-      if (!paymentMethod) {
-        logger('memberContext').error('PaymentMethod %s does not exist', payment.paymentMethodID)
-        continue
-      }
-
-      const paymentProvider = this.paymentProviders.find(
-        provider => provider.id === paymentMethod.paymentProviderID
-      )
-
-      if (!paymentProvider) {
-        logger('memberContext').error(
-          'PaymentProvider %s does not exist',
-          paymentMethod.paymentProviderID
-        )
-        continue
-      }
-
-      try {
-        const intentState = await paymentProvider.checkIntentStatus({
-          intentID: payment.intentID
-        })
-
-        await paymentProvider.updatePaymentWithIntentState({
-          intentState,
-          paymentClient: this.prisma.payment,
-          paymentsByID: this.loaders.paymentsByID,
-          invoicesByID: this.loaders.invoicesByID,
-          subscriptionClient: this.prisma.subscription,
-          userClient: this.prisma.user,
-          invoiceClient: this.prisma.invoice,
-          subscriptionPeriodClient: this.prisma.subscriptionPeriod,
-          invoiceItemClient: this.prisma.invoiceItem
-        })
-
-        // FIXME: We need to implement a way to wait for all the database
-        //  event hooks to finish before we return data. Will be solved in WPC-498
-        await new Promise(resolve => setTimeout(resolve, 100))
-      } catch (error) {
-        logger('memberContext').error(
-          error as Error,
-          'Checking Intent State for Payment %s failed',
-          payment?.id
-        )
-      }
-    }
-  }
-
   private getOffSessionPaymentProviderIDs(): string[] {
     return this.paymentProviders
       .filter(provider => provider.offSessionPayments)
       .map(provider => provider.id)
-  }
-
-  private async getAllOpenInvoices(): Promise<InvoiceWithItems[]> {
-    const openInvoices: InvoiceWithItems[] = []
-    let hasMore = true
-    let cursor: string | null = null
-
-    while (hasMore) {
-      const invoices: InvoiceWithItems[] = await this.prisma.invoice.findMany({
-        where: {
-          paidAt: null,
-          canceledAt: null
-        },
-        orderBy: {
-          createdAt: 'asc'
-        },
-        skip: cursor ? 1 : 0,
-        take: 100,
-        cursor: cursor
-          ? {
-              id: cursor
-            }
-          : undefined,
-        include: {
-          items: true
-        }
-      })
-
-      hasMore = Boolean(invoices?.length)
-      cursor = invoices?.length ? invoices[invoices.length - 1].id : null
-      openInvoices.push(...invoices)
-    }
-
-    return openInvoices
-  }
-
-  async chargeOpenInvoices(): Promise<void> {
-    const today = new Date()
-    const openInvoices = await this.getAllOpenInvoices()
-    const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
-
-    for (const invoice of openInvoices) {
-      const subscription = await this.prisma.subscription.findUnique({
-        where: {
-          id: invoice.subscriptionID ?? ''
-        }
-      })
-
-      if (!subscription) {
-        logger('memberContext').warn('subscription %s does not exist', invoice.subscriptionID)
-        continue
-      }
-
-      if (invoice.sentReminderAt) {
-        const frequencySetting = await this.prisma.setting.findUnique({
-          where: {name: SettingName.INVOICE_REMINDER_FREQ}
-        })
-        const frequency =
-          (frequencySetting?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
-
-        const maxAttemptsSetting = await this.prisma.setting.findUnique({
-          where: {name: SettingName.INVOICE_REMINDER_MAX_TRIES}
-        })
-        const maxAttempts =
-          (maxAttemptsSetting?.value as number) ??
-          parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
-
-        const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
-          sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt,
-          frequency,
-          maxAttempts
-        })
-
-        if (nextReminder > today) {
-          continue // skip reminder if not enough days passed
-        }
-
-        if (deactivateSubscription < today) {
-          const {items, ...invoiceData} = invoice
-
-          await this.prisma.invoice.update({
-            where: {id: invoice.id},
-            data: {
-              ...invoiceData,
-              items: {
-                deleteMany: {
-                  invoiceId: invoiceData.id
-                },
-                create: items.map(({invoiceId, ...item}) => item)
-              },
-              canceledAt: today
-            }
-          })
-
-          await this.deactivateSubscriptionForUser({
-            subscriptionID: subscription.id,
-            deactivationDate: today,
-            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid
-          })
-          continue
-        }
-      }
-
-      // do not charge, before we are allowed
-      if (invoice.dueAt > new Date()) {
-        continue
-      }
-
-      const user = await this.prisma.user.findUnique({
-        where: {id: subscription.userID},
-        select: unselectPassword
-      })
-
-      if (!user) {
-        logger('memberContext').warn('user %s not found', subscription.userID)
-        continue
-      }
-
-      if (!user.active) {
-        logger('memberContext').warn('user %s is not active', user.id)
-        continue
-      }
-
-      const paymentMethod = await this.loaders.paymentMethodsByID.load(subscription.paymentMethodID)
-      if (!paymentMethod) {
-        logger('memberContext').warn('paymentMethod %s not found', subscription.paymentMethodID)
-        continue
-      }
-
-      if (offSessionPaymentProvidersID.includes(paymentMethod.paymentProviderID)) {
-        const customer = user.paymentProviderCustomers.find(
-          ppc => ppc.paymentProviderID === paymentMethod.paymentProviderID
-        )
-        if (!customer) {
-          // do not send any error message, before dueAt plus 2 days, because of Payrexx Subscription lag
-          // (Payrexx Subscription is renewed during the day. Thus, a user would receive mail with payment error, even-though it would probably get paid during the day)
-          if (add(invoice.dueAt, {days: 2}) > new Date()) {
-            continue
-          }
-
-          logger('memberContext').warn(
-            'PaymentCustomer %s on user %s not found',
-            paymentMethod.paymentProviderID,
-            user.id
-          )
-          await this.mailContext.sendMail({
-            type: SendMailType.MemberSubscriptionOffSessionFailed,
-            recipient: invoice.mail,
-            data: {
-              user,
-              ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
-              invoice,
-              paymentProviderID: paymentMethod.paymentProviderID,
-              errorCode: 'customer_missing',
-              subscription
-            }
-          })
-          continue
-        }
-
-        await this.chargeInvoice({
-          user,
-          invoice,
-          paymentMethodID: paymentMethod.id,
-          customer
-        })
-      }
-    }
   }
 
   async chargeInvoice({
@@ -720,12 +354,14 @@ export class MemberContext implements MemberContext {
         'PaymentMethod %s does not support off session payments',
         paymentMethodID
       )
+
       return false
     }
 
     const paymentMethod = paymentMethods.find(method => method.id === paymentMethodID)
     if (!paymentMethod) {
       logger('memberContext').error('PaymentMethod %s does not exist', paymentMethodID)
+
       return false
     }
 
@@ -738,6 +374,7 @@ export class MemberContext implements MemberContext {
         'PaymentProvider %s does not exist',
         paymentMethod.paymentProviderID
       )
+
       return false
     }
 
@@ -752,6 +389,7 @@ export class MemberContext implements MemberContext {
     const intent = await paymentProvider.createIntent({
       paymentID: payment.id,
       invoice,
+      currency: invoice.currency,
       saveCustomer: false,
       customerID: customer.customerID
     })
@@ -770,17 +408,42 @@ export class MemberContext implements MemberContext {
     })
 
     if (intent.state === PaymentState.requiresUserAction) {
-      await this.mailContext.sendMail({
-        type: SendMailType.MemberSubscriptionOffSessionFailed,
-        recipient: invoice.mail,
-        data: {
-          user,
-          ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
-          invoice,
-          paymentProviderID: paymentProvider.id,
-          errorCode: intent.errorCode
-        }
+      if (!invoice.subscriptionID) {
+        logger('memberContext').error('Invoice %s has no associated subscriptionID', invoice.id)
+        return false
+      }
+
+      const subscription = await this.prisma.subscription.findUnique({
+        where: {id: invoice.subscriptionID}
       })
+
+      if (!subscription) {
+        logger('memberContext').error('No subscription found with ID %s', invoice.subscriptionID)
+        return false
+      }
+
+      const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+        subscription,
+        SubscriptionEvent.RENEWAL_FAILED
+      )
+
+      if (remoteTemplate) {
+        await this.mailContext.sendMail({
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {
+            invoice,
+            paymentProviderID: paymentProvider.id,
+            errorCode: intent.errorCode
+          },
+          mailType: mailLogType.UserFlow
+        })
+      } else {
+        logger('memberContext').info(
+          'No remote template found for subscription %s and event RENEWAL_FAILED',
+          subscription.id
+        )
+      }
 
       const {items, ...invoiceData} = invoice
 
@@ -793,208 +456,12 @@ export class MemberContext implements MemberContext {
               invoiceId: invoiceData.id
             },
             create: items.map(({invoiceId, ...item}) => item)
-          },
-          sentReminderAt: new Date()
+          }
         }
       })
       return updatedPayment
     }
     return updatedPayment
-  }
-
-  async sendReminderForInvoices({replyToAddress}: SendReminderForInvoicesProps): Promise<void> {
-    const today = new Date()
-
-    const openInvoices = await this.getAllOpenInvoices()
-    if (openInvoices.length === 0) {
-      logger('memberContext').info('No open invoices to remind')
-    }
-
-    for (const invoice of openInvoices) {
-      const subscription = await this.prisma.subscription.findUnique({
-        where: {
-          id: invoice.subscriptionID ?? ''
-        }
-      })
-
-      if (!subscription) {
-        logger('memberContext').warn('subscription %s does not exist', invoice.subscriptionID)
-        continue
-      }
-
-      if (invoice.sentReminderAt) {
-        const frequencySetting = await this.prisma.setting.findUnique({
-          where: {name: SettingName.INVOICE_REMINDER_FREQ}
-        })
-        const frequency =
-          (frequencySetting?.value as number) ?? parseInt(process.env.INVOICE_REMINDER_FREQ ?? '')
-
-        const maxAttemptsSetting = await this.prisma.setting.findUnique({
-          where: {name: SettingName.INVOICE_REMINDER_MAX_TRIES}
-        })
-        const maxAttempts =
-          (maxAttemptsSetting?.value as number) ??
-          parseInt(process.env.INVOICE_REMINDER_MAX_TRIES ?? '')
-
-        const {nextReminder, deactivateSubscription} = getNextReminderAndDeactivationDate({
-          sentReminderAt: invoice.sentReminderAt,
-          createdAt: invoice.createdAt,
-          frequency,
-          maxAttempts
-        })
-
-        if (nextReminder > today) {
-          continue // skip reminder if not enough days passed
-        }
-
-        if (deactivateSubscription < today) {
-          const {items, ...invoiceData} = invoice
-
-          await this.prisma.invoice.update({
-            where: {id: invoice.id},
-            data: {
-              ...invoiceData,
-              items: {
-                deleteMany: {
-                  invoiceId: invoiceData.id
-                },
-                create: items.map(({invoiceId, ...item}) => item)
-              },
-              canceledAt: today
-            }
-          })
-
-          await this.deactivateSubscriptionForUser({
-            subscriptionID: subscription.id,
-            deactivationDate: today,
-            deactivationReason: SubscriptionDeactivationReason.invoiceNotPaid
-          })
-          continue
-        }
-      }
-
-      const user = await this.prisma.user.findUnique({
-        where: {id: subscription.userID},
-        select: unselectPassword
-      })
-
-      if (!user) {
-        logger('memberContext').warn('user %s not found', subscription.userID)
-        continue
-      }
-
-      if (!user.active) {
-        logger('memberContext').warn('user %s is not active', user.id)
-        continue
-      }
-
-      try {
-        await this.sendReminderForInvoice({
-          invoice,
-          replyToAddress
-        })
-      } catch (error) {
-        logger('memberContext').error(error as Error, 'Error while sending reminder')
-      }
-    }
-  }
-
-  async sendReminderForInvoice({
-    invoice,
-    replyToAddress
-  }: SendReminderForInvoiceProps): Promise<void> {
-    const today = new Date()
-
-    if (!invoice.subscriptionID) {
-      throw new NotFound('Invoice', invoice.id)
-    }
-
-    const subscription = await this.prisma.subscription.findUnique({
-      where: {
-        id: invoice.subscriptionID
-      },
-      include: {
-        deactivation: true,
-        periods: true,
-        properties: true
-      }
-    })
-
-    const user = subscription?.userID
-      ? await this.prisma.user.findUnique({
-          where: {
-            id: subscription.userID
-          },
-          select: unselectPassword
-        })
-      : null
-
-    const paymentMethod = subscription
-      ? await this.loaders.paymentMethodsByID.load(subscription.paymentMethodID)
-      : null
-
-    const paymentProvider = paymentMethod?.paymentProviderID
-      ? this.paymentProviders.find(provider => provider.id === paymentMethod.paymentProviderID)
-      : null
-
-    const offSessionPayments = paymentProvider?.offSessionPayments ?? false
-
-    if (offSessionPayments) {
-      if (invoice.dueAt > today) {
-        await this.mailContext.sendMail({
-          type: SendMailType.MemberSubscriptionOffSessionBefore,
-          recipient: invoice.mail,
-          data: {
-            invoice,
-            user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
-            subscription
-          }
-        })
-      } else {
-        // system will try to bill every night and send error to user.
-      }
-    } else {
-      if (invoice.dueAt > today) {
-        await this.mailContext.sendMail({
-          type: SendMailType.MemberSubscriptionOnSessionBefore,
-          recipient: invoice.mail,
-          data: {
-            invoice,
-            user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
-            subscription
-          }
-        })
-      } else {
-        await this.mailContext.sendMail({
-          type: SendMailType.MemberSubscriptionOnSessionAfter,
-          recipient: invoice.mail,
-          data: {
-            invoice,
-            user,
-            ...(user ? {loginURL: this.getLoginUrlForUser(user)} : {}),
-            subscription
-          }
-        })
-      }
-    }
-
-    const {items, ...invoiceData} = invoice
-
-    await this.prisma.invoice.update({
-      where: {id: invoice.id},
-      data: {
-        ...invoiceData,
-        items: {
-          deleteMany: {
-            invoiceId: invoiceData.id
-          },
-          create: items.map(({invoiceId, ...item}) => item)
-        },
-        sentReminderAt: today
-      }
-    })
   }
 
   async cancelInvoicesForSubscription(subscriptionID: string) {
@@ -1018,44 +485,77 @@ export class MemberContext implements MemberContext {
     }
   }
 
-  async deactivateSubscriptionForUser({
-    subscriptionID,
-    deactivationDate,
+  async deactivateSubscription({
+    subscription,
     deactivationReason
-  }: DeactivateSubscriptionForUserProps): Promise<void> {
-    const subscription = await this.prisma.subscription.findUnique({
-      where: {id: subscriptionID},
+  }: DeactivateSubscriptionForUserProps): Promise<Subscription> {
+    // deactivate remote subscriptions
+    await this.cancelRemoteSubscription({
+      subscriptionId: subscription.id,
+      reason: deactivationReason
+    })
+
+    const now = new Date()
+    const deactivationDate =
+      subscription.paidUntil !== null && subscription.paidUntil > now ? subscription.paidUntil : now
+
+    await this.cancelInvoicesForSubscription(subscription.id)
+
+    const updatedSubscription: Subscription = await this.prisma.subscription.update({
+      where: {id: subscription.id},
+      data: {
+        deactivation: {
+          upsert: {
+            create: {
+              date: deactivationDate ?? subscription.paidUntil ?? subscription.startsAt,
+              reason: deactivationReason ?? SubscriptionDeactivationReason.none
+            },
+            update: {
+              date: deactivationDate ?? subscription.paidUntil ?? subscription.startsAt,
+              reason: deactivationReason ?? SubscriptionDeactivationReason.none
+            }
+          }
+        }
+      },
       include: {
         deactivation: true,
-        periods: true,
+        properties: true
+      }
+    })
+
+    // Send deactivation Mail
+    await this.sendSubscriptionDeactivationMail(subscription, deactivationReason)
+    return updatedSubscription
+  }
+
+  async cancelRemoteSubscription({
+    subscriptionId,
+    reason
+  }: {
+    subscriptionId: string
+    reason: SubscriptionDeactivationReason
+  }) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {id: subscriptionId},
+      include: {
         properties: true
       }
     })
 
     if (!subscription) {
-      logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
-      return
+      throw new Error('Subscription not found')
     }
 
-    await this.cancelInvoicesForSubscription(subscriptionID)
+    const paymentProviderBySubscription = await this.prisma.paymentMethod.findUnique({
+      where: {id: subscription.paymentMethodID}
+    })
 
-    await this.prisma.subscription.update({
-      where: {id: subscriptionID},
-      data: {
-        paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
-        deactivation: {
-          upsert: {
-            create: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
-              reason: deactivationReason ?? SubscriptionDeactivationReason.none
-            },
-            update: {
-              date: deactivationDate ?? subscription.paidUntil ?? new Date(),
-              reason: deactivationReason ?? SubscriptionDeactivationReason.none
-            }
-          }
-        }
-      }
+    const paymentProvider = this.paymentProviders.find(
+      paymentProvider => paymentProvider.id === paymentProviderBySubscription?.paymentProviderID
+    )
+
+    await paymentProvider?.cancelRemoteSubscription({
+      subscription
     })
   }
 
@@ -1068,10 +568,10 @@ export class MemberContext implements MemberContext {
    */
 
   async validateInputParamsCreateSubscription(
-    memberPlanID: string | null,
-    memberPlanSlug: string | null,
-    paymentMethodID: string | null,
-    paymentMethodSlug: string | null
+    memberPlanID: string | null | undefined,
+    memberPlanSlug: string | null | undefined,
+    paymentMethodID: string | null | undefined,
+    paymentMethodSlug: string | null | undefined
   ) {
     if (
       (memberPlanID == null && memberPlanSlug == null) ||
@@ -1088,27 +588,19 @@ export class MemberContext implements MemberContext {
     }
   }
 
-  async getMemberPlanByIDOrSlug(
-    loaders: DataLoaderContext,
-    memberPlanSlug: string,
-    memberPlanID: string
-  ) {
-    const memberPlan = memberPlanID
-      ? await loaders.activeMemberPlansByID.load(memberPlanID)
-      : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
-    if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
-    return memberPlan
-  }
-
   async getPaymentMethodByIDOrSlug(
-    loaders: DataLoaderContext,
-    paymentMethodSlug: string,
-    paymentMethodID: string
+    loaders: MemberContextDataLoaders,
+    paymentMethodSlug?: string,
+    paymentMethodID?: string
   ) {
     const paymentMethod = paymentMethodID
       ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
-      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug)
-    if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
+      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!)
+
+    if (!paymentMethod) {
+      throw new NotFound('PaymentMethod', paymentMethodID ?? paymentMethodSlug!)
+    }
+
     return paymentMethod
   }
 
@@ -1120,18 +612,22 @@ export class MemberContext implements MemberContext {
   ) {
     if (
       !memberPlan.availablePaymentMethods.some(apm => {
-        if (apm.forceAutoRenewal && !autoRenew) return false
+        if (apm.forceAutoRenewal && !autoRenew) {
+          return false
+        }
+
         return (
           apm.paymentPeriodicities.includes(paymentPeriodicity) &&
           apm.paymentMethodIDs.includes(paymentMethod.id)
         )
       })
-    )
+    ) {
       throw new PaymentConfigurationNotAllowed()
+    }
   }
 
   async processSubscriptionProperties(
-    subscriptionProperties: Omit<MetadataProperty, 'public'>[]
+    subscriptionProperties: Pick<MetadataProperty, 'key' | 'value'>[]
   ): Promise<Pick<MetadataProperty, 'public' | 'key' | 'value'>[]> {
     return Array.isArray(subscriptionProperties)
       ? subscriptionProperties.map(property => {
@@ -1145,31 +641,63 @@ export class MemberContext implements MemberContext {
   }
 
   async createSubscription(
-    subscriptionClient: PrismaClient['subscription'],
     userID: string,
-    paymentMethod: PaymentMethod,
+    paymentMethodId: string,
     paymentPeriodicity: PaymentPeriodicity,
     monthlyAmount: number,
-    memberPlan: MemberPlan,
+    memberPlanId: string,
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
-    autoRenew: boolean
-  ): Promise<SubscriptionWithRelations> {
-    const subscription = await subscriptionClient.create({
+    autoRenew: boolean,
+    extendable: boolean,
+    replacedSubscription?: Subscription | null,
+    startsAt?: Date | string,
+    needsConfirmation?: boolean
+  ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
+    if (!extendable && autoRenew) {
+      throw new Error("You can't create a non extendable subscription that is autoRenew!")
+    }
+
+    const memberPlan = await this.prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+
+    if (!memberPlan) {
+      throw new Error('Memberplan not found')
+    }
+
+    const memberPlanSubscriptionCount = await this.prisma.subscription.count({
+      where: {
+        userID,
+        memberPlanID: memberPlanId
+      }
+    })
+
+    if (memberPlan?.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+      throw new Error(
+        `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
+          memberPlan.maxCount
+        }) for ${memberPlanId} memberplan!`
+      )
+    }
+
+    const subscription = await this.prisma.subscription.create({
       data: {
         userID,
-        startsAt: new Date(),
+        startsAt: startsAt ? startsAt : new Date(),
         modifiedAt: new Date(),
-        paymentMethodID: paymentMethod.id,
+        paymentMethodID: paymentMethodId,
         paymentPeriodicity,
         paidUntil: null,
         monthlyAmount,
-        memberPlanID: memberPlan.id,
+        memberPlanID: memberPlanId,
         properties: {
           createMany: {
             data: properties
           }
         },
-        autoRenew
+        replacesSubscriptionID: replacedSubscription?.id,
+        autoRenew,
+        extendable,
+        currency: memberPlan.currency,
+        confirmed: !needsConfirmation
       },
       include: {
         deactivation: true,
@@ -1183,6 +711,262 @@ export class MemberContext implements MemberContext {
       throw new InternalError()
     }
 
-    return subscription
+    const invoice = await this.renewSubscriptionForUser({subscription})
+
+    if (!invoice) {
+      throw new InternalError()
+    }
+
+    // Send subscribe mail
+
+    const subscriptionEvent = needsConfirmation
+      ? SubscriptionEvent.CONFIRM_SUBSCRIPTION
+      : SubscriptionEvent.SUBSCRIBE
+    await this.sendMailForSubscriptionEvent(subscriptionEvent, subscription, {})
+
+    return {
+      subscription,
+      invoice
+    }
   }
+
+  async getSubscriptionTemplateIdentifier(
+    subscription: Subscription,
+    subscriptionEvent: SubscriptionEvent
+  ): Promise<string | undefined> {
+    return new SubscriptionEventDictionary(this.prisma).getSubsciptionTemplateIdentifier(
+      subscription,
+      subscriptionEvent
+    )
+  }
+
+  async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
+    return new SubscriptionEventDictionary(this.prisma).getActionsForSubscriptions(query)
+  }
+
+  async sendSubscriptionDeactivationMail(
+    subscription: Subscription,
+    deactivation: SubscriptionDeactivationReason
+  ) {
+    let event: SubscriptionEvent = SubscriptionEvent.DEACTIVATION_BY_USER
+    if (deactivation === SubscriptionDeactivationReason.invoiceNotPaid) {
+      event = SubscriptionEvent.DEACTIVATION_UNPAID
+    }
+    return this.sendMailForSubscriptionEvent(event, subscription, {})
+  }
+
+  async importSubscription(
+    prisma: PrismaClient,
+    userID: string,
+    paymentMethodId: string,
+    paymentPeriodicity: PaymentPeriodicity,
+    monthlyAmount: number,
+    memberPlanId: string,
+    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
+    autoRenew: boolean,
+    extendable: boolean,
+    startsAt: Date | string = new Date(),
+    paidUntil?: Date | string
+  ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
+    if (!extendable && autoRenew) {
+      throw new Error("You can't create a non extendable subscription that is autoRenew!")
+    }
+
+    startsAt = new Date(startsAt)
+    paidUntil = paidUntil ? new Date(paidUntil) : undefined
+
+    const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+
+    if (!memberPlan) {
+      throw new Error('Memberplan not found.')
+    }
+
+    const memberPlanSubscriptionCount = await prisma.subscription.count({
+      where: {
+        userID,
+        memberPlanID: memberPlanId
+      }
+    })
+
+    if (memberPlan?.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+      throw new Error(
+        `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
+          memberPlan.maxCount
+        }) for ${memberPlanId} memberplan!`
+      )
+    }
+
+    const now = new Date()
+
+    const subscription = await prisma.subscription.create({
+      data: {
+        userID,
+        startsAt,
+        modifiedAt: new Date(),
+        paymentMethodID: paymentMethodId,
+        paymentPeriodicity,
+        paidUntil,
+        monthlyAmount,
+        memberPlanID: memberPlanId,
+        properties: {
+          createMany: {
+            data: properties
+          }
+        },
+        autoRenew,
+        extendable,
+        currency: memberPlan.currency
+      },
+      include: {
+        deactivation: true,
+        periods: true,
+        properties: true
+      }
+    })
+
+    if (!subscription) {
+      logger('mutation.public').error('Could not create new subscription for userID "%s"', userID)
+      throw new InternalError()
+    }
+
+    if (startsAt < now || paidUntil) {
+      const endsAt = paidUntil ?? getNextDateForPeriodicity(startsAt, paymentPeriodicity)
+
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: subscription.userID
+        },
+        select: unselectPassword
+      })
+
+      if (!user) {
+        throw new InternalError()
+      }
+
+      const invoice = await this.prisma.invoice.create({
+        data: {
+          currency: memberPlan.currency,
+          subscriptionID: subscription.id,
+          description: `Membership from ${startsAt.toISOString()} for ${user.name || user.email}`,
+          mail: user.email,
+          dueAt: startsAt,
+          scheduledDeactivationAt: endsAt,
+          items: {
+            create: {
+              name: 'Membership',
+              description: `From ${startsAt.toISOString()} to ${endsAt.toISOString()}`,
+              amount: monthlyAmount,
+              quantity: 1
+            }
+          },
+          ...(paidUntil && {paidAt: startsAt})
+        },
+        include: {
+          items: true
+        }
+      })
+
+      await prisma.subscription.update({
+        where: {id: subscription.id},
+        data: {
+          periods: {
+            create: {
+              startsAt,
+              amount: monthlyAmount,
+              endsAt,
+              paymentPeriodicity,
+              invoiceID: invoice.id
+            }
+          }
+        }
+      })
+      return {
+        subscription,
+        invoice
+      }
+    } else {
+      const invoice = await this.renewSubscriptionForUser({subscription})
+
+      if (!invoice) {
+        throw new InternalError()
+      }
+
+      // Send subscribe mail
+      await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})
+
+      return {
+        subscription,
+        invoice
+      }
+    }
+  }
+
+  async sendMailForSubscriptionEvent(
+    subscriptionEvent: SubscriptionEvent,
+    subscription: Subscription,
+    optionalData: Record<string, any>
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: subscription.userID
+      },
+      select: unselectPassword
+    })
+    if (!user) {
+      logger('MemberContext').warn(`User not found %s`, subscription.userID)
+      return
+    }
+
+    const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+      subscription,
+      subscriptionEvent
+    )
+
+    if (!remoteTemplate) {
+      logger('MemberContext').warn(
+        `RemoteTemplate <%s> for subscription <%s> not found!`,
+        subscriptionEvent,
+        subscription.id
+      )
+      return
+    }
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {
+        subscription,
+        ...optionalData
+      },
+      mailType: mailLogType.UserFlow
+    })
+  }
+}
+
+export async function getMemberPlanByIDOrSlug(
+  loaders: Pick<DataLoaderContext, 'activeMemberPlansByID' | 'activeMemberPlansBySlug'>,
+  memberPlanSlug: string,
+  memberPlanID: string
+) {
+  const memberPlan = memberPlanID
+    ? await loaders.activeMemberPlansByID.load(memberPlanID)
+    : await loaders.activeMemberPlansBySlug.load(memberPlanSlug)
+  if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug)
+  return memberPlan
+}
+
+export async function getPaymentMethodByIDOrSlug(
+  loaders: Pick<DataLoaderContext, 'activePaymentMethodsByID' | 'activePaymentMethodsBySlug'>,
+  paymentMethodSlug?: string,
+  paymentMethodID?: string
+) {
+  const paymentMethod = paymentMethodID
+    ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+    : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!)
+
+  if (!paymentMethod) {
+    throw new NotFound('PaymentMethod', paymentMethodID ?? paymentMethodSlug!)
+  }
+
+  return paymentMethod
 }

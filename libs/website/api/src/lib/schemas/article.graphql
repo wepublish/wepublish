@@ -1,0 +1,173 @@
+fragment FullPaywall on Paywall {
+  id
+  active
+  anyMemberPlan
+  name
+  description
+  circumventDescription
+  memberPlans {
+    id
+  }
+  bypasses {
+    id
+    token
+  }
+}
+
+fragment ArticleRevisionWithoutBlocks on ArticleRevision {
+  id
+  publishedAt
+  createdAt
+  preTitle
+  title
+  lead
+  lead
+  title
+  canonicalUrl
+
+  authors {
+    ...FullAuthor
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment FullArticleRevision on ArticleRevision {
+  ...ArticleRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  modifiedAt
+  url
+  slug
+  likes
+  disableComments
+  peerId
+  peerArticleId
+
+  tags {
+    ...FullTag
+  }
+
+  trackingPixels {
+    ...FullTrackingPixel
+  }
+
+  latest {
+    ...ArticleRevisionWithoutBlocks
+  }
+
+  peer {
+    ...FullPeer
+  }
+
+  paywall {
+    ...FullPaywall
+  }
+}
+
+fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+
+  latest {
+    ...FullArticleRevision
+  }
+}
+
+query Article($slug: String, $id: String) {
+  article(slug: $slug, id: $id) {
+    ...FullArticle
+  }
+}
+
+query ArticleList(
+  $filter: ArticleFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...ArticleWithoutBlocks
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query FullArticleList(
+  $filter: ArticleFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullArticle
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation LikeArticle($id: String!) {
+  likeArticle(id: $id) {
+    ...FullArticle
+  }
+}
+
+mutation DislikeArticle($id: String!) {
+  dislikeArticle(id: $id) {
+    ...FullArticle
+  }
+}

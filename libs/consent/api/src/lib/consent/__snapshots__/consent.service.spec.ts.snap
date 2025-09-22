@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConsentService should create a consent 1`] = `
+[
+  {
+    "defaultValue": true,
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "name": "some-name",
+    "slug": "some-slug",
+  },
+]
+`;
+
+exports[`ConsentService should create a consent 2`] = `
+{
+  "data": {
+    "defaultValue": true,
+    "name": "some-name",
+    "slug": "some-slug",
+  },
+}
+`;
+
+exports[`ConsentService should get a single consent by id 1`] = `
+[
+  {
+    "defaultValue": true,
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "name": "some-name",
+    "slug": "some-slug",
+  },
+]
+`;
+
+exports[`ConsentService should get a single consent by id 2`] = `
+{
+  "where": {
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+  },
+}
+`;
+
+exports[`ConsentService should get consents 1`] = `
+[
+  {
+    "defaultValue": true,
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "name": "some-name",
+    "slug": "some-slug",
+  },
+  {
+    "defaultValue": false,
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "name": "some-other-name",
+    "slug": "some-other-slug",
+  },
+]
+`;
+
+exports[`ConsentService should get consents 2`] = `
+{
+  "orderBy": {
+    "createdAt": "desc",
+  },
+  "where": {},
+}
+`;

@@ -3,23 +3,19 @@ import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
-import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
-import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
-import {JobType, runJob} from './jobs'
-import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
-import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
-import {MAX_PAYLOAD_SIZE} from './utility'
+import {GraphQLWepublishSchema} from './graphql/schema'
+import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mail/api'
+import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
 import {
+  ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginLandingPageDisabled
+  ApolloServerPluginUsageReportingDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
-
-let serverLogger: pino.Logger
-
-export function logger(moduleName: string): pino.Logger {
-  return serverLogger.child({module: moduleName})
-}
+import {setupMailProvider} from './mails'
+import {logger, MAX_PAYLOAD_SIZE, serverLogger, setLogger} from '@wepublish/utils/api'
+import {printSchema} from 'graphql'
+import * as fs from 'fs'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -28,38 +24,36 @@ export interface WepublishServerOpts extends ContextOptions {
 }
 
 export class WepublishServer {
-  constructor(private readonly opts: WepublishServerOpts, private app?: Application | undefined) {}
+  constructor(private opts: WepublishServerOpts, private publicApp?: Application | undefined) {}
 
   async listen(port?: number, hostname?: string): Promise<void> {
-    const app = this.app || express()
+    if (!this.publicApp) {
+      this.publicApp = express()
+    }
+    const publicApp = this.publicApp
 
-    this.setupPrismaMiddlewares()
-
-    serverLogger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
+    setLogger(this.opts.logger)
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
       plugins: [
+        ApolloServerPluginUsageReportingDisabled(),
         this.opts.playground
           ? ApolloServerPluginLandingPageGraphQLPlayground()
           : ApolloServerPluginLandingPageDisabled()
       ],
-      introspection: this.opts.introspection ?? false,
+      introspection: true,
       context: ({req}) => contextFromRequest(req, this.opts)
     })
-    await adminServer.start()
 
-    const publicServer = new ApolloServer({
-      schema: GraphQLWepublishPublicSchema,
-      plugins: [
-        this.opts.playground
-          ? ApolloServerPluginLandingPageGraphQLPlayground()
-          : ApolloServerPluginLandingPageDisabled()
-      ],
-      introspection: this.opts.introspection ?? false,
-      context: ({req}) => contextFromRequest(req, this.opts)
-    })
-    await publicServer.start()
+    if (process.env['NODE_ENV'] !== 'production') {
+      await fs.promises.writeFile(
+        './apps/api-example/schema-v1-admin.graphql',
+        printSchema(GraphQLWepublishSchema)
+      )
+    }
+
+    await adminServer.start()
 
     const corsOptions = {
       origin: true,
@@ -75,32 +69,26 @@ export class WepublishServer {
       methods: ['POST', 'GET', 'OPTIONS']
     }
 
-    app.use(
+    publicApp.use(
       pinoHttp({
-        logger: serverLogger,
+        logger: serverLogger.logger,
         useLevel: 'debug'
       })
     )
 
-    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(this.opts))
-    app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(this.opts))
+    publicApp.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(this.opts))
+    publicApp.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(this.opts))
 
-    app.use(graphqlUploadExpress())
+    publicApp.use(graphqlUploadExpress())
 
     adminServer.applyMiddleware({
-      app,
+      app: publicApp,
       path: '/v1/admin',
       cors: corsOptions,
       bodyParserConfig: {limit: MAX_PAYLOAD_SIZE}
     })
 
-    publicServer.applyMiddleware({
-      app,
-      path: '/v1',
-      cors: corsOptions
-    })
-
-    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    publicApp.use((err: any, req: Request, res: Response, next: NextFunction) => {
       logger('server').error(err)
       if (err.status) {
         res.status(err.status)
@@ -109,28 +97,5 @@ export class WepublishServer {
         res.status(500).end()
       }
     })
-
-    this.app = app
-  }
-
-  async runJob(command: JobType, data: any): Promise<void> {
-    try {
-      const context = await contextFromRequest(null, this.opts)
-      await runJob(command, context, data)
-
-      // FIXME: Will be refactored in WPC-604
-      // Wait for all asynchronous events to finish. I know this is bad code.
-      await new Promise(resolve => setTimeout(resolve, 10000))
-    } catch (error) {
-      logger('server').error(error as Error, 'Error while running job "%s"', command)
-    }
-  }
-
-  private async setupPrismaMiddlewares(): Promise<void> {
-    this.opts.prisma.$use(onFindArticle(this.opts.prisma))
-    this.opts.prisma.$use(onFindPage(this.opts.prisma))
-
-    const contextWithoutReq = await contextFromRequest(null, this.opts)
-    this.opts.prisma.$use(onInvoiceUpdate(contextWithoutReq))
   }
 }

@@ -1,467 +1,627 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`User Roles can be created/edited/deleted: can be created 1`] = `
-Object {
-  "data": Object {
-    "createUserRole": Object {
+{
+  "data": {
+    "createUserRole": {
       "description": "New Role",
       "id": Any<String>,
       "name": Any<String>,
-      "permissions": Array [
-        Object {
+      "permissions": [
+        {
+          "deprecated": false,
+          "description": "Allows to get crowdfunding",
+          "id": "CAN_GET_CROWDFUNDING",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get crowdfundings",
+          "id": "CAN_GET_CROWDFUNDINGS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create crowdfunding",
+          "id": "CAN_CREATE_CROWDFUNDING",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update crowdfunding",
+          "id": "CAN_UPDATE_CROWDFUNDING",
+        },
+        {
           "deprecated": false,
           "description": "Allows to take an action on comment",
           "id": "CAN_TAKE_COMMENT_ACTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get navigation",
           "id": "CAN_GET_NAVIGATION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all navigations",
           "id": "CAN_GET_NAVIGATIONS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete navigations",
           "id": "CAN_DELETE_NAVIGATION",
         },
-        Object {
+        {
+          "deprecated": false,
+          "description": "Allows to get banner",
+          "id": "CAN_GET_BANNER",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get all banners",
+          "id": "CAN_GET_BANNERS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create banner",
+          "id": "CAN_CREATE_BANNER",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update banner",
+          "id": "CAN_UPDATE_BANNER",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete banners",
+          "id": "CAN_DELETE_BANNER",
+        },
+        {
           "deprecated": false,
           "description": "Allows to create authors",
           "id": "CAN_CREATE_AUTHOR",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get author",
           "id": "CAN_GET_AUTHOR",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to all authors",
+          "description": "Allows to get all authors",
           "id": "CAN_GET_AUTHORS",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to delete authors",
-          "id": "CAN_DELETE_AUTHORS",
+          "description": "Allows to delete a single author",
+          "id": "CAN_DELETE_AUTHOR",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create images",
           "id": "CAN_CREATE_IMAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get image",
           "id": "CAN_GET_IMAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all images",
           "id": "CAN_GET_IMAGES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete images",
           "id": "CAN_DELETE_IMAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create articles",
           "id": "CAN_CREATE_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get article",
           "id": "CAN_GET_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all articles",
           "id": "CAN_GET_ARTICLES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete articles",
           "id": "CAN_DELETE_ARTICLE",
         },
-        Object {
-          "deprecated": false,
-          "description": "Allows to get preview links for articles",
-          "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
-        },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to publish articles",
           "id": "CAN_PUBLISH_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get peer article",
           "id": "CAN_GET_PEER_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all peer articles",
           "id": "CAN_GET_PEER_ARTICLES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create Pages",
           "id": "CAN_CREATE_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get Page",
           "id": "CAN_GET_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all Pages",
           "id": "CAN_GET_PAGES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete Pages",
           "id": "CAN_DELETE_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to publish Pages",
           "id": "CAN_PUBLISH_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to get preview links for pages",
-          "id": "CAN_GET_PAGE_PREVIEW_LINK",
+          "description": "Allows to get a preview of articles, pages, comments etc.",
+          "id": "CAN_PREVIEW",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update peer profile",
           "id": "CAN_UPDATE_PEER_PROFILE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get peer profile",
           "id": "CAN_GET_PEER_PROFILE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create peers",
           "id": "CAN_CREATE_PEER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get peer",
           "id": "CAN_GET_PEER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all peers",
           "id": "CAN_GET_PEERS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete peers",
           "id": "CAN_DELETE_PEER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create tokens",
           "id": "CAN_CREATE_TOKEN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete tokens",
           "id": "CAN_DELETE_TOKEN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all tokens",
           "id": "CAN_GET_TOKENS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create an user",
           "id": "CAN_CREATE_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to reset the password of an user",
           "id": "CAN_RESET_USER_PASSWORD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an user",
           "id": "CAN_GET_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all users",
           "id": "CAN_GET_USERS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete users",
           "id": "CAN_DELETE_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create an user role",
           "id": "CAN_CREATE_USER_ROLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an user role",
           "id": "CAN_GET_USER_ROLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all user roles",
           "id": "CAN_GET_USER_ROLES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete user role",
           "id": "CAN_DELETE_USER_ROLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a permission",
           "id": "CAN_GET_PERMISSION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all permissions",
           "id": "CAN_GET_PERMISSIONS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all comments",
           "id": "CAN_GET_COMMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a comment",
           "id": "CAN_UPDATE_COMMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete comments",
           "id": "CAN_DELETE_COMMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a member plan",
           "id": "CAN_GET_MEMBER_PLAN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all member plans",
           "id": "CAN_GET_MEMBER_PLANS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete member plan",
           "id": "CAN_DELETE_MEMBER_PLAN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a payment method",
           "id": "CAN_CREATE_PAYMENT_METHOD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a payment method",
           "id": "CAN_GET_PAYMENT_METHOD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all payment methods",
           "id": "CAN_GET_PAYMENT_METHODS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete payment method",
           "id": "CAN_DELETE_PAYMENT_METHOD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create an invoice",
           "id": "CAN_CREATE_INVOICE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an invoice",
           "id": "CAN_GET_INVOICE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all invoices",
           "id": "CAN_GET_INVOICES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete invoice",
           "id": "CAN_DELETE_INVOICE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a payment",
           "id": "CAN_CREATE_PAYMENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an payment",
           "id": "CAN_GET_PAYMENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all payments",
           "id": "CAN_GET_PAYMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all payment providers",
           "id": "CAN_GET_PAYMENT_PROVIDERS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to send a JWT Login",
           "id": "CAN_SEND_JWT_LOGIN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to login editor",
           "id": "CAN_LOGIN_EDITOR",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a subscription",
           "id": "CAN_CREATE_SUBSCRIPTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a subscription",
           "id": "CAN_GET_SUBSCRIPTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all subscriptions",
           "id": "CAN_GET_SUBSCRIPTIONS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a subscription",
           "id": "CAN_DELETE_SUBSCRIPTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to login as other user",
           "id": "CAN_LOGIN_AS_OTHER_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all settings",
           "id": "CAN_GET_SETTINGS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a comment rating system",
           "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a comment rating system",
           "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a tag",
           "id": "CAN_CREATE_TAG",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a tag",
           "id": "CAN_UPDATE_TAG",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all tags",
           "id": "CAN_GET_TAGS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a tag",
           "id": "CAN_DELETE_TAG",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a poll",
           "id": "CAN_GET_POLL",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a poll",
           "id": "CAN_UPDATE_POLL",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a poll",
           "id": "CAN_DELETE_POLL",
         },
-        Object {
+        {
+          "deprecated": false,
+          "description": "Allows to get a poll vote",
+          "id": "CAN_GET_POLL_VOTE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a poll vote",
+          "id": "CAN_DELETE_POLL_VOTE",
+        },
+        {
           "deprecated": false,
           "description": "Allows to create a poll",
           "id": "CAN_CREATE_POLL",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an event",
           "id": "CAN_GET_EVENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update an event",
           "id": "CAN_UPDATE_EVENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete an event",
           "id": "CAN_DELETE_EVENT",
         },
-        Object {
+        {
+          "deprecated": false,
+          "description": "Allows to get imported events",
+          "id": "CAN_GET_IMPORTED_EVENTS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a consent",
+          "id": "CAN_CREATE_CONSENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update a consent",
+          "id": "CAN_UPDATE_CONSENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a consent",
+          "id": "CAN_DELETE_CONSENT",
+        },
+        {
           "deprecated": false,
           "description": "Allows to create an event",
           "id": "CAN_CREATE_EVENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get subscription flows.",
+          "id": "CAN_GET_SUBSCRIPTION_FLOWS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update subscription flow.",
+          "id": "CAN_UPDATE_SUBSCRIPTION_FLOW",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a new subscription flow.",
+          "id": "CAN_CREATE_SUBSCRIPTION_FLOW",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a subscription flow.",
+          "id": "CAN_DELETE_SUBSCRIPTION_FLOW",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get mail templates.",
+          "id": "CAN_GET_MAIL-TEMPLATES",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get the periodic job log",
+          "id": "CAN_GET_PERIODIC_JOB_LOG",
+        },
+        {
+          "deprecated": false,
+          "description": "Allowed to synchronize mail templates from mail provider.",
+          "id": "CAN_SYNC_MAIL-TEMPLATES",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get system mail list.",
+          "id": "CAN_GET_SYSTEM_MAILS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows user to edit and save a system mail.",
+          "id": "CAN_UPDATE_SYSTEM_MAILS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows user to test a system mail.",
+          "id": "CAN_TEST_SYSTEM_MAILS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to leave comment without pending approval",
+          "id": "CAN_CREATE_APPROVED_COMMENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a block style",
+          "id": "CAN_CREATE_BLOCK_STYLE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update a block style",
+          "id": "CAN_UPDATE_BLOCK_STYLE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a block style",
+          "id": "CAN_DELETE_BLOCK_STYLE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a paywall",
+          "id": "CAN_CREATE_PAYWALL",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update a paywall",
+          "id": "CAN_UPDATE_PAYWALL",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a paywall",
+          "id": "CAN_DELETE_PAYWALL",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows reading statistics about the audience.",
+          "id": "CAN_GET_AUDIENCE_STATS",
         },
       ],
       "systemRole": false,
@@ -469,491 +629,651 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`User Roles can be created/edited/deleted: can be deleted 1`] = `
-Object {
-  "data": Object {
+{
+  "data": {
     "deleteUserRole": Any<Object>,
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`User Roles can be created/edited/deleted: can be read by id 1`] = `
-Object {
-  "data": Object {
-    "userRole": Object {
+{
+  "data": {
+    "userRole": {
       "description": "New Role",
       "id": Any<String>,
       "name": Any<String>,
-      "permissions": Array [
-        Object {
+      "permissions": [
+        {
+          "deprecated": false,
+          "description": "Allows to get crowdfunding",
+          "id": "CAN_GET_CROWDFUNDING",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get crowdfundings",
+          "id": "CAN_GET_CROWDFUNDINGS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create crowdfunding",
+          "id": "CAN_CREATE_CROWDFUNDING",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update crowdfunding",
+          "id": "CAN_UPDATE_CROWDFUNDING",
+        },
+        {
           "deprecated": false,
           "description": "Allows to take an action on comment",
           "id": "CAN_TAKE_COMMENT_ACTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get navigation",
           "id": "CAN_GET_NAVIGATION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all navigations",
           "id": "CAN_GET_NAVIGATIONS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete navigations",
           "id": "CAN_DELETE_NAVIGATION",
         },
-        Object {
+        {
+          "deprecated": false,
+          "description": "Allows to get banner",
+          "id": "CAN_GET_BANNER",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get all banners",
+          "id": "CAN_GET_BANNERS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create banner",
+          "id": "CAN_CREATE_BANNER",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update banner",
+          "id": "CAN_UPDATE_BANNER",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete banners",
+          "id": "CAN_DELETE_BANNER",
+        },
+        {
           "deprecated": false,
           "description": "Allows to create authors",
           "id": "CAN_CREATE_AUTHOR",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get author",
           "id": "CAN_GET_AUTHOR",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to all authors",
+          "description": "Allows to get all authors",
           "id": "CAN_GET_AUTHORS",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to delete authors",
-          "id": "CAN_DELETE_AUTHORS",
+          "description": "Allows to delete a single author",
+          "id": "CAN_DELETE_AUTHOR",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create images",
           "id": "CAN_CREATE_IMAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get image",
           "id": "CAN_GET_IMAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all images",
           "id": "CAN_GET_IMAGES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete images",
           "id": "CAN_DELETE_IMAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create articles",
           "id": "CAN_CREATE_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get article",
           "id": "CAN_GET_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all articles",
           "id": "CAN_GET_ARTICLES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete articles",
           "id": "CAN_DELETE_ARTICLE",
         },
-        Object {
-          "deprecated": false,
-          "description": "Allows to get preview links for articles",
-          "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
-        },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to publish articles",
           "id": "CAN_PUBLISH_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get peer article",
           "id": "CAN_GET_PEER_ARTICLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all peer articles",
           "id": "CAN_GET_PEER_ARTICLES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create Pages",
           "id": "CAN_CREATE_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get Page",
           "id": "CAN_GET_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all Pages",
           "id": "CAN_GET_PAGES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete Pages",
           "id": "CAN_DELETE_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to publish Pages",
           "id": "CAN_PUBLISH_PAGE",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to get preview links for pages",
-          "id": "CAN_GET_PAGE_PREVIEW_LINK",
+          "description": "Allows to get a preview of articles, pages, comments etc.",
+          "id": "CAN_PREVIEW",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update peer profile",
           "id": "CAN_UPDATE_PEER_PROFILE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get peer profile",
           "id": "CAN_GET_PEER_PROFILE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create peers",
           "id": "CAN_CREATE_PEER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get peer",
           "id": "CAN_GET_PEER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all peers",
           "id": "CAN_GET_PEERS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete peers",
           "id": "CAN_DELETE_PEER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create tokens",
           "id": "CAN_CREATE_TOKEN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete tokens",
           "id": "CAN_DELETE_TOKEN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all tokens",
           "id": "CAN_GET_TOKENS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create an user",
           "id": "CAN_CREATE_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to reset the password of an user",
           "id": "CAN_RESET_USER_PASSWORD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an user",
           "id": "CAN_GET_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all users",
           "id": "CAN_GET_USERS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete users",
           "id": "CAN_DELETE_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create an user role",
           "id": "CAN_CREATE_USER_ROLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an user role",
           "id": "CAN_GET_USER_ROLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all user roles",
           "id": "CAN_GET_USER_ROLES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete user role",
           "id": "CAN_DELETE_USER_ROLE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a permission",
           "id": "CAN_GET_PERMISSION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all permissions",
           "id": "CAN_GET_PERMISSIONS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all comments",
           "id": "CAN_GET_COMMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a comment",
           "id": "CAN_UPDATE_COMMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete comments",
           "id": "CAN_DELETE_COMMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a member plan",
           "id": "CAN_CREATE_MEMBER_PLAN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a member plan",
           "id": "CAN_GET_MEMBER_PLAN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all member plans",
           "id": "CAN_GET_MEMBER_PLANS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete member plan",
           "id": "CAN_DELETE_MEMBER_PLAN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a payment method",
           "id": "CAN_CREATE_PAYMENT_METHOD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a payment method",
           "id": "CAN_GET_PAYMENT_METHOD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all payment methods",
           "id": "CAN_GET_PAYMENT_METHODS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete payment method",
           "id": "CAN_DELETE_PAYMENT_METHOD",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create an invoice",
           "id": "CAN_CREATE_INVOICE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an invoice",
           "id": "CAN_GET_INVOICE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all invoices",
           "id": "CAN_GET_INVOICES",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete invoice",
           "id": "CAN_DELETE_INVOICE",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a payment",
           "id": "CAN_CREATE_PAYMENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an payment",
           "id": "CAN_GET_PAYMENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all payments",
           "id": "CAN_GET_PAYMENTS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all payment providers",
           "id": "CAN_GET_PAYMENT_PROVIDERS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to send a JWT Login",
           "id": "CAN_SEND_JWT_LOGIN",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to login editor",
           "id": "CAN_LOGIN_EDITOR",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a subscription",
           "id": "CAN_CREATE_SUBSCRIPTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a subscription",
           "id": "CAN_GET_SUBSCRIPTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all subscriptions",
           "id": "CAN_GET_SUBSCRIPTIONS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a subscription",
           "id": "CAN_DELETE_SUBSCRIPTION",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to login as other user",
           "id": "CAN_LOGIN_AS_OTHER_USER",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all settings",
           "id": "CAN_GET_SETTINGS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update settings",
           "id": "CAN_UPDATE_SETTINGS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a comment rating system",
           "id": "CAN_GET_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a comment rating system",
           "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a comment rating system",
           "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a comment rating system",
           "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to create a tag",
           "id": "CAN_CREATE_TAG",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a tag",
           "id": "CAN_UPDATE_TAG",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get all tags",
           "id": "CAN_GET_TAGS",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a tag",
           "id": "CAN_DELETE_TAG",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get a poll",
           "id": "CAN_GET_POLL",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update a poll",
           "id": "CAN_UPDATE_POLL",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete a poll",
           "id": "CAN_DELETE_POLL",
         },
-        Object {
+        {
+          "deprecated": false,
+          "description": "Allows to get a poll vote",
+          "id": "CAN_GET_POLL_VOTE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a poll vote",
+          "id": "CAN_DELETE_POLL_VOTE",
+        },
+        {
           "deprecated": false,
           "description": "Allows to create a poll",
           "id": "CAN_CREATE_POLL",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to get an event",
           "id": "CAN_GET_EVENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to update an event",
           "id": "CAN_UPDATE_EVENT",
         },
-        Object {
+        {
           "deprecated": false,
           "description": "Allows to delete an event",
           "id": "CAN_DELETE_EVENT",
         },
-        Object {
+        {
+          "deprecated": false,
+          "description": "Allows to get imported events",
+          "id": "CAN_GET_IMPORTED_EVENTS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a consent",
+          "id": "CAN_CREATE_CONSENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update a consent",
+          "id": "CAN_UPDATE_CONSENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a consent",
+          "id": "CAN_DELETE_CONSENT",
+        },
+        {
           "deprecated": false,
           "description": "Allows to create an event",
           "id": "CAN_CREATE_EVENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get subscription flows.",
+          "id": "CAN_GET_SUBSCRIPTION_FLOWS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update subscription flow.",
+          "id": "CAN_UPDATE_SUBSCRIPTION_FLOW",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a new subscription flow.",
+          "id": "CAN_CREATE_SUBSCRIPTION_FLOW",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a subscription flow.",
+          "id": "CAN_DELETE_SUBSCRIPTION_FLOW",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get mail templates.",
+          "id": "CAN_GET_MAIL-TEMPLATES",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get the periodic job log",
+          "id": "CAN_GET_PERIODIC_JOB_LOG",
+        },
+        {
+          "deprecated": false,
+          "description": "Allowed to synchronize mail templates from mail provider.",
+          "id": "CAN_SYNC_MAIL-TEMPLATES",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to get system mail list.",
+          "id": "CAN_GET_SYSTEM_MAILS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows user to edit and save a system mail.",
+          "id": "CAN_UPDATE_SYSTEM_MAILS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows user to test a system mail.",
+          "id": "CAN_TEST_SYSTEM_MAILS",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to leave comment without pending approval",
+          "id": "CAN_CREATE_APPROVED_COMMENT",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a block style",
+          "id": "CAN_CREATE_BLOCK_STYLE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update a block style",
+          "id": "CAN_UPDATE_BLOCK_STYLE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a block style",
+          "id": "CAN_DELETE_BLOCK_STYLE",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to create a paywall",
+          "id": "CAN_CREATE_PAYWALL",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to update a paywall",
+          "id": "CAN_UPDATE_PAYWALL",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows to delete a paywall",
+          "id": "CAN_DELETE_PAYWALL",
+        },
+        {
+          "deprecated": false,
+          "description": "Allows reading statistics about the audience.",
+          "id": "CAN_GET_AUDIENCE_STATS",
         },
       ],
       "systemRole": false,
@@ -961,31 +1281,31 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`User Roles can be created/edited/deleted: can be updated 1`] = `
-Object {
-  "data": Object {
-    "updateUserRole": Object {
+{
+  "data": {
+    "updateUserRole": {
       "description": "Updated Role",
       "id": Any<String>,
       "name": Any<String>,
-      "permissions": Array [
-        Object {
+      "permissions": [
+        {
           "deprecated": false,
-          "description": "Allows to take an action on comment",
-          "id": "CAN_TAKE_COMMENT_ACTION",
+          "description": "Allows to get crowdfunding",
+          "id": "CAN_GET_CROWDFUNDING",
         },
-        Object {
+        {
           "deprecated": false,
-          "description": "Allows to get all navigations",
-          "id": "CAN_GET_NAVIGATIONS",
+          "description": "Allows to update crowdfunding",
+          "id": "CAN_UPDATE_CROWDFUNDING",
         },
       ],
       "systemRole": false,
@@ -993,480 +1313,640 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
 exports[`User Roles can be created/edited/deleted: can read permission list 1`] = `
-Object {
-  "data": Object {
-    "permissions": Array [
-      Object {
+{
+  "data": {
+    "permissions": [
+      {
+        "deprecated": false,
+        "description": "Allows to get crowdfunding",
+        "id": "CAN_GET_CROWDFUNDING",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to get crowdfundings",
+        "id": "CAN_GET_CROWDFUNDINGS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to create crowdfunding",
+        "id": "CAN_CREATE_CROWDFUNDING",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to update crowdfunding",
+        "id": "CAN_UPDATE_CROWDFUNDING",
+      },
+      {
         "deprecated": false,
         "description": "Allows to take an action on comment",
         "id": "CAN_TAKE_COMMENT_ACTION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create navigation",
         "id": "CAN_CREATE_NAVIGATION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get navigation",
         "id": "CAN_GET_NAVIGATION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all navigations",
         "id": "CAN_GET_NAVIGATIONS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete navigations",
         "id": "CAN_DELETE_NAVIGATION",
       },
-      Object {
+      {
+        "deprecated": false,
+        "description": "Allows to get banner",
+        "id": "CAN_GET_BANNER",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to get all banners",
+        "id": "CAN_GET_BANNERS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to create banner",
+        "id": "CAN_CREATE_BANNER",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to update banner",
+        "id": "CAN_UPDATE_BANNER",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to delete banners",
+        "id": "CAN_DELETE_BANNER",
+      },
+      {
         "deprecated": false,
         "description": "Allows to create authors",
         "id": "CAN_CREATE_AUTHOR",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get author",
         "id": "CAN_GET_AUTHOR",
       },
-      Object {
+      {
         "deprecated": false,
-        "description": "Allows to all authors",
+        "description": "Allows to get all authors",
         "id": "CAN_GET_AUTHORS",
       },
-      Object {
+      {
         "deprecated": false,
-        "description": "Allows to delete authors",
-        "id": "CAN_DELETE_AUTHORS",
+        "description": "Allows to delete a single author",
+        "id": "CAN_DELETE_AUTHOR",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create images",
         "id": "CAN_CREATE_IMAGE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get image",
         "id": "CAN_GET_IMAGE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all images",
         "id": "CAN_GET_IMAGES",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete images",
         "id": "CAN_DELETE_IMAGE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create articles",
         "id": "CAN_CREATE_ARTICLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get article",
         "id": "CAN_GET_ARTICLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all articles",
         "id": "CAN_GET_ARTICLES",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete articles",
         "id": "CAN_DELETE_ARTICLE",
       },
-      Object {
-        "deprecated": false,
-        "description": "Allows to get preview links for articles",
-        "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
-      },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to publish articles",
         "id": "CAN_PUBLISH_ARTICLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get peer article",
         "id": "CAN_GET_PEER_ARTICLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all peer articles",
         "id": "CAN_GET_PEER_ARTICLES",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create Pages",
         "id": "CAN_CREATE_PAGE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get Page",
         "id": "CAN_GET_PAGE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all Pages",
         "id": "CAN_GET_PAGES",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete Pages",
         "id": "CAN_DELETE_PAGE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to publish Pages",
         "id": "CAN_PUBLISH_PAGE",
       },
-      Object {
+      {
         "deprecated": false,
-        "description": "Allows to get preview links for pages",
-        "id": "CAN_GET_PAGE_PREVIEW_LINK",
+        "description": "Allows to get a preview of articles, pages, comments etc.",
+        "id": "CAN_PREVIEW",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update peer profile",
         "id": "CAN_UPDATE_PEER_PROFILE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get peer profile",
         "id": "CAN_GET_PEER_PROFILE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create peers",
         "id": "CAN_CREATE_PEER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get peer",
         "id": "CAN_GET_PEER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all peers",
         "id": "CAN_GET_PEERS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete peers",
         "id": "CAN_DELETE_PEER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create tokens",
         "id": "CAN_CREATE_TOKEN",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete tokens",
         "id": "CAN_DELETE_TOKEN",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all tokens",
         "id": "CAN_GET_TOKENS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create an user",
         "id": "CAN_CREATE_USER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to reset the password of an user",
         "id": "CAN_RESET_USER_PASSWORD",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get an user",
         "id": "CAN_GET_USER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all users",
         "id": "CAN_GET_USERS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete users",
         "id": "CAN_DELETE_USER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create an user role",
         "id": "CAN_CREATE_USER_ROLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get an user role",
         "id": "CAN_GET_USER_ROLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all user roles",
         "id": "CAN_GET_USER_ROLES",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete user role",
         "id": "CAN_DELETE_USER_ROLE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get a permission",
         "id": "CAN_GET_PERMISSION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all permissions",
         "id": "CAN_GET_PERMISSIONS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all comments",
         "id": "CAN_GET_COMMENTS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update a comment",
         "id": "CAN_UPDATE_COMMENTS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete comments",
         "id": "CAN_DELETE_COMMENTS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create a member plan",
         "id": "CAN_CREATE_MEMBER_PLAN",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get a member plan",
         "id": "CAN_GET_MEMBER_PLAN",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all member plans",
         "id": "CAN_GET_MEMBER_PLANS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete member plan",
         "id": "CAN_DELETE_MEMBER_PLAN",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create a payment method",
         "id": "CAN_CREATE_PAYMENT_METHOD",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get a payment method",
         "id": "CAN_GET_PAYMENT_METHOD",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all payment methods",
         "id": "CAN_GET_PAYMENT_METHODS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete payment method",
         "id": "CAN_DELETE_PAYMENT_METHOD",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create an invoice",
         "id": "CAN_CREATE_INVOICE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get an invoice",
         "id": "CAN_GET_INVOICE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all invoices",
         "id": "CAN_GET_INVOICES",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete invoice",
         "id": "CAN_DELETE_INVOICE",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create a payment",
         "id": "CAN_CREATE_PAYMENT",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get an payment",
         "id": "CAN_GET_PAYMENT",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all payments",
         "id": "CAN_GET_PAYMENTS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all payment providers",
         "id": "CAN_GET_PAYMENT_PROVIDERS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to send a JWT Login",
         "id": "CAN_SEND_JWT_LOGIN",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to login editor",
         "id": "CAN_LOGIN_EDITOR",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create a subscription",
         "id": "CAN_CREATE_SUBSCRIPTION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get a subscription",
         "id": "CAN_GET_SUBSCRIPTION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all subscriptions",
         "id": "CAN_GET_SUBSCRIPTIONS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete a subscription",
         "id": "CAN_DELETE_SUBSCRIPTION",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to login as other user",
         "id": "CAN_LOGIN_AS_OTHER_USER",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all settings",
         "id": "CAN_GET_SETTINGS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update settings",
         "id": "CAN_UPDATE_SETTINGS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get a comment rating system",
         "id": "CAN_GET_COMMENT_RATING_SYSTEM",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create a comment rating system",
         "id": "CAN_CREATE_COMMENT_RATING_SYSTEM",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update a comment rating system",
         "id": "CAN_UPDATE_COMMENT_RATING_SYSTEM",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete a comment rating system",
         "id": "CAN_DELETE_COMMENT_RATING_SYSTEM",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to create a tag",
         "id": "CAN_CREATE_TAG",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update a tag",
         "id": "CAN_UPDATE_TAG",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get all tags",
         "id": "CAN_GET_TAGS",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete a tag",
         "id": "CAN_DELETE_TAG",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get a poll",
         "id": "CAN_GET_POLL",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update a poll",
         "id": "CAN_UPDATE_POLL",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete a poll",
         "id": "CAN_DELETE_POLL",
       },
-      Object {
+      {
+        "deprecated": false,
+        "description": "Allows to get a poll vote",
+        "id": "CAN_GET_POLL_VOTE",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to delete a poll vote",
+        "id": "CAN_DELETE_POLL_VOTE",
+      },
+      {
         "deprecated": false,
         "description": "Allows to create a poll",
         "id": "CAN_CREATE_POLL",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to get an event",
         "id": "CAN_GET_EVENT",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to update an event",
         "id": "CAN_UPDATE_EVENT",
       },
-      Object {
+      {
         "deprecated": false,
         "description": "Allows to delete an event",
         "id": "CAN_DELETE_EVENT",
       },
-      Object {
+      {
+        "deprecated": false,
+        "description": "Allows to get imported events",
+        "id": "CAN_GET_IMPORTED_EVENTS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to create a consent",
+        "id": "CAN_CREATE_CONSENT",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to update a consent",
+        "id": "CAN_UPDATE_CONSENT",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to delete a consent",
+        "id": "CAN_DELETE_CONSENT",
+      },
+      {
         "deprecated": false,
         "description": "Allows to create an event",
         "id": "CAN_CREATE_EVENT",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to get subscription flows.",
+        "id": "CAN_GET_SUBSCRIPTION_FLOWS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to update subscription flow.",
+        "id": "CAN_UPDATE_SUBSCRIPTION_FLOW",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to create a new subscription flow.",
+        "id": "CAN_CREATE_SUBSCRIPTION_FLOW",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to delete a subscription flow.",
+        "id": "CAN_DELETE_SUBSCRIPTION_FLOW",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to get mail templates.",
+        "id": "CAN_GET_MAIL-TEMPLATES",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to get the periodic job log",
+        "id": "CAN_GET_PERIODIC_JOB_LOG",
+      },
+      {
+        "deprecated": false,
+        "description": "Allowed to synchronize mail templates from mail provider.",
+        "id": "CAN_SYNC_MAIL-TEMPLATES",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to get system mail list.",
+        "id": "CAN_GET_SYSTEM_MAILS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows user to edit and save a system mail.",
+        "id": "CAN_UPDATE_SYSTEM_MAILS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows user to test a system mail.",
+        "id": "CAN_TEST_SYSTEM_MAILS",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to leave comment without pending approval",
+        "id": "CAN_CREATE_APPROVED_COMMENT",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to create a block style",
+        "id": "CAN_CREATE_BLOCK_STYLE",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to update a block style",
+        "id": "CAN_UPDATE_BLOCK_STYLE",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to delete a block style",
+        "id": "CAN_DELETE_BLOCK_STYLE",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to create a paywall",
+        "id": "CAN_CREATE_PAYWALL",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to update a paywall",
+        "id": "CAN_UPDATE_PAYWALL",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows to delete a paywall",
+        "id": "CAN_DELETE_PAYWALL",
+      },
+      {
+        "deprecated": false,
+        "description": "Allows reading statistics about the audience.",
+        "id": "CAN_GET_AUDIENCE_STATS",
       },
     ],
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }

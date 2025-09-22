@@ -1,0 +1,133 @@
+name: Publish docker website image
+
+on:
+  workflow_call:
+    inputs:
+      website_project:
+        required: true
+        type: string
+      api_url:
+        required: true
+        type: string
+      website_tags:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+
+jobs:
+  build-and-push:
+    name: ${{inputs.website_target}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create .version file
+        run: echo "${{ github.sha }}" > version
+      - name: Log in to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Calculate hash of package-lock.json
+        id: hash
+        run: |
+          if [ -f package-lock.json ]; then
+            HASH=$(cat package-lock.json Dockerfile | sha256sum | awk '{print $1}')
+            echo "BUILD_IMAGE_TAG=ghcr.io/wepublish/base-image:${HASH}" >> $GITHUB_ENV
+          else
+            echo "package-lock.json not found, exiting."
+            exit 1
+          fi
+      - name: Get environment variables
+        id: get-env
+        run: |
+          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ inputs.environment == 'development' && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+      - name: Wait for api version to be deployed
+        if: ${{ inputs.environment != 'development' }}
+        id: wait-for-version
+        run: |
+          MAX_RETRIES=120
+          RETRY_DELAY=10
+          SHA_HASH=${{ github.sha }}
+          API_BASE_URL=${{ inputs.api_url }}
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${API_BASE_URL}/health/version)
+            CONTENT=$(head -n 1 response_body.txt)
+            
+            if [[ "$HTTP_CODE" != "200" ]]; then
+              echo "Attempt $i: Received HTTP $HTTP_CODE"
+            elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
+              echo "Attempt $i: Expected version $SHA_HASH found! "
+              exit 0
+            else
+              echo "Attempt $i: Received response '$CONTENT' but expected ${SHA_HASH} with HTTP status $HTTP_CODE"
+            fi
+            echo "Waiting for $RETRY_DELAY seconds before retrying..."
+            sleep $RETRY_DELAY
+          done
+          echo "Timed out waiting for version: ${SHA_HASH}"
+          exit 1
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - name: Random delay to break API peak
+        run: |
+          DELAY=$((RANDOM % 60))
+          echo "Delaying to break API peak: $DELAY seconds"
+          for ((i=1; i<=DELAY; i++)); do
+            printf "."
+            sleep 1
+          done
+          echo -e "\nStarting now."
+        shell: bash
+      - name: Build and push ${{ inputs.website_project }}
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          target: website
+          build-args: |
+            BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
+            ${{ steps.get-env.outputs.envvars }}
+          push: true
+          tags: |
+            ${{ inputs.website_tags }}
+      - name: Wait for frontend to be deployed
+        id: wait-for-frontend-deployment
+        if: ${{ inputs.environment != 'review' && inputs.environment != 'development' }}
+        run: |
+          MAX_RETRIES=120
+          RETRY_DELAY=10
+          SHA_HASH=${{ github.sha }}
+          ENVIRONMENT=${{ inputs.environment }}
+          PROJECT_NAME=${{ inputs.website_project }}
+          DEFAULT_TOP_LEVEL_DOMAIN="dev"
+          if [[ $ENVIRONMENT == "production" ]]; then
+            DEFAULT_TOP_LEVEL_DOMAIN="media"
+          fi
+          FRONTEND_BASE_URL=$(./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue https://${PROJECT_NAME}.wepublish.${DEFAULT_TOP_LEVEL_DOMAIN} | awk -F "::" '{print $3}')
+          echo "Looking for frontent version at ${FRONTEND_BASE_URL}/deployed_version"
+          for ((i=1; i<=MAX_RETRIES; i++)); do
+            HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${FRONTEND_BASE_URL}/deployed_version)
+            CONTENT=$(head -n 1 response_body.txt)
+          
+              if [[ "$HTTP_CODE" != "200" ]]; then
+                echo "Attempt $i: Received HTTP $HTTP_CODE"
+              elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
+                echo "Attempt $i: Expected version $SHA_HASH found! "
+              exit 0
+              else
+                echo "Attempt $i: Received response '${CONTENT:0:70}' but expected ${SHA_HASH} with HTTP status $HTTP_CODE"
+              fi
+          
+            echo "Waiting for $RETRY_DELAY seconds before retrying..."
+            sleep $RETRY_DELAY
+          done
+          echo "Timed out waiting for deployment of correct version!"
+          exit 1

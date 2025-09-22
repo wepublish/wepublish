@@ -3,6 +3,12 @@
 Automated testing is a crucial aspect of software development that helps to ensure the quality of a codebase by
 automating the testing process.
 
+## CLI
+**!Make sure database is running! `npm run dev`**
+
+- `npm run test`: run all tests locally
+- `npm run test-u`: run all tests and update snapshots
+
 ## API Unit Testing
 
 API unit testing is a type of automated testing that focuses on testing individual units of code that make up an API.
@@ -34,22 +40,18 @@ Also, make sure, you have a database up and running. You may want run `docker-co
 
 Once you have done this, you should be able to run a single test using the command `npx jest -t 'my test'`
 
-### Writing Tests with Fabbrica
-When it comes to writing tests, we highly recommend using [Fabbrica](https://github.com/Quramy/prisma-fabbrica).
-With Fabbrica, you can easily generate database entries using the `.create()` method or model instances using
-the `.build()` method, saving you time and effort.
-
-For examples of how to use Fabbrica in your tests, check out the `subscription-flow.controller.spec.ts` file 
-located at `libs/membership/api/src/lib/subscription-flow`. It's a great resource to help you get started with writing
-tests that utilize Fabbrica.
-
 ### ! Do not forget adding tests to the pipeline !
 In order to run your tests within the pipeline, you have to add an entry in the `package.json` in the root folder.
 To test, if it works, run `nx test` from your cli. Your specs should now be tested.
 
 
-## Snapshots
-It might happen that your tests are failing. Try to update your snapshots
-by running (eventually in the package in question) `npm run test -- -u`
+## UI Testing
+The UI is tested using Storybook and Jest. For further help, consult the documentation of NX, Jest and Storybook.
 
-For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
+
+## Troubleshooting
+### Failing Snapshots
+- It might happen that your tests are failing. Try to update your snapshots
+by running (eventually in the package in question) `npm run test-u` For more information: 
+[https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
+

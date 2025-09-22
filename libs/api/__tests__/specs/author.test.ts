@@ -9,6 +9,7 @@ import {
 } from '../api/private'
 
 import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+import {BlockFormat} from '@wepublish/richtext'
 
 let testServerPrivate: ApolloServer
 
@@ -35,7 +36,7 @@ describe('Authors', () => {
         ],
         bio: [
           {
-            type: 'heading-one',
+            type: BlockFormat.H1,
             children: [
               {
                 text: 'Test Bio'
@@ -43,7 +44,7 @@ describe('Authors', () => {
             ]
           },
           {
-            type: 'paragraph',
+            type: BlockFormat.Paragraph,
             children: [
               {
                 text: 'bio text 😀'
@@ -71,7 +72,7 @@ describe('Authors', () => {
         ],
         bio: [
           {
-            type: 'heading-one',
+            type: BlockFormat.H1,
             children: [
               {
                 text: 'Author Bio Heading'
@@ -79,7 +80,7 @@ describe('Authors', () => {
             ]
           },
           {
-            type: 'paragraph',
+            type: BlockFormat.Paragraph,
             children: [
               {
                 text: 'author bio text'

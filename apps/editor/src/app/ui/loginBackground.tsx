@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import {Logo} from '../logo'
+import {Logo} from './logo'
 
 const BgWrapper = styled.div`
   position: relative;

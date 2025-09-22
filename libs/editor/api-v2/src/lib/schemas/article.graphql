@@ -1,0 +1,264 @@
+fragment FullArticleRevisionWithoutBlocks on ArticleRevision {
+  id
+  createdAt
+  publishedAt
+  preTitle
+  title
+  lead
+  seoTitle
+  canonicalUrl
+  hideAuthor
+  breaking
+  socialMediaTitle
+  socialMediaDescription
+
+  authors {
+    ...FullAuthor
+  }
+
+  socialMediaAuthors {
+    ...FullAuthor
+  }
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    key
+    value
+    public
+  }
+}
+
+fragment FullArticleRevision on ArticleRevision {
+  ...FullArticleRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
+fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  shared
+  hidden
+  disableComments
+  slug
+  likes
+  url
+  previewUrl
+  paywallId
+
+  latest {
+    ...FullArticleRevisionWithoutBlocks
+  }
+
+  draft {
+    id
+  }
+
+  pending {
+    id
+    publishedAt
+  }
+
+  published {
+    id
+    publishedAt
+  }
+
+  tags {
+    ...FullTag
+  }
+
+  peer {
+    ...FullPeer
+  }
+
+  trackingPixels {
+    ...FullTrackingPixel
+  }
+}
+
+fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+
+  latest {
+    ...FullArticleRevision
+  }
+}
+
+query ArticleList(
+  $filter: ArticleFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...ArticleWithoutBlocks
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation CreateArticle(
+  $authorIds: [String!]!
+  $blocks: [BlockContentInput!]!
+  $breaking: Boolean!
+  $canonicalUrl: String!
+  $disableComments: Boolean!
+  $hidden: Boolean!
+  $hideAuthor: Boolean!
+  $imageID: String
+  $paywallId: String
+  $lead: String
+  $preTitle: String
+  $properties: [PropertyInput!]!
+  $seoTitle: String
+  $shared: Boolean!
+  $slug: String
+  $socialMediaAuthorIds: [String!]!
+  $socialMediaDescription: String
+  $socialMediaImageID: String
+  $socialMediaTitle: String
+  $tagIds: [String!]!
+  $title: String
+  $likes: Int!
+) {
+  createArticle(
+    authorIds: $authorIds
+    blocks: $blocks
+    breaking: $breaking
+    canonicalUrl: $canonicalUrl
+    disableComments: $disableComments
+    hidden: $hidden
+    hideAuthor: $hideAuthor
+    imageID: $imageID
+    paywallId: $paywallId
+    lead: $lead
+    preTitle: $preTitle
+    properties: $properties
+    seoTitle: $seoTitle
+    shared: $shared
+    slug: $slug
+    socialMediaAuthorIds: $socialMediaAuthorIds
+    socialMediaDescription: $socialMediaDescription
+    socialMediaImageID: $socialMediaImageID
+    socialMediaTitle: $socialMediaTitle
+    tagIds: $tagIds
+    title: $title
+    likes: $likes
+  ) {
+    ...FullArticle
+  }
+}
+
+mutation UpdateArticle(
+  $id: String!
+  $authorIds: [String!]!
+  $blocks: [BlockContentInput!]!
+  $breaking: Boolean!
+  $canonicalUrl: String!
+  $disableComments: Boolean!
+  $hidden: Boolean!
+  $hideAuthor: Boolean!
+  $imageID: String
+  $paywallId: String
+  $lead: String
+  $preTitle: String
+  $properties: [PropertyInput!]!
+  $seoTitle: String
+  $shared: Boolean!
+  $slug: String
+  $socialMediaAuthorIds: [String!]!
+  $socialMediaDescription: String
+  $socialMediaImageID: String
+  $socialMediaTitle: String
+  $tagIds: [String!]!
+  $title: String
+) {
+  updateArticle(
+    id: $id
+    authorIds: $authorIds
+    blocks: $blocks
+    breaking: $breaking
+    canonicalUrl: $canonicalUrl
+    disableComments: $disableComments
+    hidden: $hidden
+    hideAuthor: $hideAuthor
+    imageID: $imageID
+    paywallId: $paywallId
+    lead: $lead
+    preTitle: $preTitle
+    properties: $properties
+    seoTitle: $seoTitle
+    shared: $shared
+    slug: $slug
+    socialMediaAuthorIds: $socialMediaAuthorIds
+    socialMediaDescription: $socialMediaDescription
+    socialMediaImageID: $socialMediaImageID
+    socialMediaTitle: $socialMediaTitle
+    tagIds: $tagIds
+    title: $title
+  ) {
+    ...FullArticle
+  }
+}
+
+mutation PublishArticle($id: String!, $publishedAt: DateTime!) {
+  publishArticle(id: $id, publishedAt: $publishedAt) {
+    ...FullArticle
+  }
+}
+
+mutation UnpublishArticle($id: String!) {
+  unpublishArticle(id: $id) {
+    ...FullArticle
+  }
+}
+
+mutation DeleteArticle($id: String!) {
+  deleteArticle(id: $id)
+}
+
+mutation DuplicateArticle($id: String!) {
+  duplicateArticle(id: $id) {
+    ...FullArticle
+  }
+}
+
+# query ArticlePreviewLink($id: String!, $hours: Int!) {
+#   articlePreviewLink(id: $id, hours: $hours)
+# }
+
+query Article($id: String!) {
+  article(id: $id) {
+    ...FullArticle
+  }
+}

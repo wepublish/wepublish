@@ -38,6 +38,19 @@ spec:
                 port:
                   name: http
 
+
+    {{- $mediaUrl := urlParse .Values.deployment.env.MEDIA_SERVER_URL }}
+    - host: {{ $mediaUrl.host }}
+      http:
+        paths:
+          - path: {{ $mediaUrl.path | default "/" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-media
+                port:
+                  name: http
+
 {{- if .Values.website.enabled -}}
     {{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
     - host: {{ $websiteUrl.host }}
@@ -48,6 +61,19 @@ spec:
             backend:
               service:
                 name: {{ $fullName }}-website
+                port:
+                  name: http
+{{- end }}
+{{- if .Values.storybook.enabled -}}
+    {{- $storybookUrl := urlParse .Values.storybook.url }}
+    - host: {{ $storybookUrl.host }}
+      http:
+        paths:
+          - path: {{ $storybookUrl.path | default "/" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-storybook
                 port:
                   name: http
 {{- end }}

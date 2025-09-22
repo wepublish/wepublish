@@ -1,7 +1,8 @@
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export interface PeerProfile {
   name: string
+  squareLogoId?: string | null
   logoID?: string | null
   themeColor: string
   themeFontColor: string

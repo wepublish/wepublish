@@ -1,0 +1,158 @@
+{
+  "id": "pi_xxxxxxxxxxxxxxxxxxxx",
+  "object": "payment_intent",
+  "amount": 2400,
+  "amount_capturable": 0,
+  "amount_details": {
+    "tip": {}
+  },
+  "amount_received": 2400,
+  "application": null,
+  "application_fee_amount": null,
+  "automatic_payment_methods": null,
+  "canceled_at": null,
+  "cancellation_reason": null,
+  "capture_method": "automatic",
+  "charges": {
+    "object": "list",
+    "data": [
+      {
+        "id": "ch_xxxxxxxxxxxxxxxxxxxx",
+        "object": "charge",
+        "amount": 2400,
+        "amount_captured": 2400,
+        "amount_refunded": 0,
+        "application": null,
+        "application_fee": null,
+        "application_fee_amount": null,
+        "balance_transaction": "txn_xxxxxxxxxxxxxxxxxxxx",
+        "billing_details": {
+          "address": {
+            "city": null,
+            "country": "CH",
+            "line1": null,
+            "line2": null,
+            "postal_code": null,
+            "state": null
+          },
+          "email": null,
+          "name": null,
+          "phone": null
+        },
+        "calculated_statement_descriptor": "STATEMENTDESCRIPTOR",
+        "captured": true,
+        "created": 1654218044,
+        "currency": "chf",
+        "customer": "testId",
+        "description": null,
+        "destination": null,
+        "dispute": null,
+        "disputed": false,
+        "failure_balance_transaction": null,
+        "failure_code": null,
+        "failure_message": null,
+        "fraud_details": {},
+        "invoice": null,
+        "livemode": false,
+        "metadata": {
+          "paymentID": "xxxxxxxxxxxxxxxxxxxx",
+          "mail": "dev-mail@test.wepublish.com"
+        },
+        "on_behalf_of": null,
+        "order": null,
+        "outcome": {
+          "network_status": "approved_by_network",
+          "reason": null,
+          "risk_level": "normal",
+          "risk_score": 40,
+          "seller_message": "Payment complete.",
+          "type": "authorized"
+        },
+        "paid": true,
+        "payment_intent": "pi_xxxxxxxxxxxxxxxxxxxx",
+        "payment_method": "pm_1KDq0IFuERSrPkd4nLnXR9N5",
+        "payment_method_details": {
+          "card": {
+            "brand": "visa",
+            "checks": {
+              "address_line1_check": null,
+              "address_postal_code_check": null,
+              "cvc_check": null
+            },
+            "country": "US",
+            "exp_month": 12,
+            "exp_year": 2023,
+            "fingerprint": "xxxxxxxxxxxxxxxxxxxx",
+            "funding": "credit",
+            "installments": null,
+            "last4": "4242",
+            "mandate": null,
+            "network": "visa",
+            "three_d_secure": null,
+            "wallet": null
+          },
+          "type": "card"
+        },
+        "receipt_email": null,
+        "receipt_number": null,
+        "receipt_url": "https://pay.stripe.com/receipts/acct_xxxxxxxxxxxxxxxxxxxx/ch_xxxxxxxxxxxxxxxxxxxx/rcpt_xxxxxxxxxxxxxxxxxxxx",
+        "refunded": false,
+        "refunds": {
+          "object": "list",
+          "data": [],
+          "has_more": false,
+          "total_count": 0,
+          "url": "/v1/charges/ch_xxxxxxxxxxxxxxxxxxxx/refunds"
+        },
+        "review": null,
+        "shipping": null,
+        "source": null,
+        "source_transfer": null,
+        "statement_descriptor": null,
+        "statement_descriptor_suffix": null,
+        "status": "succeeded",
+        "transfer_data": null,
+        "transfer_group": null
+      }
+    ],
+    "has_more": false,
+    "total_count": 1,
+    "url": "/v1/charges?payment_intent=pi_xxxxxxxxxxxxxxxxxxxx"
+  },
+  "client_secret": "pi_xxxxxxxxxxxxxxxxxxxx_secret_xxxxxxxxxxxxxxxxxxxx",
+  "confirmation_method": "automatic",
+  "created": 1654218043,
+  "currency": "chf",
+  "customer": "testId",
+  "description": null,
+  "invoice": null,
+  "last_payment_error": null,
+  "livemode": false,
+  "metadata": {
+    "paymentID": "xxxxxxxxxxxxxxxxxxxx",
+    "mail": "dev-mail@test.wepublish.com"
+  },
+  "next_action": null,
+  "on_behalf_of": null,
+  "payment_method": "pm_1KDq0IFuERSrPkd4nLnXR9N5",
+  "payment_method_options": {
+    "card": {
+      "installments": null,
+      "mandate_options": null,
+      "network": null,
+      "request_three_d_secure": "automatic"
+    }
+  },
+  "payment_method_types": ["card"],
+  "processing": null,
+  "receipt_email": null,
+  "review": null,
+  "setup_future_usage": null,
+  "shipping": null,
+  "source": null,
+  "statement_descriptor": null,
+  "statement_descriptor_suffix": null,
+  "status": "succeeded",
+  "transfer_data": null,
+  "transfer_group": null
+}

@@ -1,93 +1,97 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Users can be created/updated/edited/deleted: can be created 1`] = `
-Object {
-  "data": Object {
-    "createUser": Object {
+exports[`Users can be created/updated/edited/deleted: private can be created 1`] = `
+{
+  "data": {
+    "createUser": {
       "email": Any<String>,
       "emailVerifiedAt": Any<Date>,
+      "flair": null,
       "id": Any<String>,
       "name": "Robin Wayne",
-      "roles": Array [],
+      "roles": [],
     },
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can be deleted 1`] = `
-Object {
-  "data": Object {
-    "deleteUser": Object {
+exports[`Users can be created/updated/edited/deleted: private can be deleted 1`] = `
+{
+  "data": {
+    "deleteUser": {
       "email": Any<String>,
       "emailVerifiedAt": null,
+      "flair": null,
       "id": Any<String>,
       "name": "Dark Knight",
-      "roles": Array [],
+      "roles": [],
     },
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can be read by id 1`] = `
-Object {
-  "data": Object {
-    "user": Object {
+exports[`Users can be created/updated/edited/deleted: private can be read by id 1`] = `
+{
+  "data": {
+    "user": {
       "email": Any<String>,
       "emailVerifiedAt": Any<Date>,
+      "flair": null,
       "id": Any<String>,
       "name": "Robin Wayne",
-      "roles": Array [],
+      "roles": [],
     },
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can be updated 1`] = `
-Object {
-  "data": Object {
-    "updateUser": Object {
+exports[`Users can be created/updated/edited/deleted: private can be updated 1`] = `
+{
+  "data": {
+    "updateUser": {
       "email": Any<String>,
       "emailVerifiedAt": null,
+      "flair": null,
       "id": Any<String>,
       "name": "Dark Knight",
-      "roles": Array [],
+      "roles": [],
     },
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can reset user password 1`] = `
-Object {
-  "data": Object {
-    "createSession": Object {
+exports[`Users can be created/updated/edited/deleted: private can reset user password 1`] = `
+{
+  "data": {
+    "createSession": {
       "token": Any<String>,
       "user": ObjectContaining {
         "email": Any<String>,
@@ -96,39 +100,40 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can reset user password 2`] = `
-Object {
-  "data": Object {
-    "resetUserPassword": Object {
+exports[`Users can be created/updated/edited/deleted: private can reset user password 2`] = `
+{
+  "data": {
+    "resetUserPassword": {
       "email": Any<String>,
       "emailVerifiedAt": Any<Date>,
+      "flair": null,
       "id": Any<String>,
       "name": "Robin Wayne",
-      "roles": Array [],
+      "roles": [],
     },
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }
 `;
 
-exports[`Users can be created/updated/edited/deleted: can reset user password 3`] = `
-Object {
-  "data": Object {
-    "createSession": Object {
+exports[`Users can be created/updated/edited/deleted: private can reset user password 3`] = `
+{
+  "data": {
+    "createSession": {
       "token": Any<String>,
       "user": ObjectContaining {
         "email": Any<String>,
@@ -137,9 +142,9 @@ Object {
   },
   "errors": undefined,
   "extensions": undefined,
-  "http": Object {
+  "http": {
     "headers": Headers {
-      Symbol(map): Object {},
+      Symbol(map): {},
     },
   },
 }

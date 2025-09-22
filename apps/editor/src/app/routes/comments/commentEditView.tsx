@@ -9,11 +9,21 @@ import {
   useRatingSystemQuery,
   useUpdateCommentMutation
 } from '@wepublish/editor/api'
+import {
+  CommentDeleteBtn,
+  CommentHistory,
+  CommentStateDropdown,
+  CommentUser,
+  createCheckedPermissionComponent,
+  SelectTags,
+  SingleViewTitle
+} from '@wepublish/ui/editor'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdVisibility} from 'react-icons/md'
 import {useNavigate, useParams} from 'react-router-dom'
 import {
+  Checkbox,
   Col as RCol,
   FlexboxGrid,
   Form,
@@ -26,25 +36,10 @@ import {
   SelectPicker,
   toaster
 } from 'rsuite'
-
-import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
-import {CommentHistory} from '../../atoms/comment/commentHistory'
-import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
-import {CommentUser} from '../../atoms/comment/commentUser'
-import {ModelTitle} from '../../atoms/modelTitle'
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {SelectTags} from '../../atoms/tag/selectTags'
+import FormHelpText from 'rsuite/FormHelpText'
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
-`
-
-const Col = styled(RCol)`
-  margin-top: 20px;
-`
-
-const Panel = styled(RPanel)`
-  width: 100%;
 `
 
 const FlexItem = styled(FlexboxGrid.Item)`
@@ -119,7 +114,7 @@ const CommentEditView = memo(() => {
     variables: {
       id: commentId
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     onError: showErrors
   })
 
@@ -195,6 +190,7 @@ const CommentEditView = memo(() => {
         guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
         tagIds: commentTags,
+        featured: comment.featured,
         ratingOverrides: comment.overriddenRatings?.map(stripTypename)
       }
     })
@@ -211,7 +207,7 @@ const CommentEditView = memo(() => {
       fluid
       disabled={loading}
       style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('comments.edit.title')}
         loadingTitle={t('comments.edit.title')}
@@ -247,7 +243,7 @@ const CommentEditView = memo(() => {
               <ColNoMargin xs={24}>
                 <RPanel bordered header={t('commentEditView.actions')}>
                   <FlexboxGrid>
-                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'end'}}>
+                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'start'}}>
                       <IconButton
                         appearance="ghost"
                         color="violet"
@@ -290,10 +286,28 @@ const CommentEditView = memo(() => {
               <RCol xs={24}>
                 <RPanel bordered header={t('commentEditView.variousPanelHeader')}>
                   <Row>
+                    {/* featured comment (top comment) */}
+                    {comment && (
+                      <RCol xs={24}>
+                        <Checkbox
+                          checked={!!comment?.featured}
+                          onChange={(value, checked) => {
+                            setComment({
+                              ...comment,
+                              featured: checked
+                            })
+                          }}>
+                          {t('commentEditView.featured')}
+                        </Checkbox>
+                        <FormHelpText>{t('commentEditView.featuredHelpText')}</FormHelpText>
+                      </RCol>
+                    )}
+
                     {/* tags */}
                     <RCol xs={24}>
                       <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
                       <SelectTags
+                        defaultTags={comment?.tags ?? []}
                         selectedTags={commentTags}
                         setSelectedTags={setSelectedTags}
                         tagType={TagType.Comment}

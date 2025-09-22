@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageRevisionDataloaderService load should load many 1`] = `
+[
+  [
+    {
+      "include": {
+        "PagesRevisionDraft": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPending": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPublished": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+      },
+      "where": {
+        "id": {
+          "in": [
+            "123",
+            "321",
+          ],
+        },
+      },
+    },
+  ],
+]
+`;
+
+exports[`PageRevisionDataloaderService load should load one 1`] = `
+[
+  [
+    {
+      "include": {
+        "PagesRevisionDraft": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPending": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+        "PagesRevisionPublished": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+      },
+      "where": {
+        "id": {
+          "in": [
+            "123",
+          ],
+        },
+      },
+    },
+  ],
+]
+`;
+
+exports[`PageRevisionDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

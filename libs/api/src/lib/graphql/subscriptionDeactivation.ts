@@ -5,16 +5,23 @@ import {GraphQLDateTime} from 'graphql-scalars'
 export const GraphQLSubscriptionDeactivationReason = new GraphQLEnumType({
   name: 'SubscriptionDeactivationReason',
   values: {
-    NONE: {value: SubscriptionDeactivationReason.none},
-    USER_SELF_DEACTIVATED: {value: SubscriptionDeactivationReason.userSelfDeactivated},
-    INVOICE_NOT_PAID: {value: SubscriptionDeactivationReason.invoiceNotPaid}
+    [SubscriptionDeactivationReason.none]: {value: SubscriptionDeactivationReason.none},
+    [SubscriptionDeactivationReason.userSelfDeactivated]: {
+      value: SubscriptionDeactivationReason.userSelfDeactivated
+    },
+    [SubscriptionDeactivationReason.invoiceNotPaid]: {
+      value: SubscriptionDeactivationReason.invoiceNotPaid
+    },
+    [SubscriptionDeactivationReason.userReplacedSubscription]: {
+      value: SubscriptionDeactivationReason.userReplacedSubscription
+    }
   }
 })
 
 export const GraphQLSubscriptionDeactivation = new GraphQLObjectType({
   name: 'SubscriptionDeactivation',
   fields: {
-    date: {type: GraphQLNonNull(GraphQLDateTime)},
-    reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+    date: {type: new GraphQLNonNull(GraphQLDateTime)},
+    reason: {type: new GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
   }
 })

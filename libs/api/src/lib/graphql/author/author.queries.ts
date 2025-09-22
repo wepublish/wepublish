@@ -1,7 +1,7 @@
 import {Author, Prisma, PrismaClient} from '@prisma/client'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {AuthorFilter, AuthorSort} from '../../db/author'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {ConnectionResult} from '../../db/common'
 
 export const createAuthorOrder = (
   field: AuthorSort,
@@ -10,17 +10,17 @@ export const createAuthorOrder = (
   switch (field) {
     case AuthorSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case AuthorSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case AuthorSort.Name:
       return {
-        name: sortOrder
+        name: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -38,20 +38,45 @@ const createNameFilter = (filter: Partial<AuthorFilter>): Prisma.AuthorWhereInpu
   return {}
 }
 
+const createTagIdsFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereInput => {
+  if (filter?.tagIds?.length) {
+    return {
+      tags: {
+        some: {
+          tagId: {
+            in: filter?.tagIds
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
+const createHideOnTeamFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereInput => {
+  if (filter != null) {
+    return {
+      hideOnTeam: filter?.hideOnTeam
+    }
+  }
+  return {}
+}
+
 export const createAuthorFilter = (filter: Partial<AuthorFilter>): Prisma.AuthorWhereInput => ({
-  AND: [createNameFilter(filter)]
+  AND: [createNameFilter(filter), createTagIdsFilter(filter), createHideOnTeamFilter(filter)]
 })
 
 export const getAuthors = async (
   filter: Partial<AuthorFilter>,
   sortedField: AuthorSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   author: PrismaClient['author']
 ): Promise<ConnectionResult<Author>> => {
-  const orderBy = createAuthorOrder(sortedField, getSortOrder(order))
+  const orderBy = createAuthorOrder(sortedField, order)
   const where = createAuthorFilter(filter)
 
   const [totalCount, authors] = await Promise.all([
@@ -62,7 +87,7 @@ export const getAuthors = async (
     author.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

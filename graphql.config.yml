@@ -1,0 +1,29 @@
+projects:
+  editor-api:
+    schema:
+      - 'apps/api-example/schema-v1-admin.graphql'
+    documents: 'libs/editor/api/**/*.graphql'
+  editor-api-v2:
+    schema:
+      - 'apps/api-example/schema-v2.graphql'
+    documents: 'libs/editor/api-v2/**/*.graphql'
+  website-api:
+    schema:
+      - 'apps/api-example/schema-v2.graphql'
+    documents:
+      - 'libs/website/api/**/*.graphql'
+      - 'libs/website/api/**/graphql.ts'
+  testing:
+    schema:
+      - 'apps/api-example/schema-v2.graphql'
+    documents:
+      - 'libs/testing/src/graphql/public/graphql-public.ts'
+      - 'libs/testing/src/graphql/public/**/*.graphql'
+  migration-v1:
+    schema:
+      - 'apps/api-example/schema-v2.graphql'
+    documents: 'libs/migrate-wordpress/src/api/public/**/*.graphql'
+  migration-v1-admin:
+    schema:
+      - 'apps/api-example/schema-v1-admin.graphql'
+    documents: 'libs/migrate-wordpress/src/api/private/**/*.graphql'

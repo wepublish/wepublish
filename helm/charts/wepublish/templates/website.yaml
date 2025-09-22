@@ -56,19 +56,21 @@ spec:
       {{- end }}
       containers:
         - name: {{ include "helm.fullname" . }}
-          image: {{ .Values.deployment.image }}
+          image: {{ .Values.website.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['node', 'dist/apps/website-example/main.js']
+          command: ["sh", "-c", "npx nx build website-example --prod && npx next start dist/apps/website-example/ -p 8000"]
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
           env:
-            - name: CANONICAL_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "helm.fullname" . }}-website-environment-{{ .Release.Revision }}
-                  key: WEBSITE_URL
+            {{- if .Values.website.dynamicEnv }}
+            {{- range $key, $value := .Values.website.dynamicEnv }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            {{- end }}
+            { { - end } }
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-website-environment-{{ .Release.Revision }}
@@ -96,10 +98,7 @@ metadata:
     {{- end }}
 type: Opaque
 data:
-  {{- range $name, $value := .Values.deployment.env }}
-    {{ $name }}: "{{ $value | b64enc }}"
-    {{- end }}
-    {{- range $name, $value := .Values.website.env }}
+    {{- range $name, $value := merge .Values.website.env .Values.deployment.env }}
     {{ $name }}: "{{ $value | b64enc }}"
     {{- end }}
 

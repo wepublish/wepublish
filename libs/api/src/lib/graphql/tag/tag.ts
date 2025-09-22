@@ -1,7 +1,7 @@
 import {Tag, TagType} from '@prisma/client'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
@@ -12,30 +12,43 @@ import {
 import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
 import {TagSort} from './tag.query'
+import {createProxyingResolver} from '../../utility'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
   values: {
-    Comment: {value: TagType.Comment},
-    Event: {value: TagType.Event}
+    [TagType.Comment]: {value: TagType.Comment},
+    [TagType.Event]: {value: TagType.Event},
+    [TagType.Author]: {value: TagType.Author},
+    [TagType.Article]: {value: TagType.Article},
+    [TagType.Page]: {value: TagType.Page}
   }
 })
 
 export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
   name: 'Tag',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
     tag: {type: GraphQLString},
-    type: {type: GraphQLTagType}
+    type: {type: GraphQLTagType},
+    main: {type: new GraphQLNonNull(GraphQLBoolean)},
+    description: {type: GraphQLRichText},
+    url: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(async (tag, _, {urlAdapter}) => {
+        return await urlAdapter.getTagURL(tag)
+      })
+    }
   }
 })
 
 export const GraphQLTagConnection = new GraphQLObjectType({
   name: 'TagConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLTag)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -50,8 +63,8 @@ export const GraphQLTagFilter = new GraphQLInputObjectType({
 export const GraphQLTagSort = new GraphQLEnumType({
   name: 'TagSort',
   values: {
-    CREATED_AT: {value: TagSort.CreatedAt},
-    MODIFIED_AT: {value: TagSort.ModifiedAt},
-    TAG: {value: TagSort.Tag}
+    [TagSort.CreatedAt]: {value: TagSort.CreatedAt},
+    [TagSort.ModifiedAt]: {value: TagSort.ModifiedAt},
+    [TagSort.Tag]: {value: TagSort.Tag}
   }
 })

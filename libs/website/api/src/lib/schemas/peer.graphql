@@ -1,0 +1,73 @@
+fragment FullPeerProfile on PeerProfile {
+  name
+  logo {
+    ...FullImage
+  }
+  squareLogo {
+    ...FullImage
+  }
+
+  # themeColor
+  # themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullImage
+  }
+}
+
+fragment FullRemotePeerProfile on RemotePeerProfile {
+  name
+  logo {
+    ...FullPeerImage
+  }
+  squareLogo {
+    ...FullPeerImage
+  }
+
+  # themeColor
+  # themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullPeerImage
+  }
+}
+
+fragment FullPeer on Peer {
+  id
+  createdAt
+  modifiedAt
+
+  name
+  slug
+  isDisabled
+  hostURL
+  information
+
+  profile {
+    ...FullRemotePeerProfile
+  }
+}
+
+query PeerProfile {
+  peerProfile {
+    ...FullPeerProfile
+  }
+}
+
+query Peer($id: String, $slug: Slug) {
+  peer(id: $id, slug: $slug) {
+    ...FullPeer
+  }
+}

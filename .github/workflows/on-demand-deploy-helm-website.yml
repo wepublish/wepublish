@@ -1,0 +1,71 @@
+name: Deploy Helm gWebsite
+
+on:
+  workflow_call:
+    inputs:
+      website_project:
+        required: true
+        type: string
+      api_url:
+        required: true
+        type: string
+
+jobs:
+
+  build-and-push:
+    name: ${{inputs.website_target}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get environment variables
+        id: get-env
+        run: |
+          ./deployment/website_read_env.sh review ${{ inputs.website_project }} helm API_URL=${{ inputs.api_url }} WEBSITE_URL=https://${{ inputs.website_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.12.3'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Helm deploy app
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            env:
+          $(echo -e "${{ steps.get-env.outputs.envvars }}" | awk '{print "    "$0}')
+          website:
+            image: ghcr.io/wepublish/website-${{ inputs.website_project }}:${{ github.sha }}
+            env:
+              NODE_ENV: production
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "384Mi"
+                cpu: "500m"
+          EOF
+          cat values.yaml
+          export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.website_project }}-website
+          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-website -n reviews -f values.yaml --wait

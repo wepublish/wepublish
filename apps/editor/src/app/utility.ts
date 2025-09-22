@@ -1,15 +1,8 @@
-import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client'
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
+import {getSettings} from '@wepublish/editor/api-v2'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-
-import {ElementID} from '../shared/elementID'
-import {ClientSettings} from '../shared/types'
-
-export enum LocalStorageKey {
-  SessionToken = 'sessionToken'
-}
 
 export const addOrUpdateOneInArray = (
   array: Record<string | 'id', any>[] | null | undefined,
@@ -42,49 +35,6 @@ export const addOrUpdateOneInArray = (
 
 export function generateID(): string {
   return nanoid()
-}
-
-// https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
-export function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/[ÀÁÂÃÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
-    .replace(/[Ä]/gi, 'ae')
-
-    .replace(/[ÇĆĈČ]/gi, 'c')
-    .replace(/[ÐĎĐÞ]/gi, 'd')
-    .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
-    .replace(/[ĜĞĢǴ]/gi, 'g')
-    .replace(/[ĤḦ]/gi, 'h')
-    .replace(/[ÌÍÎÏĨĪĮİỈỊ]/gi, 'i')
-    .replace(/[Ĵ]/gi, 'j')
-    .replace(/[Ĳ]/gi, 'ij')
-    .replace(/[Ķ]/gi, 'k')
-    .replace(/[ĹĻĽŁ]/gi, 'l')
-    .replace(/[Ḿ]/gi, 'm')
-    .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[ŒÖ]/gi, 'oe')
-
-    .replace(/[ṕ]/gi, 'p')
-    .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ŚŜŞŠ]/gi, 's')
-    .replace(/[ß]/gi, 'ss')
-    .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
-    .replace(/[Ü]/gi, 'ue')
-
-    .replace(/[ẂŴẀẄ]/gi, 'w')
-    .replace(/[ẍ]/gi, 'x')
-    .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')
-    .replace(/[ŹŻŽ]/gi, 'z')
-    .replace(/[·/_,:;\\']/gi, '-')
-    .replace(/\s+/g, '-')
-    .replace(/[^\w\-]+/g, '') //eslint-disable-line
-    .replace(/--+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '')
 }
 
 export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
@@ -156,6 +106,7 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
 }
 
 export type SortType = 'asc' | 'desc' | null
+
 export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrder | null {
   switch (sortType) {
     case 'desc':
@@ -175,7 +126,9 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Monthly,
   PaymentPeriodicity.Quarterly,
   PaymentPeriodicity.Biannual,
-  PaymentPeriodicity.Yearly
+  PaymentPeriodicity.Yearly,
+  PaymentPeriodicity.Biennial,
+  PaymentPeriodicity.Lifetime
 ]
 
 export enum StateColor {
@@ -207,29 +160,6 @@ export function flattenDOMTokenList(list: DOMTokenList) {
     string = `${string} ${element}`
   }
   return string.substring(1)
-}
-
-export function getSettings(): ClientSettings {
-  const defaultSettings = {
-    apiURL: 'http://localhost:4000',
-    peerByDefault: false,
-    imgMinSizeToCompress: 10
-  }
-
-  const settingsJson = document.getElementById(ElementID.Settings)
-
-  return settingsJson
-    ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
-    : defaultSettings
-}
-
-export function getApiClientV2() {
-  const {apiURL} = getSettings()
-  const link = new HttpLink({uri: `${apiURL}/v2`})
-  return new ApolloClient({
-    link,
-    cache: new InMemoryCache()
-  })
 }
 
 /**

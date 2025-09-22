@@ -1,0 +1,56 @@
+fragment FullAuthor on Author {
+  id
+  name
+  jobTitle
+  slug
+  bio
+  url
+  createdAt
+  modifiedAt
+
+  links {
+    title
+    url
+  }
+
+  tags {
+    ...FullTag
+  }
+
+  image {
+    ...FullImage
+  }
+  hideOnArticle
+  hideOnTeaser
+  hideOnTeam
+}
+
+query Author($id: String, $slug: Slug) {
+  author(id: $id, slug: $slug) {
+    ...FullAuthor
+  }
+}
+
+query AuthorList(
+  $filter: AuthorFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $sort: AuthorSort
+  $order: SortOrder
+) {
+  authors(filter: $filter, cursor: $cursor, sort: $sort, order: $order, take: $take, skip: $skip) {
+    nodes {
+      ...FullAuthor
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}

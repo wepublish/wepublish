@@ -1,10 +1,10 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {UserFilter, UserSort, UserWithRelations} from '../../db/user'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {Validator} from '../../validator'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createUserOrder = (
   field: UserSort,
@@ -13,22 +13,22 @@ export const createUserOrder = (
   switch (field) {
     case UserSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserSort.Name:
       return {
-        name: sortOrder
+        name: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserSort.FirstName:
       return {
-        firstName: sortOrder
+        firstName: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -57,29 +57,157 @@ const createNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
 
   return {}
 }
+const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  const splitedString = (filter.text || '').split(' ')
 
-const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
-  if (filter?.text) {
+  if (splitedString.length === 1) {
     return {
       OR: [
         {
-          preferredName: {
-            contains: filter.text,
-            mode: 'insensitive'
-          }
-        },
-        {
           firstName: {
-            contains: filter.text,
+            contains: splitedString[0],
             mode: 'insensitive'
           }
         },
         {
           name: {
-            contains: filter.text,
+            contains: splitedString[0],
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
+  } else if (splitedString.length === 2) {
+    return {
+      // Double word first / last names
+      OR: [
+        {
+          firstName: {
+            contains: `${splitedString[0]} ${splitedString[1]}`,
             mode: 'insensitive'
           }
         },
+        {
+          name: {
+            contains: `${splitedString[0]} ${splitedString[1]}`,
+            mode: 'insensitive'
+          }
+        },
+        // Single word first and lastname
+        {
+          AND: [
+            {
+              firstName: {
+                contains: splitedString[0],
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString[1],
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        {
+          AND: [
+            {
+              firstName: {
+                contains: splitedString[1],
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString[0],
+                mode: 'insensitive'
+              }
+            }
+          ]
+        }
+      ]
+    }
+  } else {
+    return {
+      OR: [
+        {
+          // Filter start with double firstname and ends with single or multi-word lastname
+          AND: [
+            {
+              firstName: {
+                contains: `${splitedString[0]} ${splitedString[1]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString.slice(2).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        {
+          // Filter start with single firstname and ends with multi-word lastname
+          AND: [
+            {
+              firstName: {
+                contains: `${splitedString[0]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              name: {
+                contains: splitedString.slice(1).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        // Filter start with double lastname and ends with single or multi-word firstname
+        {
+          AND: [
+            {
+              name: {
+                contains: `${splitedString[0]} ${splitedString[1]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              firstName: {
+                contains: splitedString.slice(2).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        // Filter start with single lastname and ends with multi-word firstname
+        {
+          AND: [
+            {
+              name: {
+                contains: `${splitedString[0]}`,
+                mode: 'insensitive'
+              }
+            },
+            {
+              firstName: {
+                contains: splitedString.slice(2).join(' '),
+                mode: 'insensitive'
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+  if (filter?.text) {
+    return {
+      OR: [
         {
           email: {
             contains: filter.text,
@@ -109,7 +237,8 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
               }
             ]
           }
-        }
+        },
+        createUserNameFilter(filter)
       ]
     }
   }
@@ -126,13 +255,13 @@ export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereI
 export const getUsers = async (
   filter: Partial<UserFilter>,
   sortedField: UserSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   user: PrismaClient['user']
 ): Promise<ConnectionResult<UserWithRelations>> => {
-  const orderBy = createUserOrder(sortedField, getSortOrder(order))
+  const orderBy = createUserOrder(sortedField, order)
   const where = createUserFilter(filter)
 
   const [totalCount, users] = await Promise.all([
@@ -143,7 +272,7 @@ export const getUsers = async (
     user.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       select: unselectPassword
@@ -175,7 +304,7 @@ export const getUserForCredentials = async (
   userClient: PrismaClient['user']
 ) => {
   email = email.toLowerCase()
-  await Validator.login().validateAsync({email})
+  await Validator.login.parse({email})
 
   const user = await userClient.findUnique({
     where: {
@@ -183,7 +312,6 @@ export const getUserForCredentials = async (
     },
     include: {
       address: true,
-      oauth2Accounts: true,
       paymentProviderCustomers: true,
       properties: true
     }

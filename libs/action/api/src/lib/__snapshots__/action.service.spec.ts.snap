@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ActionService should get actions 1`] = `
+[
+  {
+    "actionType": "eventCreated",
+    "date": 2023-01-08T00:00:00.000Z,
+    "eventId": "8",
+  },
+  {
+    "actionType": "articleCreated",
+    "articleId": "2",
+    "date": 2023-01-07T00:00:00.000Z,
+  },
+  {
+    "actionType": "userCreated",
+    "date": 2023-01-07T00:00:00.000Z,
+    "userId": "7",
+  },
+  {
+    "actionType": "articleCreated",
+    "articleId": "2",
+    "date": 2023-01-06T00:00:00.000Z,
+  },
+  {
+    "actionType": "pollStarted",
+    "date": 2023-01-06T00:00:00.000Z,
+    "pollId": "6",
+  },
+  {
+    "actionType": "authorCreated",
+    "authorId": "4",
+    "date": 2023-01-04T00:00:00.000Z,
+  },
+  {
+    "actionType": "commentCreated",
+    "commentId": "3",
+    "date": 2023-01-03T00:00:00.000Z,
+  },
+  {
+    "actionType": "subscriptionCreated",
+    "date": 2023-01-03T00:00:00.000Z,
+    "subscriptionId": "5",
+  },
+  {
+    "actionType": "pageCreated",
+    "date": 2023-01-02T00:00:00.000Z,
+    "pageId": "2",
+  },
+  {
+    "actionType": "authorCreated",
+    "authorId": "4",
+    "date": 2023-01-02T00:00:00.000Z,
+  },
+  {
+    "actionType": "articleCreated",
+    "articleId": "1",
+    "date": 2023-01-01T00:00:00.000Z,
+  },
+]
+`;

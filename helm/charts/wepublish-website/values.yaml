@@ -1,0 +1,24 @@
+deployment:
+  imagePullPolicy: Always
+  imagePullSecret:
+  env:
+    API_URL: https://api
+    FRONTEND_URL: https://front
+
+website:
+  image: ghcr.io/wepublish/website
+  env:
+    NODE_ENV: production
+  envFromSecretRefName:
+  dynamicEnv: {}
+  properties: {}
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 200m
+    limits:
+      memory: 768Mi
+      cpu: 500m
+
+labels: {}

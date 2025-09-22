@@ -2,10 +2,11 @@ import {
   CommentAuthorType,
   CommentItemType,
   CommentRatingOverride,
+  CommentRatingSystemAnswer,
   CommentRejectionReason,
   CommentState
 } from '@prisma/client'
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 
 export interface CommentData {
   readonly id: string
@@ -23,12 +24,12 @@ export interface CommentData {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly overriddenRatings?: CommentRatingOverride[] | null
+  readonly featured: boolean
+  readonly overriddenRatings: CommentRatingOverride[]
+  readonly revisions: CommentRevision[]
 }
 
 export interface Comment extends CommentData {
-  readonly revisions: CommentRevision[]
-
   readonly state: CommentState
 
   readonly rejectionReason?: CommentRejectionReason | null
@@ -41,8 +42,16 @@ export interface CommentRevision {
   readonly createdAt: Date
 }
 
+export type CalculatedRating = {
+  count: number
+  mean: number
+  total: number
+  answer: CommentRatingSystemAnswer
+}
+
 export interface PublicComment extends CommentData {
   readonly text: RichTextNode[]
+  readonly calculatedRatings?: CalculatedRating[]
 }
 
 export enum CommentSort {

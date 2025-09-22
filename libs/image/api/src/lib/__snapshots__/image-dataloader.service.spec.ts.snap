@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageDataloaderService load should load many 1`] = `
+[
+  {
+    "include": {
+      "focalPoint": true,
+    },
+    "where": {
+      "id": {
+        "in": [
+          "123",
+          "321",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`ImageDataloaderService load should load one 1`] = `
+[
+  {
+    "include": {
+      "focalPoint": true,
+    },
+    "where": {
+      "id": {
+        "in": [
+          "123",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`ImageDataloaderService should prime 1`] = `
+[
+  "123",
+  {},
+]
+`;

@@ -1,7 +1,7 @@
 import {Payment, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {PaymentFilter, PaymentSort} from '../../db/payment'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createPaymentOrder = (
   field: PaymentSort,
@@ -10,12 +10,12 @@ export const createPaymentOrder = (
   switch (field) {
     case PaymentSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PaymentSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -37,13 +37,13 @@ export const createPaymentFilter = (filter: Partial<PaymentFilter>): Prisma.Paym
 export const getPayments = async (
   filter: Partial<PaymentFilter>,
   sortedField: PaymentSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   payment: PrismaClient['payment']
 ): Promise<ConnectionResult<Payment>> => {
-  const orderBy = createPaymentOrder(sortedField, getSortOrder(order))
+  const orderBy = createPaymentOrder(sortedField, order)
   const where = createPaymentFilter(filter)
 
   const [totalCount, payments] = await Promise.all([
@@ -54,7 +54,7 @@ export const getPayments = async (
     payment.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

@@ -14,6 +14,10 @@ const indexPath = path.join(browserDist, 'index.html')
 
 app.use(cors())
 
+app.get('/health', (req, res) => {
+  res.status(200).json({status: 'ok'})
+})
+
 app.get('*.*', express.static(browserDist, {}))
 
 app.use('*', handleRequest(indexPath))

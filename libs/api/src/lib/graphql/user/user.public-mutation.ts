@@ -1,30 +1,9 @@
 import {Prisma, PrismaClient, User} from '@prisma/client'
 import {Context} from '../../context'
-import {hashPassword} from '../../db/user'
-import {unselectPassword} from '@wepublish/user/api'
-import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError} from '../../error'
+import {unselectPassword} from '@wepublish/authentication/api'
+import {EmailAlreadyInUseError} from '../../error'
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'
-
-export const updatePaymentProviderCustomers = async (
-  paymentProviderCustomers: Prisma.UserUncheckedUpdateInput['paymentProviderCustomers'],
-  authenticateUser: Context['authenticateUser'],
-  userClient: PrismaClient['user']
-) => {
-  const {user} = authenticateUser()
-
-  const updateUser = await userClient.update({
-    where: {id: user.id},
-    data: {
-      paymentProviderCustomers
-    },
-    select: unselectPassword
-  })
-
-  if (!updateUser) throw new NotFound('User', user.id)
-
-  return updateUser.paymentProviderCustomers
-}
 
 /**
  * Uploads the user profile image and returns the image and updated user
@@ -106,11 +85,11 @@ export async function uploadPublicUserProfileImage(
 }
 
 type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
-  address: Prisma.UserAddressUncheckedUpdateWithoutUserInput
+  address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
 } & {uploadImageInput: CreateImageInput}
 
 export const updatePublicUser = async (
-  {address, name, email, firstName, preferredName, uploadImageInput}: UpdateUserInput,
+  {address, name, email, birthday, firstName, flair, uploadImageInput}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   mediaAdapter: Context['mediaAdapter'],
   userClient: PrismaClient['user'],
@@ -120,10 +99,8 @@ export const updatePublicUser = async (
 
   email = email ? (email as string).toLowerCase() : email
 
-  await Validator.createUser().validateAsync(
-    {address, name, email, firstName, preferredName},
-    {allowUnknown: true}
-  )
+  await Validator.createUser.parse({name, email, birthday, firstName})
+  await Validator.createAddress.parse(address)
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({
@@ -145,38 +122,21 @@ export const updatePublicUser = async (
   const updateUser = await userClient.update({
     where: {id: user.id},
     data: {
+      birthday,
       name,
       firstName,
-      preferredName,
-      address: {
-        update: address
-      }
+      address: address
+        ? {
+            upsert: {
+              create: address,
+              update: address
+            }
+          }
+        : undefined,
+      flair
     },
     select: unselectPassword
   })
 
   return updateUser
-}
-
-export const updateUserPassword = async (
-  password: string,
-  passwordRepeated: string,
-  hashCostFactor: number,
-  authenticateUser: Context['authenticateUser'],
-  userClient: PrismaClient['user']
-) => {
-  const {user} = authenticateUser()
-  if (!user) throw new NotAuthenticatedError()
-
-  if (password !== passwordRepeated) {
-    throw new UserInputError('password and passwordRepeat are not equal')
-  }
-
-  return userClient.update({
-    where: {id: user.id},
-    data: {
-      password: await hashPassword(password, hashCostFactor)
-    },
-    select: unselectPassword
-  })
 }

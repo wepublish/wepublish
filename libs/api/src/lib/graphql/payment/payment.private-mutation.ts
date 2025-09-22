@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {Payment, PaymentState, PrismaClient} from '@prisma/client'
-import {CanCreatePayment} from '@wepublish/permissions/api'
+import {CanCreatePayment} from '@wepublish/permissions'
 
 export const createPaymentFromInvoice = async (
   input: {
@@ -14,7 +14,9 @@ export const createPaymentFromInvoice = async (
   paymentProviders: Context['paymentProviders'],
   invoicesByID: Context['loaders']['invoicesByID'],
   paymentMethodsByID: Context['loaders']['paymentMethodsByID'],
-  paymentClient: PrismaClient['payment']
+  memberPlanClient: PrismaClient['memberPlan'],
+  paymentClient: PrismaClient['payment'],
+  subscriptionClient: PrismaClient['subscription']
 ): Promise<Payment> => {
   const {roles} = authenticate()
   authorise(CanCreatePayment, roles)
@@ -25,9 +27,34 @@ export const createPaymentFromInvoice = async (
 
   const invoice = await invoicesByID.load(invoiceID)
 
-  if (!invoice || !paymentProvider) {
+  if (!invoice) {
+    throw new Error('Invoice not found')
+  }
+
+  if (!invoice.subscriptionID) {
+    throw new Error('Subscription not found')
+  }
+
+  const memberPlan = await memberPlanClient.findFirst({
+    where: {
+      subscription: {
+        some: {
+          id: invoice.subscriptionID
+        }
+      }
+    }
+  })
+
+  if (!invoice || !paymentProvider || !memberPlan) {
     throw new Error('Invalid data') // TODO: better error handling
   }
+
+  await subscriptionClient.update({
+    where: {id: invoice.subscriptionID},
+    data: {
+      confirmed: true
+    }
+  })
 
   const payment = await paymentClient.create({
     data: {
@@ -40,6 +67,7 @@ export const createPaymentFromInvoice = async (
   const intent = await paymentProvider.createIntent({
     paymentID: payment.id,
     invoice,
+    currency: invoice.currency,
     saveCustomer: true,
     successURL,
     failureURL

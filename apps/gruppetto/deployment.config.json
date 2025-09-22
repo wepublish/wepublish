@@ -1,0 +1,27 @@
+{
+  "website": {
+    "production": {
+      "deployment": true,
+      "custom_domain": "https://gruppetto-magazin.ch",
+      "env": {
+        "GA_ID": "G-FL5CRKBXV4",
+        "DEPLOY_ENV": "production"
+      },
+      "secret_env": []
+    },
+    "staging": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
+      "secret_env": []
+    }
+  }
+}

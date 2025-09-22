@@ -3,8 +3,9 @@ import {Context} from '../../context'
 import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
 import {UserInputError} from '../../error'
 import {authorise} from '../permissions'
-import {CanGetMemberPlan, CanGetMemberPlans} from '@wepublish/permissions/api'
+import {CanGetMemberPlan, CanGetMemberPlans} from '@wepublish/permissions'
 import {getMemberPlans} from './member-plan.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getMemberPlanByIdOrSlug = (
   id: string | null,
@@ -26,7 +27,7 @@ export const getMemberPlanByIdOrSlug = (
 export const getAdminMemberPlans = async (
   filter: Partial<MemberPlanFilter>,
   sortedField: MemberPlanSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

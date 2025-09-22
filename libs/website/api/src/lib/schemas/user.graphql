@@ -1,0 +1,113 @@
+fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
+  paymentProviderID
+  customerID
+}
+
+fragment FullUser on User {
+  id
+  name
+  firstName
+  flair
+  birthday
+  email
+  permissions
+
+  address {
+    ...FullAddress
+  }
+
+  paymentProviderCustomers {
+    ...FullPaymentProviderCustomer
+  }
+
+  image {
+    ...FullImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment FullAddress on UserAddress {
+  company
+  streetAddress
+  streetAddress2
+  zipCode
+  city
+  country
+}
+
+fragment FullSessionWithTokenWithoutUser on SessionWithTokenWithoutUser {
+  token
+  expiresAt
+  createdAt
+}
+
+fragment FullSessionWithToken on SessionWithToken {
+  token
+  expiresAt
+  createdAt
+}
+
+query Me {
+  me {
+    ...FullUser
+  }
+}
+
+mutation LoginWithCredentials($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    ...FullSessionWithToken
+  }
+}
+
+mutation LoginWithEmail($email: String!) {
+  sendWebsiteLogin(email: $email)
+}
+
+mutation LoginWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    ...FullSessionWithToken
+  }
+}
+
+mutation Register(
+  $name: String!
+  $firstName: String
+  $birthday: DateTime
+  $address: UserAddressInput
+  $email: String!
+  $password: String
+  $challengeAnswer: ChallengeInput!
+) {
+  registerMember(
+    name: $name
+    firstName: $firstName
+    birthday: $birthday
+    address: $address
+    email: $email
+    password: $password
+    challengeAnswer: $challengeAnswer
+  ) {
+    user {
+      ...FullUser
+    }
+
+    session {
+      ...FullSessionWithTokenWithoutUser
+    }
+  }
+}
+
+mutation UpdateUser($input: UserInput!) {
+  updateUser(input: $input) {
+    ...FullUser
+  }
+}
+
+mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
+  updatePassword(password: $password, passwordRepeated: $passwordRepeated) {
+    ...FullUser
+  }
+}

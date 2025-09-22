@@ -1,6 +1,9 @@
+import {ExecutionRequest, Executor} from '@graphql-tools/utils'
+import {schemaFromExecutor, wrapSchema} from '@graphql-tools/wrap'
 import {
   Author,
-  Event,
+  Comment,
+  CommentRatingSystemAnswer,
   Image,
   MailLog,
   Payment,
@@ -9,9 +12,7 @@ import {
   Peer,
   PrismaClient,
   User,
-  UserRole,
-  Comment,
-  Subscription
+  UserRole
 } from '@prisma/client'
 import {
   AuthenticationService,
@@ -20,46 +21,31 @@ import {
   TokenSession,
   UserSession
 } from '@wepublish/authentication/api'
+import {MediaAdapter} from '@wepublish/image/api'
+import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
+import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
+import {SettingName} from '@wepublish/settings/api'
+import {createOptionalsArray, generateJWT, GenerateJWTProps, logger} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
 import DataLoader from 'dataloader'
 import {GraphQLError, GraphQLSchema, print} from 'graphql'
-import {
-  Fetcher,
-  IFetcherOperation,
-  introspectSchema,
-  makeRemoteExecutableSchema
-} from 'graphql-tools'
 import {IncomingMessage} from 'http'
-import jwt, {SignOptions} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
-import {Client, Issuer} from 'openid-client'
-import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
-import {
-  ArticleWithRevisions,
-  articleWithRevisionsToPublicArticle,
-  PublicArticle
-} from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
-import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
+import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
-import {getEvent} from './graphql/event/event.query'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
-import {MailContext, MailContextOptions} from './mails/mailContext'
-import {BaseMailProvider} from './mails/mailProvider'
-import {MediaAdapter} from './media/mediaAdapter'
 import {MemberContext} from './memberContext'
-import {PaymentProvider} from './payments/paymentProvider'
-import {logger} from './server'
-import {URLAdapter} from './urlAdapter'
-import {SettingName} from '@wepublish/settings/api'
+import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
+import {URLAdapter} from '@wepublish/nest-modules'
+import {createSafeHostUrl} from '@wepublish/peering/api'
 
 /**
  * Peered article cache configuration and setup
@@ -74,20 +60,10 @@ const fetcherCache = new NodeCache({
 })
 
 export interface DataLoaderContext {
-  readonly navigationByID: DataLoader<string, NavigationWithLinks | null>
-  readonly navigationByKey: DataLoader<string, NavigationWithLinks | null>
-
   readonly authorsByID: DataLoader<string, Author | null>
   readonly authorsBySlug: DataLoader<string, Author | null>
 
   readonly images: DataLoader<string, Image | null>
-
-  readonly articles: DataLoader<string, ArticleWithRevisions | null>
-  readonly publicArticles: DataLoader<string, PublicArticle | null>
-
-  readonly pages: DataLoader<string, PageWithRevisions | null>
-  readonly publicPagesByID: DataLoader<string, PublicPage | null>
-  readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
   readonly userRolesByID: DataLoader<string, UserRole | null>
 
@@ -110,17 +86,13 @@ export interface DataLoaderContext {
   readonly paymentsByID: DataLoader<string, Payment | null>
 
   readonly pollById: DataLoader<string, FullPoll | null>
-  readonly eventById: DataLoader<string, Event | null>
 
   readonly commentsById: DataLoader<string, Comment | null>
-  readonly subscriptionsById: DataLoader<string, Subscription | null>
+  readonly commentRatingSystemAnswers: DataLoader<1, CommentRatingSystemAnswer[]>
+  readonly subscriptionsById: DataLoader<string, SubscriptionWithRelations | null>
   readonly usersById: DataLoader<string, User | null>
-}
 
-export interface OAuth2Clients {
-  name: string
-  provider: Oauth2Provider
-  client: Client
+  readonly blockStyleById: BlockStylesDataloaderService
 }
 
 export interface Context {
@@ -138,31 +110,25 @@ export interface Context {
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
-
-  getOauth2Clients(): Promise<OAuth2Clients[]>
+  readonly requestIP: string
+  readonly fingerprint: string
 
   authenticate(): AuthSession
+
   authenticateToken(): TokenSession
+
   authenticateUser(): UserSession
+
   optionalAuthenticateUser(): UserSession | null
 
-  generateJWT(props: GenerateJWTProps): string
+  generateJWT(props: Pick<GenerateJWTProps, 'id' | 'audience' | 'expiresInMinutes'>): string
+
   verifyJWT(token: string): string
 
   createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>
-}
-
-export interface Oauth2Provider {
-  readonly name: string
-  readonly discoverUrl: string
-  readonly clientId: string
-  readonly clientKey: string
-  readonly scopes: string[]
-  readonly redirectUri: string[]
 }
 
 interface PeerQueryParams {
@@ -189,9 +155,8 @@ export interface ContextOptions {
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly mailProvider?: BaseMailProvider
+  readonly mailProvider: BaseMailProvider
   readonly mailContextOptions: MailContextOptions
-  readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
@@ -212,22 +177,8 @@ export interface CreatePaymentWithProvider {
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
-}
-
-export interface GenerateJWTProps {
-  id: string
-  audience?: string
-  expiresInMinutes?: number
-}
-
-const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
-  keys: Key[],
-  data: Data[],
-  attribute: Attribute
-): Array<Data | null> => {
-  const dataMap = Object.fromEntries(data.map(entry => [entry[attribute], entry]))
-
-  return keys.map(id => dataMap[id] ?? null)
+  user?: User
+  migrateToTargetPaymentMethodID?: string
 }
 
 export async function contextFromRequest(
@@ -238,7 +189,6 @@ export async function contextFromRequest(
     prisma,
     mediaAdapter,
     urlAdapter,
-    oauth2Providers,
     hooks,
     mailProvider,
     mailContextOptions,
@@ -251,6 +201,8 @@ export async function contextFromRequest(
   const authService = new AuthenticationService(prisma)
 
   const token = tokenFromRequest(req)
+  const requestIP = IPFromRequest(req)
+  const fingerprint = fingerprintRequest(req, requestIP)
   const session = token ? await authService.getSessionByToken(token) : null
   const isSessionValid = authService.isSessionValid(session)
 
@@ -269,39 +221,6 @@ export async function contextFromRequest(
   )
 
   const loaders: DataLoaderContext = {
-    navigationByID: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.navigation.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            links: true
-          }
-        }),
-        'id'
-      )
-    ),
-    navigationByKey: new DataLoader(async keys =>
-      createOptionalsArray(
-        keys as string[],
-        await prisma.navigation.findMany({
-          where: {
-            key: {
-              in: keys as string[]
-            }
-          },
-          include: {
-            links: true
-          }
-        }),
-        'key'
-      )
-    ),
-
     authorsByID: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],
@@ -352,200 +271,6 @@ export async function contextFromRequest(
       )
     ),
 
-    articles: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.article.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            draft: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            },
-            pending: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            },
-            published: {
-              include: {
-                properties: true,
-                authors: true,
-                socialMediaAuthors: true
-              }
-            }
-          }
-        }),
-        'id'
-      )
-    ),
-    publicArticles: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        (
-          await prisma.article.findMany({
-            where: {
-              id: {
-                in: ids as string[]
-              },
-              OR: [
-                {
-                  publishedId: {
-                    not: null
-                  }
-                },
-                {
-                  pendingId: {
-                    not: null
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true,
-                  authors: true,
-                  socialMediaAuthors: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true,
-                  authors: true,
-                  socialMediaAuthors: true
-                }
-              }
-            }
-          })
-        ).map(articleWithRevisionsToPublicArticle),
-        'id'
-      )
-    ),
-
-    pages: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        await prisma.page.findMany({
-          where: {
-            id: {
-              in: ids as string[]
-            }
-          },
-          include: {
-            draft: {
-              include: {
-                properties: true
-              }
-            },
-            pending: {
-              include: {
-                properties: true
-              }
-            },
-            published: {
-              include: {
-                properties: true
-              }
-            }
-          }
-        }),
-        'id'
-      )
-    ),
-    publicPagesByID: new DataLoader(async ids =>
-      createOptionalsArray(
-        ids as string[],
-        (
-          await prisma.page.findMany({
-            where: {
-              id: {
-                in: ids as string[]
-              },
-              OR: [
-                {
-                  published: {
-                    isNot: null
-                  }
-                },
-                {
-                  pending: {
-                    isNot: null
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true
-                }
-              }
-            }
-          })
-        ).map(pageWithRevisionsToPublicPage),
-        'id'
-      )
-    ),
-    publicPagesBySlug: new DataLoader(async slugs =>
-      createOptionalsArray(
-        slugs as string[],
-        (
-          await prisma.page.findMany({
-            where: {
-              OR: [
-                {
-                  published: {
-                    is: {
-                      slug: {
-                        in: slugs as string[]
-                      }
-                    }
-                  }
-                },
-                {
-                  pending: {
-                    is: {
-                      slug: {
-                        in: slugs as string[]
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            include: {
-              published: {
-                include: {
-                  properties: true
-                }
-              },
-              pending: {
-                include: {
-                  properties: true
-                }
-              }
-            }
-          })
-        ).map(pageWithRevisionsToPublicPage),
-        'slug'
-      )
-    ),
-
     userRolesByID: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],
@@ -565,7 +290,7 @@ export async function contextFromRequest(
         ids as string[],
         await prisma.mailLog.findMany({
           where: {
-            id: {
+            mailIdentifier: {
               in: ids as string[]
             }
           }
@@ -607,13 +332,17 @@ export async function contextFromRequest(
                   where: {name: SettingName.PEERING_TIMEOUT_MS}
                 })
               )?.value as number) ||
-              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              parseInt(process.env['PEERING_TIMEOUT_IN_MS'] as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
-            const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
+            const fetcher = createFetcher(
+              createSafeHostUrl(peer.hostURL, 'v1'),
+              peer.token,
+              peerTimeout
+            )
 
-            return makeRemoteExecutableSchema({
-              schema: await introspectSchema(fetcher),
-              fetcher
+            return wrapSchema({
+              schema: await schemaFromExecutor(fetcher),
+              executor: fetcher
             })
           } catch (err) {
             console.error(err)
@@ -641,17 +370,18 @@ export async function contextFromRequest(
                   where: {name: SettingName.PEERING_TIMEOUT_MS}
                 })
               )?.value as number) ||
-              parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
+              parseInt(process.env['PEERING_TIMEOUT_IN_MS'] as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
+
             const fetcher = createFetcher(
-              url.resolve(peer.hostURL, 'admin'),
+              createSafeHostUrl(peer.hostURL, 'v1/admin'),
               peer.token,
               peerTimeout
             )
 
-            return makeRemoteExecutableSchema({
-              schema: await introspectSchema(fetcher),
-              fetcher
+            return wrapSchema({
+              schema: await schemaFromExecutor(fetcher),
+              executor: fetcher
             })
           } catch (err) {
             console.error(err)
@@ -799,7 +529,6 @@ export async function contextFromRequest(
     ),
 
     pollById: new DataLoader(async ids => Promise.all(ids.map(id => getPoll(id, prisma.poll)))),
-    eventById: new DataLoader(async ids => Promise.all(ids.map(id => getEvent(id, prisma.event)))),
 
     commentsById: new DataLoader(async ids =>
       createOptionalsArray(
@@ -817,6 +546,10 @@ export async function contextFromRequest(
       )
     ),
 
+    commentRatingSystemAnswers: new DataLoader(async () => [
+      await prisma.commentRatingSystemAnswer.findMany()
+    ]),
+
     subscriptionsById: new DataLoader(async ids =>
       createOptionalsArray(
         ids as string[],
@@ -827,8 +560,9 @@ export async function contextFromRequest(
             }
           },
           include: {
-            memberPlan: true,
-            user: true
+            periods: true,
+            properties: true,
+            deactivation: true
           }
         }),
         'id'
@@ -846,48 +580,40 @@ export async function contextFromRequest(
         }),
         'id'
       )
-    )
+    ),
+
+    blockStyleById: new BlockStylesDataloaderService(prisma)
   }
 
   const mailContext = new MailContext({
     prisma,
     mailProvider,
     defaultFromAddress: mailContextOptions.defaultFromAddress,
-    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
-    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
-    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress
   })
 
-  const generateJWT = (props: GenerateJWTProps): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const jwtOptions: SignOptions = {
+  const generateJWTWrapper: Context['generateJWT'] = ({expiresInMinutes, audience, id}): string => {
+    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
+
+    return generateJWT({
+      id,
+      secret: process.env['JWT_SECRET_KEY'],
       issuer: hostURL,
-      audience: props.audience ?? websiteURL,
-      algorithm: 'HS256',
-      expiresIn: `${props.expiresInMinutes || 15}m`
-    }
-    return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
+      audience: audience ?? websiteURL,
+      expiresInMinutes
+    })
   }
 
   const verifyJWT = (token: string): string => {
-    if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
+    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    const ver = jwt.verify(token, process.env['JWT_SECRET_KEY'])
+    return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>)['sub'] : ''
   }
 
   const memberContext = new MemberContext({
-    loaders,
     prisma,
     paymentProviders,
-    mailContext,
-    getLoginUrlForUser(user: User): string {
-      const jwt = generateJWT({
-        id: user.id,
-        expiresInMinutes: 10080 // One week in minutes
-      })
-
-      return urlAdapter.getLoginURL(jwt)
-    }
+    mailContext
   })
 
   return {
@@ -900,29 +626,12 @@ export async function contextFromRequest(
     mailContext,
     mediaAdapter,
     urlAdapter,
-    oauth2Providers,
     paymentProviders,
     hooks,
+    requestIP: requestIP ?? '',
+    fingerprint: fingerprint ?? '',
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
     hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
-
-    async getOauth2Clients() {
-      return await Promise.all(
-        oauth2Providers.map(async provider => {
-          const issuer = await Issuer.discover(provider.discoverUrl)
-          return {
-            name: provider.name,
-            provider,
-            client: new issuer.Client({
-              client_id: provider.clientId,
-              client_secret: provider.clientKey,
-              redirect_uris: provider.redirectUri,
-              response_types: ['code']
-            })
-          }
-        })
-      )
-    },
 
     authenticateUser() {
       if (!session || session.type !== AuthSessionType.User) {
@@ -940,6 +649,7 @@ export async function contextFromRequest(
       if (!session || session.type !== AuthSessionType.User || !isSessionValid) {
         return null
       }
+
       return session
     },
 
@@ -963,7 +673,7 @@ export async function contextFromRequest(
       return session
     },
 
-    generateJWT,
+    generateJWT: generateJWTWrapper,
 
     verifyJWT,
 
@@ -972,9 +682,13 @@ export async function contextFromRequest(
       invoice,
       saveCustomer,
       failureURL,
-      successURL
+      successURL,
+      user,
+      migrateToTargetPaymentMethodID
     }: CreatePaymentWithProvider): Promise<Payment> {
-      const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+      const paymentMethod = await loaders.activePaymentMethodsByID.load(
+        migrateToTargetPaymentMethodID || paymentMethodID
+      )
       const paymentProvider = paymentProviders.find(
         pp => pp.id === paymentMethod?.paymentProviderID
       )
@@ -982,6 +696,35 @@ export async function contextFromRequest(
       if (!paymentProvider) {
         throw new Error('paymentProvider not found')
       }
+
+      if (!invoice.subscriptionID) {
+        throw new Error('Subscription not found')
+      }
+
+      /**
+       * Gradually migrate subscription's payment method.
+       * Mainly used in mutation.public.ts
+       * Requirements written down here https://wepublish.atlassian.net/browse/TSRI-98
+       */
+      if (migrateToTargetPaymentMethodID) {
+        await prisma.subscription.update({
+          data: {
+            paymentMethodID: migrateToTargetPaymentMethodID
+          },
+          where: {
+            id: invoice.subscriptionID
+          }
+        })
+      }
+
+      await prisma.subscription.update({
+        data: {
+          confirmed: true
+        },
+        where: {
+          id: invoice.subscriptionID
+        }
+      })
 
       const payment = await prisma.payment.create({
         data: {
@@ -991,12 +734,23 @@ export async function contextFromRequest(
         }
       })
 
+      const customer = user
+        ? await prisma.paymentProviderCustomer.findFirst({
+            where: {
+              userId: user.id,
+              paymentProviderID: paymentMethod?.paymentProviderID
+            }
+          })
+        : null
+
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
+        currency: invoice.currency,
         saveCustomer,
         successURL,
-        failureURL
+        failureURL,
+        customerID: customer?.customerID
       })
 
       const updatedPayment = await prisma.payment.update({
@@ -1012,7 +766,19 @@ export async function contextFromRequest(
         }
       })
 
-      if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
+      // Mark invoice as paid
+      if (intent.state === PaymentState.paid) {
+        const intentState = await paymentProvider.checkIntentStatus({
+          intentID: updatedPayment.intentID ?? '',
+          paymentID: updatedPayment.id
+        })
+
+        await paymentProvider.updatePaymentWithIntentState({intentState})
+      }
+
+      if (intent.errorCode) {
+        throw new GraphQLError(intent.errorCode)
+      }
 
       return updatedPayment as Payment
     },
@@ -1027,6 +793,39 @@ export function tokenFromRequest(req: IncomingMessage | null): string | null {
   }
 
   return null
+}
+
+export function fingerprintRequest(
+  req: IncomingMessage | null,
+  ip: string | undefined
+): string | null {
+  let ipHash = null
+  if (ip) {
+    ipHash = crypto.createHash('sha224').update(ip).digest('hex').substring(0, 7)
+  }
+  let userAgentHash = null
+  if (req?.headers['user-agent']) {
+    userAgentHash = crypto
+      .createHash('sha224')
+      .update(req?.headers['user-agent'])
+      .digest('hex')
+      .substring(0, 7)
+  }
+  if (ipHash || userAgentHash) return `${ipHash}:${userAgentHash}`
+  return null
+}
+
+export function IPFromRequest(req: IncomingMessage | null): string | undefined {
+  const headers = req?.headers
+  if (headers) {
+    return (
+      (headers['cf-connecting-ip'] as string | undefined) ||
+      (headers['x-forwarded-for'] as string | undefined) ||
+      req.socket?.remoteAddress ||
+      undefined
+    )
+  }
+  return undefined
 }
 
 /**
@@ -1093,12 +892,12 @@ async function loadFreshData(params: PeerQueryParams) {
   }
 }
 
-export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
+export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Executor {
   const loadData = async ({
     query,
     variables,
     operationName
-  }: {query: string} & Omit<IFetcherOperation, 'query' | 'context'>) => {
+  }: {query: string} & Omit<ExecutionRequest, 'document' | 'context'>) => {
     // Initialize and prepare caching
     const fetchParams: PeerQueryParams = {
       hostURL,
@@ -1121,8 +920,8 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
     return await loadFreshData(fetchParams)
   }
 
-  return async ({query: queryDocument, variables, operationName}) => {
-    const query = print(queryDocument)
+  return async ({variables, operationName, document}) => {
+    const query = print(document)
 
     return loadData({query, variables, operationName})
   }

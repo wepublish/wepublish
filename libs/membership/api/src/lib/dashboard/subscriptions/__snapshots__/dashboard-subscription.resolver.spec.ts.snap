@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DashboardSubscriptionResolver activeSubscribers 1`] = `
-Array [
-  Object {
+[
+  {
     "endsAt": null,
     "memberPlan": "Foo",
     "monthlyAmount": 500,
@@ -11,21 +11,21 @@ Array [
     "renewsAt": null,
     "startsAt": "2023-02-03T00:00:00.000Z",
   },
-  Object {
-    "endsAt": "2023-02-01T00:00:00.000Z",
+  {
+    "endsAt": "2043-02-01T00:00:00.000Z",
     "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
-    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "renewsAt": "2043-02-01T00:00:00.000Z",
     "startsAt": "2023-01-01T00:00:00.000Z",
   },
 ]
 `;
 
 exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
-Array [
-  Object {
+[
+  {
     "endsAt": "2023-02-03T00:00:00.000Z",
     "memberPlan": "Foo",
     "monthlyAmount": 50,
@@ -37,8 +37,8 @@ Array [
 `;
 
 exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
-Array [
-  Object {
+[
+  {
     "endsAt": "2023-02-02T00:00:00.000Z",
     "memberPlan": "Bar",
     "monthlyAmount": 50,
@@ -47,7 +47,7 @@ Array [
     "renewsAt": null,
     "startsAt": "2023-01-02T00:00:00.000Z",
   },
-  Object {
+  {
     "endsAt": "2023-02-01T00:00:00.000Z",
     "memberPlan": "Foo",
     "monthlyAmount": 50,
@@ -60,8 +60,8 @@ Array [
 `;
 
 exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
-Array [
-  Object {
+[
+  {
     "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",

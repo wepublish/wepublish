@@ -1,10 +1,9 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
+  GraphQLBoolean,
   GraphQLInputObjectType,
-  GraphQLID,
-  GraphQLBoolean
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {PeerProfile} from '../db/peer'
@@ -13,50 +12,61 @@ import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Peer} from '@prisma/client'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    logoID: {type: GraphQLID},
-    themeColor: {type: GraphQLNonNull(GraphQLColor)},
-    themeFontColor: {type: GraphQLNonNull(GraphQLColor)},
-    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    logoID: {type: GraphQLString},
+    squareLogoId: {type: GraphQLString},
+    themeColor: {type: new GraphQLNonNull(GraphQLColor)},
+    themeFontColor: {type: new GraphQLNonNull(GraphQLColor)},
+    callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
+    callToActionURL: {type: new GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLID}
+    callToActionImageID: {type: GraphQLString}
   }
 })
 
 export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
   name: 'PeerProfile',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
 
+    logoID: {type: GraphQLString},
     logo: {
       type: GraphQLImage,
-      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
         return profile.logoID ? loaders.images.load(profile.logoID) : null
       })
     },
 
-    themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    squareLogoId: {type: GraphQLString},
+    squareLogo: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
+        return profile.squareLogoId ? loaders.images.load(profile.squareLogoId) : null
+      })
+    },
+
+    themeColor: {type: new GraphQLNonNull(GraphQLColor)},
     themeFontColor: {
-      type: GraphQLNonNull(GraphQLColor),
-      resolve(profile, args, {loaders}, info) {
+      type: new GraphQLNonNull(GraphQLColor),
+      resolve(profile) {
         return profile.themeFontColor ? profile.themeFontColor : '#fff'
       }
     },
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
-    websiteURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)},
+    hostURL: {type: new GraphQLNonNull(GraphQLString)},
+    websiteURL: {type: new GraphQLNonNull(GraphQLString)},
+    callToActionText: {type: new GraphQLNonNull(GraphQLRichText)},
+    callToActionURL: {type: new GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLString},
     callToActionImage: {
       type: GraphQLImage,
-      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
         return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
       })
     }
@@ -66,10 +76,11 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
 export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
   name: 'CreatePeerInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
-    token: {type: GraphQLNonNull(GraphQLString)}
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLString)},
+    hostURL: {type: new GraphQLNonNull(GraphQLString)},
+    information: {type: GraphQLRichText},
+    token: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -80,6 +91,7 @@ export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
     slug: {type: GraphQLString},
     hostURL: {type: GraphQLString},
     isDisabled: {type: GraphQLBoolean},
+    information: {type: GraphQLRichText},
     token: {type: GraphQLString}
   }
 })
@@ -87,15 +99,16 @@ export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
 export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
   name: 'Peer',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLString)},
     isDisabled: {type: GraphQLBoolean},
-    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    hostURL: {type: new GraphQLNonNull(GraphQLString)},
+    information: {type: GraphQLRichText},
     profile: {
       type: GraphQLPeerProfile,
       resolve: createProxyingResolver(async (source, args, context, info) => {

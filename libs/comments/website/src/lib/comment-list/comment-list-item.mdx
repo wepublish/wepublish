@@ -1,0 +1,14 @@
+import {Meta, Story, Canvas} from '@storybook/blocks'
+import * as stories from './comment-list-item.stories'
+
+<Meta of={stories} />
+
+# Comment List Item
+
+<Canvas>
+  <Story of={stories.VerifiedUser} />
+</Canvas>
+
+<Canvas>
+  <Story of={stories.AnonymousUser} />
+</Canvas>

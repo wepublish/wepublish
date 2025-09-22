@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - development
   pull_request:
 
 jobs:
@@ -11,19 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: bitnami/postgresql:14
+        image: postgres:17
         env:
-          ALLOW_EMPTY_PASSWORD: yes
-          POSTGRESQL_DATABASE: wepublish
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: wepublish_test
+          POSTGRES_USER: postgres
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '18'
+          cache: 'npm'
       - run: npm ci
-      - run: npm test
+      - run: npm run test-backend -- --code-coverage
         env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/wepublish_test?schema=public'
+          DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

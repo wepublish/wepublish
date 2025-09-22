@@ -1,10 +1,4 @@
-import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInputObjectType,
-  GraphQLID
-} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInputObjectType} from 'graphql'
 
 import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -13,31 +7,31 @@ import {Token} from '@prisma/client'
 export const GraphQLTokenInput = new GraphQLInputObjectType({
   name: 'TokenInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)}
+    name: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLToken = new GraphQLObjectType<Token, Context>({
   name: 'Token',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    name: {type: GraphQLNonNull(GraphQLString)}
+    name: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLCreatedToken = new GraphQLObjectType<Token, Context>({
   name: 'CreatedToken',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    name: {type: GraphQLNonNull(GraphQLString)},
-    token: {type: GraphQLNonNull(GraphQLString)}
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    token: {type: new GraphQLNonNull(GraphQLString)}
   }
 })

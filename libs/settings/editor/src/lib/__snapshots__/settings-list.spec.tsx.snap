@@ -1,0 +1,1482 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SettingList renders successfully 1`] = `
+<DocumentFragment>
+  <form
+    class="rs-form rs-form-vertical rs-form-fixed-width rs-form-disabled"
+    data-testid="form"
+  >
+    <div
+      class="emotion-0"
+    >
+      <div
+        class="emotion-1"
+      >
+        <h2>
+          settingList.settings
+        </h2>
+      </div>
+      <div
+        class="emotion-2"
+      >
+        <button
+          aria-disabled="true"
+          class="actionButton rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-default rs-btn-lg rs-btn-disabled"
+          disabled=""
+          type="reset"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+            />
+          </svg>
+          cancel
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+        <button
+          aria-disabled="true"
+          class="actionButton rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-with-text rs-btn rs-btn-primary rs-btn-lg rs-btn-disabled"
+          disabled=""
+          type="submit"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+            />
+          </svg>
+          save
+          <span
+            class="rs-ripple-pond"
+          >
+            <span
+              class="rs-ripple"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="rs-grid-container-fluid"
+      role="grid"
+    >
+      <div
+        class="rs-row"
+        role="row"
+      >
+        <div
+          class="rs-col rs-col-xs-12"
+          role="gridcell"
+        >
+          <div
+            class="rs-row"
+            role="row"
+          >
+            <div
+              class="rs-col rs-col-xs-24"
+              role="gridcell"
+            >
+              <div
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+              >
+                <div
+                  aria-expanded="false"
+                  class="rs-panel-header"
+                  tabindex="-1"
+                >
+                  <span
+                    class="rs-panel-title"
+                    role="presentation"
+                  >
+                    <span
+                      class="collapsed"
+                    >
+                      settingList.comments
+                    </span>
+                  </span>
+                </div>
+                <div
+                  class="rs-panel-body"
+                  role="region"
+                >
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="ALLOW_GUEST_COMMENTING"
+                      id="ALLOW_GUEST_COMMENTING-control-label"
+                    >
+                      settingList.guestCommenting
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="ALLOW_GUEST_COMMENT_RATING"
+                      id="ALLOW_GUEST_COMMENT_RATING-control-label"
+                    >
+                      settingList.allowGuestCommentRating
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="ALLOW_COMMENT_EDITING"
+                      id="ALLOW_COMMENT_EDITING-control-label"
+                    >
+                      settingList.allowCommentEditing
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="COMMENT_CHAR_LIMIT"
+                      id="COMMENT_CHAR_LIMIT-control-label"
+                    >
+                      settingList.commentCharLimit
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <div
+                      class="rs-input-group"
+                    >
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <div
+                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                        >
+                          <input
+                            aria-describedby="COMMENT_CHAR_LIMIT-help-text"
+                            aria-labelledby="COMMENT_CHAR_LIMIT-control-label"
+                            autocomplete="off"
+                            class="rs-input"
+                            disabled=""
+                            id="COMMENT_CHAR_LIMIT"
+                            name="COMMENT_CHAR_LIMIT"
+                            step="1"
+                            type="number"
+                            value="0"
+                          />
+                          <span
+                            class="rs-input-number-btn-group-vertical"
+                            disabled=""
+                          >
+                            <button
+                              aria-disabled="true"
+                              aria-label="Increment"
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle up"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                            <button
+                              aria-disabled="true"
+                              aria-label="Decrement"
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle down"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-col rs-col-xs-24"
+              role="gridcell"
+            >
+              <div
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+              >
+                <div
+                  aria-expanded="false"
+                  class="rs-panel-header"
+                  tabindex="-1"
+                >
+                  settingList.polls
+                  <div
+                    class="emotion-5 emotion-6"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="rs-panel-body"
+                  role="region"
+                >
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="guestPollVote"
+                      id="guestPollVote-control-label"
+                    >
+                      settingList.guestPollVote
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-col rs-col-xs-24"
+              role="gridcell"
+            >
+              <div
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+              >
+                <div
+                  aria-expanded="false"
+                  class="rs-panel-header"
+                  tabindex="-1"
+                >
+                  <span
+                    class="rs-panel-title"
+                    role="presentation"
+                  >
+                    <span
+                      class="collapsed"
+                    >
+                      settingList.memberships
+                    </span>
+                  </span>
+                </div>
+                <div
+                  class="rs-panel-body"
+                  role="region"
+                >
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="MAKE_NEW_SUBSCRIBERS_API_PUBLIC"
+                      id="MAKE_NEW_SUBSCRIBERS_API_PUBLIC-control-label"
+                    >
+                      settingList.newSubscriptionsApiPublic
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC"
+                      id="MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC-control-label"
+                    >
+                      settingList.activeSubscriptionsApiPublic
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC"
+                      id="MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC-control-label"
+                    >
+                      settingList.renewingSubscriptionsApiPublic
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="MAKE_NEW_DEACTIVATIONS_API_PUBLIC"
+                      id="MAKE_NEW_DEACTIVATIONS_API_PUBLIC-control-label"
+                    >
+                      settingList.newDeactivationsApiPublic
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="MAKE_EXPECTED_REVENUE_API_PUBLIC"
+                      id="MAKE_EXPECTED_REVENUE_API_PUBLIC-control-label"
+                    >
+                      settingList.expectedRevenueApiPublic
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="MAKE_REVENUE_API_PUBLIC"
+                      id="MAKE_REVENUE_API_PUBLIC-control-label"
+                    >
+                      settingList.revenueApiPublic
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <label
+                      class="rs-toggle rs-toggle-disabled"
+                    >
+                      <input
+                        aria-checked="false"
+                        aria-disabled="true"
+                        aria-label="Close"
+                        class="rs-toggle-input"
+                        disabled=""
+                        role="switch"
+                        type="checkbox"
+                      />
+                      <span
+                        class="rs-toggle-presentation"
+                      >
+                        <span
+                          class="rs-toggle-inner"
+                        />
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rs-col rs-col-xs-12"
+          role="gridcell"
+        >
+          <div
+            class="rs-row"
+            role="row"
+          >
+            <div
+              class="rs-col rs-col-xs-24"
+              role="gridcell"
+            >
+              <div
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+              >
+                <div
+                  aria-expanded="false"
+                  class="rs-panel-header"
+                  tabindex="-1"
+                >
+                  <span
+                    class="rs-panel-title"
+                    role="presentation"
+                  >
+                    <span
+                      class="collapsed"
+                    >
+                      settingList.login
+                    </span>
+                  </span>
+                </div>
+                <div
+                  class="rs-panel-body"
+                  role="region"
+                >
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="SEND_LOGIN_JWT_EXPIRES_MIN"
+                      id="SEND_LOGIN_JWT_EXPIRES_MIN-control-label"
+                    >
+                      settingList.loginMinutes
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <div
+                      class="rs-input-group"
+                    >
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <div
+                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                        >
+                          <input
+                            aria-describedby="SEND_LOGIN_JWT_EXPIRES_MIN-help-text"
+                            aria-labelledby="SEND_LOGIN_JWT_EXPIRES_MIN-control-label"
+                            autocomplete="off"
+                            class="rs-input"
+                            disabled=""
+                            id="SEND_LOGIN_JWT_EXPIRES_MIN"
+                            name="SEND_LOGIN_JWT_EXPIRES_MIN"
+                            step="1"
+                            type="number"
+                            value="0"
+                          />
+                          <span
+                            class="rs-input-number-btn-group-vertical"
+                            disabled=""
+                          >
+                            <button
+                              aria-disabled="true"
+                              aria-label="Increment"
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle up"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                            <button
+                              aria-disabled="true"
+                              aria-label="Decrement"
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle down"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        class="rs-input-group-addon"
+                      >
+                        settingList.minutes
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="RESET_PASSWORD_JWT_EXPIRES_MIN"
+                      id="RESET_PASSWORD_JWT_EXPIRES_MIN-control-label"
+                    >
+                      settingList.passwordToken
+                      <div
+                        class="emotion-5 emotion-6"
+                      >
+                        <svg
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 24 24"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                          />
+                        </svg>
+                      </div>
+                    </label>
+                    <div
+                      class="rs-input-group"
+                    >
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <div
+                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                        >
+                          <input
+                            aria-describedby="RESET_PASSWORD_JWT_EXPIRES_MIN-help-text"
+                            aria-labelledby="RESET_PASSWORD_JWT_EXPIRES_MIN-control-label"
+                            autocomplete="off"
+                            class="rs-input"
+                            disabled=""
+                            id="RESET_PASSWORD_JWT_EXPIRES_MIN"
+                            name="RESET_PASSWORD_JWT_EXPIRES_MIN"
+                            step="1"
+                            type="number"
+                            value="0"
+                          />
+                          <span
+                            class="rs-input-number-btn-group-vertical"
+                            disabled=""
+                          >
+                            <button
+                              aria-disabled="true"
+                              aria-label="Increment"
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle up"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                            <button
+                              aria-disabled="true"
+                              aria-label="Decrement"
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle down"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        class="rs-input-group-addon"
+                      >
+                        settingList.minutes
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="rs-col rs-col-xs-24"
+              role="gridcell"
+            >
+              <div
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+              >
+                <div
+                  aria-expanded="false"
+                  class="rs-panel-header"
+                  tabindex="-1"
+                >
+                  settingList.peering
+                  <div
+                    class="emotion-5 emotion-6"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="rs-panel-body"
+                  role="region"
+                >
+                  <div
+                    class="rs-form-group"
+                    role="group"
+                  >
+                    <label
+                      class="rs-form-control-label"
+                      for="PEERING_TIMEOUT_MS"
+                      id="PEERING_TIMEOUT_MS-control-label"
+                    >
+                      settingList.peerToken
+                    </label>
+                    <div
+                      class="rs-input-group"
+                    >
+                      <div
+                        class="rs-form-control rs-form-control-wrapper"
+                      >
+                        <div
+                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                        >
+                          <input
+                            aria-describedby="PEERING_TIMEOUT_MS-help-text"
+                            aria-labelledby="PEERING_TIMEOUT_MS-control-label"
+                            autocomplete="off"
+                            class="rs-input"
+                            disabled=""
+                            id="PEERING_TIMEOUT_MS"
+                            name="PEERING_TIMEOUT_MS"
+                            step="1"
+                            type="number"
+                            value="0"
+                          />
+                          <span
+                            class="rs-input-number-btn-group-vertical"
+                            disabled=""
+                          >
+                            <button
+                              aria-disabled="true"
+                              aria-label="Increment"
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle up"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                            <button
+                              aria-disabled="true"
+                              aria-label="Decrement"
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
+                              disabled=""
+                              tabindex="-1"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                aria-label="angle down"
+                                class="rs-icon"
+                                data-category="legacy"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="0 0 21 32"
+                                width="1em"
+                              >
+                                <path
+                                  d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                                />
+                              </svg>
+                              <span
+                                class="rs-ripple-pond"
+                              >
+                                <span
+                                  class="rs-ripple"
+                                />
+                              </span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        class="rs-input-group-addon"
+                      >
+                        settingList.ms
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rs-col rs-col-xs-24"
+            role="gridcell"
+          >
+            <div
+              class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
+            >
+              <div
+                aria-expanded="false"
+                class="rs-panel-header"
+                tabindex="-1"
+              >
+                <span
+                  class="rs-panel-title"
+                  role="presentation"
+                >
+                  <span
+                    class="collapsed"
+                  >
+                    settingList.articlePage
+                  </span>
+                </span>
+              </div>
+              <div
+                class="rs-panel-body"
+                role="region"
+              >
+                <div
+                  class="rs-form-group"
+                  role="group"
+                >
+                  <label
+                    class="rs-form-control-label"
+                    for="NEW_ARTICLE_PEERING"
+                    id="NEW_ARTICLE_PEERING-control-label"
+                  >
+                    settingList.newArticlePeering
+                    <div
+                      class="emotion-5 emotion-6"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <label
+                    class="rs-toggle rs-toggle-disabled"
+                  >
+                    <input
+                      aria-checked="false"
+                      aria-disabled="true"
+                      aria-label="Close"
+                      class="rs-toggle-input"
+                      disabled=""
+                      role="switch"
+                      type="checkbox"
+                    />
+                    <span
+                      class="rs-toggle-presentation"
+                    >
+                      <span
+                        class="rs-toggle-inner"
+                      />
+                    </span>
+                  </label>
+                </div>
+                <div
+                  class="rs-form-group"
+                  role="group"
+                >
+                  <label
+                    class="rs-form-control-label"
+                    for="NEW_ARTICLE_PAYWALL"
+                    id="NEW_ARTICLE_PAYWALL-control-label"
+                  >
+                    settingList.newArticlePaywall
+                    <div
+                      class="emotion-5 emotion-6"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <label
+                    class="rs-toggle rs-toggle-disabled"
+                  >
+                    <input
+                      aria-checked="false"
+                      aria-disabled="true"
+                      aria-label="Close"
+                      class="rs-toggle-input"
+                      disabled=""
+                      role="switch"
+                      type="checkbox"
+                    />
+                    <span
+                      class="rs-toggle-presentation"
+                    >
+                      <span
+                        class="rs-toggle-inner"
+                      />
+                    </span>
+                  </label>
+                </div>
+                <div
+                  class="rs-form-group"
+                  role="group"
+                >
+                  <label
+                    class="rs-form-control-label"
+                    for="SHOW_PENDING_WHEN_NOT_PUBLISHED"
+                    id="SHOW_PENDING_WHEN_NOT_PUBLISHED-control-label"
+                  >
+                    settingList.showPendingWhenNotPublished
+                    <div
+                      class="emotion-5 emotion-6"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <label
+                    class="rs-toggle rs-toggle-disabled"
+                  >
+                    <input
+                      aria-checked="false"
+                      aria-disabled="true"
+                      aria-label="Close"
+                      class="rs-toggle-input"
+                      disabled=""
+                      role="switch"
+                      type="checkbox"
+                    />
+                    <span
+                      class="rs-toggle-presentation"
+                    >
+                      <span
+                        class="rs-toggle-inner"
+                      />
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</DocumentFragment>
+`;

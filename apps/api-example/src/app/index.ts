@@ -1,180 +1,77 @@
 import {PrismaClient} from '@prisma/client'
 import {
   AlgebraicCaptchaChallenge,
-  JobType,
-  KarmaMediaAdapter,
-  MailgunMailProvider,
-  Oauth2Provider,
-  PayrexxPaymentProvider,
-  PayrexxSubscriptionPaymentProvider,
-  SendMailType,
-  StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
+  CfTurnstile,
+  ChallengeProvider,
   WepublishServer
 } from '@wepublish/api'
-import bodyParser from 'body-parser'
-import path from 'path'
 import pinoMultiStream from 'pino-multi-stream'
 import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
-import {URL} from 'url'
-import {SlackMailProvider} from './slack-mail-provider'
-import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
-import {CronJob} from 'cron'
+import {readConfig} from '../readConfig'
+import {URLAdapter, HauptstadtURLAdapter} from '@wepublish/nest-modules'
+import {HotAndTrendingDataSource} from '@wepublish/article/api'
+import {MediaAdapter} from '@wepublish/image/api'
+import {MailProvider} from '@wepublish/mail/api'
+import {PaymentProvider} from '@wepublish/payment/api'
 
-export async function runServer(app?: Application | undefined) {
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
+type RunServerProps = {
+  publicExpressApp?: Application
+  mediaAdapter: MediaAdapter
+  paymentProviders: PaymentProvider[]
+  mailProvider: MailProvider
+  hotAndTrendingDataSource: HotAndTrendingDataSource
+}
+
+export async function runServer({
+  publicExpressApp,
+  mediaAdapter,
+  mailProvider,
+  paymentProviders
+}: RunServerProps) {
+  /*
+   * Load User specific configuration
+   */
+
+  const config = await readConfig(process.env.CONFIG_FILE_PATH)
+
+  /*
+   * Basic configuration
+   */
+
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
-
+  if (!process.env.WEBSITE_URL) throw new Error('No WEBSITE_URL defined in environment.')
   const hostURL = process.env.HOST_URL
-  const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
-
-  const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
+  const websiteURL = process.env.WEBSITE_URL
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3002
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
 
-  if (!process.env.MEDIA_SERVER_URL) {
-    throw new Error('No MEDIA_SERVER_URL defined in environment.')
-  }
+  /*
+   * Media Adapter configuration
+   */
 
-  if (!process.env.MEDIA_SERVER_TOKEN) {
+  if (!process.env.MEDIA_SERVER_URL) throw new Error('No MEDIA_SERVER_URL defined in environment.')
+  if (!process.env.MEDIA_SERVER_TOKEN)
     throw new Error('No MEDIA_SERVER_TOKEN defined in environment.')
-  }
 
-  const mediaAdapter = new KarmaMediaAdapter(
-    new URL(process.env.MEDIA_SERVER_URL),
-    process.env.MEDIA_SERVER_TOKEN,
-    process.env.MEDIA_SERVER_INTERNAL_URL
-      ? new URL(process.env.MEDIA_SERVER_INTERNAL_URL)
-      : undefined
-  )
+  /*
+   * Connect to database
+   */
 
   const prisma = new PrismaClient()
   await prisma.$connect()
 
-  const oauth2Providers: Oauth2Provider[] = []
-  if (
-    process.env.OAUTH_GOOGLE_DISCOVERY_URL &&
-    process.env.OAUTH_GOOGLE_CLIENT_ID &&
-    process.env.OAUTH_GOOGLE_CLIENT_KEY &&
-    process.env.OAUTH_GOOGLE_REDIRECT_URL
-  ) {
-    oauth2Providers.push({
-      name: 'google',
-      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL,
-      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
-      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY,
-      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL],
-      scopes: ['openid profile email']
-    })
-  }
-
-  let mailProvider
-  if (
-    process.env.MAILGUN_API_KEY &&
-    process.env.MAILGUN_BASE_DOMAIN &&
-    process.env.MAILGUN_MAIL_DOMAIN &&
-    process.env.MAILGUN_WEBHOOK_SECRET
-  ) {
-    mailProvider = new MailgunMailProvider({
-      id: 'mailgun',
-      name: 'Mailgun',
-      fromAddress: 'dev@wepublish.ch',
-      webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
-      baseDomain: process.env.MAILGUN_BASE_DOMAIN,
-      mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
-      apiKey: process.env.MAILGUN_API_KEY,
-      incomingRequestHandler: bodyParser.json()
-    })
-  }
-  // left here intentionally for testing
-  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
-    mailProvider = new MailchimpMailProvider({
-      id: 'mailchimp',
-      name: 'Mailchimp',
-      fromAddress: 'dev@wepublish.ch',
-      webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
-      apiKey: process.env.MAILCHIMP_API_KEY,
-      baseURL: '',
-      incomingRequestHandler: bodyParser.urlencoded({extended: true})
-    })
-  } */
-
-  if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
-    mailProvider = new SlackMailProvider({
-      id: 'slackMail',
-      name: 'Slack Mail',
-      fromAddress: 'fakeMail@wepublish.media',
-      webhookURL: process.env.SLACK_DEV_MAIL_WEBHOOK_URL
-    })
-  }
-
-  const paymentProviders = []
-
-  if (
-    process.env.STRIPE_SECRET_KEY &&
-    process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET &&
-    process.env.STRIPE_WEBHOOK_SECRET
-  ) {
-    paymentProviders.push(
-      new StripeCheckoutPaymentProvider({
-        id: 'stripe_checkout',
-        name: 'Stripe Checkout',
-        offSessionPayments: false,
-        secretKey: process.env.STRIPE_SECRET_KEY,
-        webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
-        incomingRequestHandler: bodyParser.raw({type: 'application/json'})
-      }),
-      new StripePaymentProvider({
-        id: 'stripe',
-        name: 'Stripe',
-        offSessionPayments: true,
-        secretKey: process.env.STRIPE_SECRET_KEY,
-        webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
-        incomingRequestHandler: bodyParser.raw({type: 'application/json'})
-      })
-    )
-  }
-
-  if (
-    process.env.PAYREXX_INSTANCE_NAME &&
-    process.env.PAYREXX_API_SECRET &&
-    process.env.PAYREXX_WEBHOOK_SECRET &&
-    process.env.PAYREXX_PAYMENT_METHODS
-  ) {
-    const paymentMethods = process.env.PAYREXX_PAYMENT_METHODS.split(',').map(pm => pm.trim())
-
-    paymentProviders.push(
-      new PayrexxPaymentProvider({
-        id: 'payrexx',
-        name: 'Payrexx',
-        offSessionPayments: false,
-        instanceName: process.env.PAYREXX_INSTANCE_NAME,
-        instanceAPISecret: process.env.PAYREXX_API_SECRET,
-        psp: [0, 15, 17, 2, 3, 36],
-        pm: paymentMethods,
-        vatRate: 7.7,
-        incomingRequestHandler: bodyParser.json()
-      })
-    )
-    paymentProviders.push(
-      new PayrexxSubscriptionPaymentProvider({
-        id: 'payrexx-subscription',
-        name: 'Payrexx Subscription',
-        offSessionPayments: true,
-        instanceName: process.env.PAYREXX_INSTANCE_NAME,
-        instanceAPISecret: process.env.PAYREXX_API_SECRET,
-        incomingRequestHandler: bodyParser.json(),
-        webhookSecret: process.env.PAYREXX_WEBHOOK_SECRET,
-        prisma
-      })
-    )
-  }
+  /*
+   * Load logging providers
+   */
 
   const prettyStream = pinoMultiStream.prettyStream()
   const streams: pinoMultiStream.Streams = [{stream: prettyStream}]
-
   if (process.env.GOOGLE_PROJECT) {
     streams.push({
       level: 'info',
@@ -200,109 +97,61 @@ export async function runServer(app?: Application | undefined) {
     level: 'debug'
   })
 
-  const challenge = new AlgebraicCaptchaChallenge('changeMe', 600, {
-    width: 200,
-    height: 200,
-    background: '#ffffff',
-    noise: 5,
-    minValue: 1,
-    maxValue: 10,
-    operandAmount: 1,
-    operandTypes: ['+', '-'],
-    mode: 'formula',
-    targetSymbol: '?'
-  })
+  const urlAdapter =
+    config.general.urlAdapter === 'hauptstadt'
+      ? new HauptstadtURLAdapter(websiteURL)
+      : new URLAdapter(websiteURL)
+
+  /**
+   * Challenge
+   */
+  let challenge: ChallengeProvider
+  if (config.challenge.type === 'turnstile') {
+    challenge = new CfTurnstile(config.challenge.secret, config.challenge.siteKey)
+  } else {
+    challenge = new AlgebraicCaptchaChallenge(config.challenge.secret, config.challenge.validTime, {
+      width: config.challenge.width,
+      height: config.challenge.height,
+      background: config.challenge.background,
+      noise: config.challenge.noise,
+      minValue: config.challenge.minValue,
+      maxValue: config.challenge.maxValue,
+      operandAmount: config.challenge.operandAmount,
+      operandTypes: config.challenge.operandTypes,
+      mode: config.challenge.mode,
+      targetSymbol: config.challenge.targetSymbol
+    })
+  }
+
+  /**
+   * Load session time to live (TTL)
+   */
+  const sessionTTLDays = config.general.sessionTTLDays ? config.general.sessionTTLDays : 7
+  const sessionTTL = sessionTTLDays * MS_PER_DAY
 
   const server = new WepublishServer(
     {
       hostURL,
       websiteURL,
+      sessionTTL,
       mediaAdapter,
       prisma,
-      oauth2Providers,
       mailProvider,
       mailContextOptions: {
-        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
-        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
-        mailTemplateMaps: [
-          {
-            type: SendMailType.LoginLink,
-            localTemplate: 'loginLink',
-            local: true,
-            subject: 'Welcome new Member' // only needed if remoteTemplate
-          },
-          {
-            type: SendMailType.TestMail,
-            localTemplate: 'testMail',
-            local: true
-          },
-          {
-            type: SendMailType.PasswordReset,
-            localTemplate: 'passwordReset',
-            local: true
-          },
-          {
-            type: SendMailType.NewMemberSubscription,
-            localTemplate: 'newMemberSubscription',
-            local: true
-          },
-          {
-            type: SendMailType.RenewedMemberSubscription,
-            localTemplate: 'renewedMemberSubscription',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOffSessionBefore,
-            localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOnSessionBefore,
-            localTemplate: 'memberSubscriptionPayment/onSessionBefore',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOnSessionAfter,
-            localTemplate: 'memberSubscriptionPayment/onSessionAfter',
-            local: true
-          },
-          {
-            type: SendMailType.MemberSubscriptionOffSessionFailed,
-            localTemplate: 'memberSubscriptionPayment/offSessionPaymentFailed',
-            local: true
-          }
-        ],
-        mailTemplatesPath:
-          process.env.NODE_ENV === 'production'
-            ? path.resolve('apps', 'api-example', 'templates', 'emails')
-            : path.resolve('templates', 'emails')
+        defaultFromAddress: config.mailProvider.fromAddress || 'dev@wepublish.ch',
+        defaultReplyToAddress: config.mailProvider.replyToAddress || 'reply-to@wepublish.ch'
       },
       paymentProviders,
-      urlAdapter: new ExampleURLAdapter({websiteURL}),
-      playground: true,
-      introspection: true,
+      urlAdapter,
+      playground: config.general.apolloPlayground ? config.general.apolloPlayground : false,
+      introspection: config.general.apolloIntrospection
+        ? config.general.apolloIntrospection
+        : false,
       logger,
       challenge
     },
-    app
+    publicExpressApp
   )
-
-  const checkInvoiceCron = new CronJob('0 8 * * *', async function () {
-    await server.runJob(JobType.DailyInvoiceChecker, {})
-  })
-  checkInvoiceCron.start()
-
-  const chargeInvoiceCron = new CronJob('0 8 * * *', async function () {
-    await server.runJob(JobType.DailyInvoiceCharger, {})
-  })
-  chargeInvoiceCron.start()
-
-  const renewMemberships = new CronJob('0 8 * * *', async function () {
-    await server.runJob(JobType.DailyMembershipRenewal, {
-      startDate: new Date()
-    })
-  })
-  renewMemberships.start()
 
   await server.listen(port, address)
 }

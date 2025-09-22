@@ -8,28 +8,7 @@ mutation CreateSession($email: String!, $password: String!) {
     }
     token
   }
-
 }
-
-query GetAuthProviders($redirectUri: String!) {
-  authProviders(redirectUri: $redirectUri) {
-    name
-    url
-  }
-}
-
-mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $code: String!) {
-  createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
-    user {
-      email
-      roles {
-        ...FullUserRole
-      }
-    }
-    token
-  }
-}
-
 
 mutation CreateSessionWithJWT($jwt: String!) {
   createSessionWithJWT(jwt: $jwt) {
@@ -40,5 +19,12 @@ mutation CreateSessionWithJWT($jwt: String!) {
       }
     }
     token
+  }
+}
+
+query CreateJWTForWebsiteLogin {
+  createJWTForWebsiteLogin {
+    token
+    expiresAt
   }
 }

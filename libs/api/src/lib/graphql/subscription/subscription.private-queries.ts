@@ -1,12 +1,13 @@
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, Subscription} from '@prisma/client'
 import {Context} from '../../context'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
-import {unselectPassword} from '@wepublish/user/api'
+import {unselectPassword} from '@wepublish/authentication/api'
 import {mapSubscriptionsAsCsv} from '../../utility'
 import {authorise} from '../permissions'
-import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'
+import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
 import {format, lastDayOfMonth, startOfMonth, subMonths} from 'date-fns'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getSubscriptionById = (
   id: string,
@@ -31,7 +32,7 @@ export const getSubscriptionById = (
 export const getAdminSubscriptions = (
   filter: Partial<SubscriptionFilter>,
   sortedField: SubscriptionSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
@@ -80,7 +81,8 @@ export const getNewSubscribersPerMonth = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanGetSubscriptions, roles)
-  const subscriptionCount = await subscription.findMany({
+
+  const subscriptions = await subscription.findMany({
     where: {
       startsAt: {
         gte: startOfMonth(subMonths(new Date(), monthsBack - 1))
@@ -93,10 +95,10 @@ export const getNewSubscribersPerMonth = async (
     }
   })
 
-  return getSubscriberCount(subscriptionCount, monthsBack)
+  return getSubscriberCount(subscriptions, monthsBack)
 }
 
-const getSubscriberCount = (subscribers, monthsBack) => {
+const getSubscriberCount = (subscribers: Subscription[], monthsBack: number) => {
   const res = []
   for (let i = monthsBack - 1; i >= 0; i--) {
     const count = subscribers.filter(subsc => {

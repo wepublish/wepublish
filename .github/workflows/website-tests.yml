@@ -1,0 +1,39 @@
+name: Website Tests
+
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: wepublish
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test-website -- --code-coverage
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+          JWT_SECRET_KEY: 'ThisIsSuperSecret'
+          DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
+
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

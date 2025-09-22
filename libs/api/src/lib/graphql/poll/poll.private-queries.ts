@@ -1,9 +1,8 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
-import {authorise} from '../permissions'
-import {CanGetPoll} from '@wepublish/permissions/api'
+import {CanGetPoll} from '@wepublish/permissions'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {Context} from '../../context'
+import {authorise} from '../permissions'
 
 export type PollFilter = {
   openOnly: boolean
@@ -22,18 +21,18 @@ export const createPollOrder = (
   switch (field) {
     case PollSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PollSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PollSort.OpensAt:
     default:
       return {
-        opensAt: sortOrder
+        opensAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -67,7 +66,7 @@ export const createPollFilter = (filter?: Partial<PollFilter>): Prisma.PollWhere
 export const getPolls = async (
   filter: Partial<PollFilter>,
   sortedField: PollSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
@@ -77,7 +76,7 @@ export const getPolls = async (
   const {roles} = authenticate()
   authorise(CanGetPoll, roles)
 
-  const orderBy = createPollOrder(sortedField, getSortOrder(order))
+  const orderBy = createPollOrder(sortedField, order)
   const where = createPollFilter(filter)
 
   const [totalCount, polls] = await Promise.all([
@@ -88,7 +87,7 @@ export const getPolls = async (
     poll.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

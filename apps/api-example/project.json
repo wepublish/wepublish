@@ -3,9 +3,10 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api-example/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "target": "node",
@@ -13,7 +14,8 @@
         "outputPath": "dist/apps/api-example",
         "main": "apps/api-example/src/main.ts",
         "tsConfig": "apps/api-example/tsconfig.app.json",
-        "assets": ["apps/api-example/src/assets"]
+        "assets": ["apps/api-example/src/assets"],
+        "webpackConfig": "apps/api-example/webpack.config.js"
       },
       "configurations": {
         "production": {
@@ -30,7 +32,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/js:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "api-example:build"
       },
@@ -41,30 +43,42 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/api-example/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/api-example/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/api-example/jest.config.ts"
+      }
+    },
+    "build-seed": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/api-example-seed",
+        "main": "apps/api-example/prisma/seed.ts",
+        "tsConfig": "apps/api-example/tsconfig.app.json",
+        "assets": ["apps/api-example/src/seed"],
+        "webpackConfig": "apps/api-example/webpack.config.js"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
       }
     },
     "seed": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/js:node",
       "options": {
-        "commands": [
-          {
-            "command": "npx ts-node apps/api-example/prisma/seed.ts"
-          }
-        ]
+        "buildTarget": "api-example:build-seed:production",
+        "watch": false
       }
     }
-  },
-  "tags": []
+  }
 }

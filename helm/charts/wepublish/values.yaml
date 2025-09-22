@@ -1,5 +1,4 @@
 deployment:
-  image: ghcr.io/wepublish/wepublish
   imagePullPolicy: Always
   imagePullSecret:
   env:
@@ -9,31 +8,180 @@ deployment:
     MEDIA_SERVER_URL: https://media
 
 api:
+  image: ghcr.io/wepublish/api
+  resources:
+    requests:
+      memory: '512Mi'
+      cpu: '100m'
+    limits:
+      memory: '1024Mi'
+      cpu: '500m'
   env:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
     MEDIA_SERVER_TOKEN: ''
     JWT_SECRET_KEY: ''
     SENTRY_DSN: ''
+    DEFAULT_FROM_ADDRESS: ''
+    DEFAULT_REPLY_TO_ADDRESS: ''
   envFromSecretRefName:
+  dynamicEnv: {}
   properties: {}
   replicaCount: 1
+  config:
+    general:
+      apolloPlayground: true
+      apolloIntrospection: true
+      bcryptHashCostFactor: 12
+      urlAdapter: default
+    mailProvider:
+      id: slackMail
+      fromAddress: dev@wepublish.dev
+      webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
+    paymentProviders: []
+#      - type: payrexx
+#        id: payrexx
+#        name: Payrexx
+#        offSessionPayments: true
+#        instanceName: instance-name
+#        instanceAPISecret: secret
+#        webhookApiKey: secret
+#        psp: [ 0, 15, 17, 2, 3, 36 ]
+#        pm:
+#          - 'postfinance_card'
+#          - 'postfinance_efinance'
+#          - 'mastercard'
+#          - 'visa'
+#          - 'twint'
+#          - 'invoice'
+#          - 'paypal'
+#        vatRate: 8.1
+
+#      - type: stripe
+#        id: stripe
+#        name: Stripe
+#        offSessionPayments: true
+#        secretKey: key
+#        webhookEndpointSecret: wh_secret
+#
+#      - type: stripe-checkout
+#        id: stripe-checkout
+#        name: Stripe Checkout
+#        offSessionPayments: false
+#        secretKey: key
+#        webhookEndpointSecret: wh_secret
+#
+#      - type: payrexx-subscription
+#        id: payrexx-subscription
+#        name: Payrexx Subscription
+#        instanceName: wepublish-sandbox
+#        instanceAPISecret: mqwJOkjXUnV7SDuLRlGabwjgrlBhvC
+#        webhookEndpointSecret: secret
+#
+#      - type: bexio
+#        id: bexio
+#        name: Bexio
+#        apiKey: secret
+#        userId: '1'
+#        countryId: '1'
+#        invoiceTemplateNewMembership: 'template-name'
+#        invoiceTemplateRenewalMembership: 'template-name'
+#        unitId: '1'
+#        taxId: '17'
+#        accountId: '139'
+#        invoiceTitleNewMembership: "New Invoice"
+#        invoiceTitleRenewalMembership: "New Invoice"
+#        invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
+#        invoiceMailBodyNewMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
+#        invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
+#        invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
+#        markInvoiceAsOpen: False
+
+    challenge:
+      secret: 'secret'
+      validTime: 600
+      width: 200
+      height: 200
+      background: '#ffffff'
+      noise: 5
+      minValue: 1
+      maxValue: 10
+      operandAmount: 1
+      operandTypes: [ '+', '-' ]
+      mode: 'formula'
+      targetSymbol: '?'
+
+migration:
+  image: ghcr.io/wepublish/migration
+  env:
+    DATABASE_URL: postgres://
+  envFromSecretRefName:
+  dynamicEnv: {}
+  properties: {}
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 200m
+    limits:
+      memory: 512Mi
+      cpu: 300m
 
 editor:
+  image: ghcr.io/wepublish/editor
   env:
     PEER_BY_DEFAULT: "true"
   envFromSecretRefName:
+  dynamicEnv: {}
   properties: {}
   replicaCount: 1
+  resources:
+    requests:
+      memory: 32Mi
+      cpu: 25m
+    limits:
+      memory: 64Mi
+      cpu: 100m
 
 website:
   enabled: false
+  image: ghcr.io/wepublish/website
   env:
     NODE_ENV: production
-    HOST_ENV: production
-    ALLOWED_HOSTS: website
   envFromSecretRefName:
+  dynamicEnv: {}
   properties: { }
   replicaCount: 1
+
+
+storybook:
+  enabled: false
+  image: ghcr.io/wepublish/storybook
+  imagePullPolicy: Always
+  imagePullSecret:
+  url: https://storybook
+  env: {}
+  resources:
+    requests:
+      memory: 8Mi
+      cpu: 1m
+    limits:
+      memory: 16Mi
+      cpu: 20m
+
+media:
+  image: ghcr.io/wepublish/media
+  env: {}
+  dynamicEnv: {}
+  envFromSecretRefName:
+  properties: {}
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
 
 labels: {}

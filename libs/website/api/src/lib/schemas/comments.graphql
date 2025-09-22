@@ -1,0 +1,148 @@
+fragment FullCommentRatingSystemAnswer on CommentRatingSystemAnswer {
+  id
+  ratingSystemId
+  answer
+  type
+}
+
+fragment FullCommentRating on CommentRating {
+  id
+  commentId
+  userId
+  createdAt
+  disabled
+  value
+
+  answer {
+    ...FullCommentRatingSystemAnswer
+  }
+}
+
+fragment FullCalculatedRating on CalculatedRating {
+  count
+  total
+  mean
+
+  answer {
+    ...FullCommentRatingSystemAnswer
+  }
+}
+
+fragment FullOverriddenRating on overriddenRating {
+  answerId
+  value
+}
+
+fragment CommentWithoutNesting on Comment {
+  id
+  itemID
+  itemType
+  parentID
+
+  createdAt
+  modifiedAt
+
+  title
+  lead
+  text
+  authorType
+  rejectionReason
+  state
+  url
+
+  tags {
+    ...FullTag
+  }
+
+  user {
+    ...FullUser
+  }
+
+  source
+  guestUsername
+  guestUserImage {
+    ...FullImage
+  }
+
+  calculatedRatings {
+    ...FullCalculatedRating
+  }
+
+  overriddenRatings {
+    ...FullOverriddenRating
+  }
+
+  featured
+
+  userRatings {
+    ...FullCommentRating
+  }
+}
+
+fragment FullComment on Comment {
+  ...CommentWithoutNesting
+
+  children {
+    ...CommentWithoutNesting
+
+    children {
+      ...CommentWithoutNesting
+
+      children {
+        ...CommentWithoutNesting
+
+        children {
+          ...CommentWithoutNesting
+
+          children {
+            ...CommentWithoutNesting
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment FullRatingSystemAnswer on CommentRatingSystemAnswer {
+  id
+  type
+  answer
+  ratingSystemId
+}
+
+fragment FullRatingSystem on FullCommentRatingSystem {
+  id
+  name
+
+  answers {
+    ...FullRatingSystemAnswer
+  }
+}
+
+query CommentList($itemId: String!, $order: SortOrder, $sort: CommentSort) {
+  comments(itemId: $itemId, order: $order, sort: $sort) {
+    ...FullComment
+  }
+
+  ratingSystem {
+    ...FullRatingSystem
+  }
+}
+
+mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
+    ...FullComment
+  }
+}
+
+mutation EditComment($input: CommentUpdateInput!) {
+  updateComment(input: $input) {
+    ...FullComment
+  }
+}
+
+mutation RateComment($answerId: String!, $commentId: String!, $value: Int!) {
+  rateComment(answerId: $answerId, commentId: $commentId, value: $value) {
+    ...FullComment
+  }
+}

@@ -1,0 +1,8 @@
+query Challenge {
+  challenge {
+    type
+    challengeID
+    challenge
+    validUntil
+  }
+}

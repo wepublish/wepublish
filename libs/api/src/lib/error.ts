@@ -1,29 +1,5 @@
 import {ApolloError} from 'apollo-server-express'
-import {MAX_COMMENT_LENGTH} from './utility'
-
-export enum ErrorCode {
-  TokenExpired = 'TOKEN_EXPIRED',
-  InvalidCredentials = 'INVALID_CREDENTIALS',
-  UserNotFound = 'USER_NOT_FOUND',
-  InvalidOAuth2Token = 'INVALID_OAUTH_TOKEN',
-  OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND',
-  NotAuthenticated = 'NOT_AUTHENTICATED',
-  NotAuthorised = 'NOT_AUTHORISED',
-  UserNotActive = 'USER_NOT_ACTIVE',
-  NotFound = 'NOT_FOUND',
-  EmailAlreadyInUse = 'EMAIL_ALREADY_IN_USE',
-  MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
-  PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
-  UserInputError = 'USER_INPUT_ERROR',
-  DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG',
-  CommentLengthError = 'COMMENT_LENGTH_ERROR',
-  PeerTokenInvalid = 'PEER_TOKEN_INVALID',
-  InternalError = 'InternalError',
-  DisabledPeerError = 'DISABLED_PEER_ERROR',
-  UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
-  ChallengeFailed = 'ChallengeFailed',
-  InvalidSettingData = 'INVALID_SETTING_DATA'
-}
+import {ErrorCode} from '@wepublish/errors'
 
 export class TokenExpiredError extends ApolloError {
   constructor() {
@@ -40,18 +16,6 @@ export class InvalidCredentialsError extends ApolloError {
 export class UserNotFoundError extends ApolloError {
   constructor() {
     super('User not found', ErrorCode.UserNotFound)
-  }
-}
-
-export class InvalidOAuth2TokenError extends ApolloError {
-  constructor() {
-    super('OAuth2 Token from provider is invalid', ErrorCode.InvalidOAuth2Token)
-  }
-}
-
-export class OAuth2ProviderNotFoundError extends ApolloError {
-  constructor() {
-    super('OAuth2 Provider not found', ErrorCode.OAuth2ProviderNotFound)
   }
 }
 
@@ -88,6 +52,24 @@ export class EmailAlreadyInUseError extends ApolloError {
 export class MonthlyAmountNotEnough extends ApolloError {
   constructor() {
     super(`Monthly amount is not enough`, ErrorCode.MonthlyAmountNotEnough)
+  }
+}
+
+export class MonthlyTargetAmountNotEnough extends ApolloError {
+  constructor() {
+    super(
+      `Monthly target amount mus be greater than minimal monthly amount`,
+      ErrorCode.MonthlyTargetAmountNotEnough
+    )
+  }
+}
+
+export class SubscriptionToDeactivateDoesNotExist extends ApolloError {
+  constructor(id: string) {
+    super(
+      `Subscription to deactivate with id ${id} not found or the subscription is already deactivated!`,
+      ErrorCode.NotFound
+    )
   }
 }
 
@@ -131,9 +113,9 @@ export class DuplicateArticleSlugError extends ApolloError {
 }
 
 export class CommentLengthError extends ApolloError {
-  constructor() {
+  constructor(maxCommentLength: number) {
     super(
-      `Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`,
+      `Comment length should not exceed ${maxCommentLength} characters.`,
       ErrorCode.CommentLengthError
     )
   }
@@ -247,5 +229,29 @@ export class AlreadyUnpaidInvoices extends ApolloError {
 export class PeerIdMissingCommentError extends ApolloError {
   constructor() {
     super(`Comment with itemType PeerArticle requires a peerId`)
+  }
+}
+
+export class PaymentAlreadyRunning extends ApolloError {
+  constructor(id: string) {
+    super(`Payment with id ${id} already running!`, ErrorCode.PaymentAlreadyRunning)
+  }
+}
+
+export class InvoiceAlreadyPaidOrCanceled extends ApolloError {
+  constructor(id: string) {
+    super(`Invoice with id ${id} is already paid or canceled!`, ErrorCode.UserInputError)
+  }
+}
+
+export class SubscriptionNotExtendable extends ApolloError {
+  constructor(id: string) {
+    super(`Subscription with id ${id} is not extendable!`, ErrorCode.UserInputError)
+  }
+}
+
+export class InvalidMemberPlanSettings extends ApolloError {
+  constructor() {
+    super(`Memberplan cannot be non-renewable and auto-renew at the same time.`)
   }
 }

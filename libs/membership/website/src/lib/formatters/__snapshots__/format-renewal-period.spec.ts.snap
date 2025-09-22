@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatRenewalPeriod should format renewal period for biannual 1`] = `"Halbjährlich"`;
+
+exports[`formatRenewalPeriod should format renewal period for biennial 1`] = `"Zweijährlich"`;
+
+exports[`formatRenewalPeriod should format renewal period for lifetime 1`] = `"Lebenslang"`;
+
+exports[`formatRenewalPeriod should format renewal period for monthly 1`] = `"Monatlich"`;
+
+exports[`formatRenewalPeriod should format renewal period for quarterly 1`] = `"Vierteljährlich"`;
+
+exports[`formatRenewalPeriod should format renewal period for yearly 1`] = `"Jährlich"`;
