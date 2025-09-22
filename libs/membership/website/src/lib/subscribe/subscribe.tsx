@@ -277,32 +277,25 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
-  const paymentText = useMemo(() => {
-    if (isDonation) {
-      return `Einmalig ${formatCurrency(
-        monthlyAmount / 100,
+  const paymentText = useMemo(
+    () =>
+      getPaymentText(
+        autoRenew,
+        selectedMemberPlan?.extendable ?? true,
+        selectedPaymentPeriodicity,
+        monthlyAmount,
         selectedMemberPlan?.currency ?? Currency.Chf,
         locale
-      )}`
-    }
-
-    return getPaymentText(
+      ),
+    [
       autoRenew,
       selectedMemberPlan?.extendable ?? true,
       selectedPaymentPeriodicity,
       monthlyAmount,
       selectedMemberPlan?.currency ?? Currency.Chf,
       locale
-    )
-  }, [
-    isDonation,
-    monthlyAmount,
-    selectedMemberPlan?.currency,
-    locale,
-    autoRenew,
-    selectedMemberPlan?.extendable,
-    selectedPaymentPeriodicity
-  ])
+    ]
+  )
 
   const monthlyPaymentText = getPaymentText(
     true,
@@ -318,10 +311,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
-      paymentPeriodicity: isDonation
-        ? selectedAvailablePaymentMethod?.paymentPeriodicities?.[0] ?? data.paymentPeriodicity
-        : data.paymentPeriodicity,
-      autoRenew: isDonation ? false : data.autoRenew
+      paymentPeriodicity: data.paymentPeriodicity,
+      autoRenew: data.autoRenew
     }
 
     if (hasUser) {
@@ -373,11 +364,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [challenge, setValue])
 
   useEffect(() => {
-    if (isDonation) {
-      setValue<'autoRenew'>('autoRenew', false)
-      return
-    }
-
     if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
       setValue<'autoRenew'>('autoRenew', true)
       return
@@ -386,12 +372,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     if (!selectedMemberPlan?.extendable) {
       setValue<'autoRenew'>('autoRenew', false)
     }
-  }, [
-    isDonation,
-    selectedAvailablePaymentMethod?.forceAutoRenewal,
-    selectedMemberPlan?.extendable,
-    setValue
-  ])
+  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, selectedMemberPlan?.extendable, setValue])
 
   useEffect(() => {
     if (
@@ -411,15 +392,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       })
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
-
-  useEffect(() => {
-    if (isDonation && selectedAvailablePaymentMethod?.paymentPeriodicities?.length) {
-      setValue<'paymentPeriodicity'>(
-        'paymentPeriodicity',
-        selectedAvailablePaymentMethod.paymentPeriodicities[0]
-      )
-    }
-  }, [isDonation, selectedAvailablePaymentMethod?.paymentPeriodicities, setValue])
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
@@ -523,7 +495,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       <SubscribeSection area={'paymentPeriodicity'}>
-        {allPaymentMethods && allPaymentMethods.length > 1 && !isDonation && (
+        {allPaymentMethods && allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
         <SubscribePayment>
@@ -538,41 +510,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               />
             )}
           />
-
-          {!isDonation && (
-            <>
-              <Controller
-                name={'paymentPeriodicity'}
-                control={control}
-                render={({field}) => (
-                  <PeriodicityPicker
-                    {...field}
-                    onChange={periodicity => field.onChange(periodicity)}
-                    periodicities={selectedAvailablePaymentMethod?.paymentPeriodicities}
-                  />
-                )}
+          <Controller
+            name={'paymentPeriodicity'}
+            control={control}
+            render={({field}) => (
+              <PeriodicityPicker
+                {...field}
+                onChange={periodicity => field.onChange(periodicity)}
+                periodicities={selectedAvailablePaymentMethod?.paymentPeriodicities}
               />
+            )}
+          />
 
-              {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
-                selectedMemberPlan?.extendable && (
-                  <Controller
-                    name={'autoRenew'}
-                    control={control}
-                    render={({field}) => (
-                      <FormControlLabel
-                        {...field}
-                        control={
-                          <Checkbox
-                            checked={field.value}
-                            disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
-                          />
-                        }
-                        label="Automatisch erneuern"
-                      />
-                    )}
-                  />
-                )}
-            </>
+          {!selectedAvailablePaymentMethod?.forceAutoRenewal && selectedMemberPlan?.extendable && (
+            <Controller
+              name={'autoRenew'}
+              control={control}
+              render={({field}) => (
+                <FormControlLabel
+                  {...field}
+                  control={
+                    <Checkbox
+                      checked={field.value}
+                      disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
+                    />
+                  }
+                  label="Automatisch erneuern"
+                />
+              )}
+            />
           )}
         </SubscribePayment>
       </SubscribeSection>

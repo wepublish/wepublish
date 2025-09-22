@@ -294,7 +294,11 @@
         "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
       },
       "subscribe": {
-        "label": "S'abonner"
+        "label": "S'abonner",
+        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlansPlaceholder": "Afficher tous les plans",
+        "selectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
+        "selectionHintCount": "Affichage de {{count}} {{count, plural, one {plan sélectionné} other {plans sélectionnés}}}."
       },
       "image": {
         "label": "Image",
@@ -734,7 +738,8 @@
         "quarterly": "Trimestriel",
         "yearly": "Annuel",
         "biennial": "Biennal",
-        "lifetime": "À vie"
+        "lifetime": "À vie",
+        "donationOnce": "Don unique"
       },
       "title": "Plans membres"
     },
@@ -1349,7 +1354,7 @@
       "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
       "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page.",
       "productType": "Type de produit",
-      "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. L'abonnement est sélectionné par défaut.",
+      "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
       "productTypeSubscription": "Abonnement",
       "productTypeDonation": "Don"
     },

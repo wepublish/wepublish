@@ -33,6 +33,7 @@ export const PaymentAmountSlider = forwardRef<HTMLInputElement, BuilderPaymentAm
             onChange={event => onChange(+event.target.value * 100)}
             type="number"
             fullWidth
+            onFocus={event => event.target.select()}
             inputProps={{
               step: 'any',
               min: amountPerMonthMin / 100

@@ -247,7 +247,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Subscribe]: {
     field: props => <SubscribeBlock {...props} />,
-    defaultValue: {blockStyle: undefined},
+    defaultValue: {blockStyle: undefined, memberPlanIds: []},
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />
   },

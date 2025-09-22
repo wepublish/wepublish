@@ -1,11 +1,15 @@
 import {SubscribePage, useUserCountry} from '@wepublish/utils/website'
 import {Currency} from '@wepublish/website/api'
+import {ComponentProps} from 'react'
 
-export default function Mitmachen() {
+type MitmachenProps = ComponentProps<typeof SubscribePage>
+
+export default function Mitmachen(props: MitmachenProps) {
   const userCountry = useUserCountry() ?? 'CH'
 
   return (
     <SubscribePage
+      {...props}
       filter={memberPlans =>
         memberPlans.filter(memberPlan => {
           if (userCountry === 'CH') {

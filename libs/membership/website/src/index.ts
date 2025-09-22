@@ -12,6 +12,7 @@ export * from './lib/formatters/format-renewal-period'
 
 export * from './lib/subscribe/subscribe'
 export * from './lib/subscribe/subscribe-container'
+export * from './lib/subscribe/subscribe-block'
 
 export * from './lib/memberplan-picker/memberplan-picker'
 export * from './lib/memberplan-picker/memberplan-picker-item'

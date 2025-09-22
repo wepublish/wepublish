@@ -343,7 +343,11 @@
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
       },
       "subscribe": {
-        "label": "Subscribe"
+        "label": "Subscribe",
+        "selectMemberPlans": "Displayed plans",
+        "selectMemberPlansPlaceholder": "Show all plans",
+        "selectionHintAll": "Leave empty to display every active plan.",
+        "selectionHintCount": "Showing {{count}} selected {{count, plural, one {plan} other {plans}}}."
       },
       "image": {
         "label": "Image",
@@ -798,7 +802,8 @@
         "quarterly": "Quarterly",
         "yearly": "Yearly",
         "biennial": "Biennial",
-        "lifetime": "Lifetime"
+        "lifetime": "Lifetime",
+        "donationOnce": "One-time donation"
       },
       "title": "Member Plans"
     },
@@ -1505,7 +1510,7 @@
       "confirmationPage": "Redirect to page for existing users (retargeting)",
       "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
       "productType": "Product type",
-      "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation. Subscription is selected by default.",
+      "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation.",
       "productTypeSubscription": "Subscription",
       "productTypeDonation": "Donation"
     },

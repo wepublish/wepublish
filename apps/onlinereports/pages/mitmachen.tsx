@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import {SubscribeAmount, SubscribeWrapper, TransactionFeeIcon} from '@wepublish/membership/website'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {useAdsContext} from '../src/context/ads-context'
-import {useEffect} from 'react'
+import {ComponentProps, useEffect} from 'react'
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
@@ -35,7 +35,11 @@ const SubscribePageWrapper = styled('div')`
   }
 `
 
-export const MitmachenInner = () => <SubscribePage fields={['firstName']} />
+type MitmachenInnerProps = ComponentProps<typeof SubscribePage>
+
+export const MitmachenInner = (props: MitmachenInnerProps) => (
+  <SubscribePage {...props} fields={['firstName']} />
+)
 
 export default function Mitmachen() {
   const {setAdsDisabled} = useAdsContext()

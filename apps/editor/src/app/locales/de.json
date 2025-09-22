@@ -345,7 +345,11 @@
         "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
       },
       "subscribe": {
-        "label": "Abonnieren"
+        "label": "Abonnieren",
+        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
+        "selectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
+        "selectionHintCount": "Zeige {{count}} ausgewählte {{count, plural, one {Plan} other {Pläne}}}."
       },
       "image": {
         "label": "Bild",
@@ -789,7 +793,8 @@
         "quarterly": "Vierteljährlich",
         "yearly": "Jährlich",
         "biennial": "Zweijährlich",
-        "lifetime": "Lebenslang"
+        "lifetime": "Lebenslang",
+        "donationOnce": "Einmalige Spende"
       },
       "title": "Abo Pläne"
     },
@@ -1446,7 +1451,7 @@
       "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
       "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden.",
       "productType": "Produkttyp",
-      "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird. Standard ist Abonnement.",
+      "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird.",
       "productTypeSubscription": "Abonnement",
       "productTypeDonation": "Spende"
     },

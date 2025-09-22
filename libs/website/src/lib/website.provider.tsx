@@ -72,7 +72,8 @@ import {
   PaymentAmountSlider,
   PaymentMethodPicker,
   PeriodicityPicker,
-  Subscribe,
+  Subscribe as SubscribeForm,
+  SubscribeBlock as SubscribeBlockComponent,
   SubscriptionList,
   SubscriptionListItem,
   TransactionFee
@@ -193,7 +194,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
           TransactionFee={TransactionFee}
-          Subscribe={Subscribe}
+          Subscribe={SubscribeForm}
           elements={{
             TextField,
             Rating,
@@ -229,6 +230,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
             Crowdfunding: CrowdfundingBlock,
             RichText: RichTextBlock,
             Event: EventBlock,
+            Subscribe: SubscribeBlockComponent,
             Listicle: ListicleBlock,
             TeaserGridFlex: TeaserGridFlexBlock,
             TeaserGrid: TeaserGridBlock,

@@ -1,13 +1,17 @@
 import {SubscribePage} from '@wepublish/utils/website'
 import {useRouter} from 'next/router'
+import {ComponentProps} from 'react'
 
-export default function Mitmachen() {
+type MitmachenProps = ComponentProps<typeof SubscribePage>
+
+export default function Mitmachen(props: MitmachenProps) {
   const {
     query: {tag}
   } = useRouter()
 
   return (
     <SubscribePage
+      {...props}
       defaults={{
         memberPlanSlug: 'gruppetto'
       }}
