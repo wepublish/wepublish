@@ -42,6 +42,7 @@ export const PaymentAmountSlider = forwardRef<
             onChange={event => onChange(+event.target.value * 100)}
             type="number"
             fullWidth
+            onFocus={event => event.target.select()}
             inputProps={{
               step: 'any',
               min: amountPerMonthMin / 100,

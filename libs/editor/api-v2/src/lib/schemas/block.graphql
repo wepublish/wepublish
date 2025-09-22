@@ -205,10 +205,112 @@ fragment BlockWithoutTeaser on BlockContent {
     sandbox
   }
 
-  ... on SubscribeBlock {
-    blockStyle
-    type
-  }
+    ... on ListicleBlock {
+        blockStyle
+        type
+        items {
+            title
+            richText
+            image {
+                ...FullImage
+            }
+        }
+    }
+
+    ... on BreakBlock {
+        blockStyle
+        type
+        text
+        richText
+        hideButton
+        linkTarget
+        linkText
+        linkURL
+        image {
+            ...FullImage
+        }
+    }
+
+    ... on FacebookPostBlock {
+        blockStyle
+        type
+        userID
+        postID
+    }
+
+    ... on FacebookVideoBlock {
+        blockStyle
+        type
+        userID
+        videoID
+    }
+
+    ... on InstagramPostBlock {
+        blockStyle
+        type
+        postID
+    }
+
+    ... on TwitterTweetBlock {
+        blockStyle
+        type
+        userID
+        tweetID
+    }
+
+    ... on VimeoVideoBlock {
+        blockStyle
+        type
+        videoID
+    }
+
+    ... on YouTubeVideoBlock {
+        blockStyle
+        type
+        videoID
+    }
+
+    ... on SoundCloudTrackBlock {
+        blockStyle
+        type
+        trackID
+    }
+
+    ... on PolisConversationBlock {
+        blockStyle
+        type
+        conversationID
+    }
+
+    ... on TikTokVideoBlock {
+        blockStyle
+        type
+        userID
+        videoID
+    }
+
+    ... on BildwurfAdBlock {
+        blockStyle
+        type
+        zoneID
+    }
+
+    ... on IFrameBlock {
+        blockStyle
+        type
+        url
+        title
+        width
+        height
+        styleCustom
+        sandbox
+    }
+
+    ... on SubscribeBlock {
+        blockStyle
+        memberPlanIds
+        type
+    }
 }
 
 fragment FullTeaser on Teaser {

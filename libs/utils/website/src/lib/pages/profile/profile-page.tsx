@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
-import { css } from '@mui/material';
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
-import { ContentWrapper } from '@wepublish/content/website';
+import styled from '@emotion/styled'
+import {css, Tab, Tabs} from '@mui/material'
+import {AuthTokenStorageKey} from '@wepublish/authentication/website'
+import {ContentWrapper} from '@wepublish/content/website'
 import {
   InvoiceListContainer,
   InvoiceListItemWrapper,
@@ -17,18 +17,20 @@ import {
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  SessionWithTokenWithoutUser,
+  ProductType,
+  UserSession,
   useSubscriptionsQuery,
-} from '@wepublish/website/api';
-import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { setCookie } from 'cookies-next';
-import { NextPage, NextPageContext } from 'next';
-import getConfig from 'next/config';
-import { ComponentProps } from 'react';
-import { useTranslation } from 'react-i18next';
-import { withAuthGuard } from '../../auth-guard';
-import { ssrAuthLink } from '../../auth-link';
-import { getSessionTokenProps } from '../../get-session-token-props';
+  FullSubscriptionFragment
+} from '@wepublish/website/api'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {setCookie} from 'cookies-next'
+import {t} from 'i18next'
+import {NextPage, NextPageContext} from 'next'
+import getConfig from 'next/config'
+import {ComponentProps, SyntheticEvent, useCallback, useMemo, useState} from 'react'
+import {withAuthGuard} from '../../auth-guard'
+import {ssrAuthLink} from '../../auth-link'
+import {getSessionTokenProps} from '../../get-session-token-props'
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -72,10 +74,14 @@ export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-type ProfilePageProps = Omit<
-  ComponentProps<typeof PersonalDataFormContainer>,
-  ''
->;
+const SubscriptionTabPanelContent = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
+type SubscriptionTabValue = 'subscription' | 'donation'
+
+type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, ''>
 
 function ProfilePage(props: ProfilePageProps) {
   const {
@@ -86,6 +92,47 @@ function ProfilePage(props: ProfilePageProps) {
   const { data: subscriptonData } = useSubscriptionsQuery({
     fetchPolicy: 'cache-only',
   });
+
+  const [activeTab, setActiveTab] = useState<SubscriptionTabValue>('subscription')
+
+  const filterActiveSubscriptions = useCallback(
+    (subscriptions: FullSubscriptionFragment[]) =>
+      subscriptions.filter(
+        subscription =>
+          !subscription.deactivation &&
+          subscription.memberPlan?.productType !== ProductType.Donation
+      ),
+    []
+  )
+
+  const filterActiveDonationSubscriptions = useCallback(
+    (subscriptions: FullSubscriptionFragment[]) =>
+      subscriptions.filter(
+        subscription =>
+          !subscription.deactivation &&
+          subscription.memberPlan?.productType === ProductType.Donation
+      ),
+    []
+  )
+
+  const activeSubscriptionsCount = useMemo(
+    () => filterActiveSubscriptions(subscriptonData?.subscriptions ?? []).length,
+    [subscriptonData?.subscriptions, filterActiveSubscriptions]
+  )
+
+  const activeDonationSubscriptionsCount = useMemo(
+    () => filterActiveDonationSubscriptions(subscriptonData?.subscriptions ?? []).length,
+    [subscriptonData?.subscriptions, filterActiveDonationSubscriptions]
+  )
+
+  const handleTabChange = useCallback((_event: SyntheticEvent, value: SubscriptionTabValue) => {
+    setActiveTab(value)
+  }, [])
+
+  const subscriptionTabLabel = `${t('user.activeSubscriptions')} (${activeSubscriptionsCount})`
+  const donationTabLabel = `${t(
+    'user.activeDonationSubscriptions'
+  )} (${activeDonationSubscriptionsCount})`
 
   const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
@@ -119,11 +166,51 @@ function ProfilePage(props: ProfilePageProps) {
         <SubscriptionListWrapper>
           <H4 component={'h1'}>{t('user.activeSubscriptions')}</H4>
 
-          <SubscriptionListContainer
-            filter={subscriptions =>
-              subscriptions.filter(subscription => !subscription.deactivation)
-            }
-          />
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            variant="fullWidth"
+            aria-label={t('user.activeSubscriptions')}>
+            <Tab
+              value="subscription"
+              label={subscriptionTabLabel}
+              id="profile-subscription-tab"
+              aria-controls="profile-subscription-tabpanel"
+            />
+            <Tab
+              value="donation"
+              label={donationTabLabel}
+              id="profile-donation-tab"
+              aria-controls="profile-donation-tabpanel"
+            />
+          </Tabs>
+
+          <div
+            role="tabpanel"
+            hidden={activeTab !== 'subscription'}
+            id="profile-subscription-tabpanel"
+            aria-labelledby="profile-subscription-tab">
+            {activeTab === 'subscription' && (
+              <SubscriptionTabPanelContent>
+                <SubscriptionListContainer key="subscription" filter={filterActiveSubscriptions} />
+              </SubscriptionTabPanelContent>
+            )}
+          </div>
+
+          <div
+            role="tabpanel"
+            hidden={activeTab !== 'donation'}
+            id="profile-donation-tabpanel"
+            aria-labelledby="profile-donation-tab">
+            {activeTab === 'donation' && (
+              <SubscriptionTabPanelContent>
+                <SubscriptionListContainer
+                  key="donation"
+                  filter={filterActiveDonationSubscriptions}
+                />
+              </SubscriptionTabPanelContent>
+            )}
+          </div>
 
           {hasActiveSubscriptions && (
             <SubscriptionListItemWrapper>

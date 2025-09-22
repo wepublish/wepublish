@@ -1,11 +1,14 @@
-import { SubscribePage } from '@wepublish/utils/website';
+import {SubscribePage} from '@wepublish/utils/website'
+import {ComponentProps} from 'react'
 
 import { Container } from '../src/components/layout/container';
 
-export default function Mitmachen() {
+type MitmachenProps = ComponentProps<typeof SubscribePage>
+
+export default function Mitmachen(props: MitmachenProps) {
   return (
     <Container>
-      <SubscribePage fields={['firstName']} />
+      <SubscribePage {...props} fields={['firstName']} />
     </Container>
   );
 }

@@ -518,6 +518,7 @@ export function MemberPlanForm({
                           }
                           block
                           placement="auto"
+                          cleanable
                         />
                       </Col>
 

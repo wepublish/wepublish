@@ -66,7 +66,9 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string;
 }
 
-export type SubscribeBlockValue = BaseBlockValue;
+export interface SubscribeBlockValue extends BaseBlockValue {
+  memberPlanIds: string[]
+}
 
 export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined;
@@ -463,8 +465,9 @@ export function mapBlockValueToBlockInput(
       return {
         subscribe: {
           blockStyle: block.value.blockStyle,
-        },
-      };
+          memberPlanIds: block.value.memberPlanIds.length ? block.value.memberPlanIds : undefined
+        }
+      }
 
     case EditorBlockType.Image:
       return {
@@ -1010,8 +1013,9 @@ export function blockForQueryBlock(
         type: EditorBlockType.Subscribe,
         value: {
           blockStyle: block.blockStyle,
-        },
-      };
+          memberPlanIds: block.memberPlanIds ?? []
+        }
+      }
 
     case 'TeaserListBlock':
       return {

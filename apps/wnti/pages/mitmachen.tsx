@@ -1,13 +1,11 @@
-import styled from '@emotion/styled';
-import {
-  AuthTokenStorageKey,
-  UserFormWrapper,
-} from '@wepublish/authentication/website';
-import { SubscribeWrapper } from '@wepublish/membership/website';
-import { PageContainer } from '@wepublish/page/website';
-import { getSessionTokenProps, ssrAuthLink } from '@wepublish/utils/website';
-import { SubscribePage } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import styled from '@emotion/styled'
+import {AuthTokenStorageKey, UserFormWrapper} from '@wepublish/authentication/website'
+import {SubscribeWrapper} from '@wepublish/membership/website'
+import {PageContainer} from '@wepublish/page/website'
+import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
+import {SubscribePage} from '@wepublish/utils/website'
+import {ComponentProps} from 'react'
+import {UserSession} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -39,8 +37,11 @@ const MitmachenPage = styled(PageContainer)`
   }
 `;
 
-export const MitmachenInner = () => (
+type MitmachenInnerProps = ComponentProps<typeof SubscribePage>
+
+export const MitmachenInner = (props: MitmachenInnerProps) => (
   <SubscribePage
+    {...props}
     fields={['firstName']}
     filter={plans =>
       plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))

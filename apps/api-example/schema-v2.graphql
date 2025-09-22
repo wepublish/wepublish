@@ -2386,12 +2386,14 @@ type Stats {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  memberPlanIds: [String!]
   type: BlockType!
 }
 
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  memberPlanIds: [String!]
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
