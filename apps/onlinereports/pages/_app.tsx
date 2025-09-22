@@ -1,7 +1,7 @@
 import {EmotionCache} from '@emotion/cache'
 import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v13-pagesRouter'
+import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
 import {GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
 import {withErrorSnackbar} from '@wepublish/errors/website'
