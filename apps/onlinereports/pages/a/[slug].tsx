@@ -9,12 +9,13 @@ import {
   addClientCacheToV1Props,
   ArticleDocument,
   ArticleListDocument,
+  ArticleSort,
   CommentItemType,
   CommentListDocument,
   getV1ApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
+  SortOrder,
   useArticleQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -64,13 +65,14 @@ export default function ArticleBySlugOrId() {
 
           <ArticleListContainer
             variables={{
-              filter: { tags: data.article.tags.map(tag => tag.id) },
-              take: 4,
+              sort: ArticleSort.PublishedAt,
+              order: SortOrder.Descending,
+              take: 5,
             }}
             filter={articles =>
               articles
                 .filter(article => article.id !== data.article?.id)
-                .splice(0, 3)
+                .splice(0, 4)
             }
           />
           <div id={'comments'} />
