@@ -34,6 +34,7 @@ export const ArticleWrapper = styled('div')`
   }
 `;
 
+const nrOfRecentArticles = 4;
 export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
@@ -67,12 +68,12 @@ export default function ArticleBySlugOrId() {
             variables={{
               sort: ArticleSort.PublishedAt,
               order: SortOrder.Descending,
-              take: 5,
+              take: nrOfRecentArticles + 1,
             }}
             filter={articles =>
               articles
                 .filter(article => article.id !== data.article?.id)
-                .splice(0, 4)
+                .splice(0, nrOfRecentArticles)
             }
           />
           <div id={'comments'} />
@@ -132,10 +133,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       client.query({
         query: ArticleListDocument,
         variables: {
-          filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
-          },
-          take: 4,
+          sort: ArticleSort.PublishedAt,
+          order: SortOrder.Descending,
+          take: nrOfRecentArticles + 1,
         },
       }),
       client.query({
