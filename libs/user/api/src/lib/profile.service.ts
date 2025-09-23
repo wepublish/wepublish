@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { unselectPassword } from './unselect-password';
 import { ImageService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient } from '@prisma/client';
 import { UserInputError } from '@nestjs/apollo';
 import { PaymentProviderCustomerInput, User, UserInput } from './user.model';
 import { Validator } from '@wepublish/user';
+import { unselectPassword } from '@wepublish/authentication/api';
 
 @Injectable()
 export class ProfileService {

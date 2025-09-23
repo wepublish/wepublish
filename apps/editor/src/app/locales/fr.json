@@ -1221,7 +1221,9 @@
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
       "zipCode": "Code Postal",
-      "birthday": "Birthday"
+      "birthday": "Birthday",
+      "note": "Note",
+      "noteHelpText": "Non visible pour l'utilisateur."
     },
     "userList": {
       "overview": {
