@@ -101,9 +101,7 @@ export const NewSubscriptionButton = ({
   userId?: string;
 }) => {
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
-  const urlToRedirect = `/subscriptions/create${
-    userId ? `${`?userId=${userId}`}` : ''
-  }`;
+  const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
   return (
     <Link to={urlToRedirect}>
       <IconButton
@@ -222,9 +220,9 @@ function UserSubscriptionsList({
       <div>
         {t('userSubscriptionList.invoiceNr', { invoiceId: invoice.id })} &nbsp;
         <b style={invoice.paidAt ? { color: 'green' } : { color: 'red' }}>
-          {invoice.paidAt
-            ? t('userSubscriptionList.invoicePaid')
-            : t('userSubscriptionList.invoiceUnpaid')}
+          {invoice.paidAt ?
+            t('userSubscriptionList.invoicePaid')
+          : t('userSubscriptionList.invoiceUnpaid')}
         </b>
       </div>
     );
@@ -304,17 +302,16 @@ function UserSubscriptionsList({
                   </FlexboxGrid.Item>
                   {/* confirmed */}
                   <FlexboxGrid.Item colspan={24}>
-                    {subscription.confirmed ? (
+                    {subscription.confirmed ?
                       <>
                         <MdOutlineCheckBox css={commonIconMargin} />
                         {t('userSubscriptionList.confirmed')}
                       </>
-                    ) : (
-                      <>
+                    : <>
                         <MdOutlineCheckBoxOutlineBlank css={commonIconMargin} />
                         {t('userSubscriptionList.unconfirmed')}
                       </>
-                    )}
+                    }
                   </FlexboxGrid.Item>
                   {/* auto renewal */}
                   <FlexboxGrid.Item colspan={24}>

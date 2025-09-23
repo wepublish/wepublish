@@ -71,8 +71,9 @@ export const getArticleSEO = (article: Article) => {
       '@type': 'NewsArticle',
       articleBody,
       keywords: article.tags.map(({ tag }) => tag).join(','),
-      image: image
-        ? {
+      image:
+        image ?
+          {
             height: image.height,
             width: image.width,
             representativeOfPage: true,

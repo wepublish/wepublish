@@ -24,7 +24,7 @@ type ImageItems = [
   m: ImageItem<800>,
   s: ImageItem<500>,
   xs: ImageItem<300>,
-  xxs: ImageItem<200>
+  xxs: ImageItem<200>,
 ];
 
 export const imageToImageItems = (
@@ -77,11 +77,9 @@ export const Image = forwardRef<HTMLImageElement, BuilderImageProps>(
 
     const objectPosition = useMemo(
       () =>
-        square
-          ? 'center center'
-          : `${(image.focalPoint?.x ?? 0.5) * 100}% ${
-              (image.focalPoint?.y ?? 0.5) * 100
-            }%`,
+        square ? 'center center' : (
+          `${(image.focalPoint?.x ?? 0.5) * 100}% ${(image.focalPoint?.y ?? 0.5) * 100}%`
+        ),
       [image.focalPoint?.x, image.focalPoint?.y, square]
     );
 

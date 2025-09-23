@@ -74,7 +74,10 @@ export const NavigationCategory = ({
   return (
     <NavigationCategoryWrapper>
       <NavigationTopItem onClick={subItemsToggle.toggle}>
-        {nav.name} {subItemsToggle.value ? <MdExpandLess /> : <MdExpandMore />}{' '}
+        {nav.name}{' '}
+        {subItemsToggle.value ?
+          <MdExpandLess />
+        : <MdExpandMore />}{' '}
       </NavigationTopItem>
 
       {subItemsToggle.value && (

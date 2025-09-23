@@ -41,10 +41,9 @@ export const BajourComment = (props: BuilderCommentProps) => {
     (tag: Tag) => tag.tag === bajourTags.Moderation
   );
 
-  const commentStyles = moderationTag
-    ? highlightModeration(theme)
-    : highlightSourceTag
-    ? highlightSource(theme)
+  const commentStyles =
+    moderationTag ? highlightModeration(theme)
+    : highlightSourceTag ? highlightSource(theme)
     : undefined;
 
   return (

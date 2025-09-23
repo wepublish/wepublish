@@ -173,8 +173,9 @@ export function TeaserSlotsBlock({
       slots: [
         ...slots,
         {
-          type: autofillConfig.enabled
-            ? TeaserSlotType.Autofill
+          type:
+            autofillConfig.enabled ?
+              TeaserSlotType.Autofill
             : TeaserSlotType.Manual,
           teaser: null,
         },
@@ -211,12 +212,12 @@ export function TeaserSlotsBlock({
     if (autofillConfig.enabled && !newAutofillConfig.enabled) {
       newSlots = [
         ...slots.map(slot =>
-          slot.type === TeaserSlotType.Autofill
-            ? {
-                type: TeaserSlotType.Manual,
-                teaser: null,
-              }
-            : slot
+          slot.type === TeaserSlotType.Autofill ?
+            {
+              type: TeaserSlotType.Manual,
+              teaser: null,
+            }
+          : slot
         ),
       ];
     }
@@ -253,10 +254,10 @@ export function TeaserSlotsBlock({
             .slice(0, index)
             .filter(slot => slot.type === TeaserSlotType.Autofill).length;
           const teaser = (
-            type === TeaserSlotType.Manual
-              ? manualTeaser
-              : autofillTeasers[autofillIndex] ?? null
-          ) as TeaserTypeMixed | null;
+            type === TeaserSlotType.Manual ?
+              manualTeaser
+            : (autofillTeasers[autofillIndex] ??
+              null)) as TeaserTypeMixed | null;
 
           return (
             <GridItem

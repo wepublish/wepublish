@@ -108,7 +108,7 @@ export type BuilderSubscribeProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
     BuilderUserFormFields,
     'flair'
-  >
+  >,
 > = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>;
   userSubscriptions: Pick<

@@ -251,10 +251,12 @@ export class MemberContext implements MemberContextInterface {
       }
 
       const startDate = new Date(
-        paidUntil &&
-        paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
-          ? paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
-          : new Date().getTime()
+        (
+          paidUntil &&
+          paidUntil.getTime() > new Date().getTime() - ONE_MONTH_IN_MILLISECONDS
+        ) ?
+          paidUntil.getTime() + ONE_DAY_IN_MILLISECONDS
+        : new Date().getTime()
       );
       const nextDate = getNextDateForPeriodicity(
         startDate,
@@ -540,9 +542,9 @@ export class MemberContext implements MemberContextInterface {
 
     const now = new Date();
     const deactivationDate =
-      subscription.paidUntil !== null && subscription.paidUntil > now
-        ? subscription.paidUntil
-        : now;
+      subscription.paidUntil !== null && subscription.paidUntil > now ?
+        subscription.paidUntil
+      : now;
 
     await this.cancelInvoicesForSubscription(subscription.id);
 
@@ -656,8 +658,9 @@ export class MemberContext implements MemberContextInterface {
     paymentMethodSlug?: string,
     paymentMethodID?: string
   ) {
-    const paymentMethod = paymentMethodID
-      ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+    const paymentMethod =
+      paymentMethodID ?
+        await loaders.activePaymentMethodsByID.load(paymentMethodID)
       : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!);
 
     if (!paymentMethod) {
@@ -695,8 +698,8 @@ export class MemberContext implements MemberContextInterface {
   async processSubscriptionProperties(
     subscriptionProperties: Pick<MetadataProperty, 'key' | 'value'>[]
   ): Promise<Pick<MetadataProperty, 'public' | 'key' | 'value'>[]> {
-    return Array.isArray(subscriptionProperties)
-      ? subscriptionProperties.map(property => {
+    return Array.isArray(subscriptionProperties) ?
+        subscriptionProperties.map(property => {
           return {
             public: true,
             key: property.key,
@@ -748,9 +751,9 @@ export class MemberContext implements MemberContextInterface {
       memberPlan.maxCount <= memberPlanSubscriptionCount
     ) {
       throw new Error(
-        `Subscription count exceeded limit (given: ${
-          memberPlanSubscriptionCount + 1
-        } | max: ${memberPlan.maxCount}) for ${memberPlanId} memberplan!`
+        `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
+          memberPlan.maxCount
+        }) for ${memberPlanId} memberplan!`
       );
     }
 
@@ -798,8 +801,9 @@ export class MemberContext implements MemberContextInterface {
 
     // Send subscribe mail
 
-    const subscriptionEvent = needsConfirmation
-      ? SubscriptionEvent.CONFIRM_SUBSCRIPTION
+    const subscriptionEvent =
+      needsConfirmation ?
+        SubscriptionEvent.CONFIRM_SUBSCRIPTION
       : SubscriptionEvent.SUBSCRIBE;
     await this.sendMailForSubscriptionEvent(
       subscriptionEvent,
@@ -886,9 +890,9 @@ export class MemberContext implements MemberContextInterface {
       memberPlan.maxCount <= memberPlanSubscriptionCount
     ) {
       throw new Error(
-        `Subscription count exceeded limit (given: ${
-          memberPlanSubscriptionCount + 1
-        } | max: ${memberPlan.maxCount}) for ${memberPlanId} memberplan!`
+        `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
+          memberPlan.maxCount
+        }) for ${memberPlanId} memberplan!`
       );
     }
 
@@ -947,9 +951,7 @@ export class MemberContext implements MemberContextInterface {
         data: {
           currency: memberPlan.currency,
           subscriptionID: subscription.id,
-          description: `Membership from ${startsAt.toISOString()} for ${
-            user.name || user.email
-          }`,
+          description: `Membership from ${startsAt.toISOString()} for ${user.name || user.email}`,
           mail: user.email,
           dueAt: startsAt,
           scheduledDeactivationAt: endsAt,
@@ -1057,8 +1059,9 @@ export async function getMemberPlanByIDOrSlug(
   memberPlanSlug: string,
   memberPlanID: string
 ) {
-  const memberPlan = memberPlanID
-    ? await loaders.activeMemberPlansByID.load(memberPlanID)
+  const memberPlan =
+    memberPlanID ?
+      await loaders.activeMemberPlansByID.load(memberPlanID)
     : await loaders.activeMemberPlansBySlug.load(memberPlanSlug);
   if (!memberPlan)
     throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug);
@@ -1073,8 +1076,9 @@ export async function getPaymentMethodByIDOrSlug(
   paymentMethodSlug?: string,
   paymentMethodID?: string
 ) {
-  const paymentMethod = paymentMethodID
-    ? await loaders.activePaymentMethodsByID.load(paymentMethodID)
+  const paymentMethod =
+    paymentMethodID ?
+      await loaders.activePaymentMethodsByID.load(paymentMethodID)
     : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!);
 
   if (!paymentMethod) {

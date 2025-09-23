@@ -223,7 +223,9 @@ export const SubMenuButton = forwardRef<
             isMenuOpen ? closeMenu() : openMenu();
           }}
         >
-          {isMenuOpen ? <CloseIcon /> : <IconWrapper>{icon}</IconWrapper>}
+          {isMenuOpen ?
+            <CloseIcon />
+          : <IconWrapper>{icon}</IconWrapper>}
         </ToolbarButton>
       </Whisper>
     </SubMenuContext.Provider>

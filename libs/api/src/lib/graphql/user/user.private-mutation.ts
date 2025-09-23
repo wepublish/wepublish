@@ -39,9 +39,8 @@ export const createAdminUser = async (
   const { roles } = authenticate();
   authorise(CanCreateUser, roles);
 
-  input.email = input.email
-    ? (input.email as string).toLowerCase()
-    : input.email;
+  input.email =
+    input.email ? (input.email as string).toLowerCase() : input.email;
 
   const userExists = await prisma.user.findUnique({
     where: { email: input.email },
@@ -66,9 +65,8 @@ export const updateAdminUser = async (
   const { roles } = authenticate();
   authorise(CanCreateUser, roles);
 
-  input.email = input.email
-    ? (input.email as string).toLowerCase()
-    : input.email;
+  input.email =
+    input.email ? (input.email as string).toLowerCase() : input.email;
   await Validator.createUser.parse(input);
   await Validator.createAddress.parse(address);
 
@@ -76,8 +74,9 @@ export const updateAdminUser = async (
     where: { id },
     data: {
       ...input,
-      address: address
-        ? {
+      address:
+        address ?
+          {
             upsert: {
               create: address,
               update: address,

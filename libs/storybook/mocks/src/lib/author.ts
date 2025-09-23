@@ -44,4 +44,4 @@ export const mockAuthor = ({
     hideOnArticle,
     hideOnTeam,
     hideOnTeaser,
-  } as FullAuthorFragment);
+  }) as FullAuthorFragment;

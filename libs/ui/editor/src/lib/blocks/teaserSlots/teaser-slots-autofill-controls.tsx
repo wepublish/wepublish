@@ -113,9 +113,9 @@ export function TeaserSlotsAutofillControls({
           )}
         </div>
         <SummarySection>
-          {config.enabled ? (
+          {config.enabled ?
             <>
-              {tagsData?.tags && tagsData.tags.nodes.length > 0 ? (
+              {tagsData?.tags && tagsData.tags.nodes.length > 0 ?
                 <TagsContainer>
                   {tagsData.tags.nodes
                     .filter(tag => config.filter?.tags?.includes(tag.id))
@@ -128,20 +128,17 @@ export function TeaserSlotsAutofillControls({
                       </Tag>
                     ))}
                 </TagsContainer>
-              ) : (
-                <Tag color="green">{t('blocks.teaserSlots.latest')}</Tag>
-              )}
+              : <Tag color="green">{t('blocks.teaserSlots.latest')}</Tag>}
               <span style={{ marginLeft: '8px' }}>
                 {loadedTeasers}
                 {loadedTeasers < autofillSlots ? `/${autofillSlots}` : ``}{' '}
                 {t('blocks.teaserSlots.teasersLoaded')}{' '}
               </span>
             </>
-          ) : (
-            <span style={{ color: '#6b7280' }}>
+          : <span style={{ color: '#6b7280' }}>
               {t('blocks.teaserSlots.fillManually')}
             </span>
-          )}
+          }
         </SummarySection>
       </ControlsSection>
 

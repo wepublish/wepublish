@@ -91,9 +91,7 @@ export const NewSubscriptionButton = ({
   userId?: string;
 }) => {
   const canCreate = useAuthorisation('CAN_CREATE_SUBSCRIPTION');
-  const urlToRedirect = `/subscriptions/create${
-    userId ? `${`?userId=${userId}`}` : ''
-  }`;
+  const urlToRedirect = `/subscriptions/create${userId ? `${`?userId=${userId}`}` : ''}`;
   return (
     <Link to={urlToRedirect}>
       <IconButton

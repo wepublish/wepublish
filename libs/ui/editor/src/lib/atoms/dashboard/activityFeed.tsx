@@ -159,9 +159,8 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
     case 'CommentCreatedAction': {
       const userName =
         action.comment?.user?.name ?? action.comment?.guestUsername ?? '';
-      const commentTitle = action.comment.title
-        ? ': ' + action.comment.title
-        : '';
+      const commentTitle =
+        action.comment.title ? ': ' + action.comment.title : '';
 
       return (
         <TimelineItem
@@ -226,9 +225,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             />
           }
           date={action.date}
-          details={`${
-            action.user.firstName ? action.user.firstName + ' ' : ''
-          }${action.user.name}${
+          details={`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}${
             action.user.address?.city ? ', ' + action.user.address?.city : ''
           }`}
         />

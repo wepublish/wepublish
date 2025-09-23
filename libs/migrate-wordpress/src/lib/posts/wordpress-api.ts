@@ -48,7 +48,7 @@ export type WordpressPost = {
         caption: {
           rendered: string;
         };
-      }
+      },
     ];
     author: WordpressAuthor[];
   };

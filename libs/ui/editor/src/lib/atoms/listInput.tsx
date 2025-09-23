@@ -85,9 +85,8 @@ const ListItem = SortableElement<ListItemProps>(
     function handleValueChange(fieldValue: React.SetStateAction<any>) {
       onChange(itemIndex, value => ({
         ...value,
-        value: isFunctionalUpdate(fieldValue)
-          ? fieldValue(value.value)
-          : fieldValue,
+        value:
+          isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue,
       }));
     }
 
@@ -125,8 +124,9 @@ const SortableList = SortableContainer<ListFieldProps>(
     ) {
       onChange(value =>
         Object.assign([], value, {
-          [itemIndex]: isFunctionalUpdate(itemValue)
-            ? itemValue(value[itemIndex])
+          [itemIndex]:
+            isFunctionalUpdate(itemValue) ?
+              itemValue(value[itemIndex])
             : itemValue,
         })
       );

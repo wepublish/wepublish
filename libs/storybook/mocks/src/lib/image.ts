@@ -42,7 +42,7 @@ export const mockImage = () =>
     sSquare: 'https://unsplash.it/500/500',
     xsSquare: 'https://unsplash.it/300/300',
     xxsSquare: 'https://unsplash.it/200/200',
-  } as FullImageFragment);
+  }) as FullImageFragment;
 
 export const mockPeerImage = () =>
   ({
@@ -82,4 +82,4 @@ export const mockPeerImage = () =>
     sSquare: 'https://unsplash.it/500/500',
     xsSquare: 'https://unsplash.it/300/300',
     xxsSquare: 'https://unsplash.it/200/200',
-  } as FullPeerImageFragment);
+  }) as FullPeerImageFragment;

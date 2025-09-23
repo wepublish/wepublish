@@ -159,12 +159,12 @@ function UserEditView() {
     setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined);
     setEmail(tmpUser.email);
     setMetadataProperties(
-      tmpUser?.properties
-        ? tmpUser?.properties.map(userProperty => ({
-            id: generateID(),
-            value: userProperty,
-          }))
-        : []
+      tmpUser?.properties ?
+        tmpUser?.properties.map(userProperty => ({
+          id: generateID(),
+          value: userProperty,
+        }))
+      : []
     );
     setEmailVerifiedAt(
       tmpUser.emailVerifiedAt ? new Date(tmpUser.emailVerifiedAt) : null
@@ -235,8 +235,9 @@ function UserEditView() {
    * Validation schema
    */
   const { StringType } = Schema.Types;
-  const validatePassword: any = id
-    ? StringType().minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+  const validatePassword: any =
+    id ?
+      StringType().minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
     : StringType()
         .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
         .isRequired(t('errorMessages.noPasswordErrorMessage'));
@@ -280,12 +281,10 @@ function UserEditView() {
               ),
               address: {
                 company: address?.company ? address.company : '',
-                streetAddress: address?.streetAddress
-                  ? address.streetAddress
-                  : '',
-                streetAddress2: address?.streetAddress2
-                  ? address.streetAddress2
-                  : '',
+                streetAddress:
+                  address?.streetAddress ? address.streetAddress : '',
+                streetAddress2:
+                  address?.streetAddress2 ? address.streetAddress2 : '',
                 zipCode: address?.zipCode ? address.zipCode : '',
                 city: address?.city ? address.city : '',
                 country: address?.country ? address.country : '',

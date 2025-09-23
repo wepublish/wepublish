@@ -140,9 +140,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
       }
 
       if (transformations.length > 0) {
-        return `${this.url}${id}/t/${transformations.join(
-          ','
-        )}/${fullFilename}`;
+        return `${this.url}${id}/t/${transformations.join(',')}/${fullFilename}`;
       } else {
         return `${this.url}${id}/${fullFilename}`;
       }

@@ -69,11 +69,9 @@ export function TsriAdHeader({ authors }: { authors?: BuilderAuthor[] }) {
           )}
 
           <TsriAdvertiserContent>
-            {isPromo(advertiser) ? (
+            {isPromo(advertiser) ?
               <b>Rubrik Kultur wird präsentiert von: </b>
-            ) : (
-              <b>Präsentiert von:</b>
-            )}
+            : <b>Präsentiert von:</b>}
             <TsriRichText richText={advertiser.bio || []} />
           </TsriAdvertiserContent>
         </TsriAdvertiserContainer>

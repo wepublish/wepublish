@@ -208,7 +208,7 @@ export function DateTimePicker({
       />
       <Header>
         <Form.ControlLabel>{label}</Form.ControlLabel>
-        {helpInfo ? (
+        {helpInfo ?
           <Whisper
             placement="right"
             trigger="hover"
@@ -225,9 +225,7 @@ export function DateTimePicker({
               size="xs"
             />
           </Whisper>
-        ) : (
-          ''
-        )}
+        : ''}
       </Header>
       <DatePicker
         disabled={disabled}

@@ -181,8 +181,8 @@ export function TeaserGridFlexBlock({
 
   const handlePinTeaserBlock = (index: string) => {
     const newTeasers = flexTeasers.map(({ teaser, alignment }) => {
-      return alignment.i === index
-        ? {
+      return alignment.i === index ?
+          {
             teaser,
             alignment: {
               i: alignment.i,
@@ -206,8 +206,8 @@ export function TeaserGridFlexBlock({
     onChange({
       ...value,
       flexTeasers: flexTeasers.map(ft => {
-        return ft.alignment.i === index
-          ? { alignment: ft.alignment, teaser: teaserLink }
+        return ft.alignment.i === index ?
+            { alignment: ft.alignment, teaser: teaserLink }
           : ft;
       }),
     });
@@ -217,8 +217,8 @@ export function TeaserGridFlexBlock({
     onChange({
       ...value,
       flexTeasers: flexTeasers.map(({ teaser, alignment }) => {
-        return alignment.i === index
-          ? { alignment, teaser: null }
+        return alignment.i === index ?
+            { alignment, teaser: null }
           : { teaser, alignment };
       }),
     });
@@ -282,9 +282,9 @@ export function TeaserGridFlexBlock({
 
               <IconButtonTooltip
                 caption={
-                  !flexTeaser.alignment.static
-                    ? t('blocks.flexTeaser.lockBlock')
-                    : t('blocks.flexTeaser.unlockBlock')
+                  !flexTeaser.alignment.static ?
+                    t('blocks.flexTeaser.lockBlock')
+                  : t('blocks.flexTeaser.unlockBlock')
                 }
               >
                 <RIconButton

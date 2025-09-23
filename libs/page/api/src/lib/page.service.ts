@@ -240,9 +240,9 @@ export class PageService {
       page.publishedAt && page.publishedAt > publishedAt;
 
     const pagePublishedAt =
-      pagePublishedAtInTheFuture || newPublishedAtEarlier
-        ? publishedAt
-        : page.publishedAt ?? publishedAt;
+      pagePublishedAtInTheFuture || newPublishedAtEarlier ? publishedAt : (
+        (page.publishedAt ?? publishedAt)
+      );
 
     return this.prisma.page.update({
       where: {
@@ -562,9 +562,8 @@ const createPublishedFilter = (
 ): Prisma.PageWhereInput => {
   if (filter?.published != null) {
     return {
-      publishedAt: filter.published
-        ? { lte: new Date() }
-        : { not: { lte: new Date() } },
+      publishedAt:
+        filter.published ? { lte: new Date() } : { not: { lte: new Date() } },
     };
   }
 
@@ -595,9 +594,8 @@ const createPendingFilter = (
     return {
       revisions: {
         some: {
-          publishedAt: filter.pending
-            ? { gt: new Date() }
-            : { not: { gt: new Date() } },
+          publishedAt:
+            filter.pending ? { gt: new Date() } : { not: { gt: new Date() } },
         },
       },
     };

@@ -162,17 +162,17 @@ export class StripePaymentProvider extends BasePaymentProvider {
             prevItem + currentItem.amount * currentItem.quantity,
           0
         ),
-        ...(customerID && paymentMethodID
-          ? {
-              confirm: true,
-              customer: customerID,
-              off_session: true,
-              payment_method: paymentMethodID,
-              payment_method_types: this.methods,
-            }
-          : {
-              payment_method_types: this.methods,
-            }),
+        ...(customerID && paymentMethodID ?
+          {
+            confirm: true,
+            customer: customerID,
+            off_session: true,
+            payment_method: paymentMethodID,
+            payment_method_types: this.methods,
+          }
+        : {
+            payment_method_types: this.methods,
+          }),
         currency: currency.toLowerCase(),
         // description: props.invoice.description, TODO: convert to text
         ...(saveCustomer ? { setup_future_usage: 'off_session' } : {}),

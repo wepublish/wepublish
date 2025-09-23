@@ -46,10 +46,9 @@ export const SessionProvider = memo<
 
   useEffect(() => {
     const cookie = getCookie(AuthTokenStorageKey);
-    const sToken = sessionToken
-      ? sessionToken
-      : cookie
-      ? (JSON.parse(cookie.toString()) as SessionWithTokenWithoutUser)
+    const sToken =
+      sessionToken ? sessionToken
+      : cookie ? (JSON.parse(cookie.toString()) as SessionWithTokenWithoutUser)
       : null;
 
     if (sToken) {

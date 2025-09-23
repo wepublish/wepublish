@@ -53,12 +53,12 @@ export const NavbarWrapper = styled('nav')`
 `;
 
 const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
-  isMenuOpen
-    ? css`
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.contrastText};
-      `
-    : null;
+  isMenuOpen ?
+    css`
+      background-color: ${theme.palette.primary.main};
+      color: ${theme.palette.primary.contrastText};
+    `
+  : null;
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -244,9 +244,9 @@ export function Navbar({
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
   const isMenuOpen =
-    controlledIsMenuOpen !== undefined
-      ? controlledIsMenuOpen
-      : internalIsMenuOpen;
+    controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
+      internalIsMenuOpen
+    );
 
   const toggleMenu = useCallback(() => {
     const newState = !isMenuOpen;

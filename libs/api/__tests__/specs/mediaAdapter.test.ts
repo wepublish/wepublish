@@ -99,9 +99,8 @@ describe('Karma Media Adapter', () => {
       mockedFetch.mockResolvedValue(
         new Response(JSON.stringify(TEST_UPLOAD_IMAGE))
       );
-      const uploadedImage = await karmaMediaAdapter.uploadImage(
-        fileUploadPromise
-      );
+      const uploadedImage =
+        await karmaMediaAdapter.uploadImage(fileUploadPromise);
 
       expect(fetch).toHaveBeenCalledWith(
         new URL(TEST_URL),
@@ -141,9 +140,8 @@ describe('Karma Media Adapter', () => {
       mockedFetch.mockResolvedValue(
         new Response(JSON.stringify(TEST_UPLOAD_IMAGE))
       );
-      const uploadedImage = await karmaMediaAdapter.uploadImageFromArrayBuffer(
-        arrayBufferPromise
-      );
+      const uploadedImage =
+        await karmaMediaAdapter.uploadImageFromArrayBuffer(arrayBufferPromise);
 
       expect(fetch).toHaveBeenCalledWith(
         new URL(TEST_URL),
@@ -229,9 +227,8 @@ describe('Karma Media Adapter with Internal URL', () => {
     mockedFetch.mockResolvedValue(
       new Response(JSON.stringify(TEST_UPLOAD_IMAGE))
     );
-    const uploadedImage = await karmaMediaAdapterInternalURL.uploadImage(
-      fileUploadPromise
-    );
+    const uploadedImage =
+      await karmaMediaAdapterInternalURL.uploadImage(fileUploadPromise);
 
     expect(fetch).toHaveBeenCalledWith(
       new URL(TEST_INTERNAL_URL),

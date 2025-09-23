@@ -41,7 +41,11 @@ export const CountrySelect = forwardRef<
       value={countryOptions.find(({ label }) => label === value) ?? null}
       onChange={(_, value) => onChange(value?.label)}
       options={countryOptions.sort((a, b) =>
-        a.suggested ? (b.suggested ? 0 : -1) : 1
+        a.suggested ?
+          b.suggested ?
+            0
+          : -1
+        : 1
       )}
       autoHighlight
       getOptionLabel={option => option.label}

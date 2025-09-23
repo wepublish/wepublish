@@ -68,9 +68,9 @@ export const CommentRatings = ({
   const callAction = useAsyncAction(setLoading, setError);
 
   const canVote = hasUser || canRateAnonymously;
-  const allUserRatings = hasUser
-    ? userRatings
-    : ratingSystem.answers.flatMap(answer => {
+  const allUserRatings =
+    hasUser ? userRatings : (
+      ratingSystem.answers.flatMap(answer => {
         const value = getAnonymousRate(commentId, answer.id);
 
         if (!value) {
@@ -81,7 +81,8 @@ export const CommentRatings = ({
           answer,
           value,
         };
-      });
+      })
+    );
 
   const rateComment = useCallback(
     async ({ answerId, commentId, value }: RateCommentMutationVariables) =>

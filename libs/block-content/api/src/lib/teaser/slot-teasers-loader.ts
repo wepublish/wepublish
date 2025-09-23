@@ -90,9 +90,9 @@ export class SlotTeasersLoader {
         .filter(slot => slot.type === TeaserSlotType.Autofill).length;
 
       return (
-        (type === TeaserSlotType.Manual
-          ? manualTeaser
-          : autofillTeasers[autofillIndex]) ?? null
+        (type === TeaserSlotType.Manual ?
+          manualTeaser
+        : autofillTeasers[autofillIndex]) ?? null
       );
     });
   }
@@ -128,7 +128,7 @@ export class SlotTeasersLoader {
             imageID: undefined,
             lead: undefined,
             title: undefined,
-          } as ArticleTeaser)
+          }) as ArticleTeaser
       );
 
       this.addLoadedTeaser(...teasers);
@@ -153,7 +153,7 @@ export class SlotTeasersLoader {
             imageID: undefined,
             lead: undefined,
             title: undefined,
-          } as EventTeaser)
+          }) as EventTeaser
       );
       this.addLoadedTeaser(...teasers);
       return teasers;

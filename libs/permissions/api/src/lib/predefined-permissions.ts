@@ -6,7 +6,7 @@ import {
 } from '@wepublish/permissions';
 
 export const addPredefinedPermissions = <
-  PermissionsUserRole extends Pick<UserRole, 'id' | 'permissionIDs'>
+  PermissionsUserRole extends Pick<UserRole, 'id' | 'permissionIDs'>,
 >(
   role: PermissionsUserRole
 ) => {

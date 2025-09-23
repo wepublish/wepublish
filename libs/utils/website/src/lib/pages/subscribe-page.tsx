@@ -61,8 +61,8 @@ export function SubscribePage(props: SubscribePageProps) {
           );
         }
 
-        return preselectedMemberPlan && additionalMemberPlans !== 'all'
-          ? [preselectedMemberPlan]
+        return preselectedMemberPlan && additionalMemberPlans !== 'all' ?
+            [preselectedMemberPlan]
           : parentFiltered;
       }}
       deactivateSubscriptionId={

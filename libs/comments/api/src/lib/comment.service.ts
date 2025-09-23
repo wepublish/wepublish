@@ -238,8 +238,9 @@ export class CommentService {
         },
         userID: session?.user.id,
         authorType,
-        state: canSkipApproval
-          ? CommentState.approved
+        state:
+          canSkipApproval ?
+            CommentState.approved
           : CommentState.pendingApproval,
       },
       include: {
@@ -294,8 +295,9 @@ export class CommentService {
             lead: (lead ?? comment?.revisions.at(-1)?.lead ?? '') as string,
           },
         },
-        state: canSkipApproval
-          ? CommentState.approved
+        state:
+          canSkipApproval ?
+            CommentState.approved
           : CommentState.pendingApproval,
       },
       select: {

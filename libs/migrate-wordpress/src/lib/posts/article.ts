@@ -70,9 +70,8 @@ export async function ensureArticle(props: EnsureArticleProps) {
     imageID: featuredImage ? featuredImage.id : undefined,
   };
 
-  const article = id
-    ? await updateArticle({ id, input })
-    : await createArticle({ input });
+  const article =
+    id ? await updateArticle({ id, input }) : await createArticle({ input });
   return await publishArticle(article.id, createdAt, modifiedAt);
 }
 

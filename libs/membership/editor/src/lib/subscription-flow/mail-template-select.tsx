@@ -58,9 +58,8 @@ export function MailTemplateSelect({
     // No MailTemplate selected previously, must create one
     return client.createSubscriptionInterval({
       variables: {
-        daysAwayFromEnding: isNonUserEvent(event)
-          ? newDaysAwayFromEnding || 0
-          : null,
+        daysAwayFromEnding:
+          isNonUserEvent(event) ? newDaysAwayFromEnding || 0 : null,
         mailTemplateId: value,
         subscriptionFlowId: subscriptionFlow.id,
         event,

@@ -13,8 +13,9 @@ export const getEventSEO = (event: Event) => {
   const image = event.image as FullImageFragment | undefined;
   const startDate = formatISO(new Date(event.startsAt));
   const endDate = event.endsAt ? formatISO(new Date(event.endsAt)) : undefined;
-  const duration = event.endsAt
-    ? formatISODuration(
+  const duration =
+    event.endsAt ?
+      formatISODuration(
         intervalToDuration({
           start: new Date(event.startsAt),
           end: new Date(event.endsAt),
@@ -37,8 +38,9 @@ export const getEventSEO = (event: Event) => {
       keywords: event.tags?.map(tag => tag.tag).join(','),
       eventStatus: event.status,
       location: event.location,
-      image: image
-        ? {
+      image:
+        image ?
+          {
             height: image.height,
             width: image.width,
             representativeOfPage: true,

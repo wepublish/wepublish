@@ -133,9 +133,9 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
             name="countSubscriptionsFrom"
             label={t('crowdfunding.form.countSubscriptionsFrom')}
             dateTime={
-              props.crowdfunding?.countSubscriptionsFrom
-                ? new Date(props.crowdfunding?.countSubscriptionsFrom)
-                : undefined
+              props.crowdfunding?.countSubscriptionsFrom ?
+                new Date(props.crowdfunding?.countSubscriptionsFrom)
+              : undefined
             }
             changeDate={(date: Date) =>
               props.onChange({
@@ -152,9 +152,9 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
             name="countSubscriptionsUntil"
             label={t('crowdfunding.form.countSubscriptionsUntil')}
             dateTime={
-              props.crowdfunding?.countSubscriptionsUntil
-                ? new Date(props.crowdfunding?.countSubscriptionsUntil)
-                : undefined
+              props.crowdfunding?.countSubscriptionsUntil ?
+                new Date(props.crowdfunding?.countSubscriptionsUntil)
+              : undefined
             }
             changeDate={(date: Date) =>
               props.onChange({

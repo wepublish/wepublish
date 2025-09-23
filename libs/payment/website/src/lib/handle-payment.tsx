@@ -34,20 +34,20 @@ export const useSubscribe = (
       ...callbackParams: Parameters<typeof result>
     ) => {
       const [{ data: successPage }, { data: failPage }] = await Promise.all([
-        memberPlan?.successPageId
-          ? fetchPage({
-              variables: {
-                id: memberPlan.successPageId,
-              },
-            })
-          : { data: undefined },
-        memberPlan?.failPageId
-          ? fetchPage({
-              variables: {
-                id: memberPlan.failPageId,
-              },
-            })
-          : { data: undefined },
+        memberPlan?.successPageId ?
+          fetchPage({
+            variables: {
+              id: memberPlan.successPageId,
+            },
+          })
+        : { data: undefined },
+        memberPlan?.failPageId ?
+          fetchPage({
+            variables: {
+              id: memberPlan.failPageId,
+            },
+          })
+        : { data: undefined },
       ]);
 
       const successUrl = relativeToAbsolute(
@@ -62,8 +62,9 @@ export const useSubscribe = (
 
       return result({
         ...callbackParams[0],
-        variables: callbackParams[0]?.variables
-          ? {
+        variables:
+          callbackParams[0]?.variables ?
+            {
               ...callbackParams[0].variables,
               successURL: successUrl,
               failureURL: failUrl,
@@ -79,9 +80,7 @@ export const useSubscribe = (
           });
         },
         onError: error =>
-          (window.location.href = `${failUrl}?error=${encodeURIComponent(
-            error.message
-          )}`),
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
       });
     },
     [fetchPage, result]
@@ -107,20 +106,20 @@ export const usePayInvoice = (
       ...callbackParams: Parameters<typeof result>
     ) => {
       const [{ data: successPage }, { data: failPage }] = await Promise.all([
-        memberPlan?.successPageId
-          ? fetchPage({
-              variables: {
-                id: memberPlan.successPageId,
-              },
-            })
-          : { data: undefined },
-        memberPlan?.failPageId
-          ? fetchPage({
-              variables: {
-                id: memberPlan.failPageId,
-              },
-            })
-          : { data: undefined },
+        memberPlan?.successPageId ?
+          fetchPage({
+            variables: {
+              id: memberPlan.successPageId,
+            },
+          })
+        : { data: undefined },
+        memberPlan?.failPageId ?
+          fetchPage({
+            variables: {
+              id: memberPlan.failPageId,
+            },
+          })
+        : { data: undefined },
       ]);
 
       const successUrl =
@@ -135,8 +134,9 @@ export const usePayInvoice = (
 
       return result({
         ...callbackParams[0],
-        variables: callbackParams[0]?.variables
-          ? {
+        variables:
+          callbackParams[0]?.variables ?
+            {
               ...callbackParams[0].variables,
               successURL: successUrl,
               failureURL: failUrl,
@@ -152,9 +152,7 @@ export const usePayInvoice = (
           });
         },
         onError: error =>
-          (window.location.href = `${failUrl}?error=${encodeURIComponent(
-            error.message
-          )}`),
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
       });
     },
     [fetchPage, result]

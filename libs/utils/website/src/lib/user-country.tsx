@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 
 const fetchUserCountry = (initArgs?: Parameters<typeof fetch>[1]) => {
   const url =
-    process.env.NODE_ENV === 'production'
-      ? `/cdn-cgi/trace`
-      : 'https://cloudflare-dns.com/cdn-cgi/trace';
+    process.env.NODE_ENV === 'production' ?
+      `/cdn-cgi/trace`
+    : 'https://cloudflare-dns.com/cdn-cgi/trace';
 
   return fetch(url, initArgs).then(async res => {
     const text = await res.text();

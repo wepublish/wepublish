@@ -313,9 +313,9 @@ export class ArticleService {
       article.publishedAt && article.publishedAt > publishedAt;
 
     const articlePublishedAt =
-      articlePublishedAtInTheFuture || newPublishedAtEarlier
-        ? publishedAt
-        : article.publishedAt ?? publishedAt;
+      articlePublishedAtInTheFuture || newPublishedAtEarlier ? publishedAt : (
+        (article.publishedAt ?? publishedAt)
+      );
 
     return this.prisma.article.update({
       where: {
@@ -756,9 +756,8 @@ const createPublishedFilter = (
 ): Prisma.ArticleWhereInput => {
   if (filter?.published != null) {
     return {
-      publishedAt: filter.published
-        ? { lte: new Date() }
-        : { not: { lte: new Date() } },
+      publishedAt:
+        filter.published ? { lte: new Date() } : { not: { lte: new Date() } },
     };
   }
 
@@ -789,9 +788,8 @@ const createPendingFilter = (
     return {
       revisions: {
         some: {
-          publishedAt: filter.pending
-            ? { gt: new Date() }
-            : { not: { gt: new Date() } },
+          publishedAt:
+            filter.pending ? { gt: new Date() } : { not: { gt: new Date() } },
         },
       },
     };

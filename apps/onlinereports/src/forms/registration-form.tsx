@@ -18,7 +18,7 @@ export const SubscribeCheckboxWrapper = styled('div')`
 `;
 
 export function OnlineReportsRegistrationForm<
-  T extends Exclude<BuilderUserFormFields, 'flair'>
+  T extends Exclude<BuilderUserFormFields, 'flair'>,
 >(props: PropsWithChildren<BuilderRegistrationFormProps<T>>) {
   const { push } = useRouter();
   const [formValues, setFormValues] = useState<

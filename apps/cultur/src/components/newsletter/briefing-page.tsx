@@ -98,8 +98,9 @@ export default function BriefingPage(props: BriefingPageProps) {
         <section
           className="readytext"
           style={{
-            background: props.readyBackgroundImage
-              ? `url(${props.readyBackgroundImage})`
+            background:
+              props.readyBackgroundImage ?
+                `url(${props.readyBackgroundImage})`
               : props.readyBackgroundColor,
           }}
         >

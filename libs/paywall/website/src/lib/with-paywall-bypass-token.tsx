@@ -3,7 +3,7 @@ import { storeBypassToken } from './paywall-bypass';
 
 export const withPaywallBypassToken = <
   // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object
+  P extends object,
 >(
   ControlledComponent: ComponentType<P>
 ) =>

@@ -16,8 +16,9 @@ export const AddMetadata = <K = string, V extends unknown[] = []>(
       metadataKey,
       descriptor?.value ?? target
     );
-    const value = existingValue
-      ? uniq([...existingValue, ...metadataValue])
+    const value =
+      existingValue ?
+        uniq([...existingValue, ...metadataValue])
       : metadataValue;
 
     if (descriptor) {

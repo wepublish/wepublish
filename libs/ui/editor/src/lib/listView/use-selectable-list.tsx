@@ -9,7 +9,7 @@ export function useSelectableList({ ids }: UseSelectableListProps) {
   const allSelected = ids && selectedItems.length === ids.length;
   const someSelected = ids && selectedItems.length > 0;
 
-  const toggleAll = () => setSelectedItems(someSelected ? [] : ids ?? []);
+  const toggleAll = () => setSelectedItems(someSelected ? [] : (ids ?? []));
 
   const selectItem = (id: string) => {
     setSelectedItems([...new Set([...selectedItems, id])]);

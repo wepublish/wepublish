@@ -125,13 +125,13 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
       type: GraphQLImage,
       resolve: createProxyingResolver(
         ({ userImageID }, _, { prisma: { image } }) =>
-          userImageID
-            ? image.findUnique({
-                where: {
-                  id: userImageID,
-                },
-              })
-            : null
+          userImageID ?
+            image.findUnique({
+              where: {
+                id: userImageID,
+              },
+            })
+          : null
       ),
     },
 
@@ -220,13 +220,13 @@ export const GraphQLPublicUser = new GraphQLObjectType<
       type: GraphQLImage,
       resolve: createProxyingResolver(
         ({ userImageID }, _, { prisma: { image } }) =>
-          userImageID
-            ? image.findUnique({
-                where: {
-                  id: userImageID,
-                },
-              })
-            : null
+          userImageID ?
+            image.findUnique({
+              where: {
+                id: userImageID,
+              },
+            })
+          : null
       ),
     },
     properties: {
@@ -247,8 +247,8 @@ export const GraphQLPublicUser = new GraphQLObjectType<
           return [];
         }
 
-        return session
-          ? uniq(session.roles.flatMap(role => role.permissionIDs))
+        return session ?
+            uniq(session.roles.flatMap(role => role.permissionIDs))
           : [];
       }),
     },

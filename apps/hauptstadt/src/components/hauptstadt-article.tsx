@@ -143,19 +143,15 @@ export const HauptstadtArticleMeta = ({
           LinkComponent={Link}
           href="#comments"
           startIcon={
-            article.disableComments ? (
+            article.disableComments ?
               <FaCommentSlash size={16} />
-            ) : (
-              <FaRegComment size={16} />
-            )
+            : <FaRegComment size={16} />
           }
         >
           <MetaWrapperTypography variant="caption">
-            {!commentCount
-              ? 'Keine Beiträge'
-              : `${commentCount} ${
-                  commentCount === 1 ? 'Beitrag' : 'Beiträge'
-                }`}
+            {!commentCount ?
+              'Keine Beiträge'
+            : `${commentCount} ${commentCount === 1 ? 'Beitrag' : 'Beiträge'}`}
           </MetaWrapperTypography>
         </MetaWrapperButton>
 

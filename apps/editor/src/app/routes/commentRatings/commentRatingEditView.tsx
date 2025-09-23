@@ -87,12 +87,12 @@ function CommentRatingEditView() {
     useCreateRatingSystemAnswerMutation({
       onCompleted: ({ createRatingSystemAnswer }) => {
         setRatingSystem(old =>
-          old
-            ? {
-                ...old,
-                answers: [...old.answers, createRatingSystemAnswer],
-              }
-            : null
+          old ?
+            {
+              ...old,
+              answers: [...old.answers, createRatingSystemAnswer],
+            }
+          : null
         );
       },
     });
@@ -102,14 +102,14 @@ function CommentRatingEditView() {
       onError: showErrors,
       onCompleted: data => {
         setRatingSystem(old =>
-          old
-            ? {
-                ...old,
-                answers: old.answers.filter(
-                  answer => answer.id !== data.deleteRatingSystemAnswer.id
-                ),
-              }
-            : null
+          old ?
+            {
+              ...old,
+              answers: old.answers.filter(
+                answer => answer.id !== data.deleteRatingSystemAnswer.id
+              ),
+            }
+          : null
         );
       },
     });
@@ -138,14 +138,14 @@ function CommentRatingEditView() {
       type: RatingSystemType
     ) => {
       setRatingSystem(old =>
-        old
-          ? {
-              ...old,
-              answers: old.answers.map(a =>
-                answerId === a.id ? { ...a, answer, type } : a
-              ),
-            }
-          : null
+        old ?
+          {
+            ...old,
+            answers: old.answers.map(a =>
+              answerId === a.id ? { ...a, answer, type } : a
+            ),
+          }
+        : null
       );
     },
     [setRatingSystem]
@@ -198,13 +198,11 @@ function CommentRatingEditView() {
                 })
               }
             >
-              {isLoading ? (
+              {isLoading ?
                 <P>
                   <MdReplay /> {t('comments.ratingEdit.loading')}
                 </P>
-              ) : (
-                t('save')
-              )}
+              : t('save')}
             </RIconButton>
           </ListViewActions>
         )}

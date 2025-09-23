@@ -23,9 +23,7 @@ export function YouTubeVideoEmbed({ videoID }: YouTubeVideoEmbedProps) {
     <YouTubeEmbed>
       {videoID && (
         <Iframe
-          src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(
-            videoID
-          )}`}
+          src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoID)}`}
           allowFullScreen
         />
       )}

@@ -397,15 +397,15 @@ export function TeaserContent({
   return (
     <>
       <TeaserContentWrapper>
-        {image ? (
+        {image ?
           <TeaserImage
             src={
-              numColumns === 1 ? image.column1URL ?? '' : image.column6URL ?? ''
+              numColumns === 1 ?
+                (image.column1URL ?? '')
+              : (image.column6URL ?? '')
             }
           />
-        ) : (
-          <PlaceholderImage />
-        )}
+        : <PlaceholderImage />}
       </TeaserContentWrapper>
 
       <OverlayComponent>

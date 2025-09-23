@@ -74,9 +74,7 @@ export function InstagramPostEmbed({ postID }: InstagramPostEmbedProps) {
           className="instagram-media"
           data-width="100%"
           data-instgrm-captioned
-          data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(
-            postID
-          )}/`}
+          data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(postID)}/`}
           data-instgrm-version="12"
         />
       )}

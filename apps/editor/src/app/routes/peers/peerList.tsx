@@ -204,9 +204,9 @@ function PeerList() {
                     });
                   }}
                 >
-                  {isDisabled
-                    ? t('peerList.overview.enable')
-                    : t('peerList.overview.disable')}
+                  {isDisabled ?
+                    t('peerList.overview.enable')
+                  : t('peerList.overview.disable')}
                 </IconButton>
               </PermissionControl>
             </FlexboxGrid.Item>
@@ -309,11 +309,11 @@ function PeerList() {
         </PermissionControl>
       </ListViewContainer>
       <MarginTop>
-        {peerListData?.peers?.length ? (
+        {peerListData?.peers?.length ?
           <List>{peers}</List>
-        ) : !isPeerListLoading ? (
+        : !isPeerListLoading ?
           <p>{t('peerList.overview.noPeersFound')}</p>
-        ) : null}
+        : null}
       </MarginTop>
 
       <Drawer
@@ -357,9 +357,9 @@ function PeerList() {
                   closable
                   duration={2000}
                 >
-                  {editID
-                    ? t('peerList.panels.peerUpdated')
-                    : t('peerList.panels.peerCreated')}
+                  {editID ?
+                    t('peerList.panels.peerUpdated')
+                  : t('peerList.panels.peerCreated')}
                 </Message>
               );
               navigate('/peering');

@@ -336,8 +336,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
    * MEMOS
    */
   const isDeactivated = useMemo<boolean>(() => {
-    return deactivation?.date
-      ? new Date(deactivation.date) < new Date()
+    return deactivation?.date ?
+        new Date(deactivation.date) < new Date()
       : false;
   }, [deactivation?.date]);
 
@@ -586,9 +586,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
               <Link to={goBackLink}>
                 <MdChevronLeft />
               </Link>
-              {id
-                ? t('userSubscriptionEdit.editTitle')
-                : t('userSubscriptionEdit.createTitle')}
+              {id ?
+                t('userSubscriptionEdit.editTitle')
+              : t('userSubscriptionEdit.createTitle')}
             </h2>
           </ListViewHeader>
           <Actions>
@@ -636,9 +636,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                     style={{ marginBottom: '12px' }}
                   >
                     {t(
-                      new Date(deactivation.date) < new Date()
-                        ? 'userSubscriptionEdit.deactivation.isDeactivated'
-                        : 'userSubscriptionEdit.deactivation.willBeDeactivated',
+                      new Date(deactivation.date) < new Date() ?
+                        'userSubscriptionEdit.deactivation.isDeactivated'
+                      : 'userSubscriptionEdit.deactivation.willBeDeactivated',
                       {
                         date: new Date(deactivation.date),
                         reason: t(
@@ -654,9 +654,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                 <RPanel
                   bordered
                   header={
-                    id
-                      ? t('userSubscriptionEdit.editTitle')
-                      : t('userSubscriptionEdit.createTitle')
+                    id ?
+                      t('userSubscriptionEdit.editTitle')
+                    : t('userSubscriptionEdit.createTitle')
                   }
                 >
                   <Group controlId="memberPlan">
@@ -665,7 +665,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         {/* user */}
                         <Col xs={12}>
                           <ControlLabel>
-                            {user?.id ? (
+                            {user?.id ?
                               <Link
                                 to={`/users/edit/${user.id}`}
                                 target="_blank"
@@ -675,13 +675,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 )}{' '}
                                 <MdOpenInNew style={{ marginLeft: '4px' }} />
                               </Link>
-                            ) : (
-                              <p>
+                            : <p>
                                 {toggleRequiredLabel(
                                   t('userSubscriptionEdit.selectUser')
                                 )}
                               </p>
-                            )}
+                            }
                           </ControlLabel>
 
                           <UserSearch
@@ -695,7 +694,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                         {/* member plan */}
                         <Col xs={12}>
                           <ControlLabel>
-                            {memberPlan?.id ? (
+                            {memberPlan?.id ?
                               <Link
                                 to={`/memberplans/edit/${memberPlan?.id}`}
                                 target="_blank"
@@ -705,13 +704,12 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                                 )}
                                 <MdOpenInNew style={{ marginLeft: '4px' }} />
                               </Link>
-                            ) : (
-                              <p>
+                            : <p>
                                 {toggleRequiredLabel(
                                   t('userSubscriptionEdit.selectMemberPlan')
                                 )}
                               </p>
-                            )}
+                            }
                           </ControlLabel>
                           <Control
                             block
@@ -859,9 +857,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             }
                             onChange={value =>
                               setAutoRenew(() =>
-                                checkTrialSubscription(extendable, value)
-                                  ? value
-                                  : autoRenew
+                                checkTrialSubscription(extendable, value) ?
+                                  value
+                                : autoRenew
                               )
                             }
                           />
@@ -972,9 +970,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           checked={extendable}
                           onChange={updatedExtendable =>
                             setExtendable(() =>
-                              checkTrialSubscription(updatedExtendable)
-                                ? updatedExtendable
-                                : extendable
+                              checkTrialSubscription(updatedExtendable) ?
+                                updatedExtendable
+                              : extendable
                             )
                           }
                         />

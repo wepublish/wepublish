@@ -89,9 +89,10 @@ export const Comment = ({
 
   const flair = user?.flair || source;
   const image = user?.image ?? guestUserImage;
-  const name = user
-    ? user.firstName
-      ? `${user.firstName} ${user.name}`
+  const name =
+    user ?
+      user.firstName ?
+        `${user.firstName} ${user.name}`
       : user.name
     : guestUsername;
 

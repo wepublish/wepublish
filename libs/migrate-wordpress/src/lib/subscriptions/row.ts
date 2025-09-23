@@ -82,11 +82,9 @@ export function extractDate(dateString: string) {
   const [day, month, yearString] = dateString.split('.');
 
   const year =
-    +yearString > 1900
-      ? +yearString
-      : +yearString > 15
-      ? 1900 + +yearString
-      : 2000 + +yearString;
+    +yearString > 1900 ? +yearString
+    : +yearString > 15 ? 1900 + +yearString
+    : 2000 + +yearString;
   const date = new Date();
   date.setUTCDate(+day);
   date.setUTCMonth(+month - 1);

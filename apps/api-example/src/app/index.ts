@@ -102,9 +102,9 @@ export async function runServer({
   });
 
   const urlAdapter =
-    config.general.urlAdapter === 'hauptstadt'
-      ? new HauptstadtURLAdapter(websiteURL)
-      : new URLAdapter(websiteURL);
+    config.general.urlAdapter === 'hauptstadt' ?
+      new HauptstadtURLAdapter(websiteURL)
+    : new URLAdapter(websiteURL);
 
   /**
    * Challenge
@@ -137,9 +137,8 @@ export async function runServer({
   /**
    * Load session time to live (TTL)
    */
-  const sessionTTLDays = config.general.sessionTTLDays
-    ? config.general.sessionTTLDays
-    : 7;
+  const sessionTTLDays =
+    config.general.sessionTTLDays ? config.general.sessionTTLDays : 7;
   const sessionTTL = sessionTTLDays * MS_PER_DAY;
 
   const server = new WepublishServer(
@@ -158,11 +157,13 @@ export async function runServer({
       },
       paymentProviders,
       urlAdapter,
-      playground: config.general.apolloPlayground
-        ? config.general.apolloPlayground
+      playground:
+        config.general.apolloPlayground ?
+          config.general.apolloPlayground
         : false,
-      introspection: config.general.apolloIntrospection
-        ? config.general.apolloIntrospection
+      introspection:
+        config.general.apolloIntrospection ?
+          config.general.apolloIntrospection
         : false,
       logger,
       challenge,

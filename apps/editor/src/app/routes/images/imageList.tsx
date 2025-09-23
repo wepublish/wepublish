@@ -272,20 +272,19 @@ function ImageList() {
       </ButtonGroup>
 
       <TableWrapper>
-        {layout === ImageListLayout.List ? (
+        {layout === ImageListLayout.List ?
           <ImageListView
             images={images}
             isLoading={isLoading}
             setConfirmationDialogOpen={setConfirmationDialogOpen}
             setCurrentImage={setCurrentImage}
           />
-        ) : (
-          <ImageGridView
+        : <ImageGridView
             images={images}
             setConfirmationDialogOpen={setConfirmationDialogOpen}
             setCurrentImage={setCurrentImage}
           />
-        )}
+        }
 
         <Pagination
           limit={limit}
@@ -348,9 +347,8 @@ function ImageList() {
 
         <Modal.Body>
           <p>
-            {`${currentImage?.filename || t('images.panels.untitled')}${
-              currentImage?.extension
-            }` || '-'}
+            {`${currentImage?.filename || t('images.panels.untitled')}${currentImage?.extension}` ||
+              '-'}
           </p>
           <p>{currentImage?.title || t('images.panels.untitled')}</p>
           <p>{currentImage?.description || '-'}</p>
@@ -509,9 +507,9 @@ const ImageListView = ({
         <RCell className={'displayThreeLinesOnly'}>
           {(rowData: RowDataType<FullImageFragment>) => (
             <p className={'displayThreeLinesOnly'}>
-              {rowData.description
-                ? rowData.description
-                : t('images.overview.noDescription')}
+              {rowData.description ?
+                rowData.description
+              : t('images.overview.noDescription')}
             </p>
           )}
         </RCell>

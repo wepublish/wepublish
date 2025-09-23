@@ -192,9 +192,9 @@ export function SelectEventPanel({
                       value={eventFilter?.includes(rowData.id) ? 0 : 1}
                       onChange={shouldInclude =>
                         setEventFilter(old =>
-                          shouldInclude
-                            ? [...(old ?? []), rowData.id]
-                            : old?.filter(id => id !== rowData.id)
+                          shouldInclude ?
+                            [...(old ?? []), rowData.id]
+                          : old?.filter(id => id !== rowData.id)
                         )
                       }
                     />

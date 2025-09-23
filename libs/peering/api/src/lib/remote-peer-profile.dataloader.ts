@@ -43,22 +43,25 @@ export class RemotePeerProfileDataloaderService extends DataLoaderService<Remote
         return {
           id: peerId,
           ...profile.peerProfile,
-          logo: profile.peerProfile.logo
-            ? {
+          logo:
+            profile.peerProfile.logo ?
+              {
                 ...profile.peerProfile.logo,
                 createdAt: new Date(profile.peerProfile.logo.createdAt),
                 modifiedAt: new Date(profile.peerProfile.logo.modifiedAt),
               }
             : profile.peerProfile.logo,
-          squareLogo: profile.peerProfile.squareLogo
-            ? {
+          squareLogo:
+            profile.peerProfile.squareLogo ?
+              {
                 ...profile.peerProfile.squareLogo,
                 createdAt: new Date(profile.peerProfile.squareLogo.createdAt),
                 modifiedAt: new Date(profile.peerProfile.squareLogo.modifiedAt),
               }
             : profile.peerProfile.squareLogo,
-          callToActionImage: profile.peerProfile.callToActionImage
-            ? {
+          callToActionImage:
+            profile.peerProfile.callToActionImage ?
+              {
                 ...profile.peerProfile.callToActionImage,
                 createdAt: new Date(
                   profile.peerProfile.callToActionImage.createdAt

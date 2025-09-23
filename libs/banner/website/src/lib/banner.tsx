@@ -116,9 +116,12 @@ export const Banner = ({
       return;
     }
 
-    const timer = setTimeout(() => {
-      setShowBanner(true);
-    }, (data?.primaryBanner?.delay ?? 0) * 1000);
+    const timer = setTimeout(
+      () => {
+        setShowBanner(true);
+      },
+      (data?.primaryBanner?.delay ?? 0) * 1000
+    );
 
     return () => clearTimeout(timer);
   }, [data?.primaryBanner]);
@@ -212,9 +215,9 @@ export const Banner = ({
               {data?.primaryBanner.actions?.map(a => (
                 <Button
                   color={
-                    a.role === BannerActionRole.Primary
-                      ? 'primary'
-                      : 'secondary'
+                    a.role === BannerActionRole.Primary ?
+                      'primary'
+                    : 'secondary'
                   }
                   data-role={a.role}
                   LinkComponent={Link}

@@ -29,10 +29,9 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(
         return resultItem;
       }
 
-      const results = Array.isArray(resultItem)
-        ? resultItem
-        : Array.isArray(resultItem.nodes)
-        ? resultItem.nodes
+      const results =
+        Array.isArray(resultItem) ? resultItem
+        : Array.isArray(resultItem.nodes) ? resultItem.nodes
         : [resultItem];
 
       for (const result of results) {

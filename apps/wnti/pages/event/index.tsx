@@ -61,7 +61,7 @@ export default function EventList() {
         },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
-      } satisfies Partial<EventListQueryVariables>),
+      }) satisfies Partial<EventListQueryVariables>,
     [from, page, to, upcomingOnly]
   );
 

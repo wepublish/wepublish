@@ -55,8 +55,9 @@ export function getSettings(): ClientSettings {
 
     const settingsJson = document.getElementById(ElementID.Settings);
 
-    settings = settingsJson
-      ? JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
+    settings =
+      settingsJson ?
+        JSON.parse(document.getElementById(ElementID.Settings)!.textContent!)
       : defaultSettings;
   }
 
@@ -84,7 +85,7 @@ export function getApiClientV2() {
 
 export const createWithV2ApiClient = <
   // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object
+  P extends object,
 >(
   ControlledComponent: ComponentType<P>
 ) =>

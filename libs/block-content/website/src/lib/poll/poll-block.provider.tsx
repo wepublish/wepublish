@@ -12,14 +12,14 @@ import { PollBlockContext } from './poll-block.context';
 import { FetchResult, MutationFunctionOptions } from '@apollo/client';
 
 const getAnonymousVote = (pollId: string): string | null =>
-  typeof localStorage !== 'undefined'
-    ? localStorage.getItem(`poll-vote:${pollId}`)
-    : null;
+  typeof localStorage !== 'undefined' ?
+    localStorage.getItem(`poll-vote:${pollId}`)
+  : null;
 
 const setAnonymousVote = (pollId: string, answerId: string) =>
-  typeof localStorage !== 'undefined'
-    ? localStorage.setItem(`poll-vote:${pollId}`, answerId)
-    : null;
+  typeof localStorage !== 'undefined' ?
+    localStorage.setItem(`poll-vote:${pollId}`, answerId)
+  : null;
 
 export function PollBlockProvider({ children }: PropsWithChildren) {
   const { hasUser } = useUser();

@@ -98,11 +98,12 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
               width: iframe.width ? parseInt(iframe.width) : undefined,
               height: iframe.height ? parseInt(iframe.height) : undefined,
               styleCustom:
-                !!iframe.style && !!iframe.style.cssText
-                  ? iframe.style.cssText
-                  : '',
-              sandbox: iframe.sandbox
-                ? flattenDOMTokenList(iframe.sandbox)
+                !!iframe.style && !!iframe.style.cssText ?
+                  iframe.style.cssText
+                : '',
+              sandbox:
+                iframe.sandbox ?
+                  flattenDOMTokenList(iframe.sandbox)
                 : undefined,
             };
 
@@ -210,14 +211,12 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       const hasWidth = !!embed.width;
       const hasStyles = !!embed.styleCustom;
       const hasSandbox = !!embed.sandbox;
-      return embed.url
-        ? `<iframe src="${embed.url}"${
-            hasTitle ? ` title="${embed.title}"` : ''
-          }${hasWidth ? ` width="${embed.width}"` : ''}${
-            hasHeight ? ` height="${embed.height}"` : ''
-          }${hasStyles ? ` style="${embed.styleCustom}"` : ''}${
-            hasSandbox ? ` sandbox="${embed.sandbox}"` : ''
-          }></iframe>`
+      return embed.url ?
+          `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
+            hasWidth ? ` width="${embed.width}"` : ''
+          }${hasHeight ? ` height="${embed.height}"` : ''}${
+            hasStyles ? ` style="${embed.styleCustom}"` : ''
+          }${hasSandbox ? ` sandbox="${embed.sandbox}"` : ''}></iframe>`
         : '';
     }
   }

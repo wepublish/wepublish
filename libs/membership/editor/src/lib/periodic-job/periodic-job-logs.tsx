@@ -101,9 +101,9 @@ export function PeriodicJobsLog() {
           severity={getSeverity(periodicJob)}
           variant={getSeverity(periodicJob) === 'error' ? 'filled' : 'standard'}
           icon={
-            getSeverity(periodicJob) === 'info' ? (
+            getSeverity(periodicJob) === 'info' ?
               <MdOutlineHourglassEmpty />
-            ) : undefined
+            : undefined
           }
         >
           <AlertTitle>

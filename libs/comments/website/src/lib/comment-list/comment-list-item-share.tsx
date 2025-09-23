@@ -34,9 +34,9 @@ export const CommentListItemShare = ({
 }: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    !forceNonSystemShare && navigator.share
-      ? navigator.share({ title, url })
-      : setAnchorEl(event.currentTarget);
+    !forceNonSystemShare && navigator.share ?
+      navigator.share({ title, url })
+    : setAnchorEl(event.currentTarget);
   };
 
   const handleClosePopover = () => {
@@ -49,9 +49,9 @@ export const CommentListItemShare = ({
   };
 
   const handleShareByEmail = () => {
-    const emailShareUrl = `mailto:?subject=${encodeURIComponent(
-      title
-    )}&body=${encodeURIComponent(url)}`;
+    const emailShareUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(
+      url
+    )}`;
     window.location.href = emailShareUrl;
     handleClosePopover();
   };
@@ -68,23 +68,19 @@ export const CommentListItemShare = ({
       color: '#000',
     },
     {
-      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(
-        title
-      )}%20${encodeURIComponent(url)}`,
+      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%20${encodeURIComponent(
+        url
+      )}`,
       icon: <MdWhatsapp size="24" />,
       color: '#25D366',
     },
     {
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
-      )}`,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       icon: <MdFacebook size="24" />,
       color: '#3B5998',
     },
     {
-      url: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-        url
-      )}`,
+      url: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}`,
       icon: <BsLinkedin size="24" />,
       color: '#0077B5',
     },
@@ -124,7 +120,7 @@ export const CommentListItemShare = ({
       >
         <CommentListItemShareOptions>
           {shareOptions.map((option, index) =>
-            option.url ? (
+            option.url ?
               <IconButton
                 key={index}
                 component="a"
@@ -136,15 +132,13 @@ export const CommentListItemShare = ({
               >
                 {option.icon}
               </IconButton>
-            ) : (
-              <IconButton
+            : <IconButton
                 key={index}
                 style={{ color: option.color, ...iconStyle }}
                 onClick={option.action}
               >
                 {option.icon}
               </IconButton>
-            )
           )}
         </CommentListItemShareOptions>
       </Popover>

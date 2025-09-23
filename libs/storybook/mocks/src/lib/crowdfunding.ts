@@ -15,4 +15,4 @@ export const mockCrowdfunding = () =>
       amount: 100000 * 100,
       progress: 73,
     },
-  } as CrowdfundingWithActiveGoal);
+  }) as CrowdfundingWithActiveGoal;

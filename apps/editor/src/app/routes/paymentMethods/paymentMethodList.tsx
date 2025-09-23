@@ -122,9 +122,9 @@ function PaymentMethodList() {
             <HeaderCell>{''}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) =>
-                hasBrokenPaymentProvider(rowData as FullPaymentMethodFragment)
-                  ? `✅`
-                  : `❌`
+                hasBrokenPaymentProvider(rowData as FullPaymentMethodFragment) ?
+                  `✅`
+                : `❌`
               }
             </RCell>
           </Column>

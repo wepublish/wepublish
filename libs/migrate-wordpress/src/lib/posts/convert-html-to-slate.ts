@@ -38,10 +38,9 @@ const ELEMENT_TAGS: Record<
   TD: () => ({ type: BlockFormat.TableCell }),
   // TH: () => ({ type: 'table_header_cell' }),
   IMG: el => {
-    const title = el.getAttribute('alt')
-      ? el.getAttribute('alt')
-      : el.getAttribute('title')
-      ? el.getAttribute('title')
+    const title =
+      el.getAttribute('alt') ? el.getAttribute('alt')
+      : el.getAttribute('title') ? el.getAttribute('title')
       : '';
     return {
       text: title,
@@ -90,13 +89,13 @@ const TEXT_TAGS: Record<
 function deserialize<
   T extends {
     Node: typeof window.Node;
-  }
+  },
 >(el: Node, global: T): string | ChildNode[] | Descendant[];
 
 function deserialize<
   T extends {
     Node: typeof window.Node;
-  }
+  },
 >(el: Node, global: T) {
   if (el.nodeType === 3) {
     return el.textContent?.replace(/^\n/gm, '');
@@ -207,19 +206,19 @@ function deserialize<
       }
       // if TR is empty, insert a cell with a paragraph to ensure selection can be placed inside
       const modifiedChildren =
-        (el as HTMLTableRowElement).cells.length === 0
-          ? [
-              {
-                type: BlockFormat.TableCell,
-                children: [
-                  {
-                    type: BlockFormat.Paragraph,
-                    children: [{ text: el.textContent ? el.textContent : '' }],
-                  },
-                ],
-              },
-            ]
-          : children;
+        (el as HTMLTableRowElement).cells.length === 0 ?
+          [
+            {
+              type: BlockFormat.TableCell,
+              children: [
+                {
+                  type: BlockFormat.Paragraph,
+                  children: [{ text: el.textContent ? el.textContent : '' }],
+                },
+              ],
+            },
+          ]
+        : children;
       return jsx('element', attrs, modifiedChildren);
     } else if (nodeName === 'TD' || nodeName === 'TH') {
       // if TD or TH is empty, insert a paragraph to ensure selection can be placed inside
@@ -293,7 +292,7 @@ function deserialize<
       if (isChildNode(child, global)) return child;
 
       if (SlateElement.isElement(child) && !SlateText.isText(child)) {
-        child.children = child.children.map(c => ({ ...c, ...attrs } as any));
+        child.children = child.children.map(c => ({ ...c, ...attrs }) as any);
         return child;
       }
 
@@ -316,8 +315,8 @@ function normalizeSafariSpaceSpans(htmlString: string) {
   return htmlString.replace(
     /<span(?: class="Apple-converted-space"|)>(\s+)<\/span>/g,
     (_, spaces) => {
-      return spaces.length === 1
-        ? ' '
+      return spaces.length === 1 ?
+          ' '
         : Array(spaces.length + 1)
             .join('\u00A0 ')
             .substring(0, spaces.length + 1);

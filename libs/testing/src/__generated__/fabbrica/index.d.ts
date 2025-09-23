@@ -148,7 +148,7 @@ type MetadataPropertyFactoryDefineOptions = {
   };
 };
 type MetadataPropertyTraitKeys<
-  TOptions extends MetadataPropertyFactoryDefineOptions
+  TOptions extends MetadataPropertyFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface MetadataPropertyFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'MetadataProperty';
@@ -173,7 +173,8 @@ export interface MetadataPropertyFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<MetadataProperty, 'id'>>;
 }
 export interface MetadataPropertyFactoryInterface<
-  TOptions extends MetadataPropertyFactoryDefineOptions = MetadataPropertyFactoryDefineOptions
+  TOptions extends
+    MetadataPropertyFactoryDefineOptions = MetadataPropertyFactoryDefineOptions,
 > extends MetadataPropertyFactoryInterfaceWithoutTraits {
   use(
     name: MetadataPropertyTraitKeys<TOptions>,
@@ -187,7 +188,7 @@ export interface MetadataPropertyFactoryInterface<
  * @returns factory {@link MetadataPropertyFactoryInterface}
  */
 export declare function defineMetadataPropertyFactory<
-  TOptions extends MetadataPropertyFactoryDefineOptions
+  TOptions extends MetadataPropertyFactoryDefineOptions,
 >(options?: TOptions): MetadataPropertyFactoryInterface<TOptions>;
 type ArticleRevisionimageFactory = {
   _factoryFor: 'Image';
@@ -256,7 +257,7 @@ type ArticleRevisionFactoryDefineOptions = {
   };
 };
 type ArticleRevisionTraitKeys<
-  TOptions extends ArticleRevisionFactoryDefineOptions
+  TOptions extends ArticleRevisionFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface ArticleRevisionFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleRevision';
@@ -281,7 +282,8 @@ export interface ArticleRevisionFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<ArticleRevision, 'id'>>;
 }
 export interface ArticleRevisionFactoryInterface<
-  TOptions extends ArticleRevisionFactoryDefineOptions = ArticleRevisionFactoryDefineOptions
+  TOptions extends
+    ArticleRevisionFactoryDefineOptions = ArticleRevisionFactoryDefineOptions,
 > extends ArticleRevisionFactoryInterfaceWithoutTraits {
   use(
     name: ArticleRevisionTraitKeys<TOptions>,
@@ -295,7 +297,7 @@ export interface ArticleRevisionFactoryInterface<
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
 export declare function defineArticleRevisionFactory<
-  TOptions extends ArticleRevisionFactoryDefineOptions
+  TOptions extends ArticleRevisionFactoryDefineOptions,
 >(options: TOptions): ArticleRevisionFactoryInterface<TOptions>;
 type ArticleRevisionAuthorrevisionFactory = {
   _factoryFor: 'ArticleRevision';
@@ -332,7 +334,7 @@ type ArticleRevisionAuthorFactoryDefineOptions = {
   };
 };
 type ArticleRevisionAuthorTraitKeys<
-  TOptions extends ArticleRevisionAuthorFactoryDefineOptions
+  TOptions extends ArticleRevisionAuthorFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface ArticleRevisionAuthorFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleRevisionAuthor';
@@ -363,7 +365,8 @@ export interface ArticleRevisionAuthorFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<ArticleRevisionAuthor, 'revisionId' | 'authorId'>>;
 }
 export interface ArticleRevisionAuthorFactoryInterface<
-  TOptions extends ArticleRevisionAuthorFactoryDefineOptions = ArticleRevisionAuthorFactoryDefineOptions
+  TOptions extends
+    ArticleRevisionAuthorFactoryDefineOptions = ArticleRevisionAuthorFactoryDefineOptions,
 > extends ArticleRevisionAuthorFactoryInterfaceWithoutTraits {
   use(
     name: ArticleRevisionAuthorTraitKeys<TOptions>,
@@ -377,7 +380,7 @@ export interface ArticleRevisionAuthorFactoryInterface<
  * @returns factory {@link ArticleRevisionAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionAuthorFactory<
-  TOptions extends ArticleRevisionAuthorFactoryDefineOptions
+  TOptions extends ArticleRevisionAuthorFactoryDefineOptions,
 >(options: TOptions): ArticleRevisionAuthorFactoryInterface<TOptions>;
 type ArticleRevisionSocialMediaAuthorrevisionFactory = {
   _factoryFor: 'ArticleRevision';
@@ -414,7 +417,7 @@ type ArticleRevisionSocialMediaAuthorFactoryDefineOptions = {
   };
 };
 type ArticleRevisionSocialMediaAuthorTraitKeys<
-  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions
+  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleRevisionSocialMediaAuthor';
@@ -447,7 +450,8 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits {
   >;
 }
 export interface ArticleRevisionSocialMediaAuthorFactoryInterface<
-  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions = ArticleRevisionSocialMediaAuthorFactoryDefineOptions
+  TOptions extends
+    ArticleRevisionSocialMediaAuthorFactoryDefineOptions = ArticleRevisionSocialMediaAuthorFactoryDefineOptions,
 > extends ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits {
   use(
     name: ArticleRevisionSocialMediaAuthorTraitKeys<TOptions>,
@@ -461,7 +465,7 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterface<
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionSocialMediaAuthorFactory<
-  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions
+  TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions,
 >(
   options: TOptions
 ): ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions>;
@@ -519,7 +523,7 @@ export interface ArticleFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Article, 'id'>>;
 }
 export interface ArticleFactoryInterface<
-  TOptions extends ArticleFactoryDefineOptions = ArticleFactoryDefineOptions
+  TOptions extends ArticleFactoryDefineOptions = ArticleFactoryDefineOptions,
 > extends ArticleFactoryInterfaceWithoutTraits {
   use(
     name: ArticleTraitKeys<TOptions>,
@@ -533,7 +537,7 @@ export interface ArticleFactoryInterface<
  * @returns factory {@link ArticleFactoryInterface}
  */
 export declare function defineArticleFactory<
-  TOptions extends ArticleFactoryDefineOptions
+  TOptions extends ArticleFactoryDefineOptions,
 >(options?: TOptions): ArticleFactoryInterface<TOptions>;
 type ArticleTrackingPixelsarticleFactory = {
   _factoryFor: 'Article';
@@ -576,7 +580,7 @@ type ArticleTrackingPixelsFactoryDefineOptions = {
   };
 };
 type ArticleTrackingPixelsTraitKeys<
-  TOptions extends ArticleTrackingPixelsFactoryDefineOptions
+  TOptions extends ArticleTrackingPixelsFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface ArticleTrackingPixelsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'ArticleTrackingPixels';
@@ -607,7 +611,8 @@ export interface ArticleTrackingPixelsFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<ArticleTrackingPixels, 'id'>>;
 }
 export interface ArticleTrackingPixelsFactoryInterface<
-  TOptions extends ArticleTrackingPixelsFactoryDefineOptions = ArticleTrackingPixelsFactoryDefineOptions
+  TOptions extends
+    ArticleTrackingPixelsFactoryDefineOptions = ArticleTrackingPixelsFactoryDefineOptions,
 > extends ArticleTrackingPixelsFactoryInterfaceWithoutTraits {
   use(
     name: ArticleTrackingPixelsTraitKeys<TOptions>,
@@ -621,7 +626,7 @@ export interface ArticleTrackingPixelsFactoryInterface<
  * @returns factory {@link ArticleTrackingPixelsFactoryInterface}
  */
 export declare function defineArticleTrackingPixelsFactory<
-  TOptions extends ArticleTrackingPixelsFactoryDefineOptions
+  TOptions extends ArticleTrackingPixelsFactoryDefineOptions,
 >(options: TOptions): ArticleTrackingPixelsFactoryInterface<TOptions>;
 type TrackingPixelMethodFactoryDefineInput = {
   id?: string;
@@ -646,7 +651,7 @@ type TrackingPixelMethodFactoryDefineOptions = {
   };
 };
 type TrackingPixelMethodTraitKeys<
-  TOptions extends TrackingPixelMethodFactoryDefineOptions
+  TOptions extends TrackingPixelMethodFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface TrackingPixelMethodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'TrackingPixelMethod';
@@ -677,7 +682,8 @@ export interface TrackingPixelMethodFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<TrackingPixelMethod, 'id'>>;
 }
 export interface TrackingPixelMethodFactoryInterface<
-  TOptions extends TrackingPixelMethodFactoryDefineOptions = TrackingPixelMethodFactoryDefineOptions
+  TOptions extends
+    TrackingPixelMethodFactoryDefineOptions = TrackingPixelMethodFactoryDefineOptions,
 > extends TrackingPixelMethodFactoryInterfaceWithoutTraits {
   use(
     name: TrackingPixelMethodTraitKeys<TOptions>,
@@ -691,7 +697,7 @@ export interface TrackingPixelMethodFactoryInterface<
  * @returns factory {@link TrackingPixelMethodFactoryInterface}
  */
 export declare function defineTrackingPixelMethodFactory<
-  TOptions extends TrackingPixelMethodFactoryDefineOptions
+  TOptions extends TrackingPixelMethodFactoryDefineOptions,
 >(options?: TOptions): TrackingPixelMethodFactoryInterface<TOptions>;
 type TaggedArticlesarticleFactory = {
   _factoryFor: 'Article';
@@ -725,7 +731,7 @@ type TaggedArticlesFactoryDefineOptions = {
   };
 };
 type TaggedArticlesTraitKeys<
-  TOptions extends TaggedArticlesFactoryDefineOptions
+  TOptions extends TaggedArticlesFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface TaggedArticlesFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'TaggedArticles';
@@ -752,7 +758,8 @@ export interface TaggedArticlesFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<TaggedArticles, 'articleId' | 'tagId'>>;
 }
 export interface TaggedArticlesFactoryInterface<
-  TOptions extends TaggedArticlesFactoryDefineOptions = TaggedArticlesFactoryDefineOptions
+  TOptions extends
+    TaggedArticlesFactoryDefineOptions = TaggedArticlesFactoryDefineOptions,
 > extends TaggedArticlesFactoryInterfaceWithoutTraits {
   use(
     name: TaggedArticlesTraitKeys<TOptions>,
@@ -766,7 +773,7 @@ export interface TaggedArticlesFactoryInterface<
  * @returns factory {@link TaggedArticlesFactoryInterface}
  */
 export declare function defineTaggedArticlesFactory<
-  TOptions extends TaggedArticlesFactoryDefineOptions
+  TOptions extends TaggedArticlesFactoryDefineOptions,
 >(options: TOptions): TaggedArticlesFactoryInterface<TOptions>;
 type AuthorsLinksAuthorFactory = {
   _factoryFor: 'Author';
@@ -817,7 +824,8 @@ export interface AuthorsLinksFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<AuthorsLinks, 'id'>>;
 }
 export interface AuthorsLinksFactoryInterface<
-  TOptions extends AuthorsLinksFactoryDefineOptions = AuthorsLinksFactoryDefineOptions
+  TOptions extends
+    AuthorsLinksFactoryDefineOptions = AuthorsLinksFactoryDefineOptions,
 > extends AuthorsLinksFactoryInterfaceWithoutTraits {
   use(
     name: AuthorsLinksTraitKeys<TOptions>,
@@ -831,7 +839,7 @@ export interface AuthorsLinksFactoryInterface<
  * @returns factory {@link AuthorsLinksFactoryInterface}
  */
 export declare function defineAuthorsLinksFactory<
-  TOptions extends AuthorsLinksFactoryDefineOptions
+  TOptions extends AuthorsLinksFactoryDefineOptions,
 >(options?: TOptions): AuthorsLinksFactoryInterface<TOptions>;
 type AuthorimageFactory = {
   _factoryFor: 'Image';
@@ -894,7 +902,7 @@ export interface AuthorFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Author, 'id'>>;
 }
 export interface AuthorFactoryInterface<
-  TOptions extends AuthorFactoryDefineOptions = AuthorFactoryDefineOptions
+  TOptions extends AuthorFactoryDefineOptions = AuthorFactoryDefineOptions,
 > extends AuthorFactoryInterfaceWithoutTraits {
   use(
     name: AuthorTraitKeys<TOptions>,
@@ -908,7 +916,7 @@ export interface AuthorFactoryInterface<
  * @returns factory {@link AuthorFactoryInterface}
  */
 export declare function defineAuthorFactory<
-  TOptions extends AuthorFactoryDefineOptions
+  TOptions extends AuthorFactoryDefineOptions,
 >(options?: TOptions): AuthorFactoryInterface<TOptions>;
 type TaggedAuthorsauthorFactory = {
   _factoryFor: 'Author';
@@ -942,7 +950,7 @@ type TaggedAuthorsFactoryDefineOptions = {
   };
 };
 type TaggedAuthorsTraitKeys<
-  TOptions extends TaggedAuthorsFactoryDefineOptions
+  TOptions extends TaggedAuthorsFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface TaggedAuthorsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'TaggedAuthors';
@@ -969,7 +977,8 @@ export interface TaggedAuthorsFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<TaggedAuthors, 'authorId' | 'tagId'>>;
 }
 export interface TaggedAuthorsFactoryInterface<
-  TOptions extends TaggedAuthorsFactoryDefineOptions = TaggedAuthorsFactoryDefineOptions
+  TOptions extends
+    TaggedAuthorsFactoryDefineOptions = TaggedAuthorsFactoryDefineOptions,
 > extends TaggedAuthorsFactoryInterfaceWithoutTraits {
   use(
     name: TaggedAuthorsTraitKeys<TOptions>,
@@ -983,7 +992,7 @@ export interface TaggedAuthorsFactoryInterface<
  * @returns factory {@link TaggedAuthorsFactoryInterface}
  */
 export declare function defineTaggedAuthorsFactory<
-  TOptions extends TaggedAuthorsFactoryDefineOptions
+  TOptions extends TaggedAuthorsFactoryDefineOptions,
 >(options: TOptions): TaggedAuthorsFactoryInterface<TOptions>;
 type FocalPointimageFactory = {
   _factoryFor: 'Image';
@@ -1031,7 +1040,8 @@ export interface FocalPointFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<FocalPoint, 'imageId'>>;
 }
 export interface FocalPointFactoryInterface<
-  TOptions extends FocalPointFactoryDefineOptions = FocalPointFactoryDefineOptions
+  TOptions extends
+    FocalPointFactoryDefineOptions = FocalPointFactoryDefineOptions,
 > extends FocalPointFactoryInterfaceWithoutTraits {
   use(
     name: FocalPointTraitKeys<TOptions>,
@@ -1045,7 +1055,7 @@ export interface FocalPointFactoryInterface<
  * @returns factory {@link FocalPointFactoryInterface}
  */
 export declare function defineFocalPointFactory<
-  TOptions extends FocalPointFactoryDefineOptions
+  TOptions extends FocalPointFactoryDefineOptions,
 >(options?: TOptions): FocalPointFactoryInterface<TOptions>;
 type ImagefocalPointFactory = {
   _factoryFor: 'FocalPoint';
@@ -1125,7 +1135,7 @@ export interface ImageFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Image, 'id'>>;
 }
 export interface ImageFactoryInterface<
-  TOptions extends ImageFactoryDefineOptions = ImageFactoryDefineOptions
+  TOptions extends ImageFactoryDefineOptions = ImageFactoryDefineOptions,
 > extends ImageFactoryInterfaceWithoutTraits {
   use(
     name: ImageTraitKeys<TOptions>,
@@ -1139,7 +1149,7 @@ export interface ImageFactoryInterface<
  * @returns factory {@link ImageFactoryInterface}
  */
 export declare function defineImageFactory<
-  TOptions extends ImageFactoryDefineOptions
+  TOptions extends ImageFactoryDefineOptions,
 >(options?: TOptions): ImageFactoryInterface<TOptions>;
 type CommentsRevisionsCommentFactory = {
   _factoryFor: 'Comment';
@@ -1169,7 +1179,7 @@ type CommentsRevisionsFactoryDefineOptions = {
   };
 };
 type CommentsRevisionsTraitKeys<
-  TOptions extends CommentsRevisionsFactoryDefineOptions
+  TOptions extends CommentsRevisionsFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface CommentsRevisionsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentsRevisions';
@@ -1194,7 +1204,8 @@ export interface CommentsRevisionsFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<CommentsRevisions, 'id'>>;
 }
 export interface CommentsRevisionsFactoryInterface<
-  TOptions extends CommentsRevisionsFactoryDefineOptions = CommentsRevisionsFactoryDefineOptions
+  TOptions extends
+    CommentsRevisionsFactoryDefineOptions = CommentsRevisionsFactoryDefineOptions,
 > extends CommentsRevisionsFactoryInterfaceWithoutTraits {
   use(
     name: CommentsRevisionsTraitKeys<TOptions>,
@@ -1208,7 +1219,7 @@ export interface CommentsRevisionsFactoryInterface<
  * @returns factory {@link CommentsRevisionsFactoryInterface}
  */
 export declare function defineCommentsRevisionsFactory<
-  TOptions extends CommentsRevisionsFactoryDefineOptions
+  TOptions extends CommentsRevisionsFactoryDefineOptions,
 >(options?: TOptions): CommentsRevisionsFactoryInterface<TOptions>;
 type CommentguestUserImageFactory = {
   _factoryFor: 'Image';
@@ -1275,7 +1286,7 @@ export interface CommentFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Comment, 'id'>>;
 }
 export interface CommentFactoryInterface<
-  TOptions extends CommentFactoryDefineOptions = CommentFactoryDefineOptions
+  TOptions extends CommentFactoryDefineOptions = CommentFactoryDefineOptions,
 > extends CommentFactoryInterfaceWithoutTraits {
   use(
     name: CommentTraitKeys<TOptions>,
@@ -1289,7 +1300,7 @@ export interface CommentFactoryInterface<
  * @returns factory {@link CommentFactoryInterface}
  */
 export declare function defineCommentFactory<
-  TOptions extends CommentFactoryDefineOptions
+  TOptions extends CommentFactoryDefineOptions,
 >(options?: TOptions): CommentFactoryInterface<TOptions>;
 type TaggedCommentscommentFactory = {
   _factoryFor: 'Comment';
@@ -1323,7 +1334,7 @@ type TaggedCommentsFactoryDefineOptions = {
   };
 };
 type TaggedCommentsTraitKeys<
-  TOptions extends TaggedCommentsFactoryDefineOptions
+  TOptions extends TaggedCommentsFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface TaggedCommentsFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'TaggedComments';
@@ -1350,7 +1361,8 @@ export interface TaggedCommentsFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<TaggedComments, 'commentId' | 'tagId'>>;
 }
 export interface TaggedCommentsFactoryInterface<
-  TOptions extends TaggedCommentsFactoryDefineOptions = TaggedCommentsFactoryDefineOptions
+  TOptions extends
+    TaggedCommentsFactoryDefineOptions = TaggedCommentsFactoryDefineOptions,
 > extends TaggedCommentsFactoryInterfaceWithoutTraits {
   use(
     name: TaggedCommentsTraitKeys<TOptions>,
@@ -1364,7 +1376,7 @@ export interface TaggedCommentsFactoryInterface<
  * @returns factory {@link TaggedCommentsFactoryInterface}
  */
 export declare function defineTaggedCommentsFactory<
-  TOptions extends TaggedCommentsFactoryDefineOptions
+  TOptions extends TaggedCommentsFactoryDefineOptions,
 >(options: TOptions): TaggedCommentsFactoryInterface<TOptions>;
 type CommentRatingSystemFactoryDefineInput = {
   id?: string;
@@ -1388,7 +1400,7 @@ type CommentRatingSystemFactoryDefineOptions = {
   };
 };
 type CommentRatingSystemTraitKeys<
-  TOptions extends CommentRatingSystemFactoryDefineOptions
+  TOptions extends CommentRatingSystemFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface CommentRatingSystemFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRatingSystem';
@@ -1419,7 +1431,8 @@ export interface CommentRatingSystemFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<CommentRatingSystem, 'id'>>;
 }
 export interface CommentRatingSystemFactoryInterface<
-  TOptions extends CommentRatingSystemFactoryDefineOptions = CommentRatingSystemFactoryDefineOptions
+  TOptions extends
+    CommentRatingSystemFactoryDefineOptions = CommentRatingSystemFactoryDefineOptions,
 > extends CommentRatingSystemFactoryInterfaceWithoutTraits {
   use(
     name: CommentRatingSystemTraitKeys<TOptions>,
@@ -1433,7 +1446,7 @@ export interface CommentRatingSystemFactoryInterface<
  * @returns factory {@link CommentRatingSystemFactoryInterface}
  */
 export declare function defineCommentRatingSystemFactory<
-  TOptions extends CommentRatingSystemFactoryDefineOptions
+  TOptions extends CommentRatingSystemFactoryDefineOptions,
 >(options?: TOptions): CommentRatingSystemFactoryInterface<TOptions>;
 type CommentRatingSystemAnswerratingSystemFactory = {
   _factoryFor: 'CommentRatingSystem';
@@ -1468,7 +1481,7 @@ type CommentRatingSystemAnswerFactoryDefineOptions = {
   };
 };
 type CommentRatingSystemAnswerTraitKeys<
-  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions
+  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface CommentRatingSystemAnswerFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRatingSystemAnswer';
@@ -1499,7 +1512,8 @@ export interface CommentRatingSystemAnswerFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<CommentRatingSystemAnswer, 'id'>>;
 }
 export interface CommentRatingSystemAnswerFactoryInterface<
-  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions = CommentRatingSystemAnswerFactoryDefineOptions
+  TOptions extends
+    CommentRatingSystemAnswerFactoryDefineOptions = CommentRatingSystemAnswerFactoryDefineOptions,
 > extends CommentRatingSystemAnswerFactoryInterfaceWithoutTraits {
   use(
     name: CommentRatingSystemAnswerTraitKeys<TOptions>,
@@ -1513,7 +1527,7 @@ export interface CommentRatingSystemAnswerFactoryInterface<
  * @returns factory {@link CommentRatingSystemAnswerFactoryInterface}
  */
 export declare function defineCommentRatingSystemAnswerFactory<
-  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions
+  TOptions extends CommentRatingSystemAnswerFactoryDefineOptions,
 >(options: TOptions): CommentRatingSystemAnswerFactoryInterface<TOptions>;
 type CommentRatinguserFactory = {
   _factoryFor: 'User';
@@ -1562,7 +1576,7 @@ type CommentRatingFactoryDefineOptions = {
   };
 };
 type CommentRatingTraitKeys<
-  TOptions extends CommentRatingFactoryDefineOptions
+  TOptions extends CommentRatingFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface CommentRatingFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRating';
@@ -1587,7 +1601,8 @@ export interface CommentRatingFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<CommentRating, 'id'>>;
 }
 export interface CommentRatingFactoryInterface<
-  TOptions extends CommentRatingFactoryDefineOptions = CommentRatingFactoryDefineOptions
+  TOptions extends
+    CommentRatingFactoryDefineOptions = CommentRatingFactoryDefineOptions,
 > extends CommentRatingFactoryInterfaceWithoutTraits {
   use(
     name: CommentRatingTraitKeys<TOptions>,
@@ -1601,7 +1616,7 @@ export interface CommentRatingFactoryInterface<
  * @returns factory {@link CommentRatingFactoryInterface}
  */
 export declare function defineCommentRatingFactory<
-  TOptions extends CommentRatingFactoryDefineOptions
+  TOptions extends CommentRatingFactoryDefineOptions,
 >(options: TOptions): CommentRatingFactoryInterface<TOptions>;
 type CommentRatingOverrideanswerFactory = {
   _factoryFor: 'CommentRatingSystemAnswer';
@@ -1641,7 +1656,7 @@ type CommentRatingOverrideFactoryDefineOptions = {
   };
 };
 type CommentRatingOverrideTraitKeys<
-  TOptions extends CommentRatingOverrideFactoryDefineOptions
+  TOptions extends CommentRatingOverrideFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface CommentRatingOverrideFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CommentRatingOverride';
@@ -1672,7 +1687,8 @@ export interface CommentRatingOverrideFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<CommentRatingOverride, 'answerId' | 'commentId'>>;
 }
 export interface CommentRatingOverrideFactoryInterface<
-  TOptions extends CommentRatingOverrideFactoryDefineOptions = CommentRatingOverrideFactoryDefineOptions
+  TOptions extends
+    CommentRatingOverrideFactoryDefineOptions = CommentRatingOverrideFactoryDefineOptions,
 > extends CommentRatingOverrideFactoryInterfaceWithoutTraits {
   use(
     name: CommentRatingOverrideTraitKeys<TOptions>,
@@ -1686,7 +1702,7 @@ export interface CommentRatingOverrideFactoryInterface<
  * @returns factory {@link CommentRatingOverrideFactoryInterface}
  */
 export declare function defineCommentRatingOverrideFactory<
-  TOptions extends CommentRatingOverrideFactoryDefineOptions
+  TOptions extends CommentRatingOverrideFactoryDefineOptions,
 >(options: TOptions): CommentRatingOverrideFactoryInterface<TOptions>;
 type InvoiceIteminvoicesFactory = {
   _factoryFor: 'Invoice';
@@ -1739,7 +1755,8 @@ export interface InvoiceItemFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<InvoiceItem, 'id'>>;
 }
 export interface InvoiceItemFactoryInterface<
-  TOptions extends InvoiceItemFactoryDefineOptions = InvoiceItemFactoryDefineOptions
+  TOptions extends
+    InvoiceItemFactoryDefineOptions = InvoiceItemFactoryDefineOptions,
 > extends InvoiceItemFactoryInterfaceWithoutTraits {
   use(
     name: InvoiceItemTraitKeys<TOptions>,
@@ -1753,7 +1770,7 @@ export interface InvoiceItemFactoryInterface<
  * @returns factory {@link InvoiceItemFactoryInterface}
  */
 export declare function defineInvoiceItemFactory<
-  TOptions extends InvoiceItemFactoryDefineOptions
+  TOptions extends InvoiceItemFactoryDefineOptions,
 >(options?: TOptions): InvoiceItemFactoryInterface<TOptions>;
 type InvoicesubscriptionFactory = {
   _factoryFor: 'Subscription';
@@ -1810,7 +1827,7 @@ export interface InvoiceFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Invoice, 'id'>>;
 }
 export interface InvoiceFactoryInterface<
-  TOptions extends InvoiceFactoryDefineOptions = InvoiceFactoryDefineOptions
+  TOptions extends InvoiceFactoryDefineOptions = InvoiceFactoryDefineOptions,
 > extends InvoiceFactoryInterfaceWithoutTraits {
   use(
     name: InvoiceTraitKeys<TOptions>,
@@ -1824,7 +1841,7 @@ export interface InvoiceFactoryInterface<
  * @returns factory {@link InvoiceFactoryInterface}
  */
 export declare function defineInvoiceFactory<
-  TOptions extends InvoiceFactoryDefineOptions
+  TOptions extends InvoiceFactoryDefineOptions,
 >(options?: TOptions): InvoiceFactoryInterface<TOptions>;
 type MailLogrecipientFactory = {
   _factoryFor: 'User';
@@ -1886,7 +1903,7 @@ export interface MailLogFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<MailLog, 'id'>>;
 }
 export interface MailLogFactoryInterface<
-  TOptions extends MailLogFactoryDefineOptions = MailLogFactoryDefineOptions
+  TOptions extends MailLogFactoryDefineOptions = MailLogFactoryDefineOptions,
 > extends MailLogFactoryInterfaceWithoutTraits {
   use(
     name: MailLogTraitKeys<TOptions>,
@@ -1900,7 +1917,7 @@ export interface MailLogFactoryInterface<
  * @returns factory {@link MailLogFactoryInterface}
  */
 export declare function defineMailLogFactory<
-  TOptions extends MailLogFactoryDefineOptions
+  TOptions extends MailLogFactoryDefineOptions,
 >(options: TOptions): MailLogFactoryInterface<TOptions>;
 type AvailablePaymentMethodMemberPlanFactory = {
   _factoryFor: 'MemberPlan';
@@ -1938,7 +1955,7 @@ type AvailablePaymentMethodFactoryDefineOptions = {
   };
 };
 type AvailablePaymentMethodTraitKeys<
-  TOptions extends AvailablePaymentMethodFactoryDefineOptions
+  TOptions extends AvailablePaymentMethodFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface AvailablePaymentMethodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'AvailablePaymentMethod';
@@ -1969,7 +1986,8 @@ export interface AvailablePaymentMethodFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<AvailablePaymentMethod, 'id'>>;
 }
 export interface AvailablePaymentMethodFactoryInterface<
-  TOptions extends AvailablePaymentMethodFactoryDefineOptions = AvailablePaymentMethodFactoryDefineOptions
+  TOptions extends
+    AvailablePaymentMethodFactoryDefineOptions = AvailablePaymentMethodFactoryDefineOptions,
 > extends AvailablePaymentMethodFactoryInterfaceWithoutTraits {
   use(
     name: AvailablePaymentMethodTraitKeys<TOptions>,
@@ -1983,7 +2001,7 @@ export interface AvailablePaymentMethodFactoryInterface<
  * @returns factory {@link AvailablePaymentMethodFactoryInterface}
  */
 export declare function defineAvailablePaymentMethodFactory<
-  TOptions extends AvailablePaymentMethodFactoryDefineOptions
+  TOptions extends AvailablePaymentMethodFactoryDefineOptions,
 >(options?: TOptions): AvailablePaymentMethodFactoryInterface<TOptions>;
 type MemberPlanmigrateToTargetPaymentMethodFactory = {
   _factoryFor: 'PaymentMethod';
@@ -2082,7 +2100,8 @@ export interface MemberPlanFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<MemberPlan, 'id'>>;
 }
 export interface MemberPlanFactoryInterface<
-  TOptions extends MemberPlanFactoryDefineOptions = MemberPlanFactoryDefineOptions
+  TOptions extends
+    MemberPlanFactoryDefineOptions = MemberPlanFactoryDefineOptions,
 > extends MemberPlanFactoryInterfaceWithoutTraits {
   use(
     name: MemberPlanTraitKeys<TOptions>,
@@ -2096,7 +2115,7 @@ export interface MemberPlanFactoryInterface<
  * @returns factory {@link MemberPlanFactoryInterface}
  */
 export declare function defineMemberPlanFactory<
-  TOptions extends MemberPlanFactoryDefineOptions
+  TOptions extends MemberPlanFactoryDefineOptions,
 >(options?: TOptions): MemberPlanFactoryInterface<TOptions>;
 type NavigationLinkpageFactory = {
   _factoryFor: 'Page';
@@ -2145,7 +2164,7 @@ type NavigationLinkFactoryDefineOptions = {
   };
 };
 type NavigationLinkTraitKeys<
-  TOptions extends NavigationLinkFactoryDefineOptions
+  TOptions extends NavigationLinkFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface NavigationLinkFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'NavigationLink';
@@ -2170,7 +2189,8 @@ export interface NavigationLinkFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<NavigationLink, 'id'>>;
 }
 export interface NavigationLinkFactoryInterface<
-  TOptions extends NavigationLinkFactoryDefineOptions = NavigationLinkFactoryDefineOptions
+  TOptions extends
+    NavigationLinkFactoryDefineOptions = NavigationLinkFactoryDefineOptions,
 > extends NavigationLinkFactoryInterfaceWithoutTraits {
   use(
     name: NavigationLinkTraitKeys<TOptions>,
@@ -2184,7 +2204,7 @@ export interface NavigationLinkFactoryInterface<
  * @returns factory {@link NavigationLinkFactoryInterface}
  */
 export declare function defineNavigationLinkFactory<
-  TOptions extends NavigationLinkFactoryDefineOptions
+  TOptions extends NavigationLinkFactoryDefineOptions,
 >(options?: TOptions): NavigationLinkFactoryInterface<TOptions>;
 type NavigationFactoryDefineInput = {
   id?: string;
@@ -2227,7 +2247,8 @@ export interface NavigationFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Navigation, 'id'>>;
 }
 export interface NavigationFactoryInterface<
-  TOptions extends NavigationFactoryDefineOptions = NavigationFactoryDefineOptions
+  TOptions extends
+    NavigationFactoryDefineOptions = NavigationFactoryDefineOptions,
 > extends NavigationFactoryInterfaceWithoutTraits {
   use(
     name: NavigationTraitKeys<TOptions>,
@@ -2241,7 +2262,7 @@ export interface NavigationFactoryInterface<
  * @returns factory {@link NavigationFactoryInterface}
  */
 export declare function defineNavigationFactory<
-  TOptions extends NavigationFactoryDefineOptions
+  TOptions extends NavigationFactoryDefineOptions,
 >(options?: TOptions): NavigationFactoryInterface<TOptions>;
 type PageRevisionimageFactory = {
   _factoryFor: 'Image';
@@ -2324,7 +2345,8 @@ export interface PageRevisionFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PageRevision, 'id'>>;
 }
 export interface PageRevisionFactoryInterface<
-  TOptions extends PageRevisionFactoryDefineOptions = PageRevisionFactoryDefineOptions
+  TOptions extends
+    PageRevisionFactoryDefineOptions = PageRevisionFactoryDefineOptions,
 > extends PageRevisionFactoryInterfaceWithoutTraits {
   use(
     name: PageRevisionTraitKeys<TOptions>,
@@ -2338,7 +2360,7 @@ export interface PageRevisionFactoryInterface<
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export declare function definePageRevisionFactory<
-  TOptions extends PageRevisionFactoryDefineOptions
+  TOptions extends PageRevisionFactoryDefineOptions,
 >(options: TOptions): PageRevisionFactoryInterface<TOptions>;
 type PageFactoryDefineInput = {
   id?: string;
@@ -2385,7 +2407,7 @@ export interface PageFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Page, 'id'>>;
 }
 export interface PageFactoryInterface<
-  TOptions extends PageFactoryDefineOptions = PageFactoryDefineOptions
+  TOptions extends PageFactoryDefineOptions = PageFactoryDefineOptions,
 > extends PageFactoryInterfaceWithoutTraits {
   use(
     name: PageTraitKeys<TOptions>,
@@ -2399,7 +2421,7 @@ export interface PageFactoryInterface<
  * @returns factory {@link PageFactoryInterface}
  */
 export declare function definePageFactory<
-  TOptions extends PageFactoryDefineOptions
+  TOptions extends PageFactoryDefineOptions,
 >(options?: TOptions): PageFactoryInterface<TOptions>;
 type TaggedPagespageFactory = {
   _factoryFor: 'Page';
@@ -2452,7 +2474,8 @@ export interface TaggedPagesFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<TaggedPages, 'pageId' | 'tagId'>>;
 }
 export interface TaggedPagesFactoryInterface<
-  TOptions extends TaggedPagesFactoryDefineOptions = TaggedPagesFactoryDefineOptions
+  TOptions extends
+    TaggedPagesFactoryDefineOptions = TaggedPagesFactoryDefineOptions,
 > extends TaggedPagesFactoryInterfaceWithoutTraits {
   use(
     name: TaggedPagesTraitKeys<TOptions>,
@@ -2466,7 +2489,7 @@ export interface TaggedPagesFactoryInterface<
  * @returns factory {@link TaggedPagesFactoryInterface}
  */
 export declare function defineTaggedPagesFactory<
-  TOptions extends TaggedPagesFactoryDefineOptions
+  TOptions extends TaggedPagesFactoryDefineOptions,
 >(options: TOptions): TaggedPagesFactoryInterface<TOptions>;
 type PaymentMethodimageFactory = {
   _factoryFor: 'Image';
@@ -2503,7 +2526,7 @@ type PaymentMethodFactoryDefineOptions = {
   };
 };
 type PaymentMethodTraitKeys<
-  TOptions extends PaymentMethodFactoryDefineOptions
+  TOptions extends PaymentMethodFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface PaymentMethodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PaymentMethod';
@@ -2528,7 +2551,8 @@ export interface PaymentMethodFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PaymentMethod, 'id'>>;
 }
 export interface PaymentMethodFactoryInterface<
-  TOptions extends PaymentMethodFactoryDefineOptions = PaymentMethodFactoryDefineOptions
+  TOptions extends
+    PaymentMethodFactoryDefineOptions = PaymentMethodFactoryDefineOptions,
 > extends PaymentMethodFactoryInterfaceWithoutTraits {
   use(
     name: PaymentMethodTraitKeys<TOptions>,
@@ -2542,7 +2566,7 @@ export interface PaymentMethodFactoryInterface<
  * @returns factory {@link PaymentMethodFactoryInterface}
  */
 export declare function definePaymentMethodFactory<
-  TOptions extends PaymentMethodFactoryDefineOptions
+  TOptions extends PaymentMethodFactoryDefineOptions,
 >(options?: TOptions): PaymentMethodFactoryInterface<TOptions>;
 type PaymentpaymentMethodFactory = {
   _factoryFor: 'PaymentMethod';
@@ -2595,7 +2619,7 @@ export interface PaymentFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Payment, 'id'>>;
 }
 export interface PaymentFactoryInterface<
-  TOptions extends PaymentFactoryDefineOptions = PaymentFactoryDefineOptions
+  TOptions extends PaymentFactoryDefineOptions = PaymentFactoryDefineOptions,
 > extends PaymentFactoryInterfaceWithoutTraits {
   use(
     name: PaymentTraitKeys<TOptions>,
@@ -2609,7 +2633,7 @@ export interface PaymentFactoryInterface<
  * @returns factory {@link PaymentFactoryInterface}
  */
 export declare function definePaymentFactory<
-  TOptions extends PaymentFactoryDefineOptions
+  TOptions extends PaymentFactoryDefineOptions,
 >(options: TOptions): PaymentFactoryInterface<TOptions>;
 type PeerProfilelogoFactory = {
   _factoryFor: 'Image';
@@ -2672,7 +2696,8 @@ export interface PeerProfileFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PeerProfile, 'id'>>;
 }
 export interface PeerProfileFactoryInterface<
-  TOptions extends PeerProfileFactoryDefineOptions = PeerProfileFactoryDefineOptions
+  TOptions extends
+    PeerProfileFactoryDefineOptions = PeerProfileFactoryDefineOptions,
 > extends PeerProfileFactoryInterfaceWithoutTraits {
   use(
     name: PeerProfileTraitKeys<TOptions>,
@@ -2686,7 +2711,7 @@ export interface PeerProfileFactoryInterface<
  * @returns factory {@link PeerProfileFactoryInterface}
  */
 export declare function definePeerProfileFactory<
-  TOptions extends PeerProfileFactoryDefineOptions
+  TOptions extends PeerProfileFactoryDefineOptions,
 >(options?: TOptions): PeerProfileFactoryInterface<TOptions>;
 type PeerFactoryDefineInput = {
   id?: string;
@@ -2733,7 +2758,7 @@ export interface PeerFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Peer, 'id'>>;
 }
 export interface PeerFactoryInterface<
-  TOptions extends PeerFactoryDefineOptions = PeerFactoryDefineOptions
+  TOptions extends PeerFactoryDefineOptions = PeerFactoryDefineOptions,
 > extends PeerFactoryInterfaceWithoutTraits {
   use(
     name: PeerTraitKeys<TOptions>,
@@ -2747,7 +2772,7 @@ export interface PeerFactoryInterface<
  * @returns factory {@link PeerFactoryInterface}
  */
 export declare function definePeerFactory<
-  TOptions extends PeerFactoryDefineOptions
+  TOptions extends PeerFactoryDefineOptions,
 >(options?: TOptions): PeerFactoryInterface<TOptions>;
 type TokenFactoryDefineInput = {
   id?: string;
@@ -2788,7 +2813,7 @@ export interface TokenFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Token, 'id'>>;
 }
 export interface TokenFactoryInterface<
-  TOptions extends TokenFactoryDefineOptions = TokenFactoryDefineOptions
+  TOptions extends TokenFactoryDefineOptions = TokenFactoryDefineOptions,
 > extends TokenFactoryInterfaceWithoutTraits {
   use(
     name: TokenTraitKeys<TOptions>,
@@ -2802,7 +2827,7 @@ export interface TokenFactoryInterface<
  * @returns factory {@link TokenFactoryInterface}
  */
 export declare function defineTokenFactory<
-  TOptions extends TokenFactoryDefineOptions
+  TOptions extends TokenFactoryDefineOptions,
 >(options?: TOptions): TokenFactoryInterface<TOptions>;
 type SessionuserFactory = {
   _factoryFor: 'User';
@@ -2848,7 +2873,7 @@ export interface SessionFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Session, 'id'>>;
 }
 export interface SessionFactoryInterface<
-  TOptions extends SessionFactoryDefineOptions = SessionFactoryDefineOptions
+  TOptions extends SessionFactoryDefineOptions = SessionFactoryDefineOptions,
 > extends SessionFactoryInterfaceWithoutTraits {
   use(
     name: SessionTraitKeys<TOptions>,
@@ -2862,7 +2887,7 @@ export interface SessionFactoryInterface<
  * @returns factory {@link SessionFactoryInterface}
  */
 export declare function defineSessionFactory<
-  TOptions extends SessionFactoryDefineOptions
+  TOptions extends SessionFactoryDefineOptions,
 >(options: TOptions): SessionFactoryInterface<TOptions>;
 type SubscriptionPeriodinvoiceFactory = {
   _factoryFor: 'Invoice';
@@ -2903,7 +2928,7 @@ type SubscriptionPeriodFactoryDefineOptions = {
   };
 };
 type SubscriptionPeriodTraitKeys<
-  TOptions extends SubscriptionPeriodFactoryDefineOptions
+  TOptions extends SubscriptionPeriodFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface SubscriptionPeriodFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionPeriod';
@@ -2928,7 +2953,8 @@ export interface SubscriptionPeriodFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<SubscriptionPeriod, 'id'>>;
 }
 export interface SubscriptionPeriodFactoryInterface<
-  TOptions extends SubscriptionPeriodFactoryDefineOptions = SubscriptionPeriodFactoryDefineOptions
+  TOptions extends
+    SubscriptionPeriodFactoryDefineOptions = SubscriptionPeriodFactoryDefineOptions,
 > extends SubscriptionPeriodFactoryInterfaceWithoutTraits {
   use(
     name: SubscriptionPeriodTraitKeys<TOptions>,
@@ -2942,7 +2968,7 @@ export interface SubscriptionPeriodFactoryInterface<
  * @returns factory {@link SubscriptionPeriodFactoryInterface}
  */
 export declare function defineSubscriptionPeriodFactory<
-  TOptions extends SubscriptionPeriodFactoryDefineOptions
+  TOptions extends SubscriptionPeriodFactoryDefineOptions,
 >(options: TOptions): SubscriptionPeriodFactoryInterface<TOptions>;
 type SubscriptionDeactivationsubscriptionFactory = {
   _factoryFor: 'Subscription';
@@ -2975,7 +3001,7 @@ type SubscriptionDeactivationFactoryDefineOptions = {
   };
 };
 type SubscriptionDeactivationTraitKeys<
-  TOptions extends SubscriptionDeactivationFactoryDefineOptions
+  TOptions extends SubscriptionDeactivationFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface SubscriptionDeactivationFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionDeactivation';
@@ -3006,7 +3032,8 @@ export interface SubscriptionDeactivationFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<SubscriptionDeactivation, 'id'>>;
 }
 export interface SubscriptionDeactivationFactoryInterface<
-  TOptions extends SubscriptionDeactivationFactoryDefineOptions = SubscriptionDeactivationFactoryDefineOptions
+  TOptions extends
+    SubscriptionDeactivationFactoryDefineOptions = SubscriptionDeactivationFactoryDefineOptions,
 > extends SubscriptionDeactivationFactoryInterfaceWithoutTraits {
   use(
     name: SubscriptionDeactivationTraitKeys<TOptions>,
@@ -3020,7 +3047,7 @@ export interface SubscriptionDeactivationFactoryInterface<
  * @returns factory {@link SubscriptionDeactivationFactoryInterface}
  */
 export declare function defineSubscriptionDeactivationFactory<
-  TOptions extends SubscriptionDeactivationFactoryDefineOptions
+  TOptions extends SubscriptionDeactivationFactoryDefineOptions,
 >(options: TOptions): SubscriptionDeactivationFactoryInterface<TOptions>;
 type SubscriptiondeactivationFactory = {
   _factoryFor: 'SubscriptionDeactivation';
@@ -3117,7 +3144,8 @@ export interface SubscriptionFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Subscription, 'id'>>;
 }
 export interface SubscriptionFactoryInterface<
-  TOptions extends SubscriptionFactoryDefineOptions = SubscriptionFactoryDefineOptions
+  TOptions extends
+    SubscriptionFactoryDefineOptions = SubscriptionFactoryDefineOptions,
 > extends SubscriptionFactoryInterfaceWithoutTraits {
   use(
     name: SubscriptionTraitKeys<TOptions>,
@@ -3131,7 +3159,7 @@ export interface SubscriptionFactoryInterface<
  * @returns factory {@link SubscriptionFactoryInterface}
  */
 export declare function defineSubscriptionFactory<
-  TOptions extends SubscriptionFactoryDefineOptions
+  TOptions extends SubscriptionFactoryDefineOptions,
 >(options: TOptions): SubscriptionFactoryInterface<TOptions>;
 type UserAddressUserFactory = {
   _factoryFor: 'User';
@@ -3183,7 +3211,8 @@ export interface UserAddressFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<UserAddress, 'userId'>>;
 }
 export interface UserAddressFactoryInterface<
-  TOptions extends UserAddressFactoryDefineOptions = UserAddressFactoryDefineOptions
+  TOptions extends
+    UserAddressFactoryDefineOptions = UserAddressFactoryDefineOptions,
 > extends UserAddressFactoryInterfaceWithoutTraits {
   use(
     name: UserAddressTraitKeys<TOptions>,
@@ -3197,7 +3226,7 @@ export interface UserAddressFactoryInterface<
  * @returns factory {@link UserAddressFactoryInterface}
  */
 export declare function defineUserAddressFactory<
-  TOptions extends UserAddressFactoryDefineOptions
+  TOptions extends UserAddressFactoryDefineOptions,
 >(options: TOptions): UserAddressFactoryInterface<TOptions>;
 type UserOAuth2AccountUserFactory = {
   _factoryFor: 'User';
@@ -3237,7 +3266,7 @@ type UserOAuth2AccountFactoryDefineOptions = {
   };
 };
 type UserOAuth2AccountTraitKeys<
-  TOptions extends UserOAuth2AccountFactoryDefineOptions
+  TOptions extends UserOAuth2AccountFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface UserOAuth2AccountFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'UserOAuth2Account';
@@ -3262,7 +3291,8 @@ export interface UserOAuth2AccountFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<UserOAuth2Account, 'id'>>;
 }
 export interface UserOAuth2AccountFactoryInterface<
-  TOptions extends UserOAuth2AccountFactoryDefineOptions = UserOAuth2AccountFactoryDefineOptions
+  TOptions extends
+    UserOAuth2AccountFactoryDefineOptions = UserOAuth2AccountFactoryDefineOptions,
 > extends UserOAuth2AccountFactoryInterfaceWithoutTraits {
   use(
     name: UserOAuth2AccountTraitKeys<TOptions>,
@@ -3276,7 +3306,7 @@ export interface UserOAuth2AccountFactoryInterface<
  * @returns factory {@link UserOAuth2AccountFactoryInterface}
  */
 export declare function defineUserOAuth2AccountFactory<
-  TOptions extends UserOAuth2AccountFactoryDefineOptions
+  TOptions extends UserOAuth2AccountFactoryDefineOptions,
 >(options?: TOptions): UserOAuth2AccountFactoryInterface<TOptions>;
 type PaymentProviderCustomerUserFactory = {
   _factoryFor: 'User';
@@ -3309,7 +3339,7 @@ type PaymentProviderCustomerFactoryDefineOptions = {
   };
 };
 type PaymentProviderCustomerTraitKeys<
-  TOptions extends PaymentProviderCustomerFactoryDefineOptions
+  TOptions extends PaymentProviderCustomerFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface PaymentProviderCustomerFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PaymentProviderCustomer';
@@ -3340,7 +3370,8 @@ export interface PaymentProviderCustomerFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PaymentProviderCustomer, 'id'>>;
 }
 export interface PaymentProviderCustomerFactoryInterface<
-  TOptions extends PaymentProviderCustomerFactoryDefineOptions = PaymentProviderCustomerFactoryDefineOptions
+  TOptions extends
+    PaymentProviderCustomerFactoryDefineOptions = PaymentProviderCustomerFactoryDefineOptions,
 > extends PaymentProviderCustomerFactoryInterfaceWithoutTraits {
   use(
     name: PaymentProviderCustomerTraitKeys<TOptions>,
@@ -3354,7 +3385,7 @@ export interface PaymentProviderCustomerFactoryInterface<
  * @returns factory {@link PaymentProviderCustomerFactoryInterface}
  */
 export declare function definePaymentProviderCustomerFactory<
-  TOptions extends PaymentProviderCustomerFactoryDefineOptions
+  TOptions extends PaymentProviderCustomerFactoryDefineOptions,
 >(options?: TOptions): PaymentProviderCustomerFactoryInterface<TOptions>;
 type UseruserImageFactory = {
   _factoryFor: 'Image';
@@ -3432,7 +3463,7 @@ export interface UserFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<User, 'id'>>;
 }
 export interface UserFactoryInterface<
-  TOptions extends UserFactoryDefineOptions = UserFactoryDefineOptions
+  TOptions extends UserFactoryDefineOptions = UserFactoryDefineOptions,
 > extends UserFactoryInterfaceWithoutTraits {
   use(
     name: UserTraitKeys<TOptions>,
@@ -3446,7 +3477,7 @@ export interface UserFactoryInterface<
  * @returns factory {@link UserFactoryInterface}
  */
 export declare function defineUserFactory<
-  TOptions extends UserFactoryDefineOptions
+  TOptions extends UserFactoryDefineOptions,
 >(options?: TOptions): UserFactoryInterface<TOptions>;
 type UserRoleFactoryDefineInput = {
   id?: string;
@@ -3492,7 +3523,7 @@ export interface UserRoleFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<UserRole, 'id'>>;
 }
 export interface UserRoleFactoryInterface<
-  TOptions extends UserRoleFactoryDefineOptions = UserRoleFactoryDefineOptions
+  TOptions extends UserRoleFactoryDefineOptions = UserRoleFactoryDefineOptions,
 > extends UserRoleFactoryInterfaceWithoutTraits {
   use(
     name: UserRoleTraitKeys<TOptions>,
@@ -3506,7 +3537,7 @@ export interface UserRoleFactoryInterface<
  * @returns factory {@link UserRoleFactoryInterface}
  */
 export declare function defineUserRoleFactory<
-  TOptions extends UserRoleFactoryDefineOptions
+  TOptions extends UserRoleFactoryDefineOptions,
 >(options?: TOptions): UserRoleFactoryInterface<TOptions>;
 type SettingFactoryDefineInput = {
   id?: string;
@@ -3547,7 +3578,7 @@ export interface SettingFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Setting, 'id'>>;
 }
 export interface SettingFactoryInterface<
-  TOptions extends SettingFactoryDefineOptions = SettingFactoryDefineOptions
+  TOptions extends SettingFactoryDefineOptions = SettingFactoryDefineOptions,
 > extends SettingFactoryInterfaceWithoutTraits {
   use(
     name: SettingTraitKeys<TOptions>,
@@ -3561,7 +3592,7 @@ export interface SettingFactoryInterface<
  * @returns factory {@link SettingFactoryInterface}
  */
 export declare function defineSettingFactory<
-  TOptions extends SettingFactoryDefineOptions
+  TOptions extends SettingFactoryDefineOptions,
 >(options?: TOptions): SettingFactoryInterface<TOptions>;
 type TagpeerFactory = {
   _factoryFor: 'Peer';
@@ -3614,7 +3645,7 @@ export interface TagFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Tag, 'id'>>;
 }
 export interface TagFactoryInterface<
-  TOptions extends TagFactoryDefineOptions = TagFactoryDefineOptions
+  TOptions extends TagFactoryDefineOptions = TagFactoryDefineOptions,
 > extends TagFactoryInterfaceWithoutTraits {
   use(
     name: TagTraitKeys<TOptions>,
@@ -3628,7 +3659,7 @@ export interface TagFactoryInterface<
  * @returns factory {@link TagFactoryInterface}
  */
 export declare function defineTagFactory<
-  TOptions extends TagFactoryDefineOptions
+  TOptions extends TagFactoryDefineOptions,
 >(options?: TOptions): TagFactoryInterface<TOptions>;
 type PollFactoryDefineInput = {
   id?: string;
@@ -3673,7 +3704,7 @@ export interface PollFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Poll, 'id'>>;
 }
 export interface PollFactoryInterface<
-  TOptions extends PollFactoryDefineOptions = PollFactoryDefineOptions
+  TOptions extends PollFactoryDefineOptions = PollFactoryDefineOptions,
 > extends PollFactoryInterfaceWithoutTraits {
   use(
     name: PollTraitKeys<TOptions>,
@@ -3687,7 +3718,7 @@ export interface PollFactoryInterface<
  * @returns factory {@link PollFactoryInterface}
  */
 export declare function definePollFactory<
-  TOptions extends PollFactoryDefineOptions
+  TOptions extends PollFactoryDefineOptions,
 >(options?: TOptions): PollFactoryInterface<TOptions>;
 type PollAnswerpollFactory = {
   _factoryFor: 'Poll';
@@ -3737,7 +3768,8 @@ export interface PollAnswerFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PollAnswer, 'id'>>;
 }
 export interface PollAnswerFactoryInterface<
-  TOptions extends PollAnswerFactoryDefineOptions = PollAnswerFactoryDefineOptions
+  TOptions extends
+    PollAnswerFactoryDefineOptions = PollAnswerFactoryDefineOptions,
 > extends PollAnswerFactoryInterfaceWithoutTraits {
   use(
     name: PollAnswerTraitKeys<TOptions>,
@@ -3751,7 +3783,7 @@ export interface PollAnswerFactoryInterface<
  * @returns factory {@link PollAnswerFactoryInterface}
  */
 export declare function definePollAnswerFactory<
-  TOptions extends PollAnswerFactoryDefineOptions
+  TOptions extends PollAnswerFactoryDefineOptions,
 >(options: TOptions): PollAnswerFactoryInterface<TOptions>;
 type PollVoteuserFactory = {
   _factoryFor: 'User';
@@ -3816,7 +3848,7 @@ export interface PollVoteFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PollVote, 'id'>>;
 }
 export interface PollVoteFactoryInterface<
-  TOptions extends PollVoteFactoryDefineOptions = PollVoteFactoryDefineOptions
+  TOptions extends PollVoteFactoryDefineOptions = PollVoteFactoryDefineOptions,
 > extends PollVoteFactoryInterfaceWithoutTraits {
   use(
     name: PollVoteTraitKeys<TOptions>,
@@ -3830,7 +3862,7 @@ export interface PollVoteFactoryInterface<
  * @returns factory {@link PollVoteFactoryInterface}
  */
 export declare function definePollVoteFactory<
-  TOptions extends PollVoteFactoryDefineOptions
+  TOptions extends PollVoteFactoryDefineOptions,
 >(options: TOptions): PollVoteFactoryInterface<TOptions>;
 type PollExternalVoteSourcepollFactory = {
   _factoryFor: 'Poll';
@@ -3863,7 +3895,7 @@ type PollExternalVoteSourceFactoryDefineOptions = {
   };
 };
 type PollExternalVoteSourceTraitKeys<
-  TOptions extends PollExternalVoteSourceFactoryDefineOptions
+  TOptions extends PollExternalVoteSourceFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface PollExternalVoteSourceFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PollExternalVoteSource';
@@ -3894,7 +3926,8 @@ export interface PollExternalVoteSourceFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PollExternalVoteSource, 'id'>>;
 }
 export interface PollExternalVoteSourceFactoryInterface<
-  TOptions extends PollExternalVoteSourceFactoryDefineOptions = PollExternalVoteSourceFactoryDefineOptions
+  TOptions extends
+    PollExternalVoteSourceFactoryDefineOptions = PollExternalVoteSourceFactoryDefineOptions,
 > extends PollExternalVoteSourceFactoryInterfaceWithoutTraits {
   use(
     name: PollExternalVoteSourceTraitKeys<TOptions>,
@@ -3908,7 +3941,7 @@ export interface PollExternalVoteSourceFactoryInterface<
  * @returns factory {@link PollExternalVoteSourceFactoryInterface}
  */
 export declare function definePollExternalVoteSourceFactory<
-  TOptions extends PollExternalVoteSourceFactoryDefineOptions
+  TOptions extends PollExternalVoteSourceFactoryDefineOptions,
 >(options: TOptions): PollExternalVoteSourceFactoryInterface<TOptions>;
 type PollExternalVoteanswerFactory = {
   _factoryFor: 'PollAnswer';
@@ -3946,7 +3979,7 @@ type PollExternalVoteFactoryDefineOptions = {
   };
 };
 type PollExternalVoteTraitKeys<
-  TOptions extends PollExternalVoteFactoryDefineOptions
+  TOptions extends PollExternalVoteFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface PollExternalVoteFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'PollExternalVote';
@@ -3971,7 +4004,8 @@ export interface PollExternalVoteFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PollExternalVote, 'id'>>;
 }
 export interface PollExternalVoteFactoryInterface<
-  TOptions extends PollExternalVoteFactoryDefineOptions = PollExternalVoteFactoryDefineOptions
+  TOptions extends
+    PollExternalVoteFactoryDefineOptions = PollExternalVoteFactoryDefineOptions,
 > extends PollExternalVoteFactoryInterfaceWithoutTraits {
   use(
     name: PollExternalVoteTraitKeys<TOptions>,
@@ -3985,7 +4019,7 @@ export interface PollExternalVoteFactoryInterface<
  * @returns factory {@link PollExternalVoteFactoryInterface}
  */
 export declare function definePollExternalVoteFactory<
-  TOptions extends PollExternalVoteFactoryDefineOptions
+  TOptions extends PollExternalVoteFactoryDefineOptions,
 >(options: TOptions): PollExternalVoteFactoryInterface<TOptions>;
 type EventimageFactory = {
   _factoryFor: 'Image';
@@ -4042,7 +4076,7 @@ export interface EventFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Event, 'id'>>;
 }
 export interface EventFactoryInterface<
-  TOptions extends EventFactoryDefineOptions = EventFactoryDefineOptions
+  TOptions extends EventFactoryDefineOptions = EventFactoryDefineOptions,
 > extends EventFactoryInterfaceWithoutTraits {
   use(
     name: EventTraitKeys<TOptions>,
@@ -4056,7 +4090,7 @@ export interface EventFactoryInterface<
  * @returns factory {@link EventFactoryInterface}
  */
 export declare function defineEventFactory<
-  TOptions extends EventFactoryDefineOptions
+  TOptions extends EventFactoryDefineOptions,
 >(options?: TOptions): EventFactoryInterface<TOptions>;
 type TaggedEventseventFactory = {
   _factoryFor: 'Event';
@@ -4111,7 +4145,8 @@ export interface TaggedEventsFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<TaggedEvents, 'eventId' | 'tagId'>>;
 }
 export interface TaggedEventsFactoryInterface<
-  TOptions extends TaggedEventsFactoryDefineOptions = TaggedEventsFactoryDefineOptions
+  TOptions extends
+    TaggedEventsFactoryDefineOptions = TaggedEventsFactoryDefineOptions,
 > extends TaggedEventsFactoryInterfaceWithoutTraits {
   use(
     name: TaggedEventsTraitKeys<TOptions>,
@@ -4125,7 +4160,7 @@ export interface TaggedEventsFactoryInterface<
  * @returns factory {@link TaggedEventsFactoryInterface}
  */
 export declare function defineTaggedEventsFactory<
-  TOptions extends TaggedEventsFactoryDefineOptions
+  TOptions extends TaggedEventsFactoryDefineOptions,
 >(options: TOptions): TaggedEventsFactoryInterface<TOptions>;
 type ConsentFactoryDefineInput = {
   id?: string;
@@ -4167,7 +4202,7 @@ export interface ConsentFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Consent, 'id'>>;
 }
 export interface ConsentFactoryInterface<
-  TOptions extends ConsentFactoryDefineOptions = ConsentFactoryDefineOptions
+  TOptions extends ConsentFactoryDefineOptions = ConsentFactoryDefineOptions,
 > extends ConsentFactoryInterfaceWithoutTraits {
   use(
     name: ConsentTraitKeys<TOptions>,
@@ -4181,7 +4216,7 @@ export interface ConsentFactoryInterface<
  * @returns factory {@link ConsentFactoryInterface}
  */
 export declare function defineConsentFactory<
-  TOptions extends ConsentFactoryDefineOptions
+  TOptions extends ConsentFactoryDefineOptions,
 >(options?: TOptions): ConsentFactoryInterface<TOptions>;
 type UserConsentconsentFactory = {
   _factoryFor: 'Consent';
@@ -4238,7 +4273,8 @@ export interface UserConsentFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<UserConsent, 'id'>>;
 }
 export interface UserConsentFactoryInterface<
-  TOptions extends UserConsentFactoryDefineOptions = UserConsentFactoryDefineOptions
+  TOptions extends
+    UserConsentFactoryDefineOptions = UserConsentFactoryDefineOptions,
 > extends UserConsentFactoryInterfaceWithoutTraits {
   use(
     name: UserConsentTraitKeys<TOptions>,
@@ -4252,7 +4288,7 @@ export interface UserConsentFactoryInterface<
  * @returns factory {@link UserConsentFactoryInterface}
  */
 export declare function defineUserConsentFactory<
-  TOptions extends UserConsentFactoryDefineOptions
+  TOptions extends UserConsentFactoryDefineOptions,
 >(options: TOptions): UserConsentFactoryInterface<TOptions>;
 type UserFlowMailmailTemplateFactory = {
   _factoryFor: 'MailTemplate';
@@ -4302,7 +4338,8 @@ export interface UserFlowMailFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<UserFlowMail, 'id'>>;
 }
 export interface UserFlowMailFactoryInterface<
-  TOptions extends UserFlowMailFactoryDefineOptions = UserFlowMailFactoryDefineOptions
+  TOptions extends
+    UserFlowMailFactoryDefineOptions = UserFlowMailFactoryDefineOptions,
 > extends UserFlowMailFactoryInterfaceWithoutTraits {
   use(
     name: UserFlowMailTraitKeys<TOptions>,
@@ -4316,7 +4353,7 @@ export interface UserFlowMailFactoryInterface<
  * @returns factory {@link UserFlowMailFactoryInterface}
  */
 export declare function defineUserFlowMailFactory<
-  TOptions extends UserFlowMailFactoryDefineOptions
+  TOptions extends UserFlowMailFactoryDefineOptions,
 >(options?: TOptions): UserFlowMailFactoryInterface<TOptions>;
 type SubscriptionFlowmemberPlanFactory = {
   _factoryFor: 'MemberPlan';
@@ -4353,7 +4390,7 @@ type SubscriptionFlowFactoryDefineOptions = {
   };
 };
 type SubscriptionFlowTraitKeys<
-  TOptions extends SubscriptionFlowFactoryDefineOptions
+  TOptions extends SubscriptionFlowFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface SubscriptionFlowFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionFlow';
@@ -4378,7 +4415,8 @@ export interface SubscriptionFlowFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<SubscriptionFlow, 'id'>>;
 }
 export interface SubscriptionFlowFactoryInterface<
-  TOptions extends SubscriptionFlowFactoryDefineOptions = SubscriptionFlowFactoryDefineOptions
+  TOptions extends
+    SubscriptionFlowFactoryDefineOptions = SubscriptionFlowFactoryDefineOptions,
 > extends SubscriptionFlowFactoryInterfaceWithoutTraits {
   use(
     name: SubscriptionFlowTraitKeys<TOptions>,
@@ -4392,7 +4430,7 @@ export interface SubscriptionFlowFactoryInterface<
  * @returns factory {@link SubscriptionFlowFactoryInterface}
  */
 export declare function defineSubscriptionFlowFactory<
-  TOptions extends SubscriptionFlowFactoryDefineOptions
+  TOptions extends SubscriptionFlowFactoryDefineOptions,
 >(options?: TOptions): SubscriptionFlowFactoryInterface<TOptions>;
 type SubscriptionIntervalmailTemplateFactory = {
   _factoryFor: 'MailTemplate';
@@ -4434,7 +4472,7 @@ type SubscriptionIntervalFactoryDefineOptions = {
   };
 };
 type SubscriptionIntervalTraitKeys<
-  TOptions extends SubscriptionIntervalFactoryDefineOptions
+  TOptions extends SubscriptionIntervalFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface SubscriptionIntervalFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'SubscriptionInterval';
@@ -4465,7 +4503,8 @@ export interface SubscriptionIntervalFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<SubscriptionInterval, 'id'>>;
 }
 export interface SubscriptionIntervalFactoryInterface<
-  TOptions extends SubscriptionIntervalFactoryDefineOptions = SubscriptionIntervalFactoryDefineOptions
+  TOptions extends
+    SubscriptionIntervalFactoryDefineOptions = SubscriptionIntervalFactoryDefineOptions,
 > extends SubscriptionIntervalFactoryInterfaceWithoutTraits {
   use(
     name: SubscriptionIntervalTraitKeys<TOptions>,
@@ -4479,7 +4518,7 @@ export interface SubscriptionIntervalFactoryInterface<
  * @returns factory {@link SubscriptionIntervalFactoryInterface}
  */
 export declare function defineSubscriptionIntervalFactory<
-  TOptions extends SubscriptionIntervalFactoryDefineOptions
+  TOptions extends SubscriptionIntervalFactoryDefineOptions,
 >(options: TOptions): SubscriptionIntervalFactoryInterface<TOptions>;
 type MailTemplateFactoryDefineInput = {
   id?: string;
@@ -4526,7 +4565,8 @@ export interface MailTemplateFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<MailTemplate, 'id'>>;
 }
 export interface MailTemplateFactoryInterface<
-  TOptions extends MailTemplateFactoryDefineOptions = MailTemplateFactoryDefineOptions
+  TOptions extends
+    MailTemplateFactoryDefineOptions = MailTemplateFactoryDefineOptions,
 > extends MailTemplateFactoryInterfaceWithoutTraits {
   use(
     name: MailTemplateTraitKeys<TOptions>,
@@ -4540,7 +4580,7 @@ export interface MailTemplateFactoryInterface<
  * @returns factory {@link MailTemplateFactoryInterface}
  */
 export declare function defineMailTemplateFactory<
-  TOptions extends MailTemplateFactoryDefineOptions
+  TOptions extends MailTemplateFactoryDefineOptions,
 >(options?: TOptions): MailTemplateFactoryInterface<TOptions>;
 type PeriodicJobFactoryDefineInput = {
   id?: string;
@@ -4586,7 +4626,8 @@ export interface PeriodicJobFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<PeriodicJob, 'id'>>;
 }
 export interface PeriodicJobFactoryInterface<
-  TOptions extends PeriodicJobFactoryDefineOptions = PeriodicJobFactoryDefineOptions
+  TOptions extends
+    PeriodicJobFactoryDefineOptions = PeriodicJobFactoryDefineOptions,
 > extends PeriodicJobFactoryInterfaceWithoutTraits {
   use(
     name: PeriodicJobTraitKeys<TOptions>,
@@ -4600,7 +4641,7 @@ export interface PeriodicJobFactoryInterface<
  * @returns factory {@link PeriodicJobFactoryInterface}
  */
 export declare function definePeriodicJobFactory<
-  TOptions extends PeriodicJobFactoryDefineOptions
+  TOptions extends PeriodicJobFactoryDefineOptions,
 >(options?: TOptions): PeriodicJobFactoryInterface<TOptions>;
 type BlockStyleFactoryDefineInput = {
   id?: string;
@@ -4642,7 +4683,8 @@ export interface BlockStyleFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<BlockStyle, 'id'>>;
 }
 export interface BlockStyleFactoryInterface<
-  TOptions extends BlockStyleFactoryDefineOptions = BlockStyleFactoryDefineOptions
+  TOptions extends
+    BlockStyleFactoryDefineOptions = BlockStyleFactoryDefineOptions,
 > extends BlockStyleFactoryInterfaceWithoutTraits {
   use(
     name: BlockStyleTraitKeys<TOptions>,
@@ -4656,7 +4698,7 @@ export interface BlockStyleFactoryInterface<
  * @returns factory {@link BlockStyleFactoryInterface}
  */
 export declare function defineBlockStyleFactory<
-  TOptions extends BlockStyleFactoryDefineOptions
+  TOptions extends BlockStyleFactoryDefineOptions,
 >(options?: TOptions): BlockStyleFactoryInterface<TOptions>;
 type BannerimageFactory = {
   _factoryFor: 'Image';
@@ -4711,7 +4753,7 @@ export interface BannerFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Banner, 'id'>>;
 }
 export interface BannerFactoryInterface<
-  TOptions extends BannerFactoryDefineOptions = BannerFactoryDefineOptions
+  TOptions extends BannerFactoryDefineOptions = BannerFactoryDefineOptions,
 > extends BannerFactoryInterfaceWithoutTraits {
   use(
     name: BannerTraitKeys<TOptions>,
@@ -4725,7 +4767,7 @@ export interface BannerFactoryInterface<
  * @returns factory {@link BannerFactoryInterface}
  */
 export declare function defineBannerFactory<
-  TOptions extends BannerFactoryDefineOptions
+  TOptions extends BannerFactoryDefineOptions,
 >(options?: TOptions): BannerFactoryInterface<TOptions>;
 type BannerActionbannerFactory = {
   _factoryFor: 'Banner';
@@ -4778,7 +4820,8 @@ export interface BannerActionFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<BannerAction, 'id'>>;
 }
 export interface BannerActionFactoryInterface<
-  TOptions extends BannerActionFactoryDefineOptions = BannerActionFactoryDefineOptions
+  TOptions extends
+    BannerActionFactoryDefineOptions = BannerActionFactoryDefineOptions,
 > extends BannerActionFactoryInterfaceWithoutTraits {
   use(
     name: BannerActionTraitKeys<TOptions>,
@@ -4792,7 +4835,7 @@ export interface BannerActionFactoryInterface<
  * @returns factory {@link BannerActionFactoryInterface}
  */
 export declare function defineBannerActionFactory<
-  TOptions extends BannerActionFactoryDefineOptions
+  TOptions extends BannerActionFactoryDefineOptions,
 >(options: TOptions): BannerActionFactoryInterface<TOptions>;
 type CrowdfundingFactoryDefineInput = {
   id?: string;
@@ -4838,7 +4881,8 @@ export interface CrowdfundingFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<Crowdfunding, 'id'>>;
 }
 export interface CrowdfundingFactoryInterface<
-  TOptions extends CrowdfundingFactoryDefineOptions = CrowdfundingFactoryDefineOptions
+  TOptions extends
+    CrowdfundingFactoryDefineOptions = CrowdfundingFactoryDefineOptions,
 > extends CrowdfundingFactoryInterfaceWithoutTraits {
   use(
     name: CrowdfundingTraitKeys<TOptions>,
@@ -4852,7 +4896,7 @@ export interface CrowdfundingFactoryInterface<
  * @returns factory {@link CrowdfundingFactoryInterface}
  */
 export declare function defineCrowdfundingFactory<
-  TOptions extends CrowdfundingFactoryDefineOptions
+  TOptions extends CrowdfundingFactoryDefineOptions,
 >(options?: TOptions): CrowdfundingFactoryInterface<TOptions>;
 type CrowdfundingGoalCrowdfundingFactory = {
   _factoryFor: 'Crowdfunding';
@@ -4883,7 +4927,7 @@ type CrowdfundingGoalFactoryDefineOptions = {
   };
 };
 type CrowdfundingGoalTraitKeys<
-  TOptions extends CrowdfundingGoalFactoryDefineOptions
+  TOptions extends CrowdfundingGoalFactoryDefineOptions,
 > = keyof TOptions['traits'];
 export interface CrowdfundingGoalFactoryInterfaceWithoutTraits {
   readonly _factoryFor: 'CrowdfundingGoal';
@@ -4908,7 +4952,8 @@ export interface CrowdfundingGoalFactoryInterfaceWithoutTraits {
   ): PromiseLike<Pick<CrowdfundingGoal, 'id'>>;
 }
 export interface CrowdfundingGoalFactoryInterface<
-  TOptions extends CrowdfundingGoalFactoryDefineOptions = CrowdfundingGoalFactoryDefineOptions
+  TOptions extends
+    CrowdfundingGoalFactoryDefineOptions = CrowdfundingGoalFactoryDefineOptions,
 > extends CrowdfundingGoalFactoryInterfaceWithoutTraits {
   use(
     name: CrowdfundingGoalTraitKeys<TOptions>,
@@ -4922,5 +4967,5 @@ export interface CrowdfundingGoalFactoryInterface<
  * @returns factory {@link CrowdfundingGoalFactoryInterface}
  */
 export declare function defineCrowdfundingGoalFactory<
-  TOptions extends CrowdfundingGoalFactoryDefineOptions
+  TOptions extends CrowdfundingGoalFactoryDefineOptions,
 >(options: TOptions): CrowdfundingGoalFactoryInterface<TOptions>;

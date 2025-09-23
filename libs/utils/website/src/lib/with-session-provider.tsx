@@ -3,7 +3,7 @@ import { ComponentType, memo } from 'react';
 import { SessionProvider } from './session.provider';
 
 export const withSessionProvider = <
-  P extends { pageProps: { sessionToken?: SessionWithTokenWithoutUser } }
+  P extends { pageProps: { sessionToken?: SessionWithTokenWithoutUser } },
 >(
   ControlledComponent: ComponentType<P>,
   Provider: typeof SessionProvider = SessionProvider

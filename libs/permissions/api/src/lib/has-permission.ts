@@ -2,14 +2,13 @@ import { UserRole } from '@prisma/client';
 import { Permission } from '@wepublish/permissions';
 
 export function hasPermission<
-  PermissionsUserRole extends Pick<UserRole, 'id' | 'permissionIDs'>
+  PermissionsUserRole extends Pick<UserRole, 'id' | 'permissionIDs'>,
 >(
   neededPermissions: Permission | Permission[],
   userRoles: PermissionsUserRole[]
 ): boolean {
-  const perms = Array.isArray(neededPermissions)
-    ? neededPermissions
-    : [neededPermissions];
+  const perms =
+    Array.isArray(neededPermissions) ? neededPermissions : [neededPermissions];
 
   const hasPerms = perms.map(perm => {
     if (perm.deprecated) {

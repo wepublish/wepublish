@@ -66,11 +66,13 @@ export function extractEmbed(input: string, blockStyle?: string): BlockInput {
           embed: {
             url: source,
             title: iframe.attr('title'),
-            width: iframe.attr('width')
-              ? parseInt(iframe.attr('width')!)
+            width:
+              iframe.attr('width') ?
+                parseInt(iframe.attr('width')!)
               : undefined,
-            height: iframe.attr('height')
-              ? parseInt(iframe.attr('height')!)
+            height:
+              iframe.attr('height') ?
+                parseInt(iframe.attr('height')!)
               : undefined,
             blockStyle,
           },

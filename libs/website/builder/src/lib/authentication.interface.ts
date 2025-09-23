@@ -45,7 +45,7 @@ export type BuilderRegistrationFormProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
     BuilderUserFormFields,
     'flair'
-  >
+  >,
 > = {
   fields?: T[];
   schema?: z.ZodObject<

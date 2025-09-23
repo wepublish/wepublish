@@ -46,9 +46,9 @@ export class WepublishServer {
       schema: GraphQLWepublishSchema,
       plugins: [
         ApolloServerPluginUsageReportingDisabled(),
-        this.opts.playground
-          ? ApolloServerPluginLandingPageGraphQLPlayground()
-          : ApolloServerPluginLandingPageDisabled(),
+        this.opts.playground ?
+          ApolloServerPluginLandingPageGraphQLPlayground()
+        : ApolloServerPluginLandingPageDisabled(),
       ],
       introspection: true,
       context: ({ req }) => contextFromRequest(req, this.opts),

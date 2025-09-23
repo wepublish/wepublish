@@ -81,7 +81,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
         </Drawer.Actions>
       </Drawer.Header>
       <Drawer.Body>
-        {token ? (
+        {token ?
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
             <Panel bordered>{token}</Panel>
@@ -92,8 +92,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
               {t('tokenList.panels.tokenWarning')}
             </Message>
           </>
-        ) : (
-          <Input
+        : <Input
             placeholder={t('tokenList.panels.name')}
             value={name}
             disabled={isDisabled}
@@ -101,7 +100,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
               setName(value);
             }}
           />
-        )}
+        }
       </Drawer.Body>
     </>
   );

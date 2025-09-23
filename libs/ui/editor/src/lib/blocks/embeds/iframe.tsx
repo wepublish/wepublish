@@ -27,21 +27,19 @@ export function IframeEmbed({
     width !== undefined && height !== undefined ? width / height : 0;
   const noRatio = !!styleCustom && ratio === 0;
   const styleCustomCss =
-    noRatio && !!styleCustom && styleCustom !== ''
-      ? transformCssStringToObject(styleCustom)
-      : {
-          width: '100%',
-          height: '100%',
-        };
+    noRatio && !!styleCustom && styleCustom !== '' ?
+      transformCssStringToObject(styleCustom)
+    : {
+        width: '100%',
+        height: '100%',
+      };
 
   return (
     <Iframe>
       <div
         style={{
           position: 'relative',
-          paddingTop: `${
-            noRatio && ratio === 0 ? '0' : (1 / ratio) * 100 + '%'
-          }`,
+          paddingTop: `${noRatio && ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`,
           minHeight: '45px',
         }}
       >

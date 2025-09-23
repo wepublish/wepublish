@@ -60,11 +60,9 @@ export const TsriArticleMeta = ({
             badgeContent={commentCount}
             invisible={!!article.disableComments}
           >
-            {article.disableComments ? (
+            {article.disableComments ?
               <FaCommentSlash size={24} />
-            ) : (
-              <FaRegComment size={24} />
-            )}
+            : <FaRegComment size={24} />}
           </ArticleMetaBadge>
         </Link>
       </ArticleMetaComments>

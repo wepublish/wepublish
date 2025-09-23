@@ -186,9 +186,8 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
-        sequenceType: this.offSessionPayments
-          ? SequenceType.first
-          : SequenceType.oneoff,
+        sequenceType:
+          this.offSessionPayments ? SequenceType.first : SequenceType.oneoff,
         method: this.methods,
         metadata: {
           paymentID,

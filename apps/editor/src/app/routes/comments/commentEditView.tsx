@@ -369,7 +369,7 @@ const CommentEditView = memo(() => {
                         onChange={(source: string) => {
                           setComment(
                             oldComment =>
-                              ({ ...oldComment, source } as FullCommentFragment)
+                              ({ ...oldComment, source }) as FullCommentFragment
                           );
                         }}
                       />
@@ -411,24 +411,23 @@ const CommentEditView = memo(() => {
                           value={override.value}
                           onChange={value =>
                             setComment(oldComment =>
-                              oldComment
-                                ? {
-                                    ...oldComment,
-                                    overriddenRatings: ratingOverrides.map(
-                                      oldOverride =>
+                              oldComment ?
+                                {
+                                  ...oldComment,
+                                  overriddenRatings: ratingOverrides.map(
+                                    oldOverride =>
+                                      (
                                         oldOverride.answerId ===
                                         override.answerId
-                                          ? {
-                                              answerId: override.answerId,
-                                              value,
-                                            }
-                                          : {
-                                              answerId: oldOverride.answerId,
-                                              value: oldOverride.value,
-                                            }
-                                    ),
-                                  }
-                                : undefined
+                                      ) ?
+                                        { answerId: override.answerId, value }
+                                      : {
+                                          answerId: oldOverride.answerId,
+                                          value: oldOverride.value,
+                                        }
+                                  ),
+                                }
+                              : undefined
                             )
                           }
                         />

@@ -48,9 +48,8 @@ export async function migratePost(data: PreparedArticleData) {
   const tags = existingArticle ? existingArticle.tags : await ensureTags(data);
 
   // Authors
-  const authors = existingArticle
-    ? existingArticle.authors
-    : await ensureAuthors(data);
+  const authors =
+    existingArticle ? existingArticle.authors : await ensureAuthors(data);
 
   const blocks: BlockInput[] = [];
 

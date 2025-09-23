@@ -37,9 +37,9 @@ export class MailController {
    */
   private generateMailIdentifier() {
     return `${this.config.mailType}-${
-      this.config.periodicJobRunDate
-        ? this.config.periodicJobRunDate.toISOString()
-        : 'null'
+      this.config.periodicJobRunDate ?
+        this.config.periodicJobRunDate.toISOString()
+      : 'null'
     }-${this.config.daysAwayFromEnding}-${this.config.externalMailTemplateId}-${
       this.config.recipient.id
     }`;

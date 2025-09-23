@@ -109,14 +109,13 @@ export default function ArticleBySlugOrId() {
       Comment={isFDT ? BajourComment : Comment}
     >
       <Container>
-        {isSearchSlider && data?.article ? (
+        {isSearchSlider && data?.article ?
           <SearchSlider
             key={data.article.id}
             article={data.article as ArticleType}
             includeSEO
           />
-        ) : (
-          <>
+        : <>
             <ArticleContainer {...containerProps} />
             <BriefingNewsletter />
 
@@ -186,7 +185,7 @@ export default function ArticleBySlugOrId() {
               </>
             )}
           </>
-        )}
+        }
       </Container>
     </WebsiteBuilderProvider>
   );

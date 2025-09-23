@@ -55,9 +55,7 @@ export function InstagramPostBlock({
       <blockquote
         className="instagram-media"
         data-instgrm-captioned
-        data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(
-          postID
-        )}/`}
+        data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(postID)}/`}
         data-instgrm-version="14"
       />
 

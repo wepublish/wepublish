@@ -7,7 +7,7 @@ import { ComponentType, memo } from 'react';
 
 export const withJwtHandler = <
   // eslint-disable-next-line @typescript-eslint/ban-types
-  P extends object
+  P extends object,
 >(
   ControlledComponent: ComponentType<P>
 ) =>

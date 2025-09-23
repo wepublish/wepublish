@@ -93,8 +93,9 @@ export const updateComment = async (
       guestUserImageID,
       featured,
       source,
-      revisions: revision
-        ? {
+      revisions:
+        revision ?
+          {
             create: {
               text: revision.text as unknown as string,
               title: revision.title,
@@ -102,8 +103,9 @@ export const updateComment = async (
             },
           }
         : undefined,
-      tags: tagIds
-        ? {
+      tags:
+        tagIds ?
+          {
             connectOrCreate: tagIds.map(tagId => ({
               where: {
                 commentId_tagId: {
@@ -164,15 +166,15 @@ export const createAdminComment = async (
 
   return commentClient.create({
     data: {
-      state: canSkipApproval
-        ? CommentState.approved
-        : CommentState.pendingApproval,
+      state:
+        canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
       authorType: CommentAuthorType.team,
       itemID: itemId,
       itemType,
       parentID,
-      revisions: text
-        ? {
+      revisions:
+        text ?
+          {
             create: {
               text,
             },

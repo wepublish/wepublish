@@ -8,8 +8,9 @@ export const getSessionTokenProps = async (
 ): Promise<{ sessionToken: SessionWithTokenWithoutUser | null }> => {
   try {
     const token = await getCookie(AuthTokenStorageKey, { req: ctx.req });
-    const sessionToken = token
-      ? (JSON.parse(token.toString()) as SessionWithTokenWithoutUser)
+    const sessionToken =
+      token ?
+        (JSON.parse(token.toString()) as SessionWithTokenWithoutUser)
       : null;
 
     return {

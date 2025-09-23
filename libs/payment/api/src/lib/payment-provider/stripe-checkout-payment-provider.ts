@@ -146,9 +146,9 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
   }: CheckIntentProps): Promise<IntentState> {
     const session = await this.stripe.checkout.sessions.retrieve(intentID);
     const state =
-      session.payment_status === 'paid'
-        ? PaymentState.paid
-        : PaymentState.requiresUserAction;
+      session.payment_status === 'paid' ?
+        PaymentState.paid
+      : PaymentState.requiresUserAction;
 
     if (!session.client_reference_id) {
       logger('stripePaymentProvider').error(

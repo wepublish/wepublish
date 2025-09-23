@@ -11,7 +11,10 @@ import { ONE_OF_METADATA_KEY } from './one-of.decorator';
 
 @Injectable()
 export class OneOfGuard implements CanActivate {
-  constructor(private reflector: Reflector, private moduleRef: ModuleRef) {}
+  constructor(
+    private reflector: Reflector,
+    private moduleRef: ModuleRef
+  ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const allowedGuards = this.reflector.getAllAndMerge<Type<CanActivate>[]>(
@@ -31,8 +34,9 @@ export class OneOfGuard implements CanActivate {
       guards.map(async guard => {
         try {
           const canActivate$ = guard.canActivate(context);
-          const canActivate = isObservable(canActivate$)
-            ? await lastValueFrom(canActivate$)
+          const canActivate =
+            isObservable(canActivate$) ?
+              await lastValueFrom(canActivate$)
             : await canActivate$;
 
           return canActivate;

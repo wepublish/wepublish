@@ -263,9 +263,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
           <div key={`answer-${answer.id}`}>
             <Col xs={16}>
               <Badge
-                content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t(
-                  'pollAnswer.votes'
-                )}`}
+                content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}
               >
                 <Form.Control
                   name={`answer-${answer.id}`}

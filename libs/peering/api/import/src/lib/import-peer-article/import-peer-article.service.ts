@@ -102,8 +102,9 @@ export class ImportPeerArticleService {
             ...article,
             createdAt: new Date(article.createdAt),
             modifiedAt: new Date(article.modifiedAt),
-            publishedAt: article.publishedAt
-              ? new Date(article.publishedAt)
+            publishedAt:
+              article.publishedAt ?
+                new Date(article.publishedAt)
               : article.publishedAt,
           })),
         } as unknown as PaginatedPeerArticle;
@@ -184,19 +185,20 @@ export class ImportPeerArticleService {
       id: articleId,
     });
 
-    const authors = options.importAuthors
-      ? await this.importAuthors(peerId, article.published!.authors)
+    const authors =
+      options.importAuthors ?
+        await this.importAuthors(peerId, article.published!.authors)
       : [];
-    const tags = options.importAuthors
-      ? await this.importTags(peerId, article.tags)
-      : [];
+    const tags =
+      options.importAuthors ? await this.importTags(peerId, article.tags) : [];
     const blocks = await this.prepareBlocksForImport(
       peerId,
       article.published!.blocks,
       options
     );
-    const imageId = options.importContentImages
-      ? await this.importImage(peerId, article.published?.image)
+    const imageId =
+      options.importContentImages ?
+        await this.importImage(peerId, article.published?.image)
       : null;
 
     const created = await this.prisma.article.create({
@@ -331,8 +333,9 @@ export class ImportPeerArticleService {
           case 'BreakBlock':
           case 'QuoteBlock':
           case 'ImageBlock': {
-            const imageId = options.importContentImages
-              ? await this.importImage(peerId, block.image)
+            const imageId =
+              options.importContentImages ?
+                await this.importImage(peerId, block.image)
               : null;
 
             return {
@@ -345,8 +348,9 @@ export class ImportPeerArticleService {
           case 'ListicleBlock': {
             const items = await Promise.all(
               block.items.map(async item => {
-                const imageId = options.importContentImages
-                  ? await this.importImage(peerId, item.image)
+                const imageId =
+                  options.importContentImages ?
+                    await this.importImage(peerId, item.image)
                   : null;
 
                 return {
@@ -366,8 +370,9 @@ export class ImportPeerArticleService {
           case 'ImageGalleryBlock': {
             const images = await Promise.all(
               block.images.map(async item => {
-                const imageId = options.importContentImages
-                  ? await this.importImage(peerId, item.image)
+                const imageId =
+                  options.importContentImages ?
+                    await this.importImage(peerId, item.image)
                   : null;
 
                 return {

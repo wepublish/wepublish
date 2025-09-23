@@ -120,8 +120,8 @@ export const PaymentAmountPicker = forwardRef<
     const pickerItems = useMemo(() => {
       switch (siteTitle) {
         case 'WNTI':
-          return slug?.includes('donate')
-            ? [10000, 15000, 20000]
+          return slug?.includes('donate') ?
+              [10000, 15000, 20000]
             : [1000, 1500, 2000];
         default:
           return [1000, 1500, 2000];
@@ -172,11 +172,7 @@ export const PaymentAmountPicker = forwardRef<
                 type={'number'}
                 fullWidth
                 error={!!error}
-                helperText={`Min ${formatCurrency(
-                  amountPerMonthMin / 100,
-                  currency,
-                  locale
-                )}`}
+                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
                 inputProps={{
                   step: 'any',
                   min: amountPerMonthMin / 100,

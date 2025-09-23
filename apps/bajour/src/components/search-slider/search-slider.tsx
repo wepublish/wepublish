@@ -498,11 +498,13 @@ export function SearchSlider({
   const videoBlock = (mainArticle?.latest.blocks as BlockContent[])?.find(
     isIFrameBlock
   );
-  const publicationDate = mainArticle?.publishedAt
-    ? format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
+  const publicationDate =
+    mainArticle?.publishedAt ?
+      format(new Date(mainArticle?.publishedAt), 'd. MMM yyyy')
     : '';
-  const publicationDay = mainArticle?.publishedAt
-    ? format(new Date(mainArticle?.publishedAt), 'eeee')
+  const publicationDay =
+    mainArticle?.publishedAt ?
+      format(new Date(mainArticle?.publishedAt), 'eeee')
     : '';
 
   const articlesWithVideos = sliderArticles

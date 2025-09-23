@@ -108,9 +108,7 @@ function BannerList() {
             <RCell>
               {(rowData: RowDataType<Banner>) =>
                 t(
-                  `banner.form.loginStatus.${
-                    (rowData as Banner).showForLoginStatus
-                  }`
+                  `banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`
                 )
               }
             </RCell>

@@ -131,9 +131,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       );
 
       // Get subscription
-      const subscription = await this.findSubscriptionByExternalId(
-        subscriptionId
-      );
+      const subscription =
+        await this.findSubscriptionByExternalId(subscriptionId);
       if (!subscription) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Subscription ${subscriptionId} received from payrexx webhook not found!`

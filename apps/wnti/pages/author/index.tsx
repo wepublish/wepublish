@@ -40,7 +40,7 @@ export default function AuthorList() {
         filter: {
           hideOnTeam: false,
         },
-      } satisfies AuthorListQueryVariables),
+      }) satisfies AuthorListQueryVariables,
     [page]
   );
 

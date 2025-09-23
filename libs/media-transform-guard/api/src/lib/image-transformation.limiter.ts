@@ -76,9 +76,7 @@ export const validateImageDimension = (
 
   if (!formatCheck) {
     throw new BadRequestException(
-      `Requested forbidden dimension (${checkWidth ?? '—'}x${
-        checkHeight ?? '—'
-      })`
+      `Requested forbidden dimension (${checkWidth ?? '—'}x${checkHeight ?? '—'})`
     );
   }
 };

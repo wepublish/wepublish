@@ -175,9 +175,9 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
           {poll.answers.map(answer => (
             <PollBlockResult
               highlight={
-                userVote
-                  ? answer.id === userVote
-                  : combinedVotes[answer.id] > totalVotes / poll.answers.length
+                userVote ?
+                  answer.id === userVote
+                : combinedVotes[answer.id] > totalVotes / poll.answers.length
               }
               voteCount={combinedVotes[answer.id] ?? 0}
               answer={answer.answer}

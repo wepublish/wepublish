@@ -123,9 +123,8 @@ export function CommentPreview({
 }: CommentPreviewProps) {
   const { t } = useTranslation();
   const revisions = comment.revisions;
-  const lastRevision = revisions?.length
-    ? revisions[revisions.length - 1]
-    : undefined;
+  const lastRevision =
+    revisions?.length ? revisions[revisions.length - 1] : undefined;
   const expanded = useMemo(
     () => comment.id === originComment?.id,
     [comment.id, originComment?.id]
@@ -190,9 +189,9 @@ export function CommentPreview({
       defaultExpanded={!!expanded}
       onSelect={() => setPanelExpanded(!panelExpanded)}
       style={
-        expanded
-          ? { border: `1px solid black`, backgroundColor: '#f7f9fa' }
-          : {}
+        expanded ?
+          { border: `1px solid black`, backgroundColor: '#f7f9fa' }
+        : {}
       }
     >
       {!expanded && (

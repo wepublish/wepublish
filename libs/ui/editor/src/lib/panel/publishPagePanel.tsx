@@ -57,7 +57,7 @@ function PublishPagePanel({
 
         <DescriptionList>
           <DescriptionListItem label={t('pageEditor.panels.url')}>
-            {metadata?.url ? (
+            {metadata?.url ?
               <a
                 href={metadata.url}
                 target="_blank"
@@ -65,9 +65,7 @@ function PublishPagePanel({
               >
                 {metadata.url}
               </a>
-            ) : (
-              '-'
-            )}
+            : '-'}
           </DescriptionListItem>
           <DescriptionListItemWithMessage
             label={t('pageEditor.panels.title')}

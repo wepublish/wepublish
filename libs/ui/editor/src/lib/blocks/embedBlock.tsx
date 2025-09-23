@@ -156,15 +156,15 @@ export function EmbedPreview({ value }: EmbedPreviewProps) {
       return <BildwurfAdEmbed zoneID={value.zoneID} />;
 
     default:
-      return value.url ? (
-        <IframeEmbed
-          title={value.title}
-          url={value.url}
-          width={value.width}
-          height={value.height}
-          styleCustom={value.styleCustom}
-          sandbox={value.sandbox}
-        />
-      ) : null;
+      return value.url ?
+          <IframeEmbed
+            title={value.title}
+            url={value.url}
+            width={value.width}
+            height={value.height}
+            styleCustom={value.styleCustom}
+            sandbox={value.sandbox}
+          />
+        : null;
   }
 }

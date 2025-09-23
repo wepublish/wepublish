@@ -243,7 +243,9 @@ const BaselBriefingTitle = styled('span')`
   font-weight: bold;
   font-size: ${({ theme }) => theme.spacing(4)};
   text-transform: uppercase;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35), 0 0 1em rgba(0, 0, 0, 0.35),
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.35),
+    0 0 1em rgba(0, 0, 0, 0.35),
     0 0 0.2em rgba(0, 0, 0, 0.35);
 
   ${({ theme }) => theme.breakpoints.up('lg')} {
@@ -255,7 +257,9 @@ const BaselBriefingSubtitle = styled('span')`
   font-weight: bold;
   font-size: 0.8rem;
   text-transform: uppercase;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35), 0 0 1em rgba(0, 0, 0, 0.35),
+  text-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.35),
+    0 0 1em rgba(0, 0, 0, 0.35),
     0 0 0.2em rgba(0, 0, 0, 0.35);
 
   ${({ theme }) => theme.breakpoints.up('lg')} {
@@ -273,9 +277,7 @@ const Briefing = styled('div')`
   color: ${({ theme }) => theme.palette.common.white};
   background-color: rgba(0, 0, 0, 0.35);
   padding: ${({ theme }) =>
-    `${theme.spacing(0.5)} ${theme.spacing(2)} ${theme.spacing(
-      2
-    )} ${theme.spacing(2)}`};
+    `${theme.spacing(0.5)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)}`};
   font-size: ${fluidTypography(12, 26)};
   grid-column: 1/13;
 
@@ -284,18 +286,14 @@ const Briefing = styled('div')`
     border-radius: ${({ theme }) => theme.spacing(2)}
       ${({ theme }) => theme.spacing(2)} 0 0;
     padding: ${({ theme }) =>
-      `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-        2
-      )} ${theme.spacing(4)}`};
+      `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(4)}`};
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     border-radius: ${({ theme }) => theme.spacing(4)}
       ${({ theme }) => theme.spacing(4)} 0 0;
     padding: ${({ theme }) =>
-      `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(
-        2
-      )} ${theme.spacing(4)}`};
+      `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(4)}`};
   }
 `;
 
@@ -327,9 +325,7 @@ const TeaserContentInterior = styled('div')`
   align-items: center;
   grid-template-columns: 3fr 4fr;
   padding: ${({ theme }) =>
-    `${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(
-      1
-    )} ${theme.spacing(3.5)}`};
+    `${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(3.5)}`};
   border-bottom-right-radius: ${({ theme }) => theme.spacing(2)};
   background-color: ${({ theme }) => theme.palette.secondary.dark};
   color: ${({ theme }) => theme.palette.common.black};
@@ -337,9 +333,7 @@ const TeaserContentInterior = styled('div')`
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: 3/12;
     padding: ${({ theme }) =>
-      `${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(
-        1.5
-      )} ${theme.spacing(4)}`};
+      `${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(4)}`};
   }
 `;
 

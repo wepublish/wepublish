@@ -68,8 +68,9 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         onChange={fieldValue =>
           props.onChange({
             ...props.value,
-            richText: isFunctionalUpdate(fieldValue)
-              ? fieldValue(props.value.richText)
+            richText:
+              isFunctionalUpdate(fieldValue) ?
+                fieldValue(props.value.richText)
               : fieldValue,
           })
         }

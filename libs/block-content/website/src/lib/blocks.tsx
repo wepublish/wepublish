@@ -185,12 +185,12 @@ export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
           key={index}
           value={
             // Above the fold images should be loaded with a high priority
-            3 > index
-              ? {
-                  fetchPriority: 'high',
-                  loading: 'eager',
-                }
-              : {}
+            3 > index ?
+              {
+                fetchPriority: 'high',
+                loading: 'eager',
+              }
+            : {}
           }
         >
           <Renderer

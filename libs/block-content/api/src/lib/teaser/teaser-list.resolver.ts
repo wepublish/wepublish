@@ -60,9 +60,9 @@ export class TeaserListBlockResolver {
               published: true,
             },
             sort:
-              sort === TeaserListBlockSort.UpdatedAt
-                ? ArticleSort.ModifiedAt
-                : ArticleSort.PublishedAt,
+              sort === TeaserListBlockSort.UpdatedAt ?
+                ArticleSort.ModifiedAt
+              : ArticleSort.PublishedAt,
             order: SortOrder.Descending,
             skip,
             take,
@@ -78,7 +78,7 @@ export class TeaserListBlockResolver {
             imageID: undefined,
             lead: undefined,
             title: undefined,
-          } as ArticleTeaser)
+          }) as ArticleTeaser
       );
     }
 
@@ -89,9 +89,9 @@ export class TeaserListBlockResolver {
           published: true,
         },
         sort:
-          sort === TeaserListBlockSort.UpdatedAt
-            ? PageSort.ModifiedAt
-            : PageSort.PublishedAt,
+          sort === TeaserListBlockSort.UpdatedAt ?
+            PageSort.ModifiedAt
+          : PageSort.PublishedAt,
         order: SortOrder.Descending,
         skip,
         take,
@@ -105,7 +105,7 @@ export class TeaserListBlockResolver {
             imageID: undefined,
             lead: undefined,
             title: undefined,
-          } as PageTeaser)
+          }) as PageTeaser
       );
     }
 
@@ -115,9 +115,9 @@ export class TeaserListBlockResolver {
           tags: filter.tags,
         },
         sort:
-          sort === TeaserListBlockSort.UpdatedAt
-            ? EventSort.ModifiedAt
-            : EventSort.StartsAt,
+          sort === TeaserListBlockSort.UpdatedAt ?
+            EventSort.ModifiedAt
+          : EventSort.StartsAt,
         order: SortOrder.Descending,
         skip,
         take,
@@ -131,7 +131,7 @@ export class TeaserListBlockResolver {
             imageID: undefined,
             lead: undefined,
             title: undefined,
-          } as EventTeaser)
+          }) as EventTeaser
       );
     }
 

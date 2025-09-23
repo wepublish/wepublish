@@ -51,9 +51,8 @@ export class UserSubscriptionResolver {
     @Args() { userId, ...args }: CreateSubscriptionWithConfirmationArgs,
     @CurrentUser() session?: UserSession
   ) {
-    const user = userId
-      ? await this.userDataloader.load(userId)
-      : session?.user;
+    const user =
+      userId ? await this.userDataloader.load(userId) : session?.user;
     if (!user) {
       throw new UserInputError('User not found');
     }

@@ -3,19 +3,18 @@ import 'reflect-metadata';
 type Constructor<T = any> = new (...args: any[]) => T;
 
 export type DeepMocked<T> = Partial<{
-  [K in keyof T]: T[K] extends (...args: any[]) => any
-    ? jest.Mock<ReturnType<T[K]>, Parameters<T[K]>>
-    : T[K] extends object
-    ? DeepMocked<T[K]>
-    : T[K];
+  [K in keyof T]: T[K] extends (...args: any[]) => any ?
+    jest.Mock<ReturnType<T[K]>, Parameters<T[K]>>
+  : T[K] extends object ? DeepMocked<T[K]>
+  : T[K];
 }>;
 
 export type Mocked<T> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => any
-    ? T[K] extends (...args: any[]) => Promise<infer R>
-      ? jest.Mock<Promise<Partial<R>>, Parameters<T[K]>>
-      : jest.Mock<Partial<ReturnType<T[K]>>, Parameters<T[K]>>
-    : T[K];
+  [K in keyof T]: T[K] extends (...args: any[]) => any ?
+    T[K] extends (...args: any[]) => Promise<infer R> ?
+      jest.Mock<Promise<Partial<R>>, Parameters<T[K]>>
+    : jest.Mock<Partial<ReturnType<T[K]>>, Parameters<T[K]>>
+  : T[K];
 };
 
 export type PartialMocked<T> = Partial<Mocked<T>>;

@@ -165,7 +165,11 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
 
           <CommentsWrapper>
             <AuthorAndContext>
-              <div>{author ? <StyledAuthorBox author={author} /> : null}</div>
+              <div>
+                {author ?
+                  <StyledAuthorBox author={author} />
+                : null}
+              </div>
               <div>
                 <StyledInfoBox richText={poll?.infoText || []} />
               </div>

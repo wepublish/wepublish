@@ -25,9 +25,9 @@ export function TeaserSelectAndEditPanel({
       <TeaserSelectPanel
         onClose={onClose}
         onSelect={teaser =>
-          teaser.type !== TeaserType.Custom
-            ? (setEditOpen(true), setTeaser(teaser))
-            : (onClose(), onSelect(teaser))
+          teaser.type !== TeaserType.Custom ?
+            (setEditOpen(true), setTeaser(teaser))
+          : (onClose(), onSelect(teaser))
         }
       />
       <Drawer

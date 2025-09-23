@@ -316,9 +316,9 @@ function PageEditor() {
       <Notification
         type="success"
         header={t(
-          publishedAt <= new Date()
-            ? 'pageEditor.overview.pagePublished'
-            : 'pageEditor.overview.pagePending'
+          publishedAt <= new Date() ?
+            'pageEditor.overview.pagePublished'
+          : 'pageEditor.overview.pagePending'
         )}
         duration={2000}
       />,
@@ -377,7 +377,7 @@ function PageEditor() {
                     {t('pageEditor.overview.metadata')}
                   </RIconButton>
 
-                  {isNew && createData == null ? (
+                  {isNew && createData == null ?
                     <PermissionControl
                       qualifyingPermissions={['CAN_CREATE_PAGE']}
                     >
@@ -391,8 +391,7 @@ function PageEditor() {
                         {t('create')}
                       </IconButton>
                     </PermissionControl>
-                  ) : (
-                    <PermissionControl
+                  : <PermissionControl
                       qualifyingPermissions={['CAN_CREATE_PAGE']}
                     >
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
@@ -411,9 +410,12 @@ function PageEditor() {
                       >
                         <Badge
                           className={
-                            pageData?.page?.draft || !pageData?.page?.published
-                              ? 'unsaved'
-                              : 'saved'
+                            (
+                              pageData?.page?.draft ||
+                              !pageData?.page?.published
+                            ) ?
+                              'unsaved'
+                            : 'saved'
                           }
                         >
                           <IconButton
@@ -430,7 +432,7 @@ function PageEditor() {
                         </Badge>
                       </PermissionControl>
                     </PermissionControl>
-                  )}
+                  }
                 </CenterChildren>
               }
               rightChildren={
@@ -446,9 +448,7 @@ function PageEditor() {
                       const { data: jwt } = await createJWT();
 
                       window.open(
-                        `${pageData!.page.previewUrl}&jwt=${
-                          jwt?.createJWTForWebsiteLogin?.token
-                        }`,
+                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForWebsiteLogin?.token}`,
                         '_blank'
                       );
                     }}

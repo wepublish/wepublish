@@ -97,9 +97,8 @@ export const addPublicComment = async (
       },
       userID: user?.user.id,
       authorType,
-      state: canSkipApproval
-        ? CommentState.approved
-        : CommentState.pendingApproval,
+      state:
+        canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
     },
     include: {
       revisions: { orderBy: { createdAt: 'asc' } },
@@ -162,9 +161,8 @@ export const updatePublicComment = async (
           lead: lead ?? comment?.revisions.at(-1)?.lead ?? '',
         },
       },
-      state: canSkipApproval
-        ? CommentState.approved
-        : CommentState.pendingApproval,
+      state:
+        canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
     },
     include: {
       revisions: { orderBy: { createdAt: 'asc' } },

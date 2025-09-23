@@ -28,9 +28,9 @@ export const ImagePanel = styled(RPanel)<{ image: FullImageFragment }>`
   background-position-y: center;
   background-repeat: no-repeat;
   background-image: ${({ image }) =>
-    image?.largeURL
-      ? `url(${image?.largeURL})`
-      : 'https://via.placeholder.com/240x240'};
+    image?.largeURL ?
+      `url(${image?.largeURL})`
+    : 'https://via.placeholder.com/240x240'};
 `;
 
 // TODO: Handle disabled prop

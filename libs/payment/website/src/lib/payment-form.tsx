@@ -24,9 +24,8 @@ export const PaymentForm = ({
       <StripePayment
         onClose={async success => {
           if (redirectPages) {
-            window.location.href = success
-              ? redirectPages.successUrl
-              : redirectPages.failUrl;
+            window.location.href =
+              success ? redirectPages.successUrl : redirectPages.failUrl;
           }
         }}
       />

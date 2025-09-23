@@ -191,9 +191,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       state: intentStatus,
       paymentID,
       paymentData: JSON.stringify(bexioResponse),
-      customerID: bexioResponse.contact_id
-        ? bexioResponse.contact_id.toString()
-        : '',
+      customerID:
+        bexioResponse.contact_id ? bexioResponse.contact_id.toString() : '',
     };
   }
 
@@ -302,7 +301,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     const upsertContact: ContactsStatic.ContactOverwrite = {
       nr: '',
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
-      name_2: user?.address?.company ? '' : user.firstName ?? undefined, // Firstname or none
+      name_2: user?.address?.company ? '' : (user.firstName ?? undefined), // Firstname or none
       mail: user.email,
       user_id: this.userId,
       contact_type_id: user?.address?.company ? 1 : 2, // 1: Company 2: Person
@@ -368,16 +367,18 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     );
 
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
-      title: isRenewal
-        ? this.invoiceTitleRenewalMembership
+      title:
+        isRenewal ?
+          this.invoiceTitleRenewalMembership
         : this.invoiceTitleNewMembership,
       contact_id: contact.id,
       user_id: this.userId,
       mwst_type: 0,
       mwst_is_net: false,
       api_reference: invoice.id,
-      template_slug: isRenewal
-        ? this.invoiceTemplateRenewalMembership
+      template_slug:
+        isRenewal ?
+          this.invoiceTemplateRenewalMembership
         : this.invoiceTemplateNewMembership,
       positions: [
         {
@@ -401,14 +402,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     const sentInvoice = await this.bexio.invoices.sent(invoiceUpdated.id, {
       recipient_email: contact.mail,
       subject: stringReplaceMap.replace(
-        isRenewal
-          ? this.invoiceMailSubjectRenewalMembership
-          : this.invoiceMailSubjectNewMembership
+        isRenewal ?
+          this.invoiceMailSubjectRenewalMembership
+        : this.invoiceMailSubjectNewMembership
       ),
       message: stringReplaceMap.replace(
-        isRenewal
-          ? this.invoiceMailBodyRenewalMembership
-          : this.invoiceMailBodyNewMembership
+        isRenewal ?
+          this.invoiceMailBodyRenewalMembership
+        : this.invoiceMailBodyNewMembership
       ),
       mark_as_open: this.markInvoiceAsOpen,
       attach_pdf: true,

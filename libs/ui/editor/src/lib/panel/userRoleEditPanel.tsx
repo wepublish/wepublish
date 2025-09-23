@@ -158,9 +158,9 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     >
       <Drawer.Header>
         <Drawer.Title>
-          {id
-            ? t('userRoles.panels.editUserRole')
-            : t('userRoles.panels.createUserRole')}
+          {id ?
+            t('userRoles.panels.editUserRole')
+          : t('userRoles.panels.createUserRole')}
         </Drawer.Title>
 
         <Drawer.Actions>

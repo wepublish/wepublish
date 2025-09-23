@@ -82,8 +82,9 @@ export class PaymentsService {
       );
     }
 
-    const paymentMethod = paymentMethodID
-      ? await this.paymentMethodsService.findActivePaymentMethodById(
+    const paymentMethod =
+      paymentMethodID ?
+        await this.paymentMethodsService.findActivePaymentMethodById(
           paymentMethodID
         )
       : await this.paymentMethodsService.findActivePaymentMethodBySlug(
@@ -264,8 +265,9 @@ export class PaymentsService {
       },
     });
 
-    const customer = userId
-      ? await this.prisma.paymentProviderCustomer.findFirst({
+    const customer =
+      userId ?
+        await this.prisma.paymentProviderCustomer.findFirst({
           where: {
             userId,
             paymentProviderID: paymentMethod.paymentProviderID,

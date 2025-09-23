@@ -104,9 +104,9 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
       setThemeColor(data.peerProfile.themeColor);
       setThemeFontColor(data.peerProfile.themeFontColor);
       setCallToActionText(
-        data.peerProfile.callToActionText.length
-          ? data.peerProfile.callToActionText
-          : createDefaultValue()
+        data.peerProfile.callToActionText.length ?
+          data.peerProfile.callToActionText
+        : createDefaultValue()
       );
       setCallToActionTextURL(data.peerProfile.callToActionURL);
       setCallToActionImage(data?.peerProfile?.callToActionImage);
@@ -420,11 +420,10 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
         {(logoImage || squareLogoImage || callToActionImage) && (
           <ImageEditPanel
             id={
-              whatImageChange === 'logo'
-                ? logoImage?.id
-                : whatImageChange === 'squareLogo'
-                ? squareLogoImage?.id
-                : callToActionImage?.id
+              whatImageChange === 'logo' ? logoImage?.id
+              : whatImageChange === 'squareLogo' ?
+                squareLogoImage?.id
+              : callToActionImage?.id
             }
             onClose={() => setEditModalOpen(false)}
           />

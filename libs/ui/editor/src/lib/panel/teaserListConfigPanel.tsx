@@ -164,16 +164,16 @@ export function TeaserListConfigPanel({
                 ),
                 value: TeaserListBlockSort.UpdatedAt,
               },
-              ...(teaserType === TeaserType.Article
-                ? [
-                    {
-                      label: t(
-                        `resources.teaserSort.${TeaserListBlockSort.HotAndTrending}`
-                      ),
-                      value: TeaserListBlockSort.HotAndTrending,
-                    },
-                  ]
-                : []),
+              ...(teaserType === TeaserType.Article ?
+                [
+                  {
+                    label: t(
+                      `resources.teaserSort.${TeaserListBlockSort.HotAndTrending}`
+                    ),
+                    value: TeaserListBlockSort.HotAndTrending,
+                  },
+                ]
+              : []),
             ]}
             css={inputStyles}
           />

@@ -55,8 +55,9 @@ export class PaywallService {
         ...input,
         description: input.description as any[],
         circumventDescription: input.circumventDescription as any[],
-        memberPlans: memberPlanIds
-          ? {
+        memberPlans:
+          memberPlanIds ?
+            {
               deleteMany: {
                 memberPlanId: {
                   notIn: memberPlanIds,
@@ -71,8 +72,9 @@ export class PaywallService {
               },
             }
           : undefined,
-        bypasses: bypassTokens
-          ? {
+        bypasses:
+          bypassTokens ?
+            {
               deleteMany: {
                 token: {
                   notIn: bypassTokens,

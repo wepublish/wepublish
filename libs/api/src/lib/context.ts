@@ -644,8 +644,8 @@ export async function contextFromRequest(
     if (!process.env['JWT_SECRET_KEY'])
       throw new Error('No JWT_SECRET_KEY defined in environment.');
     const ver = jwt.verify(token, process.env['JWT_SECRET_KEY']);
-    return typeof ver === 'object' && 'sub' in ver
-      ? (ver as Record<string, any>)['sub']
+    return typeof ver === 'object' && 'sub' in ver ?
+        (ver as Record<string, any>)['sub']
       : '';
   };
 
@@ -777,8 +777,9 @@ export async function contextFromRequest(
         },
       });
 
-      const customer = user
-        ? await prisma.paymentProviderCustomer.findFirst({
+      const customer =
+        user ?
+          await prisma.paymentProviderCustomer.findFirst({
             where: {
               userId: user.id,
               paymentProviderID: paymentMethod?.paymentProviderID,
@@ -885,9 +886,9 @@ function generateCacheKey(params: PeerQueryParams) {
       // Hash function doesn't have to be crypto safe, just fast!
       .createHash('md5')
       .update(
-        `${JSON.stringify(params.hostURL)}${JSON.stringify(
-          params.variables
-        )}${JSON.stringify(params.query)}`
+        `${JSON.stringify(params.hostURL)}${JSON.stringify(params.variables)}${JSON.stringify(
+          params.query
+        )}`
       )
       .digest('hex')
   );

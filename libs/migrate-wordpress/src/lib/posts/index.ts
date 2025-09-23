@@ -101,9 +101,7 @@ export const migratePosts = async (
         console.log(
           `Migrated post id: ${chalk.bgYellow(
             post.id
-          )} (${++postsMigrated}/${totalCount}) ${chalk.bgGreen('DONE')} ${
-            result.url
-          }`
+          )} (${++postsMigrated}/${totalCount}) ${chalk.bgGreen('DONE')} ${result.url}`
         );
       } else {
         postsMigrated++;

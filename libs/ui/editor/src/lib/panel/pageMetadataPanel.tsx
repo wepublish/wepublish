@@ -118,12 +118,12 @@ function PageMetadataPanel({
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<PageMetadataProperty>[]
   >(
-    properties
-      ? properties.map(metaDataProperty => ({
-          id: generateID(),
-          value: metaDataProperty,
-        }))
-      : []
+    properties ?
+      properties.map(metaDataProperty => ({
+        id: generateID(),
+        value: metaDataProperty,
+      }))
+    : []
   );
 
   const { t } = useTranslation();
@@ -428,9 +428,9 @@ function PageMetadataPanel({
         >
           <ImageEditPanel
             id={
-              activeKey === MetaDataType.General
-                ? value.image?.id
-                : value.socialMediaImage?.id
+              activeKey === MetaDataType.General ?
+                value.image?.id
+              : value.socialMediaImage?.id
             }
             onClose={() => setEditModalOpen(false)}
           />

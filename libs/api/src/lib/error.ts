@@ -175,9 +175,9 @@ export class InternalError extends ApolloError {
 export class UserSubscriptionAlreadyDeactivated extends ApolloError {
   constructor(deactivatedAt: Date) {
     const msg =
-      deactivatedAt < new Date()
-        ? 'Subscription is already canceled'
-        : 'Subscription is already marked to be canceled';
+      deactivatedAt < new Date() ?
+        'Subscription is already canceled'
+      : 'Subscription is already marked to be canceled';
     super(msg, ErrorCode.UserSubscriptionAlreadyDeactivated);
   }
 }

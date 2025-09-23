@@ -76,9 +76,9 @@ export const HighlightTeaser = styled(
     font-family: ${({ theme }) => theme.typography.h1.fontFamily};
     font-weight: ${({ theme }) => theme.typography.h1.fontWeight};
     font-size: ${({ theme, teaser }) =>
-      teaserTitleIsLongOrHasLongWords(teaser)
-        ? theme.typography.h2.fontSize
-        : theme.typography.h1.fontSize};
+      teaserTitleIsLongOrHasLongWords(teaser) ?
+        theme.typography.h2.fontSize
+      : theme.typography.h1.fontSize};
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       font-size: ${({ theme, teaser }) =>

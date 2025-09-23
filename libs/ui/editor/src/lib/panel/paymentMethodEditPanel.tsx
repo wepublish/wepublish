@@ -196,9 +196,9 @@ function PaymentMethodEditPanel({
       >
         <Drawer.Header>
           <Drawer.Title>
-            {id
-              ? t('paymentMethodList.editTitle')
-              : t('paymentMethodList.createTitle')}
+            {id ?
+              t('paymentMethodList.editTitle')
+            : t('paymentMethodList.createTitle')}
           </Drawer.Title>
 
           <Drawer.Actions>

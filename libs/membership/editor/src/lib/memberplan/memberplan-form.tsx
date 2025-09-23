@@ -318,9 +318,9 @@ export function MemberPlanForm({
                 value={memberPlan?.tags ?? []}
                 creatable
                 data={
-                  memberPlan?.tags
-                    ? memberPlan.tags.map(tag => ({ label: tag, value: tag }))
-                    : []
+                  memberPlan?.tags ?
+                    memberPlan.tags.map(tag => ({ label: tag, value: tag }))
+                  : []
                 }
                 onChange={tagsValue => {
                   if (!memberPlan) {
@@ -582,15 +582,14 @@ export function MemberPlanForm({
           {/* automatically configure trial subscription */}
           <Row>
             <Col xs={24}>
-              {isTrialSubscription ? (
+              {isTrialSubscription ?
                 <Alert
                   icon={<MdCheck />}
                   severity="success"
                 >
                   {t('memberplanForm.trialMemberplanAlert')}
                 </Alert>
-              ) : (
-                <Button
+              : <Button
                   startIcon={<MdAutoFixHigh />}
                   onClick={() =>
                     setExtendable(
@@ -603,7 +602,7 @@ export function MemberPlanForm({
                 >
                   {t('memberplanForm.configureTrialBtn')}
                 </Button>
-              )}
+              }
             </Col>
           </Row>
           <RowPaddingTop>

@@ -9,8 +9,9 @@ export function handleRequest(indexPath: string) {
   return function render(req: Request, res: Response) {
     const clientSettings = {
       apiURL: process.env.API_URL,
-      imgMinSizeToCompress: process.env.IMG_MIN_SIZE_TO_COMPRESS
-        ? parseInt(process.env.IMG_MIN_SIZE_TO_COMPRESS)
+      imgMinSizeToCompress:
+        process.env.IMG_MIN_SIZE_TO_COMPRESS ?
+          parseInt(process.env.IMG_MIN_SIZE_TO_COMPRESS)
         : 10,
     };
 

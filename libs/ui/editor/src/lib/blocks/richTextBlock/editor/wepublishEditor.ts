@@ -56,10 +56,9 @@ export const WepublishEditor = {
       }
 
       Transforms.setNodes(editor, {
-        type: isActive
-          ? BlockFormat.Paragraph
-          : isList
-          ? BlockFormat.ListItem
+        type:
+          isActive ? BlockFormat.Paragraph
+          : isList ? BlockFormat.ListItem
           : (format as BlockFormat),
       });
 

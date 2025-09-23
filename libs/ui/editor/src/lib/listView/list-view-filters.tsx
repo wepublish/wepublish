@@ -466,18 +466,19 @@ export function ListViewFilters({
               cleanable
               value={filter.providers || []}
               data={
-                providersData
-                  ? providersData?.eventProviders.map(provider => ({
-                      value: provider,
-                      label: provider,
-                    }))
-                  : [{ value: undefined, label: undefined }]
+                providersData ?
+                  providersData?.eventProviders.map(provider => ({
+                    value: provider,
+                    label: provider,
+                  }))
+                : [{ value: undefined, label: undefined }]
               }
               placeholder={t('articleList.filter.providers')}
               onChange={providers => {
                 updateFilter({
-                  providers: providers.length
-                    ? (providers.filter(p => p !== '') as string[])
+                  providers:
+                    providers.length ?
+                      (providers.filter(p => p !== '') as string[])
                     : undefined,
                 });
               }}

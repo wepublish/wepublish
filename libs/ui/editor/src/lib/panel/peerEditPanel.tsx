@@ -187,9 +187,10 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
     url: StringType()
       .isRequired(t('errorMessages.noUrlErrorMessage'))
       .isURL(t('errorMessages.invalidUrlErrorMessage')),
-    token: id
-      ? StringType()
-      : StringType().isRequired(t('errorMessages.noTokenErrorMessage')),
+    token:
+      id ? StringType() : (
+        StringType().isRequired(t('errorMessages.noTokenErrorMessage'))
+      ),
   });
 
   return (
@@ -228,15 +229,15 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       <Drawer.Body>
         <PermissionControl
           qualifyingPermissions={
-            !id
-              ? ['CAN_CREATE_PEER']
-              : [
-                  'CAN_GET_PEER',
-                  'CAN_GET_PEERS',
-                  'CAN_CREATE_PEER',
-                  'CAN_DELETE_PEER',
-                  'CAN_GET_PEER_PROFILE',
-                ]
+            !id ?
+              ['CAN_CREATE_PEER']
+            : [
+                'CAN_GET_PEER',
+                'CAN_GET_PEERS',
+                'CAN_CREATE_PEER',
+                'CAN_DELETE_PEER',
+                'CAN_GET_PEER_PROFILE',
+              ]
           }
           showRejectionMessage
         >

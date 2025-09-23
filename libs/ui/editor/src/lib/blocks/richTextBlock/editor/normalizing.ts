@@ -107,8 +107,9 @@ export function withNormalizeNode<T extends Editor>(editor: T): T {
 
     function mergeAdjacent() {
       const pathOfPreceding: Path = [path[0] + 1];
-      const precedingNode = Node.has(editor, pathOfPreceding)
-        ? Node.get(editor, pathOfPreceding)
+      const precedingNode =
+        Node.has(editor, pathOfPreceding) ?
+          Node.get(editor, pathOfPreceding)
         : null;
 
       if (
@@ -126,8 +127,9 @@ export function withNormalizeNode<T extends Editor>(editor: T): T {
     function ensureSubseedingParagraph() {
       // Ensure Table is followed by paragraph at bottom for flawless continuation
       const pathOfSubsequent: Path = [path[0] + 1];
-      const subsequentNode = Node.has(editor, pathOfSubsequent)
-        ? Node.get(editor, pathOfSubsequent)
+      const subsequentNode =
+        Node.has(editor, pathOfSubsequent) ?
+          Node.get(editor, pathOfSubsequent)
         : null;
 
       if (

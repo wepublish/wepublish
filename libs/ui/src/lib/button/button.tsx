@@ -4,9 +4,9 @@ import { ComponentProps, PropsWithChildren } from 'react';
 type MuiButtonProps = ComponentProps<typeof MuiButton>;
 
 export type ButtonProps = PropsWithChildren<MuiButtonProps> &
-  (MuiButtonProps extends { LinkComponent?: React.ElementType }
-    ? { target?: string }
-    : object);
+  (MuiButtonProps extends { LinkComponent?: React.ElementType } ?
+    { target?: string }
+  : object);
 
 export function Button({
   children,

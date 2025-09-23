@@ -207,7 +207,9 @@ export function UserForm<T extends BuilderUserFormFields>({
                         onMouseDown={event => event.preventDefault()}
                         edge="end"
                       >
-                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                        {showPassword ?
+                          <MdVisibilityOff />
+                        : <MdVisibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -238,11 +240,9 @@ export function UserForm<T extends BuilderUserFormFields>({
                           onMouseDown={event => event.preventDefault()}
                           edge="end"
                         >
-                          {showPassword ? (
+                          {showPassword ?
                             <MdVisibilityOff />
-                          ) : (
-                            <MdVisibility />
-                          )}
+                          : <MdVisibility />}
                         </IconButton>
                       </InputAdornment>
                     ),

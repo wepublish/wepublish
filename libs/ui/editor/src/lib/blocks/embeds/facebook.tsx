@@ -47,9 +47,7 @@ export function FacebookProvider({
   sdkLanguage,
 }: FacebookProviderProps) {
   const { isLoading, load } = useScript(
-    `https://connect.facebook.net/${encodeURIComponent(
-      sdkLanguage
-    )}/sdk.js#version=v4.0`,
+    `https://connect.facebook.net/${encodeURIComponent(sdkLanguage)}/sdk.js#version=v4.0`,
     () => window.FB != null,
     true
   );

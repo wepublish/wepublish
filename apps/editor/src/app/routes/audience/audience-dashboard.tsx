@@ -75,9 +75,9 @@ function AudienceDashboard({
 
   const audienceStats = useMemo(
     () =>
-      resolution === 'daily'
-        ? audienceStatsComputed
-        : audienceStatsAggregatedByMonth,
+      resolution === 'daily' ?
+        audienceStatsComputed
+      : audienceStatsAggregatedByMonth,
     [resolution, audienceStatsComputed, audienceStatsAggregatedByMonth]
   );
 

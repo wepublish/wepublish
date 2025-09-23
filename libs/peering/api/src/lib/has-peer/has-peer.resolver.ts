@@ -17,11 +17,9 @@ export class HasPeerResolver {
     @Parent() block: HasOptionalPeer | HasPeer | HasOptionalPeerLc | HasPeerLc
   ) {
     const id =
-      'peerId' in block
-        ? block.peerId
-        : 'peerID' in block
-        ? block.peerID
-        : null;
+      'peerId' in block ? block.peerId
+      : 'peerID' in block ? block.peerID
+      : null;
 
     if (!id) {
       return null;

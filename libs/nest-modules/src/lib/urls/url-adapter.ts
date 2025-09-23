@@ -20,8 +20,8 @@ export class URLAdapter {
   }
 
   async getArticleUrl(article: Article) {
-    return article.slug
-      ? `${this.baseURL}/a/${article.slug}`
+    return article.slug ?
+        `${this.baseURL}/a/${article.slug}`
       : `${this.baseURL}/a/id/${article.id}`;
   }
 
@@ -30,8 +30,8 @@ export class URLAdapter {
   }
 
   async getPageUrl(page: Page) {
-    return page.slug || page.publishedAt
-      ? `${this.baseURL}/${page.slug}`
+    return page.slug || page.publishedAt ?
+        `${this.baseURL}/${page.slug}`
       : `${this.baseURL}/id/${page.id}`;
   }
 

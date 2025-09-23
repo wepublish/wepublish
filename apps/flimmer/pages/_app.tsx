@@ -107,9 +107,9 @@ const FlimmerTitle = styled(TitleBlock)`
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime
-    ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-    : format(date, 'dd. MMMM yyyy');
+  includeTime ?
+    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+  : format(date, 'dd. MMMM yyyy');
 
 const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => (
   <SubscribePage

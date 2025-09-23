@@ -17,11 +17,9 @@ export class HasPageResolver {
     @Parent() block: HasOptionalPage | HasPage | HasOptionalPageLc | HasPageLc
   ) {
     const id =
-      'pageId' in block
-        ? block.pageId
-        : 'pageID' in block
-        ? block.pageID
-        : null;
+      'pageId' in block ? block.pageId
+      : 'pageID' in block ? block.pageID
+      : null;
 
     if (!id) {
       return null;

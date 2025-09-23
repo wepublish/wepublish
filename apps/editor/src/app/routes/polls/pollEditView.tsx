@@ -136,9 +136,8 @@ function PollEditView() {
       return;
     }
     const opensAt = poll.opensAt ? new Date(poll.opensAt).toISOString() : null;
-    const closedAt = poll.closedAt
-      ? new Date(poll.closedAt).toISOString()
-      : null;
+    const closedAt =
+      poll.closedAt ? new Date(poll.closedAt).toISOString() : null;
     const externalSources = poll.externalVoteSources?.map(
       (voteSource: PollExternalVoteSource) => ({
         ...voteSource,

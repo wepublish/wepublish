@@ -146,9 +146,10 @@ export const EventBlock = ({
 
               <p style={{ marginBottom: '12px', textAlign: 'center' }}>
                 {t('blocks.event.events', {
-                  count: events.length
-                    ? events.length
-                    : filter.events?.length ?? 0,
+                  count:
+                    events.length ?
+                      events.length
+                    : (filter.events?.length ?? 0),
                 })}
               </p>
             </div>

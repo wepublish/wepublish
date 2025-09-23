@@ -59,7 +59,7 @@ export default function Login({ sessionToken }: LoginProps) {
         <div>
           <H3 component="h1">Login für Abonnent*innen</H3>
 
-          {!router.query?.mail ? (
+          {!router.query?.mail ?
             <Typography sx={{ marginTop: 2 }}>
               Falls du noch keinen Account hast,{' '}
               <Link
@@ -70,14 +70,13 @@ export default function Login({ sessionToken }: LoginProps) {
                 klicke hier.
               </Link>
             </Typography>
-          ) : (
-            <Typography sx={{ marginTop: 2 }}>
+          : <Typography sx={{ marginTop: 2 }}>
               So schön, bist du da. Aus Sicherheitsgründen müssen wir den Umweg
               über ein E-Mail gehen, das wir dir sofort zuschicken. Darin
               enthalten ist ein Link, mit dem du dein Abo einfach und schnell
               abschliessen kannst.
             </Typography>
-          )}
+          }
         </div>
 
         <LoginFormContainer

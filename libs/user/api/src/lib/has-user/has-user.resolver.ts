@@ -17,11 +17,9 @@ export class HasUserResolver {
     @Parent() block: HasOptionalUser | HasUser | HasOptionalUserLc | HasUserLc
   ) {
     const id =
-      'userId' in block
-        ? block.userId
-        : 'userID' in block
-        ? block.userID
-        : null;
+      'userId' in block ? block.userId
+      : 'userID' in block ? block.userID
+      : null;
 
     if (!id) {
       return null;

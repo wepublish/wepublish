@@ -4,7 +4,7 @@
 export const createOptionalsArray = <
   Data,
   Attribute extends keyof Data,
-  Key extends Data[Attribute]
+  Key extends Data[Attribute],
 >(
   keys: Key[],
   data: Data[],

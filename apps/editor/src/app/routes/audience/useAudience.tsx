@@ -71,15 +71,17 @@ export function useAudience({
 
   const getRenewalFigures = useCallback(
     (dailyStat: Partial<DailySubscriptionStats>): RenewalFigures => {
-      const totalToBeRenewed = dailyStat
-        ? (dailyStat.renewedSubscriptionCount || 0) +
+      const totalToBeRenewed =
+        dailyStat ?
+          (dailyStat.renewedSubscriptionCount || 0) +
           (dailyStat.replacedSubscriptionCount || 0) +
           (dailyStat.deactivatedSubscriptionCount || 0) +
           (dailyStat.overdueSubscriptionCount || 0)
         : 0;
 
-      const renewedAndReplaced = dailyStat
-        ? totalToBeRenewed -
+      const renewedAndReplaced =
+        dailyStat ?
+          totalToBeRenewed -
           (dailyStat.deactivatedSubscriptionCount || 0) -
           (dailyStat.overdueSubscriptionCount || 0)
         : 0;

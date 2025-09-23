@@ -46,43 +46,38 @@ enum ScrollDirection {
   Down,
 }
 
-const cssVariables = (state: NavbarState[]) => (theme: Theme) =>
-  css`
-    :root {
-      --navbar-height: 80px;
-      --changing-navbar-height: ${state.includes(NavbarState.Regular)
-        ? '80px'
-        : '55px'};
+const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
+  :root {
+    --navbar-height: 80px;
+    --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '80px' : (
+      '55px'
+    )};
 
-      ${theme.breakpoints.up('sm')} {
-        --navbar-height: 109px;
-        --changing-navbar-height: ${state.includes(NavbarState.Regular)
-          ? '109px'
-          : '55px'};
-      }
-
-      ${theme.breakpoints.up('lg')} {
-        --navbar-height: 145px;
-        --changing-navbar-height: ${state.includes(NavbarState.Regular)
-          ? '145px'
-          : '80px'};
-      }
-
-      ${theme.breakpoints.up('xl')} {
-        --navbar-height: 173px;
-        --changing-navbar-height: ${state.includes(NavbarState.Regular)
-          ? '173px'
-          : '80px'};
-      }
-
-      ${theme.breakpoints.up('xxl')} {
-        --navbar-height: 208px;
-        --changing-navbar-height: ${state.includes(NavbarState.Regular)
-          ? '208px'
-          : '80px'};
-      }
+    ${theme.breakpoints.up('sm')} {
+      --navbar-height: 109px;
+      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '109px'
+      : '55px'};
     }
-  `;
+
+    ${theme.breakpoints.up('lg')} {
+      --navbar-height: 145px;
+      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '145px'
+      : '80px'};
+    }
+
+    ${theme.breakpoints.up('xl')} {
+      --navbar-height: 173px;
+      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '173px'
+      : '80px'};
+    }
+
+    ${theme.breakpoints.up('xxl')} {
+      --navbar-height: 208px;
+      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '208px'
+      : '80px'};
+    }
+  }
+`;
 
 export const NavbarWrapper = styled('nav')`
   position: sticky;
@@ -131,7 +126,9 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   background-color: ${({ theme }) => theme.palette.background.paper};
 
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  transition: clip-path 300ms ease-out, transform 300ms ease-out,
+  transition:
+    clip-path 300ms ease-out,
+    transform 300ms ease-out,
     height 300ms ease-out;
   transform: translate3d(0, 0, 0);
 
@@ -471,9 +468,9 @@ export function HauptstadtNavbar({
   const hasActiveSubscription = useHasActiveSubscription();
 
   const isMenuOpen =
-    controlledIsMenuOpen !== undefined
-      ? controlledIsMenuOpen
-      : internalIsMenuOpen;
+    controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
+      internalIsMenuOpen
+    );
 
   const handleScroll = useCallback(
     (...args: any) => {

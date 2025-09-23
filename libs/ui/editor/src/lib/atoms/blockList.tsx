@@ -120,9 +120,8 @@ export interface BlockListValue<T extends string = string, V = any> {
 type BlockMap = Record<string, BlockCaseProps>;
 
 export type BlockMapForValue<R extends BlockListValue> = UnionToIntersection<
-  R extends BlockListValue<infer T, infer V>
-    ? { [K in T]: BlockCaseProps<V> }
-    : never
+  R extends BlockListValue<infer T, infer V> ? { [K in T]: BlockCaseProps<V> }
+  : never
 >;
 
 export interface BlockListItemProps<T extends string = string, V = any> {
@@ -161,8 +160,9 @@ const BlockListItem = memo(function BlockListItem({
       onChange(index, value => {
         return {
           ...value,
-          value: isFunctionalUpdate(fieldValue)
-            ? fieldValue(value.value)
+          value:
+            isFunctionalUpdate(fieldValue) ?
+              fieldValue(value.value)
             : {
                 blockStyle: value.value.blockStyle,
                 ...fieldValue,
@@ -215,9 +215,8 @@ export function BlockList<V extends BlockListValue>({
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
       onChange((value: any) => {
         return Object.assign([], value, {
-          [index]: isFunctionalUpdate(itemValue)
-            ? itemValue(value[index])
-            : itemValue,
+          [index]:
+            isFunctionalUpdate(itemValue) ? itemValue(value[index]) : itemValue,
         });
       });
     },
@@ -234,9 +233,8 @@ export function BlockList<V extends BlockListValue>({
         valuesCopy.splice(index, 0, {
           key: nanoid(),
           type,
-          value: isValueConstructor(defaultValue)
-            ? defaultValue()
-            : defaultValue,
+          value:
+            isValueConstructor(defaultValue) ? defaultValue() : defaultValue,
         } as V);
 
         return valuesCopy;

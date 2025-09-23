@@ -77,14 +77,14 @@ export function TeaserSlotsAutofillDialog({
     >
       <Modal.Header>
         <Modal.Title>
-          {localConfig.enabled
-            ? 'Enable & Configure Auto-loading'
-            : 'Configure Auto-loading'}
+          {localConfig.enabled ?
+            'Enable & Configure Auto-loading'
+          : 'Configure Auto-loading'}
         </Modal.Title>
         <Description>
-          {!localConfig.enabled
-            ? 'Enable and configure how teasers are automatically loaded into the grid.'
-            : 'Configure how teasers are loaded and displayed in the grid.'}
+          {!localConfig.enabled ?
+            'Enable and configure how teasers are automatically loaded into the grid.'
+          : 'Configure how teasers are loaded and displayed in the grid.'}
         </Description>
       </Modal.Header>
 

@@ -80,9 +80,9 @@ const onErrorToast = (error: ApolloError) => {
 
 const commentUsernameGenerator =
   (t: TFunction<'translation'>) => (comment: CommentBlockCommentFragment) =>
-    comment?.user
-      ? `${comment?.user.name}`
-      : ` ${comment?.guestUsername} ${t('comments.panels.unregisteredUser')}`;
+    comment?.user ?
+      `${comment?.user.name}`
+    : ` ${comment?.guestUsername} ${t('comments.panels.unregisteredUser')}`;
 
 export type SelectCommentPanelProps = {
   itemId: string | null | undefined;
@@ -227,9 +227,9 @@ export function SelectCommentPanel({
                       value={commentFilter?.includes(rowData.id) ? 0 : 1}
                       onChange={shouldInclude =>
                         setCommentFilter(old =>
-                          shouldInclude
-                            ? [...(old ?? []), rowData.id]
-                            : old?.filter(id => id !== rowData.id)
+                          shouldInclude ?
+                            [...(old ?? []), rowData.id]
+                          : old?.filter(id => id !== rowData.id)
                         )
                       }
                     />
@@ -262,7 +262,7 @@ export function SelectCommentPanel({
             <Table.Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) => (
                 <>
-                  {rowData?.revisions?.length ? (
+                  {rowData?.revisions?.length ?
                     <RichTextBlock
                       displayOnly
                       displayOneLine
@@ -274,7 +274,7 @@ export function SelectCommentPanel({
                           ?.text || []
                       }
                     />
-                  ) : null}
+                  : null}
                 </>
               )}
             </Table.Cell>

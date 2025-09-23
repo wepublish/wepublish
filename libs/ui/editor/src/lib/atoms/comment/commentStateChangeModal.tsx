@@ -184,8 +184,9 @@ export function CommentStateChangeModal({
     }
   }, [open]);
 
-  const printUsername = comment?.user?.name
-    ? `${comment.user.name}`
+  const printUsername =
+    comment?.user?.name ?
+      `${comment.user.name}`
     : `${comment?.guestUsername || t('comments.panels.noUserName')} ${t(
         'comments.panels.unregisteredUser'
       )}`;
@@ -252,21 +253,23 @@ export function CommentStateChangeModal({
             </DescriptionListItem>
           )}
 
-          {newCommentState === CommentState.Rejected ||
-          newCommentState === CommentState.PendingUserChanges ? (
+          {(
+            newCommentState === CommentState.Rejected ||
+            newCommentState === CommentState.PendingUserChanges
+          ) ?
             <DescriptionListItem
               label={t(
-                newCommentState === CommentState.Rejected
-                  ? 'comments.panels.rejectionReason'
-                  : 'comments.panels.requestChangesReason'
+                newCommentState === CommentState.Rejected ?
+                  'comments.panels.rejectionReason'
+                : 'comments.panels.requestChangesReason'
               )}
             >
               <Dropdown
                 title={t(
                   rejectionReason ||
-                    (newCommentState === CommentState.Rejected
-                      ? 'comments.panels.rejectionReason'
-                      : 'comments.panels.requestChangesReason')
+                    (newCommentState === CommentState.Rejected ?
+                      'comments.panels.rejectionReason'
+                    : 'comments.panels.requestChangesReason')
                 )}
                 placement="topEnd"
               >
@@ -290,33 +293,33 @@ export function CommentStateChangeModal({
                 </Dropdown.Item>
               </Dropdown>
             </DescriptionListItem>
-          ) : null}
+          : null}
 
           <DescriptionListItem label={t('comments.panels.revisions')} />
           <RevisionPanel bordered>
             <Timeline align="left">
-              {sortedRevisions.length
-                ? sortedRevisions.map(({ text, createdAt }, index) => (
-                    <Timeline.Item
-                      key={`timeline-item-${index}`}
-                      className={index === 0 ? 'rs-timeline-item-last' : ''}
-                    >
-                      <div>
-                        {t('comments.panels.revisionCreatedAtDate', {
-                          revisionCreatedAtDate: new Date(createdAt),
-                        })}
-                      </div>
-                      <RichTextBlock
-                        disabled
-                        displayOnly
-                        onChange={() => {
-                          return undefined;
-                        }}
-                        value={text || []}
-                      />
-                    </Timeline.Item>
-                  ))
-                : null}
+              {sortedRevisions.length ?
+                sortedRevisions.map(({ text, createdAt }, index) => (
+                  <Timeline.Item
+                    key={`timeline-item-${index}`}
+                    className={index === 0 ? 'rs-timeline-item-last' : ''}
+                  >
+                    <div>
+                      {t('comments.panels.revisionCreatedAtDate', {
+                        revisionCreatedAtDate: new Date(createdAt),
+                      })}
+                    </div>
+                    <RichTextBlock
+                      disabled
+                      displayOnly
+                      onChange={() => {
+                        return undefined;
+                      }}
+                      value={text || []}
+                    />
+                  </Timeline.Item>
+                ))
+              : null}
             </Timeline>
           </RevisionPanel>
         </DescriptionList>

@@ -18,11 +18,9 @@ export class HasArticleResolver {
     block: HasOptionalArticle | HasArticle | HasOptionalArticleLc | HasArticleLc
   ) {
     const id =
-      'articleId' in block
-        ? block.articleId
-        : 'articleID' in block
-        ? block.articleID
-        : null;
+      'articleId' in block ? block.articleId
+      : 'articleID' in block ? block.articleID
+      : null;
 
     if (!id) {
       return null;

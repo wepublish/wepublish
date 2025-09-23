@@ -49,9 +49,8 @@ export class SessionService {
   }
 
   async createSessionWithJWT(jwt: string): Promise<SessionWithToken> {
-    const user = await this.jwtAuthenticationService.authenticateUserWithJWT(
-      jwt
-    );
+    const user =
+      await this.jwtAuthenticationService.authenticateUserWithJWT(jwt);
 
     if (!user) throw new InvalidCredentialsError();
     if (!user.active) throw new NotActiveError();

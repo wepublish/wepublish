@@ -187,9 +187,9 @@ export const FrageDesTages = ({
         <CommentsWrapper>
           <AuthorAndContext>
             <div>
-              {article?.latest.authors[0] ? (
+              {article?.latest.authors[0] ?
                 <AuthorBox author={article?.latest.authors[0]} />
-              ) : null}
+              : null}
             </div>
             <div>
               <InfoBox richText={pollToPass?.infoText || []} />

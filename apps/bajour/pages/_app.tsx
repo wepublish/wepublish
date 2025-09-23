@@ -83,9 +83,9 @@ i18next
 z.setErrorMap(zodI18nMap);
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime
-    ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-    : format(date, 'dd. MMMM yyyy');
+  includeTime ?
+    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+  : format(date, 'dd. MMMM yyyy');
 
 type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;

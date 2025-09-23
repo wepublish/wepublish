@@ -38,8 +38,8 @@ export function ApiAlert({ error, ...props }: BuilderApiAlertProps) {
   }, [error]);
 
   const errorMessage = useMemo<string>(() => {
-    return apolloErrorCode
-      ? translateApolloErrorCode(apolloErrorCode) ?? error.message
+    return apolloErrorCode ?
+        (translateApolloErrorCode(apolloErrorCode) ?? error.message)
       : error.message;
   }, [apolloErrorCode, error]);
 

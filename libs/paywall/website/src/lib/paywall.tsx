@@ -56,8 +56,9 @@ export const Paywall = ({
     >
       <RichText
         richText={
-          (hideContent ? description : circumventDescription ?? description) ??
-          []
+          (hideContent ? description : (
+            (circumventDescription ?? description)
+          )) ?? []
         }
       />
 

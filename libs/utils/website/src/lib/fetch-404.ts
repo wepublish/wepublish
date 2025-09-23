@@ -16,8 +16,9 @@ export const fetch404 = async (ctx: NextPageContext): Promise<void> => {
       s => String(s) === 'Symbol(NextInternalRequestMeta)'
     ) as keyof typeof req;
     const NextInternalRequestMeta = req[key];
-    const proto = NextInternalRequestMeta.initProtocol
-      ? NextInternalRequestMeta.initProtocol
+    const proto =
+      NextInternalRequestMeta.initProtocol ?
+        NextInternalRequestMeta.initProtocol
       : 'https';
     const url = `${proto}://${ctx.req?.headers?.host}/${fourOhFourSlug}`;
     const fetchRes = await fetch(url);

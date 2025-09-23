@@ -308,9 +308,9 @@ function ImageEditPanel({
     >
       <Drawer.Header>
         <Drawer.Title>
-          {isUpload
-            ? t('images.panels.uploadImage')
-            : t('images.panels.editImage')}
+          {isUpload ?
+            t('images.panels.uploadImage')
+          : t('images.panels.editImage')}
         </Drawer.Title>
 
         <Drawer.Actions>

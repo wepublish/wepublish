@@ -73,10 +73,12 @@ const createV1ApiClient = (
     cache: new InMemoryCache({
       possibleTypes: possibleTypes.possibleTypes,
       typePolicies:
-        process.env.NODE_ENV !== 'production' ||
-        process.env.DEPLOY_ENV === 'review'
-          ? absoluteUrlToRelative
-          : undefined,
+        (
+          process.env.NODE_ENV !== 'production' ||
+          process.env.DEPLOY_ENV === 'review'
+        ) ?
+          absoluteUrlToRelative
+        : undefined,
       ...cacheConfig,
     }).restore(cache ?? {}),
     ssrMode: typeof window === 'undefined',
@@ -93,9 +95,9 @@ export const getV1ApiClient = (
   cache?: NormalizedCacheObject
 ) => {
   const client =
-    !CACHED_CLIENT || typeof window === 'undefined'
-      ? (CACHED_CLIENT = createV1ApiClient(apiUrl, links, cacheConfig, cache))
-      : CACHED_CLIENT;
+    !CACHED_CLIENT || typeof window === 'undefined' ?
+      (CACHED_CLIENT = createV1ApiClient(apiUrl, links, cacheConfig, cache))
+    : CACHED_CLIENT;
 
   if (cache) {
     const existingCache = client.extract();
@@ -132,7 +134,7 @@ export const createWithV1ApiClient =
     P extends object,
     NextPage extends {
       pageProps?: { [V1_CLIENT_STATE_PROP_NAME]?: NormalizedCacheObject };
-    }
+    },
   >(
     ControlledComponent: ComponentType<P>
   ) =>

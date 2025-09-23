@@ -6,7 +6,10 @@ import { SettingName } from './setting';
 
 @Injectable()
 export class SettingsGuard implements CanActivate {
-  constructor(private reflector: Reflector, private prisma: PrismaClient) {}
+  constructor(
+    private reflector: Reflector,
+    private prisma: PrismaClient
+  ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const settings = this.reflector.getAllAndMerge<SettingName[]>(

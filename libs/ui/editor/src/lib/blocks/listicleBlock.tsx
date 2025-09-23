@@ -70,9 +70,8 @@ export function ListicleItemElement({
     (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
-        richText: isFunctionalUpdate(richText)
-          ? richText(value.richText)
-          : richText,
+        richText:
+          isFunctionalUpdate(richText) ? richText(value.richText) : richText,
       })),
     [onChange]
   );

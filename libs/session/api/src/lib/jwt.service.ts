@@ -33,8 +33,8 @@ export class JwtService {
 
     try {
       const decoded = jwt.verify(token, this.jwtSecretKey);
-      return typeof decoded === 'object' && 'sub' in decoded
-        ? (decoded.sub as string)
+      return typeof decoded === 'object' && 'sub' in decoded ?
+          (decoded.sub as string)
         : '';
     } catch (error) {
       throw new Error('Invalid JWT token');

@@ -266,13 +266,13 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <Editable
           style={
-            displayOneLine
-              ? {
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }
-              : undefined
+            displayOneLine ?
+              {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }
+            : undefined
           }
           readOnly={disabled || displayOnly}
           renderElement={renderElement}

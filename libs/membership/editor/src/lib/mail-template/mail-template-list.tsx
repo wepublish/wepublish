@@ -120,10 +120,9 @@ function MailTemplateList() {
                   <TableCell>{template.name}</TableCell>
                   <TableCell>{template.description}</TableCell>
                   <TableCell>
-                    {template.remoteMissing ? (
+                    {template.remoteMissing ?
                       ''
-                    ) : (
-                      <Button
+                    : <Button
                         appearance="default"
                         onClick={() => openInNewTab(template.url)}
                       >
@@ -131,7 +130,7 @@ function MailTemplateList() {
                           provider: queryData?.provider.name,
                         })}
                       </Button>
-                    )}
+                    }
                   </TableCell>
                   <TableCell>
                     <Link to="/mailtemplates/placeholders">
@@ -144,17 +143,16 @@ function MailTemplateList() {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    {template.status === 'ok' ? (
+                    {template.status === 'ok' ?
                       <MdCheck />
-                    ) : (
-                      <>
+                    : <>
                         <MdWarning />{' '}
                         {t(`mailTemplates.statuses.${template.status}`, {
                           provider: queryData?.provider.name,
                           internalName: template.externalMailTemplateId,
                         })}
                       </>
-                    )}
+                    }
                   </TableCell>
                 </TableRow>
               ))}

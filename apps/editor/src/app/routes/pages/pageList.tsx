@@ -247,17 +247,17 @@ function PageList() {
             <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
               {(pageRef: FullPageFragment) =>
-                pageRef.published?.publishedAt
-                  ? t('pageEditor.overview.publishedAt', {
-                      publicationDate: new Date(pageRef.published.publishedAt),
-                    })
-                  : pageRef.pending?.publishedAt
-                  ? t('pageEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(
-                        pageRef.pending?.publishedAt
-                      ),
-                    })
-                  : t('pages.overview.notPublished')
+                pageRef.published?.publishedAt ?
+                  t('pageEditor.overview.publishedAt', {
+                    publicationDate: new Date(pageRef.published.publishedAt),
+                  })
+                : pageRef.pending?.publishedAt ?
+                  t('pageEditor.overview.publishedAtIfPending', {
+                    publishedAtIfPending: new Date(
+                      pageRef.pending?.publishedAt
+                    ),
+                  })
+                : t('pages.overview.notPublished')
               }
             </Cell>
           </Column>
@@ -402,11 +402,11 @@ function PageList() {
       >
         <Modal.Header>
           <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish
-              ? t('pages.panels.unpublishPage')
-              : confirmAction === ConfirmAction.Delete
-              ? t('pages.panels.deletePage')
-              : t('pages.panels.duplicatePage')}
+            {confirmAction === ConfirmAction.Unpublish ?
+              t('pages.panels.unpublishPage')
+            : confirmAction === ConfirmAction.Delete ?
+              t('pages.panels.deletePage')
+            : t('pages.panels.duplicatePage')}
           </Modal.Title>
         </Modal.Header>
 

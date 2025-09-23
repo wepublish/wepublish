@@ -116,10 +116,12 @@ export function RenderElement({
       return (
         <Link
           target={
-            (element.url as string).startsWith('#') ||
-            (element.url as string).startsWith('/')
-              ? ''
-              : '_blank'
+            (
+              (element.url as string).startsWith('#') ||
+              (element.url as string).startsWith('/')
+            ) ?
+              ''
+            : '_blank'
           }
           rel="noreferrer"
           id={element.id as string}

@@ -71,9 +71,10 @@ export const CommentBlock = ({
 
               <p>
                 {t('blocks.comment.comments', {
-                  count: comments.length
-                    ? comments.length
-                    : filter.comments?.length ?? 0,
+                  count:
+                    comments.length ?
+                      comments.length
+                    : (filter.comments?.length ?? 0),
                 })}
               </p>
             </Wrapper>

@@ -443,7 +443,7 @@ export const WebsiteBuilderProvider = memo<
           ...parentComponents.meta,
           ...components.meta,
         },
-      } as WebsiteBuilderProps),
+      }) as WebsiteBuilderProps,
     [components, parentComponents]
   );
 

@@ -24,7 +24,7 @@ export const mockCommentRatingAnswer = ({
     ratingSystemId: nanoid(),
     type: RatingSystemType.Star,
     answer,
-  } as CommentRatingSystemAnswer);
+  }) as CommentRatingSystemAnswer;
 
 export const mockCommentRating = ({
   answer = 'Foobar',
@@ -38,7 +38,7 @@ export const mockCommentRating = ({
     count,
     mean,
     total,
-  } as CalculatedRating);
+  }) as CalculatedRating;
 
 export const mockOverridenRating = ({
   answerId = nanoid(),
@@ -48,7 +48,7 @@ export const mockOverridenRating = ({
     __typename: 'overriddenRating',
     answerId,
     value,
-  } as OverriddenRating);
+  }) as OverriddenRating;
 
 export const mockUserCommentRating = ({
   answer = 'Foobar',
@@ -65,7 +65,7 @@ export const mockUserCommentRating = ({
     commentId: nanoid(),
     createdAt: new Date('2023-01-01').toISOString(),
     id: nanoid(),
-  } as CommentRating);
+  }) as CommentRating;
 
 export const mockComment = ({
   id = nanoid(),
@@ -118,4 +118,4 @@ export const mockComment = ({
     source,
     rejectionReason,
     user,
-  } as FullCommentFragment);
+  }) as FullCommentFragment;

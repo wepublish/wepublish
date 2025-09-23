@@ -160,8 +160,8 @@ export const GraphQLImage = new GraphQLObjectType<
       type: GraphQLString,
       args: { input: { type: GraphQLImageTransformation } },
       resolve: createProxyingResolver((image, { input }, { mediaAdapter }) => {
-        return image.transformURL
-          ? image.transformURL
+        return image.transformURL ?
+            image.transformURL
           : mediaAdapter.getImageURL(image, input);
       }),
     },

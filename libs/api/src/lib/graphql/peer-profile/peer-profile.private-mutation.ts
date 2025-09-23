@@ -16,8 +16,9 @@ export const upsertPeerProfile = async (
 
   const oldProfile = await peerProfile.findFirst({});
 
-  const data = oldProfile
-    ? await peerProfile.update({
+  const data =
+    oldProfile ?
+      await peerProfile.update({
         where: {
           id: oldProfile.id,
         },

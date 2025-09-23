@@ -57,9 +57,8 @@ export class UserSubscriptionService {
   }
 
   async createSubscription(userId: string, args: CreateSubscriptionArgs) {
-    const { memberPlan, paymentMethod } = await this.validateSubscriptionInput(
-      args
-    );
+    const { memberPlan, paymentMethod } =
+      await this.validateSubscriptionInput(args);
 
     const {
       autoRenew,
@@ -461,9 +460,9 @@ export class UserSubscriptionService {
 
     if (subscription.deactivation) {
       const msg =
-        subscription.deactivation.date < new Date()
-          ? 'Subscription is already canceled'
-          : 'Subscription is already marked to be canceled';
+        subscription.deactivation.date < new Date() ?
+          'Subscription is already canceled'
+        : 'Subscription is already marked to be canceled';
       throw new UserInputError(msg);
     }
 
@@ -510,8 +509,9 @@ export class UserSubscriptionService {
       paymentMethodSlug
     );
 
-    const memberPlan = memberPlanID
-      ? await this.memberPlanService.getMemberPlanById(memberPlanID)
+    const memberPlan =
+      memberPlanID ?
+        await this.memberPlanService.getMemberPlanById(memberPlanID)
       : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '');
     if (!memberPlan) {
       throw new UserInputError(
@@ -519,8 +519,9 @@ export class UserSubscriptionService {
       );
     }
 
-    const paymentMethod = paymentMethodID
-      ? await this.paymentMethodService.findActivePaymentMethodById(
+    const paymentMethod =
+      paymentMethodID ?
+        await this.paymentMethodService.findActivePaymentMethodById(
           paymentMethodID
         )
       : await this.paymentMethodService.findActivePaymentMethodBySlug(

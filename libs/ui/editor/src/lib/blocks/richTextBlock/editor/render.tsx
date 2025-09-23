@@ -11,9 +11,9 @@ const Table = styled.table`
 
 const TD = styled.td<{ borderColor: string }>`
   border: ${({ borderColor }) =>
-    borderColor === 'transparent'
-      ? '1px solid rgba(0, 0, 0, 0.1)'
-      : `1px solid ${borderColor}`};
+    borderColor === 'transparent' ?
+      '1px solid rgba(0, 0, 0, 0.1)'
+    : `1px solid ${borderColor}`};
   padding: 8px;
 `;
 

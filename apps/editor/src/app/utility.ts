@@ -183,10 +183,8 @@ export function getImgMinSizeToCompress(): number {
   return imgMinSizeToCompress;
 }
 
-export type UnionToIntersection<U> = (
-  U extends any ? (k: U) => void : never
-) extends (k: infer I) => void
-  ? I
+export type UnionToIntersection<U> =
+  (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I
   : never;
 
 export type ValueConstructor<T> = T | (() => T);

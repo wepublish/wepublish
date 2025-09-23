@@ -206,15 +206,14 @@ export default function ImportableEventListView() {
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) =>
-                alreadyImported && alreadyImported.includes(rowData.id) ? (
+                alreadyImported && alreadyImported.includes(rowData.id) ?
                   <Button
                     appearance="ghost"
                     disabled
                   >
                     {t('importableEvent.imported')}
                   </Button>
-                ) : (
-                  <Button
+                : <Button
                     onClick={() =>
                       importEvent(rowData.id, rowData.externalSourceName)
                     }
@@ -222,7 +221,6 @@ export default function ImportableEventListView() {
                   >
                     {t('importableEvent.import')}
                   </Button>
-                )
               }
             </Cell>
           </Column>

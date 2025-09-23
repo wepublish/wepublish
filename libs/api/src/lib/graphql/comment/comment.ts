@@ -153,20 +153,21 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> =
         type: GraphQLImage,
         resolve: createProxyingResolver(
           ({ guestUserImageID }, _, { prisma: { image } }) =>
-            guestUserImageID
-              ? image.findUnique({
-                  where: {
-                    id: guestUserImageID,
-                  },
-                })
-              : null
+            guestUserImageID ?
+              image.findUnique({
+                where: {
+                  id: guestUserImageID,
+                },
+              })
+            : null
         ),
       },
       user: {
         type: GraphQLUser,
-        resolve: createProxyingResolver(({ userID }, _, { prisma: { user } }) =>
-          userID
-            ? user.findUnique({
+        resolve: createProxyingResolver(
+          ({ userID }, _, { prisma: { user } }) =>
+            userID ?
+              user.findUnique({
                 where: {
                   id: userID,
                 },
@@ -204,16 +205,16 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> =
         type: GraphQLComment,
         resolve: createProxyingResolver(
           ({ parentID }, _, { prisma: { comment } }) =>
-            parentID
-              ? comment.findUnique({
-                  where: {
-                    id: parentID,
-                  },
-                  include: {
-                    revisions: { orderBy: { createdAt: 'asc' } },
-                  },
-                })
-              : null
+            parentID ?
+              comment.findUnique({
+                where: {
+                  id: parentID,
+                },
+                include: {
+                  revisions: { orderBy: { createdAt: 'asc' } },
+                },
+              })
+            : null
         ),
       },
       revisions: {

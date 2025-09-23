@@ -30,7 +30,7 @@ export type SubscribeContainerProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
     BuilderUserFormFields,
     'flair'
-  >
+  >,
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
@@ -52,7 +52,7 @@ export type SubscribeContainerProps<
   };
 
 export const SubscribeContainer = <
-  T extends Exclude<BuilderUserFormFields, 'flair'>
+  T extends Exclude<BuilderUserFormFields, 'flair'>,
 >({
   filter = memberPlan => memberPlan,
   sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),

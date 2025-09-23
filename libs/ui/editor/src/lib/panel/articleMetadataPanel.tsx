@@ -195,12 +195,12 @@ function ArticleMetadataPanel({
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<ArticleMetadataProperty>[]
   >(
-    properties
-      ? properties.map(metaDataProperty => ({
-          id: generateID(),
-          value: metaDataProperty,
-        }))
-      : []
+    properties ?
+      properties.map(metaDataProperty => ({
+        id: generateID(),
+        value: metaDataProperty,
+      }))
+    : []
   );
 
   const { t } = useTranslation();
@@ -289,9 +289,9 @@ function ArticleMetadataPanel({
               <ControlLabel>
                 {t('articleEditor.panels.socialMediaDescription')}
                 <FloatRightLabel>
-                  {value.socialMediaDescription
-                    ? value.socialMediaDescription.length
-                    : 0}
+                  {value.socialMediaDescription ?
+                    value.socialMediaDescription.length
+                  : 0}
                   /{socialMediaDescriptionMax}
                 </FloatRightLabel>
               </ControlLabel>
@@ -819,9 +819,9 @@ function ArticleMetadataPanel({
         >
           <ImageEditPanel
             id={
-              activeKey === MetaDataType.General
-                ? value.image?.id
-                : value.socialMediaImage?.id
+              activeKey === MetaDataType.General ?
+                value.image?.id
+              : value.socialMediaImage?.id
             }
             onClose={() => setEditModalOpen(false)}
           />

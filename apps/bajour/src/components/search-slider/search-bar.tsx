@@ -33,7 +33,9 @@ const SearchInput = styled('input')<{ expanded: boolean }>`
   pointer-events: ${({ expanded }) => (expanded ? 'initial' : 'none')};
   border: 1px solid #ccc;
   border-radius: 4px;
-  transition: width 0.3s, opacity 0.3s;
+  transition:
+    width 0.3s,
+    opacity 0.3s;
 `;
 
 interface SearchBarProps {

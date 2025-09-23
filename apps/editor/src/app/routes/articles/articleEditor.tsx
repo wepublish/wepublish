@@ -522,9 +522,9 @@ function ArticleEditor() {
         <Notification
           type="success"
           header={t(
-            publishedAt <= new Date()
-              ? 'articleEditor.overview.articlePublished'
-              : 'articleEditor.overview.articlePending'
+            publishedAt <= new Date() ?
+              'articleEditor.overview.articlePublished'
+            : 'articleEditor.overview.articlePending'
           )}
           duration={2000}
         />,
@@ -597,7 +597,7 @@ function ArticleEditor() {
                     {t('articleEditor.overview.metadata')}
                   </RIconButton>
 
-                  {isNew && createData == null ? (
+                  {isNew && createData == null ?
                     <PermissionControl
                       qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                     >
@@ -611,8 +611,7 @@ function ArticleEditor() {
                         {t('create')}
                       </IconButton>
                     </PermissionControl>
-                  ) : (
-                    <PermissionControl
+                  : <PermissionControl
                       qualifyingPermissions={['CAN_CREATE_ARTICLE']}
                     >
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
@@ -631,10 +630,12 @@ function ArticleEditor() {
                       >
                         <Badge
                           className={
-                            articleData?.article?.draft ||
-                            !articleData?.article?.published
-                              ? 'unsaved'
-                              : 'saved'
+                            (
+                              articleData?.article?.draft ||
+                              !articleData?.article?.published
+                            ) ?
+                              'unsaved'
+                            : 'saved'
                           }
                         >
                           <IconButton
@@ -651,7 +652,7 @@ function ArticleEditor() {
                         </Badge>
                       </PermissionControl>
                     </PermissionControl>
-                  )}
+                  }
                 </CenterChildren>
               }
               rightChildren={

@@ -12,9 +12,9 @@ const getAnonymousRate = (
   answerId: string
 ): number | null => {
   const voteValue =
-    typeof localStorage !== 'undefined'
-      ? localStorage.getItem(`comment-rate:${commentId}:${answerId}`)
-      : null;
+    typeof localStorage !== 'undefined' ?
+      localStorage.getItem(`comment-rate:${commentId}:${answerId}`)
+    : null;
 
   return voteValue ? +voteValue : null;
 };

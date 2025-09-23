@@ -48,9 +48,9 @@ export function withRichText<T extends Editor>(editor: T): T {
   const { insertData, isInline } = editor;
 
   editor.isInline = node =>
-    SlateNode.isNode(node) && InlineFormats.includes(node.type as string)
-      ? true
-      : isInline(node);
+    SlateNode.isNode(node) && InlineFormats.includes(node.type as string) ?
+      true
+    : isInline(node);
 
   editor.insertData = data => {
     const html = data.getData('text/html');

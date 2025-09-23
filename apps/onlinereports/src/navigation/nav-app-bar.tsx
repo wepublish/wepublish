@@ -196,12 +196,12 @@ export const MenuItems = ({ items }: MenuItemsProps) => {
 };
 
 const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
-  isMenuOpen
-    ? css`
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.contrastText};
-      `
-    : null;
+  isMenuOpen ?
+    css`
+      background-color: ${theme.palette.primary.main};
+      color: ${theme.palette.primary.contrastText};
+    `
+  : null;
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -300,18 +300,17 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `;
 
-const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) =>
+const logoLinkStyles = (isMenuOpen: boolean) => (theme: Theme) => css`
+  color: unset;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  justify-self: center;
+  ${isMenuOpen &&
   css`
-    color: unset;
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    justify-self: center;
-    ${isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
-  `;
+    z-index: -1;
+  `}
+`;
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;

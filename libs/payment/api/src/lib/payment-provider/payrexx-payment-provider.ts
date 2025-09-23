@@ -131,9 +131,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({
     intentID,
   }: CheckIntentProps): Promise<IntentState> {
-    const transaction = await this.transactionClient.retrieveTransaction(
-      intentID
-    );
+    const transaction =
+      await this.transactionClient.retrieveTransaction(intentID);
 
     if (transaction) {
       return this.checkTransactionIntentStatus(transaction);
@@ -321,8 +320,9 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       state,
       paymentID: gateway.referenceId,
       paymentData: JSON.stringify(gateway),
-      customerID: transaction?.preAuthorizationId
-        ? transaction.preAuthorizationId.toString()
+      customerID:
+        transaction?.preAuthorizationId ?
+          transaction.preAuthorizationId.toString()
         : undefined,
     };
   }

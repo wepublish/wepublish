@@ -67,12 +67,8 @@ export const generateSitemap =
                         <news:language>${lang}</news:language>
                     </news:publication>
 
-                    <news:publication_date>${
-                      article.publishedAt
-                    }</news:publication_date>
-                    <news:title>${escape(
-                      seo.socialMediaTitle ?? ''
-                    )}</news:title>
+                    <news:publication_date>${article.publishedAt}</news:publication_date>
+                    <news:title>${escape(seo.socialMediaTitle ?? '')}</news:title>
                 </news:news>
             </url>
         `;

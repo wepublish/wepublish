@@ -158,9 +158,9 @@ async function findMemberPlanByRow(row: Row) {
 
   if (selectedMemberPlans.length > 1) {
     throw new Error(
-      `Narrow down member plan selection: ${
-        memberPlans.length
-      } plans left (${memberPlans.map(p => p.name).join(', ')}`
+      `Narrow down member plan selection: ${memberPlans.length} plans left (${memberPlans
+        .map(p => p.name)
+        .join(', ')}`
     );
   }
   if (selectedMemberPlans.length === 0) {

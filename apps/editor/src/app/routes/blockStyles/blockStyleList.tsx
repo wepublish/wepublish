@@ -80,11 +80,14 @@ type BlockStyleListActions =
 const mapBlockStyleToFormValue = (
   blockStyles: BlockStyle[] | null | undefined
 ) =>
-  blockStyles?.reduce((obj, node) => {
-    obj[node.id] = node;
+  blockStyles?.reduce(
+    (obj, node) => {
+      obj[node.id] = node;
 
-    return obj;
-  }, {} as Record<string, BlockStyle>) ?? {};
+      return obj;
+    },
+    {} as Record<string, BlockStyle>
+  ) ?? {};
 
 const blockStyleFormValueReducer = (
   state: Record<string, BlockStyle>,

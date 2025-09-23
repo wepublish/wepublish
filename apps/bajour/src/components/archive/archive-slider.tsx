@@ -28,7 +28,9 @@ const SliderWrapper = styled('div')`
 const Slide = styled('div')<{ isCurrent?: boolean }>`
   position: relative;
   cursor: pointer;
-  transition: flex-basis 0.3s ease-in-out, margin 0.3s ease-in-out;
+  transition:
+    flex-basis 0.3s ease-in-out,
+    margin 0.3s ease-in-out;
   height: ${({ theme }) => theme.spacing(25)};
   flex-basis: 10%;
 

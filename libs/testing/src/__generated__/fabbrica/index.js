@@ -1323,9 +1323,9 @@ function defineMetadataPropertyFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -1333,12 +1333,14 @@ function defineMetadataPropertyFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -1346,29 +1348,31 @@ function defineMetadataPropertyFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          ArticleRevision: isMetadataPropertyArticleRevisionFactory(
-            defaultData.ArticleRevision
-          )
-            ? {
+          ArticleRevision:
+            (
+              isMetadataPropertyArticleRevisionFactory(
+                defaultData.ArticleRevision
+              )
+            ) ?
+              {
                 create: yield defaultData.ArticleRevision.build(),
               }
             : defaultData.ArticleRevision,
-          PageRevision: isMetadataPropertyPageRevisionFactory(
-            defaultData.PageRevision
-          )
-            ? {
+          PageRevision:
+            isMetadataPropertyPageRevisionFactory(defaultData.PageRevision) ?
+              {
                 create: yield defaultData.PageRevision.build(),
               }
             : defaultData.PageRevision,
-          Subscription: isMetadataPropertySubscriptionFactory(
-            defaultData.Subscription
-          )
-            ? {
+          Subscription:
+            isMetadataPropertySubscriptionFactory(defaultData.Subscription) ?
+              {
                 create: yield defaultData.Subscription.build(),
               }
             : defaultData.Subscription,
-          User: isMetadataPropertyUserFactory(defaultData.User)
-            ? {
+          User:
+            isMetadataPropertyUserFactory(defaultData.User) ?
+              {
                 create: yield defaultData.User.build(),
               }
             : defaultData.User,
@@ -1476,9 +1480,9 @@ function defineArticleRevisionFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -1486,12 +1490,14 @@ function defineArticleRevisionFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -1499,25 +1505,31 @@ function defineArticleRevisionFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isArticleRevisionimageFactory(defaultData.image)
-            ? {
+          image:
+            isArticleRevisionimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
-          socialMediaImage: isArticleRevisionsocialMediaImageFactory(
-            defaultData.socialMediaImage
-          )
-            ? {
+          socialMediaImage:
+            (
+              isArticleRevisionsocialMediaImageFactory(
+                defaultData.socialMediaImage
+              )
+            ) ?
+              {
                 create: yield defaultData.socialMediaImage.build(),
               }
             : defaultData.socialMediaImage,
-          article: isArticleRevisionarticleFactory(defaultData.article)
-            ? {
+          article:
+            isArticleRevisionarticleFactory(defaultData.article) ?
+              {
                 create: yield defaultData.article.build(),
               }
             : defaultData.article,
-          user: isArticleRevisionuserFactory(defaultData.user)
-            ? {
+          user:
+            isArticleRevisionuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
@@ -1599,9 +1611,9 @@ function defineArticleRevisionAuthorFactoryInternal({
         const requiredScalarData =
           autoGenerateArticleRevisionAuthorScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -1609,12 +1621,14 @@ function defineArticleRevisionAuthorFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -1622,13 +1636,15 @@ function defineArticleRevisionAuthorFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          revision: isArticleRevisionAuthorrevisionFactory(defaultData.revision)
-            ? {
+          revision:
+            isArticleRevisionAuthorrevisionFactory(defaultData.revision) ?
+              {
                 create: yield defaultData.revision.build(),
               }
             : defaultData.revision,
-          author: isArticleRevisionAuthorauthorFactory(defaultData.author)
-            ? {
+          author:
+            isArticleRevisionAuthorauthorFactory(defaultData.author) ?
+              {
                 create: yield defaultData.author.build(),
               }
             : defaultData.author,
@@ -1711,9 +1727,9 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({
         const requiredScalarData =
           autoGenerateArticleRevisionSocialMediaAuthorScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -1721,12 +1737,14 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -1734,17 +1752,23 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          revision: isArticleRevisionSocialMediaAuthorrevisionFactory(
-            defaultData.revision
-          )
-            ? {
+          revision:
+            (
+              isArticleRevisionSocialMediaAuthorrevisionFactory(
+                defaultData.revision
+              )
+            ) ?
+              {
                 create: yield defaultData.revision.build(),
               }
             : defaultData.revision,
-          author: isArticleRevisionSocialMediaAuthorauthorFactory(
-            defaultData.author
-          )
-            ? {
+          author:
+            (
+              isArticleRevisionSocialMediaAuthorauthorFactory(
+                defaultData.author
+              )
+            ) ?
+              {
                 create: yield defaultData.author.build(),
               }
             : defaultData.author,
@@ -1828,9 +1852,9 @@ function defineArticleFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateArticleScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -1838,12 +1862,14 @@ function defineArticleFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -1851,8 +1877,9 @@ function defineArticleFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          peer: isArticlepeerFactory(defaultData.peer)
-            ? {
+          peer:
+            isArticlepeerFactory(defaultData.peer) ?
+              {
                 create: yield defaultData.peer.build(),
               }
             : defaultData.peer,
@@ -1937,9 +1964,9 @@ function defineArticleTrackingPixelsFactoryInternal({
         const requiredScalarData =
           autoGenerateArticleTrackingPixelsScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -1947,12 +1974,14 @@ function defineArticleTrackingPixelsFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -1960,19 +1989,22 @@ function defineArticleTrackingPixelsFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          article: isArticleTrackingPixelsarticleFactory(defaultData.article)
-            ? {
+          article:
+            isArticleTrackingPixelsarticleFactory(defaultData.article) ?
+              {
                 create: yield defaultData.article.build(),
               }
             : defaultData.article,
           trackingPixelMethod:
-            isArticleTrackingPixelstrackingPixelMethodFactory(
-              defaultData.trackingPixelMethod
-            )
-              ? {
-                  create: yield defaultData.trackingPixelMethod.build(),
-                }
-              : defaultData.trackingPixelMethod,
+            (
+              isArticleTrackingPixelstrackingPixelMethodFactory(
+                defaultData.trackingPixelMethod
+              )
+            ) ?
+              {
+                create: yield defaultData.trackingPixelMethod.build(),
+              }
+            : defaultData.trackingPixelMethod,
         };
         const data = Object.assign(
           Object.assign(
@@ -2049,9 +2081,9 @@ function defineTrackingPixelMethodFactoryInternal({
         const requiredScalarData =
           autoGenerateTrackingPixelMethodScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2059,12 +2091,14 @@ function defineTrackingPixelMethodFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2147,9 +2181,9 @@ function defineTaggedArticlesFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2157,12 +2191,14 @@ function defineTaggedArticlesFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2170,13 +2206,15 @@ function defineTaggedArticlesFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          article: isTaggedArticlesarticleFactory(defaultData.article)
-            ? {
+          article:
+            isTaggedArticlesarticleFactory(defaultData.article) ?
+              {
                 create: yield defaultData.article.build(),
               }
             : defaultData.article,
-          tag: isTaggedArticlestagFactory(defaultData.tag)
-            ? {
+          tag:
+            isTaggedArticlestagFactory(defaultData.tag) ?
+              {
                 create: yield defaultData.tag.build(),
               }
             : defaultData.tag,
@@ -2267,9 +2305,9 @@ function defineAuthorsLinksFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2277,12 +2315,14 @@ function defineAuthorsLinksFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2290,8 +2330,9 @@ function defineAuthorsLinksFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          Author: isAuthorsLinksAuthorFactory(defaultData.Author)
-            ? {
+          Author:
+            isAuthorsLinksAuthorFactory(defaultData.Author) ?
+              {
                 create: yield defaultData.Author.build(),
               }
             : defaultData.Author,
@@ -2384,9 +2425,9 @@ function defineAuthorFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateAuthorScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2394,12 +2435,14 @@ function defineAuthorFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2407,13 +2450,15 @@ function defineAuthorFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isAuthorimageFactory(defaultData.image)
-            ? {
+          image:
+            isAuthorimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
-          peer: isAuthorpeerFactory(defaultData.peer)
-            ? {
+          peer:
+            isAuthorpeerFactory(defaultData.peer) ?
+              {
                 create: yield defaultData.peer.build(),
               }
             : defaultData.peer,
@@ -2493,9 +2538,9 @@ function defineTaggedAuthorsFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2503,12 +2548,14 @@ function defineTaggedAuthorsFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2516,13 +2563,15 @@ function defineTaggedAuthorsFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          author: isTaggedAuthorsauthorFactory(defaultData.author)
-            ? {
+          author:
+            isTaggedAuthorsauthorFactory(defaultData.author) ?
+              {
                 create: yield defaultData.author.build(),
               }
             : defaultData.author,
-          tag: isTaggedAuthorstagFactory(defaultData.tag)
-            ? {
+          tag:
+            isTaggedAuthorstagFactory(defaultData.tag) ?
+              {
                 create: yield defaultData.tag.build(),
               }
             : defaultData.tag,
@@ -2598,9 +2647,9 @@ function defineFocalPointFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2608,12 +2657,14 @@ function defineFocalPointFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2621,8 +2672,9 @@ function defineFocalPointFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isFocalPointimageFactory(defaultData.image)
-            ? {
+          image:
+            isFocalPointimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
@@ -2750,9 +2802,9 @@ function defineImageFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateImageScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2760,12 +2812,14 @@ function defineImageFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2773,13 +2827,15 @@ function defineImageFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          focalPoint: isImagefocalPointFactory(defaultData.focalPoint)
-            ? {
+          focalPoint:
+            isImagefocalPointFactory(defaultData.focalPoint) ?
+              {
                 create: yield defaultData.focalPoint.build(),
               }
             : defaultData.focalPoint,
-          peer: isImagepeerFactory(defaultData.peer)
-            ? {
+          peer:
+            isImagepeerFactory(defaultData.peer) ?
+              {
                 create: yield defaultData.peer.build(),
               }
             : defaultData.peer,
@@ -2856,9 +2912,9 @@ function defineCommentsRevisionsFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2866,12 +2922,14 @@ function defineCommentsRevisionsFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2879,8 +2937,9 @@ function defineCommentsRevisionsFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          Comment: isCommentsRevisionsCommentFactory(defaultData.Comment)
-            ? {
+          Comment:
+            isCommentsRevisionsCommentFactory(defaultData.Comment) ?
+              {
                 create: yield defaultData.Comment.build(),
               }
             : defaultData.Comment,
@@ -2969,9 +3028,9 @@ function defineCommentFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateCommentScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -2979,12 +3038,14 @@ function defineCommentFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -2992,15 +3053,15 @@ function defineCommentFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          guestUserImage: isCommentguestUserImageFactory(
-            defaultData.guestUserImage
-          )
-            ? {
+          guestUserImage:
+            isCommentguestUserImageFactory(defaultData.guestUserImage) ?
+              {
                 create: yield defaultData.guestUserImage.build(),
               }
             : defaultData.guestUserImage,
-          user: isCommentuserFactory(defaultData.user)
-            ? {
+          user:
+            isCommentuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
@@ -3080,9 +3141,9 @@ function defineTaggedCommentsFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3090,12 +3151,14 @@ function defineTaggedCommentsFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3103,13 +3166,15 @@ function defineTaggedCommentsFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          comment: isTaggedCommentscommentFactory(defaultData.comment)
-            ? {
+          comment:
+            isTaggedCommentscommentFactory(defaultData.comment) ?
+              {
                 create: yield defaultData.comment.build(),
               }
             : defaultData.comment,
-          tag: isTaggedCommentstagFactory(defaultData.tag)
-            ? {
+          tag:
+            isTaggedCommentstagFactory(defaultData.tag) ?
+              {
                 create: yield defaultData.tag.build(),
               }
             : defaultData.tag,
@@ -3181,9 +3246,9 @@ function defineCommentRatingSystemFactoryInternal({
         const requiredScalarData =
           autoGenerateCommentRatingSystemScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3191,12 +3256,14 @@ function defineCommentRatingSystemFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3283,9 +3350,9 @@ function defineCommentRatingSystemAnswerFactoryInternal({
         const requiredScalarData =
           autoGenerateCommentRatingSystemAnswerScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3293,12 +3360,14 @@ function defineCommentRatingSystemAnswerFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3306,10 +3375,13 @@ function defineCommentRatingSystemAnswerFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          ratingSystem: isCommentRatingSystemAnswerratingSystemFactory(
-            defaultData.ratingSystem
-          )
-            ? {
+          ratingSystem:
+            (
+              isCommentRatingSystemAnswerratingSystemFactory(
+                defaultData.ratingSystem
+              )
+            ) ?
+              {
                 create: yield defaultData.ratingSystem.build(),
               }
             : defaultData.ratingSystem,
@@ -3401,9 +3473,9 @@ function defineCommentRatingFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3411,12 +3483,14 @@ function defineCommentRatingFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3424,18 +3498,21 @@ function defineCommentRatingFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          user: isCommentRatinguserFactory(defaultData.user)
-            ? {
+          user:
+            isCommentRatinguserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
-          answer: isCommentRatinganswerFactory(defaultData.answer)
-            ? {
+          answer:
+            isCommentRatinganswerFactory(defaultData.answer) ?
+              {
                 create: yield defaultData.answer.build(),
               }
             : defaultData.answer,
-          comment: isCommentRatingcommentFactory(defaultData.comment)
-            ? {
+          comment:
+            isCommentRatingcommentFactory(defaultData.comment) ?
+              {
                 create: yield defaultData.comment.build(),
               }
             : defaultData.comment,
@@ -3518,9 +3595,9 @@ function defineCommentRatingOverrideFactoryInternal({
         const requiredScalarData =
           autoGenerateCommentRatingOverrideScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3528,12 +3605,14 @@ function defineCommentRatingOverrideFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3541,13 +3620,15 @@ function defineCommentRatingOverrideFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          answer: isCommentRatingOverrideanswerFactory(defaultData.answer)
-            ? {
+          answer:
+            isCommentRatingOverrideanswerFactory(defaultData.answer) ?
+              {
                 create: yield defaultData.answer.build(),
               }
             : defaultData.answer,
-          comment: isCommentRatingOverridecommentFactory(defaultData.comment)
-            ? {
+          comment:
+            isCommentRatingOverridecommentFactory(defaultData.comment) ?
+              {
                 create: yield defaultData.comment.build(),
               }
             : defaultData.comment,
@@ -3645,9 +3726,9 @@ function defineInvoiceItemFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3655,12 +3736,14 @@ function defineInvoiceItemFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3668,8 +3751,9 @@ function defineInvoiceItemFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          invoices: isInvoiceIteminvoicesFactory(defaultData.invoices)
-            ? {
+          invoices:
+            isInvoiceIteminvoicesFactory(defaultData.invoices) ?
+              {
                 create: yield defaultData.invoices.build(),
               }
             : defaultData.invoices,
@@ -3769,9 +3853,9 @@ function defineInvoiceFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateInvoiceScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3779,12 +3863,14 @@ function defineInvoiceFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3792,8 +3878,9 @@ function defineInvoiceFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          subscription: isInvoicesubscriptionFactory(defaultData.subscription)
-            ? {
+          subscription:
+            isInvoicesubscriptionFactory(defaultData.subscription) ?
+              {
                 create: yield defaultData.subscription.build(),
               }
             : defaultData.subscription,
@@ -3896,9 +3983,9 @@ function defineMailLogFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateMailLogScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -3906,12 +3993,14 @@ function defineMailLogFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -3919,13 +4008,15 @@ function defineMailLogFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          recipient: isMailLogrecipientFactory(defaultData.recipient)
-            ? {
+          recipient:
+            isMailLogrecipientFactory(defaultData.recipient) ?
+              {
                 create: yield defaultData.recipient.build(),
               }
             : defaultData.recipient,
-          mailTemplate: isMailLogmailTemplateFactory(defaultData.mailTemplate)
-            ? {
+          mailTemplate:
+            isMailLogmailTemplateFactory(defaultData.mailTemplate) ?
+              {
                 create: yield defaultData.mailTemplate.build(),
               }
             : defaultData.mailTemplate,
@@ -4010,9 +4101,9 @@ function defineAvailablePaymentMethodFactoryInternal({
         const requiredScalarData =
           autoGenerateAvailablePaymentMethodScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4020,12 +4111,14 @@ function defineAvailablePaymentMethodFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4033,10 +4126,9 @@ function defineAvailablePaymentMethodFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          MemberPlan: isAvailablePaymentMethodMemberPlanFactory(
-            defaultData.MemberPlan
-          )
-            ? {
+          MemberPlan:
+            isAvailablePaymentMethodMemberPlanFactory(defaultData.MemberPlan) ?
+              {
                 create: yield defaultData.MemberPlan.build(),
               }
             : defaultData.MemberPlan,
@@ -4164,9 +4256,9 @@ function defineMemberPlanFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4174,12 +4266,14 @@ function defineMemberPlanFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4188,33 +4282,36 @@ function defineMemberPlanFactoryInternal({
         );
         const defaultAssociations = {
           migrateToTargetPaymentMethod:
-            isMemberPlanmigrateToTargetPaymentMethodFactory(
-              defaultData.migrateToTargetPaymentMethod
-            )
-              ? {
-                  create:
-                    yield defaultData.migrateToTargetPaymentMethod.build(),
-                }
-              : defaultData.migrateToTargetPaymentMethod,
-          image: isMemberPlanimageFactory(defaultData.image)
-            ? {
+            (
+              isMemberPlanmigrateToTargetPaymentMethodFactory(
+                defaultData.migrateToTargetPaymentMethod
+              )
+            ) ?
+              {
+                create: yield defaultData.migrateToTargetPaymentMethod.build(),
+              }
+            : defaultData.migrateToTargetPaymentMethod,
+          image:
+            isMemberPlanimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
-          successPage: isMemberPlansuccessPageFactory(defaultData.successPage)
-            ? {
+          successPage:
+            isMemberPlansuccessPageFactory(defaultData.successPage) ?
+              {
                 create: yield defaultData.successPage.build(),
               }
             : defaultData.successPage,
-          failPage: isMemberPlanfailPageFactory(defaultData.failPage)
-            ? {
+          failPage:
+            isMemberPlanfailPageFactory(defaultData.failPage) ?
+              {
                 create: yield defaultData.failPage.build(),
               }
             : defaultData.failPage,
-          confirmationPage: isMemberPlanconfirmationPageFactory(
-            defaultData.confirmationPage
-          )
-            ? {
+          confirmationPage:
+            isMemberPlanconfirmationPageFactory(defaultData.confirmationPage) ?
+              {
                 create: yield defaultData.confirmationPage.build(),
               }
             : defaultData.confirmationPage,
@@ -4312,9 +4409,9 @@ function defineNavigationLinkFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4322,12 +4419,14 @@ function defineNavigationLinkFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4335,18 +4434,21 @@ function defineNavigationLinkFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          page: isNavigationLinkpageFactory(defaultData.page)
-            ? {
+          page:
+            isNavigationLinkpageFactory(defaultData.page) ?
+              {
                 create: yield defaultData.page.build(),
               }
             : defaultData.page,
-          article: isNavigationLinkarticleFactory(defaultData.article)
-            ? {
+          article:
+            isNavigationLinkarticleFactory(defaultData.article) ?
+              {
                 create: yield defaultData.article.build(),
               }
             : defaultData.article,
-          navigation: isNavigationLinknavigationFactory(defaultData.navigation)
-            ? {
+          navigation:
+            isNavigationLinknavigationFactory(defaultData.navigation) ?
+              {
                 create: yield defaultData.navigation.build(),
               }
             : defaultData.navigation,
@@ -4435,9 +4537,9 @@ function defineNavigationFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4445,12 +4547,14 @@ function defineNavigationFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4547,9 +4651,9 @@ function definePageRevisionFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4557,12 +4661,14 @@ function definePageRevisionFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4570,25 +4676,31 @@ function definePageRevisionFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isPageRevisionimageFactory(defaultData.image)
-            ? {
+          image:
+            isPageRevisionimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
-          socialMediaImage: isPageRevisionsocialMediaImageFactory(
-            defaultData.socialMediaImage
-          )
-            ? {
+          socialMediaImage:
+            (
+              isPageRevisionsocialMediaImageFactory(
+                defaultData.socialMediaImage
+              )
+            ) ?
+              {
                 create: yield defaultData.socialMediaImage.build(),
               }
             : defaultData.socialMediaImage,
-          page: isPageRevisionpageFactory(defaultData.page)
-            ? {
+          page:
+            isPageRevisionpageFactory(defaultData.page) ?
+              {
                 create: yield defaultData.page.build(),
               }
             : defaultData.page,
-          user: isPageRevisionuserFactory(defaultData.user)
-            ? {
+          user:
+            isPageRevisionuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
@@ -4658,9 +4770,9 @@ function definePageFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGeneratePageScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4668,12 +4780,14 @@ function definePageFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4756,9 +4870,9 @@ function defineTaggedPagesFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4766,12 +4880,14 @@ function defineTaggedPagesFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4779,13 +4895,15 @@ function defineTaggedPagesFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          page: isTaggedPagespageFactory(defaultData.page)
-            ? {
+          page:
+            isTaggedPagespageFactory(defaultData.page) ?
+              {
                 create: yield defaultData.page.build(),
               }
             : defaultData.page,
-          tag: isTaggedPagestagFactory(defaultData.tag)
-            ? {
+          tag:
+            isTaggedPagestagFactory(defaultData.tag) ?
+              {
                 create: yield defaultData.tag.build(),
               }
             : defaultData.tag,
@@ -4897,9 +5015,9 @@ function definePaymentMethodFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -4907,12 +5025,14 @@ function definePaymentMethodFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -4920,8 +5040,9 @@ function definePaymentMethodFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isPaymentMethodimageFactory(defaultData.image)
-            ? {
+          image:
+            isPaymentMethodimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
@@ -5007,9 +5128,9 @@ function definePaymentFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGeneratePaymentScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5017,12 +5138,14 @@ function definePaymentFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5030,10 +5153,9 @@ function definePaymentFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          paymentMethod: isPaymentpaymentMethodFactory(
-            defaultData.paymentMethod
-          )
-            ? {
+          paymentMethod:
+            isPaymentpaymentMethodFactory(defaultData.paymentMethod) ?
+              {
                 create: yield defaultData.paymentMethod.build(),
               }
             : defaultData.paymentMethod,
@@ -5147,9 +5269,9 @@ function definePeerProfileFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5157,12 +5279,14 @@ function definePeerProfileFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5170,13 +5294,15 @@ function definePeerProfileFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          logo: isPeerProfilelogoFactory(defaultData.logo)
-            ? {
+          logo:
+            isPeerProfilelogoFactory(defaultData.logo) ?
+              {
                 create: yield defaultData.logo.build(),
               }
             : defaultData.logo,
-          squareLogo: isPeerProfilesquareLogoFactory(defaultData.squareLogo)
-            ? {
+          squareLogo:
+            isPeerProfilesquareLogoFactory(defaultData.squareLogo) ?
+              {
                 create: yield defaultData.squareLogo.build(),
               }
             : defaultData.squareLogo,
@@ -5277,9 +5403,9 @@ function definePeerFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGeneratePeerScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5287,12 +5413,14 @@ function definePeerFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5382,9 +5510,9 @@ function defineTokenFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateTokenScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5392,12 +5520,14 @@ function defineTokenFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5490,9 +5620,9 @@ function defineSessionFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateSessionScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5500,12 +5630,14 @@ function defineSessionFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5513,8 +5645,9 @@ function defineSessionFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          user: isSessionuserFactory(defaultData.user)
-            ? {
+          user:
+            isSessionuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
@@ -5617,9 +5750,9 @@ function defineSubscriptionPeriodFactoryInternal({
           { seq }
         );
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5627,12 +5760,14 @@ function defineSubscriptionPeriodFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5640,15 +5775,15 @@ function defineSubscriptionPeriodFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          invoice: isSubscriptionPeriodinvoiceFactory(defaultData.invoice)
-            ? {
+          invoice:
+            isSubscriptionPeriodinvoiceFactory(defaultData.invoice) ?
+              {
                 create: yield defaultData.invoice.build(),
               }
             : defaultData.invoice,
-          subscription: isSubscriptionPeriodsubscriptionFactory(
-            defaultData.subscription
-          )
-            ? {
+          subscription:
+            isSubscriptionPeriodsubscriptionFactory(defaultData.subscription) ?
+              {
                 create: yield defaultData.subscription.build(),
               }
             : defaultData.subscription,
@@ -5736,9 +5871,9 @@ function defineSubscriptionDeactivationFactoryInternal({
         const requiredScalarData =
           autoGenerateSubscriptionDeactivationScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5746,12 +5881,14 @@ function defineSubscriptionDeactivationFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5759,10 +5896,13 @@ function defineSubscriptionDeactivationFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          subscription: isSubscriptionDeactivationsubscriptionFactory(
-            defaultData.subscription
-          )
-            ? {
+          subscription:
+            (
+              isSubscriptionDeactivationsubscriptionFactory(
+                defaultData.subscription
+              )
+            ) ?
+              {
                 create: yield defaultData.subscription.build(),
               }
             : defaultData.subscription,
@@ -5880,9 +6020,9 @@ function defineSubscriptionFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -5890,12 +6030,14 @@ function defineSubscriptionFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -5903,34 +6045,37 @@ function defineSubscriptionFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          deactivation: isSubscriptiondeactivationFactory(
-            defaultData.deactivation
-          )
-            ? {
+          deactivation:
+            isSubscriptiondeactivationFactory(defaultData.deactivation) ?
+              {
                 create: yield defaultData.deactivation.build(),
               }
             : defaultData.deactivation,
-          paymentMethod: isSubscriptionpaymentMethodFactory(
-            defaultData.paymentMethod
-          )
-            ? {
+          paymentMethod:
+            isSubscriptionpaymentMethodFactory(defaultData.paymentMethod) ?
+              {
                 create: yield defaultData.paymentMethod.build(),
               }
             : defaultData.paymentMethod,
-          memberPlan: isSubscriptionmemberPlanFactory(defaultData.memberPlan)
-            ? {
+          memberPlan:
+            isSubscriptionmemberPlanFactory(defaultData.memberPlan) ?
+              {
                 create: yield defaultData.memberPlan.build(),
               }
             : defaultData.memberPlan,
-          user: isSubscriptionuserFactory(defaultData.user)
-            ? {
+          user:
+            isSubscriptionuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
-          replacesSubscription: isSubscriptionreplacesSubscriptionFactory(
-            defaultData.replacesSubscription
-          )
-            ? {
+          replacesSubscription:
+            (
+              isSubscriptionreplacesSubscriptionFactory(
+                defaultData.replacesSubscription
+              )
+            ) ?
+              {
                 create: yield defaultData.replacesSubscription.build(),
               }
             : defaultData.replacesSubscription,
@@ -6005,9 +6150,9 @@ function defineUserAddressFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6015,12 +6160,14 @@ function defineUserAddressFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6028,8 +6175,9 @@ function defineUserAddressFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          User: isUserAddressUserFactory(defaultData.User)
-            ? {
+          User:
+            isUserAddressUserFactory(defaultData.User) ?
+              {
                 create: yield defaultData.User.build(),
               }
             : defaultData.User,
@@ -6161,9 +6309,9 @@ function defineUserOAuth2AccountFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6171,12 +6319,14 @@ function defineUserOAuth2AccountFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6184,8 +6334,9 @@ function defineUserOAuth2AccountFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          User: isUserOAuth2AccountUserFactory(defaultData.User)
-            ? {
+          User:
+            isUserOAuth2AccountUserFactory(defaultData.User) ?
+              {
                 create: yield defaultData.User.build(),
               }
             : defaultData.User,
@@ -6279,9 +6430,9 @@ function definePaymentProviderCustomerFactoryInternal({
         const requiredScalarData =
           autoGeneratePaymentProviderCustomerScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6289,12 +6440,14 @@ function definePaymentProviderCustomerFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6302,8 +6455,9 @@ function definePaymentProviderCustomerFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          User: isPaymentProviderCustomerUserFactory(defaultData.User)
-            ? {
+          User:
+            isPaymentProviderCustomerUserFactory(defaultData.User) ?
+              {
                 create: yield defaultData.User.build(),
               }
             : defaultData.User,
@@ -6412,9 +6566,9 @@ function defineUserFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateUserScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6422,12 +6576,14 @@ function defineUserFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6435,13 +6591,15 @@ function defineUserFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          userImage: isUseruserImageFactory(defaultData.userImage)
-            ? {
+          userImage:
+            isUseruserImageFactory(defaultData.userImage) ?
+              {
                 create: yield defaultData.userImage.build(),
               }
             : defaultData.userImage,
-          address: isUseraddressFactory(defaultData.address)
-            ? {
+          address:
+            isUseraddressFactory(defaultData.address) ?
+              {
                 create: yield defaultData.address.build(),
               }
             : defaultData.address,
@@ -6528,9 +6686,9 @@ function defineUserRoleFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateUserRoleScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6538,12 +6696,14 @@ function defineUserRoleFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6640,9 +6800,9 @@ function defineSettingFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateSettingScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6650,12 +6810,14 @@ function defineSettingFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6735,9 +6897,9 @@ function defineTagFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateTagScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6745,12 +6907,14 @@ function defineTagFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6758,8 +6922,9 @@ function defineTagFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          peer: isTagpeerFactory(defaultData.peer)
-            ? {
+          peer:
+            isTagpeerFactory(defaultData.peer) ?
+              {
                 create: yield defaultData.peer.build(),
               }
             : defaultData.peer,
@@ -6831,9 +6996,9 @@ function definePollFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGeneratePollScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6841,12 +7006,14 @@ function definePollFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6926,9 +7093,9 @@ function definePollAnswerFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -6936,12 +7103,14 @@ function definePollAnswerFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -6949,8 +7118,9 @@ function definePollAnswerFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          poll: isPollAnswerpollFactory(defaultData.poll)
-            ? {
+          poll:
+            isPollAnswerpollFactory(defaultData.poll) ?
+              {
                 create: yield defaultData.poll.build(),
               }
             : defaultData.poll,
@@ -7029,9 +7199,9 @@ function definePollVoteFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGeneratePollVoteScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7039,12 +7209,14 @@ function definePollVoteFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7052,18 +7224,21 @@ function definePollVoteFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          user: isPollVoteuserFactory(defaultData.user)
-            ? {
+          user:
+            isPollVoteuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
-          answer: isPollVoteanswerFactory(defaultData.answer)
-            ? {
+          answer:
+            isPollVoteanswerFactory(defaultData.answer) ?
+              {
                 create: yield defaultData.answer.build(),
               }
             : defaultData.answer,
-          poll: isPollVotepollFactory(defaultData.poll)
-            ? {
+          poll:
+            isPollVotepollFactory(defaultData.poll) ?
+              {
                 create: yield defaultData.poll.build(),
               }
             : defaultData.poll,
@@ -7140,9 +7315,9 @@ function definePollExternalVoteSourceFactoryInternal({
         const requiredScalarData =
           autoGeneratePollExternalVoteSourceScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7150,12 +7325,14 @@ function definePollExternalVoteSourceFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7163,8 +7340,9 @@ function definePollExternalVoteSourceFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          poll: isPollExternalVoteSourcepollFactory(defaultData.poll)
-            ? {
+          poll:
+            isPollExternalVoteSourcepollFactory(defaultData.poll) ?
+              {
                 create: yield defaultData.poll.build(),
               }
             : defaultData.poll,
@@ -7245,9 +7423,9 @@ function definePollExternalVoteFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7255,12 +7433,14 @@ function definePollExternalVoteFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7268,13 +7448,15 @@ function definePollExternalVoteFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          answer: isPollExternalVoteanswerFactory(defaultData.answer)
-            ? {
+          answer:
+            isPollExternalVoteanswerFactory(defaultData.answer) ?
+              {
                 create: yield defaultData.answer.build(),
               }
             : defaultData.answer,
-          source: isPollExternalVotesourceFactory(defaultData.source)
-            ? {
+          source:
+            isPollExternalVotesourceFactory(defaultData.source) ?
+              {
                 create: yield defaultData.source.build(),
               }
             : defaultData.source,
@@ -7362,9 +7544,9 @@ function defineEventFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateEventScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7372,12 +7554,14 @@ function defineEventFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7385,8 +7569,9 @@ function defineEventFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isEventimageFactory(defaultData.image)
-            ? {
+          image:
+            isEventimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
@@ -7466,9 +7651,9 @@ function defineTaggedEventsFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7476,12 +7661,14 @@ function defineTaggedEventsFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7489,13 +7676,15 @@ function defineTaggedEventsFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          event: isTaggedEventseventFactory(defaultData.event)
-            ? {
+          event:
+            isTaggedEventseventFactory(defaultData.event) ?
+              {
                 create: yield defaultData.event.build(),
               }
             : defaultData.event,
-          tag: isTaggedEventstagFactory(defaultData.tag)
-            ? {
+          tag:
+            isTaggedEventstagFactory(defaultData.tag) ?
+              {
                 create: yield defaultData.tag.build(),
               }
             : defaultData.tag,
@@ -7588,9 +7777,9 @@ function defineConsentFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateConsentScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7598,12 +7787,14 @@ function defineConsentFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7694,9 +7885,9 @@ function defineUserConsentFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7704,12 +7895,14 @@ function defineUserConsentFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7717,13 +7910,15 @@ function defineUserConsentFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          consent: isUserConsentconsentFactory(defaultData.consent)
-            ? {
+          consent:
+            isUserConsentconsentFactory(defaultData.consent) ?
+              {
                 create: yield defaultData.consent.build(),
               }
             : defaultData.consent,
-          user: isUserConsentuserFactory(defaultData.user)
-            ? {
+          user:
+            isUserConsentuserFactory(defaultData.user) ?
+              {
                 create: yield defaultData.user.build(),
               }
             : defaultData.user,
@@ -7802,9 +7997,9 @@ function defineUserFlowMailFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7812,12 +8007,14 @@ function defineUserFlowMailFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7825,10 +8022,9 @@ function defineUserFlowMailFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          mailTemplate: isUserFlowMailmailTemplateFactory(
-            defaultData.mailTemplate
-          )
-            ? {
+          mailTemplate:
+            isUserFlowMailmailTemplateFactory(defaultData.mailTemplate) ?
+              {
                 create: yield defaultData.mailTemplate.build(),
               }
             : defaultData.mailTemplate,
@@ -7905,9 +8101,9 @@ function defineSubscriptionFlowFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -7915,12 +8111,14 @@ function defineSubscriptionFlowFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -7928,10 +8126,9 @@ function defineSubscriptionFlowFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          memberPlan: isSubscriptionFlowmemberPlanFactory(
-            defaultData.memberPlan
-          )
-            ? {
+          memberPlan:
+            isSubscriptionFlowmemberPlanFactory(defaultData.memberPlan) ?
+              {
                 create: yield defaultData.memberPlan.build(),
               }
             : defaultData.memberPlan,
@@ -8019,9 +8216,9 @@ function defineSubscriptionIntervalFactoryInternal({
         const requiredScalarData =
           autoGenerateSubscriptionIntervalScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8029,12 +8226,14 @@ function defineSubscriptionIntervalFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8042,17 +8241,23 @@ function defineSubscriptionIntervalFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          mailTemplate: isSubscriptionIntervalmailTemplateFactory(
-            defaultData.mailTemplate
-          )
-            ? {
+          mailTemplate:
+            (
+              isSubscriptionIntervalmailTemplateFactory(
+                defaultData.mailTemplate
+              )
+            ) ?
+              {
                 create: yield defaultData.mailTemplate.build(),
               }
             : defaultData.mailTemplate,
-          subscriptionFlow: isSubscriptionIntervalsubscriptionFlowFactory(
-            defaultData.subscriptionFlow
-          )
-            ? {
+          subscriptionFlow:
+            (
+              isSubscriptionIntervalsubscriptionFlowFactory(
+                defaultData.subscriptionFlow
+              )
+            ) ?
+              {
                 create: yield defaultData.subscriptionFlow.build(),
               }
             : defaultData.subscriptionFlow,
@@ -8139,9 +8344,9 @@ function defineMailTemplateFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8149,12 +8354,14 @@ function defineMailTemplateFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8239,9 +8446,9 @@ function definePeriodicJobFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8249,12 +8456,14 @@ function definePeriodicJobFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8339,9 +8548,9 @@ function defineBlockStyleFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8349,12 +8558,14 @@ function defineBlockStyleFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8447,9 +8658,9 @@ function defineBannerFactoryInternal({
         const seq = getSeq();
         const requiredScalarData = autoGenerateBannerScalarsOrEnums({ seq });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8457,12 +8668,14 @@ function defineBannerFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8470,8 +8683,9 @@ function defineBannerFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          image: isBannerimageFactory(defaultData.image)
-            ? {
+          image:
+            isBannerimageFactory(defaultData.image) ?
+              {
                 create: yield defaultData.image.build(),
               }
             : defaultData.image,
@@ -8563,9 +8777,9 @@ function defineBannerActionFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8573,12 +8787,14 @@ function defineBannerActionFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8586,8 +8802,9 @@ function defineBannerActionFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          banner: isBannerActionbannerFactory(defaultData.banner)
-            ? {
+          banner:
+            isBannerActionbannerFactory(defaultData.banner) ?
+              {
                 create: yield defaultData.banner.build(),
               }
             : defaultData.banner,
@@ -8667,9 +8884,9 @@ function defineCrowdfundingFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8677,12 +8894,14 @@ function defineCrowdfundingFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8779,9 +8998,9 @@ function defineCrowdfundingGoalFactoryInternal({
           seq,
         });
         const resolveValue = normalizeResolver(
-          defaultDataResolver !== null && defaultDataResolver !== void 0
-            ? defaultDataResolver
-            : {}
+          defaultDataResolver !== null && defaultDataResolver !== void 0 ?
+            defaultDataResolver
+          : {}
         );
         const defaultData = yield traitKeys.reduce(
           (queue, traitKey) =>
@@ -8789,12 +9008,14 @@ function defineCrowdfundingGoalFactoryInternal({
               var _a, _b;
               const acc = yield queue;
               const resolveTraitValue = normalizeResolver(
-                (_b =
-                  (_a = traitsDefs[traitKey]) === null || _a === void 0
-                    ? void 0
+                (
+                  (_b =
+                    (_a = traitsDefs[traitKey]) === null || _a === void 0 ?
+                      void 0
                     : _a.data) !== null && _b !== void 0
-                  ? _b
-                  : {}
+                ) ?
+                  _b
+                : {}
               );
               const traitData = yield resolveTraitValue({ seq });
               return Object.assign(Object.assign({}, acc), traitData);
@@ -8802,10 +9023,9 @@ function defineCrowdfundingGoalFactoryInternal({
           resolveValue({ seq })
         );
         const defaultAssociations = {
-          Crowdfunding: isCrowdfundingGoalCrowdfundingFactory(
-            defaultData.Crowdfunding
-          )
-            ? {
+          Crowdfunding:
+            isCrowdfundingGoalCrowdfundingFactory(defaultData.Crowdfunding) ?
+              {
                 create: yield defaultData.Crowdfunding.build(),
               }
             : defaultData.Crowdfunding,

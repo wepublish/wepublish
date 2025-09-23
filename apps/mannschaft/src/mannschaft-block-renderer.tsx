@@ -48,8 +48,8 @@ import {
 
 const seamlessBackground = (theme: Theme) => css`
   &:has(
-      + * > :is(${BreakBlockWrapper}, ${SliderWrapper}, ${FocusTeaserWrapper})
-    ) {
+    + * > :is(${BreakBlockWrapper}, ${SliderWrapper}, ${FocusTeaserWrapper})
+  ) {
     margin-bottom: -${theme.spacing(7)};
   }
 

@@ -19,8 +19,8 @@ export const revokeSessionByToken = (
 ) => {
   const session = authenticateUser();
 
-  return session
-    ? sessionClient.delete({
+  return session ?
+      sessionClient.delete({
         where: {
           token: session.token,
         },

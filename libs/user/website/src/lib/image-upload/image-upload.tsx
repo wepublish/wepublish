@@ -53,14 +53,12 @@ export const ImageUpload = forwardRef<
   return (
     <ImageUploadWrapper className={className}>
       <ImageUploadImageWrapper>
-        {image ? (
+        {image ?
           <Image
             css={avatarStyles}
             image={image}
           />
-        ) : (
-          <ImageUploadPlaceholder css={avatarStyles} />
-        )}
+        : <ImageUploadPlaceholder css={avatarStyles} />}
 
         <input
           css={hiddenInputStyles}
@@ -73,7 +71,7 @@ export const ImageUpload = forwardRef<
       </ImageUploadImageWrapper>
 
       <ImageUploadContent>
-        {image ? (
+        {image ?
           <>
             <IconButton
               color="error"
@@ -91,15 +89,14 @@ export const ImageUpload = forwardRef<
               <MdEdit />
             </IconButton>
           </>
-        ) : (
-          <IconButton
+        : <IconButton
             color="primary"
             onClick={() => fileInputRef.current?.click()}
             title="Bild hochladen"
           >
             <MdOutlineUploadFile />
           </IconButton>
-        )}
+        }
       </ImageUploadContent>
     </ImageUploadWrapper>
   );

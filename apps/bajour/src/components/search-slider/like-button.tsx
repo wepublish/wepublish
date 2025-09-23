@@ -35,7 +35,9 @@ export const VideoLikeButton = ({
       css={iconButtonStyles}
       disableRipple
     >
-      {isLiked ? <MdFavorite style={{ color: 'red' }} /> : <MdFavoriteBorder />}
+      {isLiked ?
+        <MdFavorite style={{ color: 'red' }} />
+      : <MdFavoriteBorder />}
       {likes}
     </IconButton>
   );
@@ -55,7 +57,9 @@ export const LikeButton = ({ isLiked, likes, onLike }: LikeButtonProps) => {
       css={iconButtonStyles}
       disableRipple
     >
-      {isLiked ? <MdFavorite style={{ color: 'red' }} /> : <MdFavoriteBorder />}
+      {isLiked ?
+        <MdFavorite style={{ color: 'red' }} />
+      : <MdFavoriteBorder />}
       {likes}
     </IconButton>
   );

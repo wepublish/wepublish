@@ -73,8 +73,9 @@ export const updateAuthor = (
     where: { id },
     data: {
       ...input,
-      tags: tagIds
-        ? {
+      tags:
+        tagIds ?
+          {
             connectOrCreate: tagIds.map(tagId => ({
               where: {
                 authorId_tagId: {

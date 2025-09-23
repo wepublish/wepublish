@@ -88,8 +88,9 @@ export class ProfileService {
         birthday,
         name,
         firstName,
-        address: address
-          ? {
+        address:
+          address ?
+            {
               upsert: {
                 create: address,
                 update: address,

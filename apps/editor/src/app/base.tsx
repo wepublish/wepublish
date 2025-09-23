@@ -126,7 +126,9 @@ const FloatingButton = styled(RIconButton)`
   padding: 6px;
   position: absolute;
   top: 5vh;
-  transition: transform 0.2s ease-in, opacity 0.15s ease-in-out;
+  transition:
+    transform 0.2s ease-in,
+    opacity 0.15s ease-in-out;
   z-index: 100;
   transform: translateX(${props => (props.isExpanded ? '241px' : '37px')});
 
@@ -183,11 +185,9 @@ export function Base({ children }: BaseProps) {
                 size="sm"
                 onClick={() => setIsExpanded(!isExpanded)}
                 icon={
-                  isExpanded ? (
+                  isExpanded ?
                     <MdChevronLeft size="22px" />
-                  ) : (
-                    <MdChevronRight size="22px" />
-                  )
+                  : <MdChevronRight size="22px" />
                 }
               />
 

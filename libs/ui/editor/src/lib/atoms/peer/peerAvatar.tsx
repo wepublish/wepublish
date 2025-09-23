@@ -11,11 +11,10 @@ export const PeerAvatar = ({
   peer?: FullPeerFragment | V2FullPeerFragment | null;
 }>) => {
   const logo = peer?.profile?.squareLogo ?? peer?.profile?.logo;
-  const logoUrl = logo
-    ? 'thumbURL' in logo
-      ? logo.thumbURL
-      : 'xxsSquare' in logo
-      ? logo.xxsSquare
+  const logoUrl =
+    logo ?
+      'thumbURL' in logo ? logo.thumbURL
+      : 'xxsSquare' in logo ? logo.xxsSquare
       : null
     : null;
 

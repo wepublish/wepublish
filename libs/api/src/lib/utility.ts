@@ -76,12 +76,12 @@ export function mapSubscriptionsAsCsv(
         `${user?.birthday ? format(user?.birthday, 'yyyy-MM-dd') : ''}`,
         `${user?.email ?? ''}`,
         user?.active,
-        user?.createdAt
-          ? formatISO(user.createdAt, { representation: 'date' })
-          : '',
-        user?.modifiedAt
-          ? formatISO(user.modifiedAt, { representation: 'date' })
-          : '',
+        user?.createdAt ?
+          formatISO(user.createdAt, { representation: 'date' })
+        : '',
+        user?.modifiedAt ?
+          formatISO(user.modifiedAt, { representation: 'date' })
+        : '',
         `${sanitizeCsvContent(user?.address?.company)}`,
         `${sanitizeCsvContent(user?.address?.streetAddress)}`,
         `${sanitizeCsvContent(user?.address?.streetAddress2)}`,
@@ -94,19 +94,17 @@ export function mapSubscriptionsAsCsv(
         subscription?.monthlyAmount ?? '',
         subscription?.autoRenew ?? '',
         subscription?.extendable ?? '',
-        subscription?.startsAt
-          ? formatISO(subscription.startsAt, { representation: 'date' })
-          : '',
-        subscription?.paidUntil
-          ? formatISO(subscription.paidUntil, { representation: 'date' })
-          : 'no pay',
+        subscription?.startsAt ?
+          formatISO(subscription.startsAt, { representation: 'date' })
+        : '',
+        subscription?.paidUntil ?
+          formatISO(subscription.paidUntil, { representation: 'date' })
+        : 'no pay',
         sanitizeCsvContent(paymentMethod?.name),
         subscription?.paymentMethodID ?? '',
-        subscription?.deactivation
-          ? formatISO(subscription.deactivation.date, {
-              representation: 'date',
-            })
-          : '',
+        subscription?.deactivation ?
+          formatISO(subscription.deactivation.date, { representation: 'date' })
+        : '',
         subscription?.deactivation?.reason ?? '',
       ].join(',') + '\r\n';
   }
@@ -159,7 +157,7 @@ export function isSourceProxied<T>(
 export function createProxyingResolver<
   TSource,
   TContext,
-  TArgs = { [argName: string]: any }
+  TArgs = { [argName: string]: any },
 >(
   resolver: GraphQLFieldResolver<TSource, TContext, TArgs>
 ): GraphQLFieldResolver<TSource, TContext, TArgs> {
@@ -176,8 +174,8 @@ export function createProxyingIsTypeOf<TSource, TContext>(
   isTypeOf: GraphQLIsTypeOfFn<TSource, TContext>
 ): GraphQLIsTypeOfFn<TSource, TContext> {
   return function (this: GraphQLObjectType, source, context, info) {
-    return isSourceProxied(source)
-      ? source.__typename === this.name
+    return isSourceProxied(source) ?
+        source.__typename === this.name
       : isTypeOf(source, context, info);
   };
 }
@@ -209,8 +207,9 @@ export async function delegateToPeerSchema(
   context: Context,
   opts: Omit<IDelegateToSchemaOptions, 'schema'>
 ) {
-  const schema = fetchAdminEndpoint
-    ? await context.loaders.peerAdminSchema.load(peerID)
+  const schema =
+    fetchAdminEndpoint ?
+      await context.loaders.peerAdminSchema.load(peerID)
     : await context.loaders.peerSchema.load(peerID);
 
   if (!schema) return null;
@@ -242,15 +241,12 @@ export function countRichtextChars(blocksCharLength: number, nodes: any) {
   }, blocksCharLength);
 }
 
-export type DiscriminateUnion<
-  T,
-  K extends keyof T,
-  V extends T[K]
-> = T extends Record<K, V> ? T : never;
+export type DiscriminateUnion<T, K extends keyof T, V extends T[K]> =
+  T extends Record<K, V> ? T : never;
 
 export type MapDiscriminatedUnion<
   T extends Record<K, string>,
-  K extends keyof T
+  K extends keyof T,
 > = {
   [V in T[K]]: DiscriminateUnion<T, K, V>;
 };

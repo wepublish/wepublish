@@ -112,14 +112,13 @@ function TokenList() {
         </PermissionControl>
       </ListViewContainer>
 
-      {isTokenListLoading ? (
+      {isTokenListLoading ?
         <Loader
           backdrop
           content={t('tokenList.overview.loading')}
           vertical
         />
-      ) : (
-        <TableWrapper>
+      : <TableWrapper>
           <List bordered>
             {tokenListData?.tokens.map((token, index) => (
               <RList.Item
@@ -152,7 +151,7 @@ function TokenList() {
             ))}
           </List>
         </TableWrapper>
-      )}
+      }
 
       <Drawer
         open={isTokenGeneratePanelOpen}

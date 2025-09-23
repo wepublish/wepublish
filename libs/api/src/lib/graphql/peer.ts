@@ -47,8 +47,8 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     squareLogo: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, { loaders }) => {
-        return profile.squareLogoId
-          ? loaders.images.load(profile.squareLogoId)
+        return profile.squareLogoId ?
+            loaders.images.load(profile.squareLogoId)
           : null;
       }),
     },
@@ -69,8 +69,8 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     callToActionImage: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, { loaders }) => {
-        return profile.callToActionImageID
-          ? loaders.images.load(profile.callToActionImageID)
+        return profile.callToActionImageID ?
+            loaders.images.load(profile.callToActionImageID)
           : null;
       }),
     },
@@ -127,8 +127,8 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
         );
 
         // TODO: Improve error handling for invalid tokens WPC-298
-        return peerProfile?.extensions?.code === 'UNAUTHENTICATED'
-          ? null
+        return peerProfile?.extensions?.code === 'UNAUTHENTICATED' ?
+            null
           : peerProfile;
       }),
     },

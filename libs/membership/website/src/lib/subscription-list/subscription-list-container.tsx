@@ -81,8 +81,9 @@ export function SubscriptionListContainer({
               if (stripeMemberPlan) {
                 const page = await fetchPage({
                   variables: {
-                    id: success
-                      ? stripeMemberPlan.successPageId
+                    id:
+                      success ?
+                        stripeMemberPlan.successPageId
                       : stripeMemberPlan.failPageId,
                   },
                 });

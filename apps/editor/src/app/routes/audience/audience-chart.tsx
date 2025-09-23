@@ -58,10 +58,9 @@ export function AudienceChart({
         width="100%"
         height={400}
       >
-        {loading ? (
+        {loading ?
           <Placeholder.Graph active />
-        ) : (
-          <ComposedChart data={audienceStats}>
+        : <ComposedChart data={audienceStats}>
             <XAxis
               dataKey={'date'}
               tick={({ x, y, payload }) => (
@@ -142,7 +141,7 @@ export function AudienceChart({
               />
             )}
           </ComposedChart>
-        )}
+        }
       </ResponsiveContainer>
     )
   );

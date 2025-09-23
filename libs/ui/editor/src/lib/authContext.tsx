@@ -101,8 +101,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [data, error, loading]);
 
   return loading ? null : (
-    <AuthDispatchContext.Provider value={dispatch}>
-      {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
-    </AuthDispatchContext.Provider>
-  );
+      <AuthDispatchContext.Provider value={dispatch}>
+        {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
+      </AuthDispatchContext.Provider>
+    );
 }

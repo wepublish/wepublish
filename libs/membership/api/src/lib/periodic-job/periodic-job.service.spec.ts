@@ -1006,9 +1006,8 @@ describe('PeriodicJobService', () => {
 
   it('random timeout for concurrent execution of periodic job', async () => {
     service['randomNumberRangeForConcurrency'] = 500;
-    const timeout = await service[
-      'sleepForRandomIntervalToEnsureConcurrency'
-    ]();
+    const timeout =
+      await service['sleepForRandomIntervalToEnsureConcurrency']();
     expect(timeout).toBeLessThanOrEqual(500);
     expect(timeout).toBeGreaterThanOrEqual(0);
   });

@@ -100,11 +100,9 @@ export const EventListItem = ({
           </EventListItemMeta>
 
           <H4 component="h1">{name}</H4>
-          {lead ? (
+          {lead ?
             <Paragraph>{lead}</Paragraph>
-          ) : (
-            <RichText richText={description ?? []} />
-          )}
+          : <RichText richText={description ?? []} />}
         </EventListItemContent>
       </EventListItemWrapper>
     </Link>

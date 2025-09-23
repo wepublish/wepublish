@@ -71,9 +71,9 @@ export function TwitterTweetEmbed({ userID, tweetID }: TwitterTweetEmbedProps) {
       {userID && tweetID && (
         <blockquote className="twitter-tweet">
           <a
-            href={`https://twitter.com/${encodeURIComponent(
-              userID
-            )}/status/${encodeURIComponent(tweetID)}`}
+            href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
+              tweetID
+            )}`}
           />
         </blockquote>
       )}

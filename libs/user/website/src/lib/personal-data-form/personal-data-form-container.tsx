@@ -15,14 +15,14 @@ import {
 import { ChangeEvent, useCallback } from 'react';
 
 export type PersonalDataFormContainerProps<
-  T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
+  T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields,
 > = {
   mediaEmail?: string;
 } & BuilderContainerProps &
   Pick<BuilderPersonalDataFormProps<T>, 'fields' | 'schema'>;
 
 export function PersonalDataFormContainer<
-  T extends BuilderPersonalDataFormFields
+  T extends BuilderPersonalDataFormFields,
 >({
   className,
   mediaEmail,
@@ -40,9 +40,8 @@ export function PersonalDataFormContainer<
     async (input: ChangeEvent<HTMLInputElement> | null) => {
       await uploadImage({
         variables: {
-          uploadImageInput: input
-            ? { file: input.target?.files![0] as File }
-            : null,
+          uploadImageInput:
+            input ? { file: input.target?.files![0] as File } : null,
         },
       });
     },

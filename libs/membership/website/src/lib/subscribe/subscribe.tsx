@@ -254,8 +254,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       monthlyAmount: 0,
       autoRenew: true,
       payTransactionFee: false,
-      memberPlanId: defaults?.memberPlanSlug
-        ? memberPlans.data?.memberPlans.nodes.find(
+      memberPlanId:
+        defaults?.memberPlanSlug ?
+          memberPlans.data?.memberPlans.nodes.find(
             memberPlan => memberPlan.slug === defaults?.memberPlanSlug
           )?.id
         : memberPlans.data?.memberPlans.nodes[0]?.id,
@@ -277,9 +278,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
   const monthlyAmount =
     watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee
-      ? transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
-      : 0);
+    (payTransactionFee ?
+      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
+    : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -469,9 +470,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       {!hasUser && returningUserId && (
         <SubscribeSection area="returning">
           <H5 component="h2">
-            {`Hallo ${defaults?.firstName ?? ''} ${
-              defaults?.name ?? ''
-            }`.trim()}
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
             , willkommen zurück!
           </H5>
         </SubscribeSection>
@@ -687,7 +686,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
         </SubscribeButton>
 
-        {autoRenew && termsOfServiceUrl ? (
+        {autoRenew && termsOfServiceUrl ?
           <Link
             underline={'hover'}
             href={termsOfServiceUrl}
@@ -696,13 +695,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               {t('subscribe.cancellable')}
             </SubscribeCancelable>
           </Link>
-        ) : (
-          autoRenew && (
+        : autoRenew && (
             <SubscribeCancelable>
               {t('subscribe.cancellable')}
             </SubscribeCancelable>
           )
-        )}
+        }
       </SubscribeNarrowSection>
 
       <Modal

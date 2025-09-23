@@ -35,13 +35,16 @@ export const removeSignatureFromTransformations = (t: TransformationsDto) => {
 
 export const getTransformationKey = (transformations: TransformationsDto) => {
   return JSON.stringify(transformations, (_key, value) =>
-    value instanceof Object && !(value instanceof Array)
-      ? Object.keys(value)
-          .sort()
-          .reduce((sorted, key) => {
+    value instanceof Object && !(value instanceof Array) ?
+      Object.keys(value)
+        .sort()
+        .reduce(
+          (sorted, key) => {
             sorted[key] = value[key];
             return sorted;
-          }, {} as Record<string, unknown>)
-      : value
+          },
+          {} as Record<string, unknown>
+        )
+    : value
   );
 };

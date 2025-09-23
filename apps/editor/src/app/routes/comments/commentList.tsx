@@ -120,8 +120,9 @@ function CommentList() {
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.Approved]
+                  states:
+                    enabled ?
+                      [...states, CommentState.Approved]
                     : states.filter(val => val !== CommentState.Approved),
                 };
               })
@@ -140,8 +141,9 @@ function CommentList() {
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.PendingApproval]
+                  states:
+                    enabled ?
+                      [...states, CommentState.PendingApproval]
                     : states.filter(
                         val => val !== CommentState.PendingApproval
                       ),
@@ -162,8 +164,9 @@ function CommentList() {
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.PendingUserChanges]
+                  states:
+                    enabled ?
+                      [...states, CommentState.PendingUserChanges]
                     : states.filter(
                         val => val !== CommentState.PendingUserChanges
                       ),
@@ -182,8 +185,9 @@ function CommentList() {
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.Rejected]
+                  states:
+                    enabled ?
+                      [...states, CommentState.Rejected]
                     : states.filter(val => val !== CommentState.Rejected),
                 };
               })
@@ -231,7 +235,7 @@ function CommentList() {
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) =>
-                rowData.revisions?.length ? (
+                rowData.revisions?.length ?
                   <RichTextBlock
                     displayOnly
                     displayOneLine
@@ -244,7 +248,7 @@ function CommentList() {
                       []
                     }
                   />
-                ) : null
+                : null
               }
             </Cell>
           </Column>

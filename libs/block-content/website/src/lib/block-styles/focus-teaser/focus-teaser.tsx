@@ -82,18 +82,18 @@ export const FocusTeaser = ({
 
   const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>;
   const tags =
-    'filter' in props
-      ? focusedTeaser &&
-        selectTeaserTags(focusedTeaser).filter(({ id }) =>
-          props.filter.tags?.includes(id)
-        )
-      : [];
+    'filter' in props ?
+      focusedTeaser &&
+      selectTeaserTags(focusedTeaser).filter(({ id }) =>
+        props.filter.tags?.includes(id)
+      )
+    : [];
 
   return (
     <FocusTeaserWrapper className={className}>
       <FocusedTeaserContent>
         <FocusedTeaserTitle>
-          {tags?.length === 1 && tags[0].url ? (
+          {tags?.length === 1 && tags[0].url ?
             <Link
               href={tags[0].url}
               color="inherit"
@@ -101,9 +101,7 @@ export const FocusTeaser = ({
             >
               {focusTeaserTitle}
             </Link>
-          ) : (
-            focusTeaserTitle
-          )}
+          : focusTeaserTitle}
         </FocusedTeaserTitle>
 
         <FocusedTeaser>

@@ -30,8 +30,9 @@ export type ProLitterisCountPixelProps = {
 };
 
 export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
-  private gateway = this.props.usePublisherInternalKey
-    ? new InternalKey(
+  private gateway =
+    this.props.usePublisherInternalKey ?
+      new InternalKey(
         this.props.memberNr,
         this.props.publisherInternalKeyDomain
       )
@@ -41,9 +42,8 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
         this.props.password,
         this.httpClient
       );
-  private uriPaidContentIndicator = this.props.onlyPaidContentAccess
-    ? 'pw'
-    : 'na';
+  private uriPaidContentIndicator =
+    this.props.onlyPaidContentAccess ? 'pw' : 'na';
 
   constructor(
     public readonly id: string,
@@ -55,9 +55,8 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
   ) {}
 
   async createPixelUri(internalTrackingId: string): Promise<PixelUrl> {
-    const trackingPixels = await this.gateway.getTrackingPixels(
-      internalTrackingId
-    );
+    const trackingPixels =
+      await this.gateway.getTrackingPixels(internalTrackingId);
 
     return {
       pixelUid: trackingPixels.pixelUids[0],

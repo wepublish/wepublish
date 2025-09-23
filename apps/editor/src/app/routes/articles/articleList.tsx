@@ -254,9 +254,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
               {(rowData: FullArticleFragment) => {
                 return (rowData as FullArticleFragment).latest.authors.reduce(
                   (allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${
-                      author?.name
-                    }`;
+                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`;
                   },
                   ''
                 );
@@ -273,19 +271,17 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
             <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
               {(articleRef: FullArticleFragment) =>
-                articleRef.published?.publishedAt
-                  ? t('articleEditor.overview.publishedAt', {
-                      publicationDate: new Date(
-                        articleRef.published.publishedAt
-                      ),
-                    })
-                  : articleRef.pending?.publishedAt
-                  ? t('articleEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(
-                        articleRef.pending?.publishedAt
-                      ),
-                    })
-                  : t('articles.overview.notPublished')
+                articleRef.published?.publishedAt ?
+                  t('articleEditor.overview.publishedAt', {
+                    publicationDate: new Date(articleRef.published.publishedAt),
+                  })
+                : articleRef.pending?.publishedAt ?
+                  t('articleEditor.overview.publishedAtIfPending', {
+                    publishedAtIfPending: new Date(
+                      articleRef.pending?.publishedAt
+                    ),
+                  })
+                : t('articles.overview.notPublished')
               }
             </Cell>
           </Column>
@@ -430,11 +426,11 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
       >
         <Modal.Header>
           <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish
-              ? t('articles.panels.unpublishArticle')
-              : confirmAction === ConfirmAction.Delete
-              ? t('articles.panels.deleteArticle')
-              : t('articles.panels.duplicateArticle')}
+            {confirmAction === ConfirmAction.Unpublish ?
+              t('articles.panels.unpublishArticle')
+            : confirmAction === ConfirmAction.Delete ?
+              t('articles.panels.deleteArticle')
+            : t('articles.panels.duplicateArticle')}
           </Modal.Title>
         </Modal.Header>
 

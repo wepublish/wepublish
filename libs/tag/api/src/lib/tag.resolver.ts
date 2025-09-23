@@ -8,7 +8,10 @@ import { Tag } from './tag.model';
 
 @Resolver(() => Tag)
 export class TagResolver {
-  constructor(private tagService: TagService, private urlAdapter: URLAdapter) {}
+  constructor(
+    private tagService: TagService,
+    private urlAdapter: URLAdapter
+  ) {}
 
   @Public()
   @Query(() => TagConnection, {

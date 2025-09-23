@@ -113,9 +113,9 @@ function MemberPlanList() {
             <HeaderCell>{''}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) =>
-                hasBrokenPaymentProvider(rowData as FullMemberPlanFragment)
-                  ? `✅`
-                  : `❌`
+                hasBrokenPaymentProvider(rowData as FullMemberPlanFragment) ?
+                  `✅`
+                : `❌`
               }
             </RCell>
           </Column>

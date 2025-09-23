@@ -7,7 +7,7 @@ export const SessionTokenContext = createContext<
   | [
       User | null,
       boolean,
-      (value: SessionWithTokenWithoutUser | null) => Promise<void>
+      (value: SessionWithTokenWithoutUser | null) => Promise<void>,
     ]
   | null
 >(null);

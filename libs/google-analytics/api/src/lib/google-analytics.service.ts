@@ -134,11 +134,11 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
         return -1;
       }
 
-      return articleViewMap[a.slug] > articleViewMap[b.slug]
-        ? -1
-        : articleViewMap[b.slug] > articleViewMap[a.slug]
-        ? 1
-        : 0;
+      return (
+        articleViewMap[a.slug] > articleViewMap[b.slug] ? -1
+        : articleViewMap[b.slug] > articleViewMap[a.slug] ? 1
+        : 0
+      );
     });
   }
 }

@@ -68,8 +68,8 @@ export function AudienceDetailDrawer({
       dateTimeFormat = { month: 'long', year: 'numeric' };
     }
 
-    return audienceStats?.date
-      ? new Date(audienceStats.date).toLocaleDateString(
+    return audienceStats?.date ?
+        new Date(audienceStats.date).toLocaleDateString(
           language,
           dateTimeFormat
         )

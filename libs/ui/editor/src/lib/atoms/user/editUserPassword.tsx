@@ -140,9 +140,8 @@ export function EditUserPassword({
       // eslint-disable-next-line react/jsx-no-useless-fragment
       return <></>;
     }
-    const userName = user?.firstName
-      ? `${user.firstName} ${user.name}`
-      : user.name;
+    const userName =
+      user?.firstName ? `${user.firstName} ${user.name}` : user.name;
     return (
       <Modal
         open={isResetUserPasswordOpen}

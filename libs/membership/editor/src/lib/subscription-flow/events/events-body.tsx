@@ -37,7 +37,7 @@ export function EventsBody({
             object: interval,
             icon: eventIcons[interval.event.toUpperCase()],
             color: eventColors[interval.event.toUpperCase()],
-          } as DecoratedSubscriptionInterval<NonUserActionInterval>)
+          }) as DecoratedSubscriptionInterval<NonUserActionInterval>
       ),
     [eventColors, eventIcons, subscriptionFlow, t]
   );

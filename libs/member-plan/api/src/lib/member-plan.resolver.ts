@@ -31,8 +31,8 @@ export class MemberPlanResolver {
       throw new UserInputError('You must provide either `id` or `slug`.');
     }
 
-    return id
-      ? this.memberPlanDataloader.load(id)
+    return id ?
+        this.memberPlanDataloader.load(id)
       : this.memberPlanService.getMemberPlanBySlug(slug!);
   }
 

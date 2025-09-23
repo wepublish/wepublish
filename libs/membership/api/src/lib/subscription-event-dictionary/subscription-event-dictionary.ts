@@ -152,9 +152,8 @@ export class SubscriptionEventDictionary {
         actions: flow.intervals.map(int => ({
           type: int.event,
           daysAwayFromEnding: int.daysAwayFromEnding,
-          externalMailTemplate: int.mailTemplate
-            ? int.mailTemplate.externalMailTemplateId
-            : null,
+          externalMailTemplate:
+            int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null,
         })),
       };
     });

@@ -12,7 +12,7 @@ export const mockPollAnswer = ({ votes = 1000, answer = 'Foobar' } = {}) =>
     pollId: nanoid(),
     votes,
     answer,
-  } as PollAnswerWithVoteCount);
+  }) as PollAnswerWithVoteCount;
 
 export const mockPoll = ({
   infoText = mockRichText(),
@@ -31,4 +31,4 @@ export const mockPoll = ({
     infoText,
     answers,
     question: 'Lorem Ipsum?',
-  } as FullPollFragment);
+  }) as FullPollFragment;

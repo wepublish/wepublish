@@ -179,18 +179,18 @@ export function parseRichTextNode(
       { text: value.text },
       value.bold != undefined ? { bold: value.bold as boolean } : {},
       value.italic != undefined ? { italic: value.italic as boolean } : {},
-      value.underline != undefined
-        ? { underline: value.underline as boolean }
-        : {},
-      value.strikethrough != undefined
-        ? { strikethrough: value.strikethrough as boolean }
-        : {},
-      value.superscript != undefined
-        ? { superscript: value.superscript as boolean }
-        : {},
-      value.subscript != undefined
-        ? { subscript: value.subscript as boolean }
-        : {}
+      value.underline != undefined ?
+        { underline: value.underline as boolean }
+      : {},
+      value.strikethrough != undefined ?
+        { strikethrough: value.strikethrough as boolean }
+      : {},
+      value.superscript != undefined ?
+        { superscript: value.superscript as boolean }
+      : {},
+      value.subscript != undefined ?
+        { subscript: value.subscript as boolean }
+      : {}
     );
   } else {
     const isLinkNode = value.type === InlineFormat.Link;

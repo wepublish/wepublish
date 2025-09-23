@@ -3,12 +3,10 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import { SortType } from '../utility';
 
-type ExtractQueryType<T> = T extends Apollo.QueryResult<infer U, any>
-  ? U
-  : never;
-type ExtractQueryVariablesType<T> = T extends Apollo.QueryResult<any, infer V>
-  ? V
-  : never;
+type ExtractQueryType<T> =
+  T extends Apollo.QueryResult<infer U, any> ? U : never;
+type ExtractQueryVariablesType<T> =
+  T extends Apollo.QueryResult<any, infer V> ? V : never;
 type ExtractFilterType<T> = T extends { filter?: infer F } ? F : never;
 type ExtractSortType<T> = T extends { sort?: infer F } ? F : never;
 type ExtractOrderType<T> = T extends { order?: infer F } ? F : never;

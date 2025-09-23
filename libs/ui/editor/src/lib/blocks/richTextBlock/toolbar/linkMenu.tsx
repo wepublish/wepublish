@@ -147,12 +147,12 @@ export function LinkMenu() {
               onChange={(url: string) => setURL(url)}
             />
           </InputGroup>
-          {prefix !== prefixType.mailto && url && !isValidURL ? (
+          {prefix !== prefixType.mailto && url && !isValidURL ?
             <HelpText> {t('blocks.richText.invalidLink')}</HelpText>
-          ) : undefined}
-          {prefix === prefixType.mailto && url && !isValidMail ? (
+          : undefined}
+          {prefix === prefixType.mailto && url && !isValidMail ?
             <HelpText> {t('blocks.richText.invalidMail')} </HelpText>
-          ) : undefined}
+          : undefined}
         </Group>
         <Group controlId="text">
           <ControlLabel>{t('blocks.richText.text')}</ControlLabel>

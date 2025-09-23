@@ -137,29 +137,29 @@ function NavigationEditPanel({
       setName(data.navigation.name);
       setKey(data.navigation.key);
       setNavigationLinks(
-        data.navigation.links
-          ? data.navigation.links.map(link => {
-              return {
-                id: generateID(),
-                value: {
-                  label: link.label,
-                  type: link.__typename,
-                  articleID:
-                    link.__typename === 'ArticleNavigationLink'
-                      ? link.articleID
-                      : undefined,
-                  pageID:
-                    link.__typename === 'PageNavigationLink'
-                      ? link.pageID
-                      : undefined,
-                  url:
-                    link.__typename === 'ExternalNavigationLink'
-                      ? link.url
-                      : undefined,
-                },
-              };
-            })
-          : []
+        data.navigation.links ?
+          data.navigation.links.map(link => {
+            return {
+              id: generateID(),
+              value: {
+                label: link.label,
+                type: link.__typename,
+                articleID:
+                  link.__typename === 'ArticleNavigationLink' ?
+                    link.articleID
+                  : undefined,
+                pageID:
+                  link.__typename === 'PageNavigationLink' ?
+                    link.pageID
+                  : undefined,
+                url:
+                  link.__typename === 'ExternalNavigationLink' ?
+                    link.url
+                  : undefined,
+              },
+            };
+          })
+        : []
       );
     }
   }, [data?.navigation]);
@@ -253,9 +253,9 @@ function NavigationEditPanel({
     <>
       <Drawer.Header>
         <Drawer.Title>
-          {id
-            ? t('navigation.panels.editNavigation')
-            : t('navigation.panels.createNavigation')}
+          {id ?
+            t('navigation.panels.editNavigation')
+          : t('navigation.panels.createNavigation')}
         </Drawer.Title>
 
         <Drawer.Actions>
@@ -342,31 +342,33 @@ function NavigationEditPanel({
                     }
                   }}
                 />
-                {value.type === 'PageNavigationLink' ||
-                value.type === 'ArticleNavigationLink' ? (
+                {(
+                  value.type === 'PageNavigationLink' ||
+                  value.type === 'ArticleNavigationLink'
+                ) ?
                   <RSelectPicker
                     block
                     virtualized
                     placeholder={
-                      value.type === 'PageNavigationLink'
-                        ? t('navigation.panels.selectPage')
-                        : t('navigation.panels.selectArticle')
+                      value.type === 'PageNavigationLink' ?
+                        t('navigation.panels.selectPage')
+                      : t('navigation.panels.selectArticle')
                     }
                     value={
-                      value.type === 'PageNavigationLink'
-                        ? value.pageID
-                        : value.articleID
+                      value.type === 'PageNavigationLink' ?
+                        value.pageID
+                      : value.articleID
                     }
                     data={
-                      value.type === 'PageNavigationLink'
-                        ? pages.map(page => ({
-                            value: page.id!,
-                            label: page.latest.title,
-                          }))
-                        : articles.map(article => ({
-                            value: article.id!,
-                            label: article.latest.title,
-                          }))
+                      value.type === 'PageNavigationLink' ?
+                        pages.map(page => ({
+                          value: page.id!,
+                          label: page.latest.title,
+                        }))
+                      : articles.map(article => ({
+                          value: article.id!,
+                          label: article.latest.title,
+                        }))
                     }
                     onChange={chosenReferenceID => {
                       if (!chosenReferenceID) return;
@@ -377,8 +379,7 @@ function NavigationEditPanel({
                       }
                     }}
                   />
-                ) : (
-                  <Input
+                : <Input
                     placeholder={t('navigation.panels.url')}
                     value={value.url!}
                     onChange={url =>
@@ -388,7 +389,7 @@ function NavigationEditPanel({
                       })
                     }
                   />
-                )}
+                }
               </>
             )}
           </ListInput>

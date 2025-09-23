@@ -66,7 +66,7 @@ export const defaultRegisterSchema = z.object({
 });
 
 export function RegistrationForm<
-  T extends Exclude<BuilderUserFormFields, 'flair'>
+  T extends Exclude<BuilderUserFormFields, 'flair'>,
 >({
   challenge,
   fields = ['firstName', 'address', 'password', 'passwordRepeated'] as T[],

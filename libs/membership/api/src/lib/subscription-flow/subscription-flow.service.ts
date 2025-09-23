@@ -182,8 +182,9 @@ export class SubscriptionFlowService {
       this.prismaService.subscriptionFlow.update({
         where: { id: flow.id },
         data: {
-          paymentMethods: flow.paymentMethodIds
-            ? {
+          paymentMethods:
+            flow.paymentMethodIds ?
+              {
                 connect: flow.paymentMethodIds.map(paymentMethodId => ({
                   id: paymentMethodId,
                 })),
@@ -248,8 +249,9 @@ export class SubscriptionFlowService {
           },
         },
         event: interval.event,
-        mailTemplate: interval.mailTemplateId
-          ? {
+        mailTemplate:
+          interval.mailTemplateId ?
+            {
               connect: {
                 id: interval.mailTemplateId,
               },
@@ -292,8 +294,9 @@ export class SubscriptionFlowService {
           id: interval.id,
         },
         data: {
-          mailTemplate: interval.mailTemplateId
-            ? {
+          mailTemplate:
+            interval.mailTemplateId ?
+              {
                 connect: {
                   id: interval.mailTemplateId,
                 },
@@ -338,9 +341,8 @@ export class SubscriptionFlowService {
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
   ) {
-    const whereClause = memberPlanId
-      ? { memberPlan: { id: memberPlanId } }
-      : {};
+    const whereClause =
+      memberPlanId ? { memberPlan: { id: memberPlanId } } : {};
     const allFlows = await this.prismaService.subscriptionFlow.findMany({
       where: whereClause,
       select: {

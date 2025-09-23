@@ -50,8 +50,9 @@ export const getPageSEO = (page: Page) => {
       '@context': 'http://schema.org',
       '@type': 'WebPage',
       keywords: page.tags.join(','),
-      image: image
-        ? {
+      image:
+        image ?
+          {
             height: image.height,
             width: image.width,
             representativeOfPage: true,

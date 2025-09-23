@@ -18,11 +18,9 @@ export class HasEventResolver {
     block: HasOptionalEvent | HasEvent | HasOptionalEventLc | HasEventLc
   ) {
     const id =
-      'eventId' in block
-        ? block.eventId
-        : 'eventID' in block
-        ? block.eventID
-        : null;
+      'eventId' in block ? block.eventId
+      : 'eventID' in block ? block.eventID
+      : null;
 
     if (!id) {
       return null;

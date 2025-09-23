@@ -38,16 +38,14 @@ export const InlineAvatar = ({
 
   return (
     <InlineAvatarWrapper>
-      {url ? (
+      {url ?
         <FlexLink
           to={url}
           title={title ?? undefined}
         >
           {avatar}
         </FlexLink>
-      ) : (
-        avatar
-      )}
+      : avatar}
 
       {children}
     </InlineAvatarWrapper>

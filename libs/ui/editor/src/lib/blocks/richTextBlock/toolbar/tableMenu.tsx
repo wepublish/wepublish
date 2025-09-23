@@ -141,9 +141,9 @@ export function TableMenu() {
 
   const tableModifyControls = (
     <>
-      {!showRemoveConfirm ? (
+      {!showRemoveConfirm ?
         <>
-          {borderColor && borderColor !== '#00000000' ? (
+          {borderColor && borderColor !== '#00000000' ?
             <ControlsContainer dividerBottom>
               <ColorPicker
                 setColor={color => {
@@ -159,14 +159,13 @@ export function TableMenu() {
                 <RedIcon />
               </button>
             </ControlsContainer>
-          ) : (
-            <Button
+          : <Button
               appearance="default"
               onClick={() => setBorderColor(DEFAULT_BORDER_COLOR)}
             >
               {t('blocks.richTextTable.addBorders')}
             </Button>
-          )}
+          }
           <Button
             color="red"
             appearance="ghost"
@@ -175,8 +174,7 @@ export function TableMenu() {
             {t('blocks.richTextTable.deleteTable')}
           </Button>
         </>
-      ) : (
-        <ControlsContainer>
+      : <ControlsContainer>
           <Button
             color="red"
             appearance="primary"
@@ -195,7 +193,7 @@ export function TableMenu() {
             {t('blocks.richTextTable.cancel')}
           </Button>
         </ControlsContainer>
-      )}
+      }
     </>
   );
 
@@ -210,9 +208,9 @@ export function TableMenu() {
         </Col>
       </Row>
       <ControlsWrapper>
-        {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
-          ? tableModifyControls
-          : tableInsertControls}
+        {WepublishEditor.isFormatActive(editor, BlockFormat.Table) ?
+          tableModifyControls
+        : tableInsertControls}
       </ControlsWrapper>
     </>
   );

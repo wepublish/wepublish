@@ -26,17 +26,15 @@ export function ImageUploadAndEditPanel({
     setFile(file);
   }
 
-  return file ? (
-    <ImageEditPanel
-      file={file}
-      onClose={onClose}
-      onSave={onUpload}
-      imageMetaData={imageMetaData}
-    />
-  ) : (
-    <ImageUploadPanel
-      onClose={onClose}
-      onUpload={handleUpload}
-    />
-  );
+  return file ?
+      <ImageEditPanel
+        file={file}
+        onClose={onClose}
+        onSave={onUpload}
+        imageMetaData={imageMetaData}
+      />
+    : <ImageUploadPanel
+        onClose={onClose}
+        onUpload={handleUpload}
+      />;
 }

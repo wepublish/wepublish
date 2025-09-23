@@ -102,8 +102,9 @@ export class EventService {
       data: {
         ...input,
         description: description as any[],
-        tags: tagIds
-          ? {
+        tags:
+          tagIds ?
+            {
               connectOrCreate: tagIds.map(tagId => ({
                 where: {
                   eventId_tagId: {
@@ -135,8 +136,9 @@ export class EventService {
       data: {
         ...input,
         description: description as any[],
-        tags: tagIds?.length
-          ? {
+        tags:
+          tagIds?.length ?
+            {
               createMany: {
                 data: tagIds?.map(tagId => ({ tagId })),
               },

@@ -35,19 +35,17 @@ export function IFrameBlock({
     [styleCustom]
   );
 
-  return url ? (
-    <IFrameBlockWrapper className={className}>
-      <IFrameBlockIframe
-        css={styleCustomCss}
-        src={url}
-        title={title ?? undefined}
-        allowFullScreen
-        width={width?.toString()}
-        height={height?.toString()}
-        sandbox={sandbox || undefined}
-      />
-    </IFrameBlockWrapper>
-  ) : (
-    <div></div>
-  );
+  return url ?
+      <IFrameBlockWrapper className={className}>
+        <IFrameBlockIframe
+          css={styleCustomCss}
+          src={url}
+          title={title ?? undefined}
+          allowFullScreen
+          width={width?.toString()}
+          height={height?.toString()}
+          sandbox={sandbox || undefined}
+        />
+      </IFrameBlockWrapper>
+    : <div></div>;
 }

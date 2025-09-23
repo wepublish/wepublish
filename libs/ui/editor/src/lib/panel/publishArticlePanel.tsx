@@ -57,7 +57,7 @@ function PublishArticlePanel({
 
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.url')}>
-            {metadata?.url ? (
+            {metadata?.url ?
               <a
                 href={metadata.url}
                 target="_blank"
@@ -65,9 +65,7 @@ function PublishArticlePanel({
               >
                 {metadata.url}
               </a>
-            ) : (
-              '-'
-            )}
+            : '-'}
           </DescriptionListItem>
 
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
@@ -127,21 +125,21 @@ function PublishArticlePanel({
           </DescriptionListItemWithMessage>
 
           <DescriptionListItem label={t('articleEditor.panels.breakingNews')}>
-            {metadata.breaking
-              ? t('articleEditor.panels.yes')
-              : t('articleEditor.panels.no')}
+            {metadata.breaking ?
+              t('articleEditor.panels.yes')
+            : t('articleEditor.panels.no')}
           </DescriptionListItem>
           <DescriptionListItem
             label={t('articleEditor.panels.sharedWithPeers')}
           >
-            {metadata.shared
-              ? t('articleEditor.panels.yes')
-              : t('articleEditor.panels.no')}
+            {metadata.shared ?
+              t('articleEditor.panels.yes')
+            : t('articleEditor.panels.no')}
           </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.hideAuthors')}>
-            {metadata.hideAuthor
-              ? t('articleEditor.panels.yes')
-              : t('articleEditor.panels.no')}
+            {metadata.hideAuthor ?
+              t('articleEditor.panels.yes')
+            : t('articleEditor.panels.no')}
           </DescriptionListItem>
 
           <DescriptionListItemWithMessage

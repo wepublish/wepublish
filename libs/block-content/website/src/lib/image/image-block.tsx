@@ -90,16 +90,14 @@ export const ImageBlock = ({
   return (
     <ImageBlockWrapper className={className}>
       <ImageBlockInnerWrapper>
-        {linkUrl ? (
+        {linkUrl ?
           <Link
             href={linkUrl}
             target="_blank"
           >
             {img}
           </Link>
-        ) : (
-          img
-        )}
+        : img}
 
         {(caption || image?.source) && (
           <Typography
@@ -107,9 +105,9 @@ export const ImageBlock = ({
             variant="caption"
             component={ImageBlockCaption}
             sx={
-              realImageWidth
-                ? { width: `${realImageWidth}px`, justifySelf: 'center' }
-                : undefined
+              realImageWidth ?
+                { width: `${realImageWidth}px`, justifySelf: 'center' }
+              : undefined
             }
           >
             <Trans

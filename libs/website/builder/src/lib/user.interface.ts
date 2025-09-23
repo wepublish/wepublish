@@ -38,7 +38,7 @@ export type BuilderPersonalDataFormFields =
   | 'image';
 
 export type BuilderPersonalDataFormProps<
-  T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
+  T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields,
 > = {
   fields?: T[];
   schema?: z.ZodObject<

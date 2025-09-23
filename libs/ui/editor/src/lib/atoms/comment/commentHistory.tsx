@@ -45,9 +45,9 @@ function ChildComments({
         <div
           key={childComment.id}
           id={
-            childComment.id === originComment?.id
-              ? `comment-${originComment.id}`
-              : ''
+            childComment.id === originComment?.id ?
+              `comment-${originComment.id}`
+            : ''
           }
         >
           <CommentPreview

@@ -116,9 +116,7 @@ function SystemMailList() {
                     <SelectPicker
                       style={{ width: '100%' }}
                       data={mailTemplates.mailTemplates.map(mailTemplate => ({
-                        label: `${mailTemplate.remoteMissing ? '⚠' : ''} ${
-                          mailTemplate.name
-                        }`,
+                        label: `${mailTemplate.remoteMissing ? '⚠' : ''} ${mailTemplate.name}`,
                         value: mailTemplate.id,
                       }))}
                       cleanable={false}

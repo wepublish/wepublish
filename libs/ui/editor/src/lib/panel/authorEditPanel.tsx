@@ -142,15 +142,15 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       setHideOnTeam(data.author.hideOnTeam);
       setHideOnTeaser(data.author.hideOnTeaser);
       setLinks(
-        data.author.links
-          ? data.author.links.map(link => ({
-              id: generateID(),
-              value: {
-                title: link.title,
-                url: link.url,
-              },
-            }))
-          : []
+        data.author.links ?
+          data.author.links.map(link => ({
+            id: generateID(),
+            value: {
+              title: link.title,
+              url: link.url,
+            },
+          }))
+        : []
       );
     }
   }, [data?.author]);
@@ -235,9 +235,9 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       >
         <Drawer.Header>
           <Drawer.Title>
-            {id
-              ? t('authors.panels.editAuthor')
-              : t('authors.panels.createAuthor')}
+            {id ?
+              t('authors.panels.editAuthor')
+            : t('authors.panels.createAuthor')}
           </Drawer.Title>
 
           <Drawer.Actions>

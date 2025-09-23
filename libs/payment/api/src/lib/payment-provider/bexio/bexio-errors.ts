@@ -13,9 +13,7 @@ class InvoiceNotFoundError extends Error {
 class SendingInvoiceError extends Error {
   constructor(sentInvoice: InvoicesStatic.InvoiceSentAnswer) {
     super(
-      `Sending of the invoice failed with message: ${JSON.stringify(
-        sentInvoice
-      )}`
+      `Sending of the invoice failed with message: ${JSON.stringify(sentInvoice)}`
     );
   }
 }

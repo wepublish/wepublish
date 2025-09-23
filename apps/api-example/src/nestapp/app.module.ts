@@ -201,33 +201,31 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
                 trackingPixelProvider.id,
                 trackingPixelProvider.name,
                 trackingPixelProvider.type,
-                trackingPixelProvider.usePublisherInternalKey
-                  ? {
-                      memberNr: trackingPixelProvider.memberNr,
-                      onlyPaidContentAccess: Boolean(
-                        trackingPixelProvider.onlyPaidContentAccess
-                      ),
-                      publisherInternalKeyDomain:
-                        trackingPixelProvider.publisherInternalKeyDomain,
-                      usePublisherInternalKey: true,
-                    }
-                  : {
-                      memberNr: trackingPixelProvider.memberNr,
-                      username: trackingPixelProvider.username,
-                      password: trackingPixelProvider.password,
-                      onlyPaidContentAccess: Boolean(
-                        trackingPixelProvider.onlyPaidContentAccess
-                      ),
-                      usePublisherInternalKey: false,
-                    },
+                trackingPixelProvider.usePublisherInternalKey ?
+                  {
+                    memberNr: trackingPixelProvider.memberNr,
+                    onlyPaidContentAccess: Boolean(
+                      trackingPixelProvider.onlyPaidContentAccess
+                    ),
+                    publisherInternalKeyDomain:
+                      trackingPixelProvider.publisherInternalKeyDomain,
+                    usePublisherInternalKey: true,
+                  }
+                : {
+                    memberNr: trackingPixelProvider.memberNr,
+                    username: trackingPixelProvider.username,
+                    password: trackingPixelProvider.password,
+                    onlyPaidContentAccess: Boolean(
+                      trackingPixelProvider.onlyPaidContentAccess
+                    ),
+                    usePublisherInternalKey: false,
+                  },
                 httpClient
               )
             );
           } else {
             throw new Error(
-              `Unknown tracking Pixel type defined: ${
-                (trackingPixelProvider as any).type
-              }`
+              `Unknown tracking Pixel type defined: ${(trackingPixelProvider as any).type}`
             );
           }
         }
@@ -371,9 +369,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
               );
             } else {
               throw new Error(
-                `Unknown payment provider type defined: ${
-                  (paymentProvider as any).type
-                }`
+                `Unknown payment provider type defined: ${(paymentProvider as any).type}`
               );
             }
           }
@@ -401,8 +397,9 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
         );
         configFile.general.sessionTTLDays;
         const MS_PER_DAY = 24 * 60 * 60 * 1000;
-        const sessionTTLDays = configFile.general.sessionTTLDays
-          ? configFile.general.sessionTTLDays
+        const sessionTTLDays =
+          configFile.general.sessionTTLDays ?
+            configFile.general.sessionTTLDays
           : 7;
         const sessionTTL = MS_PER_DAY * sessionTTLDays;
         const jwtSecretKey =
@@ -525,9 +522,9 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
         );
 
         const urlAdapter =
-          configFile.general.urlAdapter === 'hauptstadt'
-            ? new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
-            : new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+          configFile.general.urlAdapter === 'hauptstadt' ?
+            new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
+          : new URLAdapter(config.getOrThrow('WEBSITE_URL'));
 
         return urlAdapter;
       },

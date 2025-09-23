@@ -239,7 +239,7 @@ function PeerArticleList() {
 
             <Cell>
               {(rowData: PeerArticle) =>
-                rowData.latest.image?.url ? (
+                rowData.latest.image?.url ?
                   <Whisper
                     placement="left"
                     trigger="hover"
@@ -258,9 +258,7 @@ function PeerArticleList() {
                       alt=""
                     />
                   </Whisper>
-                ) : (
-                  ''
-                )
+                : ''
               }
             </Cell>
           </Column>

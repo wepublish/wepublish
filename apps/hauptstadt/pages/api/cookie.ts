@@ -17,8 +17,9 @@ async function writeCookie(req: NextApiRequest, res: NextApiResponse) {
 
 async function readCookie(req: NextApiRequest, res: NextApiResponse) {
   const token = await getCookie(AuthTokenStorageKey, { req });
-  const sessionToken = token
-    ? (JSON.parse(token.toString()) as SessionWithTokenWithoutUser)
+  const sessionToken =
+    token ?
+      (JSON.parse(token.toString()) as SessionWithTokenWithoutUser)
     : null;
 
   return res.send({ sessionToken });

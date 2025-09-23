@@ -66,12 +66,8 @@ export enum LineHeight {
   Default = 1.375,
 }
 
-export const tabletMediaQuery = `@media screen and (max-width: ${
-  Breakpoint.Desktop - 1
-}px)`;
-export const mobileMediaQuery = `@media screen and (max-width: ${
-  Breakpoint.Tablet - 1
-}px)`;
+export const tabletMediaQuery = `@media screen and (max-width: ${Breakpoint.Desktop - 1}px)`;
+export const mobileMediaQuery = `@media screen and (max-width: ${Breakpoint.Tablet - 1}px)`;
 
 export function whenTablet(styles: any) {
   return { [tabletMediaQuery]: styles };
@@ -83,9 +79,9 @@ export function whenMobile(styles: any) {
 
 export function hexToRgba(hex: string | number, alpha: number) {
   hex =
-    typeof hex === 'string'
-      ? parseInt(hex[0] === '#' ? hex.slice(1) : hex, 16)
-      : hex;
+    typeof hex === 'string' ?
+      parseInt(hex[0] === '#' ? hex.slice(1) : hex, 16)
+    : hex;
 
   const red = 0xff & (hex >> 16);
   const green = 0xff & (hex >> 8);

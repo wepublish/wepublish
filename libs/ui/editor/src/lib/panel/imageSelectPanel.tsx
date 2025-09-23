@@ -177,7 +177,7 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
             </InputGroup.Addon>
           </InputGroup>
         </RPanel>
-        {images.length ? (
+        {images.length ?
           <>
             <FlexboxGrid justify="space-around">
               {images.map(image => {
@@ -218,16 +218,15 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
               </Button>
             )}
           </>
-        ) : !isLoading ? (
+        : !isLoading ?
           <Message type="info">
             {t('articleEditor.panels.noImagesFound')}
           </Message>
-        ) : (
-          <Loader
+        : <Loader
             center
             content={t('articleEditor.panels.loading')}
           />
-        )}
+        }
       </Drawer.Body>
     </>
   );

@@ -91,7 +91,9 @@ export const HauptstadtBannerContainer = styled(Container, {
   top: var(--changing-navbar-height);
   z-index: 100;
   left: 50%;
-  transition: transform 300ms ease-out, top 300ms ease-out;
+  transition:
+    transform 300ms ease-out,
+    top 300ms ease-out;
   transform: translate3d(
     -50%,
     ${({ isScrolled }) =>
