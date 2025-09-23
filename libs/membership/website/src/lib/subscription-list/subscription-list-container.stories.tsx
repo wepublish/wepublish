@@ -209,7 +209,7 @@ export const Extend: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByText('Jetzt Verlängern'));
+    await waitFor(() => canvas.getByText('Jetzt verlängern'));
 
     await WithExtendError.play?.(ctx);
   },
