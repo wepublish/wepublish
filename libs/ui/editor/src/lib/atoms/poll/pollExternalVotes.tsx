@@ -57,22 +57,26 @@ export function ExternalVoteTable({
     if (!poll) {
       return
     }
-    const newPoll = {...poll} as FullPoll
-    const voteSource: PollExternalVoteSource | undefined = newPoll?.externalVoteSources?.find(
-      (tmpVoteSource: PollExternalVoteSource) => tmpVoteSource.source === externalVoteSource.source
-    )
-    if (!voteSource?.voteAmounts) {
-      return
-    }
-    const voteIndex = voteSource.voteAmounts?.findIndex(
-      (tmpVote: PollExternalVote) => tmpVote.answerId === answer.id
-    )
-    if (voteIndex < 0) {
-      return
-    }
-    voteSource.voteAmounts[voteIndex].amount =
-      typeof newAmount === 'string' ? parseInt(newAmount) : newAmount
-    onPollChange(newPoll)
+
+    const parsedAmount = typeof newAmount === 'string' ? parseInt(newAmount, 10) : newAmount
+
+    const updatedExternalVoteSources = (poll.externalVoteSources ?? []).map(src => {
+      if (src.source !== externalVoteSource.source) {
+        return src
+      }
+
+      return {
+        ...src,
+        voteAmounts: (src.voteAmounts ?? []).map(vote =>
+          vote.answerId === answer.id ? {...vote, amount: parsedAmount} : vote
+        )
+      }
+    })
+
+    onPollChange({
+      ...poll,
+      externalVoteSources: updatedExternalVoteSources
+    })
   }
 
   /**
@@ -177,8 +181,11 @@ export function AddSource({poll, setLoading, onPollChange}: AddSourceProps) {
     if (!source) {
       return
     }
-    const updatedPoll = {...poll}
-    updatedPoll.externalVoteSources?.push(source)
+
+    const updatedPoll: FullPoll = {
+      ...poll,
+      externalVoteSources: [...(poll.externalVoteSources ?? []), source]
+    }
     onPollChange(updatedPoll)
     setNewSource(undefined)
   }
@@ -221,7 +228,7 @@ export function DeleteModal({
 
   async function deletePoll() {
     const id = sourceToDelete?.id
-    if (!id) {
+    if (!id || !poll?.externalVoteSources) {
       return
     }
     const deletedSource = await deleteExternalVoteSource({
@@ -233,12 +240,13 @@ export function DeleteModal({
     if (!source || !poll?.externalVoteSources) {
       return
     }
-    const deleteIndex = poll.externalVoteSources.findIndex(tmpSource => tmpSource.id === source.id)
-    if (deleteIndex < 0) {
-      return
+
+    const updatedPoll: FullPoll = {
+      ...poll,
+      externalVoteSources: poll.externalVoteSources.filter(tmpSource => tmpSource.id !== source.id)
     }
-    poll.externalVoteSources?.splice(deleteIndex, 1)
-    onPollChange({...poll})
+
+    onPollChange(updatedPoll)
     closeModal()
   }
 
