@@ -78,6 +78,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
         "noImagesFound": "Aucune image trouvée",
+        "openInNewTab": "URL du contenu ouvre dans un nouvel onglet",
         "pagePreviewLink": "Lien de prévisualisation de la page",
         "peerDisabled": "Ce peer est actuellement désactivé",
         "peeredArticlePreview": "Prévisualisation",

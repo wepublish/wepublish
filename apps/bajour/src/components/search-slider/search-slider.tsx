@@ -29,10 +29,10 @@ import { descend, eqBy, sortWith, uniqWith } from 'ramda';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 
-import { LikeButton, VideoLikeButton } from './like-button'
-import { SearchBar } from './search-bar'
-import { useLikeStatus } from './use-like-status'
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
+import { LikeButton, VideoLikeButton } from './like-button';
+import { SearchBar } from './search-bar';
+import { useLikeStatus } from './use-like-status';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 export const SEARCH_SLIDER_TAG = 'search-slider';
 
@@ -228,11 +228,11 @@ const FullScreenVideo = styled('video')`
   height: 85vh;
 `;
 
-const VideoNavigationButton = styled('button')<{position: 'left' | 'right'}>`
+const VideoNavigationButton = styled('button')<{ position: 'left' | 'right' }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  ${({position}) => (position === 'left' ? 'left: 20px;' : 'right: 20px;')}
+  ${({ position }) => (position === 'left' ? 'left: 20px;' : 'right: 20px;')}
   background-color: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
@@ -261,7 +261,7 @@ const VideoNavigationButton = styled('button')<{position: 'left' | 'right'}>`
     width: 32px;
     height: 32px;
   }
-`
+`;
 
 type SearchSliderProps = {
   article: Article;
@@ -509,35 +509,37 @@ export function SearchSlider({
 
   const articlesWithVideos = sliderArticles
     .map((article, index) => {
-      const hasVideo = (article?.latest.blocks as BlockContent[])?.find(isIFrameBlock)?.url
-      return hasVideo ? {article, index, videoUrl: hasVideo} : null
+      const hasVideo = (article?.latest.blocks as BlockContent[])?.find(
+        isIFrameBlock
+      )?.url;
+      return hasVideo ? { article, index, videoUrl: hasVideo } : null;
     })
-    .filter(Boolean)
+    .filter(Boolean);
 
   const currentVideoIndex = articlesWithVideos.findIndex(
     item => item?.article.id === mainArticle?.id
-  )
+  );
 
-  const hasPreviousVideo = currentVideoIndex > 0
-  const hasNextVideo = currentVideoIndex < articlesWithVideos.length - 1
+  const hasPreviousVideo = currentVideoIndex > 0;
+  const hasNextVideo = currentVideoIndex < articlesWithVideos.length - 1;
 
   const navigateToVideo = (direction: 'prev' | 'next') => {
     if (direction === 'prev' && hasPreviousVideo) {
-      const prevVideo = articlesWithVideos[currentVideoIndex - 1]
+      const prevVideo = articlesWithVideos[currentVideoIndex - 1];
       if (prevVideo) {
-        keenSliderRef.current?.moveToIdx(prevVideo.index)
-        setCurrentSlide(prevVideo.index)
-        setVideoUrl(prevVideo.videoUrl)
+        keenSliderRef.current?.moveToIdx(prevVideo.index);
+        setCurrentSlide(prevVideo.index);
+        setVideoUrl(prevVideo.videoUrl);
       }
     } else if (direction === 'next' && hasNextVideo) {
-      const nextVideo = articlesWithVideos[currentVideoIndex + 1]
+      const nextVideo = articlesWithVideos[currentVideoIndex + 1];
       if (nextVideo) {
-        keenSliderRef.current?.moveToIdx(nextVideo.index)
-        setCurrentSlide(nextVideo.index)
-        setVideoUrl(nextVideo.videoUrl)
+        keenSliderRef.current?.moveToIdx(nextVideo.index);
+        setCurrentSlide(nextVideo.index);
+        setVideoUrl(nextVideo.videoUrl);
       }
     }
-  }
+  };
 
   if (!sliderArticles.length || !mainArticle) {
     return null;
@@ -637,22 +639,32 @@ export function SearchSlider({
             position="left"
             onClick={() => navigateToVideo('prev')}
             disabled={!hasPreviousVideo}
-            aria-label="Previous video">
+            aria-label="Previous video"
+          >
             <MdChevronLeft />
           </VideoNavigationButton>
 
-          <FullScreenVideo src={videoUrl} controls autoPlay />
+          <FullScreenVideo
+            src={videoUrl}
+            controls
+            autoPlay
+          />
 
           <VideoNavigationButton
             position="right"
             onClick={() => navigateToVideo('next')}
             disabled={!hasNextVideo}
-            aria-label="Next video">
+            aria-label="Next video"
+          >
             <MdChevronRight />
           </VideoNavigationButton>
 
           <BtnContainer>
-            <VideoLikeButton onLike={() => handleLike()} isLiked={isLiked} likes={likes} />
+            <VideoLikeButton
+              onLike={() => handleLike()}
+              isLiked={isLiked}
+              likes={likes}
+            />
             <Button onClick={() => setVideoUrl(undefined)}>Schliessen</Button>
           </BtnContainer>
         </FullScreenVideoContainer>

@@ -91,6 +91,14 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
   }
 };
 
+export const selectTeaserTarget = (teaser: TeaserType): string | undefined => {
+  if (teaser.__typename === 'CustomTeaser') {
+    return teaser.openInNewTab ? '_blank' : undefined;
+  }
+
+  return undefined;
+};
+
 export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
@@ -357,7 +365,12 @@ const TeaserContent = ({
   href,
   className,
   children,
-}: PropsWithChildren<{ href?: string; className?: string }>) => {
+  target,
+}: PropsWithChildren<{
+  href?: string;
+  className?: string;
+  target?: string;
+}>) => {
   const {
     elements: { Link },
   } = useWebsiteBuilder();
@@ -368,6 +381,7 @@ const TeaserContent = ({
         color="inherit"
         underline="none"
         href={href}
+        target={target}
         css={stretchToParentHeight}
       >
         <TeaserContentWrapper className={className}>
@@ -393,6 +407,7 @@ export const BaseTeaser = ({
   const preTitle = teaser && selectTeaserPreTitle(teaser);
   const lead = teaser && selectTeaserLead(teaser);
   const href = (teaser && selectTeaserUrl(teaser)) ?? '';
+  const target = (teaser && selectTeaserTarget(teaser)) ?? undefined;
   const image = teaser && selectTeaserImage(teaser);
   const peerLogo = teaser && selectTeaserPeerImage(teaser);
   const publishDate = teaser && selectTeaserDate(teaser);
@@ -407,6 +422,7 @@ export const BaseTeaser = ({
     <TeaserWrapper {...alignment}>
       <TeaserContent
         href={href}
+        target={target}
         className={className}
       >
         <TeaserImageWrapper>
@@ -451,15 +467,15 @@ export const BaseTeaser = ({
           variant="teaserMeta"
           component={TeaserMetadata}
         >
-          {authors && authors?.length ?
+          {authors && authors?.length ? (
             <TeaserAuthors>
               Von {authors?.join(t('teaser.author.seperator'))}
             </TeaserAuthors>
-          : null}
+          ) : null}
 
-          {publishDate && authors && authors?.length ?
-            `${t('teaser.meta.seperator')}`
-          : null}
+          {publishDate && authors && authors?.length
+            ? `${t('teaser.meta.seperator')}`
+            : null}
 
           {publishDate && (
             <TeaserTime
