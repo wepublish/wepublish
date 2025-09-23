@@ -3,58 +3,62 @@ import {
   FullPaymentFragment,
   usePageLazyQuery,
   usePayInvoiceMutation,
-  useSubscribeMutation
-} from '@wepublish/website/api'
-import {useCallback, useState} from 'react'
-import {RedirectPages} from './payment-form'
+  useSubscribeMutation,
+} from '@wepublish/website/api';
+import { useCallback, useState } from 'react';
+import { RedirectPages } from './payment-form';
 
 // relative urls are not allowed by some payment providers
 const relativeToAbsolute = (url: string) => {
   if (url.startsWith('http')) {
-    return url
+    return url;
   }
 
-  return `${window.location.origin}${url}`
-}
+  return `${window.location.origin}${url}`;
+};
 
-export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>) => {
-  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [redirectPages, setRedirectPages] = useState<RedirectPages>()
+export const useSubscribe = (
+  ...params: Parameters<typeof useSubscribeMutation>
+) => {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>();
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [fetchPage] = usePageLazyQuery()
+  const [fetchPage] = usePageLazyQuery();
   const [result] = useSubscribeMutation({
-    ...params[0]
-  })
+    ...params[0],
+  });
 
   const callback = useCallback(
     async (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const [{data: successPage}, {data: failPage}] = await Promise.all([
+      const [{ data: successPage }, { data: failPage }] = await Promise.all([
         memberPlan?.successPageId
           ? fetchPage({
               variables: {
-                id: memberPlan.successPageId
-              }
+                id: memberPlan.successPageId,
+              },
             })
-          : {data: undefined},
+          : { data: undefined },
         memberPlan?.failPageId
           ? fetchPage({
               variables: {
-                id: memberPlan.failPageId
-              }
+                id: memberPlan.failPageId,
+              },
             })
-          : {data: undefined}
-      ])
+          : { data: undefined },
+      ]);
 
-      const successUrl = relativeToAbsolute(successPage?.page?.url ?? '/profile')
-      const failUrl = relativeToAbsolute(failPage?.page?.url ?? '/profile')
+      const successUrl = relativeToAbsolute(
+        successPage?.page?.url ?? '/profile'
+      );
+      const failUrl = relativeToAbsolute(failPage?.page?.url ?? '/profile');
 
       setRedirectPages({
         successUrl,
-        failUrl
-      })
+        failUrl,
+      });
 
       return result({
         ...callbackParams[0],
@@ -62,66 +66,72 @@ export const useSubscribe = (...params: Parameters<typeof useSubscribeMutation>)
           ? {
               ...callbackParams[0].variables,
               successURL: successUrl,
-              failureURL: failUrl
+              failureURL: failUrl,
             }
           : undefined,
         onCompleted: data => {
-          callbackParams[0]?.onCompleted?.(data)
+          callbackParams[0]?.onCompleted?.(data);
           handlePayment({
             intent: data.createSubscription ?? undefined,
             successUrl,
             failUrl,
-            setStripeClientSecret
-          })
+            setStripeClientSecret,
+          });
         },
         onError: error =>
-          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`)
-      })
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(
+            error.message
+          )}`),
+      });
     },
     [fetchPage, result]
-  )
+  );
 
-  return [callback, redirectPages, stripeClientSecret] as const
-}
+  return [callback, redirectPages, stripeClientSecret] as const;
+};
 
-export const usePayInvoice = (...params: Parameters<typeof usePayInvoiceMutation>) => {
-  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [redirectPages, setRedirectPages] = useState<RedirectPages>()
-  const [fetchPage] = usePageLazyQuery()
+export const usePayInvoice = (
+  ...params: Parameters<typeof usePayInvoiceMutation>
+) => {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>();
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>();
+  const [fetchPage] = usePageLazyQuery();
 
   const [result] = usePayInvoiceMutation({
-    ...params[0]
-  })
+    ...params[0],
+  });
 
   const callback = useCallback(
     async (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const [{data: successPage}, {data: failPage}] = await Promise.all([
+      const [{ data: successPage }, { data: failPage }] = await Promise.all([
         memberPlan?.successPageId
           ? fetchPage({
               variables: {
-                id: memberPlan.successPageId
-              }
+                id: memberPlan.successPageId,
+              },
             })
-          : {data: undefined},
+          : { data: undefined },
         memberPlan?.failPageId
           ? fetchPage({
               variables: {
-                id: memberPlan.failPageId
-              }
+                id: memberPlan.failPageId,
+              },
             })
-          : {data: undefined}
-      ])
+          : { data: undefined },
+      ]);
 
-      const successUrl = successPage?.page?.url ?? window.location.origin + '/profile'
-      const failUrl = failPage?.page?.url ?? window.location.origin + '/profile'
+      const successUrl =
+        successPage?.page?.url ?? window.location.origin + '/profile';
+      const failUrl =
+        failPage?.page?.url ?? window.location.origin + '/profile';
 
       setRedirectPages({
         successUrl,
-        failUrl
-      })
+        failUrl,
+      });
 
       return result({
         ...callbackParams[0],
@@ -129,65 +139,67 @@ export const usePayInvoice = (...params: Parameters<typeof usePayInvoiceMutation
           ? {
               ...callbackParams[0].variables,
               successURL: successUrl,
-              failureURL: failUrl
+              failureURL: failUrl,
             }
           : undefined,
         onCompleted: data => {
-          callbackParams[0]?.onCompleted?.(data)
+          callbackParams[0]?.onCompleted?.(data);
           handlePayment({
             intent: data.createPaymentFromInvoice ?? undefined,
             successUrl,
             failUrl,
-            setStripeClientSecret
-          })
+            setStripeClientSecret,
+          });
         },
         onError: error =>
-          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`)
-      })
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(
+            error.message
+          )}`),
+      });
     },
     [fetchPage, result]
-  )
+  );
 
-  return [callback, redirectPages, stripeClientSecret] as const
-}
+  return [callback, redirectPages, stripeClientSecret] as const;
+};
 
 const handlePayment = ({
   intent,
   successUrl,
   failUrl,
-  setStripeClientSecret
+  setStripeClientSecret,
 }: {
-  intent?: FullPaymentFragment
-  successUrl: string
-  failUrl: string
-  setStripeClientSecret?: (secret: string | undefined) => void
+  intent?: FullPaymentFragment;
+  successUrl: string;
+  failUrl: string;
+  setStripeClientSecret?: (secret: string | undefined) => void;
 }) => {
   if (!intent) {
     window.location.href = `${failUrl}?error=${encodeURIComponent(
       'Intent konnte nicht gefunden werden.'
-    )}`
-    return
+    )}`;
+    return;
   }
 
   if (intent.state === 'paid') {
-    window.location.href = successUrl
-    return
+    window.location.href = successUrl;
+    return;
   }
 
   if (intent.paymentMethod.paymentProviderID === 'stripe') {
-    setStripeClientSecret?.(intent.intentSecret ?? undefined)
-    return
+    setStripeClientSecret?.(intent.intentSecret ?? undefined);
+    return;
   } else {
-    setStripeClientSecret?.(undefined)
+    setStripeClientSecret?.(undefined);
   }
 
   if (!intent.intentSecret) {
-    window.location.href = successUrl
-    return
+    window.location.href = successUrl;
+    return;
   }
 
   if (intent.intentSecret.startsWith('http')) {
-    window.location.href = intent.intentSecret
-    return
+    window.location.href = intent.intentSecret;
+    return;
   }
-}
+};

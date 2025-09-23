@@ -5,7 +5,6 @@ loadDevMessages()
 loadErrorMessages()
 
 const originalConsoleError = console.error
-const originalConsoleWarn = console.warn
 
 global.console.error = (message, ...optionalParams) => {
   if (typeof message === 'string') {

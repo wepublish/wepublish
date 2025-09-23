@@ -1,90 +1,99 @@
-import {Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {PaginatedType} from '@wepublish/utils/api'
-import {HasImage, Image} from '@wepublish/image/api'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Node} from 'slate'
-import {PaymentMethod} from '@wepublish/payment-method/api'
-import {PaymentPeriodicity} from '@prisma/client'
+import {
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { PaginatedType } from '@wepublish/utils/api';
+import { HasImage, Image } from '@wepublish/image/api';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { Descendant } from 'slate';
+import { PaymentMethod } from '@wepublish/payment-method/api';
+import { PaymentPeriodicity } from '@prisma/client';
 
 export enum MemberPlanSort {
   createdAt = 'createdAt',
-  modifiedAt = 'modifiedAt'
+  modifiedAt = 'modifiedAt',
 }
 
 registerEnumType(MemberPlanSort, {
-  name: 'MemberPlanSort'
-})
+  name: 'MemberPlanSort',
+});
 
 enum Currency {
   CHF = 'CHF',
-  EUR = 'EUR'
+  EUR = 'EUR',
 }
 
 registerEnumType(Currency, {
-  name: 'Currency'
-})
+  name: 'Currency',
+});
 
 @ObjectType()
 export class AvailablePaymentMethod {
-  paymentMethodIDs!: string[]
+  paymentMethodIDs!: string[];
 
   @Field(() => [PaymentMethod])
-  paymentMethods!: PaymentMethod[]
+  paymentMethods!: PaymentMethod[];
 
   @Field(() => [PaymentPeriodicity])
-  paymentPeriodicities!: PaymentPeriodicity[]
+  paymentPeriodicities!: PaymentPeriodicity[];
 
   @Field()
-  forceAutoRenewal!: boolean
+  forceAutoRenewal!: boolean;
 }
 
 @ObjectType({
-  implements: () => [HasImage]
+  implements: () => [HasImage],
 })
 export class MemberPlan {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  name!: string
+  name!: string;
 
   @Field()
-  slug!: string
+  slug!: string;
 
-  image?: Image
+  image?: Image;
 
-  @Field(() => GraphQLRichText, {nullable: true})
-  description?: Node[] | null
+  @Field(() => GraphQLRichText, { nullable: true })
+  description?: Descendant[];
 
-  @Field(() => [String], {nullable: true})
-  tags?: string[]
+  @Field(() => GraphQLRichText, { nullable: true })
+  shortDescription?: Descendant[];
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 
   @Field(() => Currency)
-  currency!: Currency
+  currency!: Currency;
 
   @Field(() => Int)
-  amountPerMonthMin!: number
+  amountPerMonthMin!: number;
 
-  @Field(() => Int, {nullable: true})
-  amountPerMonthTarget?: number
+  @Field(() => Int, { nullable: true })
+  amountPerMonthTarget?: number;
 
-  @Field(() => Int, {nullable: true})
-  maxCount?: number
+  @Field(() => Int, { nullable: true })
+  maxCount?: number;
 
   @Field()
-  extendable!: boolean
+  extendable!: boolean;
 
   @Field(() => [AvailablePaymentMethod])
-  availablePaymentMethods!: AvailablePaymentMethod[]
+  availablePaymentMethods!: AvailablePaymentMethod[];
 
-  @Field({nullable: true})
-  successPageId?: string
+  @Field({ nullable: true })
+  successPageId?: string;
 
-  @Field({nullable: true})
-  failPageId?: string
+  @Field({ nullable: true })
+  failPageId?: string;
 
-  @Field({nullable: true})
-  confirmationPageId?: string
+  @Field({ nullable: true })
+  confirmationPageId?: string;
 }
 
 @ObjectType()
@@ -92,12 +101,12 @@ export class MemberPlanConnection extends PaginatedType(MemberPlan) {}
 
 @InputType()
 export class MemberPlanFilter {
-  @Field({nullable: true})
-  name?: string
+  @Field({ nullable: true })
+  name?: string;
 
-  @Field({nullable: true})
-  active?: boolean
+  @Field({ nullable: true })
+  active?: boolean;
 
-  @Field(() => [String], {nullable: true})
-  tags?: string[]
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 }

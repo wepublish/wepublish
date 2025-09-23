@@ -1,3 +1,3 @@
 export default function () {
-  return 'fakeNanoid1'
+  return 'fakeNanoid1';
 }

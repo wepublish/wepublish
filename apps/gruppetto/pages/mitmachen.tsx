@@ -1,27 +1,27 @@
-import {SubscribePage} from '@wepublish/utils/website'
-import {useRouter} from 'next/router'
+import { SubscribePage } from '@wepublish/utils/website';
+import { useRouter } from 'next/router';
 
 export default function Mitmachen() {
   const {
-    query: {tag}
-  } = useRouter()
+    query: { tag },
+  } = useRouter();
 
   return (
     <SubscribePage
       defaults={{
-        memberPlanSlug: 'gruppetto'
+        memberPlanSlug: 'gruppetto',
       }}
       filter={memberPlans =>
         memberPlans.filter(mb => {
           if (!tag) {
-            return !mb.tags?.length
+            return !mb.tags?.length;
           }
 
-          return mb.tags?.includes(tag as string)
+          return mb.tags?.includes(tag as string);
         })
       }
     />
-  )
+  );
 }
 
-Mitmachen.getInitialProps = SubscribePage.getInitialProps
+Mitmachen.getInitialProps = SubscribePage.getInitialProps;

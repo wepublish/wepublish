@@ -1,16 +1,28 @@
-import {useNavigationListQuery} from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren} from 'react'
+import { useNavigationListQuery } from '@wepublish/website/api';
+import {
+  BuilderContainerProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
 
 export type FooterContainerProps = PropsWithChildren<{
-  slug: string
-  categorySlugs: string[][]
+  slug: string;
+  categorySlugs: string[][];
+  iconSlug?: string;
+  hideBannerOnIntersecting?: boolean;
 }> &
-  BuilderContainerProps
+  BuilderContainerProps;
 
-export function FooterContainer({slug, children, className, categorySlugs}: FooterContainerProps) {
-  const {Footer} = useWebsiteBuilder()
-  const {data, loading, error} = useNavigationListQuery()
+export function FooterContainer({
+  slug,
+  iconSlug,
+  categorySlugs,
+  children,
+  className,
+  hideBannerOnIntersecting = true,
+}: FooterContainerProps) {
+  const { Footer } = useWebsiteBuilder();
+  const { data, loading, error } = useNavigationListQuery();
 
   return (
     <Footer
@@ -19,8 +31,11 @@ export function FooterContainer({slug, children, className, categorySlugs}: Foot
       error={error}
       slug={slug}
       className={className}
-      categorySlugs={categorySlugs}>
+      iconSlug={iconSlug}
+      categorySlugs={categorySlugs}
+      hideBannerOnIntersecting={hideBannerOnIntersecting}
+    >
       {children}
     </Footer>
-  )
+  );
 }

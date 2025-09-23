@@ -1,1 +1,1 @@
-export * from './activityFeed'
+export * from './activityFeed';

@@ -18,75 +18,89 @@ import {
   MemberPlanList,
   ImportSubscriptionMutation,
   ImportSubscriptionMutationVariables,
-  ImportSubscription
-} from '../../api/private'
-import {privateClient} from '../api/clients'
+  ImportSubscription,
+} from '../../api/private';
+import { privateClient } from '../api/clients';
 
 export async function createUser({
   password,
   ...input
-}: UserInput & {password: string}): Promise<CreateUserMutation['createUser']> {
+}: UserInput & { password: string }): Promise<
+  CreateUserMutation['createUser']
+> {
   return (
-    await privateClient.request<CreateUserMutation, CreateUserMutationVariables>(CreateUser, {
+    await privateClient.request<
+      CreateUserMutation,
+      CreateUserMutationVariables
+    >(CreateUser, {
       input,
-      password
+      password,
     })
-  ).createUser!
+  ).createUser!;
 }
 
 export async function findUserByEmail(
   email: string
 ): Promise<UserListQuery['users']['nodes'][number] | null> {
   return (
-    await privateClient.request<UserListQuery, UserListQueryVariables>(UserList, {
-      filter: email
-    })
-  ).users.nodes[0]
+    await privateClient.request<UserListQuery, UserListQueryVariables>(
+      UserList,
+      {
+        filter: email,
+      }
+    )
+  ).users.nodes[0];
 }
 
 export async function deleteUser(userId: string) {
   return (
-    await privateClient.request<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUser, {
-      id: userId
+    await privateClient.request<
+      DeleteUserMutation,
+      DeleteUserMutationVariables
+    >(DeleteUser, {
+      id: userId,
     })
-  ).deleteUser
+  ).deleteUser;
 }
 
 export async function importSubscription(input: SubscriptionInput) {
   return (
-    await privateClient.request<ImportSubscriptionMutation, ImportSubscriptionMutationVariables>(
-      ImportSubscription,
-      {
-        input
-      }
-    )
-  ).importSubscription!
+    await privateClient.request<
+      ImportSubscriptionMutation,
+      ImportSubscriptionMutationVariables
+    >(ImportSubscription, {
+      input,
+    })
+  ).importSubscription!;
 }
 
 export async function deleteSubscription(id: string) {
   return (
-    await privateClient.request<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>(
-      DeleteSubscription,
-      {
-        id
-      }
-    )
-  ).deleteSubscription!
+    await privateClient.request<
+      DeleteSubscriptionMutation,
+      DeleteSubscriptionMutationVariables
+    >(DeleteSubscription, {
+      id,
+    })
+  ).deleteSubscription!;
 }
 
 export async function findMemberPlanByName(name: string) {
   return (
-    await privateClient.request<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanList, {
-      filter: name
+    await privateClient.request<
+      MemberPlanListQuery,
+      MemberPlanListQueryVariables
+    >(MemberPlanList, {
+      filter: name,
     })
-  ).memberPlans.nodes.find(mp => mp.name === name)
+  ).memberPlans.nodes.find(mp => mp.name === name);
 }
 
 export async function getMemberPlans() {
   return (
-    await privateClient.request<MemberPlanListQuery, MemberPlanListQueryVariables>(
-      MemberPlanList,
-      {}
-    )
-  ).memberPlans.nodes
+    await privateClient.request<
+      MemberPlanListQuery,
+      MemberPlanListQueryVariables
+    >(MemberPlanList, {})
+  ).memberPlans.nodes;
 }

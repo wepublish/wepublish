@@ -1,5 +1,5 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PageRevisionService {
@@ -9,8 +9,8 @@ export class PageRevisionService {
     return this.prisma.metadataProperty.findMany({
       where: {
         public: includePrivate ? undefined : true,
-        pageRevisionId: revisionId
-      }
-    })
+        pageRevisionId: revisionId,
+      },
+    });
   }
 }

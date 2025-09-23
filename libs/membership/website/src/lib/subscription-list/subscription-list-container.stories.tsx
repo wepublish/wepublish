@@ -1,5 +1,5 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {SubscriptionListContainer} from './subscription-list-container'
+import { Meta, StoryObj } from '@storybook/react';
+import { SubscriptionListContainer } from './subscription-list-container';
 import {
   CancelSubscriptionDocument,
   Currency,
@@ -13,17 +13,20 @@ import {
   PaymentPeriodicity,
   Subscription,
   SubscriptionDeactivationReason,
-  SubscriptionsDocument
-} from '@wepublish/website/api'
-import {WithCancelError, WithExtendError} from './subscription-list-item.stories'
-import {waitFor, within} from '@storybook/test'
-import {InvoiceListContainer} from '../invoice-list/invoice-list-container'
-import {mockImage} from '@wepublish/storybook/mocks'
+  SubscriptionsDocument,
+} from '@wepublish/website/api';
+import {
+  WithCancelError,
+  WithExtendError,
+} from './subscription-list-item.stories';
+import { waitFor, within } from '@storybook/test';
+import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
+import { mockImage } from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionListContainer,
-  title: 'Container/SubscriptionList'
-} as Meta
+  title: 'Container/SubscriptionList',
+} as Meta;
 
 const subscription = {
   __typename: 'PublicSubscription',
@@ -40,7 +43,7 @@ const subscription = {
     id: '123',
     name: '',
     paymentProviderID: '',
-    slug: ''
+    slug: '',
   },
   memberPlan: {
     __typename: 'MemberPlan',
@@ -53,19 +56,19 @@ const subscription = {
     description: [],
     tags: [],
     extendable: true,
-    currency: Currency.Chf
+    currency: Currency.Chf,
   },
   properties: [],
   deactivation: null,
   extendable: true,
-  canExtend: true
-} as Exact<FullSubscriptionFragment>
+  canExtend: true,
+} as Exact<FullSubscriptionFragment>;
 
 const deactivation = {
   __typename: 'SubscriptionDeactivation',
   date: new Date('2023-01-01').toISOString(),
-  reason: SubscriptionDeactivationReason.UserSelfDeactivated
-} as Exact<FullSubscriptionDeactivationFragment>
+  reason: SubscriptionDeactivationReason.UserSelfDeactivated,
+} as Exact<FullSubscriptionDeactivationFragment>;
 
 const invoice = {
   __typename: 'Invoice',
@@ -80,15 +83,15 @@ const invoice = {
   total: 50000,
   description: null,
   canceledAt: null,
-  paidAt: null
-} as Exact<FullInvoiceFragment>
+  paidAt: null,
+} as Exact<FullInvoiceFragment>;
 
 const intent = {
   intentSecret: 'https://example.com',
   paymentMethod: {
-    paymentProviderID: 'payrexx'
-  }
-}
+    paymentProviderID: 'payrexx',
+  },
+};
 
 export const Default: StoryObj = {
   args: {},
@@ -97,71 +100,71 @@ export const Default: StoryObj = {
       mocks: [
         {
           request: {
-            query: SubscriptionsDocument
+            query: SubscriptionsDocument,
           },
           result: {
             data: {
-              subscriptions: [subscription]
-            }
-          }
+              subscriptions: [subscription],
+            },
+          },
         },
         {
           request: {
-            query: InvoicesDocument
+            query: InvoicesDocument,
           },
           result: {
             data: {
-              invoices: [invoice]
-            }
-          }
+              invoices: [invoice],
+            },
+          },
         },
         {
           request: {
             query: CancelSubscriptionDocument,
             variables: {
-              subscriptionId: subscription.id
-            }
+              subscriptionId: subscription.id,
+            },
           },
           result: {
             data: {
               cancelUserSubscription: {
                 ...subscription,
                 canceledAt: new Date('2023-01-01'),
-                deactivation
-              }
-            }
-          }
+                deactivation,
+              },
+            },
+          },
         },
         {
           request: {
             query: ExtendSubscriptionDocument,
             variables: {
-              subscriptionId: subscription.id
-            }
+              subscriptionId: subscription.id,
+            },
           },
           result: {
             data: {
-              extendSubscription: intent
-            }
-          }
+              extendSubscription: intent,
+            },
+          },
         },
         {
           request: {
             query: PaySubscriptionDocument,
             variables: {
-              subscriptionId: subscription.id
-            }
+              subscriptionId: subscription.id,
+            },
           },
           result: {
             data: {
-              createPaymentFromSubscription: intent
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              createPaymentFromSubscription: intent,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const Unpaid: StoryObj = {
   ...Default,
@@ -170,45 +173,45 @@ export const Unpaid: StoryObj = {
       mocks: [
         {
           request: {
-            query: SubscriptionsDocument
+            query: SubscriptionsDocument,
           },
           result: {
             data: {
-              subscriptions: [{...subscription, paidUntil: null}]
-            }
-          }
+              subscriptions: [{ ...subscription, paidUntil: null }],
+            },
+          },
         },
         {
           request: {
-            query: InvoicesDocument
+            query: InvoicesDocument,
           },
           result: {
             data: {
-              invoices: [invoice]
-            }
-          }
+              invoices: [invoice],
+            },
+          },
         },
-        ...Default.parameters!.apolloClient.mocks.slice(1)
-      ]
-    }
-  }
-}
+        ...Default.parameters!.apolloClient.mocks.slice(1),
+      ],
+    },
+  },
+};
 
 export const WithFilter: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    filter: (subscriptions: Subscription[]) => []
-  }
-}
+    filter: (subscriptions: Subscription[]) => [],
+  },
+};
 
 export const Extend: StoryObj = {
   ...Default,
   play: async ctx => {
-    const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Jetzt Verlängern'))
+    const canvas = within(ctx.canvasElement);
+    await waitFor(() => canvas.getByText('Jetzt Verlängern'));
 
-    await WithExtendError.play?.(ctx)
+    await WithExtendError.play?.(ctx);
   },
   parameters: {
     apolloClient: {
@@ -216,29 +219,29 @@ export const Extend: StoryObj = {
         Default.parameters!.apolloClient.mocks[0],
         {
           request: {
-            query: InvoicesDocument
+            query: InvoicesDocument,
           },
           result: {
             data: {
-              invoices: [{...invoice, paidAt: new Date('2023-01-01')}]
-            }
-          }
+              invoices: [{ ...invoice, paidAt: new Date('2023-01-01') }],
+            },
+          },
         },
-        ...Default.parameters!.apolloClient.mocks.slice(2)
-      ]
-    }
-  }
-}
+        ...Default.parameters!.apolloClient.mocks.slice(2),
+      ],
+    },
+  },
+};
 
 export const Cancel: StoryObj = {
   ...Default,
   play: async ctx => {
-    const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Abo kündigen'))
+    const canvas = within(ctx.canvasElement);
+    await waitFor(() => canvas.getByText('Abo kündigen'));
 
-    await WithCancelError.play?.(ctx)
-  }
-}
+    await WithCancelError.play?.(ctx);
+  },
+};
 
 export const CancelWithInvoiceList: StoryObj = {
   ...Cancel,
@@ -253,16 +256,16 @@ export const CancelWithInvoiceList: StoryObj = {
       mocks: [
         {
           request: {
-            query: InvoicesDocument
+            query: InvoicesDocument,
           },
           result: {
             data: {
-              invoices: [invoice]
-            }
-          }
+              invoices: [invoice],
+            },
+          },
         },
-        ...Cancel.parameters!.apolloClient.mocks
-      ]
-    }
-  }
-}
+        ...Cancel.parameters!.apolloClient.mocks,
+      ],
+    },
+  },
+};

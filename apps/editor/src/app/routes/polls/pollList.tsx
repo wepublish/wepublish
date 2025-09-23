@@ -1,5 +1,5 @@
-import {ApolloError} from '@apollo/client'
-import {Poll, usePollsQuery} from '@wepublish/editor/api'
+import { ApolloError } from '@apollo/client';
+import { Poll, usePollsQuery } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
@@ -14,41 +14,53 @@ import {
   PollOpensAtView,
   PollStateIndication,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdDelete} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {Button, IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdDelete } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import {
+  Button,
+  IconButton,
+  Message,
+  Pagination,
+  Table as RTable,
+  toaster,
+} from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error?.message}
       </Message>
-    )
+    );
   }
-}
+};
 
 function PollList() {
-  const {t} = useTranslation()
-  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined)
-  const [page, setPage] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(10)
+  const { t } = useTranslation();
+  const [pollDelete, setPollDelete] = useState<Poll | undefined>(undefined);
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
 
-  const {data, loading, refetch} = usePollsQuery({
+  const { data, loading, refetch } = usePollsQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
       take: limit,
-      skip: (page - 1) * limit
+      skip: (page - 1) * limit,
     },
-    onError: onErrorToast
-  })
+    onError: onErrorToast,
+  });
 
   /**
    * Refetch data
@@ -56,9 +68,9 @@ function PollList() {
   useEffect(() => {
     refetch({
       take: limit,
-      skip: (page - 1) * limit
-    })
-  }, [page, limit])
+      skip: (page - 1) * limit,
+    });
+  }, [page, limit]);
 
   return (
     <>
@@ -75,18 +87,28 @@ function PollList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.polls?.nodes || []}>
+        <Table
+          fillHeight
+          loading={loading}
+          data={data?.polls?.nodes || []}
+        >
           {/* state */}
           <Column resizable>
             <HeaderCell>{t('pollList.state')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Poll>) => (
-                <PollStateIndication closedAt={rowData.closedAt} opensAt={rowData.opensAt} />
+                <PollStateIndication
+                  closedAt={rowData.closedAt}
+                  opensAt={rowData.opensAt}
+                />
               )}
             </RCell>
           </Column>
           {/* question */}
-          <Column width={200} resizable>
+          <Column
+            width={200}
+            resizable
+          >
             <HeaderCell>{t('pollList.question')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Poll>) => (
@@ -97,21 +119,34 @@ function PollList() {
             </RCell>
           </Column>
           {/* opens at */}
-          <Column width={300} resizable>
+          <Column
+            width={300}
+            resizable
+          >
             <HeaderCell>{t('pollList.opensAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => <PollOpensAtView poll={rowData as Poll} />}
+              {(rowData: RowDataType<Poll>) => (
+                <PollOpensAtView poll={rowData as Poll} />
+              )}
             </RCell>
           </Column>
           {/* opens at */}
-          <Column width={300} resizable>
+          <Column
+            width={300}
+            resizable
+          >
             <HeaderCell>{t('pollList.closedAt')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Poll>) => <PollClosedAtView poll={rowData as Poll} />}
+              {(rowData: RowDataType<Poll>) => (
+                <PollClosedAtView poll={rowData as Poll} />
+              )}
             </RCell>
           </Column>
           {/* delete */}
-          <Column resizable fixed="right">
+          <Column
+            resizable
+            fixed="right"
+          >
             <HeaderCell align={'center'}>{t('pollList.delete')}</HeaderCell>
             <PaddedCell align={'center'}>
               {(poll: RowDataType<Poll>) => (
@@ -127,11 +162,17 @@ function PollList() {
             </PaddedCell>
           </Column>
           {/* show votes */}
-          <Column resizable fixed="right">
+          <Column
+            resizable
+            fixed="right"
+          >
             <HeaderCell align={'center'}>{t('pollList.showVotes')}</HeaderCell>
             <PaddedCell align={'center'}>
               {(poll: RowDataType<Poll>) => (
-                <Button appearance={'primary'} href={`/polls/votes/${poll?.id}`}>
+                <Button
+                  appearance={'primary'}
+                  href={`/polls/votes/${poll?.id}`}
+                >
                   {t('pollList.showVotes')}
                 </Button>
               )}
@@ -163,13 +204,13 @@ function PollList() {
         onClose={() => setPollDelete(undefined)}
       />
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_POLL',
   'CAN_CREATE_POLL',
   'CAN_UPDATE_POLL',
-  'CAN_DELETE_POLL'
-])(PollList)
-export {CheckedPermissionComponent as PollList}
+  'CAN_DELETE_POLL',
+])(PollList);
+export { CheckedPermissionComponent as PollList };

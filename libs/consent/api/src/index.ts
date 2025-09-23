@@ -1,1 +1,1 @@
-export * from './lib/consent.module'
+export * from './lib/consent.module';

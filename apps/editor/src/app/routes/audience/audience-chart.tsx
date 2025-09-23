@@ -1,4 +1,4 @@
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 import {
   Bar,
   ComposedChart,
@@ -8,33 +8,37 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
-} from 'recharts'
-import {Placeholder} from 'rsuite'
+  YAxis,
+} from 'recharts';
+import { Placeholder } from 'rsuite';
 
-import {AudienceStatsComputed} from './useAudience'
-import {AudienceClientFilter} from './useAudienceFilter'
+import { AudienceStatsComputed } from './useAudience';
+import { AudienceClientFilter } from './useAudienceFilter';
 
-export const chartColors: {[K in keyof AudienceClientFilter]: string} = {
+export const chartColors: { [K in keyof AudienceClientFilter]: string } = {
   createdSubscriptionCount: 'var(--rs-green-900)',
   overdueSubscriptionCount: 'var(--rs-violet-900)',
   deactivatedSubscriptionCount: 'var(--rs-orange-900)',
   renewedSubscriptionCount: 'var(--rs-blue-900)',
   replacedSubscriptionCount: 'var(--rs-cyan-900)',
-  totalActiveSubscriptionCount: 'var(--rs-red-900)'
-}
+  totalActiveSubscriptionCount: 'var(--rs-red-900)',
+};
 
 interface AudienceChartProps {
-  audienceStats: AudienceStatsComputed[]
-  clientFilter: AudienceClientFilter
-  loading?: boolean
+  audienceStats: AudienceStatsComputed[];
+  clientFilter: AudienceClientFilter;
+  loading?: boolean;
 }
 
-export function AudienceChart({clientFilter, audienceStats, loading}: AudienceChartProps) {
+export function AudienceChart({
+  clientFilter,
+  audienceStats,
+  loading,
+}: AudienceChartProps) {
   const {
     t,
-    i18n: {language}
-  } = useTranslation()
+    i18n: { language },
+  } = useTranslation();
 
   const {
     totalActiveSubscriptionCount,
@@ -42,32 +46,46 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
     renewedSubscriptionCount,
     overdueSubscriptionCount,
     replacedSubscriptionCount,
-    deactivatedSubscriptionCount
-  } = clientFilter
+    deactivatedSubscriptionCount,
+  } = clientFilter;
 
   // Ensure the ResponsiveContainer does not render outside the viewport during initial load.
-  const readyRenderChart = !!audienceStats.length
+  const readyRenderChart = !!audienceStats.length;
 
   return (
     readyRenderChart && (
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer
+        width="100%"
+        height={400}
+      >
         {loading ? (
           <Placeholder.Graph active />
         ) : (
           <ComposedChart data={audienceStats}>
             <XAxis
               dataKey={'date'}
-              tick={({x, y, payload}) => (
-                <text x={x} y={y + 15} textAnchor="middle">
-                  {new Date(payload.value).toLocaleDateString(language, {dateStyle: 'short'})}
+              tick={({ x, y, payload }) => (
+                <text
+                  x={x}
+                  y={y + 15}
+                  textAnchor="middle"
+                >
+                  {new Date(payload.value).toLocaleDateString(language, {
+                    dateStyle: 'short',
+                  })}
                 </text>
               )}
             />
             <YAxis domain={['auto', 'auto']} />
             <Tooltip
-              formatter={(value, name, item) => [value, t(`audience.legend.${name}`)]}
+              formatter={(value, name, item) => [
+                value,
+                t(`audience.legend.${name}`),
+              ]}
               labelFormatter={label =>
-                new Date(label).toLocaleDateString(language, {dateStyle: 'medium'})
+                new Date(label).toLocaleDateString(language, {
+                  dateStyle: 'medium',
+                })
               }
             />
             <Legend
@@ -127,5 +145,5 @@ export function AudienceChart({clientFilter, audienceStats, loading}: AudienceCh
         )}
       </ResponsiveContainer>
     )
-  )
+  );
 }
