@@ -35,7 +35,7 @@ export const PaymentAmountSlider = forwardRef<
 
     return (
       <PaymentAmountSliderWrapper className={className}>
-        {donate ? (
+        {donate ?
           <TextField
             name={name}
             value={value / 100}
@@ -55,19 +55,20 @@ export const PaymentAmountSlider = forwardRef<
               ),
             }}
           />
-        ) : (
-          <Slider
+        : <Slider
             ref={ref}
             name={name}
             value={value}
             onChange={(_, val) => onChange(val as number)}
             min={amountPerMonthMin}
             max={amountPerMonthMin * 5}
-            valueLabelFormat={val => formatCurrency(val / 100, currency ?? Currency.Chf, locale)}
+            valueLabelFormat={val =>
+              formatCurrency(val / 100, currency ?? Currency.Chf, locale)
+            }
             step={100}
             color="secondary"
           />
-        )}
+        }
       </PaymentAmountSliderWrapper>
     );
   }

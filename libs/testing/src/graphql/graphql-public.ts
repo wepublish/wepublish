@@ -1433,25 +1433,25 @@ export type MailTemplateWithUrlAndStatusModel = {
 };
 
 export type MemberPlan = HasImage & {
-  __typename?: 'MemberPlan'
-  amountPerMonthMin: Scalars['Int']
-  amountPerMonthTarget?: Maybe<Scalars['Int']>
-  availablePaymentMethods: Array<AvailablePaymentMethod>
-  confirmationPageId?: Maybe<Scalars['String']>
-  currency: Currency
-  description?: Maybe<Scalars['RichText']>
-  extendable: Scalars['Boolean']
-  failPageId?: Maybe<Scalars['String']>
-  id: Scalars['String']
-  image?: Maybe<Image>
-  imageID?: Maybe<Scalars['String']>
-  maxCount?: Maybe<Scalars['Int']>
-  name: Scalars['String']
-  productType: ProductType
-  slug: Scalars['String']
-  successPageId?: Maybe<Scalars['String']>
-  tags?: Maybe<Array<Scalars['String']>>
-}
+  __typename?: 'MemberPlan';
+  amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: Maybe<Scalars['Int']>;
+  availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPageId?: Maybe<Scalars['String']>;
+  currency: Currency;
+  description?: Maybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
+  failPageId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  imageID?: Maybe<Scalars['String']>;
+  maxCount?: Maybe<Scalars['Int']>;
+  name: Scalars['String'];
+  productType: ProductType;
+  slug: Scalars['String'];
+  successPageId?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+};
 
 export type MemberPlanConnection = {
   __typename?: 'MemberPlanConnection';
@@ -1461,11 +1461,11 @@ export type MemberPlanConnection = {
 };
 
 export type MemberPlanFilter = {
-  active?: InputMaybe<Scalars['Boolean']>
-  name?: InputMaybe<Scalars['String']>
-  productType?: InputMaybe<ProductType>
-  tags?: InputMaybe<Array<Scalars['String']>>
-}
+  active?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
 
 export enum MemberPlanSort {
   CreatedAt = 'createdAt',
@@ -2576,7 +2576,7 @@ export enum PollVoteSort {
 
 export enum ProductType {
   Donation = 'DONATION',
-  Subscription = 'SUBSCRIPTION'
+  Subscription = 'SUBSCRIPTION',
 }
 
 export type Property = {
@@ -3216,18 +3216,18 @@ export type Stats = {
 };
 
 export type SubscribeBlock = BaseBlock & {
-  __typename?: 'SubscribeBlock'
-  blockStyle?: Maybe<Scalars['String']>
-  blockStyleName?: Maybe<Scalars['String']>
-  memberPlanIds?: Maybe<Array<Scalars['String']>>
-  type: BlockType
-}
+  __typename?: 'SubscribeBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  type: BlockType;
+};
 
 export type SubscribeBlockInput = {
-  blockStyle?: InputMaybe<Scalars['String']>
-  blockStyleName?: InputMaybe<Scalars['String']>
-  memberPlanIds?: InputMaybe<Array<Scalars['String']>>
-}
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
+};
 
 export type SubscriptionCreatedAction = BaseAction &
   HasSubscriptionLc & {

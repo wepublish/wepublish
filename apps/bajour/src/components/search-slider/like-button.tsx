@@ -17,10 +17,14 @@ const iconButtonStyles = css`
   }
 `;
 
-export const VideoLikeButton = ({ isLiked, likes, onLike }: LikeButtonProps) => {
+export const VideoLikeButton = ({
+  isLiked,
+  likes,
+  onLike,
+}: LikeButtonProps) => {
   const {
-    elements: { IconButton }
-  } = useWebsiteBuilder()
+    elements: { IconButton },
+  } = useWebsiteBuilder();
 
   return (
     <IconButton
@@ -29,12 +33,15 @@ export const VideoLikeButton = ({ isLiked, likes, onLike }: LikeButtonProps) => 
       onClick={onLike}
       color="primary"
       css={iconButtonStyles}
-      disableRipple>
-      {isLiked ? <MdFavorite style={{color: 'red'}} /> : <MdFavoriteBorder />}
+      disableRipple
+    >
+      {isLiked ?
+        <MdFavorite style={{ color: 'red' }} />
+      : <MdFavoriteBorder />}
       {likes}
     </IconButton>
-  )
-}
+  );
+};
 
 export const LikeButton = ({ isLiked, likes, onLike }: LikeButtonProps) => {
   const {

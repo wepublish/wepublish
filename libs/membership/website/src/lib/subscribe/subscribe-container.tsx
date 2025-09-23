@@ -45,10 +45,12 @@ export type SubscribeContainerProps<
     | 'returningUserId'
     | 'hidePaymentAmount'
   > & {
-    filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
-    deactivateSubscriptionId?: string
-    memberPlanIds?: string[]
-  }
+    filter?: (
+      memberPlans: FullMemberPlanFragment[]
+    ) => FullMemberPlanFragment[];
+    deactivateSubscriptionId?: string;
+    memberPlanIds?: string[];
+  };
 
 export const SubscribeContainer = <
   T extends Exclude<BuilderUserFormFields, 'flair'>,
@@ -61,7 +63,7 @@ export const SubscribeContainer = <
   transactionFee,
   transactionFeeText,
   returningUserId,
-  memberPlanIds
+  memberPlanIds,
 }: SubscribeContainerProps<T>) => {
   const { setToken, hasUser } = useUser();
   const { Subscribe } = useWebsiteBuilder();
@@ -111,18 +113,24 @@ export const SubscribeContainer = <
       }
 
       if (memberPlanIds?.length && draftList.data?.memberPlans) {
-        const allowedIds = new Set(memberPlanIds)
-        draftList.data.memberPlans.nodes = draftList.data.memberPlans.nodes.filter(memberPlan =>
-          allowedIds.has(memberPlan.id)
-        )
+        const allowedIds = new Set(memberPlanIds);
+        draftList.data.memberPlans.nodes =
+          draftList.data.memberPlans.nodes.filter(memberPlan =>
+            allowedIds.has(memberPlan.id)
+          );
       }
-    })
-  }, [memberPlanList, filter, memberPlanIds])
+    });
+  }, [memberPlanList, filter, memberPlanIds]);
 
-  const donatePredicate = useMemo<NonNullable<SubscribeContainerProps<T>['donate']>>(
-    () => donate ?? ((plan?: FullMemberPlanFragment) => plan?.productType === ProductType.Donation),
+  const donatePredicate = useMemo<
+    NonNullable<SubscribeContainerProps<T>['donate']>
+  >(
+    () =>
+      donate ??
+      ((plan?: FullMemberPlanFragment) =>
+        plan?.productType === ProductType.Donation),
     [donate]
-  )
+  );
 
   return (
     <>

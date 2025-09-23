@@ -1,11 +1,11 @@
-import {SubscribePage, useUserCountry} from '@wepublish/utils/website'
-import {Currency} from '@wepublish/website/api'
-import {ComponentProps} from 'react'
+import { SubscribePage, useUserCountry } from '@wepublish/utils/website';
+import { Currency } from '@wepublish/website/api';
+import { ComponentProps } from 'react';
 
-type MitmachenProps = ComponentProps<typeof SubscribePage>
+type MitmachenProps = ComponentProps<typeof SubscribePage>;
 
 export default function Mitmachen(props: MitmachenProps) {
-  const userCountry = useUserCountry() ?? 'CH'
+  const userCountry = useUserCountry() ?? 'CH';
 
   return (
     <SubscribePage

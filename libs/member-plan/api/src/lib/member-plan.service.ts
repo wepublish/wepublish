@@ -148,12 +148,12 @@ const createProductTypeFilter = (
 ): Prisma.MemberPlanWhereInput => {
   if (filter?.productType) {
     return {
-      productType: filter.productType
-    }
+      productType: filter.productType,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
 export const createMemberPlanFilter = (
   filter?: Partial<MemberPlanFilter>
@@ -164,9 +164,9 @@ export const createMemberPlanFilter = (
         createNameFilter(filter),
         createActiveFilter(filter),
         createTagsFilter(filter),
-        createProductTypeFilter(filter)
-      ]
-    }
+        createProductTypeFilter(filter),
+      ],
+    };
   }
   return {};
 };

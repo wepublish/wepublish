@@ -1,8 +1,8 @@
-import {SubscribePage} from '@wepublish/utils/website'
-import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
+import { SubscribePage } from '@wepublish/utils/website';
+import { useRouter } from 'next/router';
+import { ComponentProps } from 'react';
 
-type MitmachenProps = ComponentProps<typeof SubscribePage>
+type MitmachenProps = ComponentProps<typeof SubscribePage>;
 
 export default function Mitmachen(props: MitmachenProps) {
   const {

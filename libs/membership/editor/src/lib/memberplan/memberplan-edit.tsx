@@ -106,8 +106,8 @@ function MemberPlanEdit() {
       name: '',
       extendable: true,
       maxCount: undefined,
-      productType: ProductType.Subscription
-    }
+      productType: ProductType.Subscription,
+    };
 
     setMemberPlan(initMemberPlan);
     setAvailablePaymentMethods(
