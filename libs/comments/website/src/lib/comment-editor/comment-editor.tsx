@@ -40,9 +40,26 @@ export const LoginWrapper = styled('div')`
   display: grid;
   grid-template-columns: 1;
   padding-top: ${({ theme }) => theme.spacing(4)};
+  column-gap: ${({ theme }) => theme.spacing(7)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+export const ExistingAccountsLoginWrapper = styled('div')`
+  padding-left: ${({ theme }) => theme.spacing(2)};
+  padding-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
+export const NewAccountsLoginWrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
+
+  & > h3 {
+    margin-left: ${({ theme }) => theme.spacing(7)};
   }
 `;
 
@@ -68,12 +85,12 @@ export const InitialModalContent = styled('div')`
 
 export const Register = styled('div')`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   grid-column: 1/2;
-  margin: 0 ${({ theme }) => theme.spacing(4)};
+  margin-left: ${({ theme }) => theme.spacing(7)};
   margin-top: ${({ theme }) => theme.spacing(3)};
-  border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: 2/3;
@@ -170,22 +187,26 @@ export const CommentEditor = ({
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
 
   const handleClose = () => {
+    console.log('comment-editor.tsx: handleClose');
     setModalOpen(false);
     onCancel();
   };
 
   const handleGuestComment = () => {
+    console.log('comment-editor.tsx: handleGuestComment');
     setShowInitialModal(false);
     setModalOpen(false);
   };
 
   const handleLoginRegister = () => {
+    console.log('comment-editor.tsx: handleLoginRegister');
     setShowInitialModal(false);
   };
 
   const buttonStyles = useMemo(() => registerStyles(theme), [theme]);
   const iconStyles = useMemo(() => registerIconStyles(theme), [theme]);
   const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme]);
+
   const initialButtonsStyles = useMemo(
     () => initialButtonStyles(theme),
     [theme]
@@ -408,23 +429,29 @@ export const CommentEditor = ({
 
           {!showInitialModal && (
             <LoginWrapper>
-              <LoginFormContainer
-                afterLoginCallback={handleAfterLoginCallback}
-              />
+              <ExistingAccountsLoginWrapper>
+                <h3>Login für Leserinnen und Leser</h3>
+                <LoginFormContainer
+                  afterLoginCallback={handleAfterLoginCallback}
+                />
+              </ExistingAccountsLoginWrapper>
 
-              <Register>
-                <Button
-                  css={buttonStyles}
-                  onClick={registerRedirect}
-                >
-                  <MdLogin
-                    aria-label="Register"
-                    css={iconStyles}
-                  />
+              <NewAccountsLoginWrapper>
+                <h3 css={headingStyles}>Ich will mitreden!</h3>
+                <Register>
+                  <Button
+                    css={buttonStyles}
+                    onClick={registerRedirect}
+                  >
+                    <MdLogin
+                      aria-label="Register"
+                      css={iconStyles}
+                    />
 
-                  <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
-                </Button>
-              </Register>
+                    <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
+                  </Button>
+                </Register>
+              </NewAccountsLoginWrapper>
             </LoginWrapper>
           )}
         </ModalContent>

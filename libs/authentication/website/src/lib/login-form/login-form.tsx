@@ -93,6 +93,21 @@ export function LoginForm({
     (!loginWithPassword && loginWithEmail.loading) ||
     (loginWithPassword && loginWithCredentials.loading);
 
+  console.log(
+    'loginWithPassword',
+    loginWithPassword,
+    '\nloginWithCredentials',
+    loginWithCredentials,
+    '\nloginLinkSent',
+    loginLinkSent,
+    '\nloginWithEmail',
+    loginWithEmail,
+    '\nloginWithEmail.data',
+    loginWithEmail.data,
+    '\nloading',
+    loading
+  );
+
   return (
     <LoginFormWrapper className={className}>
       {!disablePasswordLogin && (
