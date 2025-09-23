@@ -121,7 +121,9 @@ const IconButton = styled(RIconButton)`
   }
 `;
 
-const FloatingButton = styled(RIconButton)`
+const FloatingButton = styled(RIconButton, {
+  shouldForwardProp: prop => prop !== 'isExpanded',
+})<{ isExpanded: boolean }>`
   display: block;
   padding: 6px;
   position: absolute;
@@ -168,7 +170,6 @@ export function Base({ children }: BaseProps) {
     <Wrapper>
       <Container>
         <Sidebar
-          isExpanded={isExpanded}
           collapsible
           width={isExpanded ? 260 : 56}
         >
