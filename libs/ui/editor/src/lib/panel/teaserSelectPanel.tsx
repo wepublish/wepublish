@@ -144,6 +144,7 @@ export function TeaserSelectPanel({
     preTitle: '',
     lead: '',
     contentUrl: 'https://www.example.com',
+    openInNewTab: true,
     image: undefined,
   } as Teaser;
 
@@ -151,6 +152,7 @@ export function TeaserSelectPanel({
   const [image, setImage] = useState(initialTeaser.image);
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle);
   const [contentUrl, setContentUrl] = useState('');
+  const [openInNewTab, setOpenInNewTab] = useState(false);
   const [title, setTitle] = useState(initialTeaser.title);
   const [lead, setLead] = useState(initialTeaser.lead);
 
@@ -161,12 +163,12 @@ export function TeaserSelectPanel({
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<TeaserMetadataProperty>[]
   >(
-    initialTeaser.type === TeaserType.Custom && initialTeaser.properties ?
-      initialTeaser.properties.map(metaDataProperty => ({
-        id: generateID(),
-        value: metaDataProperty,
-      }))
-    : []
+    initialTeaser.type === TeaserType.Custom && initialTeaser.properties
+      ? initialTeaser.properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty,
+        }))
+      : []
   );
 
   const client = getApiClientV2();
@@ -327,14 +329,14 @@ export function TeaserSelectPanel({
       case TeaserType.Article:
         return (
           <>
-            {isArticleListLoading ?
+            {isArticleListLoading ? (
               <RList.Item>
                 <Loader />
               </RList.Item>
-            : null}
-            {!isArticleListLoading && articles.length === 0 ?
+            ) : null}
+            {!isArticleListLoading && articles.length === 0 ? (
               <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
-            : null}
+            ) : null}
             {articles.map(article => {
               const states = [];
 
@@ -386,14 +388,14 @@ export function TeaserSelectPanel({
       case TeaserType.Page:
         return (
           <>
-            {isPageListLoading ?
+            {isPageListLoading ? (
               <RList.Item>
                 <Loader />
               </RList.Item>
-            : null}
-            {!isPageListLoading && pages.length === 0 ?
+            ) : null}
+            {!isPageListLoading && pages.length === 0 ? (
               <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
-            : null}
+            ) : null}
             {pages.map(page => {
               const states = [];
 
@@ -439,14 +441,14 @@ export function TeaserSelectPanel({
       case TeaserType.Event:
         return (
           <>
-            {isEventListLoading ?
+            {isEventListLoading ? (
               <RList.Item>
                 <Loader />
               </RList.Item>
-            : null}
-            {!isEventListLoading && events.length === 0 ?
+            ) : null}
+            {!isEventListLoading && events.length === 0 ? (
               <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
-            : null}
+            ) : null}
             {events.map(event => {
               return (
                 <RList.Item key={event.id}>
@@ -558,6 +560,19 @@ export function TeaserSelectPanel({
                     onChange={(contentUrl: string) => setContentUrl(contentUrl)}
                   />
                 </Form.Group>
+                <Form.Group controlId="customTeaserOpenInNewTab">
+                  <Form.ControlLabel>
+                    {t('articleEditor.panels.openInNewTab')}
+                  </Form.ControlLabel>
+                  <Toggle
+                    checkedChildren={t('articleEditor.panels.yes')}
+                    unCheckedChildren={t('articleEditor.panels.no')}
+                    checked={!!openInNewTab}
+                    onChange={(isChecked: boolean) =>
+                      setOpenInNewTab(isChecked)
+                    }
+                  />
+                </Form.Group>
 
                 <Form.Group controlId="properties">
                   <Form.ControlLabel>
@@ -614,7 +629,6 @@ export function TeaserSelectPanel({
               openEditModalOpen={() => setEditModalOpen(true)}
               removeImage={() => setImage(undefined)}
             />
-
             <Drawer
               open={isChooseModalOpen}
               size="sm"

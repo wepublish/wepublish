@@ -230,6 +230,7 @@ export interface CustomTeaserLink extends BaseTeaser {
   type: TeaserType.Custom;
   contentUrl?: string | null;
   properties?: TeaserMetadataProperty[];
+  openInNewTab?: boolean | null;
 }
 
 export type TeaserLink =
@@ -667,16 +668,16 @@ export function mapBlockValueToBlockInput(
         teaserSlots: {
           title: block.value.title,
           autofillConfig: {
-            ...(block.value.autofillConfig.enabled ?
-              {
-                ...block.value.autofillConfig,
-                filter: {
-                  tags: block.value.autofillConfig.filter?.tags,
-                },
-              }
-            : {
-                enabled: false,
-              }),
+            ...(block.value.autofillConfig.enabled
+              ? {
+                  ...block.value.autofillConfig,
+                  filter: {
+                    tags: block.value.autofillConfig.filter?.tags,
+                  },
+                }
+              : {
+                  enabled: false,
+                }),
             enabled: block.value.autofillConfig.enabled ?? false,
           },
           slots: block.value.slots.map(({ teaser, ...slot }) => {
@@ -773,6 +774,7 @@ export function mapTeaserToTeaserInput(
           title: teaser.title || undefined,
           lead: teaser.lead || undefined,
           contentUrl: teaser.contentUrl || undefined,
+          openInNewTab: teaser.openInNewTab ?? false,
           properties: teaser.properties || [],
         },
       };
@@ -1030,10 +1032,13 @@ export function blockForQueryBlock(
             {
               ...teaser,
               type:
-                teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                : TeaserType.Custom,
+                teaser?.__typename === 'ArticleTeaser'
+                  ? TeaserType.Article
+                  : teaser?.__typename === 'PageTeaser'
+                  ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser'
+                  ? TeaserType.Event
+                  : TeaserType.Custom,
             } as Teaser,
           ]),
         },
@@ -1063,9 +1068,9 @@ export function blockForQueryBlock(
       return {
         key,
         type:
-          block.numColumns === 1 ?
-            EditorBlockType.TeaserGrid1
-          : EditorBlockType.TeaserGrid6,
+          block.numColumns === 1
+            ? EditorBlockType.TeaserGrid1
+            : EditorBlockType.TeaserGrid6,
         value: {
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
@@ -1084,17 +1089,19 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           slots: block.slots.map(({ teaser, type }) => ({
             type,
-            teaser:
-              !teaser ? null : (
-                ({
+            teaser: !teaser
+              ? null
+              : ({
                   ...teaser,
                   type:
-                    teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                    : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                    : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                    : TeaserType.Custom,
-                } as Teaser)
-              ),
+                    teaser?.__typename === 'ArticleTeaser'
+                      ? TeaserType.Article
+                      : teaser?.__typename === 'PageTeaser'
+                      ? TeaserType.Page
+                      : teaser?.__typename === 'EventTeaser'
+                      ? TeaserType.Event
+                      : TeaserType.Custom,
+                } as Teaser),
           })),
           autofillConfig: block.autofillConfig,
           autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
@@ -1174,8 +1181,8 @@ const mapTeaserToQueryTeaser = (
   }
   switch (teaser.__typename) {
     case 'ArticleTeaser':
-      return teaser.article ?
-          {
+      return teaser.article
+        ? {
             type: TeaserType.Article,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
@@ -1186,8 +1193,8 @@ const mapTeaserToQueryTeaser = (
         : null;
 
     case 'PageTeaser':
-      return teaser.page ?
-          {
+      return teaser.page
+        ? {
             type: TeaserType.Page,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
@@ -1198,8 +1205,8 @@ const mapTeaserToQueryTeaser = (
         : null;
 
     case 'EventTeaser':
-      return teaser.event ?
-          {
+      return teaser.event
+        ? {
             type: TeaserType.Event,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
@@ -1210,14 +1217,15 @@ const mapTeaserToQueryTeaser = (
         : null;
 
     case 'CustomTeaser':
-      return teaser ?
-          {
+      return teaser
+        ? {
             type: TeaserType.Custom,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
             title: teaser.title ?? undefined,
             lead: teaser.lead ?? undefined,
             contentUrl: teaser.contentUrl ?? undefined,
+            openInNewTab: teaser.openInNewTab ?? false,
             properties: teaser?.properties ?? undefined,
           }
         : null;

@@ -116,6 +116,9 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
   @Field({ nullable: true })
   contentUrl?: string;
 
+  @Field({ nullable: true })
+  openInNewTab?: boolean;
+
   @Field(() => [NonDbProperty], { defaultValue: [], nullable: true })
   properties!: NonDbProperty[];
 }
@@ -146,7 +149,6 @@ export const Teaser = createUnionType({
     }
 
     console.warn(`Teaser ${value.type} not implemented!`);
-
     return CustomTeaser.name;
   },
 });
@@ -178,7 +180,9 @@ export function mapTeaserUnionMap(
 
   if (valueKeys.length > 1) {
     throw new Error(
-      `Received multiple teaser types (${JSON.stringify(valueKeys)}), they're mutually exclusive.`
+      `Received multiple teaser types (${JSON.stringify(
+        valueKeys
+      )}), they're mutually exclusive.`
     );
   }
 
