@@ -1,9 +1,8 @@
 import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
-import {PrismaClient} from '@prisma/client'
-import {PaymentMethod} from './payment-method.model'
-import {Injectable} from '@nestjs/common'
+import {PaymentMethod, PrismaClient} from '@prisma/client'
+import {Injectable, Scope} from '@nestjs/common'
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class PaymentMethodDataloader extends DataLoaderService<PaymentMethod> {
   constructor(protected readonly prisma: PrismaClient) {
     super()

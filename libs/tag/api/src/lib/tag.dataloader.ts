@@ -1,9 +1,9 @@
 import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
 import {PrismaClient} from '@prisma/client'
 import {Tag} from './tag.model'
-import {Injectable} from '@nestjs/common'
+import {Injectable, Scope} from '@nestjs/common'
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class TagDataloader extends DataLoaderService<Tag> {
   constructor(private prisma: PrismaClient) {
     super()
