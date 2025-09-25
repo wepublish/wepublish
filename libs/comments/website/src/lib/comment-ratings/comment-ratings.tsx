@@ -23,7 +23,6 @@ export const CommentRatingsWrapper = styled('div')`
 
 const getCommentRating = (
   answerId: string,
-  userRatings: Pick<CommentRating, 'answer' | 'value'>[],
   calculatedRatings: Pick<CalculatedRating, 'answer' | 'mean'>[],
   overriddenRatings: Pick<OverriddenRating, 'answerId' | 'value'>[]
 ) => {
@@ -33,20 +32,16 @@ const getCommentRating = (
   const calculatedRating = calculatedRatings.find(
     rating => rating.answer.id === answerId
   );
-  const userRating = userRatings.find(rating => rating.answer.id === answerId);
 
-  return (
-    userRating?.value ?? overriddenRating?.value ?? calculatedRating?.mean ?? 0
-  );
+  return overriddenRating?.value ?? calculatedRating?.mean ?? 0;
 };
 
-const hasUserRated = (
+const getUserRating = (
   answerId: string,
   userRatings: Pick<CommentRating, 'answer' | 'value'>[]
 ) => {
   const userRating = userRatings.find(rating => rating.answer.id === answerId);
-
-  return Boolean(userRating);
+  return userRating?.value ?? 0;
 };
 
 export const CommentRatings = ({
@@ -108,13 +103,12 @@ export const CommentRatings = ({
             {answer.type === RatingSystemType.Star && (
               <StarRating
                 name={showRatingNames ? answer.answer : null}
-                hasRated={hasUserRated(answer.id, allUserRatings)}
-                rating={getCommentRating(
+                averageRating={getCommentRating(
                   answer.id,
-                  allUserRatings,
                   calculatedRatings,
                   overriddenRatings
                 )}
+                userRating={getUserRating(answer.id, allUserRatings)}
                 onChange={rating =>
                   rateComment({
                     answerId: answer.id,
