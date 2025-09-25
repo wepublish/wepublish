@@ -1325,7 +1325,9 @@
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
       "zipCode": "PLZ",
-      "birthday": "Geburtstag"
+      "birthday": "Geburtstag",
+      "note": "Notiz",
+      "noteHelpText": "Nicht für den Nutzer sichtbar."
     },
     "userList": {
       "overview": {

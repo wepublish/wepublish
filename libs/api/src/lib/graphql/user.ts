@@ -120,6 +120,7 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
 
     address: { type: GraphQLUserAddress },
     flair: { type: GraphQLString },
+    note: { type: GraphQLString },
 
     userImage: {
       type: GraphQLImage,
@@ -312,6 +313,7 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     },
     address: { type: GraphQLUserAddressInput },
     flair: { type: GraphQLString },
+    note: { type: GraphQLString },
 
     userImageID: { type: GraphQLString },
 

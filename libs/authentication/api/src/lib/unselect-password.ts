@@ -21,6 +21,7 @@ export const unselectPassword: Record<
 > = {
   address: true,
   birthday: true,
+  note: true,
   properties: true,
   paymentProviderCustomers: true,
   id: true,
