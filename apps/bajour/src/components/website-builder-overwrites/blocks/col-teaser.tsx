@@ -4,6 +4,7 @@ import { TeaserOverwrite } from './teaser-overwrite';
 import {
   AuthorsAndDate,
   fluidTypography,
+  TeaserContentStyled,
   TeaserLeadStyled,
   TeaserPreTitleStyled,
   TeaserTitlesStyled,
@@ -12,6 +13,13 @@ import {
 export const ColTeaser = styled(TeaserOverwrite)`
   margin-top: ${({ theme }) => theme.spacing(3)};
   align-self: start;
+
+  ${TeaserContentStyled} {
+    margin-top: calc(-20px - (2 * 2 * (4px)));
+    padding: ${({theme}) => theme.spacing(1)};
+    background: white;
+    grid-column: 2/23;
+  }
 
   ${TeaserPreTitleStyled} {
     font-size: ${fluidTypography(17, 25)};
@@ -37,6 +45,10 @@ export const ColTeaser = styled(TeaserOverwrite)`
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: span 6;
+
+    ${TeaserContentStyled} {
+      grid-column: 2/11;
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
