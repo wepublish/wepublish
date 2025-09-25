@@ -245,13 +245,7 @@ export const CommentEditor = ({
     setShowInitialModal(false);
   };
 
-  const buttonStyles = useMemo(() => {
-    let s = registerStyles(theme);
-    s = css`
-      font-size: ${theme.typography.body1.fontSize};
-    `;
-    return s;
-  }, [theme]);
+  const buttonStyles = useMemo(() => registerStyles(theme), [theme]);
   const iconStyles = useMemo(() => registerIconStyles(theme), [theme]);
   const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme]);
 
