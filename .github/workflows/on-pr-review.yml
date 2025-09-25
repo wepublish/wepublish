@@ -9,6 +9,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  RUN_REVIEW: ${{ !(
+    (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
+    (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')) }}
   API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
@@ -17,6 +20,12 @@ env:
   PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
+  debug_pr_refs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "base.ref=${{ github.event.pull_request.base.ref }}"
+          echo "head.ref=${{ github.event.pull_request.head.ref }}"
   publish_docker_base_image:
     name: Docker base image
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
@@ -41,6 +50,7 @@ jobs:
 
   helm_deployment_deps:
     name: Helm deployment dependencies
+    if: ${{ env.RUN_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
