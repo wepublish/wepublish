@@ -1,29 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import {
-  InvoiceWithItems,
-  PaymentProvider,
-} from './payment-provider/payment-provider';
-import { Payment, PaymentState, PrismaClient } from '@prisma/client';
-import { sub } from 'date-fns';
-import { PaymentMethodService } from '@wepublish/payment-method/api';
-import { UserInputError } from '@nestjs/apollo';
-import { GraphQLError } from 'graphql/index';
-import {
-  PaymentFromInvoiceInput,
-  PaymentFromSubscriptionArgs,
-} from './payment.model';
+import {InvoiceWithItems, PaymentProvider} from './payment-provider/payment-provider'
+import {Payment, PaymentState, PrismaClient} from '@prisma/client'
+import {sub} from 'date-fns'
+import {PaymentMethodService} from '@wepublish/payment-method/api'
+import {UserInputError} from '@nestjs/apollo'
+import {GraphQLError} from 'graphql/index'
+import {PaymentFromInvoiceInput, PaymentFromSubscriptionArgs} from './payment.model'
 
 interface CreatePaymentWithProvider {
-  paymentMethodID: string;
-  invoice: InvoiceWithItems;
-  saveCustomer: boolean;
-  successURL?: string;
-  failureURL?: string;
-  userId?: string;
-  migrateToTargetPaymentMethodID?: string;
+  paymentMethodID: string
+  invoice: InvoiceWithItems
+  saveCustomer: boolean
+  successURL?: string
+  failureURL?: string
+  userId?: string
+  migrateToTargetPaymentMethodID?: string
 }
 
-@Injectable()
 export class PaymentsService {
   constructor(
     readonly prisma: PrismaClient,
@@ -32,103 +24,79 @@ export class PaymentsService {
   ) {}
 
   getProviders() {
-    return this.paymentProviders;
+    return this.paymentProviders
   }
 
   findById(id: string) {
-    return this.paymentProviders.find(p => p.id === id);
+    return this.paymentProviders.find(p => p.id === id)
   }
 
   findByInvoiceId(invoiceID: string) {
     return this.prisma.payment.findMany({
       where: {
-        invoiceID,
-      },
-    });
+        invoiceID
+      }
+    })
   }
 
-  async findPaymentProviderByPaymentMethodeId(
-    id: string
-  ): Promise<PaymentProvider | undefined> {
+  async findPaymentProviderByPaymentMethodeId(id: string): Promise<PaymentProvider | undefined> {
     const paymentMethode = await this.prisma.paymentMethod.findUnique({
       where: {
-        id,
-      },
-    });
-    if (!paymentMethode) return undefined;
-    return this.paymentProviders.find(
-      p => p.id === paymentMethode.paymentProviderID
-    );
+        id
+      }
+    })
+    if (!paymentMethode) return undefined
+    return this.paymentProviders.find(p => p.id === paymentMethode.paymentProviderID)
   }
 
-  async createPaymentFromInvoice(
-    userId: string,
-    input: PaymentFromInvoiceInput
-  ) {
-    const {
-      invoiceID,
-      paymentMethodID,
-      paymentMethodSlug,
-      successURL,
-      failureURL,
-    } = input;
+  async createPaymentFromInvoice(userId: string, input: PaymentFromInvoiceInput) {
+    const {invoiceID, paymentMethodID, paymentMethodSlug, successURL, failureURL} = input
 
     if (
       (paymentMethodID == null && paymentMethodSlug == null) ||
       (paymentMethodID != null && paymentMethodSlug != null)
     ) {
-      throw new UserInputError(
-        'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
-      );
+      throw new UserInputError('You must provide either `paymentMethodID` or `paymentMethodSlug`.')
     }
 
-    const paymentMethod =
-      paymentMethodID ?
-        await this.paymentMethodsService.findActivePaymentMethodById(
-          paymentMethodID
-        )
-      : await this.paymentMethodsService.findActivePaymentMethodBySlug(
-          paymentMethodSlug || ''
-        );
+    const paymentMethod = paymentMethodID
+      ? await this.paymentMethodsService.findActivePaymentMethodById(paymentMethodID)
+      : await this.paymentMethodsService.findActivePaymentMethodBySlug(paymentMethodSlug || '')
     if (!paymentMethod) {
-      throw new UserInputError(
-        `PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`
-      );
+      throw new UserInputError(`PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`)
     }
 
     const invoice = await this.prisma.invoice.findUnique({
       where: {
-        id: invoiceID,
+        id: invoiceID
       },
       include: {
-        items: true,
-      },
-    });
+        items: true
+      }
+    })
 
     if (!invoice || !invoice.subscriptionID) {
-      throw new UserInputError(`Invoice not found ${invoiceID}`);
+      throw new UserInputError(`Invoice not found ${invoiceID}`)
     }
 
     if (invoice.paidAt || invoice.canceledAt) {
-      throw new UserInputError(
-        `Invoice with id ${invoiceID} is already paid or canceled!`
-      );
+      throw new UserInputError(`Invoice with id ${invoiceID} is already paid or canceled!`)
     }
 
     const subscription = await this.prisma.subscription.findUnique({
       where: {
-        id: invoice.subscriptionID || undefined,
+        id: invoice.subscriptionID || undefined
       },
       include: {
         deactivation: true,
         periods: true,
         properties: true,
-        memberPlan: true,
-      },
-    });
+        memberPlan: true
+      }
+    })
 
     if (!subscription || subscription.userID !== userId) {
-      throw new UserInputError(`Invoice not found ${invoiceID}`);
+      throw new UserInputError(`Invoice not found ${invoiceID}`)
     }
 
     // Prevent multiple payment of same invoice!
@@ -136,19 +104,15 @@ export class PaymentsService {
       where: {
         invoiceID,
         state: {
-          in: [
-            PaymentState.created,
-            PaymentState.submitted,
-            PaymentState.processing,
-          ],
+          in: [PaymentState.created, PaymentState.submitted, PaymentState.processing]
         },
         createdAt: {
-          gte: sub(new Date(), { minutes: 1 }),
-        },
-      },
-    });
+          gte: sub(new Date(), {minutes: 1})
+        }
+      }
+    })
     if (blockingPayment) {
-      throw new UserInputError(blockingPayment.id);
+      throw new UserInputError(blockingPayment.id)
     }
 
     return await this.createPaymentWithProvider({
@@ -159,36 +123,36 @@ export class PaymentsService {
       failureURL,
       userId,
       migrateToTargetPaymentMethodID:
-        subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined,
-    });
+        subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined
+    })
   }
 
   async createPaymentFromSubscription(
     userId: string,
-    { subscriptionId, successURL, failureURL }: PaymentFromSubscriptionArgs
+    {subscriptionId, successURL, failureURL}: PaymentFromSubscriptionArgs
   ) {
     const invoice = await this.prisma.invoice.findFirst({
       where: {
         subscriptionID: subscriptionId,
         paidAt: null,
-        canceledAt: null,
+        canceledAt: null
       },
       include: {
         items: true,
         subscription: {
           include: {
-            memberPlan: true,
-          },
-        },
-      },
-    });
+            memberPlan: true
+          }
+        }
+      }
+    })
 
     if (!invoice) {
-      throw new UserInputError(`Unpaid Invoice not found ${subscriptionId}`);
+      throw new UserInputError(`Unpaid Invoice not found ${subscriptionId}`)
     }
 
     if (invoice.subscription?.userID !== userId) {
-      throw new UserInputError(`Subscription not found ${subscriptionId}`);
+      throw new UserInputError(`Subscription not found ${subscriptionId}`)
     }
 
     return await this.createPaymentWithProvider({
@@ -198,9 +162,8 @@ export class PaymentsService {
       successURL,
       failureURL,
       migrateToTargetPaymentMethodID:
-        invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ??
-        undefined,
-    });
+        invoice.subscription?.memberPlan.migrateToTargetPaymentMethodID ?? undefined
+    })
   }
 
   async createPaymentWithProvider({
@@ -210,27 +173,26 @@ export class PaymentsService {
     failureURL,
     successURL,
     userId,
-    migrateToTargetPaymentMethodID,
+    migrateToTargetPaymentMethodID
   }: CreatePaymentWithProvider): Promise<Payment> {
-    const paymentMethod =
-      await this.paymentMethodsService.findActivePaymentMethodById(
-        migrateToTargetPaymentMethodID || paymentMethodID
-      );
+    const paymentMethod = await this.paymentMethodsService.findActivePaymentMethodById(
+      migrateToTargetPaymentMethodID || paymentMethodID
+    )
 
     if (!paymentMethod) {
-      throw new Error('Payment method not found');
+      throw new Error('Payment method not found')
     }
 
     const paymentProvider = this.paymentProviders.find(
       pp => pp.id === paymentMethod.paymentProviderID
-    );
+    )
 
     if (!paymentProvider) {
-      throw new Error('paymentProvider not found');
+      throw new Error('paymentProvider not found')
     }
 
     if (!invoice.subscriptionID) {
-      throw new Error('Subscription not found');
+      throw new Error('Subscription not found')
     }
 
     /**
@@ -241,42 +203,41 @@ export class PaymentsService {
     if (migrateToTargetPaymentMethodID) {
       await this.prisma.subscription.update({
         data: {
-          paymentMethodID: migrateToTargetPaymentMethodID || '',
+          paymentMethodID: migrateToTargetPaymentMethodID || ''
         },
         where: {
-          id: invoice.subscriptionID || undefined,
-        },
-      });
+          id: invoice.subscriptionID || undefined
+        }
+      })
     }
     await this.prisma.subscription.update({
       data: {
-        confirmed: true,
+        confirmed: true
       },
       where: {
-        id: invoice.subscriptionID || undefined,
-      },
-    });
+        id: invoice.subscriptionID || undefined
+      }
+    })
 
     const payment = await this.prisma.payment.create({
       data: {
         paymentMethodID,
         invoiceID: invoice.id,
-        state: PaymentState.created,
-      },
-    });
+        state: PaymentState.created
+      }
+    })
 
-    const customer =
-      userId ?
-        await this.prisma.paymentProviderCustomer.findFirst({
+    const customer = userId
+      ? await this.prisma.paymentProviderCustomer.findFirst({
           where: {
             userId,
-            paymentProviderID: paymentMethod.paymentProviderID,
-          },
+            paymentProviderID: paymentMethod.paymentProviderID
+          }
         })
-      : null;
+      : null
 
     if (!paymentProvider) {
-      throw new Error('Payment provider is undefined');
+      throw new Error('Payment provider is undefined')
     }
 
     const intent = await paymentProvider.createIntent({
@@ -286,11 +247,11 @@ export class PaymentsService {
       saveCustomer,
       successURL,
       failureURL,
-      customerID: customer?.customerID,
-    });
+      customerID: customer?.customerID
+    })
 
     const updatedPayment = await this.prisma.payment.update({
-      where: { id: payment.id },
+      where: {id: payment.id},
       data: {
         state: intent.state,
         intentID: `${intent.intentID}`,
@@ -298,28 +259,28 @@ export class PaymentsService {
         intentSecret: intent.intentSecret,
         paymentData: intent.paymentData,
         paymentMethodID: payment.paymentMethodID,
-        invoiceID: payment.invoiceID,
-      },
-    });
+        invoiceID: payment.invoiceID
+      }
+    })
 
     // Mark invoice as paid
     if (intent.state === PaymentState.paid && paymentProvider) {
       const intentState = await paymentProvider.checkIntentStatus({
         intentID: updatedPayment.intentID ?? '',
-        paymentID: updatedPayment.id,
-      });
+        paymentID: updatedPayment.id
+      })
 
       if (paymentProvider) {
         await paymentProvider.updatePaymentWithIntentState({
-          intentState,
-        });
+          intentState
+        })
       }
     }
 
     if (intent.errorCode) {
-      throw new GraphQLError(intent.errorCode || 'Unknown error');
+      throw new GraphQLError(intent.errorCode || 'Unknown error')
     }
 
-    return updatedPayment as Payment;
+    return updatedPayment as Payment
   }
 }
