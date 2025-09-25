@@ -6,8 +6,9 @@ import {
 } from '@wepublish/membership/website';
 import { SubscribePage } from '@wepublish/utils/website';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { useEffect } from 'react';
+
 import { useAdsContext } from '../src/context/ads-context';
-import { ComponentProps, useEffect } from 'react';
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
@@ -39,13 +40,10 @@ const SubscribePageWrapper = styled('div')`
   }
 `;
 
-type MitmachenInnerProps = ComponentProps<typeof SubscribePage>;
-
-export const MitmachenInner = (props: MitmachenInnerProps) => (
-  <SubscribePage
-    {...props}
-    fields={['firstName']}
-  />
+export const MitmachenInner = () => (
+  <OnlineReportsSubscribePageWrapper>
+    <SubscribePage fields={['firstName']} />
+  </OnlineReportsSubscribePageWrapper>
 );
 
 export default function Mitmachen() {
@@ -63,9 +61,7 @@ export default function Mitmachen() {
   return (
     <SubscribePageWrapper>
       <H3 component="h1">Herzlichen Dank für Ihre Unterstützung!</H3>
-      <OnlineReportsSubscribePageWrapper>
-        <MitmachenInner />
-      </OnlineReportsSubscribePageWrapper>
+      <MitmachenInner />
     </SubscribePageWrapper>
   );
 }

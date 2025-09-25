@@ -1,5 +1,5 @@
-import { Chip, css, SxProps, Typography } from '@mui/material';
 import styled from '@emotion/styled';
+import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
 import { FlexAlignment, Teaser as TeaserType } from '@wepublish/website/api';
 import {
@@ -7,10 +7,10 @@ import {
   Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { isImageBlock } from '../image/image-block';
-import { isTitleBlock } from '../title/title-block';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isImageBlock } from '../image/image-block';
+import { isTitleBlock } from '../title/title-block';
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -89,6 +89,14 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
     case 'CustomTeaser':
       return teaser.contentUrl;
   }
+};
+
+export const selectTeaserTarget = (teaser: TeaserType): string | undefined => {
+  if (teaser.__typename === 'CustomTeaser') {
+    return teaser.openInNewTab ? '_blank' : undefined;
+  }
+
+  return undefined;
 };
 
 export const selectTeaserImage = (teaser: TeaserType) => {
@@ -357,7 +365,12 @@ const TeaserContent = ({
   href,
   className,
   children,
-}: PropsWithChildren<{ href?: string; className?: string }>) => {
+  target,
+}: PropsWithChildren<{
+  href?: string;
+  className?: string;
+  target?: string;
+}>) => {
   const {
     elements: { Link },
   } = useWebsiteBuilder();
@@ -368,6 +381,7 @@ const TeaserContent = ({
         color="inherit"
         underline="none"
         href={href}
+        target={target}
         css={stretchToParentHeight}
       >
         <TeaserContentWrapper className={className}>
@@ -393,6 +407,7 @@ export const BaseTeaser = ({
   const preTitle = teaser && selectTeaserPreTitle(teaser);
   const lead = teaser && selectTeaserLead(teaser);
   const href = (teaser && selectTeaserUrl(teaser)) ?? '';
+  const target = (teaser && selectTeaserTarget(teaser)) ?? undefined;
   const image = teaser && selectTeaserImage(teaser);
   const peerLogo = teaser && selectTeaserPeerImage(teaser);
   const publishDate = teaser && selectTeaserDate(teaser);
@@ -407,6 +422,7 @@ export const BaseTeaser = ({
     <TeaserWrapper {...alignment}>
       <TeaserContent
         href={href}
+        target={target}
         className={className}
       >
         <TeaserImageWrapper>
@@ -455,7 +471,9 @@ export const BaseTeaser = ({
         >
           {authors && authors?.length ?
             <TeaserAuthors>
-              Von {authors?.join(t('teaser.author.seperator'))}
+              {t('teaser.author.text', {
+                authors: authors?.join(t('teaser.author.seperator')),
+              })}
             </TeaserAuthors>
           : null}
 

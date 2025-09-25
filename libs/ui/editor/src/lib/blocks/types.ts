@@ -232,6 +232,7 @@ export interface CustomTeaserLink extends BaseTeaser {
   type: TeaserType.Custom;
   contentUrl?: string | null;
   properties?: TeaserMetadataProperty[];
+  openInNewTab?: boolean | null;
 }
 
 export type TeaserLink =
@@ -779,6 +780,7 @@ export function mapTeaserToTeaserInput(
           title: teaser.title || undefined,
           lead: teaser.lead || undefined,
           contentUrl: teaser.contentUrl || undefined,
+          openInNewTab: teaser.openInNewTab ?? false,
           properties: teaser.properties || [],
         },
       };
@@ -1225,6 +1227,7 @@ const mapTeaserToQueryTeaser = (
             title: teaser.title ?? undefined,
             lead: teaser.lead ?? undefined,
             contentUrl: teaser.contentUrl ?? undefined,
+            openInNewTab: teaser.openInNewTab ?? false,
             properties: teaser?.properties ?? undefined,
           }
         : null;
