@@ -81,8 +81,7 @@ const RequestEmail = styled('div')``
 
 const requiredSchema = requiredRegisterSchema.omit({
   challengeAnswer: true,
-  email: true,
-  emailRepeated: true
+  email: true
 })
 
 const defaultSchema = z.object({
@@ -96,7 +95,8 @@ const defaultSchema = z.object({
     country: z.enum(userCountryNames)
   }),
   password: z.string().min(8).optional().or(z.literal('')),
-  passwordRepeated: z.string().min(8).optional().or(z.literal(''))
+  passwordRepeated: z.string().min(8).optional().or(z.literal('')),
+  emailRepeated: z.string().email().min(1)
 })
 
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
