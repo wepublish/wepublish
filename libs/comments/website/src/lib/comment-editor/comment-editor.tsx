@@ -16,7 +16,7 @@ import {
 } from '@wepublish/website/builder';
 import { setCookie } from 'cookies-next';
 import { add } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
@@ -183,6 +183,7 @@ export const CommentEditor = ({
   } = useWebsiteBuilder();
   const { hasUser } = useUser();
   const [modalOpen, setModalOpen] = useState(!hasUser);
+  const [userHasLoggedIn, setUserHasLoggedIn] = useState(hasUser);
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
 
   const handleClose = () => {
@@ -282,112 +283,125 @@ export const CommentEditor = ({
 
   const handleAfterLoginCallback = () => {
     passRedirectCookie();
-    setModalOpen(false);
   };
+
+  useEffect(() => {
+    if (hasUser) {
+      setModalOpen(false);
+      setUserHasLoggedIn(true);
+    } else {
+      if (userHasLoggedIn) {
+        setUserHasLoggedIn(false);
+        onCancel();
+      }
+    }
+  }, [hasUser, onCancel, userHasLoggedIn]);
 
   return (
     <>
-      <CommentEditorWrapper
-        className={className}
-        onSubmit={submit}
-        modalOpen={modalOpen}
-      >
-        {!hasUser && (
+      {(anonymousCanComment || hasUser) && (
+        <CommentEditorWrapper
+          className={className}
+          onSubmit={submit}
+          modalOpen={modalOpen}
+        >
+          {!hasUser && (
+            <Controller
+              name={'guestUsername'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  placeholder="Dein Name"
+                  label="Name"
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
+            />
+          )}
+
           <Controller
-            name={'guestUsername'}
+            name={'title'}
             control={control}
             render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 fullWidth
-                placeholder="Dein Name"
-                label="Name"
+                placeholder="Gib Deinem Beitrag einen Titel."
+                label="Titel"
                 error={!!error}
                 helperText={error?.message}
               />
             )}
           />
-        )}
 
-        <Controller
-          name={'title'}
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              fullWidth
-              placeholder="Gib Deinem Beitrag einen Titel."
-              label="Titel"
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name={'comment'}
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              multiline
-              fullWidth
-              minRows={5}
-              label="Kommentar"
-              placeholder="Beitrag verfassen"
-              error={!!error}
-              helperText={`${field.value.length} / ${maxCommentLength} Zeichen`}
-            />
-          )}
-        />
-
-        {challenge?.data?.challenge && (
           <Controller
-            name={'challenge.challengeSolution'}
+            name={'comment'}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <Challenge
+              <TextField
                 {...field}
-                onChange={field.onChange}
-                challenge={challenge.data!.challenge}
-                label={'Captcha'}
+                multiline
+                fullWidth
+                minRows={5}
+                label="Kommentar"
+                placeholder="Beitrag verfassen"
                 error={!!error}
-                helperText={error?.message}
+                helperText={`${field.value.length} / ${maxCommentLength} Zeichen`}
               />
             )}
           />
-        )}
 
-        {challenge?.error && (
-          <Alert severity="error">{challenge.error.message}</Alert>
-        )}
+          {challenge?.data?.challenge && (
+            <Controller
+              name={'challenge.challengeSolution'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Challenge
+                  {...field}
+                  onChange={field.onChange}
+                  challenge={challenge.data!.challenge}
+                  label={'Captcha'}
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
+            />
+          )}
 
-        {error && <Alert severity="error">{error.message}</Alert>}
+          {challenge?.error && (
+            <Alert severity="error">{challenge.error.message}</Alert>
+          )}
 
-        <CommentEditorActions>
-          <Button
-            type="submit"
-            size="small"
-            endIcon={<MdSend />}
-            disabled={loading}
-          >
-            Kommentieren
-          </Button>
+          {error && <Alert severity="error">{error.message}</Alert>}
 
-          <Button
-            type="reset"
-            onClick={() => {
-              reset();
-              onCancel();
-            }}
-            size="small"
-            variant="text"
-            color="secondary"
-          >
-            Abbrechen
-          </Button>
-        </CommentEditorActions>
-      </CommentEditorWrapper>
+          <CommentEditorActions>
+            <Button
+              type="submit"
+              size="small"
+              endIcon={<MdSend />}
+              disabled={loading}
+            >
+              Kommentieren
+            </Button>
+
+            <Button
+              type="reset"
+              onClick={() => {
+                reset();
+                onCancel();
+              }}
+              size="small"
+              variant="text"
+              color="secondary"
+            >
+              Abbrechen
+            </Button>
+          </CommentEditorActions>
+        </CommentEditorWrapper>
+      )}
 
       <Modal
         open={modalOpen}

@@ -8,6 +8,7 @@ import {
 } from '@wepublish/website/builder';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useEffect, useState } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -43,12 +44,6 @@ const loginFormSchema = z.union([
   withCredentialsFormSchema,
 ]);
 
-const autofocus = (node: HTMLElement | null) => {
-  const inputNode = node?.querySelector('input') ?? node;
-  console.log(inputNode);
-  inputNode?.focus();
-};
-
 export function LoginForm({
   loginWithCredentials,
   onSubmitLoginWithCredentials,
@@ -61,26 +56,33 @@ export function LoginForm({
   const {
     elements: { Alert, TextField },
   } = useWebsiteBuilder();
+  const [showStandByMessage, setShowStandByMessage] = useState(false);
 
   type FormInput = z.infer<typeof loginFormSchema>;
-  const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      email: defaults?.email || '',
-      password: '',
-      requirePassword: defaults?.requirePassword || false,
-    },
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
+  const { handleSubmit, control, watch, setValue, setFocus, register } =
+    useForm<FormInput>({
+      resolver: zodResolver(loginFormSchema),
+      defaultValues: {
+        email: defaults?.email || '',
+        password: '',
+        requirePassword: defaults?.requirePassword || false,
+      },
+      mode: 'onSubmit',
+      reValidateMode: 'onBlur',
+    });
 
   const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
     if (requirePassword) {
+      setShowStandByMessage(true);
       return onSubmitLoginWithCredentials(email, password);
     }
 
     return onSubmitLoginWithEmail(email);
   });
+
+  useEffect(() => {
+    setFocus('email');
+  }, [setFocus]);
 
   const loginWithPassword = watch('requirePassword');
   const loginLinkSent =
@@ -122,8 +124,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
-              //onChange={() => console.log('loginWithPassword:text-field changed')}
-              ref={autofocus}
+              {...register('email')}
             />
           )}
         />
@@ -144,6 +145,13 @@ export function LoginForm({
               />
             )}
           />
+        )}
+
+        {showStandByMessage && !error && !loginLinkSent && (
+          <Alert severity="info">
+            Einen Moment bitte, die eingegebenen Anmeldedaten werden
+            überprüft...
+          </Alert>
         )}
 
         {error && (

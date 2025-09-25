@@ -42,6 +42,10 @@ export function LoginFormContainer({
         loginWithCredentials({
           variables: { email, password },
         });
+
+        if (afterLoginCallback) {
+          afterLoginCallback();
+        }
       }}
       loginWithCredentials={withCredentials}
       onSubmitLoginWithEmail={email => {
