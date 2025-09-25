@@ -45,7 +45,6 @@ export function zodAlwaysRefine<T extends z.ZodTypeAny>(zodType: T) {
 export const requiredRegisterSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
-  emailRepeated: z.string().email().min(1),
   challengeAnswer: z.object({
     challengeSolution: z.string().min(1),
     challengeID: z.string().min(1)
@@ -62,6 +61,7 @@ export const defaultRegisterSchema = z.object({
   }),
   password: z.string().min(8),
   passwordRepeated: z.string().min(8),
+  emailRepeated: z.string().email().min(1),
   birthday: z.coerce.date().max(new Date())
 })
 
