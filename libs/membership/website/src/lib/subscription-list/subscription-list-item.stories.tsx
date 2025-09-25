@@ -58,7 +58,7 @@ const clickCancel: StoryObj['play'] = async ({ canvasElement, step }) => {
 const clickExtend: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
 
-  const button = canvas.getByText('Jetzt Verlängern', {
+  const button = canvas.getByText('Jetzt verlängern', {
     selector: 'button',
   });
 
