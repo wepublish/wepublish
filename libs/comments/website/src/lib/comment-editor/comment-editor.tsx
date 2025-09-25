@@ -41,9 +41,12 @@ export const LoginWrapper = styled('div')`
   grid-template-columns: 1;
   padding: ${({ theme }) => theme.spacing(4, 0, 3, 0)};
   column-gap: ${({ theme }) => theme.spacing(7)};
-
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(2, 1fr);
+    column-gap: ${({ theme }) => theme.spacing(3)};
+  }
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: ${({ theme }) => theme.spacing(7)};
   }
 `;
 
@@ -51,15 +54,16 @@ export const ExistingAccountsLoginWrapper = styled('div')`
   padding: ${({ theme }) => theme.spacing(0, 2, 4, 2)};
 
   & > h3 {
+    font-size: ${({ theme }) => theme.typography.h4.fontSize};
     line-height: 1.2;
-    margin-top: ${({ theme }) => theme.spacing(0)};
+    margin: ${({ theme }) => theme.spacing(1, 0, 2, 0)};
   }
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     padding: ${({ theme }) => theme.spacing(0, 0, 0, 2)};
 
     & > h3 {
-      margin-top: ${({ theme }) => theme.spacing(2)};
+      margin: ${({ theme }) => theme.spacing(2, 0, 1, 0)};
     }
   }
 `;
@@ -73,7 +77,9 @@ export const NewAccountsLoginWrapper = styled('div')`
   padding: ${({ theme }) => theme.spacing(2, 2, 0, 2)};
 
   & > h3 {
+    font-size: ${({ theme }) => theme.typography.h4.fontSize};
     line-height: 1.2;
+    margin: ${({ theme }) => theme.spacing(2, 0, 3, 0)};
   }
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -82,7 +88,16 @@ export const NewAccountsLoginWrapper = styled('div')`
     padding: ${({ theme }) => theme.spacing(0, 0, 0, 0)};
 
     & > h3 {
-      margin-left: ${({ theme }) => theme.spacing(7)};
+      width: unset;
+      margin: ${({ theme }) => theme.spacing(2, 0, 7, 2)};
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin-left: ${({ theme }) => theme.spacing(0)};
+
+    & > h3 {
+      margin: ${({ theme }) => theme.spacing(2, 0, 8, 7)};
     }
   }
 `;
@@ -116,9 +131,14 @@ export const Register = styled('div')`
   width: 100%;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
+    width: unset;
     grid-column: 2/3;
-    margin: ${({ theme }) => theme.spacing(4, 0, 0, 7)};
+    margin: ${({ theme }) => theme.spacing(4, 0, 0, 3)};
     align-items: flex-start;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 0, 7)};
   }
 `;
 
@@ -472,14 +492,14 @@ export const CommentEditor = ({
           {!showInitialModal && (
             <LoginWrapper>
               <ExistingAccountsLoginWrapper>
-                <h3>Login für Leserinnen und Leser</h3>
+                <H3>Login für Leserinnen und Leser</H3>
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
                 />
               </ExistingAccountsLoginWrapper>
 
               <NewAccountsLoginWrapper>
-                <h3 css={headingStyles}>Noch kein Account?</h3>
+                <H3>Noch kein Account?</H3>
                 <Register>
                   <Button
                     css={buttonStyles}
