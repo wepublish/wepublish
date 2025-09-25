@@ -61,8 +61,8 @@ export const defaultRegisterSchema = z.object({
   }),
   password: z.string().min(8),
   passwordRepeated: z.string().min(8),
-  birthday: z.coerce.date().max(new Date()),
   emailRepeated: z.string().email().min(1),
+  birthday: z.coerce.date().max(new Date())
 });
 
 export function RegistrationForm<
