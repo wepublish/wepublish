@@ -1,4 +1,3 @@
-import {Injectable} from '@nestjs/common'
 import {InvoiceWithItems, PaymentProvider} from './payment-provider/payment-provider'
 import {Payment, PaymentState, PrismaClient} from '@prisma/client'
 import {sub} from 'date-fns'
@@ -17,7 +16,6 @@ interface CreatePaymentWithProvider {
   migrateToTargetPaymentMethodID?: string
 }
 
-@Injectable()
 export class PaymentsService {
   constructor(
     readonly prisma: PrismaClient,
