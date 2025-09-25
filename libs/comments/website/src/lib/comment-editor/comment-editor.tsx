@@ -155,7 +155,6 @@ export const initialHeadingStyles = (theme: Theme) => css`
 
 export const initialButtonStyles = (theme: Theme) => css`
   text-transform: uppercase;
-  font-size: ${theme.typography.h5.fontSize};
 `;
 
 export const registerStyles = (theme: Theme) => css`
