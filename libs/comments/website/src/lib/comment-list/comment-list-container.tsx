@@ -49,11 +49,6 @@ export function CommentListContainer({
   const { hasUser } = useUser();
   const [openCommentEditors, dispatch] = useReducer(commentListReducer, {});
 
-  console.log(
-    'CommentListContainer: render: openCommentEditors',
-    openCommentEditors
-  );
-
   const settings = useSettingListQuery({});
   const [fetchChallenge, challenge] = useChallengeLazyQuery();
 

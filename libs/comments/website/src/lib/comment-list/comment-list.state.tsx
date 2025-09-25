@@ -45,18 +45,7 @@ export const commentListReducer: Reducer<
   return state;
 };
 
-export const getStateForEditor = (state: BuilderCommentListState) => {
-  console.log('getStateForEditor', state);
-  return (type: BuilderCommentListStateTypes, commentId: string | null) => {
-    console.log('getStateForEditor1: type', type, 'commentId', commentId);
-    console.log(
-      'getStateForEditor2: getCommentListStateKey: key',
-      getCommentListStateKey(type, commentId)
-    );
-    console.log(
-      'getStateForEditor3: state[key]',
-      state[getCommentListStateKey(type, commentId)]
-    );
-    return state[getCommentListStateKey(type, commentId)];
-  };
-};
+export const getStateForEditor =
+  (state: BuilderCommentListState) =>
+  (type: BuilderCommentListStateTypes, commentId: string | null) =>
+    state[getCommentListStateKey(type, commentId)];

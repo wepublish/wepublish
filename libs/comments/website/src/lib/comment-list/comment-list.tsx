@@ -49,8 +49,6 @@ export const CommentList = ({
   const canReply = true;
   const showReply = getStateForEditor(openEditorsState)('add', null);
 
-  console.log('CommentList: showReply', showReply);
-
   return (
     <CommentListWrapper className={className}>
       {!loading && !error && !data?.comments.length && (

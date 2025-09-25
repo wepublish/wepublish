@@ -40,6 +40,7 @@ export const LoginWrapper = styled('div')`
   display: grid;
   grid-template-columns: 1;
   padding-top: ${({ theme }) => theme.spacing(4)};
+  padding-bottom: ${({ theme }) => theme.spacing(3)};
   column-gap: ${({ theme }) => theme.spacing(7)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -49,7 +50,6 @@ export const LoginWrapper = styled('div')`
 
 export const ExistingAccountsLoginWrapper = styled('div')`
   padding-left: ${({ theme }) => theme.spacing(2)};
-  padding-bottom: ${({ theme }) => theme.spacing(2)};
 `;
 
 export const NewAccountsLoginWrapper = styled('div')`
@@ -90,11 +90,10 @@ export const Register = styled('div')`
   align-items: flex-start;
   grid-column: 1/2;
   margin-left: ${({ theme }) => theme.spacing(7)};
-  margin-top: ${({ theme }) => theme.spacing(3)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: 2/3;
-    margin-top: 0;
+    margin-top: ${({ theme }) => theme.spacing(4)};
   }
 `;
 
@@ -187,19 +186,16 @@ export const CommentEditor = ({
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
 
   const handleClose = () => {
-    console.log('comment-editor.tsx: handleClose');
     setModalOpen(false);
     onCancel();
   };
 
   const handleGuestComment = () => {
-    console.log('comment-editor.tsx: handleGuestComment');
     setShowInitialModal(false);
     setModalOpen(false);
   };
 
   const handleLoginRegister = () => {
-    console.log('comment-editor.tsx: handleLoginRegister');
     setShowInitialModal(false);
   };
 

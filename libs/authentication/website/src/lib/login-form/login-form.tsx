@@ -93,21 +93,6 @@ export function LoginForm({
     (!loginWithPassword && loginWithEmail.loading) ||
     (loginWithPassword && loginWithCredentials.loading);
 
-  console.log(
-    'loginWithPassword',
-    loginWithPassword,
-    '\nloginWithCredentials',
-    loginWithCredentials,
-    '\nloginLinkSent',
-    loginLinkSent,
-    '\nloginWithEmail',
-    loginWithEmail,
-    '\nloginWithEmail.data',
-    loginWithEmail.data,
-    '\nloading',
-    loading
-  );
-
   return (
     <LoginFormWrapper className={className}>
       {!disablePasswordLogin && (
@@ -137,6 +122,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
+              //onChange={() => console.log('loginWithPassword:text-field changed')}
               ref={autofocus}
             />
           )}
@@ -160,7 +146,11 @@ export function LoginForm({
           />
         )}
 
-        {error && <Alert severity="error">{error.message}</Alert>}
+        {error && (
+          <Alert severity="error">
+            Die eingegebenen Anmeldedaten sind ungültig.
+          </Alert>
+        )}
 
         {loginLinkSent && (
           <Alert severity="success">
