@@ -39,8 +39,7 @@ export const LoginWrapper = styled('div')`
   position: relative;
   display: grid;
   grid-template-columns: 1;
-  padding-top: ${({ theme }) => theme.spacing(4)};
-  padding-bottom: ${({ theme }) => theme.spacing(3)};
+  padding: ${({ theme }) => theme.spacing(4, 0, 3, 0)};
   column-gap: ${({ theme }) => theme.spacing(7)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -49,17 +48,42 @@ export const LoginWrapper = styled('div')`
 `;
 
 export const ExistingAccountsLoginWrapper = styled('div')`
-  padding-left: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(0, 2, 4, 2)};
+
+  & > h3 {
+    line-height: 1.2;
+    margin-top: ${({ theme }) => theme.spacing(0)};
+  }
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    padding: ${({ theme }) => theme.spacing(0, 0, 0, 2)};
+
+    & > h3 {
+      margin-top: ${({ theme }) => theme.spacing(2)};
+    }
+  }
 `;
 
 export const NewAccountsLoginWrapper = styled('div')`
   display: flex;
   flex-direction: column;
+  border-top: 1px solid ${({ theme }) => theme.palette.grey[300]};
   justify-content: flex-start;
-  border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
+  align-items: flex-start;
+  padding: ${({ theme }) => theme.spacing(2, 2, 0, 2)};
 
   & > h3 {
-    margin-left: ${({ theme }) => theme.spacing(7)};
+    line-height: 1.2;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    border-top: none;
+    border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
+    padding: ${({ theme }) => theme.spacing(0, 0, 0, 0)};
+
+    & > h3 {
+      margin-left: ${({ theme }) => theme.spacing(7)};
+    }
   }
 `;
 
@@ -87,13 +111,14 @@ export const Register = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: flex-end;
   grid-column: 1/2;
-  margin-left: ${({ theme }) => theme.spacing(7)};
+  width: 100%;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: 2/3;
-    margin-top: ${({ theme }) => theme.spacing(4)};
+    margin: ${({ theme }) => theme.spacing(4, 0, 0, 7)};
+    align-items: flex-start;
   }
 `;
 
@@ -110,6 +135,7 @@ export const initialHeadingStyles = (theme: Theme) => css`
 
 export const initialButtonStyles = (theme: Theme) => css`
   text-transform: uppercase;
+  font-size: ${theme.typography.h5.fontSize};
 `;
 
 export const registerStyles = (theme: Theme) => css`
@@ -132,7 +158,7 @@ export const SignupLink = styled(Link)`
   text-decoration: none;
   font-size: ${({ theme }) => theme.typography.body1.fontSize};
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     font-size: ${({ theme }) => theme.typography.h4.fontSize};
   }
 `;
@@ -200,7 +226,13 @@ export const CommentEditor = ({
     setShowInitialModal(false);
   };
 
-  const buttonStyles = useMemo(() => registerStyles(theme), [theme]);
+  const buttonStyles = useMemo(() => {
+    let s = registerStyles(theme);
+    s = css`
+      font-size: ${theme.typography.body1.fontSize};
+    `;
+    return s;
+  }, [theme]);
   const iconStyles = useMemo(() => registerIconStyles(theme), [theme]);
   const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme]);
 
@@ -447,7 +479,7 @@ export const CommentEditor = ({
               </ExistingAccountsLoginWrapper>
 
               <NewAccountsLoginWrapper>
-                <h3 css={headingStyles}>Ich will mitreden!</h3>
+                <h3 css={headingStyles}>Noch kein Account?</h3>
                 <Register>
                   <Button
                     css={buttonStyles}
