@@ -1,4 +1,4 @@
-fragment ImageURLs on Image {
+fragment ImageUrls on Image {
   url
 
   xxl: transformURL(input: {width: 1500, output: png, quality: 0.8})
@@ -45,5 +45,5 @@ fragment RemoteImage on Image {
     y
   }
 
-  ...ImageURLs
+  ...ImageUrls
 }
