@@ -1,16 +1,16 @@
-import {DynamicModule, Module} from '@nestjs/common'
-import {PrismaService} from './prisma.service'
-import {PrismaClient} from '@prisma/client'
+import { DynamicModule, Module } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
   providers: [
     {
       provide: PrismaClient,
-      useExisting: PrismaService
+      useExisting: PrismaService,
     },
-    PrismaService
+    PrismaService,
   ],
-  exports: [PrismaClient]
+  exports: [PrismaClient],
 })
 export class PrismaModule {
   // https://github.com/prisma/prisma/discussions/4399#discussioncomment-3126122
@@ -20,10 +20,10 @@ export class PrismaModule {
       providers: [
         {
           provide: PrismaClient,
-          useFactory: () => prismaClient as PrismaService
-        }
+          useFactory: () => prismaClient as PrismaService,
+        },
       ],
-      exports: [PrismaService]
-    }
+      exports: [PrismaService],
+    };
   }
 }

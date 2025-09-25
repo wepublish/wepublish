@@ -1,19 +1,28 @@
-import {Injectable, Scope} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {Primeable, createOptionalsArray} from '@wepublish/utils/api'
-import DataLoader from 'dataloader'
-import {CrowdfundingWithActiveGoal} from './crowdfunding.model'
-import {CrowdfundingService} from './crowdfunding.service'
+import { Injectable, Scope } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { Primeable, createOptionalsArray } from '@wepublish/utils/api';
+import DataLoader from 'dataloader';
+import { CrowdfundingWithActiveGoal } from './crowdfunding.model';
+import { CrowdfundingService } from './crowdfunding.service';
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
-export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWithActiveGoal> {
-  private dataloader = new DataLoader<string, CrowdfundingWithActiveGoal | null>(
+export class CrowdfundingDataloaderService
+  implements Primeable<CrowdfundingWithActiveGoal>
+{
+  private dataloader = new DataLoader<
+    string,
+    CrowdfundingWithActiveGoal | null
+  >(
     async (ids: readonly string[]) =>
-      createOptionalsArray(ids as string[], await this.loadCrowdfundingWithActiveGoals(ids), 'id'),
-    {name: 'CrowdfundingDataLoader'}
-  )
+      createOptionalsArray(
+        ids as string[],
+        await this.loadCrowdfundingWithActiveGoals(ids),
+        'id'
+      ),
+    { name: 'CrowdfundingDataLoader' }
+  );
 
   constructor(
     private prisma: PrismaClient,
@@ -21,57 +30,66 @@ export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWith
   ) {}
 
   public prime(
-    ...parameters: Parameters<DataLoader<string, CrowdfundingWithActiveGoal | null>['prime']>
+    ...parameters: Parameters<
+      DataLoader<string, CrowdfundingWithActiveGoal | null>['prime']
+    >
   ) {
-    return this.dataloader.prime(...parameters)
+    return this.dataloader.prime(...parameters);
   }
 
   public load(
-    ...parameters: Parameters<DataLoader<string, CrowdfundingWithActiveGoal | null>['load']>
+    ...parameters: Parameters<
+      DataLoader<string, CrowdfundingWithActiveGoal | null>['load']
+    >
   ) {
-    return this.dataloader.load(...parameters)
+    return this.dataloader.load(...parameters);
   }
 
   public loadMany(
-    ...parameters: Parameters<DataLoader<string, CrowdfundingWithActiveGoal | null>['loadMany']>
+    ...parameters: Parameters<
+      DataLoader<string, CrowdfundingWithActiveGoal | null>['loadMany']
+    >
   ) {
-    return this.dataloader.loadMany(...parameters)
+    return this.dataloader.loadMany(...parameters);
   }
 
   private async loadCrowdfundingWithActiveGoals(
     ids: readonly string[]
   ): Promise<CrowdfundingWithActiveGoal[]> {
     if (!ids.length) {
-      return []
+      return [];
     }
 
     const crowdfundings = await this.prisma.crowdfunding.findMany({
       where: {
         id: {
-          in: ids as string[]
-        }
+          in: ids as string[],
+        },
       },
       include: {
         goals: true,
-        memberPlans: true
-      }
-    })
+        memberPlans: true,
+      },
+    });
 
     // decorate crowdfundings with active goal
-    const crowdfundingsWithActiveGoal = []
+    const crowdfundingsWithActiveGoal = [];
     for (const crowdfunding of crowdfundings) {
-      const revenue = await this.crowdfundingService.getRevenue({crowdfunding})
-      const activeCrowdfundingGoal = await this.crowdfundingService.getActiveGoalWithProgress({
+      const revenue = await this.crowdfundingService.getRevenue({
         crowdfunding,
-        revenue
-      })
+      });
+      const activeCrowdfundingGoal =
+        await this.crowdfundingService.getActiveGoalWithProgress({
+          crowdfunding,
+          revenue,
+        });
       crowdfundingsWithActiveGoal.push({
         ...crowdfunding,
         revenue,
-        activeCrowdfundingGoal
-      })
+        activeCrowdfundingGoal,
+      });
     }
 
-    return crowdfundingsWithActiveGoal
+    return crowdfundingsWithActiveGoal;
   }
 }

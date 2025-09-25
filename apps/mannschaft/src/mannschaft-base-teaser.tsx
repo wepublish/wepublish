@@ -1,5 +1,9 @@
-import styled from '@emotion/styled'
-import {BaseTeaser, TeaserMetadata, TeaserTags} from '@wepublish/block-content/website'
+import styled from '@emotion/styled';
+import {
+  BaseTeaser,
+  TeaserMetadata,
+  TeaserTags,
+} from '@wepublish/block-content/website';
 
 export const MannschaftBaseTeaser = styled(BaseTeaser)`
   grid-template-areas:
@@ -21,4 +25,4 @@ export const MannschaftBaseTeaser = styled(BaseTeaser)`
     color: inherit;
     border-color: inherit;
   }
-`
+`;

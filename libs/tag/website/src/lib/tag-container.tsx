@@ -1,33 +1,41 @@
-import {TagQueryVariables, useArticleListQuery, useTagQuery} from '@wepublish/website/api'
-import {BuilderArticleListProps, BuilderContainerProps, Tag} from '@wepublish/website/builder'
+import {
+  TagQueryVariables,
+  useArticleListQuery,
+  useTagQuery,
+} from '@wepublish/website/api';
+import {
+  BuilderArticleListProps,
+  BuilderContainerProps,
+  Tag,
+} from '@wepublish/website/builder';
 
 export type TagContainerProps = TagQueryVariables &
   BuilderContainerProps &
-  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'>
+  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'>;
 
 export function TagContainer({
   tag,
   type,
   className,
   variables,
-  onVariablesChange
+  onVariablesChange,
 }: TagContainerProps) {
   const tags = useTagQuery({
     variables: {
       tag,
-      type
-    }
-  })
+      type,
+    },
+  });
 
   const articles = useArticleListQuery({
     skip: !tags.data?.tags?.nodes[0].id,
     variables: {
       ...variables,
       filter: {
-        tags: tags.data?.tags?.nodes[0] ? [tags.data.tags.nodes[0].id] : []
-      }
-    }
-  })
+        tags: tags.data?.tags?.nodes[0] ? [tags.data.tags.nodes[0].id] : [],
+      },
+    },
+  });
 
   return (
     <Tag
@@ -37,5 +45,5 @@ export function TagContainer({
       variables={variables}
       onVariablesChange={onVariablesChange}
     />
-  )
+  );
 }

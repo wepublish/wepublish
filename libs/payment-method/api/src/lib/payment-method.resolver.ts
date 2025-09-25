@@ -1,8 +1,8 @@
-import {Query, Resolver} from '@nestjs/graphql'
-import {CanGetPaymentMethods} from '@wepublish/permissions'
-import {PrismaClient} from '@prisma/client'
-import {Permissions} from '@wepublish/permissions/api'
-import {PaymentMethod} from './payment-method.model'
+import { Query, Resolver } from '@nestjs/graphql';
+import { CanGetPaymentMethods } from '@wepublish/permissions';
+import { PrismaClient } from '@prisma/client';
+import { Permissions } from '@wepublish/permissions/api';
+import { PaymentMethod } from './payment-method.model';
 
 @Resolver(() => PaymentMethod)
 export class PaymentMethodResolver {
@@ -10,13 +10,13 @@ export class PaymentMethodResolver {
 
   @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentMethod], {
-    description: `Returns all payment methods`
+    description: `Returns all payment methods`,
   })
   async paymentMethods() {
     return this.prismaService.paymentMethod.findMany({
       include: {
-        image: true
-      }
-    })
+        image: true,
+      },
+    });
   }
 }

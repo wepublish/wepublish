@@ -1,13 +1,13 @@
-import {Injectable} from '@nestjs/common'
-import {Prisma, PrismaClient} from '@prisma/client'
+import { Injectable } from '@nestjs/common';
+import { Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
   PrimeDataLoader,
-  SortOrder
-} from '@wepublish/utils/api'
-import {MemberPlanFilter, MemberPlanSort} from './member-plan.model'
-import {MemberPlanDataloader} from './member-plan.dataloader'
+  SortOrder,
+} from '@wepublish/utils/api';
+import { MemberPlanFilter, MemberPlanSort } from './member-plan.model';
+import { MemberPlanDataloader } from './member-plan.dataloader';
 
 @Injectable()
 export class MemberPlanService {
@@ -18,12 +18,12 @@ export class MemberPlanService {
     return this.prisma.memberPlan.findFirst({
       where: {
         id,
-        active: true
+        active: true,
       },
       include: {
-        availablePaymentMethods: true
-      }
-    })
+        availablePaymentMethods: true,
+      },
+    });
   }
 
   @PrimeDataLoader(MemberPlanDataloader)
@@ -31,12 +31,12 @@ export class MemberPlanService {
     return this.prisma.memberPlan.findFirst({
       where: {
         slug,
-        active: true
+        active: true,
       },
       include: {
-        availablePaymentMethods: true
-      }
-    })
+        availablePaymentMethods: true,
+      },
+    });
   }
 
   @PrimeDataLoader(MemberPlanDataloader)
@@ -48,32 +48,32 @@ export class MemberPlanService {
     skip = 0,
     take = 10
   ) {
-    const orderBy = createMemberPlanOrder(sortedField, order)
-    const where = createMemberPlanFilter(filter)
+    const orderBy = createMemberPlanOrder(sortedField, order);
+    const where = createMemberPlanFilter(filter);
 
     const [totalCount, memberplans] = await Promise.all([
       this.prisma.memberPlan.count({
         where,
-        orderBy
+        orderBy,
       }),
       this.prisma.memberPlan.findMany({
         where,
         skip,
         take: getMaxTake(take) + 1,
         orderBy,
-        cursor: cursorId ? {id: cursorId} : undefined,
+        cursor: cursorId ? { id: cursorId } : undefined,
         include: {
-          availablePaymentMethods: true
-        }
-      })
-    ])
+          availablePaymentMethods: true,
+        },
+      }),
+    ]);
 
-    const nodes = memberplans.slice(0, take)
-    const firstMemberPlan = nodes[0]
-    const lastMemberPlan = nodes[nodes.length - 1]
+    const nodes = memberplans.slice(0, take);
+    const firstMemberPlan = nodes[0];
+    const lastMemberPlan = nodes[nodes.length - 1];
 
-    const hasPreviousPage = Boolean(skip)
-    const hasNextPage = memberplans.length > nodes.length
+    const hasPreviousPage = Boolean(skip);
+    const hasNextPage = memberplans.length > nodes.length;
 
     return {
       nodes,
@@ -82,9 +82,9 @@ export class MemberPlanService {
         hasPreviousPage,
         hasNextPage,
         startCursor: firstMemberPlan?.id,
-        endCursor: lastMemberPlan?.id
-      }
-    }
+        endCursor: lastMemberPlan?.id,
+      },
+    };
   }
 }
 
@@ -95,59 +95,65 @@ export const createMemberPlanOrder = (
   switch (field) {
     case MemberPlanSort.createdAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case MemberPlanSort.modifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createNameFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
+const createNameFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
   if (filter?.name) {
     return {
-      name: filter.name
-    }
+      name: filter.name,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createActiveFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
+const createActiveFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
   if (filter?.active != null) {
     return {
-      active: filter.active
-    }
+      active: filter.active,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createTagsFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
+const createTagsFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
   if (filter?.tags?.length) {
     return {
       tags: {
-        hasSome: filter.tags
-      }
-    }
+        hasSome: filter.tags,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
 const createProductTypeFilter = (
   filter: Partial<MemberPlanFilter>
 ): Prisma.MemberPlanWhereInput => {
   if (filter?.productType) {
     return {
-      productType: filter.productType
-    }
+      productType: filter.productType,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
 export const createMemberPlanFilter = (
   filter?: Partial<MemberPlanFilter>
@@ -158,9 +164,9 @@ export const createMemberPlanFilter = (
         createNameFilter(filter),
         createActiveFilter(filter),
         createTagsFilter(filter),
-        createProductTypeFilter(filter)
-      ]
-    }
+        createProductTypeFilter(filter),
+      ],
+    };
   }
-  return {}
-}
+  return {};
+};

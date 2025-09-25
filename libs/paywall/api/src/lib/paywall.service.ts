@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {PrimeDataLoader} from '@wepublish/utils/api'
-import {PaywallDataloaderService} from './paywall-dataloader.service'
-import {CreatePaywallInput, UpdatePaywallInput} from './paywall.model'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { PrimeDataLoader } from '@wepublish/utils/api';
+import { PaywallDataloaderService } from './paywall-dataloader.service';
+import { CreatePaywallInput, UpdatePaywallInput } from './paywall.model';
 
 @Injectable()
 export class PaywallService {
@@ -10,20 +10,20 @@ export class PaywallService {
 
   @PrimeDataLoader(PaywallDataloaderService)
   public getPaywalls() {
-    return this.prisma.paywall.findMany({})
+    return this.prisma.paywall.findMany({});
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
   public getPaywall(id: string) {
     return this.prisma.paywall.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public createPaywall({memberPlanIds, ...input}: CreatePaywallInput) {
+  public createPaywall({ memberPlanIds, ...input }: CreatePaywallInput) {
     return this.prisma.paywall.create({
       data: {
         ...input,
@@ -32,65 +32,72 @@ export class PaywallService {
         memberPlans: {
           createMany: {
             data: memberPlanIds.map(memberPlanId => ({
-              memberPlanId
-            }))
-          }
-        }
-      }
-    })
+              memberPlanId,
+            })),
+          },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public updatePaywall({id, memberPlanIds, bypassTokens, ...input}: UpdatePaywallInput) {
+  public updatePaywall({
+    id,
+    memberPlanIds,
+    bypassTokens,
+    ...input
+  }: UpdatePaywallInput) {
     return this.prisma.paywall.update({
       where: {
-        id
+        id,
       },
       data: {
         ...input,
         description: input.description as any[],
         circumventDescription: input.circumventDescription as any[],
-        memberPlans: memberPlanIds
-          ? {
+        memberPlans:
+          memberPlanIds ?
+            {
               deleteMany: {
                 memberPlanId: {
-                  notIn: memberPlanIds
-                }
+                  notIn: memberPlanIds,
+                },
               },
               createMany: {
                 skipDuplicates: true,
                 data:
                   memberPlanIds?.map(memberPlanId => ({
-                    memberPlanId
-                  })) ?? []
-              }
+                    memberPlanId,
+                  })) ?? [],
+              },
             }
           : undefined,
-        bypasses: bypassTokens
-          ? {
+        bypasses:
+          bypassTokens ?
+            {
               deleteMany: {
                 token: {
-                  notIn: bypassTokens
-                }
+                  notIn: bypassTokens,
+                },
               },
               createMany: {
                 skipDuplicates: true,
                 data: bypassTokens.map(token => ({
-                  token
-                }))
-              }
+                  token,
+                })),
+              },
             }
-          : undefined
-      }
-    })
+          : undefined,
+      },
+    });
   }
 
   public deletePaywall(id: string) {
     return this.prisma.paywall.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
   public getPaywallMemberplans(id: string) {
@@ -98,22 +105,22 @@ export class PaywallService {
       where: {
         paywalls: {
           some: {
-            paywallId: id
-          }
-        }
+            paywallId: id,
+          },
+        },
       },
       include: {
-        availablePaymentMethods: true
-      }
-    })
+        availablePaymentMethods: true,
+      },
+    });
   }
 
   public getPaywallBypasses(id: string) {
     return this.prisma.paywallBypass.findMany({
       where: {
-        paywallId: id
-      }
-    })
+        paywallId: id,
+      },
+    });
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
@@ -121,16 +128,16 @@ export class PaywallService {
     return this.prisma.paywallBypass.create({
       data: {
         paywallId,
-        token
-      }
-    })
+        token,
+      },
+    });
   }
 
   public deletePaywallBypass(id: string) {
     return this.prisma.paywallBypass.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 }

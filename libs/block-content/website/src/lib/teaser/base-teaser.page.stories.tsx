@@ -1,13 +1,13 @@
-import {Meta} from '@storybook/react'
-import {BaseTeaser} from './base-teaser'
-import {mockPageTeaser} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { BaseTeaser } from './base-teaser';
+import { mockPageTeaser } from '@wepublish/storybook/mocks';
 
 export default {
   component: BaseTeaser,
-  title: 'Blocks/Teaser/Page'
-} as Meta
+  title: 'Blocks/Teaser/Page',
+} as Meta;
 
-const pageTeaser = mockPageTeaser()
+const pageTeaser = mockPageTeaser();
 
 export const Default = {
   args: {
@@ -16,11 +16,11 @@ export const Default = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
-    teaser: pageTeaser
-  }
-}
+    teaser: pageTeaser,
+  },
+};
 
 export const WithoutPreTitle = {
   args: {
@@ -29,7 +29,7 @@ export const WithoutPreTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...pageTeaser,
@@ -41,19 +41,19 @@ export const WithoutPreTitle = {
             __typename: 'Tag',
             id: '123',
             tag: 'Secondary Tag',
-            main: false
+            main: false,
           },
           {
             __typename: 'Tag',
             id: '1234',
             tag: 'Main Tag',
-            main: true
-          }
-        ]
-      }
-    }
-  }
-}
+            main: true,
+          },
+        ],
+      },
+    },
+  },
+};
 
 export const WithoutTitle = {
   args: {
@@ -62,14 +62,14 @@ export const WithoutTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...pageTeaser,
-      title: null
-    }
-  }
-}
+      title: null,
+    },
+  },
+};
 
 export const WithoutLead = {
   args: {
@@ -78,14 +78,14 @@ export const WithoutLead = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...pageTeaser,
-      lead: null
-    }
-  }
-}
+      lead: null,
+    },
+  },
+};
 
 export const WithoutImage = {
   args: {
@@ -94,14 +94,14 @@ export const WithoutImage = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...pageTeaser,
-      image: null
-    }
-  }
-}
+      image: null,
+    },
+  },
+};
 
 export const WithoutImageWithoutBlock = {
   args: {
@@ -110,15 +110,15 @@ export const WithoutImageWithoutBlock = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...pageTeaser,
       image: null,
       Page: {
         ...pageTeaser.page,
-        blocks: []
-      }
-    }
-  }
-}
+        blocks: [],
+      },
+    },
+  },
+};

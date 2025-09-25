@@ -1,11 +1,11 @@
-import {Meta} from '@storybook/react'
-import {TeaserSlotsBlock} from './teaser-slots-block'
-import {mockArticleTeaser} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { TeaserSlotsBlock } from './teaser-slots-block';
+import { mockArticleTeaser } from '@wepublish/storybook/mocks';
 
 export default {
   component: TeaserSlotsBlock,
-  title: 'Blocks/Teaser Slots'
-} as Meta
+  title: 'Blocks/Teaser Slots',
+} as Meta;
 
 const mockTeaserSlotsBlock = ({
   title = undefined,
@@ -17,14 +17,14 @@ const mockTeaserSlotsBlock = ({
     strategy: 'manual',
     numberOfTeasers: 3,
     tagIds: [],
-    maxAgeInDays: 30
+    maxAgeInDays: 30,
   },
   autofillTeasers = [],
   slots = [
-    {id: '1', teaser: undefined, position: 0},
-    {id: '2', teaser: undefined, position: 1},
-    {id: '3', teaser: undefined, position: 2}
-  ]
+    { id: '1', teaser: undefined, position: 0 },
+    { id: '2', teaser: undefined, position: 1 },
+    { id: '3', teaser: undefined, position: 2 },
+  ],
 } = {}) => ({
   title,
   teasers,
@@ -32,38 +32,38 @@ const mockTeaserSlotsBlock = ({
   className,
   autofillConfig,
   autofillTeasers,
-  slots
-})
+  slots,
+});
 
 export const Default = {
-  args: mockTeaserSlotsBlock()
-}
+  args: mockTeaserSlotsBlock(),
+};
 
 export const WithTitle = {
   args: {
     ...mockTeaserSlotsBlock(),
-    title: 'Featured Stories'
-  }
-}
+    title: 'Featured Stories',
+  },
+};
 
 export const WithMixedContent = {
   args: mockTeaserSlotsBlock({
-    teasers: [mockArticleTeaser(), mockArticleTeaser(), mockArticleTeaser()]
-  })
-}
+    teasers: [mockArticleTeaser(), mockArticleTeaser(), mockArticleTeaser()],
+  }),
+};
 
 export const WithCustomStyle = {
   args: {
     ...mockTeaserSlotsBlock(),
     blockStyle: 'custom-style',
-    title: 'Styled Teasers'
-  }
-}
+    title: 'Styled Teasers',
+  },
+};
 
 export const WithCustomClass = {
   args: {
     ...mockTeaserSlotsBlock(),
     className: 'custom-teaser-slots',
-    title: 'Custom Class'
-  }
-}
+    title: 'Custom Class',
+  },
+};

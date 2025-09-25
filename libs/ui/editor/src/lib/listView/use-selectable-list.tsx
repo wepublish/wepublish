@@ -1,38 +1,38 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react';
 
 type UseSelectableListProps = {
-  ids?: string[]
-}
+  ids?: string[];
+};
 
-export function useSelectableList({ids}: UseSelectableListProps) {
-  const [selectedItems, setSelectedItems] = useState<string[]>([])
-  const allSelected = ids && selectedItems.length === ids.length
-  const someSelected = ids && selectedItems.length > 0
+export function useSelectableList({ ids }: UseSelectableListProps) {
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const allSelected = ids && selectedItems.length === ids.length;
+  const someSelected = ids && selectedItems.length > 0;
 
-  const toggleAll = () => setSelectedItems(someSelected ? [] : ids ?? [])
+  const toggleAll = () => setSelectedItems(someSelected ? [] : (ids ?? []));
 
   const selectItem = (id: string) => {
-    setSelectedItems([...new Set([...selectedItems, id])])
-  }
+    setSelectedItems([...new Set([...selectedItems, id])]);
+  };
   const unselectItem = (id: string) => {
-    setSelectedItems(selectedItems.filter(item => item !== id))
-  }
+    setSelectedItems(selectedItems.filter(item => item !== id));
+  };
   const toggleItem = (id: string | any, value?: boolean) => {
     if (value === undefined) {
-      value = !selectedItems.includes(id)
+      value = !selectedItems.includes(id);
     }
     if (value) {
-      selectItem(id)
+      selectItem(id);
     } else {
-      unselectItem(id)
+      unselectItem(id);
     }
-  }
+  };
 
   useEffect(() => {
     if (ids !== undefined) {
-      setSelectedItems(ids.filter(item => selectedItems.includes(item)))
+      setSelectedItems(ids.filter(item => selectedItems.includes(item)));
     }
-  }, [ids])
+  }, [ids]);
 
   return {
     selectedItems,
@@ -41,6 +41,6 @@ export function useSelectableList({ids}: UseSelectableListProps) {
     toggleAll,
     selectItem,
     unselectItem,
-    toggleItem
-  }
+    toggleItem,
+  };
 }

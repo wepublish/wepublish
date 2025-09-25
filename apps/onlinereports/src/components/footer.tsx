@@ -1,18 +1,18 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   FooterCategory,
   FooterCategoryLinks,
   FooterContainer,
   FooterName,
-  FooterPaperWrapper
-} from '@wepublish/navigation/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+  FooterPaperWrapper,
+} from '@wepublish/navigation/website';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 const OnlineReportsFooterContainer = styled(FooterContainer)`
   grid-column: -1/1;
 
   ${FooterPaperWrapper} {
-    color: ${({theme}) => theme.palette.common.white};
+    color: ${({ theme }) => theme.palette.common.white};
     background-color: #323232;
     font-size: 18px !important;
   }
@@ -25,14 +25,17 @@ const OnlineReportsFooterContainer = styled(FooterContainer)`
   ${FooterCategoryLinks} {
     font-size: 18px;
   }
-`
+`;
 
 export const OnlineReportsFooter = () => {
   const {
-    elements: {H6}
-  } = useWebsiteBuilder()
+    elements: { H6 },
+  } = useWebsiteBuilder();
   return (
-    <OnlineReportsFooterContainer slug={''} categorySlugs={[['footer']]}>
+    <OnlineReportsFooterContainer
+      slug={''}
+      categorySlugs={[['footer']]}
+    >
       <FooterCategory>
         <FooterCategoryLinks>
           <H6>OnlineReports GmbH</H6>
@@ -42,5 +45,5 @@ export const OnlineReportsFooter = () => {
         </FooterCategoryLinks>
       </FooterCategory>
     </OnlineReportsFooterContainer>
-  )
-}
+  );
+};

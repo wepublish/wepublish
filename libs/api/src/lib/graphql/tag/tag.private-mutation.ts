@@ -1,8 +1,12 @@
-import {TagType, PrismaClient} from '@prisma/client'
-import {authorise} from '../permissions'
-import {CanCreateTag, CanDeleteTag, CanUpdateTag} from '@wepublish/permissions'
-import {Context} from '../../context'
-import {Descendant} from 'slate'
+import { TagType, PrismaClient } from '@prisma/client';
+import { authorise } from '../permissions';
+import {
+  CanCreateTag,
+  CanDeleteTag,
+  CanUpdateTag,
+} from '@wepublish/permissions';
+import { Context } from '../../context';
+import { Descendant } from 'slate';
 
 export const createTag = (
   tag: string,
@@ -12,33 +16,33 @@ export const createTag = (
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateTag, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateTag, roles);
 
   return tagClient.create({
     data: {
       tag,
       type,
       description: description as any[],
-      main
-    }
-  })
-}
+      main,
+    },
+  });
+};
 
 export const deleteTag = (
   tagId: string,
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanDeleteTag, roles)
+  const { roles } = authenticate();
+  authorise(CanDeleteTag, roles);
 
   return tagClient.delete({
     where: {
-      id: tagId
-    }
-  })
-}
+      id: tagId,
+    },
+  });
+};
 
 export const updateTag = (
   tagId: string,
@@ -48,17 +52,17 @@ export const updateTag = (
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanUpdateTag, roles)
+  const { roles } = authenticate();
+  authorise(CanUpdateTag, roles);
 
   return tagClient.update({
     where: {
-      id: tagId
+      id: tagId,
     },
     data: {
       tag,
       main,
-      description: description as any[]
-    }
-  })
-}
+      description: description as any[],
+    },
+  });
+};

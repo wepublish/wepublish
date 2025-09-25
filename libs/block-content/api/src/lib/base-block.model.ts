@@ -1,16 +1,16 @@
-import {Field, InterfaceType, ObjectType} from '@nestjs/graphql'
-import {BlockType} from './block-type.model'
+import { Field, InterfaceType, ObjectType } from '@nestjs/graphql';
+import { BlockType } from './block-type.model';
 
 @InterfaceType()
 export abstract class BaseBlock<Type extends BlockType> {
   @Field(() => BlockType)
-  type!: Type
+  type!: Type;
 
-  @Field({nullable: true})
-  blockStyle?: string
+  @Field({ nullable: true })
+  blockStyle?: string;
 
-  @Field({nullable: true})
-  blockStyleName?: string
+  @Field({ nullable: true })
+  blockStyleName?: string;
 }
 
 @ObjectType()

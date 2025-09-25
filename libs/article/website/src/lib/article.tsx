@@ -1,21 +1,25 @@
-import styled from '@emotion/styled'
-import {BuilderArticleProps, PeerInformation, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
-import {ArticleListWrapper} from './article-list/article-list'
-import {CommentListWrapper} from '@wepublish/comments/website'
-import {ContentWrapper} from '@wepublish/content/website'
-import {ArticleTrackingPixels} from './article-tracking-pixels'
-import {Paywall} from '@wepublish/website/builder'
-import {css} from '@emotion/react'
+import styled from '@emotion/styled';
+import {
+  BuilderArticleProps,
+  PeerInformation,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import { ArticleListWrapper } from './article-list/article-list';
+import { CommentListWrapper } from '@wepublish/comments/website';
+import { ContentWrapper } from '@wepublish/content/website';
+import { ArticleTrackingPixels } from './article-tracking-pixels';
+import { Paywall } from '@wepublish/website/builder';
+import { css } from '@emotion/react';
 
 export const ArticleInfoWrapper = styled('aside')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
+  gap: ${({ theme }) => theme.spacing(4)};
   grid-row-start: 2;
-`
+`;
 
-export const ArticleWrapper = styled(ContentWrapper)<{hideContent?: boolean}>`
-  ${({hideContent}) =>
+export const ArticleWrapper = styled(ContentWrapper)<{ hideContent?: boolean }>`
+  ${({ hideContent }) =>
     hideContent &&
     css`
       // Shows the first 3 blocks (usually title, image, richtext) and hides the rest
@@ -28,16 +32,20 @@ export const ArticleWrapper = styled(ContentWrapper)<{hideContent?: boolean}>`
         max-height: 250px;
         overflow-x: hidden;
         overflow-y: hidden;
-        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 100%);
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 1) 30%,
+          rgba(0, 0, 0, 0) 100%
+        );
       }
     `}
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
       grid-column: 2/12;
     }
   }
-`
+`;
 
 export function Article({
   className,
@@ -46,19 +54,22 @@ export function Article({
   showPaywall,
   hideContent,
   loading,
-  error
+  error,
 }: BuilderArticleProps) {
   const {
     ArticleSEO,
     ArticleAuthors,
     ArticleMeta,
-    blocks: {Blocks}
-  } = useWebsiteBuilder()
+    blocks: { Blocks },
+  } = useWebsiteBuilder();
 
-  const article = data?.article as ArticleType | undefined
+  const article = data?.article as ArticleType | undefined;
 
   return (
-    <ArticleWrapper className={className} hideContent={hideContent}>
+    <ArticleWrapper
+      className={className}
+      hideContent={hideContent}
+    >
       {article && <ArticleSEO article={article} />}
 
       {article && (
@@ -82,12 +93,15 @@ export function Article({
       </ArticleInfoWrapper>
 
       {showPaywall && article?.paywall && (
-        <Paywall {...article.paywall} hideContent={hideContent} />
+        <Paywall
+          {...article.paywall}
+          hideContent={hideContent}
+        />
       )}
 
       {children}
 
       <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
     </ArticleWrapper>
-  )
+  );
 }

@@ -1,52 +1,65 @@
-import styled from '@emotion/styled'
-import {BuilderPaywallProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useIntersectionObserver} from 'usehooks-ts'
-import {forceHideBanner} from '@wepublish/banner/website'
-import {useSetIntendedRoute, useUser} from '@wepublish/authentication/website'
-import {useTranslation} from 'react-i18next'
+import styled from '@emotion/styled';
+import {
+  BuilderPaywallProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useIntersectionObserver } from 'usehooks-ts';
+import { forceHideBanner } from '@wepublish/banner/website';
+import {
+  useSetIntendedRoute,
+  useUser,
+} from '@wepublish/authentication/website';
+import { useTranslation } from 'react-i18next';
 
 export const PaywallWrapper = styled.div`
   display: grid !important; // exception as it should always be shown
-  gap: ${({theme}) => theme.spacing(5)};
+  gap: ${({ theme }) => theme.spacing(5)};
   justify-content: center;
   align-items: center;
-  background-color: ${({theme}) => theme.palette.accent.light};
-  color: ${({theme}) => theme.palette.accent.contrastText};
-  padding: ${({theme}) => theme.spacing(4)};
-`
+  background-color: ${({ theme }) => theme.palette.accent.light};
+  color: ${({ theme }) => theme.palette.accent.contrastText};
+  padding: ${({ theme }) => theme.spacing(4)};
+`;
 
 const PaywallActions = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  column-gap: ${({theme}) => theme.spacing(3)};
-  row-gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${({ theme }) => theme.spacing(3)};
+  row-gap: ${({ theme }) => theme.spacing(2)};
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: max-content max-content;
   }
-`
+`;
 
 export const Paywall = ({
   className,
   description,
   circumventDescription,
-  hideContent
+  hideContent,
 }: BuilderPaywallProps) => {
-  const {t} = useTranslation()
-  const {hasUser} = useUser()
+  const { t } = useTranslation();
+  const { hasUser } = useUser();
   const {
-    elements: {Button, Link},
-    blocks: {RichText}
-  } = useWebsiteBuilder()
-  const {isIntersecting, ref} = useIntersectionObserver({
-    initialIsIntersecting: false
-  })
-  const setIntendedRoute = useSetIntendedRoute()
+    elements: { Button, Link },
+    blocks: { RichText },
+  } = useWebsiteBuilder();
+  const { isIntersecting, ref } = useIntersectionObserver({
+    initialIsIntersecting: false,
+  });
+  const setIntendedRoute = useSetIntendedRoute();
 
   return (
-    <PaywallWrapper className={className} ref={ref}>
+    <PaywallWrapper
+      className={className}
+      ref={ref}
+    >
       <RichText
-        richText={(hideContent ? description : (circumventDescription ?? description)) ?? []}
+        richText={
+          (hideContent ? description : (
+            (circumventDescription ?? description)
+          )) ?? []
+        }
       />
 
       <PaywallActions>
@@ -55,7 +68,8 @@ export const Paywall = ({
           color="secondary"
           LinkComponent={Link}
           href={'/mitmachen'}
-          onClick={setIntendedRoute}>
+          onClick={setIntendedRoute}
+        >
           {t('paywall.subscribe')}
         </Button>
 
@@ -65,7 +79,8 @@ export const Paywall = ({
             color="secondary"
             LinkComponent={Link}
             href={'/login'}
-            onClick={setIntendedRoute}>
+            onClick={setIntendedRoute}
+          >
             {t('paywall.login')}
           </Button>
         )}
@@ -73,5 +88,5 @@ export const Paywall = ({
 
       {isIntersecting && forceHideBanner}
     </PaywallWrapper>
-  )
-}
+  );
+};

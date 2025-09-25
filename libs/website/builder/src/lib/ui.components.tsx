@@ -2,38 +2,38 @@ import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
-  BuilderModalProps
-} from './ui.interface'
-import {useWebsiteBuilder} from './website-builder.context'
+  BuilderModalProps,
+} from './ui.interface';
+import { useWebsiteBuilder } from './website-builder.context';
 
 export const Button = (props: BuilderButtonProps) => {
   const {
-    elements: {Button}
-  } = useWebsiteBuilder()
+    elements: { Button },
+  } = useWebsiteBuilder();
 
-  return <Button {...props} />
-}
+  return <Button {...props} />;
+};
 
 export const IconButton = (props: BuilderIconButtonProps) => {
   const {
-    elements: {IconButton}
-  } = useWebsiteBuilder()
+    elements: { IconButton },
+  } = useWebsiteBuilder();
 
-  return <IconButton {...props} />
-}
+  return <IconButton {...props} />;
+};
 
 export const Modal = (props: BuilderModalProps) => {
   const {
-    elements: {Modal}
-  } = useWebsiteBuilder()
+    elements: { Modal },
+  } = useWebsiteBuilder();
 
-  return <Modal {...props} />
-}
+  return <Modal {...props} />;
+};
 
 export const Alert = (props: BuilderAlertProps) => {
   const {
-    elements: {Alert}
-  } = useWebsiteBuilder()
+    elements: { Alert },
+  } = useWebsiteBuilder();
 
-  return <Alert {...props} />
-}
+  return <Alert {...props} />;
+};

@@ -1,49 +1,57 @@
-import styled from '@emotion/styled'
-import {getApiClientV2, useDailySubscriptionStatsLazyQuery} from '@wepublish/editor/api-v2'
+import styled from '@emotion/styled';
+import {
+  getApiClientV2,
+  useDailySubscriptionStatsLazyQuery,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
   ListViewFilterArea,
   ListViewHeader,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import {AudienceChart} from './audience-chart'
-import {AudienceFilter} from './audience-filter'
-import {AudienceTable} from './audience-table'
-import {useAudience} from './useAudience'
-import {PreDefinedDates, preDefinedDates, useAudienceFilter} from './useAudienceFilter'
+import { AudienceChart } from './audience-chart';
+import { AudienceFilter } from './audience-filter';
+import { AudienceTable } from './audience-table';
+import { useAudience } from './useAudience';
+import {
+  PreDefinedDates,
+  preDefinedDates,
+  useAudienceFilter,
+} from './useAudienceFilter';
 
 const AudienceChartWrapper = styled('div')`
-  margin-top: ${({theme}) => theme.spacing(4)};
-  padding-top: ${({theme}) => theme.spacing(2)};
+  margin-top: ${({ theme }) => theme.spacing(4)};
+  padding-top: ${({ theme }) => theme.spacing(2)};
   height: 100%;
   width: 100%;
   min-height: 40vh;
-`
+`;
 
 const TableWrapperStyled = styled(TableWrapper)`
-  margin-top: ${({theme}) => theme.spacing(8)};
-`
+  margin-top: ${({ theme }) => theme.spacing(8)};
+`;
 
 interface AudienceDashboardProps {
-  hideHeader?: boolean
-  hideFilter?: boolean
-  initialDateRange?: keyof PreDefinedDates
+  hideHeader?: boolean;
+  hideFilter?: boolean;
+  initialDateRange?: keyof PreDefinedDates;
 }
 
 function AudienceDashboard({
   hideHeader,
   hideFilter,
-  initialDateRange = 'lastMonth'
+  initialDateRange = 'lastMonth',
 }: AudienceDashboardProps) {
-  const {t} = useTranslation()
-  const client = getApiClientV2()
-  const [fetchStats, {data: rawAudienceStats, loading}] = useDailySubscriptionStatsLazyQuery({
-    client
-  })
+  const { t } = useTranslation();
+  const client = getApiClientV2();
+  const [fetchStats, { data: rawAudienceStats, loading }] =
+    useDailySubscriptionStatsLazyQuery({
+      client,
+    });
 
   const {
     audienceApiFilter,
@@ -53,27 +61,32 @@ function AudienceDashboard({
     resolution,
     setResolution,
     audienceComponentFilter,
-    setAudienceComponentFilter
+    setAudienceComponentFilter,
   } = useAudienceFilter({
-    fetchStats
-  })
+    fetchStats,
+  });
 
-  const {audienceStatsComputed, audienceStatsAggregatedByMonth} = useAudience({
-    audienceClientFilter,
-    audienceStats: rawAudienceStats
-  })
+  const { audienceStatsComputed, audienceStatsAggregatedByMonth } = useAudience(
+    {
+      audienceClientFilter,
+      audienceStats: rawAudienceStats,
+    }
+  );
 
   const audienceStats = useMemo(
-    () => (resolution === 'daily' ? audienceStatsComputed : audienceStatsAggregatedByMonth),
+    () =>
+      resolution === 'daily' ?
+        audienceStatsComputed
+      : audienceStatsAggregatedByMonth,
     [resolution, audienceStatsComputed, audienceStatsAggregatedByMonth]
-  )
+  );
 
   // triggers initial data load
   useEffect(() => {
-    const today = preDefinedDates()['today']
-    const dateRange = preDefinedDates()[initialDateRange]
-    setAudienceApiFilter({dateRange: [dateRange, today]})
-  }, [initialDateRange, setAudienceApiFilter])
+    const today = preDefinedDates()['today'];
+    const dateRange = preDefinedDates()[initialDateRange];
+    setAudienceApiFilter({ dateRange: [dateRange, today] });
+  }, [initialDateRange, setAudienceApiFilter]);
 
   return (
     <>
@@ -85,7 +98,7 @@ function AudienceDashboard({
         )}
 
         {!hideFilter && audienceComponentFilter.filter && (
-          <ListViewFilterArea style={{alignItems: 'center'}}>
+          <ListViewFilterArea style={{ alignItems: 'center' }}>
             <AudienceFilter
               resolution={resolution}
               setResolution={setResolution}
@@ -121,10 +134,10 @@ function AudienceDashboard({
         </TableWrapperStyled>
       )}
     </>
-  )
+  );
 }
 
-const CheckedPermissionComponent = createCheckedPermissionComponent(['CAN_GET_AUDIENCE_STATS'])(
-  AudienceDashboard
-)
-export {CheckedPermissionComponent as AudienceDashboard}
+const CheckedPermissionComponent = createCheckedPermissionComponent([
+  'CAN_GET_AUDIENCE_STATS',
+])(AudienceDashboard);
+export { CheckedPermissionComponent as AudienceDashboard };

@@ -1,65 +1,74 @@
-import {EmotionCache} from '@emotion/cache'
-import styled from '@emotion/styled'
-import {Container, CssBaseline, ThemeProvider} from '@mui/material'
-import {AppCacheProvider, createEmotionCache} from '@mui/material-nextjs/v15-pagesRouter'
-import {GoogleAnalytics, GoogleTagManager} from '@next/third-parties/google'
-import {withErrorSnackbar} from '@wepublish/errors/website'
-import {FooterContainer, NavbarContainer} from '@wepublish/navigation/website'
-import {withPaywallBypassToken} from '@wepublish/paywall/website'
+import { EmotionCache } from '@emotion/cache';
+import styled from '@emotion/styled';
+import { Container, CssBaseline, ThemeProvider } from '@mui/material';
+import {
+  AppCacheProvider,
+  createEmotionCache,
+} from '@mui/material-nextjs/v15-pagesRouter';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { withErrorSnackbar } from '@wepublish/errors/website';
+import {
+  FooterContainer,
+  NavbarContainer,
+} from '@wepublish/navigation/website';
+import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   AsyncSessionProvider,
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
   withJwtHandler,
-  withSessionProvider
-} from '@wepublish/utils/website'
-import {WebsiteProvider} from '@wepublish/website'
-import {previewLink} from '@wepublish/website/admin'
-import {createWithV1ApiClient, SessionWithTokenWithoutUser} from '@wepublish/website/api'
-import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import deTranlations from '@wepublish/website/translations/de.json'
-import {format, setDefaultOptions} from 'date-fns'
-import {de} from 'date-fns/locale'
-import i18next from 'i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import ICU from 'i18next-icu'
-import resourcesToBackend from 'i18next-resources-to-backend'
-import {AppProps} from 'next/app'
-import getConfig from 'next/config'
-import Head from 'next/head'
-import Script from 'next/script'
-import {mergeDeepRight} from 'ramda'
-import {initReactI18next} from 'react-i18next'
-import {z} from 'zod'
-import {zodI18nMap} from 'zod-i18n-map'
+  withSessionProvider,
+} from '@wepublish/utils/website';
+import { WebsiteProvider } from '@wepublish/website';
+import { previewLink } from '@wepublish/website/admin';
+import {
+  createWithV1ApiClient,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
+import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import deTranlations from '@wepublish/website/translations/de.json';
+import { format, setDefaultOptions } from 'date-fns';
+import { de } from 'date-fns/locale';
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import ICU from 'i18next-icu';
+import resourcesToBackend from 'i18next-resources-to-backend';
+import { AppProps } from 'next/app';
+import getConfig from 'next/config';
+import Head from 'next/head';
+import Script from 'next/script';
+import { mergeDeepRight } from 'ramda';
+import { initReactI18next } from 'react-i18next';
+import { z } from 'zod';
+import { zodI18nMap } from 'zod-i18n-map';
 
-import deOverriden from '../locales/deOverriden.json'
-import {FontSizeProvider} from '../src/components/font-size-picker'
+import deOverriden from '../locales/deOverriden.json';
+import { FontSizeProvider } from '../src/components/font-size-picker';
 import {
   HauptstadtArticle,
   HauptstadtArticleAuthors,
-  HauptstadtArticleMeta
-} from '../src/components/hauptstadt-article'
-import {HauptstadtAuthorChip} from '../src/components/hauptstadt-author-chip'
-import {HauptstadtBanner} from '../src/components/hauptstadt-banner'
-import {HauptstadtBreakBlock} from '../src/components/hauptstadt-break'
-import {HauptstadtCommentList} from '../src/components/hauptstadt-comment'
-import {HauptstadtContentWrapper} from '../src/components/hauptstadt-content-wrapper'
-import {HauptstadtEvent} from '../src/components/hauptstadt-event'
+  HauptstadtArticleMeta,
+} from '../src/components/hauptstadt-article';
+import { HauptstadtAuthorChip } from '../src/components/hauptstadt-author-chip';
+import { HauptstadtBanner } from '../src/components/hauptstadt-banner';
+import { HauptstadtBreakBlock } from '../src/components/hauptstadt-break';
+import { HauptstadtCommentList } from '../src/components/hauptstadt-comment';
+import { HauptstadtContentWrapper } from '../src/components/hauptstadt-content-wrapper';
+import { HauptstadtEvent } from '../src/components/hauptstadt-event';
 import {
   HauptstadtImageBlock,
-  HauptstadtImageGalleryBlock
-} from '../src/components/hauptstadt-image-block'
+  HauptstadtImageGalleryBlock,
+} from '../src/components/hauptstadt-image-block';
 import {
   HauptstadtMemberPlanItem,
-  HauptstadtMemberPlanPicker
-} from '../src/components/hauptstadt-memberplan-picker'
-import {HauptstadtNavbar} from '../src/components/hauptstadt-navbar'
-import {HauptstadtFooter} from '../src/components/hauptstadt-navigation'
-import {HauptstadtPage} from '../src/components/hauptstadt-page'
-import {HauptstadtPaywall} from '../src/components/hauptstadt-paywall'
-import {HauptstadtQuoteBlock} from '../src/components/hauptstadt-quote'
+  HauptstadtMemberPlanPicker,
+} from '../src/components/hauptstadt-memberplan-picker';
+import { HauptstadtNavbar } from '../src/components/hauptstadt-navbar';
+import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
+import { HauptstadtPage } from '../src/components/hauptstadt-page';
+import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
+import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
 import {
   HauptstadtAlternatingTeaser,
   HauptstadtFocusTeaser,
@@ -67,17 +76,17 @@ import {
   HauptstadtTeaserGrid,
   HauptstadtTeaserList,
   HauptstadtTeaserSlider,
-  HauptstadtTeaserSlots
-} from '../src/components/hauptstadt-teaser'
-import {HauptstadtTitleBlock} from '../src/components/hauptstadt-title-block'
-import {PrintLogo} from '../src/components/print-logo'
-import {printStyles} from '../src/print-styles'
-import theme from '../src/theme'
-import {MitmachenInner} from './mitmachen'
+  HauptstadtTeaserSlots,
+} from '../src/components/hauptstadt-teaser';
+import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
+import { PrintLogo } from '../src/components/print-logo';
+import { printStyles } from '../src/print-styles';
+import theme from '../src/theme';
+import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
-  locale: de
-})
+  locale: de,
+});
 
 i18next
   .use(ICU)
@@ -90,14 +99,14 @@ i18next
     fallbackLng: 'de',
     supportedLngs: ['de'],
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
     resources: {
-      de: {zod: deTranlations.zod}
-    }
-  })
+      de: { zod: deTranlations.zod },
+    },
+  });
 
-z.setErrorMap(zodI18nMap)
+z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
   display: grid;
@@ -105,38 +114,38 @@ const Spacer = styled('div')`
   grid-template-rows: min-content 1fr min-content;
   min-height: 100vh;
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    gap: ${({theme}) => theme.spacing(3)};
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    gap: ${({ theme }) => theme.spacing(3)};
   }
-`
+`;
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
-`
+`;
 
 const Main = styled('main')`
-  ${({theme}) => theme.breakpoints.up('lg')} {
+  ${({ theme }) => theme.breakpoints.up('lg')} {
     padding-top: 11px;
   }
-`
+`;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime
-    ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-    : format(date, 'dd. MMMM yyyy')
+  includeTime ?
+    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+  : format(date, 'dd. MMMM yyyy');
 
 type CustomAppProps = AppProps<{
-  sessionToken?: SessionWithTokenWithoutUser
-}> & {emotionCache?: EmotionCache}
+  sessionToken?: SessionWithTokenWithoutUser;
+}> & { emotionCache?: EmotionCache };
 
-function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
-  const siteTitle = 'Hauptstadt'
+function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
+  const siteTitle = 'Hauptstadt';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
-  const cache = emotionCache ?? createEmotionCache()
-  cache.compat = true
+  const cache = emotionCache ?? createEmotionCache();
+  cache.compat = true;
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -144,7 +153,7 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          elements={{Link: NextWepublishLink}}
+          elements={{ Link: NextWepublishLink }}
           Footer={HauptstadtFooter}
           Navbar={HauptstadtNavbar}
           ContentWrapper={HauptstadtContentWrapper}
@@ -169,15 +178,16 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
             TeaserSlots: HauptstadtTeaserSlots,
             Image: HauptstadtImageBlock,
             ImageGallery: HauptstadtImageGalleryBlock,
-            Break: HauptstadtBreakBlock
+            Break: HauptstadtBreakBlock,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
             AlternatingTeaser: HauptstadtAlternatingTeaser,
-            TeaserSlider: HauptstadtTeaserSlider
+            TeaserSlider: HauptstadtTeaserSlider,
           }}
-          date={{format: dateFormatter}}
-          meta={{siteTitle}}>
+          date={{ format: dateFormatter }}
+          meta={{ siteTitle }}
+        >
           <ThemeProvider theme={theme}>
             <FontSizeProvider>
               <CssBaseline />
@@ -185,23 +195,65 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
 
               <Head>
                 <title key="title">{siteTitle}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
 
                 {/* Feeds */}
-                <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
-                <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
-                <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+                <link
+                  rel="alternate"
+                  type="application/rss+xml"
+                  href="/api/rss-feed"
+                />
+                <link
+                  rel="alternate"
+                  type="application/atom+xml"
+                  href="/api/atom-feed"
+                />
+                <link
+                  rel="alternate"
+                  type="application/feed+json"
+                  href="/api/json-feed"
+                />
 
                 {/* Sitemap */}
-                <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
+                <link
+                  rel="sitemap"
+                  type="application/xml"
+                  title="Sitemap"
+                  href="/api/sitemap"
+                />
 
                 {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-                <link rel="shortcut icon" href="/favicon.ico" />
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <meta name="apple-mobile-web-app-title" content="Hauptstadt" />
-                <link rel="manifest" href="/site.webmanifest" />
+                <link
+                  rel="icon"
+                  type="image/png"
+                  href="/favicon-96x96.png"
+                  sizes="96x96"
+                />
+                <link
+                  rel="icon"
+                  type="image/svg+xml"
+                  href="/favicon.svg"
+                />
+                <link
+                  rel="shortcut icon"
+                  href="/favicon.ico"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="180x180"
+                  href="/apple-touch-icon.png"
+                />
+                <meta
+                  name="apple-mobile-web-app-title"
+                  content="Hauptstadt"
+                />
+                <link
+                  rel="manifest"
+                  href="/site.webmanifest"
+                />
               </Head>
 
               <Spacer>
@@ -241,15 +293,20 @@ function CustomApp({Component, pageProps, emotionCache}: CustomAppProps) {
         </WebsiteBuilderProvider>
       </WebsiteProvider>
     </AppCacheProvider>
-  )
+  );
 }
 
-const {publicRuntimeConfig} = getConfig()
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink, previewLink])
+const { publicRuntimeConfig } = getConfig();
+const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  authLink,
+  previewLink,
+]);
 const ConnectedApp = withApollo(
   withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider))
+    withPaywallBypassToken(
+      withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider)
+    )
   )
-)
+);
 
-export {ConnectedApp as default}
+export { ConnectedApp as default };

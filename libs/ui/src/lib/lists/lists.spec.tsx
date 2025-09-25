@@ -1,6 +1,6 @@
-import {render} from '@testing-library/react'
+import { render } from '@testing-library/react';
 
-import {OrderedList, UnorderedList} from './lists'
+import { OrderedList, UnorderedList } from './lists';
 
 describe('UnorderedList', () => {
   it('should render successfully', () => {
@@ -8,9 +8,9 @@ describe('UnorderedList', () => {
       <UnorderedList>
         <li>Foobar</li>
       </UnorderedList>
-    )
-  })
-})
+    );
+  });
+});
 
 describe('OrderedList', () => {
   it('should render successfully', () => {
@@ -18,6 +18,6 @@ describe('OrderedList', () => {
       <OrderedList>
         <li>Foobar</li>
       </OrderedList>
-    )
-  })
-})
+    );
+  });
+});

@@ -1,1 +1,1 @@
-export * from './lib/settings-list'
+export * from './lib/settings-list';

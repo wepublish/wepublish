@@ -1,14 +1,14 @@
-import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
+import { composeStories } from '@storybook/react';
+import { render } from '@testing-library/react';
 
-import * as stories from './alert.stories'
+import * as stories from './alert.stories';
 
-const storiesCmp = composeStories(stories)
+const storiesCmp = composeStories(stories);
 
 describe('Alert', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      render(<Component />)
-    })
-  })
-})
+      render(<Component />);
+    });
+  });
+});

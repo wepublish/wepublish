@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common'
-import {MediaAdapter} from './media-adapter'
-import {PrismaClient} from '@prisma/client'
-import {UploadImageInput} from './image.model'
-import {ImageWithFocalPoint} from './image-dataloader.service'
+import { Injectable } from '@nestjs/common';
+import { MediaAdapter } from './media-adapter';
+import { PrismaClient } from '@prisma/client';
+import { UploadImageInput } from './image.model';
+import { ImageWithFocalPoint } from './image-dataloader.service';
 
 @Injectable()
 export class ImageService {
@@ -11,10 +11,21 @@ export class ImageService {
     readonly mediaAdapter: MediaAdapter
   ) {}
 
-  async uploadNewImage(uploadImageInput: UploadImageInput): Promise<ImageWithFocalPoint> {
-    const {file, filename, title, description, tags, source, link, license, focalPoint} =
-      uploadImageInput
-    const {id, ...image} = await this.mediaAdapter.uploadImage(file)
+  async uploadNewImage(
+    uploadImageInput: UploadImageInput
+  ): Promise<ImageWithFocalPoint> {
+    const {
+      file,
+      filename,
+      title,
+      description,
+      tags,
+      source,
+      link,
+      license,
+      focalPoint,
+    } = uploadImageInput;
+    const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
     return this.prisma.image.create({
       data: {
@@ -28,26 +39,35 @@ export class ImageService {
         link,
         license,
         focalPoint: {
-          create: focalPoint
-        }
+          create: focalPoint,
+        },
       },
       include: {
-        focalPoint: true
-      }
-    })
+        focalPoint: true,
+      },
+    });
   }
 
   async replaceImage(
     imageId: string,
     uploadImageInput: UploadImageInput
   ): Promise<ImageWithFocalPoint> {
-    const {file, filename, title, description, tags, source, link, license, focalPoint} =
-      uploadImageInput
-    const {id, ...image} = await this.mediaAdapter.uploadImage(file)
+    const {
+      file,
+      filename,
+      title,
+      description,
+      tags,
+      source,
+      link,
+      license,
+      focalPoint,
+    } = uploadImageInput;
+    const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
     return this.prisma.image.update({
       where: {
-        id: imageId
+        id: imageId,
       },
       data: {
         id,
@@ -60,17 +80,17 @@ export class ImageService {
         link,
         license,
         focalPoint: {
-          create: focalPoint
-        }
+          create: focalPoint,
+        },
       },
       include: {
-        focalPoint: true
-      }
-    })
+        focalPoint: true,
+      },
+    });
   }
 
   async deleteImage(imageId: string) {
-    await this.mediaAdapter.deleteImage(imageId)
-    await this.prisma.image.delete({where: {id: imageId}})
+    await this.mediaAdapter.deleteImage(imageId);
+    await this.prisma.image.delete({ where: { id: imageId } });
   }
 }

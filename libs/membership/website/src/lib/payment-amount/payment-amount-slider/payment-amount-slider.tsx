@@ -1,32 +1,41 @@
-import {InputAdornment, Slider} from '@mui/material'
-import styled from '@emotion/styled'
-import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Currency} from '@wepublish/website/api'
-import {formatCurrency} from '../../formatters/format-currency'
-import {forwardRef} from 'react'
+import { InputAdornment, Slider } from '@mui/material';
+import styled from '@emotion/styled';
+import {
+  BuilderPaymentAmountProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { Currency } from '@wepublish/website/api';
+import { formatCurrency } from '../../formatters/format-currency';
+import { forwardRef } from 'react';
 
 export const PaymentAmountSliderWrapper = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
   align-items: center;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-auto-flow: column;
     grid-auto-columns: 300px;
   }
-`
+`;
 
-export const PaymentAmountSlider = forwardRef<HTMLInputElement, BuilderPaymentAmountProps>(
-  ({className, currency, amountPerMonthMin, donate, name, value, onChange}, ref) => {
+export const PaymentAmountSlider = forwardRef<
+  HTMLInputElement,
+  BuilderPaymentAmountProps
+>(
+  (
+    { className, currency, amountPerMonthMin, donate, name, value, onChange },
+    ref
+  ) => {
     const {
-      elements: {TextField},
-      meta: {locale}
-    } = useWebsiteBuilder()
+      elements: { TextField },
+      meta: { locale },
+    } = useWebsiteBuilder();
 
     return (
       <PaymentAmountSliderWrapper className={className}>
-        {donate ? (
+        {donate ?
           <TextField
             name={name}
             value={value / 100}
@@ -36,28 +45,31 @@ export const PaymentAmountSlider = forwardRef<HTMLInputElement, BuilderPaymentAm
             onFocus={event => event.target.select()}
             inputProps={{
               step: 'any',
-              min: amountPerMonthMin / 100
+              min: amountPerMonthMin / 100,
             }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">{currency ?? Currency.Chf}</InputAdornment>
-              )
+                <InputAdornment position="start">
+                  {currency ?? Currency.Chf}
+                </InputAdornment>
+              ),
             }}
           />
-        ) : (
-          <Slider
+        : <Slider
             ref={ref}
             name={name}
             value={value}
             onChange={(_, val) => onChange(val as number)}
             min={amountPerMonthMin}
             max={amountPerMonthMin * 5}
-            valueLabelFormat={val => formatCurrency(val / 100, currency ?? Currency.Chf, locale)}
+            valueLabelFormat={val =>
+              formatCurrency(val / 100, currency ?? Currency.Chf, locale)
+            }
             step={100}
             color="secondary"
           />
-        )}
+        }
       </PaymentAmountSliderWrapper>
-    )
+    );
   }
-)
+);
