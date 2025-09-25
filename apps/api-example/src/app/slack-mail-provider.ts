@@ -36,12 +36,10 @@ export class SlackMailProvider extends BaseMailProvider {
       ],
     };
 
-    console.log('Sending Slack message', this.webhookURL, message);
-
     await fetch(this.webhookURL, {
       method: 'POST',
       headers: {
-        'Content-type': 'application/json',
+        'Conetent-type': 'application/json',
       },
       body: JSON.stringify(message),
     });
