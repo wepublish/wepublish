@@ -204,7 +204,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             richtext={{ RenderElement: OnlineReportsRenderElement }}
             elements={{ Link: NextWepublishLink }}
             blocks={{
-              Teaser: OnlineReportsTeaser,
+              BaseTeaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
               TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,

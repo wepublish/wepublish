@@ -120,7 +120,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
-          blocks={{ Teaser: ZwoelfBaseTeaser }}
+          blocks={{ BaseTeaser: ZwoelfBaseTeaser }}
           blockStyles={{
             FocusTeaser: ZwoelfFocusTeaser,
           }}
@@ -215,9 +215,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   <Component {...pageProps} />
                 </MainSpacer>
               </main>
-
               <FooterContainer
                 slug="main"
+
                 categorySlugs={[['about']]}
                 iconSlug="icons"
               />

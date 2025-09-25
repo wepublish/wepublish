@@ -112,7 +112,7 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
         Footer={Footer}
         elements={{ Link: NextWepublishLink }}
         blocks={{
-          Teaser: CulturTeaser,
+          BaseTeaser: CulturTeaser,
           Break: CulturBreakBlock,
         }}
         date={{ format: dateFormatter }}
@@ -199,7 +199,6 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
                 <Component {...pageProps} />
               </MainSpacer>
             </main>
-
             <FooterContainer
               slug="footer"
               categorySlugs={[['categories']]}
