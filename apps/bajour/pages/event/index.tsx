@@ -14,12 +14,13 @@ import {
   useEventListQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {Container} from '../../src/components/layout/container'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 import {z} from 'zod'
+
+import {Container} from '../../src/components/layout/container'
 
 const Filter = styled('div')`
   display: grid;
@@ -64,7 +65,7 @@ export default function EventList() {
         },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending
-      } satisfies Partial<EventListQueryVariables>),
+      }) satisfies Partial<EventListQueryVariables>,
     [from, page, to, upcomingOnly]
   )
 

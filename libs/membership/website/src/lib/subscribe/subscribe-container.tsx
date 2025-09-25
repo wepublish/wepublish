@@ -18,6 +18,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
+import {sortBy} from 'ramda'
 import {useMemo} from 'react'
 
 /**
@@ -39,18 +40,17 @@ export type SubscribeContainerProps<
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'
+    | 'hidePaymentAmount'
   > & {
+    sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     filter?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[]
     deactivateSubscriptionId?: string
     memberPlanIds?: string[]
   }
 
 export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
-  className,
-  defaults,
-  fields,
-  schema,
-  filter,
+  filter = memberPlan => memberPlan,
+  sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
   deactivateSubscriptionId,
   termsOfServiceUrl,
   donate,
@@ -83,12 +83,7 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const [resubscribe] = useResubscribeMutation({})
 
-  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe({
-    onError() {
-      userSubscriptions.refetch()
-      userInvoices.refetch()
-    }
-  })
+  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe()
 
   const [register] = useRegisterMutation({
     onError: () => challenge.refetch(),
@@ -105,8 +100,8 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
-      if (filter && draftList.data?.memberPlans) {
-        draftList.data.memberPlans.nodes = filter(draftList.data.memberPlans.nodes)
+      if (draftList.data?.memberPlans) {
+        draftList.data.memberPlans.nodes = filter(sort(draftList.data.memberPlans.nodes))
       }
 
       if (memberPlanIds?.length && draftList.data?.memberPlans) {
@@ -128,16 +123,13 @@ export const SubscribeContainer = <T extends Exclude<BuilderUserFormFields, 'fla
       <PaymentForm stripeClientSecret={stripeClientSecret} redirectPages={redirectPages} />
 
       <Subscribe
-        className={className}
-        defaults={defaults}
-        fields={fields}
-        schema={schema}
         challenge={challenge}
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
         termsOfServiceUrl={termsOfServiceUrl}
         donate={donatePredicate}
+        fields={['firstName', 'password', 'passwordRepeated', 'address', 'emailRepeated']}
         transactionFee={transactionFee}
         transactionFeeText={transactionFeeText}
         returningUserId={returningUserId}

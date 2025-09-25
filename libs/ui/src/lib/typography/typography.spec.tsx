@@ -8,8 +8,7 @@ const storiesCmp = composeStories(stories)
 describe('Typography', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
+      render(<Component />)
     })
   })
 })

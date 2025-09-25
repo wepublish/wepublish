@@ -9,13 +9,16 @@ import {CrowdfundingService} from './crowdfunding.service'
   scope: Scope.REQUEST
 })
 export class CrowdfundingDataloaderService implements Primeable<CrowdfundingWithActiveGoal> {
-  private readonly dataloader = new DataLoader<string, CrowdfundingWithActiveGoal | null>(
+  private dataloader = new DataLoader<string, CrowdfundingWithActiveGoal | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(ids as string[], await this.loadCrowdfundingWithActiveGoals(ids), 'id'),
     {name: 'CrowdfundingDataLoader'}
   )
 
-  constructor(private prisma: PrismaClient, private crowdfundingService: CrowdfundingService) {}
+  constructor(
+    private prisma: PrismaClient,
+    private crowdfundingService: CrowdfundingService
+  ) {}
 
   public prime(
     ...parameters: Parameters<DataLoader<string, CrowdfundingWithActiveGoal | null>['prime']>

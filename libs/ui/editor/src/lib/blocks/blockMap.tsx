@@ -1,3 +1,9 @@
+import {
+  EditorBlockType,
+  TeaserListBlockSort,
+  TeaserSlotType,
+  TeaserType
+} from '@wepublish/editor/api-v2'
 import nanoid from 'nanoid'
 import {
   MdAccountBox,
@@ -22,7 +28,9 @@ import {
 } from 'react-icons/md'
 
 import {BlockMapForValue} from '../atoms/blockList'
+import {isFunctionalUpdate} from '../utility'
 import {CommentBlock} from './commentBlock'
+import {CrowdfundingBlock} from './CrowdfundingBlock'
 import {EmbedBlock} from './embedBlock'
 import {EventBlock} from './eventBlock'
 import {HTMLBlock} from './htmlBlock'
@@ -33,26 +41,18 @@ import {ListicleBlock} from './listicleBlock'
 import {PollBlock} from './pollBlock'
 import {QuoteBlock} from './quoteBlock'
 import {createDefaultValue, RichTextBlock} from './richTextBlock/rich-text-block'
+import {SubscribeBlock} from './subscribeBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
+import {TeaserListBlock} from './teaserListBlock'
+import {TeaserSlotsBlock} from './teaserSlotsBlock'
 import {TitleBlock} from './titleBlock'
 import {BlockValue, EmbedType} from './types'
-import {
-  EditorBlockType,
-  TeaserListBlockSort,
-  TeaserSlotType,
-  TeaserType
-} from '@wepublish/editor/api-v2'
-import {isFunctionalUpdate} from '../utility'
-import {TeaserListBlock} from './teaserListBlock'
-import {SubscribeBlock} from './subscribeBlock'
-import {TeaserSlotsBlock} from './teaserSlotsBlock'
-import {CrowdfundingBlock} from './CrowdfundingBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
     field: props => <TitleBlock {...props} />,
-    defaultValue: {title: '', lead: '', blockStyle: undefined},
+    defaultValue: {title: '', lead: '', preTitle: '', blockStyle: undefined},
     label: 'blocks.title.label',
     icon: <MdTitle />
   },

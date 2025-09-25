@@ -60,6 +60,34 @@ const theme = createTheme(WePTheme, {
     subtitle2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
     },
+    // Article
+    articleAuthors: {
+      lineHeight: 1.7
+    },
+    // Teaser
+    teaserTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    teaserPretitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    teaserLead: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    teaserMeta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    // Banner
+    bannerTitle: {
+      ...WePTheme.typography.h3,
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    bannerText: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    bannerCta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
     fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
   },
   components: {

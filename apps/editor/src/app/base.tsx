@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {CanPreview} from '@wepublish/permissions'
+import {CanCreatePaywall, CanPreview, CanUpdatePaywall} from '@wepublish/permissions'
 import {PermissionControl, Version} from '@wepublish/ui/editor'
 import {de, enUS, fr} from 'date-fns/locale'
 import {forwardRef, ReactNode, useEffect, useState} from 'react'
@@ -29,6 +29,7 @@ import {
   MdMultilineChart,
   MdOutgoingMail,
   MdOutlineGridView,
+  MdPayment,
   MdPersonAddAlt1,
   MdPhoto,
   MdPieChartOutline,
@@ -115,7 +116,9 @@ const FloatingButton = styled(RIconButton)`
   padding: 6px;
   position: absolute;
   top: 5vh;
-  transition: transform 0.2s ease-in, opacity 0.15s ease-in-out;
+  transition:
+    transform 0.2s ease-in,
+    opacity 0.15s ease-in-out;
   z-index: 100;
   transform: translateX(${props => (props.isExpanded ? '241px' : '37px')});
 
@@ -182,7 +185,9 @@ export function Base({children}: BaseProps) {
                     CanPreview.id,
                     'CAN_GET_PEER_ARTICLES',
                     'CAN_GET_PEER_ARTICLE',
-                    'CAN_GET_TAGS'
+                    'CAN_GET_TAGS',
+                    CanCreatePaywall.id,
+                    CanUpdatePaywall.id
                   ]}>
                   <Nav.Menu
                     eventKey={'articles'}
@@ -232,6 +237,17 @@ export function Base({children}: BaseProps) {
                         {t('navbar.articleTags')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[CanCreatePaywall.id, CanUpdatePaywall.id]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/paywall"
+                        icon={<MdPayment />}
+                        active={path === 'articles/paywall'}>
+                        {t('paywall.navbar')}
+                      </Nav.Item>
+                    </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
 
@@ -259,7 +275,7 @@ export function Base({children}: BaseProps) {
                         as={NavLink}
                         href="/pages"
                         icon={<MdDashboard />}
-                        active={path === 'page'}>
+                        active={path === 'pages'}>
                         {t('navbar.pages')}
                       </Nav.Item>
                     </PermissionControl>

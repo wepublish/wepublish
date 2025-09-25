@@ -93,6 +93,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
       })
     },
     description: {type: GraphQLRichText},
+    shortDescription: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
@@ -176,6 +177,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     slug: {type: new GraphQLNonNull(GraphQLString)},
     imageID: {type: GraphQLString},
     description: {type: GraphQLRichText},
+    shortDescription: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},

@@ -8,12 +8,14 @@ import {Tag} from './tag.model'
 
 @Resolver(() => Tag)
 export class TagResolver {
-  constructor(private tagService: TagService, private urlAdapter: URLAdapter) {}
+  constructor(
+    private tagService: TagService,
+    private urlAdapter: URLAdapter
+  ) {}
 
   @Public()
   @Query(() => TagConnection, {
-    description: 'This query returns a list of tags',
-    nullable: true
+    description: 'This query returns a list of tags'
   })
   async tags(@Args() args: TagsArgs) {
     const {filter, sort, order, cursor, take, skip} = args

@@ -15,8 +15,8 @@ import {ProfileService} from './profile.service'
 @Resolver()
 export class ProfileResolver {
   constructor(
-    private readonly userService: UserService,
-    private readonly profileService: ProfileService
+    private userService: UserService,
+    private profileService: ProfileService
   ) {}
 
   @Public()
@@ -62,7 +62,7 @@ export class ProfileResolver {
     if (!user) {
       throw new UserInputError(`User not found ${session.user.id}`)
     }
-    console.log({user})
+
     return user.paymentProviderCustomers
   }
 

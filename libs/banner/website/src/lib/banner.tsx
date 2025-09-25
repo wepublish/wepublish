@@ -1,8 +1,9 @@
-import {Link} from '@mui/material'
 import styled from '@emotion/styled'
+import {css, GlobalStyles, Typography} from '@mui/material'
+import {useSetIntendedRoute} from '@wepublish/authentication/website'
 import {Button} from '@wepublish/ui'
 import {BannerAction, BannerActionRole} from '@wepublish/website/api'
-import {BuilderBannerProps} from '@wepublish/website/builder'
+import {BuilderBannerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {differenceInHours} from 'date-fns'
 import {useEffect, useState} from 'react'
 
@@ -19,7 +20,7 @@ export const BannerImage = styled('div')(
 `
 )
 
-export const BannerContent = styled('div')`
+export const BannerContentWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(4)};
   padding-top: ${({theme}) => theme.spacing(5)};
 
@@ -28,8 +29,17 @@ export const BannerContent = styled('div')`
   }
 `
 
-export const BannerCta = styled('p')`
-  font-weight: 700;
+export const BannerContent = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
+export const BannerCta = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
+export const BannerCtaText = styled('p')`
   text-align: center;
 `
 
@@ -49,18 +59,12 @@ export const BannerCloseButton = styled('span')`
   }
 `
 
-export const BannerTitle = styled('h2')`
-  margin-top: 0;
-  margin-bottom: ${({theme}) => theme.spacing(2)};
-  line-height: 1.2;
+export const BannerTitle = styled('div')`
+  padding-right: ${({theme}) => theme.spacing(3)};
 `
+export const BannerText = styled('div')``
 
-export const BannerText = styled('div')`
-  font-family: sans-serif;
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-`
-
-const BannerActions = styled('div')`
+export const BannerActions = styled('div')`
   display: flex;
   gap: ${({theme}) => theme.spacing(3)};
   justify-content: center;
@@ -70,7 +74,7 @@ type BannerWrapperProps = {
   hasImage?: boolean
 }
 
-const BannerWrapper = styled('div')<BannerWrapperProps>(
+export const BannerWrapper = styled('div')<BannerWrapperProps>(
   ({theme, hasImage}) => `
   z-index: 11;
   position: sticky;
@@ -79,7 +83,6 @@ const BannerWrapper = styled('div')<BannerWrapperProps>(
   grid-template-columns: 1fr;
   background-color: ${theme.palette.secondary.main};
   color: ${theme.palette.secondary.contrastText};
-  width: 100%;
 
   &[data-collapsed='true'] {
     display: none;
@@ -95,15 +98,22 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
   const [showBanner, setShowBanner] = useState(false)
   const [collapsed, setCollapsed] = useState(true)
   const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+  const setIntendedRoute = useSetIntendedRoute()
 
   useEffect(() => {
     if (!data?.primaryBanner) {
       return
     }
 
-    const timer = setTimeout(() => {
-      setShowBanner(true)
-    }, (data?.primaryBanner?.delay ?? 0) * 1000)
+    const timer = setTimeout(
+      () => {
+        setShowBanner(true)
+      },
+      (data?.primaryBanner?.delay ?? 0) * 1000
+    )
 
     return () => clearTimeout(timer)
   }, [data?.primaryBanner])
@@ -126,7 +136,11 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     if (action.role === BannerActionRole.Cancel) {
       e.preventDefault()
       handleClose()
+
+      return
     }
+
+    setIntendedRoute()
   }
 
   if (!data?.primaryBanner || loading || error) {
@@ -143,7 +157,8 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
     <BannerWrapper
       hasImage={!!data?.primaryBanner.image}
       className={className}
-      data-collapsed={collapsed}>
+      data-collapsed={collapsed}
+      data-banner>
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
 
       {data?.primaryBanner.image && (
@@ -151,30 +166,53 @@ export const Banner = ({data, loading, error, className}: BuilderBannerProps) =>
           style={{backgroundImage: `url(${data?.primaryBanner.image.url})`}}></BannerImage>
       )}
 
-      {htmlContent != null && htmlContent != '' ? (
-        <BannerContent dangerouslySetInnerHTML={{__html: htmlContent}} />
-      ) : (
-        <BannerContent>
-          <BannerTitle>{data?.primaryBanner.title}</BannerTitle>
-          <BannerText>{data?.primaryBanner.text}</BannerText>
-          {data?.primaryBanner.cta && <BannerCta>{data?.primaryBanner.cta}</BannerCta>}
+      {htmlContent && <BannerContentWrapper dangerouslySetInnerHTML={{__html: htmlContent}} />}
 
-          <BannerActions>
-            {data?.primaryBanner.actions &&
-              data?.primaryBanner.actions.map(a => (
-                <Link
+      {!htmlContent && (
+        <BannerContentWrapper>
+          <BannerContent>
+            <Typography variant="bannerTitle" component={BannerTitle}>
+              {data?.primaryBanner.title}
+            </Typography>
+
+            <Typography variant="bannerText" component={BannerText}>
+              {data?.primaryBanner.text}
+            </Typography>
+          </BannerContent>
+
+          <BannerCta>
+            {data?.primaryBanner.cta && (
+              <Typography variant="bannerCta" component={BannerCtaText}>
+                {data?.primaryBanner.cta}
+              </Typography>
+            )}
+
+            <BannerActions>
+              {data?.primaryBanner.actions?.map(a => (
+                <Button
+                  color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}
+                  data-role={a.role}
+                  LinkComponent={Link}
                   href={a.url}
                   key={a.url}
-                  onClick={e => handleActionClick(e, a)}
-                  data-role={a.role}>
-                  <Button color={a.role === BannerActionRole.Primary ? 'primary' : 'secondary'}>
-                    {a.label}
-                  </Button>
-                </Link>
+                  onClick={e => handleActionClick(e, a)}>
+                  {a.label}
+                </Button>
               ))}
-          </BannerActions>
-        </BannerContent>
+            </BannerActions>
+          </BannerCta>
+        </BannerContentWrapper>
       )}
     </BannerWrapper>
   )
 }
+
+export const forceHideBanner = (
+  <GlobalStyles
+    styles={css`
+      [data-banner] {
+        display: none !important;
+      }
+    `}
+  />
+)

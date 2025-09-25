@@ -4,8 +4,9 @@ import {useCallback, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {CheckPicker, Panel as RPanel} from 'rsuite'
 import type {CheckPickerProps} from 'rsuite'
-import {SubscribeBlockValue} from '.'
+
 import {BlockProps} from '../atoms/blockList'
+import {SubscribeBlockValue} from '.'
 
 const Panel = styled(RPanel)`
   display: grid;

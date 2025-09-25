@@ -8,7 +8,10 @@ import {Validator} from '@wepublish/user'
 
 @Injectable()
 export class ProfileService {
-  constructor(readonly prisma: PrismaClient, readonly imageService: ImageService) {}
+  constructor(
+    readonly prisma: PrismaClient,
+    readonly imageService: ImageService
+  ) {}
 
   async uploadUserProfileImage(user: User, uploadImageInput: UploadImageInput | null) {
     let newImage = null
@@ -94,7 +97,7 @@ export class ProfileService {
       data: {
         paymentProviderCustomers: {
           deleteMany: {
-            userId: userId
+            userId
           },
           createMany: {
             data: paymentProviderCustomers

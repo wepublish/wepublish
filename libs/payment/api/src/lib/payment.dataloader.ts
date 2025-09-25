@@ -6,7 +6,7 @@ import {Injectable, Scope} from '@nestjs/common'
   scope: Scope.REQUEST
 })
 export class PaymentDataloader extends DataLoaderService<Payment> {
-  constructor(protected readonly prisma: PrismaClient) {
+  constructor(protected prisma: PrismaClient) {
     super()
   }
 

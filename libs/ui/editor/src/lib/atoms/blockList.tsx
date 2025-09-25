@@ -16,10 +16,10 @@ import React, {
   useMemo,
   useState
 } from 'react'
+import {useTranslation} from 'react-i18next'
 import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
 import {IconButton, Panel as RPanel, SelectPicker} from 'rsuite'
 
-import {useTranslation} from 'react-i18next'
 import {
   isFunctionalUpdate,
   isValueConstructor,

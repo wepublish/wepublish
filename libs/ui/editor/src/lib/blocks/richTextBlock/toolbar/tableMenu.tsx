@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {BlockFormat} from '@wepublish/richtext'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose, MdDisabledByDefault} from 'react-icons/md'
@@ -10,7 +11,6 @@ import {ColorPicker} from '../../../atoms/colorPicker'
 import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 import {WepublishEditor} from '../editor/wepublishEditor'
-import {BlockFormat} from '@wepublish/richtext'
 
 const ControlsWrapper = styled.div`
   display: flex;

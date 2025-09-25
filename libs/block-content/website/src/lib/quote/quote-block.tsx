@@ -1,7 +1,8 @@
-import {css} from '@mui/material'
+import {css, Typography} from '@mui/material'
 import styled from '@emotion/styled'
 import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {BlockContent, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
+import {Image} from '@wepublish/image/website'
 
 export const isQuoteBlock = (block: Pick<BlockContent, '__typename'>): block is QuoteBlockType =>
   block.__typename === 'QuoteBlock'
@@ -46,7 +47,7 @@ export const QuoteContent = styled('div')`
 
 export const QuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockProps) => {
   const {
-    elements: {H4, Image, Paragraph}
+    elements: {Paragraph}
   } = useWebsiteBuilder()
 
   return (
@@ -54,7 +55,9 @@ export const QuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockP
       {image && <Image image={image} square css={imageStyles} />}
 
       <QuoteContent>
-        <H4 component="p">{quote}</H4>
+        <Typography variant="blockQuote" component="p">
+          {quote}
+        </Typography>
 
         {author && (
           <Paragraph component="cite" gutterBottom={false}>

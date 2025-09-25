@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {
-  ImageListDocument,
   FullImageFragment,
+  ImageListDocument,
   useImageQuery,
   useUpdateImageMutation,
   useUploadImageMutation
@@ -30,8 +30,8 @@ import {
   PermissionControl,
   useAuthorisation
 } from '../atoms/permissionControl'
-import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 import {ImageBlockValue} from '../blocks'
+import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
 
 const {ControlLabel, Control, Group} = RForm
 

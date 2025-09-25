@@ -7,7 +7,7 @@ import DataLoader from 'dataloader'
   scope: Scope.REQUEST
 })
 export class SettingDataloaderService implements Primeable<Setting> {
-  private readonly dataloader = new DataLoader<string, Setting | null>(
+  private dataloader = new DataLoader<string, Setting | null>(
     async (names: readonly string[]) =>
       createOptionalsArray(
         names as string[],

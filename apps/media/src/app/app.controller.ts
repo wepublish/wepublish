@@ -30,8 +30,8 @@ import {ImageCacheService} from './imageCache.service'
 })
 export class AppController {
   constructor(
-    private readonly media: MediaService,
-    private readonly imageCacheService: ImageCacheService
+    private media: MediaService,
+    private imageCacheService: ImageCacheService
   ) {}
 
   @Get('/health')

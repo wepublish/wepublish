@@ -1,7 +1,7 @@
-import {BuilderRenderElementProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {RenderElement} from '@wepublish/richtext/website'
-import {BlockFormat} from '@wepublish/richtext'
 import {css} from '@mui/material'
+import {BlockFormat} from '@wepublish/richtext'
+import {RenderElement} from '@wepublish/richtext/website'
+import {BuilderRenderElementProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 const lastChildNoGutter = css`
   &:last-child {

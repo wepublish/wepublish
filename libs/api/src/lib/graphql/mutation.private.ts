@@ -92,16 +92,9 @@ import {
 } from './poll/poll.private-mutation'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
-import {
-  createJWTSession,
-  createOAuth2Session,
-  createSession,
-  revokeSessionByToken
-} from './session/session.mutation'
+import {createJWTSession, createSession, revokeSessionByToken} from './session/session.mutation'
 import {revokeSessionById} from './session/session.private-mutation'
 import {getSessionsForUser} from './session/session.private-queries'
-import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
-import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
   cancelSubscriptionById,
@@ -190,26 +183,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
         createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
-    },
-
-    createSessionWithOAuth2Code: {
-      type: new GraphQLNonNull(GraphQLSessionWithToken),
-      args: {
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        code: {type: new GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
-        createOAuth2Session(
-          name,
-          code,
-          redirectUri,
-          sessionTTL,
-          oauth2Providers,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        )
     },
 
     revokeSession: {
@@ -771,18 +744,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         deleteComment(id, authenticate, comment)
     },
 
-    // Settings
-    // ==========
-
-    updateSettingList: {
-      type: new GraphQLList(GraphQLSetting),
-      args: {
-        value: {type: new GraphQLList(GraphQLUpdateSettingArgs)}
-      },
-      resolve: (root, {value}, {authenticate, prisma}) =>
-        updateSettings(value, authenticate, prisma)
-    },
-
     // Rating System
     // ==========
 
@@ -930,11 +891,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLTag,
       args: {
         tag: {type: GraphQLString},
+        description: {type: GraphQLRichText},
         type: {type: new GraphQLNonNull(GraphQLTagType)},
         main: {type: GraphQLBoolean}
       },
-      resolve: (root, {tag, type, main}, {authenticate, prisma}) =>
-        createTag(tag, type, main, authenticate, prisma.tag)
+      resolve: (root, {tag, description, type, main}, {authenticate, prisma}) =>
+        createTag(tag, description, type, main, authenticate, prisma.tag)
     },
 
     updateTag: {
@@ -942,10 +904,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: new GraphQLNonNull(GraphQLString)},
         tag: {type: GraphQLString},
+        description: {type: GraphQLRichText},
         main: {type: GraphQLBoolean}
       },
-      resolve: (root, {id, tag, main}, {authenticate, prisma}) =>
-        updateTag(id, tag, main, authenticate, prisma.tag)
+      resolve: (root, {id, tag, description, main}, {authenticate, prisma}) =>
+        updateTag(id, tag, description, main, authenticate, prisma.tag)
     },
 
     deleteTag: {

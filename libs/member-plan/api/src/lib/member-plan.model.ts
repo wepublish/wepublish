@@ -2,7 +2,7 @@ import {Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graph
 import {PaginatedType} from '@wepublish/utils/api'
 import {HasImage, Image} from '@wepublish/image/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Node} from 'slate'
+import {Descendant} from 'slate'
 import {PaymentMethod} from '@wepublish/payment-method/api'
 import {PaymentPeriodicity} from '@prisma/client'
 
@@ -63,7 +63,10 @@ export class MemberPlan {
   image?: Image
 
   @Field(() => GraphQLRichText, {nullable: true})
-  description?: Node[] | null
+  description?: Descendant[]
+
+  @Field(() => GraphQLRichText, {nullable: true})
+  shortDescription?: Descendant[]
 
   @Field(() => [String], {nullable: true})
   tags?: string[]

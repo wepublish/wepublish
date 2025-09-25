@@ -312,7 +312,6 @@ export const getUserForCredentials = async (
     },
     include: {
       address: true,
-      oauth2Accounts: true,
       paymentProviderCustomers: true,
       properties: true
     }

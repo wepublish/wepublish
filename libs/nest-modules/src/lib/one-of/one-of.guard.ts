@@ -11,7 +11,10 @@ import {ONE_OF_METADATA_KEY} from './one-of.decorator'
 
 @Injectable()
 export class OneOfGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector, private readonly moduleRef: ModuleRef) {}
+  constructor(
+    private reflector: Reflector,
+    private moduleRef: ModuleRef
+  ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const allowedGuards = this.reflector.getAllAndMerge<Type<CanActivate>[]>(ONE_OF_METADATA_KEY, [

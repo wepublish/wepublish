@@ -2,18 +2,18 @@ import styled from '@emotion/styled'
 import {TeaserSlotsAutofillConfigInput, TeaserSlotType} from '@wepublish/editor/api-v2'
 import arrayMove from 'array-move'
 import {ReactNode, useMemo, useState} from 'react'
+import {useTranslation} from 'react-i18next'
+import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
 import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
 import {Button, Drawer, IconButton as RIconButton, Panel as RPanel, Toggle} from 'rsuite'
 
+import {IconButtonTooltip, PlaceholderInput} from '../atoms'
 import {BlockProps} from '../atoms/blockList'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {Teaser as TeaserTypeMixed, TeaserSlotsBlockValue} from './types'
-import {TeaserSlotsAutofillControls} from './teaserSlots/teaser-slots-autofill-controls'
-import {useTranslation} from 'react-i18next'
 import {ContentForTeaser} from './teaserGridBlock'
-import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
-import {IconButtonTooltip, PlaceholderInput} from '../atoms'
+import {TeaserSlotsAutofillControls} from './teaserSlots/teaser-slots-autofill-controls'
+import {Teaser as TeaserTypeMixed, TeaserSlotsBlockValue} from './types'
 // import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
 
 const IconButton = styled(RIconButton)`
@@ -57,18 +57,6 @@ const TeaserWrapper = styled('div', {
   opacity: ${({autofill}) => (autofill ? 0.4 : 1)};
 `
 
-const TeaserContentWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-`
-
-const TeaserImage = styled.img`
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-`
-
 export const TeaserToolbar = styled.div`
   position: absolute;
   z-index: 2000;
@@ -94,36 +82,6 @@ export const SlotToolbar = styled.div`
   padding: 5px;
   border-radius: 3px;
   font-size: 0.875rem;
-`
-
-const PeerInfo = styled.div`
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const Content = styled.div`
-  margin-bottom: 10px;
-`
-
-const PeerLogo = styled.div`
-  display: flex;
-  margin-bottom: 10px;
-`
-
-const TeaserInfoWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-
-const TeaserStyleElement = styled.div`
-  flex-shrink: 0;
-  margin-right: 10px;
-`
-
-const Status = styled.div`
-  flex-shrink: 0;
 `
 
 const GridItem = SortableElement<TeaserSlotProps>((props: TeaserSlotProps) => {
@@ -154,6 +112,7 @@ export function TeaserSlotsBlock({
   }
   const numColumns = 3
   const [editIndex, setEditIndex] = useState(0)
+  const {t} = useTranslation()
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -265,7 +224,7 @@ export function TeaserSlotsBlock({
             .slice(0, index)
             .filter(slot => slot.type === TeaserSlotType.Autofill).length
           const teaser = (
-            type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex] ?? null
+            type === TeaserSlotType.Manual ? manualTeaser : (autofillTeasers[autofillIndex] ?? null)
           ) as TeaserTypeMixed | null
 
           return (
@@ -298,7 +257,7 @@ export function TeaserSlotsBlock({
         })}
       </Grid>
       <TeaserSlotsControls>
-        <Button onClick={handleAddSlot}>Add slot</Button>
+        <Button onClick={handleAddSlot}>{t('blocks.teaserSlots.addSlot')}</Button>
       </TeaserSlotsControls>
       <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
         {slots[editIndex] && (

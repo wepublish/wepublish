@@ -4,9 +4,10 @@ import {UserService} from '@wepublish/user/api'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
 import {MemberRegistrationInput} from './register.model'
 import {Validator} from './validator'
-import {InternalError, logger} from '@wepublish/api'
+import {InternalError} from '@wepublish/api'
 import crypto from 'crypto'
 import {UserEvent} from '@prisma/client'
+import {logger} from '@wepublish/utils/api'
 
 @Injectable()
 export class RegisterService {
@@ -35,7 +36,6 @@ export class RegisterService {
       password,
       active: true
     })
-    console.log({user})
 
     if (!user) {
       logger('mutation.public').error('Could not create new user for email "%s"', email)

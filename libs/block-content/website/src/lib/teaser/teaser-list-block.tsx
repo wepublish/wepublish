@@ -20,16 +20,15 @@ export const TeaserListBlockTeasers = styled('div')`
   grid-template-columns: 1fr;
   align-items: stretch;
 
-  ${({theme}) =>
-    css`
-      ${theme.breakpoints.up('sm')} {
-        grid-template-columns: 1fr 1fr;
-      }
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr 1fr;
+    }
 
-      ${theme.breakpoints.up('md')} {
-        grid-template-columns: repeat(12, 1fr);
-      }
-    `}
+    ${theme.breakpoints.up('md')} {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  `}
 `
 
 export const TeaserListBlock = ({
@@ -54,6 +53,7 @@ export const TeaserListBlock = ({
             teaser={teaser}
             alignment={alignmentForTeaserBlock(index, 3)}
             blockStyle={blockStyle}
+            index={index}
           />
         ))}
       </TeaserListBlockTeasers>

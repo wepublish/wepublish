@@ -1,16 +1,25 @@
-import {MdEast} from 'react-icons/md'
-import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {extractTeaserData} from '@wepublish/block-content/website'
 import styled from '@emotion/styled'
+import {
+  selectTeaserPreTitle,
+  selectTeaserTitle,
+  selectTeaserUrl
+} from '@wepublish/block-content/website'
+import {BuilderTeaserProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
+import {MdEast} from 'react-icons/md'
 
 const NewsTeaserUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const {title, preTitle, href} = extractTeaserData(teaser)
+  const title = teaser && selectTeaserTitle(teaser)
+  const preTitle = teaser && selectTeaserPreTitle(teaser)
+  const href = (teaser && selectTeaserUrl(teaser)) ?? ''
+
   const {
-    elements: {H4, Link}
+    elements: {H4}
   } = useWebsiteBuilder()
+
   return (
     <Link href={href} className={className}>
       <span>{preTitle}</span>
+
       <div>
         <H4 gutterBottom>{title}</H4>
         <MdEast />

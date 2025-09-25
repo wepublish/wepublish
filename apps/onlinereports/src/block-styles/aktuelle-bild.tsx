@@ -1,8 +1,10 @@
+import styled from '@emotion/styled'
+import {Box, Typography} from '@mui/material'
 import {
-  ArrowButton,
   hasBlockStyle,
   isFilledTeaser,
   isTeaserListBlock,
+  SliderArrow,
   SliderBallContainer,
   SliderInnerContainer,
   SliderTitle,
@@ -15,17 +17,15 @@ import {
   TeaserTitle,
   TeaserWrapper
 } from '@wepublish/block-content/website'
+import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
+import {BuilderTeaserListBlockProps, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {allPass} from 'ramda'
 
-import styled from '@emotion/styled'
-import {Box, Typography} from '@mui/material'
 import {
   OnlineReportsBaseTeaserStyled,
   OnlineReportsTeaserPreTitleWrapper,
   OnlineReportsTeaserTitleWrapper
 } from '../onlinereports-base-teaser'
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const IsAktuelleBildTeasers = (
   block: BlockContent
@@ -41,7 +41,7 @@ export const AktuelleBild = ({
   const numColumns = 1
 
   const {
-    elements: {H2, Link}
+    elements: {H2}
   } = useWebsiteBuilder()
 
   return (
@@ -55,10 +55,12 @@ export const AktuelleBild = ({
           </Link>{' '}
           (mit Adresse und Datum)!
         </Typography>
+
         <Link href={'/a/tag/Das%20Wort%20zum%20Bild'}>
           <b>Zum Archiv {'->'}</b>
         </Link>
       </SideInfo>
+
       <TeaserSliderWrapper>
         <TeaserSlider
           teasers={filledTeasers}
@@ -148,7 +150,7 @@ const AktuelleBildWrapper = styled(Box)`
     margin-top: ${({theme}) => theme.spacing(1)};
   }
 
-  ${ArrowButton} {
+  ${SliderArrow} {
     display: block;
   }
 `

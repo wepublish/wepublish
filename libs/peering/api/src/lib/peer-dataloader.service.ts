@@ -7,7 +7,7 @@ import DataLoader from 'dataloader'
   scope: Scope.REQUEST
 })
 export class PeerDataloaderService implements Primeable<Peer> {
-  private readonly dataloader = new DataLoader<string, Peer | null>(
+  private dataloader = new DataLoader<string, Peer | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
         ids as string[],

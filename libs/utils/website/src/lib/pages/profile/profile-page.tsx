@@ -6,6 +6,8 @@ import {
   InvoiceListContainer,
   InvoiceListItemWrapper,
   SubscriptionListContainer,
+  SubscriptionListItemContent,
+  SubscriptionListItemWrapper,
   useHasUnpaidInvoices
 } from '@wepublish/membership/website'
 import {PersonalDataFormContainer} from '@wepublish/user/website'
@@ -16,16 +18,16 @@ import {
   MeDocument,
   NavigationListDocument,
   ProductType,
-  UserSession,
+  SessionWithTokenWithoutUser,
   useSubscriptionsQuery,
   FullSubscriptionFragment
 } from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {Button, Link, useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
-import {t} from 'i18next'
 import {NextPage, NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {ComponentProps, SyntheticEvent, useCallback, useMemo, useState} from 'react'
+import {useTranslation} from 'react-i18next'
 import {withAuthGuard} from '../../auth-guard'
 import {ssrAuthLink} from '../../auth-link'
 import {getSessionTokenProps} from '../../get-session-token-props'
@@ -68,7 +70,7 @@ const DeactivatedSubscriptions = styled('div')`
   justify-content: center;
 `
 
-const ProfileWrapper = styled(ContentWrapper)`
+export const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
@@ -83,8 +85,9 @@ type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, '
 
 function ProfilePage(props: ProfilePageProps) {
   const {
-    elements: {Link, H4}
+    elements: {H4}
   } = useWebsiteBuilder()
+  const {t} = useTranslation()
 
   const {data: subscriptonData} = useSubscriptionsQuery({
     fetchPolicy: 'cache-only'
@@ -133,6 +136,9 @@ function ProfilePage(props: ProfilePageProps) {
 
   const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
+  )
+  const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
+    subscription => !subscription.deactivation
   )
 
   const hasUnpaidInvoices = useHasUnpaidInvoices()
@@ -241,12 +247,17 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }
     })
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(data.data.createSessionWithJWT as SessionWithTokenWithoutUser),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE
+      }
+    )
   }
 
   const sessionProps = await getSessionTokenProps(ctx)

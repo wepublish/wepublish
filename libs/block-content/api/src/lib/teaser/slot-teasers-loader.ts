@@ -15,7 +15,10 @@ import {isTeaserGridBlock} from './teaser-grid.model'
 export class SlotTeasersLoader {
   private loadedTeasers: (typeof Teaser)[] = []
 
-  constructor(private eventService: EventService, private articleService: ArticleService) {}
+  constructor(
+    private eventService: EventService,
+    private articleService: ArticleService
+  ) {}
 
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
     revisionBlocks.forEach(block => {
@@ -29,6 +32,7 @@ export class SlotTeasersLoader {
           }, [])
         )
       }
+
       if (isTeaserGridBlock(block)) {
         this.addLoadedTeaser(
           ...block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
@@ -39,6 +43,7 @@ export class SlotTeasersLoader {
           }, [])
         )
       }
+
       if (isTeaserGridFlexBlock(block)) {
         this.addLoadedTeaser(
           ...block.flexTeasers.reduce((teasers: (typeof Teaser)[], flexTeaser) => {
@@ -65,6 +70,7 @@ export class SlotTeasersLoader {
         blocks.push(block)
       }
     }
+
     return blocks
   }
 
@@ -76,6 +82,7 @@ export class SlotTeasersLoader {
       const autofillIndex = slots
         .slice(0, index)
         .filter(slot => slot.type === TeaserSlotType.Autofill).length
+
       return (
         (type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex]) ?? null
       )
@@ -109,7 +116,7 @@ export class SlotTeasersLoader {
             imageID: undefined,
             lead: undefined,
             title: undefined
-          } as ArticleTeaser)
+          }) as ArticleTeaser
       )
 
       this.addLoadedTeaser(...teasers)
@@ -134,7 +141,7 @@ export class SlotTeasersLoader {
             imageID: undefined,
             lead: undefined,
             title: undefined
-          } as EventTeaser)
+          }) as EventTeaser
       )
       this.addLoadedTeaser(...teasers)
       return teasers
@@ -153,10 +160,12 @@ export class SlotTeasersLoader {
         if (teaser.type === TeaserType.Article && teaser.articleID) {
           ids.push(teaser.articleID)
         }
+
         if (teaser.type === TeaserType.Event && teaser.eventID) {
           ids.push(teaser.eventID)
         }
       }
+
       return ids
     }, [])
   }

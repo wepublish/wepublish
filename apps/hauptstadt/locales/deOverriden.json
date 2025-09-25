@@ -1,0 +1,22 @@
+{
+  "navbar": {
+    "subscribe": "Abo lösen"
+  },
+  "paywall": {
+    "subscribe": "Jetzt Abo Lösen"
+  },
+  "teaser": {
+    "author": {
+      "seperator": " und "
+    },
+    "meta": {
+      "seperator": ", "
+    }
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {{yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
+    },
+    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
+  }
+}

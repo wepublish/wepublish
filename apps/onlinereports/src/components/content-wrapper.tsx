@@ -1,11 +1,9 @@
-import {css} from '@mui/material'
 import styled from '@emotion/styled'
-import {ComponentProps} from 'react'
+import {css} from '@mui/material'
 import {
+  BreakBlockHeading,
   BreakBlockWrapper,
   EventBlockWrapper,
-  HeadingWithImage,
-  HeadingWithoutImage,
   ImageBlockCaption,
   ImageBlockInnerWrapper,
   ImageBlockWrapper,
@@ -13,6 +11,7 @@ import {
   SliderWrapper
 } from '@wepublish/block-content/website'
 import {ContentWrapperStyled, useFullWidthContent} from '@wepublish/content/website'
+import {ComponentProps} from 'react'
 
 export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   fullWidth?: boolean
@@ -45,7 +44,7 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         }
       }
 
-      ${HeadingWithoutImage}, ${HeadingWithImage} {
+      ${BreakBlockHeading} {
         text-transform: none;
         font-family: ${theme.typography.subtitle2.fontFamily};
         font-style: ${theme.typography.subtitle2.fontStyle};
