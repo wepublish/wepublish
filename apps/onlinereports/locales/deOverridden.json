@@ -18,6 +18,7 @@
   "user": {
     "changeEmailRequest": "Klicken Sie hier, um Ihre E-Mail-Adresse zu ändern.",
     "activeSubscriptions": "Aktive Zahlungen",
+    "activeDonationSubscriptions": "Aktive Spenden",
     "viewCancelledSubscriptions": "Frühere Zahlungen anzeigen"
   }
 }

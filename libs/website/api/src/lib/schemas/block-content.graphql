@@ -106,6 +106,7 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     blockStyle
+    memberPlanIds
   }
 
   ... on EventBlock {

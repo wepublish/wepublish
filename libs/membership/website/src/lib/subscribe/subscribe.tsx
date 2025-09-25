@@ -170,7 +170,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   challenge,
   userSubscriptions,
   userInvoices,
-  fields = ['firstName', 'password', 'passwordRepeated', 'address'] as T[],
+  fields = [
+    'firstName',
+    'password',
+    'emailRepeated',
+    'passwordRepeated',
+    'address',
+  ] as T[],
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
@@ -290,6 +296,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ),
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
   );
+  const isDonation = useMemo(
+    () => !!donate?.(selectedMemberPlan),
+    [donate, selectedMemberPlan]
+  );
 
   const selectedAvailablePaymentMethod = useMemo(
     () =>
@@ -309,13 +319,24 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
-  const paymentText = getPaymentText(
-    autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    selectedPaymentPeriodicity,
-    monthlyAmount,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
+  const paymentText = useMemo(
+    () =>
+      getPaymentText(
+        autoRenew,
+        selectedMemberPlan?.extendable ?? true,
+        selectedPaymentPeriodicity,
+        monthlyAmount,
+        selectedMemberPlan?.currency ?? Currency.Chf,
+        locale
+      ),
+    [
+      autoRenew,
+      selectedMemberPlan?.extendable ?? true,
+      selectedPaymentPeriodicity,
+      monthlyAmount,
+      selectedMemberPlan?.currency ?? Currency.Chf,
+      locale,
+    ]
   );
 
   const monthlyPaymentText = getPaymentText(
@@ -327,53 +348,58 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     locale
   );
 
-  const onSubmit = handleSubmit(data => {
-    const subscribeData: SubscribeMutationVariables = {
-      monthlyAmount,
-      memberPlanId: data.memberPlanId,
-      paymentMethodId: data.paymentMethodId,
-      paymentPeriodicity: data.paymentPeriodicity,
-      autoRenew: data.autoRenew,
-    };
-
-    if (hasUser) {
-      return callAction(onSubscribe)(subscribeData);
-    }
-
-    if (returningUserId) {
-      const resubscribeData: ResubscribeMutationVariables = {
-        ...subscribeData,
-        userId: returningUserId,
+  const onSubmit = handleSubmit(
+    data => {
+      const subscribeData: SubscribeMutationVariables = {
+        monthlyAmount,
+        memberPlanId: data.memberPlanId,
+        paymentMethodId: data.paymentMethodId,
+        paymentPeriodicity: data.paymentPeriodicity,
+        autoRenew: data.autoRenew,
       };
 
-      return callAction(onResubscribe)(resubscribeData);
+      if (hasUser) {
+        return callAction(onSubscribe)(subscribeData);
+      }
+
+      if (returningUserId) {
+        const resubscribeData: ResubscribeMutationVariables = {
+          ...subscribeData,
+          userId: returningUserId,
+        };
+
+        return callAction(onResubscribe)(resubscribeData);
+      }
+
+      const {
+        address,
+        challengeAnswer,
+        email,
+        birthday,
+        password,
+        name,
+        firstName,
+      } = data as z.infer<typeof loggedOutSchema>;
+
+      const registerData = {
+        birthday,
+        email,
+        password,
+        name,
+        firstName,
+        address: address as UserAddressInput,
+        challengeAnswer,
+      } as RegisterMutationVariables;
+
+      return callAction(onSubscribeWithRegister)({
+        register: registerData,
+        subscribe: subscribeData,
+      });
+    },
+    error => {
+      console.error('Validation Error:', error);
     }
-
-    const {
-      address,
-      challengeAnswer,
-      email,
-      birthday,
-      password,
-      name,
-      firstName,
-    } = data as z.infer<typeof loggedOutSchema>;
-
-    const registerData = {
-      birthday,
-      email,
-      password,
-      name,
-      firstName,
-      address: address as UserAddressInput,
-      challengeAnswer,
-    } as RegisterMutationVariables;
-
-    return callAction(onSubscribeWithRegister)({
-      register: registerData,
-      subscribe: subscribeData,
-    });
-  });
+  );
 
   useEffect(() => {
     if (selectedMemberPlan) {
@@ -397,6 +423,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   useEffect(() => {
     if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
       setValue<'autoRenew'>('autoRenew', true);
+      return;
     }
 
     if (!selectedMemberPlan?.extendable) {
@@ -516,36 +543,36 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         )}
       </SubscribeSection>
 
-      <SubscribeSection area="monthlyAmount">
-        {!hidePaymentAmount(selectedMemberPlan) && (
-          <Controller
-            name={'monthlyAmount'}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <SubscribeAmount>
-                <Paragraph
-                  component={SubscribeAmountText}
-                  gutterBottom={false}
-                >
-                  Ich unterstütze {siteTitle}{' '}
-                  {replace(/^./, toLower)(monthlyPaymentText)}
-                </Paragraph>
+      <SubscribeSection area={'monthlyAmount'}>
+        <Controller
+          name={'monthlyAmount'}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <SubscribeAmount>
+              <Paragraph
+                component={SubscribeAmountText}
+                gutterBottom={false}
+              >
+                {isDonation ?
+                  `Ich spende an ${siteTitle}`
+                : `Ich unterstütze ${siteTitle} ${replace(/^./, toLower)(monthlyPaymentText)}`
+                }
+              </Paragraph>
 
-                <PaymentAmount
-                  {...field}
-                  error={error}
-                  slug={selectedMemberPlan?.slug}
-                  donate={!!donate?.(selectedMemberPlan)}
-                  amountPerMonthMin={amountPerMonthMin}
-                  amountPerMonthTarget={
-                    selectedMemberPlan?.amountPerMonthTarget ?? undefined
-                  }
-                  currency={selectedMemberPlan?.currency ?? Currency.Chf}
-                />
-              </SubscribeAmount>
-            )}
-          />
-        )}
+              <PaymentAmount
+                {...field}
+                error={error}
+                slug={selectedMemberPlan?.slug}
+                donate={isDonation}
+                amountPerMonthMin={amountPerMonthMin}
+                amountPerMonthTarget={
+                  selectedMemberPlan?.amountPerMonthTarget ?? undefined
+                }
+                currency={selectedMemberPlan?.currency ?? Currency.Chf}
+              />
+            </SubscribeAmount>
+          )}
+        />
       </SubscribeSection>
 
       {!hasUserContext && (
@@ -574,7 +601,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               />
             )}
           />
-
           <Controller
             name={'paymentPeriodicity'}
             control={control}
@@ -682,8 +708,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?
@@ -710,7 +735,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} Abonnieren`}
+        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
       >
         <H5
           id="modal-modal-title"
