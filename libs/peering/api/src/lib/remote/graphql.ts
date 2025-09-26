@@ -684,6 +684,7 @@ export type CustomTeaser = BaseTeaser & HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
+  openInNewTab?: Maybe<Scalars['Boolean']>;
   preTitle?: Maybe<Scalars['String']>;
   properties?: Maybe<Array<NonDbProperty>>;
   title?: Maybe<Scalars['String']>;
@@ -694,6 +695,7 @@ export type CustomTeaserInput = {
   contentUrl?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
+  openInNewTab?: InputMaybe<Scalars['Boolean']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   title?: InputMaybe<Scalars['String']>;
@@ -2687,6 +2689,8 @@ export type Query = {
   expectedRevenue: Array<DashboardInvoice>;
   /** Returns an image by id. */
   getImage: Image;
+  /** Returns images by tag. */
+  getImagesByTag: Array<Image>;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -2922,6 +2926,11 @@ export type QueryExpectedRevenueArgs = {
 
 export type QueryGetImageArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetImagesByTagArgs = {
+  tag: Scalars['String'];
 };
 
 
