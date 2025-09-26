@@ -43,7 +43,8 @@ export class WepublishServer {
           : ApolloServerPluginLandingPageDisabled()
       ],
       introspection: true,
-      context: ({req}) => contextFromRequest(req, this.opts)
+      context: ({req}) => contextFromRequest(req, this.opts),
+      cache: 'bounded'
     })
 
     if (process.env['NODE_ENV'] !== 'production') {
