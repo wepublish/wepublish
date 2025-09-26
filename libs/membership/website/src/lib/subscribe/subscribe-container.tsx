@@ -1,12 +1,10 @@
-import { useUser } from '@wepublish/authentication/website';
+import { useRegister, useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
-  useChallengeQuery,
   useInvoicesQuery,
   useMemberPlanListQuery,
   usePageLazyQuery,
-  useRegisterMutation,
   useResubscribeMutation,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
@@ -30,7 +28,7 @@ export type SubscribeContainerProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
     BuilderUserFormFields,
     'flair'
-  >,
+  >
 > = BuilderContainerProps &
   Pick<
     BuilderSubscribeProps<T>,
@@ -52,18 +50,15 @@ export type SubscribeContainerProps<
   };
 
 export const SubscribeContainer = <
-  T extends Exclude<BuilderUserFormFields, 'flair'>,
+  T extends Exclude<BuilderUserFormFields, 'flair'>
 >({
   filter = memberPlan => memberPlan,
   sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
   deactivateSubscriptionId,
   ...props
 }: SubscribeContainerProps<T>) => {
-  const { setToken, hasUser } = useUser();
+  const { hasUser } = useUser();
   const { Subscribe } = useWebsiteBuilder();
-  const challenge = useChallengeQuery({
-    skip: hasUser,
-  });
 
   const userSubscriptions = useSubscriptionsQuery({
     skip: !hasUser,
@@ -84,15 +79,10 @@ export const SubscribeContainer = <
   const [resubscribe] = useResubscribeMutation({});
 
   const [subscribe, redirectPages, stripeClientSecret] = useSubscribe();
-
-  const [register] = useRegisterMutation({
-    onError: () => challenge.refetch(),
-    onCompleted(data) {
-      if (data.registerMember.session) {
-        setToken(data.registerMember.session);
-      }
-    },
-  });
+  const {
+    register: [register],
+    challenge,
+  } = useRegister();
 
   // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
   // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
