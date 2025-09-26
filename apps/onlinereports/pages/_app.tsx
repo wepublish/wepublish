@@ -1,38 +1,10 @@
 import {EmotionCache} from '@emotion/cache'
+import styled from '@emotion/styled'
 import {CssBaseline, ThemeProvider} from '@mui/material'
 import {AppCacheProvider} from '@mui/material-nextjs/v13-pagesRouter'
-import {WebsiteProvider} from '@wepublish/website'
-import {previewLink} from '@wepublish/website/admin'
-import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
-import {format, setDefaultOptions} from 'date-fns'
-import {de} from 'date-fns/locale'
-import deTranlations from '@wepublish/website/translations/de.json'
-import i18next from 'i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import resourcesToBackend from 'i18next-resources-to-backend'
-import {AppProps} from 'next/app'
-import getConfig from 'next/config'
-import Head from 'next/head'
-import Script from 'next/script'
-import {initReactI18next} from 'react-i18next'
-import {z} from 'zod'
-import {zodI18nMap} from 'zod-i18n-map'
-import translation from 'zod-i18n-map/locales/de/zod.json'
-import theme from '../src/theme'
-import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
-import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
-import {OnlineReportsAuthorChip} from '../src/components/author-chip'
-import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
-import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
-import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
-import {OnlineReportsTeaserGridFlexBlock} from '../src/onlinereports-teaser-grid-flex-blocks'
-import {OnlineReportsTeaserGridBlock} from '../src/onlinereports-teaser-grid-block'
-import {Advertisement} from '../src/components/advertisement'
-import {Structure} from '../src/structure'
-import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
-import {OnlineReportsArticle} from '../src/components/article'
+import {GoogleTagManager} from '@next/third-parties/google'
 import {TitleBlock, TitleBlockLead, TitleBlockTitle} from '@wepublish/block-content/website'
-import styled from '@emotion/styled'
+import {NavbarContainer} from '@wepublish/navigation/website'
 import {
   authLink,
   NextWepublishLink,
@@ -40,20 +12,49 @@ import {
   withJwtHandler,
   withSessionProvider
 } from '@wepublish/utils/website'
-import {NavbarContainer} from '@wepublish/navigation/website'
+import {WebsiteProvider} from '@wepublish/website'
+import {previewLink} from '@wepublish/website/admin'
+import {createWithV1ApiClient, UserSession} from '@wepublish/website/api'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
-import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
-import {AdblockOverlay} from '../src/components/adblock-detector'
-import {OnlineReportsFooter} from '../src/components/footer'
-import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
-import {OnlineReportsRenderElement} from '../src/render-element'
-import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
-import {GoogleTagManager} from '@next/third-parties/google'
-import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import deTranlations from '@wepublish/website/translations/de.json'
+import {format, setDefaultOptions} from 'date-fns'
+import {de} from 'date-fns/locale'
+import i18next from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import {AppProps} from 'next/app'
+import getConfig from 'next/config'
+import Head from 'next/head'
+import Script from 'next/script'
 import {mergeDeepRight} from 'ramda'
+import {initReactI18next} from 'react-i18next'
+import {z} from 'zod'
+import {zodI18nMap} from 'zod-i18n-map'
+import translation from 'zod-i18n-map/locales/de/zod.json'
+
 import deOverridden from '../locales/deOverridden.json'
+import {AdblockOverlay} from '../src/components/adblock-detector'
+import {Advertisement} from '../src/components/advertisement'
+import {OnlineReportsArticle} from '../src/components/article'
+import {OnlineReportsAuthorChip} from '../src/components/author-chip'
+import {OnlineReportsFooter} from '../src/components/footer'
+import {OnlineReportsArticleAuthors} from '../src/components/online-reports-article-authors'
+import {OnlineReportsArticleList} from '../src/components/online-reports-article-list'
 import {OnlineReportsPage} from '../src/components/page'
+import {OnlineReportsPaymentAmount} from '../src/components/payment-amount'
+import {OnlineReportsQuoteBlock} from '../src/components/quote-block'
 import {AdsProvider} from '../src/context/ads-context'
+import {OnlineReportsRegistrationForm} from '../src/forms/registration-form'
+import {OnlineReportsNavbar} from '../src/navigation/onlinereports-navbar'
+import {OnlineReportsBlockRenderer} from '../src/onlinereports-block-renderer'
+import {OnlineReportsGlobalStyles} from '../src/onlinereports-global-styles'
+import {OnlineReportsTeaser} from '../src/onlinereports-teaser'
+import {OnlineReportsTeaserGridBlock} from '../src/onlinereports-teaser-grid-block'
+import {OnlineReportsTeaserGridFlexBlock} from '../src/onlinereports-teaser-grid-flex-blocks'
+import {OnlineReportsTeaserListBlock} from '../src/onlinereports-teaser-list-block'
+import {OnlineReportsRenderElement} from '../src/render-element'
+import {Structure} from '../src/structure'
+import theme from '../src/theme'
 import Mitmachen from './mitmachen'
 
 setDefaultOptions({
@@ -123,10 +124,13 @@ const NavBar = styled(NavbarContainer)`
 
 const OnlineReportsTitle = styled(TitleBlock)`
   ${TitleBlockTitle} {
-    margin-bottom: -${({theme}) => theme.spacing(2)};
+    margin-bottom: ${({theme}) => theme.spacing(0)};
     font-size: ${({theme}) => theme.typography.h1.fontSize};
     font-family: ${({theme}) => theme.typography.h1.fontFamily};
     font-weight: ${({theme}) => theme.typography.h1.fontWeight};
+    &:has(+ ${TitleBlockLead}) {
+      margin-bottom: -${({theme}) => theme.spacing(2)};
+    }
 
     ${({theme}) => theme.breakpoints.up('md')} {
       font-size: 44px;
