@@ -44,7 +44,8 @@ export class WepublishServer {
       ],
       introspection: true,
       context: ({req}) => contextFromRequest(req, this.opts),
-      cache: 'bounded'
+      cache: 'bounded',
+      persistedQueries: false
     })
 
     if (process.env['NODE_ENV'] !== 'production') {
