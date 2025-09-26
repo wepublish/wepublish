@@ -114,11 +114,7 @@ const MainContent = styled('main')`
   }
 `
 
-const WideboardPlacer = styled('div')`
-  * {
-    margin-bottom: -${({theme}) => theme.spacing(5)};
-  }
-`
+const WideboardPlacer = styled('div')``
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
