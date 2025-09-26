@@ -8,7 +8,7 @@ import {
 } from '@wepublish/website/builder';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -56,33 +56,31 @@ export function LoginForm({
   const {
     elements: { Alert, TextField },
   } = useWebsiteBuilder();
-  const [showStandByMessage, setShowStandByMessage] = useState(false);
+  const [awaitingWithCredentials, setAwaitingWithCredentials] = useState(false);
 
   type FormInput = z.infer<typeof loginFormSchema>;
-  const { handleSubmit, control, watch, setValue, setFocus, register } =
-    useForm<FormInput>({
-      resolver: zodResolver(loginFormSchema),
-      defaultValues: {
-        email: defaults?.email || '',
-        password: '',
-        requirePassword: defaults?.requirePassword || false,
-      },
-      mode: 'onSubmit',
-      reValidateMode: 'onBlur',
-    });
+  const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: defaults?.email || '',
+      password: '',
+      requirePassword: defaults?.requirePassword || false,
+    },
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+  });
 
   const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
     if (requirePassword) {
-      setShowStandByMessage(true);
-      return onSubmitLoginWithCredentials(email, password);
+      setAwaitingWithCredentials(true);
+      return (async () => {
+        await onSubmitLoginWithCredentials(email, password);
+        setAwaitingWithCredentials(false);
+      })();
     }
 
     return onSubmitLoginWithEmail(email);
   });
-
-  useEffect(() => {
-    setFocus('email');
-  }, [setFocus]);
 
   const loginWithPassword = watch('requirePassword');
   const loginLinkSent =
@@ -124,7 +122,6 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
-              {...register('email')}
             />
           )}
         />
@@ -147,18 +144,14 @@ export function LoginForm({
           />
         )}
 
-        {showStandByMessage && !error && !loginLinkSent && (
+        {awaitingWithCredentials && !error && !loginLinkSent && (
           <Alert severity="info">
             Einen Moment bitte, die eingegebenen Anmeldedaten werden
             überprüft...
           </Alert>
         )}
 
-        {error && (
-          <Alert severity="error">
-            Die eingegebenen Anmeldedaten sind ungültig.
-          </Alert>
-        )}
+        {error && <Alert severity="error">{error.message}</Alert>}
 
         {loginLinkSent && (
           <Alert severity="success">
