@@ -100,6 +100,16 @@ export class ImageService {
   async deleteImage(id: string) {
     return this.upload.deleteImage(id);
   }
+
+  public async getImagesByTag(tag: string) {
+    return this.prisma.image.findMany({
+      where: {
+        tags: {
+          has: tag,
+        },
+      },
+    });
+  }
 }
 
 export const createImageOrder = (
