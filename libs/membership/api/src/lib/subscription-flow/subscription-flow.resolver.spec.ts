@@ -7,7 +7,6 @@ import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/clien
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import request from 'supertest'
-import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {SubscriptionService} from '../subscription/subscription.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
 import {SubscriptionFlowResolver} from './subscription-flow.resolver'
@@ -131,7 +130,6 @@ const paymentMethodsQuery = `
   providers: [
     SubscriptionFlowResolver,
     SubscriptionFlowService,
-    PeriodicJobService,
     SubscriptionService,
     {
       provide: APP_GUARD,
@@ -155,7 +153,6 @@ export class AppUnauthenticatedModule {}
   providers: [
     SubscriptionFlowResolver,
     SubscriptionFlowService,
-    PeriodicJobService,
     SubscriptionService,
     {
       provide: APP_GUARD,

@@ -1,6 +1,5 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
-import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {SubscriptionService} from '../subscription/subscription.service'
 import {SubscriptionFlowService} from './subscription-flow.service'
 import {BadRequestException} from '@nestjs/common'
@@ -14,7 +13,6 @@ describe('SubscriptionFlowService', () => {
     paymentMethod: {[method in keyof PrismaClient['paymentMethod']]?: jest.Mock}
     mailTemplate: {[method in keyof PrismaClient['mailTemplate']]?: jest.Mock}
   }
-  let periodicJobServiceMock: Partial<PeriodicJobService>
   let subscriptionServiceMock: Partial<SubscriptionService>
 
   const mockMemberPlan = {
@@ -82,14 +80,12 @@ describe('SubscriptionFlowService', () => {
     // Add transaction method separately
     ;(prismaMock as any).$transaction = jest.fn()
 
-    periodicJobServiceMock = {}
     subscriptionServiceMock = {}
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubscriptionFlowService,
         {provide: PrismaClient, useValue: prismaMock},
-        {provide: PeriodicJobService, useValue: periodicJobServiceMock},
         {provide: SubscriptionService, useValue: subscriptionServiceMock}
       ]
     }).compile()
