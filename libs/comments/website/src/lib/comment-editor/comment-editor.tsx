@@ -39,10 +39,66 @@ export const LoginWrapper = styled('div')`
   position: relative;
   display: grid;
   grid-template-columns: 1;
-  padding-top: ${({ theme }) => theme.spacing(4)};
-
+  padding: ${({ theme }) => theme.spacing(4, 0, 3, 0)};
+  column-gap: ${({ theme }) => theme.spacing(7)};
   ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(2, 1fr);
+    column-gap: ${({ theme }) => theme.spacing(3)};
+  }
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: ${({ theme }) => theme.spacing(7)};
+  }
+`;
+
+export const ExistingAccountsLoginWrapper = styled('div')`
+  padding: ${({ theme }) => theme.spacing(0, 2, 4, 2)};
+
+  & > h3 {
+    font-size: ${({ theme }) => theme.typography.h4.fontSize};
+    line-height: 1.2;
+    margin: ${({ theme }) => theme.spacing(1, 0, 2, 0)};
+  }
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    padding: ${({ theme }) => theme.spacing(0, 0, 0, 2)};
+
+    & > h3 {
+      margin: ${({ theme }) => theme.spacing(2, 0, 1, 0)};
+    }
+  }
+`;
+
+export const NewAccountsLoginWrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid ${({ theme }) => theme.palette.grey[300]};
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: ${({ theme }) => theme.spacing(2, 2, 0, 2)};
+
+  & > h3 {
+    font-size: ${({ theme }) => theme.typography.h4.fontSize};
+    line-height: 1.2;
+    margin: ${({ theme }) => theme.spacing(2, 0, 3, 0)};
+  }
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    border-top: none;
+    border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
+    padding: ${({ theme }) => theme.spacing(0, 0, 0, 0)};
+
+    & > h3 {
+      width: unset;
+      margin: ${({ theme }) => theme.spacing(2, 0, 7, 2)};
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin-left: ${({ theme }) => theme.spacing(0)};
+
+    & > h3 {
+      margin: ${({ theme }) => theme.spacing(2, 0, 8, 7)};
+    }
   }
 `;
 
@@ -68,16 +124,21 @@ export const InitialModalContent = styled('div')`
 
 export const Register = styled('div')`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
   grid-column: 1/2;
-  margin: 0 ${({ theme }) => theme.spacing(4)};
-  margin-top: ${({ theme }) => theme.spacing(3)};
-  border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
+  width: 100%;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
+    width: unset;
     grid-column: 2/3;
-    margin-top: 0;
+    margin: ${({ theme }) => theme.spacing(4, 0, 0, 3)};
+    align-items: flex-start;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 0, 7)};
   }
 `;
 
@@ -116,7 +177,7 @@ export const SignupLink = styled(Link)`
   text-decoration: none;
   font-size: ${({ theme }) => theme.typography.body1.fontSize};
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     font-size: ${({ theme }) => theme.typography.h4.fontSize};
   }
 `;
@@ -408,23 +469,29 @@ export const CommentEditor = ({
 
           {!showInitialModal && (
             <LoginWrapper>
-              <LoginFormContainer
-                afterLoginCallback={handleAfterLoginCallback}
-              />
+              <ExistingAccountsLoginWrapper>
+                <H3>Login für Leserinnen und Leser</H3>
+                <LoginFormContainer
+                  afterLoginCallback={handleAfterLoginCallback}
+                />
+              </ExistingAccountsLoginWrapper>
 
-              <Register>
-                <Button
-                  css={buttonStyles}
-                  onClick={registerRedirect}
-                >
-                  <MdLogin
-                    aria-label="Register"
-                    css={iconStyles}
-                  />
+              <NewAccountsLoginWrapper>
+                <H3>Noch kein Account?</H3>
+                <Register>
+                  <Button
+                    css={buttonStyles}
+                    onClick={registerRedirect}
+                  >
+                    <MdLogin
+                      aria-label="Register"
+                      css={iconStyles}
+                    />
 
-                  <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
-                </Button>
-              </Register>
+                    <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
+                  </Button>
+                </Register>
+              </NewAccountsLoginWrapper>
             </LoginWrapper>
           )}
         </ModalContent>

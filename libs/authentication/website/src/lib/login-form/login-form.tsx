@@ -8,6 +8,7 @@ import {
 } from '@wepublish/website/builder';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useState } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -43,12 +44,6 @@ const loginFormSchema = z.union([
   withCredentialsFormSchema,
 ]);
 
-const autofocus = (node: HTMLElement | null) => {
-  const inputNode = node?.querySelector('input') ?? node;
-  console.log(inputNode);
-  inputNode?.focus();
-};
-
 export function LoginForm({
   loginWithCredentials,
   onSubmitLoginWithCredentials,
@@ -61,6 +56,7 @@ export function LoginForm({
   const {
     elements: { Alert, TextField },
   } = useWebsiteBuilder();
+  const [awaitingWithCredentials, setAwaitingWithCredentials] = useState(false);
 
   type FormInput = z.infer<typeof loginFormSchema>;
   const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
@@ -70,13 +66,17 @@ export function LoginForm({
       password: '',
       requirePassword: defaults?.requirePassword || false,
     },
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
   });
 
   const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
     if (requirePassword) {
-      return onSubmitLoginWithCredentials(email, password);
+      setAwaitingWithCredentials(true);
+      return (async () => {
+        await onSubmitLoginWithCredentials(email, password);
+        setAwaitingWithCredentials(false);
+      })();
     }
 
     return onSubmitLoginWithEmail(email);
@@ -122,7 +122,6 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
-              ref={autofocus}
             />
           )}
         />
@@ -143,6 +142,13 @@ export function LoginForm({
               />
             )}
           />
+        )}
+
+        {awaitingWithCredentials && !error && !loginLinkSent && (
+          <Alert severity="info">
+            Einen Moment bitte, die eingegebenen Anmeldedaten werden
+            überprüft...
+          </Alert>
         )}
 
         {error && <Alert severity="error">{error.message}</Alert>}

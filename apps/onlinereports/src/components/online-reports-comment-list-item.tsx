@@ -1,50 +1,21 @@
-import { css, lighten, Theme } from '@mui/material';
-import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
+import {
+  buttonStyles,
+  CommentListItemActions,
+  CommentListItemActionsButtons,
+  CommentListItemChildren,
+  CommentListItemShare,
+  CommentListItemStateWarnings,
+  getStateForEditor,
+} from '@wepublish/comments/website';
 import { CommentState } from '@wepublish/website/api';
 import {
   BuilderCommentListItemProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { cond } from 'ramda';
 import { MdEdit, MdReply } from 'react-icons/md';
-import { getStateForEditor } from './comment-list.state';
-import { CommentListItemShare } from './comment-list-item-share';
 
-export const CommentListItemChildren = styled('aside')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
-  padding: ${({ theme }) => theme.spacing(3)};
-  padding-right: 0;
-  border-left: 2px solid currentColor;
-`;
-
-export const CommentListItemActions = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({ theme }) => theme.spacing(1)};
-  align-items: start;
-  justify-content: space-between;
-`;
-
-export const CommentListItemActionsButtons = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({ theme }) => theme.spacing(1)};
-  align-items: start;
-  justify-content: space-between;
-`;
-
-export const buttonStyles = (theme: Theme) => css`
-  border-width: 1px;
-
-  &:hover {
-    border-width: 1px;
-    background-color: ${lighten(theme.palette.primary.main, 0.9)};
-  }
-`;
-
-export const CommentListItem = ({
+export const OnlineReportsCommentListItem = ({
   anonymousCanComment,
   anonymousCanRate,
   userCanEdit,
@@ -137,6 +108,7 @@ export const CommentListItem = ({
           <CommentListItemShare
             url={comment.url}
             title="share"
+            forceNonSystemShare={true}
           />
 
           {canEdit && (
@@ -225,48 +197,4 @@ export const CommentListItem = ({
       )}
     </Comment>
   );
-};
-
-const CommentWarningWrapper = styled('div')`
-  padding-top: ${({ theme }) => `${theme.spacing(1)}`};
-  padding-bottom: ${({ theme }) => `${theme.spacing(1)}`};
-`;
-
-export const CommentListItemStateWarnings = (
-  props: Pick<BuilderCommentListItemProps, 'state'>
-) => {
-  const {
-    elements: { Alert },
-  } = useWebsiteBuilder();
-
-  const errors = cond([
-    [
-      ({ state }) => state === CommentState.PendingApproval,
-      () => <Alert severity="info">Kommentar wartet auf Freischaltung.</Alert>,
-    ],
-    [
-      ({ state }) => state === CommentState.PendingUserChanges,
-      () => (
-        <Alert severity="warning">
-          Kommentar muss editiert werden bevor Freischaltung.
-        </Alert>
-      ),
-    ],
-    [
-      ({ state }) => state === CommentState.Rejected,
-      () => (
-        <Alert severity="error">Kommentar wurde nicht freigeschalten.</Alert>
-      ),
-    ],
-    [
-      ({ state }: typeof props) => true,
-      (_: typeof props): JSX.Element | null => null,
-    ],
-  ])(props);
-
-  if (!errors) {
-    return;
-  }
-
-  return <CommentWarningWrapper>{errors}</CommentWarningWrapper>;
 };
