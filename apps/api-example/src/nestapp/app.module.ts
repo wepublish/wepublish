@@ -94,6 +94,7 @@ import {PaymentMethodModule} from '@wepublish/payment-method/api'
           sortSchema: true,
           path: 'v1',
           cache: 'bounded',
+          persistedQueries: false,
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
