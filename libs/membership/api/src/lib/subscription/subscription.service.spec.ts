@@ -10,7 +10,6 @@ import {Test, TestingModule} from '@nestjs/testing'
 
 import {PaymentsService} from '@wepublish/payment/api'
 import {add, sub} from 'date-fns'
-import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
@@ -94,7 +93,6 @@ describe('SubscriptionPaymentsService', () => {
       imports: [registerMailsModule(), registerPaymentsModule()],
       providers: [
         SubscriptionFlowService,
-        PeriodicJobService,
         SubscriptionService,
         {
           provide: PrismaClient,
