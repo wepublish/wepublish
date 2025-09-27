@@ -53,7 +53,9 @@ export const NewsTeaser = styled(NewsTeaserUnstyled)`
   }
 
   > span {
+    display: inline-block;
     font-weight: 500;
+    line-height: 1.2;
   }
 
   h4 {

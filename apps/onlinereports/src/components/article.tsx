@@ -26,16 +26,17 @@ export const ArticleWrapper = styled(OnlineReportsContentWrapper)`
 `
 
 export const ArticlePreTitle = styled('div')`
-  margin-top: ${({theme}) => theme.spacing(4)};
-  margin-bottom: -${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-bottom: -${({theme}) => theme.spacing(3.5)};
-  }
-
+  margin-top: ${({theme}) => theme.spacing(0.5)};
+  margin-bottom: -${({theme}) => theme.spacing(2.75)};
   color: ${({theme}) => theme.palette.primary.main};
   grid-row-start: 1;
   font-weight: 500;
+  line-height: 1.2;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    margin-top: ${({theme}) => theme.spacing(4)};
+    margin-bottom: -${({theme}) => theme.spacing(3)};
+  }
 `
 
 export const ArticleTopMeta = styled('aside')`
