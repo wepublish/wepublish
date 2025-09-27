@@ -39,13 +39,14 @@ export function LoginFormContainer({
     <LoginForm
       className={className}
       onSubmitLoginWithCredentials={(email, password) => {
-        loginWithCredentials({
-          variables: { email, password },
-        });
-
-        if (afterLoginCallback) {
-          afterLoginCallback();
-        }
+        (async () => {
+          const loginResult = await loginWithCredentials({
+            variables: { email, password },
+          });
+          if (loginResult.data?.createSession && afterLoginCallback) {
+            afterLoginCallback();
+          }
+        })();
       }}
       loginWithCredentials={withCredentials}
       onSubmitLoginWithEmail={email => {
