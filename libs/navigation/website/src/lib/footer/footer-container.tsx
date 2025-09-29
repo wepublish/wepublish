@@ -7,14 +7,10 @@ import {
 import { PropsWithChildren } from 'react';
 
 export type FooterContainerProps = PropsWithChildren<
-  Pick<
-    BuilderFooterProps,
-    | 'slug'
-    | 'iconSlug'
-    | 'categorySlugs'
-    | 'hideBannerOnIntersecting'
-    | 'wepublishLogo'
-  >
+  Pick<BuilderFooterProps, 'slug' | 'iconSlug' | 'categorySlugs'> &
+    Partial<
+      Pick<BuilderFooterProps, 'hideBannerOnIntersecting' | 'wepublishLogo'>
+    >
 > &
   BuilderContainerProps;
 
