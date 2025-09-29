@@ -86,7 +86,6 @@ const RequestEmail = styled('div')``;
 const requiredSchema = requiredRegisterSchema.omit({
   challengeAnswer: true,
   email: true,
-  emailRepeated: true,
 });
 
 const defaultSchema = z.object({
@@ -101,6 +100,7 @@ const defaultSchema = z.object({
   }),
   password: z.string().min(8).optional().or(z.literal('')),
   passwordRepeated: z.string().min(8).optional().or(z.literal('')),
+  emailRepeated: z.string().email().min(1).optional().or(z.literal('')),
 });
 
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
@@ -245,9 +245,11 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                             onMouseDown={event => event.preventDefault()}
                             edge="end"
                           >
-                            {showPassword ?
+                            {showPassword ? (
                               <MdVisibilityOff />
-                            : <MdVisibility />}
+                            ) : (
+                              <MdVisibility />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -278,9 +280,11 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                           onMouseDown={event => event.preventDefault()}
                           edge="end"
                         >
-                          {showRepeatPassword ?
+                          {showRepeatPassword ? (
                             <MdVisibilityOff />
-                          : <MdVisibility />}
+                          ) : (
+                            <MdVisibility />
+                          )}
                         </IconButton>
                       </InputAdornment>
                     ),
