@@ -64,6 +64,7 @@ export const FooterIcons = styled.div`
   gap: ${({ theme }) => theme.spacing(3)};
   grid-auto-flow: column;
   grid-auto-columns: max-content;
+  align-items: center;
   justify-self: center;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -135,12 +136,13 @@ export function Footer({
 
             {wepublishLogo === 'light' && (
               <Link href="https://wepublish.ch/de/das-projekt/#cms">
-                <WepublishLight />
+                <WepublishLight height={40} />
               </Link>
             )}
+
             {wepublishLogo === 'dark' && (
               <Link href="https://wepublish.ch/de/das-projekt/#cms">
-                <WepublishDark />
+                <WepublishDark height={40} />
               </Link>
             )}
           </FooterIcons>
