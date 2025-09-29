@@ -1,11 +1,10 @@
-import { useChallengeQuery, useRegisterMutation } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderRegistrationFormProps,
   BuilderUserFormFields,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useUser } from '../session.context';
+import { useRegister } from '../use-register';
 
 export type RegistrationFormContainerProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
@@ -19,18 +18,10 @@ export function RegistrationFormContainer<
   T extends Exclude<BuilderUserFormFields, 'flair'>,
 >({ className, fields, schema }: RegistrationFormContainerProps<T>) {
   const { RegistrationForm } = useWebsiteBuilder();
-  const { setToken } = useUser();
-  const [register, registerData] = useRegisterMutation({
-    onError: () => challenge.refetch(),
-    onCompleted(data) {
-      setToken({
-        createdAt: data.registerMember.session.createdAt,
-        expiresAt: data.registerMember.session.expiresAt,
-        token: data.registerMember.session.token,
-      });
-    },
-  });
-  const challenge = useChallengeQuery();
+  const {
+    register: [register, registerData],
+    challenge,
+  } = useRegister();
 
   return (
     <RegistrationForm
