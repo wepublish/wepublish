@@ -2,7 +2,6 @@ import { useRegister, useUser } from '@wepublish/authentication/website';
 import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
 import {
   FullMemberPlanFragment,
-  ProductType,
   useInvoicesQuery,
   useMemberPlanListQuery,
   usePageLazyQuery,
@@ -48,7 +47,6 @@ export type SubscribeContainerProps<
       memberPlans: FullMemberPlanFragment[]
     ) => FullMemberPlanFragment[];
     deactivateSubscriptionId?: string;
-    memberPlanIds?: string[];
   };
 
 export const SubscribeContainer = <
@@ -57,12 +55,7 @@ export const SubscribeContainer = <
   filter = memberPlan => memberPlan,
   sort = sortBy(memberPlan => memberPlan.amountPerMonthMin),
   deactivateSubscriptionId,
-  termsOfServiceUrl,
-  donate,
-  transactionFee,
-  transactionFeeText,
-  returningUserId,
-  memberPlanIds,
+  ...props
 }: SubscribeContainerProps<T>) => {
   const { hasUser } = useUser();
   const { Subscribe } = useWebsiteBuilder();
@@ -102,26 +95,8 @@ export const SubscribeContainer = <
           sort(draftList.data.memberPlans.nodes)
         );
       }
-
-      if (memberPlanIds?.length && draftList.data?.memberPlans) {
-        const allowedIds = new Set(memberPlanIds);
-        draftList.data.memberPlans.nodes =
-          draftList.data.memberPlans.nodes.filter(memberPlan =>
-            allowedIds.has(memberPlan.id)
-          );
-      }
     });
-  }, [memberPlanList, filter, memberPlanIds]);
-
-  const donatePredicate = useMemo<
-    NonNullable<SubscribeContainerProps<T>['donate']>
-  >(
-    () =>
-      donate ??
-      ((plan?: FullMemberPlanFragment) =>
-        plan?.productType === ProductType.Donation),
-    [donate]
-  );
+  }, [memberPlanList, filter, sort]);
 
   return (
     <>
@@ -135,18 +110,7 @@ export const SubscribeContainer = <
         userSubscriptions={userSubscriptions}
         userInvoices={userInvoices}
         memberPlans={filteredMemberPlans}
-        termsOfServiceUrl={termsOfServiceUrl}
-        donate={donatePredicate}
-        fields={[
-          'firstName',
-          'password',
-          'passwordRepeated',
-          'address',
-          'emailRepeated',
-        ]}
-        transactionFee={transactionFee}
-        transactionFeeText={transactionFeeText}
-        returningUserId={returningUserId}
+        {...props}
         onSubscribe={async formData => {
           const selectedMemberplan =
             filteredMemberPlans.data?.memberPlans.nodes.find(
