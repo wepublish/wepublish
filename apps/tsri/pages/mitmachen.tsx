@@ -7,7 +7,6 @@ import { SubscribeWrapper } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getSessionTokenProps, ssrAuthLink } from '@wepublish/utils/website';
 import { SubscribePage } from '@wepublish/utils/website';
-import { ComponentProps } from 'react';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
@@ -40,11 +39,8 @@ const MitmachenPage = styled(PageContainer)`
   }
 `;
 
-type MitmachenInnerProps = ComponentProps<typeof SubscribePage>;
-
-export const MitmachenInner = (props: MitmachenInnerProps) => (
+export const MitmachenInner = () => (
   <SubscribePage
-    {...props}
     fields={['firstName']}
     filter={plans =>
       plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))
