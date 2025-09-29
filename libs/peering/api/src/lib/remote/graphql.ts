@@ -684,6 +684,7 @@ export type CustomTeaser = BaseTeaser & HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
+  openInNewTab?: Maybe<Scalars['Boolean']>;
   preTitle?: Maybe<Scalars['String']>;
   properties?: Maybe<Array<NonDbProperty>>;
   title?: Maybe<Scalars['String']>;
@@ -694,6 +695,7 @@ export type CustomTeaserInput = {
   contentUrl?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
+  openInNewTab?: InputMaybe<Scalars['Boolean']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   title?: InputMaybe<Scalars['String']>;
@@ -3271,13 +3273,25 @@ export type SubscribeBlock = BaseBlock & {
   __typename?: 'SubscribeBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  fields: Array<SubscribeBlockFields>;
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  memberPlans: Array<MemberPlan>;
   type: BlockType;
 };
+
+export enum SubscribeBlockFields {
+  Address = 'Address',
+  Birthday = 'Birthday',
+  EmailRepeated = 'EmailRepeated',
+  FirstName = 'FirstName',
+  Password = 'Password',
+  PasswordRepeat = 'PasswordRepeat'
+}
 
 export type SubscribeBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  fields: Array<SubscribeBlockFields>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
 };
 

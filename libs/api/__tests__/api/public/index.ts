@@ -3273,13 +3273,25 @@ export type SubscribeBlock = BaseBlock & {
   __typename?: 'SubscribeBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  fields: Array<SubscribeBlockFields>;
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  memberPlans: Array<MemberPlan>;
   type: BlockType;
 };
+
+export enum SubscribeBlockFields {
+  Address = 'Address',
+  Birthday = 'Birthday',
+  EmailRepeated = 'EmailRepeated',
+  FirstName = 'FirstName',
+  Password = 'Password',
+  PasswordRepeat = 'PasswordRepeat'
+}
 
 export type SubscribeBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  fields: Array<SubscribeBlockFields>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
 };
 

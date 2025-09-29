@@ -37,6 +37,7 @@ import {
   PolisConversationBlock,
   PollBlock,
   CrowdfundingBlock,
+  SubscribeBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
@@ -82,8 +83,7 @@ import {
   PaymentAmountSlider,
   PaymentMethodPicker,
   PeriodicityPicker,
-  Subscribe as SubscribeForm,
-  SubscribeBlock as SubscribeBlockComponent,
+  Subscribe,
   SubscriptionList,
   SubscriptionListItem,
   TransactionFee,
@@ -217,7 +217,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           PaymentAmount={PaymentAmountSlider}
           PaymentMethodPicker={PaymentMethodPicker}
           TransactionFee={TransactionFee}
-          Subscribe={SubscribeForm}
+          Subscribe={Subscribe}
           ContentWrapper={ContentWrapperStyled}
           Paywall={Paywall}
           Tag={Tag}
@@ -258,7 +258,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             Crowdfunding: CrowdfundingBlock,
             RichText: RichTextBlock,
             Event: EventBlock,
-            Subscribe: SubscribeBlockComponent,
+            Subscribe: SubscribeBlock,
             Listicle: ListicleBlock,
             TeaserGridFlex: TeaserGridFlexBlock,
             TeaserGrid: TeaserGridBlock,

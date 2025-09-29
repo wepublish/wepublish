@@ -2389,13 +2389,25 @@ type Stats {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockFields!]!
   memberPlanIds: [String!]
+  memberPlans: [MemberPlan!]!
   type: BlockType!
+}
+
+enum SubscribeBlockFields {
+  Address
+  Birthday
+  EmailRepeated
+  FirstName
+  Password
+  PasswordRepeat
 }
 
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockFields!]!
   memberPlanIds: [String!]
 }
 
