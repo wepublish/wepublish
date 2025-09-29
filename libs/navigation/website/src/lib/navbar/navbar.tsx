@@ -221,6 +221,7 @@ export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   navPaperClassName?: string;
+  headerMax?: number;
 }
 
 export function Navbar({
@@ -240,6 +241,7 @@ export function Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
+  headerMax = 2,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -310,7 +312,7 @@ export function Navbar({
 
             {!!headerItems?.links.length && (
               <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
+                {headerItems.links.slice(0, headerMax).map((link, index) => (
                   <NavbarLink
                     key={index}
                     href={navigationLinkToUrl(link)}

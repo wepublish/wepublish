@@ -25,7 +25,9 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'subscribeBtn'
   > &
     BuilderContainerProps
->;
+> & {
+  headerMax?: number;
+};
 
 export function NavbarContainer({
   className,
@@ -37,6 +39,7 @@ export function NavbarContainer({
   profileBtn,
   subscribeBtn,
   children,
+  headerMax = 2,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
   const { data, loading, error } = useNavigationListQuery();
@@ -62,6 +65,7 @@ export function NavbarContainer({
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
       hasRunningSubscription={!!hasRunningSubscription}
+      headerMax={headerMax}
     >
       {children}
     </Navbar>
