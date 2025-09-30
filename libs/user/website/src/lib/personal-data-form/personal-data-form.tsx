@@ -245,11 +245,9 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                             onMouseDown={event => event.preventDefault()}
                             edge="end"
                           >
-                            {showPassword ? (
+                            {showPassword ?
                               <MdVisibilityOff />
-                            ) : (
-                              <MdVisibility />
-                            )}
+                            : <MdVisibility />}
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -280,11 +278,9 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                           onMouseDown={event => event.preventDefault()}
                           edge="end"
                         >
-                          {showRepeatPassword ? (
+                          {showRepeatPassword ?
                             <MdVisibilityOff />
-                          ) : (
-                            <MdVisibility />
-                          )}
+                          : <MdVisibility />}
                         </IconButton>
                       </InputAdornment>
                     ),
