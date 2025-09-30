@@ -44,6 +44,19 @@ const loginFormSchema = z.union([
   withCredentialsFormSchema,
 ]);
 
+const autofocus = (node: HTMLElement | null, focusDelay?: number) => {
+  const inputNode = node?.querySelector('input') ?? node;
+  console.log(inputNode, focusDelay);
+  if (focusDelay && focusDelay > 0) {
+    (async () => {
+      await new Promise(resolve => setTimeout(resolve, focusDelay));
+      inputNode?.focus();
+    })();
+    return;
+  }
+  inputNode?.focus();
+};
+
 export function LoginForm({
   loginWithCredentials,
   onSubmitLoginWithCredentials,
@@ -52,6 +65,7 @@ export function LoginForm({
   defaults,
   disablePasswordLogin,
   className,
+  focusDelay,
 }: BuilderLoginFormProps) {
   const {
     elements: { Alert, TextField },
@@ -122,6 +136,11 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
+              ref={
+                Number(focusDelay) > 0 ?
+                  ref => autofocus(ref, Number(focusDelay))
+                : autofocus
+              }
             />
           )}
         />

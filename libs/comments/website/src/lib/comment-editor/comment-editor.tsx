@@ -20,6 +20,7 @@ import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
+import { H1 } from '@wepublish/ui';
 
 export const CommentEditorWrapper = styled('form')<{ modalOpen: boolean }>`
   display: grid;
@@ -38,74 +39,91 @@ export const CommentEditorActions = styled('div')`
 export const LoginWrapper = styled('div')`
   position: relative;
   display: grid;
-  grid-template-columns: 1;
   padding: ${({ theme }) => theme.spacing(4, 0, 3, 0)};
-  column-gap: ${({ theme }) => theme.spacing(7)};
+
   ${({ theme }) => theme.breakpoints.up('sm')} {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: ${({ theme }) => theme.spacing(3)};
+    grid-template-columns: auto 52%;
+    grid-template-rows: min-content auto min-content auto;
+    column-gap: ${({ theme }) => theme.spacing(4)};
+    row-gap: ${({ theme }) => theme.spacing(0)};
+    padding-left: ${({ theme }) => theme.spacing(3)};
   }
+
   ${({ theme }) => theme.breakpoints.up('md')} {
-    column-gap: ${({ theme }) => theme.spacing(7)};
+    column-gap: ${({ theme }) => theme.spacing(6)};
+    padding-left: ${({ theme }) => theme.spacing(3)};
   }
 `;
 
-export const ExistingAccountsLoginWrapper = styled('div')`
+export const ExistingAccountsLoginWrapper = styled('article')`
+  display: grid;
   padding: ${({ theme }) => theme.spacing(0, 2, 4, 2)};
 
-  & > h3 {
-    font-size: ${({ theme }) => theme.typography.h4.fontSize};
-    line-height: 1.2;
-    margin: ${({ theme }) => theme.spacing(1, 0, 2, 0)};
-  }
-
   ${({ theme }) => theme.breakpoints.up('sm')} {
-    padding: ${({ theme }) => theme.spacing(0, 0, 0, 2)};
+    grid-area: 1 / 1 / 4 / 2;
+    grid-template-rows: subgrid;
+    padding: ${({ theme }) => theme.spacing(0)};
+  }
+`;
 
-    & > h3 {
-      margin: ${({ theme }) => theme.spacing(2, 0, 1, 0)};
+export const existingAccountsHeadingStyles = (theme: Theme) => css`
+  grid-area: 1 / 1 / 2 / 2;
+  font-size: ${theme.typography.h4.fontSize};
+  line-height: 1.2;
+
+  ${theme.breakpoints.up('sm')} {
+    font-size: ${theme.typography.h4.fontSize};
+  }
+`;
+
+export const loginFormContainerStyles = (theme: Theme) => css`
+  display: grid;
+  grid-template-rows: inherit;
+
+  ${theme.breakpoints.up('sm')} {
+    grid-area: 2 / 1 / 4 / 2;
+    & > *:nth-child(1) {
+      grid-column: 1 / 2;
+    }
+    & > *:nth-child(2) {
+      grid-area: 3 / 1 / 4 / 2;
     }
   }
 `;
 
-export const NewAccountsLoginWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
+export const NewAccountsLoginWrapper = styled('article')`
+  display: grid;
+  padding: ${({ theme }) => theme.spacing(3, 2, 0, 2)};
+  grid-template-rows: min-content auto;
   border-top: 1px solid ${({ theme }) => theme.palette.grey[300]};
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: ${({ theme }) => theme.spacing(2, 2, 0, 2)};
-
-  & > h3 {
-    font-size: ${({ theme }) => theme.typography.h4.fontSize};
-    line-height: 1.2;
-    margin: ${({ theme }) => theme.spacing(2, 0, 3, 0)};
-  }
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     border-top: none;
     border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
-    padding: ${({ theme }) => theme.spacing(0, 0, 0, 0)};
-
-    & > h3 {
-      width: unset;
-      margin: ${({ theme }) => theme.spacing(2, 0, 7, 2)};
-    }
+    padding: ${({ theme }) => theme.spacing(0, 0, 0, 4)};
+    grid-area: 1 / 2 / 4 / 3;
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    margin-left: ${({ theme }) => theme.spacing(0)};
+    padding-left: ${({ theme }) => theme.spacing(6)};
+  }
+`;
 
-    & > h3 {
-      margin: ${({ theme }) => theme.spacing(2, 0, 8, 7)};
-    }
+export const newAccountsHeadingStyles = (theme: Theme) => css`
+  font-size: ${theme.typography.h4.fontSize};
+  line-height: 1.2;
+
+  ${theme.breakpoints.up('sm')} {
+    grid-area: 1 / 2 / 2 / 3;
+    font-size: ${theme.typography.h4.fontSize};
   }
 `;
 
 export const InitialModalWrapper = styled('div')`
   position: relative;
   display: grid;
-  grid-template-columns: 1;
   padding-top: ${({ theme }) => theme.spacing(4)};
   align-items: center;
 `;
@@ -123,22 +141,12 @@ export const InitialModalContent = styled('div')`
 `;
 
 export const Register = styled('div')`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  grid-column: 1/2;
-  width: 100%;
+  padding-top: ${({ theme }) => theme.spacing(0.5)};
+  text-align: right;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
-    width: unset;
-    grid-column: 2/3;
-    margin: ${({ theme }) => theme.spacing(4, 0, 0, 3)};
-    align-items: flex-start;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    margin: ${({ theme }) => theme.spacing(0, 0, 0, 7)};
+    grid-area: 3 / 2 / 4 / 3;
+    text-align: unset;
   }
 `;
 
@@ -161,9 +169,11 @@ export const registerStyles = (theme: Theme) => css`
   font-size: ${theme.typography.body1.fontSize};
   white-space: nowrap;
   color: ${theme.palette.common.white};
-
   ${theme.breakpoints.up('sm')} {
-    font-size: ${theme.typography.h4.fontSize};
+    min-width: 240px;
+  }
+  ${theme.breakpoints.up('md')} {
+    min-width: 280px;
   }
 `;
 
@@ -175,11 +185,7 @@ export const registerIconStyles = (theme: Theme) => css`
 export const SignupLink = styled(Link)`
   color: ${({ theme }) => theme.palette.common.white};
   text-decoration: none;
-  font-size: ${({ theme }) => theme.typography.body1.fontSize};
-
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    font-size: ${({ theme }) => theme.typography.h4.fontSize};
-  }
+  font-size: inherit;
 `;
 
 export const CloseLogin = styled(IconButton)`
@@ -470,14 +476,26 @@ export const CommentEditor = ({
           {!showInitialModal && (
             <LoginWrapper>
               <ExistingAccountsLoginWrapper>
-                <H3>Login für Leserinnen und Leser</H3>
+                <H1
+                  css={existingAccountsHeadingStyles}
+                  gutterBottom={true}
+                >
+                  Login für Leserinnen und Leser
+                </H1>
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
+                  css={loginFormContainerStyles}
+                  focusDelay={300}
                 />
               </ExistingAccountsLoginWrapper>
 
               <NewAccountsLoginWrapper>
-                <H3>Noch kein Account?</H3>
+                <H1
+                  css={newAccountsHeadingStyles}
+                  gutterBottom={true}
+                >
+                  Noch kein Account?
+                </H1>
                 <Register>
                   <Button
                     css={buttonStyles}
