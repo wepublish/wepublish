@@ -1,8 +1,8 @@
-import {MemberPlan, PaymentState, Subscription, User} from '@prisma/client'
-import Bexio, {ContactsStatic} from 'bexio'
-import {MappedReplacer} from 'mapped-replacer/dist/types'
+import { MemberPlan, PaymentState, Subscription, User } from '@prisma/client';
+import Bexio, { ContactsStatic } from 'bexio';
+import { MappedReplacer } from 'mapped-replacer/dist/types';
 
-const {ContactSearchParameters} = ContactsStatic
+const { ContactSearchParameters } = ContactsStatic;
 
 export enum BexioInvoiceStatus {
   Draft = 7,
@@ -10,7 +10,7 @@ export enum BexioInvoiceStatus {
   Paid = 9,
   Partial = 16,
   Canceled = 19,
-  Unpaid = 31
+  Unpaid = 31,
 }
 
 export async function searchForContact(bexio: Bexio, user: User) {
@@ -18,10 +18,10 @@ export async function searchForContact(bexio: Bexio, user: User) {
     {
       field: ContactSearchParameters.mail,
       value: `${user.email}`,
-      criteria: '='
-    }
-  ])
-  return contacts[0]
+      criteria: '=',
+    },
+  ]);
+  return contacts[0];
 }
 
 export async function addToStringReplaceMap(
@@ -30,7 +30,7 @@ export async function addToStringReplaceMap(
   object: User | Subscription | MemberPlan
 ) {
   for (const [key, value] of Object.entries(object)) {
-    stringReplaceMap.addRule(`:${id}.${key}:`, `${value}`)
+    stringReplaceMap.addRule(`:${id}.${key}:`, `${value}`);
   }
 }
 
@@ -41,14 +41,14 @@ export function mapBexioStatusToPaymentStatus(
     case BexioInvoiceStatus.Unpaid:
     case BexioInvoiceStatus.Partial:
     case BexioInvoiceStatus.Draft:
-      return PaymentState.requiresUserAction
+      return PaymentState.requiresUserAction;
     case BexioInvoiceStatus.Pending:
-      return PaymentState.processing
+      return PaymentState.processing;
     case BexioInvoiceStatus.Paid:
-      return PaymentState.paid
+      return PaymentState.paid;
     case BexioInvoiceStatus.Canceled:
-      return PaymentState.canceled
+      return PaymentState.canceled;
     default:
-      return null
+      return null;
   }
 }

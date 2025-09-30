@@ -1,26 +1,36 @@
-import {PollBlockProvider} from '@wepublish/block-content/website'
-import {BannerDocumentType, useArticleQuery} from '@wepublish/website/api'
-import {Article, BuilderContainerProps} from '@wepublish/website/builder'
-import {BannerContainer} from '@wepublish/banner/website'
-import {PropsWithChildren} from 'react'
-import {useShowPaywall} from '@wepublish/paywall/website'
+import { PollBlockProvider } from '@wepublish/block-content/website';
+import { BannerDocumentType, useArticleQuery } from '@wepublish/website/api';
+import { Article, BuilderContainerProps } from '@wepublish/website/builder';
+import { BannerContainer } from '@wepublish/banner/website';
+import { PropsWithChildren } from 'react';
+import { useShowPaywall } from '@wepublish/paywall/website';
 
-type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
+type IdOrSlug = { id: string; slug?: never } | { id?: never; slug: string };
 
-export type ArticleContainerProps = PropsWithChildren<IdOrSlug & BuilderContainerProps>
+export type ArticleContainerProps = PropsWithChildren<
+  IdOrSlug & BuilderContainerProps
+>;
 
-export function ArticleContainer({id, slug, className, children}: ArticleContainerProps) {
-  const {data, loading, error} = useArticleQuery({
+export function ArticleContainer({
+  id,
+  slug,
+  className,
+  children,
+}: ArticleContainerProps) {
+  const { data, loading, error } = useArticleQuery({
     variables: {
       id,
-      slug
-    }
-  })
-  const {showPaywall, hideContent} = useShowPaywall(data?.article?.paywall)
+      slug,
+    },
+  });
+  const { showPaywall, hideContent } = useShowPaywall(data?.article?.paywall);
 
   return (
     <PollBlockProvider>
-      <BannerContainer documentId={data?.article?.id} documentType={BannerDocumentType.Article} />
+      <BannerContainer
+        documentId={data?.article?.id}
+        documentType={BannerDocumentType.Article}
+      />
 
       <Article
         data={data}
@@ -28,9 +38,10 @@ export function ArticleContainer({id, slug, className, children}: ArticleContain
         error={error}
         showPaywall={showPaywall}
         hideContent={hideContent}
-        className={className}>
+        className={className}
+      >
         {children}
       </Article>
     </PollBlockProvider>
-  )
+  );
 }

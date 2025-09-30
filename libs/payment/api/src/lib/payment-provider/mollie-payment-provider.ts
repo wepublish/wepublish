@@ -6,23 +6,23 @@ import {
   IntentState,
   PaymentProviderProps,
   WebhookForPaymentIntentProps,
-  WebhookResponse
-} from './payment-provider'
-import {logger} from '@wepublish/utils/api'
-import {PaymentState} from '@prisma/client'
+  WebhookResponse,
+} from './payment-provider';
+import { logger } from '@wepublish/utils/api';
+import { PaymentState } from '@prisma/client';
 import createMollieClient, {
   MollieClient,
   SequenceType,
   Payment,
-  PaymentMethod
-} from '@mollie/api-client'
-import MaybeArray from '@mollie/api-client/dist/types/types/MaybeArray'
+  PaymentMethod,
+} from '@mollie/api-client';
+import MaybeArray from '@mollie/api-client/dist/types/types/MaybeArray';
 
 export interface MolliePaymentProviderProps extends PaymentProviderProps {
-  apiKey: string
-  webhookEndpointSecret: string
-  apiBaseUrl: string
-  methods?: string[]
+  apiKey: string;
+  webhookEndpointSecret: string;
+  apiBaseUrl: string;
+  methods?: string[];
 }
 
 const erroredPaymentIntent = {
@@ -30,175 +30,186 @@ const erroredPaymentIntent = {
   intentSecret: '',
   intentData: 'error',
   state: PaymentState.requiresUserAction,
-  errorCode: 'error'
-}
+  errorCode: 'error',
+};
 
 type MolliePaymentMetadata = {
-  paymentID?: string
-  mail?: string
-}
+  paymentID?: string;
+  mail?: string;
+};
 
 export function mapMollieEventToPaymentStatus(event: string): PaymentState {
   switch (event) {
     case 'failed':
     case 'expired':
-      return PaymentState.requiresUserAction
+      return PaymentState.requiresUserAction;
     case 'open':
     case 'authorized':
     case 'pending':
-      return PaymentState.processing
+      return PaymentState.processing;
     case 'paid':
-      return PaymentState.paid
+      return PaymentState.paid;
     case 'canceled':
-      return PaymentState.canceled
+      return PaymentState.canceled;
     default:
-      throw new Error(`Unhandled ${event} state received from mollie`)
+      throw new Error(`Unhandled ${event} state received from mollie`);
   }
 }
 
-export function calculateAndFormatAmount(invoice: {items: {amount: number; quantity: number}[]}) {
+export function calculateAndFormatAmount(invoice: {
+  items: { amount: number; quantity: number }[];
+}) {
   return (
     invoice.items.reduce(
-      (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
+      (prevItem, currentItem) =>
+        prevItem + currentItem.amount * currentItem.quantity,
       0
     ) / 100
-  ).toFixed(2)
+  ).toFixed(2);
 }
 
 export class MolliePaymentProvider extends BasePaymentProvider {
-  readonly webhookEndpointSecret: string
-  readonly mollieClient: MollieClient
-  readonly apiBaseUrl: string
-  readonly methods: MaybeArray<PaymentMethod> | undefined
+  readonly webhookEndpointSecret: string;
+  readonly mollieClient: MollieClient;
+  readonly apiBaseUrl: string;
+  readonly methods: MaybeArray<PaymentMethod> | undefined;
 
   constructor(props: MolliePaymentProviderProps) {
-    super(props)
-    this.webhookEndpointSecret = props.webhookEndpointSecret
-    this.apiBaseUrl = props.apiBaseUrl
-    this.mollieClient = createMollieClient({apiKey: props.apiKey})
-    this.methods = this.getPaymentMethode(props.methods)
+    super(props);
+    this.webhookEndpointSecret = props.webhookEndpointSecret;
+    this.apiBaseUrl = props.apiBaseUrl;
+    this.mollieClient = createMollieClient({ apiKey: props.apiKey });
+    this.methods = this.getPaymentMethode(props.methods);
   }
 
-  getPaymentMethode(methods: string[] | undefined): MaybeArray<PaymentMethod> | undefined {
+  getPaymentMethode(
+    methods: string[] | undefined
+  ): MaybeArray<PaymentMethod> | undefined {
     if (!methods) {
-      return undefined
+      return undefined;
     }
-    const paymentMethods: MaybeArray<PaymentMethod> = []
+    const paymentMethods: MaybeArray<PaymentMethod> = [];
     for (const paymentMethode of methods) {
-      paymentMethods.push(PaymentMethod[paymentMethode as keyof typeof PaymentMethod])
+      paymentMethods.push(
+        PaymentMethod[paymentMethode as keyof typeof PaymentMethod]
+      );
     }
-    return paymentMethods
+    return paymentMethods;
   }
 
   generateWebhookUrl(): string {
-    return `${this.apiBaseUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`
+    return `${this.apiBaseUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`;
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
-    const intentStates: IntentState[] = []
-    const key = props.req.query?.['key'] as string
+  async webhookForPaymentIntent(
+    props: WebhookForPaymentIntentProps
+  ): Promise<WebhookResponse> {
+    const intentStates: IntentState[] = [];
+    const key = props.req.query?.['key'] as string;
 
     if (!this.timeConstantCompare(key, this.webhookEndpointSecret)) {
       return {
         status: 403,
-        message: 'Invalid Api Key'
-      }
+        message: 'Invalid Api Key',
+      };
     }
 
-    const molliePaymentId: string | undefined = props.req.body.id
+    const molliePaymentId: string | undefined = props.req.body.id;
 
     if (!molliePaymentId) {
       return {
         status: 200,
-        paymentStates: intentStates
-      }
+        paymentStates: intentStates,
+      };
     }
-    const payment = await this.mollieClient.payments.get(molliePaymentId)
-    const state = mapMollieEventToPaymentStatus(payment.status)
-    const metadata = payment.metadata as MolliePaymentMetadata
+    const payment = await this.mollieClient.payments.get(molliePaymentId);
+    const state = mapMollieEventToPaymentStatus(payment.status);
+    const metadata = payment.metadata as MolliePaymentMetadata;
     if (state && metadata.paymentID) {
-      let customerID: undefined | string
+      let customerID: undefined | string;
 
       if (this.offSessionPayments && payment.customerId) {
-        customerID = payment.customerId
+        customerID = payment.customerId;
       }
 
       intentStates.push({
         paymentID: metadata.paymentID,
         paymentData: JSON.stringify(payment),
         state,
-        customerID
-      })
+        customerID,
+      });
     }
     return {
       status: 200,
-      paymentStates: intentStates
-    }
+      paymentStates: intentStates,
+    };
   }
 
-  async createIntent(createPaymentIntentProps: CreatePaymentIntentProps): Promise<Intent> {
+  async createIntent(
+    createPaymentIntentProps: CreatePaymentIntentProps
+  ): Promise<Intent> {
     if (this.offSessionPayments && createPaymentIntentProps.customerID) {
-      const offsiteTransactionIntent = await this.createOffsiteTransactionIntent(
-        createPaymentIntentProps
-      )
+      const offsiteTransactionIntent =
+        await this.createOffsiteTransactionIntent(createPaymentIntentProps);
 
       if (offsiteTransactionIntent.state === PaymentState.paid) {
-        return offsiteTransactionIntent
+        return offsiteTransactionIntent;
       }
     }
 
-    return this.createGatewayIntent(createPaymentIntentProps)
+    return this.createGatewayIntent(createPaymentIntentProps);
   }
 
   async createGatewayIntent({
     invoice,
     paymentID,
     currency,
-    successURL
+    successURL,
   }: CreatePaymentIntentProps): Promise<Intent> {
-    let payment: Payment
+    let payment: Payment;
     try {
-      let customerId: undefined | string
+      let customerId: undefined | string;
       if (this.offSessionPayments) {
         const customer = await this.mollieClient.customers.create({
           email: invoice.mail,
-          name: invoice.mail
-        })
-        customerId = customer.id
+          name: invoice.mail,
+        });
+        customerId = customer.id;
       }
 
       payment = await this.mollieClient.payments.create({
         customerId,
         amount: {
           currency,
-          value: calculateAndFormatAmount(invoice)
+          value: calculateAndFormatAmount(invoice),
         },
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
         webhookUrl: this.generateWebhookUrl(),
-        sequenceType: this.offSessionPayments ? SequenceType.first : SequenceType.oneoff,
+        sequenceType:
+          this.offSessionPayments ? SequenceType.first : SequenceType.oneoff,
         method: this.methods,
         metadata: {
           paymentID,
-          mail: invoice.mail
-        }
-      })
+          mail: invoice.mail,
+        },
+      });
     } catch (err) {
-      const error: any = err
+      const error: any = err;
 
       logger('molliePaymentProvider').error(
         error,
         'Error while creating Mollie Intent for paymentProvider %s',
         this.id
-      )
-      return erroredPaymentIntent
+      );
+      return erroredPaymentIntent;
     }
     return {
       intentID: payment.id,
       intentSecret: payment.getCheckoutUrl() ?? '',
       intentData: JSON.stringify(payment),
-      state: mapMollieEventToPaymentStatus(payment.status)
-    }
+      state: mapMollieEventToPaymentStatus(payment.status),
+    };
   }
 
   async createOffsiteTransactionIntent({
@@ -206,12 +217,12 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     invoice,
     paymentID,
     currency,
-    successURL
+    successURL,
   }: CreatePaymentIntentProps): Promise<Intent> {
-    let payment: Payment
+    let payment: Payment;
 
     if (!customerID) {
-      return erroredPaymentIntent
+      return erroredPaymentIntent;
     }
 
     try {
@@ -219,7 +230,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         customerId: customerID,
         amount: {
           currency,
-          value: calculateAndFormatAmount(invoice)
+          value: calculateAndFormatAmount(invoice),
         },
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
@@ -227,41 +238,43 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         sequenceType: SequenceType.recurring,
         metadata: {
           paymentID,
-          mail: invoice.mail
-        }
-      })
+          mail: invoice.mail,
+        },
+      });
     } catch (err) {
-      return erroredPaymentIntent
+      return erroredPaymentIntent;
     }
 
     return {
       intentID: payment.id,
       intentSecret: payment.getCheckoutUrl() ?? '',
       intentData: JSON.stringify(payment),
-      state: mapMollieEventToPaymentStatus(payment.status)
-    }
+      state: mapMollieEventToPaymentStatus(payment.status),
+    };
   }
 
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
-    const payment = await this.mollieClient.payments.get(intentID)
-    const state = mapMollieEventToPaymentStatus(payment.status)
+  async checkIntentStatus({
+    intentID,
+  }: CheckIntentProps): Promise<IntentState> {
+    const payment = await this.mollieClient.payments.get(intentID);
+    const state = mapMollieEventToPaymentStatus(payment.status);
 
-    const metadata = payment.metadata as MolliePaymentMetadata
+    const metadata = payment.metadata as MolliePaymentMetadata;
 
     if (!metadata.paymentID) {
       logger('molliePaymentProvider').error(
         'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
         payment.id,
         this.id
-      )
-      throw new Error('empty paymentID')
+      );
+      throw new Error('empty paymentID');
     }
 
     return {
       state,
       paymentID: metadata.paymentID,
       paymentData: JSON.stringify(payment),
-      customerID: payment.customerId ?? undefined
-    }
+      customerID: payment.customerId ?? undefined,
+    };
   }
 }

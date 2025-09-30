@@ -1,13 +1,13 @@
-import {Meta} from '@storybook/react'
-import {BaseTeaser} from './base-teaser'
-import {mockEventTeaser} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { BaseTeaser } from './base-teaser';
+import { mockEventTeaser } from '@wepublish/storybook/mocks';
 
 export default {
   component: BaseTeaser,
-  title: 'Blocks/Teaser/Event'
-} as Meta
+  title: 'Blocks/Teaser/Event',
+} as Meta;
 
-const eventTeaser = mockEventTeaser()
+const eventTeaser = mockEventTeaser();
 
 export const Default = {
   args: {
@@ -16,11 +16,11 @@ export const Default = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
-    teaser: eventTeaser
-  }
-}
+    teaser: eventTeaser,
+  },
+};
 
 export const WithoutDescription = {
   args: {
@@ -29,14 +29,14 @@ export const WithoutDescription = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...eventTeaser,
-      lead: null
-    }
-  }
-}
+      lead: null,
+    },
+  },
+};
 
 export const WithoutPreTitle = {
   args: {
@@ -45,14 +45,14 @@ export const WithoutPreTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...eventTeaser,
-      preTitle: null
-    }
-  }
-}
+      preTitle: null,
+    },
+  },
+};
 
 export const WithoutTitle = {
   args: {
@@ -61,14 +61,14 @@ export const WithoutTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...eventTeaser,
-      title: null
-    }
-  }
-}
+      title: null,
+    },
+  },
+};
 
 export const WithoutImage = {
   args: {
@@ -77,14 +77,14 @@ export const WithoutImage = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...eventTeaser,
-      image: null
-    }
-  }
-}
+      image: null,
+    },
+  },
+};
 
 export const WithoutImageWithoutEventImage = {
   args: {
@@ -93,15 +93,15 @@ export const WithoutImageWithoutEventImage = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...eventTeaser,
       image: null,
       event: {
         ...eventTeaser.event,
-        image: null
-      }
-    }
-  }
-}
+        image: null,
+      },
+    },
+  },
+};

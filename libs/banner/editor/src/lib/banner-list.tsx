@@ -1,4 +1,8 @@
-import {Banner, getApiClientV2, useBannersQuery} from '@wepublish/editor/api-v2'
+import {
+  Banner,
+  getApiClientV2,
+  useBannersQuery,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   IconButton,
@@ -7,35 +11,37 @@ import {
   ListViewHeader,
   PaddedCell,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite/esm/Table'
-import {BannerDeleteModal} from './banner-delete-modal'
-import React from 'react'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { Table as RTable } from 'rsuite';
+import { RowDataType } from 'rsuite/esm/Table';
+import { BannerDeleteModal } from './banner-delete-modal';
+import React from 'react';
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function BannerList() {
-  const {t} = useTranslation()
-  const [bannerDelete, setBannerDelete] = useState<Banner | undefined>(undefined)
+  const { t } = useTranslation();
+  const [bannerDelete, setBannerDelete] = useState<Banner | undefined>(
+    undefined
+  );
 
-  const client = useMemo(() => getApiClientV2(), [])
+  const client = useMemo(() => getApiClientV2(), []);
 
-  const {data, loading, error, refetch} = useBannersQuery({
+  const { data, loading, error, refetch } = useBannersQuery({
     client,
     variables: {
       take: 100,
-      skip: 0
+      skip: 0,
     },
     onError: () => {
-      console.log(error)
-    }
-  })
+      console.log(error);
+    },
+  });
 
   return (
     <>
@@ -46,7 +52,10 @@ function BannerList() {
 
         <ListViewActions>
           <Link to="create">
-            <IconButton appearance="primary" loading={loading}>
+            <IconButton
+              appearance="primary"
+              loading={loading}
+            >
               <MdAdd />
               {t('banner.list.createNew')}
             </IconButton>
@@ -55,8 +64,15 @@ function BannerList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.banners || []}>
-          <Column width={300} resizable>
+        <Table
+          fillHeight
+          loading={loading}
+          data={data?.banners || []}
+        >
+          <Column
+            width={300}
+            resizable
+          >
             <HeaderCell>{t('banner.list.title')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Banner>) => (
@@ -64,25 +80,43 @@ function BannerList() {
               )}
             </RCell>
           </Column>
-          <Column width={300} resizable>
+          <Column
+            width={300}
+            resizable
+          >
             <HeaderCell>{t('banner.list.text')}</HeaderCell>
-            <RCell>{(rowData: RowDataType<Banner>) => (rowData as Banner).text}</RCell>
-          </Column>
-          <Column width={100} resizable>
-            <HeaderCell>{t('banner.list.active')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<Banner>) => ((rowData as Banner).active ? '✓' : '⨯')}
+              {(rowData: RowDataType<Banner>) => (rowData as Banner).text}
             </RCell>
           </Column>
-          <Column width={200} resizable>
-            <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
+          <Column
+            width={100}
+            resizable
+          >
+            <HeaderCell>{t('banner.list.active')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<Banner>) =>
-                t(`banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`)
+                (rowData as Banner).active ? '✓' : '⨯'
               }
             </RCell>
           </Column>
-          <Column resizable fixed="right">
+          <Column
+            width={200}
+            resizable
+          >
+            <HeaderCell>{t('banner.form.showForLoginStatus')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<Banner>) =>
+                t(
+                  `banner.form.loginStatus.${(rowData as Banner).showForLoginStatus}`
+                )
+              }
+            </RCell>
+          </Column>
+          <Column
+            resizable
+            fixed="right"
+          >
             <HeaderCell align={'center'}>{t('banner.list.delete')}</HeaderCell>
             <PaddedCell align={'center'}>
               {(banner: RowDataType<Banner>) => (
@@ -125,13 +159,13 @@ function BannerList() {
         />
       }
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_BANNERS',
   'CAN_GET_BANNER',
   'CAN_CREATE_BANNER',
-  'CAN_DELETE_BANNER'
-])(BannerList)
-export {CheckedPermissionComponent as BannerList}
+  'CAN_DELETE_BANNER',
+])(BannerList);
+export { CheckedPermissionComponent as BannerList };

@@ -1,12 +1,12 @@
 export {
   TagPageGetStaticPaths as getStaticPaths,
-  TagPageGetStaticProps as getStaticProps
-} from '@wepublish/utils/website'
+  TagPageGetStaticProps as getStaticProps,
+} from '@wepublish/utils/website';
 
-import {css} from '@emotion/react'
-import styled from '@emotion/styled'
-import {TagTitleWrapper} from '@wepublish/tag/website'
-import {TagPage} from '@wepublish/utils/website'
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { TagTitleWrapper } from '@wepublish/tag/website';
+import { TagPage } from '@wepublish/utils/website';
 
 export default styled(TagPage)`
   ${TagTitleWrapper} {
@@ -16,6 +16,6 @@ export default styled(TagPage)`
   }
 
   ${TagTitleWrapper} p {
-    ${({theme}) => css(theme.typography.subtitle1)}
+    ${({ theme }) => css(theme.typography.subtitle1)}
   }
-`
+`;

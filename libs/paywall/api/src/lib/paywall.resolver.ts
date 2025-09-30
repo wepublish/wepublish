@@ -1,12 +1,28 @@
-import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {PaywallDataloaderService} from './paywall-dataloader.service'
-import {Paywall, PaywallBypass, CreatePaywallInput, UpdatePaywallInput} from './paywall.model'
-import {PaywallService} from './paywall.service'
-import {Paywall as PPaywall} from '@prisma/client'
-import {CanCreatePaywall, CanDeletePaywall, CanUpdatePaywall} from '@wepublish/permissions'
-import {Permissions} from '@wepublish/permissions/api'
-import {Public} from '@wepublish/authentication/api'
-import {MemberPlan} from '@wepublish/member-plan/api'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { PaywallDataloaderService } from './paywall-dataloader.service';
+import {
+  Paywall,
+  PaywallBypass,
+  CreatePaywallInput,
+  UpdatePaywallInput,
+} from './paywall.model';
+import { PaywallService } from './paywall.service';
+import { Paywall as PPaywall } from '@prisma/client';
+import {
+  CanCreatePaywall,
+  CanDeletePaywall,
+  CanUpdatePaywall,
+} from '@wepublish/permissions';
+import { Permissions } from '@wepublish/permissions/api';
+import { Public } from '@wepublish/authentication/api';
+import { MemberPlan } from '@wepublish/member-plan/api';
 
 @Resolver(() => Paywall)
 export class PaywallResolver {
@@ -16,67 +32,70 @@ export class PaywallResolver {
   ) {}
 
   @Public()
-  @Query(() => Paywall, {description: `Returns an paywall by id.`})
+  @Query(() => Paywall, { description: `Returns an paywall by id.` })
   public async paywall(@Args('id') id: string) {
-    return await this.paywallDataloader.load(id)
+    return await this.paywallDataloader.load(id);
   }
 
   @Public()
   @Query(() => [Paywall], {
-    description: `Returns a list of paywalls based on the filters given.`
+    description: `Returns a list of paywalls based on the filters given.`,
   })
   public paywalls() {
-    return this.paywallService.getPaywalls()
+    return this.paywallService.getPaywalls();
   }
 
   @Permissions(CanCreatePaywall)
   @Mutation(() => Paywall, {
-    description: `Creates a paywall.`
+    description: `Creates a paywall.`,
   })
   public createPaywall(@Args() input: CreatePaywallInput) {
-    return this.paywallService.createPaywall(input)
+    return this.paywallService.createPaywall(input);
   }
 
   @Permissions(CanUpdatePaywall)
   @Mutation(() => Paywall, {
-    description: `Updates a paywall.`
+    description: `Updates a paywall.`,
   })
   public updatePaywall(@Args() input: UpdatePaywallInput) {
-    return this.paywallService.updatePaywall(input)
+    return this.paywallService.updatePaywall(input);
   }
 
   @Permissions(CanDeletePaywall)
   @Mutation(() => Paywall, {
-    description: `Deletes a paywall.`
+    description: `Deletes a paywall.`,
   })
   public async deletePaywall(@Args('id') id: string) {
-    return (await this.paywallService.deletePaywall(id)).id
+    return (await this.paywallService.deletePaywall(id)).id;
   }
 
   @ResolveField(() => [MemberPlan])
   async memberPlans(@Parent() parent: PPaywall) {
-    return this.paywallService.getPaywallMemberplans(parent.id)
+    return this.paywallService.getPaywallMemberplans(parent.id);
   }
 
   @ResolveField(() => [PaywallBypass])
   async bypasses(@Parent() parent: PPaywall) {
-    return this.paywallService.getPaywallBypasses(parent.id)
+    return this.paywallService.getPaywallBypasses(parent.id);
   }
 
   @Permissions(CanCreatePaywall)
   @Mutation(() => PaywallBypass, {
-    description: `Creates a paywall bypass token.`
+    description: `Creates a paywall bypass token.`,
   })
-  public createPaywallBypass(@Args('paywallId') paywallId: string, @Args('token') token: string) {
-    return this.paywallService.createPaywallBypass(paywallId, token)
+  public createPaywallBypass(
+    @Args('paywallId') paywallId: string,
+    @Args('token') token: string
+  ) {
+    return this.paywallService.createPaywallBypass(paywallId, token);
   }
 
   @Permissions(CanDeletePaywall)
   @Mutation(() => String, {
-    description: `Deletes a paywall bypass token.`
+    description: `Deletes a paywall bypass token.`,
   })
   public async deletePaywallBypass(@Args('id') id: string) {
-    await this.paywallService.deletePaywallBypass(id)
-    return id
+    await this.paywallService.deletePaywallBypass(id);
+    return id;
   }
 }

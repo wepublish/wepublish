@@ -1,8 +1,12 @@
-import styled from '@emotion/styled'
-import {Banner, BannerCloseButton, BannerContentWrapper} from '@wepublish/banner/website'
+import styled from '@emotion/styled';
+import {
+  Banner,
+  BannerCloseButton,
+  BannerContentWrapper,
+} from '@wepublish/banner/website';
 
 const TsriBanner = styled(Banner)(
-  ({theme}) => `
+  ({ theme }) => `
 
   ${BannerContentWrapper} {
     background-color: ${theme.palette.primary.main};
@@ -35,6 +39,6 @@ const TsriBanner = styled(Banner)(
     border: 2px solid ${theme.palette.primary.contrastText};
   }
 `
-)
+);
 
-export {TsriBanner}
+export { TsriBanner };

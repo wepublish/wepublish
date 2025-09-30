@@ -1,11 +1,11 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   BaseTeaser,
   TeaserImageWrapper,
   TeaserPreTitleNoContent,
-  TeaserPreTitleWrapper
-} from '@wepublish/block-content/website'
-import {ImageWrapper} from '@wepublish/image/website'
+  TeaserPreTitleWrapper,
+} from '@wepublish/block-content/website';
+import { ImageWrapper } from '@wepublish/image/website';
 
 export const FlimmerTeaser = styled(BaseTeaser)`
   &,
@@ -23,4 +23,4 @@ export const FlimmerTeaser = styled(BaseTeaser)`
   ${TeaserImageWrapper}:empty {
     min-height: unset;
   }
-`
+`;

@@ -1,10 +1,16 @@
-import {forwardRef} from 'react'
-import {Input} from 'rsuite'
+import { forwardRef } from 'react';
+import { Input } from 'rsuite';
 
 export type TextareaProps = {
-  rows: number
-}
+  rows: number;
+};
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => (
-  <Input {...props} as="textarea" ref={ref} />
-))
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (props, ref) => (
+    <Input
+      {...props}
+      as="textarea"
+      ref={ref}
+    />
+  )
+);

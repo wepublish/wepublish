@@ -75,6 +75,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
         "noImagesFound": "Keine Bilder gefunden",
+        "openInNewTab": "Inhalt URL öffnet in einem neuen Tab",
         "pagePreviewLink": "Vorschau Link",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
         "peeredArticlePreview": "Vorschau",

@@ -1,46 +1,53 @@
-import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel} from '@mui/material'
-import styled from '@emotion/styled'
-import {BuilderLoginFormProps, Button, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Controller, useForm} from 'react-hook-form'
-import {z} from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import styled from '@emotion/styled';
+import {
+  BuilderLoginFormProps,
+  Button,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
   width: 100%;
   max-width: 600px;
   justify-self: center;
-  gap: ${({theme}) => theme.spacing(2)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
 
 export const LoginFormForm = styled('form')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
 export const LoginFormButton = styled(Button)`
   justify-self: flex-end;
-`
+`;
 
 const withEmailFormSchema = z.object({
   email: z.string().email().min(1),
   requirePassword: z.literal(false),
-  password: z.string().optional()
-})
+  password: z.string().optional(),
+});
 
 const withCredentialsFormSchema = z.object({
   email: z.string().email().min(1),
   requirePassword: z.literal(true),
-  password: z.string().min(1)
-})
+  password: z.string().min(1),
+});
 
-const loginFormSchema = z.union([withEmailFormSchema, withCredentialsFormSchema])
+const loginFormSchema = z.union([
+  withEmailFormSchema,
+  withCredentialsFormSchema,
+]);
 
 const autofocus = (node: HTMLElement | null) => {
-  const inputNode = node?.querySelector('input') ?? node
-  console.log(inputNode)
-  inputNode?.focus()
-}
+  const inputNode = node?.querySelector('input') ?? node;
+  console.log(inputNode);
+  inputNode?.focus();
+};
 
 export function LoginForm({
   loginWithCredentials,
@@ -49,41 +56,42 @@ export function LoginForm({
   onSubmitLoginWithEmail,
   defaults,
   disablePasswordLogin,
-  className
+  className,
 }: BuilderLoginFormProps) {
   const {
-    elements: {Alert, TextField}
-  } = useWebsiteBuilder()
+    elements: { Alert, TextField },
+  } = useWebsiteBuilder();
 
-  type FormInput = z.infer<typeof loginFormSchema>
-  const {handleSubmit, control, watch, setValue} = useForm<FormInput>({
+  type FormInput = z.infer<typeof loginFormSchema>;
+  const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: defaults?.email || '',
       password: '',
-      requirePassword: defaults?.requirePassword || false
+      requirePassword: defaults?.requirePassword || false,
     },
     mode: 'onTouched',
-    reValidateMode: 'onChange'
-  })
+    reValidateMode: 'onChange',
+  });
 
-  const onSubmit = handleSubmit(({email, requirePassword, password}) => {
+  const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
     if (requirePassword) {
-      return onSubmitLoginWithCredentials(email, password)
+      return onSubmitLoginWithCredentials(email, password);
     }
 
-    return onSubmitLoginWithEmail(email)
-  })
+    return onSubmitLoginWithEmail(email);
+  });
 
-  const loginWithPassword = watch('requirePassword')
+  const loginWithPassword = watch('requirePassword');
   const loginLinkSent =
-    !loginWithPassword && loginWithEmail.data?.sendWebsiteLogin === watch('email')
+    !loginWithPassword &&
+    loginWithEmail.data?.sendWebsiteLogin === watch('email');
   const error =
     (!loginWithPassword && loginWithEmail.error) ||
-    (loginWithPassword && loginWithCredentials.error)
+    (loginWithPassword && loginWithCredentials.error);
   const loading =
     (!loginWithPassword && loginWithEmail.loading) ||
-    (loginWithPassword && loginWithCredentials.loading)
+    (loginWithPassword && loginWithCredentials.loading);
 
   return (
     <LoginFormWrapper className={className}>
@@ -92,7 +100,9 @@ export function LoginForm({
           control={
             <Checkbox
               checked={loginWithPassword}
-              onChange={event => setValue('requirePassword', event.target.checked)}
+              onChange={event =>
+                setValue('requirePassword', event.target.checked)
+              }
             />
           }
           label="Login mit Passwort"
@@ -103,7 +113,7 @@ export function LoginForm({
         <Controller
           name={'email'}
           control={control}
-          render={({field, fieldState: {error}}) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               autoComplete="email"
@@ -121,7 +131,7 @@ export function LoginForm({
           <Controller
             name={'password'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 autoComplete="current-password"
@@ -139,18 +149,24 @@ export function LoginForm({
 
         {loginLinkSent && (
           <Alert severity="success">
-            Falls ein Account unter der Email &quot;{loginWithEmail.data?.sendWebsiteLogin}&quot;
-            besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen
-            Moment dauern. Bitte prüfe auch deinen Spam-Ordner.
+            Falls ein Account unter der Email &quot;
+            {loginWithEmail.data?.sendWebsiteLogin}&quot; besteht, sollte bald
+            ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment
+            dauern. Bitte prüfe auch deinen Spam-Ordner.
           </Alert>
         )}
 
-        <LoginFormButton disabled={loading || loginLinkSent} type="submit" onClick={onSubmit}>
-          {!loginWithPassword && (loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern')}
+        <LoginFormButton
+          disabled={loading || loginLinkSent}
+          type="submit"
+          onClick={onSubmit}
+        >
+          {!loginWithPassword &&
+            (loginLinkSent ? 'Login-Link versendet' : 'Login-Link anfordern')}
 
           {loginWithPassword && 'Login'}
         </LoginFormButton>
       </LoginFormForm>
     </LoginFormWrapper>
-  )
+  );
 }

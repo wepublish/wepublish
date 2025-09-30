@@ -1,6 +1,6 @@
-import {deleteArticle, ensureArticle, getArticleBySlug} from './article'
-import {ensureTags} from './tags'
-import {BlockInput} from '../../api/private'
+import { deleteArticle, ensureArticle, getArticleBySlug } from './article';
+import { ensureTags } from './tags';
+import { BlockInput } from '../../api/private';
 import {
   convertNodeContentToRichText,
   extractBlockquoteOrEmbed,
@@ -10,113 +10,128 @@ import {
   extractIframe,
   extractImageGallery,
   prepareImageBlock,
-  prepareTitleBlock
-} from './blocks'
-import {ensureImage} from './image'
-import {ensureAuthor} from './author'
-import {PreparedArticleData} from './prepare-data'
-import {deleteExistingPosts, updateExistingArticles} from './index'
-import {isSlateNodeEmpty, transformHtmlToSlate} from './utils'
+  prepareTitleBlock,
+} from './blocks';
+import { ensureImage } from './image';
+import { ensureAuthor } from './author';
+import { PreparedArticleData } from './prepare-data';
+import { deleteExistingPosts, updateExistingArticles } from './index';
+import { isSlateNodeEmpty, transformHtmlToSlate } from './utils';
 
 export async function migratePost(data: PreparedArticleData) {
-  const {title, lead, content, createdAt, modifiedAt, slug, link, featuredMedia} = data
+  const {
+    title,
+    lead,
+    content,
+    createdAt,
+    modifiedAt,
+    slug,
+    link,
+    featuredMedia,
+  } = data;
 
-  let existingArticle = await getArticleBySlug(slug)
+  let existingArticle = await getArticleBySlug(slug);
   if (existingArticle) {
-    console.debug('  article exists', slug)
+    console.debug('  article exists', slug);
     if (deleteExistingPosts) {
-      console.debug('  article delete', slug)
-      await deleteArticle(existingArticle.id)
-      existingArticle = undefined
+      console.debug('  article delete', slug);
+      await deleteArticle(existingArticle.id);
+      existingArticle = undefined;
     } else {
       if (!updateExistingArticles) {
-        return existingArticle
+        return existingArticle;
       }
     }
   }
 
   // Tags
-  const tags = existingArticle ? existingArticle.tags : await ensureTags(data)
+  const tags = existingArticle ? existingArticle.tags : await ensureTags(data);
 
   // Authors
-  const authors = existingArticle ? existingArticle.authors : await ensureAuthors(data)
+  const authors =
+    existingArticle ? existingArticle.authors : await ensureAuthors(data);
 
-  const blocks: BlockInput[] = []
+  const blocks: BlockInput[] = [];
 
   // Title
-  blocks.push(prepareTitleBlock(data))
+  blocks.push(prepareTitleBlock(data));
 
   // Featured media
-  let featuredImage
+  let featuredImage;
   if (featuredMedia) {
-    featuredImage = await ensureImage(featuredMedia)
+    featuredImage = await ensureImage(featuredMedia);
     if (featuredImage) {
-      blocks.push(prepareImageBlock(featuredImage))
+      blocks.push(prepareImageBlock(featuredImage));
     }
   }
 
-  const nodes = extractContentNodes(content)
+  const nodes = extractContentNodes(content);
   for (const node of nodes) {
-    const {specialEl, $specialEl, $element} = node
+    const { specialEl, $specialEl, $element } = node;
 
     if (specialEl) {
       // Img
       if ('img' === specialEl.tagName) {
-        blocks.push(...(await extractImageGallery(node)))
-        continue
+        blocks.push(...(await extractImageGallery(node)));
+        continue;
       }
 
       // Figure
       if ('figure' === specialEl.tagName) {
-        blocks.push(...(await await extractFigure(node)))
-        continue
+        blocks.push(...(await await extractFigure(node)));
+        continue;
       }
 
       // Iframe
       if ('iframe' === specialEl.tagName) {
-        blocks.push(...(await extractIframe(node)))
-        continue
+        blocks.push(...(await extractIframe(node)));
+        continue;
       }
 
       // Quotes
       if ('blockquote' === specialEl.tagName) {
-        blocks.push(extractBlockquoteOrEmbed(node))
-        continue
+        blocks.push(extractBlockquoteOrEmbed(node));
+        continue;
       }
 
       // Content box
       if ($specialEl.filter('.content-box, .content-box-gelb').length) {
-        blocks.push(...(await extractContentBox(node)))
-        continue
+        blocks.push(...(await extractContentBox(node)));
+        continue;
       }
     }
 
     // Elements surrounded with <hr> tags
-    if ($element.filter('p').length && $element.prev('hr').length && $element.next('hr').length) {
-      const skipHrSurroundedLinks = true
+    if (
+      $element.filter('p').length &&
+      $element.prev('hr').length &&
+      $element.next('hr').length
+    ) {
+      const skipHrSurroundedLinks = true;
       if (!skipHrSurroundedLinks) {
-        const richText = await transformHtmlToSlate($element.html()!)
+        const richText = await transformHtmlToSlate($element.html()!);
         blocks.push({
           linkPageBreak: {
             richText,
-            hideButton: true
-          }
-        })
+            hideButton: true,
+          },
+        });
       }
-      continue
+      continue;
     }
 
-    const slateContent = await convertNodeContentToRichText(node)
+    const slateContent = await convertNodeContentToRichText(node);
     if (isSlateNodeEmpty(slateContent)) {
-      continue
+      continue;
     }
-    const lastBlock = blocks[blocks.length - 1]
+    const lastBlock = blocks[blocks.length - 1];
     const hasParagraphs = (block: BlockInput) =>
-      block.richText && block.richText.richText?.some((node: any) => node.type === 'paragraph')
+      block.richText &&
+      block.richText.richText?.some((node: any) => node.type === 'paragraph');
     if (lastBlock?.richText && !hasParagraphs(lastBlock)) {
-      lastBlock?.richText.richText.push(...slateContent)
+      lastBlock?.richText.richText.push(...slateContent);
     } else {
-      blocks.push({richText: {richText: slateContent}})
+      blocks.push({ richText: { richText: slateContent } });
     }
   }
 
@@ -130,10 +145,10 @@ export async function migratePost(data: PreparedArticleData) {
     authors,
     blocks,
     createdAt,
-    modifiedAt
-  })
+    modifiedAt,
+  });
 }
 
-async function ensureAuthors({authors}: PreparedArticleData) {
-  return Promise.all(authors.map(a => ensureAuthor(a)))
+async function ensureAuthors({ authors }: PreparedArticleData) {
+  return Promise.all(authors.map(a => ensureAuthor(a)));
 }

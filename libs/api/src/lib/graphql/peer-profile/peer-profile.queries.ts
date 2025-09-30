@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
 export const getPeerProfile = async (
   hostURL: string,
@@ -13,8 +13,8 @@ export const getPeerProfile = async (
     callToActionURL: '',
     callToActionText: [],
     callToActionImageID: '',
-    callToActionImageURL: ''
-  }
+    callToActionImageURL: '',
+  };
 
-  return {...profile, hostURL, websiteURL}
-}
+  return { ...profile, hostURL, websiteURL };
+};

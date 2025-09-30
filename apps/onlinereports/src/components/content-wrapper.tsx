@@ -1,5 +1,5 @@
-import styled from '@emotion/styled'
-import {css} from '@mui/material'
+import styled from '@emotion/styled';
+import { css } from '@mui/material';
 import {
   BreakBlockHeading,
   BreakBlockWrapper,
@@ -8,18 +8,21 @@ import {
   ImageBlockInnerWrapper,
   ImageBlockWrapper,
   RichTextBlockWrapper,
-  SliderWrapper
-} from '@wepublish/block-content/website'
-import {ContentWrapperStyled, useFullWidthContent} from '@wepublish/content/website'
-import {ComponentProps} from 'react'
+  SliderWrapper,
+} from '@wepublish/block-content/website';
+import {
+  ContentWrapperStyled,
+  useFullWidthContent,
+} from '@wepublish/content/website';
+import { ComponentProps } from 'react';
 
 export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
-  fullWidth?: boolean
+  fullWidth?: boolean;
 }>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(7)};
+  gap: ${({ theme }) => theme.spacing(7)};
 
-  ${({theme, fullWidth}) =>
+  ${({ theme, fullWidth }) =>
     !fullWidth &&
     css`
       ${theme.breakpoints.down('md')} {
@@ -38,7 +41,10 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
 
         &
           > :is(
-            ${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}
+            ${ImageBlockWrapper},
+              ${SliderWrapper},
+              ${EventBlockWrapper},
+              ${BreakBlockWrapper}
           ) {
           grid-column: 2/12;
         }
@@ -60,12 +66,17 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         font-size: 14px;
       }
     `}
-`
+`;
 
 export const OnlineReportsContentWrapper = (
   props: ComponentProps<typeof OnlineReportsContentWrapperStyled>
 ) => {
-  const fullWidth = useFullWidthContent()
+  const fullWidth = useFullWidthContent();
 
-  return <OnlineReportsContentWrapperStyled fullWidth={fullWidth} {...props} />
-}
+  return (
+    <OnlineReportsContentWrapperStyled
+      fullWidth={fullWidth}
+      {...props}
+    />
+  );
+};

@@ -1,19 +1,19 @@
-import {Field, ObjectType, OmitType} from '@nestjs/graphql'
-import {User} from '@wepublish/user/api'
+import { Field, ObjectType, OmitType } from '@nestjs/graphql';
+import { User } from '@wepublish/user/api';
 
 @ObjectType()
 export class SessionWithToken {
   @Field()
-  token!: string
+  token!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  expiresAt!: Date
+  expiresAt!: Date;
 
   @Field(() => User)
-  user!: User
+  user!: User;
 }
 
 @ObjectType()

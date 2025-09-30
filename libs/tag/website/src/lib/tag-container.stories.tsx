@@ -1,15 +1,19 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {ArticleListDocument, TagDocument} from '@wepublish/website/api'
-import {TagContainer} from './tag-container'
-import {mockArticle, mockArticleRevision, mockTag} from '@wepublish/storybook/mocks'
-import {action} from '@storybook/addon-actions'
+import { Meta, StoryObj } from '@storybook/react';
+import { ArticleListDocument, TagDocument } from '@wepublish/website/api';
+import { TagContainer } from './tag-container';
+import {
+  mockArticle,
+  mockArticleRevision,
+  mockTag,
+} from '@wepublish/storybook/mocks';
+import { action } from '@storybook/addon-actions';
 
-const tag = mockTag()
+const tag = mockTag();
 
 export default {
   component: TagContainer,
-  title: 'Container/Tag'
-} as Meta
+  title: 'Container/Tag',
+} as Meta;
 
 export const Default: StoryObj<typeof TagContainer> = {
   args: {
@@ -18,8 +22,8 @@ export const Default: StoryObj<typeof TagContainer> = {
     onVariablesChange: action('onVariablesChange'),
     variables: {
       skip: 0,
-      take: 5
-    }
+      take: 5,
+    },
   },
   parameters: {
     apolloClient: {
@@ -29,16 +33,16 @@ export const Default: StoryObj<typeof TagContainer> = {
             query: TagDocument,
             variables: {
               tag: tag.tag,
-              type: tag.type
-            }
+              type: tag.type,
+            },
           },
           result: {
             data: {
               tags: {
-                nodes: [tag]
-              }
-            }
-          }
+                nodes: [tag],
+              },
+            },
+          },
         },
         {
           request: {
@@ -47,9 +51,9 @@ export const Default: StoryObj<typeof TagContainer> = {
               skip: 0,
               take: 5,
               filter: {
-                tags: [tag.id]
-              }
-            }
+                tags: [tag.id],
+              },
+            },
           },
           result: {
             data: {
@@ -58,8 +62,9 @@ export const Default: StoryObj<typeof TagContainer> = {
                   mockArticle(),
                   mockArticle({
                     latest: mockArticleRevision({
-                      title: 'Some longer article title: How will it look like?'
-                    })
+                      title:
+                        'Some longer article title: How will it look like?',
+                    }),
                   }),
                   mockArticle(),
                   mockArticle(),
@@ -69,20 +74,20 @@ export const Default: StoryObj<typeof TagContainer> = {
                   mockArticle(),
                   mockArticle(),
                   mockArticle(),
-                  mockArticle()
+                  mockArticle(),
                 ],
                 pageInfo: {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   endCursor: null,
-                  startCursor: null
+                  startCursor: null,
                 },
-                totalCount: 11
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+                totalCount: 11,
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+};

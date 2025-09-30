@@ -1,13 +1,17 @@
-import {Meta} from '@storybook/react'
-import {BaseTeaser} from './base-teaser'
-import {mockArticle, mockArticleRevision, mockArticleTeaser} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { BaseTeaser } from './base-teaser';
+import {
+  mockArticle,
+  mockArticleRevision,
+  mockArticleTeaser,
+} from '@wepublish/storybook/mocks';
 
 export default {
   component: BaseTeaser,
-  title: 'Blocks/Teaser/Article'
-} as Meta
+  title: 'Blocks/Teaser/Article',
+} as Meta;
 
-const articleTeaser = mockArticleTeaser()
+const articleTeaser = mockArticleTeaser();
 
 export const Default = {
   args: {
@@ -16,11 +20,11 @@ export const Default = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
-    teaser: articleTeaser
-  }
-}
+    teaser: articleTeaser,
+  },
+};
 
 export const WithoutPreTitle = {
   args: {
@@ -29,14 +33,14 @@ export const WithoutPreTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: {
       ...articleTeaser,
-      preTitle: null
-    }
-  }
-}
+      preTitle: null,
+    },
+  },
+};
 
 export const WithoutArticlePreTitle = {
   args: {
@@ -45,18 +49,18 @@ export const WithoutArticlePreTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
       preTitle: null,
       article: mockArticle({
         latest: mockArticleRevision({
-          preTitle: null
-        })
-      })
-    })
-  }
-}
+          preTitle: null,
+        }),
+      }),
+    }),
+  },
+};
 
 export const WithoutTitle = {
   args: {
@@ -65,13 +69,13 @@ export const WithoutTitle = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
-      title: null
-    })
-  }
-}
+      title: null,
+    }),
+  },
+};
 
 export const WithoutLead = {
   args: {
@@ -80,13 +84,13 @@ export const WithoutLead = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
-      lead: null
-    })
-  }
-}
+      lead: null,
+    }),
+  },
+};
 
 export const WithoutImage = {
   args: {
@@ -95,13 +99,13 @@ export const WithoutImage = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
-      image: null
-    })
-  }
-}
+      image: null,
+    }),
+  },
+};
 
 export const WithoutImageWithoutBlock = {
   args: {
@@ -110,18 +114,18 @@ export const WithoutImageWithoutBlock = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
       image: null,
       article: mockArticle({
         latest: mockArticleRevision({
-          blocks: []
-        })
-      })
-    })
-  }
-}
+          blocks: [],
+        }),
+      }),
+    }),
+  },
+};
 
 export const WithoutAuthors = {
   args: {
@@ -130,17 +134,17 @@ export const WithoutAuthors = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
       article: mockArticle({
         latest: mockArticleRevision({
-          authors: []
-        })
-      })
-    })
-  }
-}
+          authors: [],
+        }),
+      }),
+    }),
+  },
+};
 
 export const WithoutDate = {
   args: {
@@ -149,12 +153,12 @@ export const WithoutDate = {
       y: 0,
       w: 3,
       h: 4,
-      __typename: 'FlexAlignment'
+      __typename: 'FlexAlignment',
     },
     teaser: mockArticleTeaser({
       article: mockArticle({
-        publishedAt: null
-      })
-    })
-  }
-}
+        publishedAt: null,
+      }),
+    }),
+  },
+};

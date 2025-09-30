@@ -1,16 +1,17 @@
-import {css} from '@emotion/react'
-import styled from '@emotion/styled'
-import {lighten} from '@mui/material'
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { lighten } from '@mui/material';
 import {
   MemberPlanItem,
   MemberPlanItemContent,
   MemberPlanItemDescription,
   MemberPlanPicker,
-  MemberPlanPickerRadios
-} from '@wepublish/membership/website'
+  MemberPlanPickerRadios,
+} from '@wepublish/membership/website';
 
 export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
-  --memberplan-item-picker-checked-bg: ${({theme}) => lighten(theme.palette.primary.main, 0.35)};
+  --memberplan-item-picker-checked-bg: ${({ theme }) =>
+    lighten(theme.palette.primary.main, 0.35)};
 
   .MuiRadio-root {
     display: none;
@@ -24,7 +25,7 @@ export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
     font-size: inherit;
   }
 
-  ${({tags, theme}) => {
+  ${({ tags, theme }) => {
     return (
       tags?.includes('disabled-style') &&
       css`
@@ -37,12 +38,12 @@ export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
           font-size: 0.75rem;
         }
       `
-    )
+    );
   }}
-`
+`;
 
 export const HauptstadtMemberPlanPicker = styled(MemberPlanPicker)`
   ${MemberPlanPickerRadios} {
-    gap: ${({theme}) => theme.spacing(4)};
+    gap: ${({ theme }) => theme.spacing(4)};
   }
-`
+`;

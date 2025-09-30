@@ -1,5 +1,5 @@
-import {FileValidator} from '@nestjs/common'
-import {IFile} from '@nestjs/common/pipes/file/interfaces'
+import { FileValidator } from '@nestjs/common';
+import { IFile } from '@nestjs/common/pipes/file/interfaces';
 
 const supportedMimeTypes = [
   'image/webp',
@@ -8,20 +8,20 @@ const supportedMimeTypes = [
   'image/jpeg',
   'image/jpg',
   'image/avif',
-  'image/tiff'
-]
+  'image/tiff',
+];
 
 export class SupportedImagesValidator extends FileValidator {
   constructor() {
-    super({})
+    super({});
   }
 
   override async isValid(file?: IFile): Promise<boolean> {
     if (!file) {
-      return false
+      return false;
     }
 
-    return supportedMimeTypes.includes(file.mimetype)
+    return supportedMimeTypes.includes(file.mimetype);
   }
 
   override buildErrorMessage(file: IFile): string {
@@ -29,6 +29,6 @@ export class SupportedImagesValidator extends FileValidator {
       file.mimetype
     } is not supported. Only the file types ${supportedMimeTypes
       .map(mimeType => mimeType.replace('image/', ''))
-      .join(', ')} are supported.`
+      .join(', ')} are supported.`;
   }
 }

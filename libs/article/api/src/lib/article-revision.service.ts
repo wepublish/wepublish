@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {AuthorDataloaderService} from '@wepublish/author/api'
-import {PrimeDataLoader} from '@wepublish/utils/api'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { AuthorDataloaderService } from '@wepublish/author/api';
+import { PrimeDataLoader } from '@wepublish/utils/api';
 
 @Injectable()
 export class ArticleRevisionService {
@@ -11,9 +11,9 @@ export class ArticleRevisionService {
     return this.prisma.metadataProperty.findMany({
       where: {
         public: includePrivate ? undefined : true,
-        articleRevisionId: revisionId
-      }
-    })
+        articleRevisionId: revisionId,
+      },
+    });
   }
 
   @PrimeDataLoader(AuthorDataloaderService)
@@ -22,11 +22,11 @@ export class ArticleRevisionService {
       where: {
         articlesAsSocialMediaAuthor: {
           some: {
-            revisionId
-          }
-        }
-      }
-    })
+            revisionId,
+          },
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(AuthorDataloaderService)
@@ -35,10 +35,10 @@ export class ArticleRevisionService {
       where: {
         articlesAsAuthor: {
           some: {
-            revisionId
-          }
-        }
-      }
-    })
+            revisionId,
+          },
+        },
+      },
+    });
   }
 }

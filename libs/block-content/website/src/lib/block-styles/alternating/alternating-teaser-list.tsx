@@ -1,13 +1,16 @@
-import {css} from '@emotion/react'
-import {BuilderBlockStyleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {TeaserWrapper} from '../../teaser/base-teaser'
+import { css } from '@emotion/react';
+import {
+  BuilderBlockStyleProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { TeaserWrapper } from '../../teaser/base-teaser';
 
 export const AlternatingTeaserListBlock = (
   props: BuilderBlockStyleProps['AlternatingTeaserList']
 ) => {
   const {
-    blocks: {TeaserList}
-  } = useWebsiteBuilder()
+    blocks: { TeaserList },
+  } = useWebsiteBuilder();
 
   return (
     <TeaserList
@@ -19,5 +22,5 @@ export const AlternatingTeaserListBlock = (
         }
       `}
     />
-  )
-}
+  );
+};
