@@ -16,7 +16,7 @@ export const ColTeaser = styled(TeaserOverwrite)`
 
   ${TeaserContentStyled} {
     margin-top: calc(-20px - (2 * 2 * (4px)));
-    padding: ${({theme}) => theme.spacing(1)};
+    padding: ${({ theme }) => theme.spacing(1)};
     background: white;
     grid-column: 2/23;
   }
