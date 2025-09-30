@@ -39,7 +39,7 @@ export function NavbarContainer({
   profileBtn,
   subscribeBtn,
   children,
-  headerMax = 2,
+  headerMax = 0,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
   const { data, loading, error } = useNavigationListQuery();

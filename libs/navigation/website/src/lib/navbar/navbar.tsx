@@ -101,6 +101,8 @@ export const NavbarLinks = styled('div', {
   @media (min-width: 740px) {
     // custom for maximum space usage
     display: flex;
+    white-space: nowrap;
+    flex-wrap: nowrap;
   }
 `;
 
@@ -241,7 +243,7 @@ export function Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
-  headerMax = 2,
+  headerMax = 0,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -312,14 +314,16 @@ export function Navbar({
 
             {!!headerItems?.links.length && (
               <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.slice(0, headerMax).map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
-                  >
-                    {link.label}
-                  </NavbarLink>
-                ))}
+                {headerItems.links
+                  .slice(0, headerMax || headerItems.links.length)
+                  .map((link, index) => (
+                    <NavbarLink
+                      key={index}
+                      href={navigationLinkToUrl(link)}
+                    >
+                      {link.label}
+                    </NavbarLink>
+                  ))}
               </NavbarLinks>
             )}
           </NavbarMain>

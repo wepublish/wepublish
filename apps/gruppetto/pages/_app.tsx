@@ -188,7 +188,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                headerMax={3}
+                headerMax={2}
               />
 
               <main>
