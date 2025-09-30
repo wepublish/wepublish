@@ -1,17 +1,16 @@
-import { Injectable } from '@nestjs/common';
 import {
   InvoiceWithItems,
   PaymentProvider,
 } from './payment-provider/payment-provider';
 import { Payment, PaymentState, PrismaClient } from '@prisma/client';
 import { sub } from 'date-fns';
-import { PaymentMethodService } from '@wepublish/payment-method/api';
 import { UserInputError } from '@nestjs/apollo';
 import { GraphQLError } from 'graphql/index';
 import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
 } from './payment.model';
+import { Injectable } from '@nestjs/common';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -27,8 +26,7 @@ interface CreatePaymentWithProvider {
 export class PaymentsService {
   constructor(
     readonly prisma: PrismaClient,
-    readonly paymentProviders: PaymentProvider[],
-    readonly paymentMethodsService: PaymentMethodService
+    readonly paymentProviders: PaymentProvider[]
   ) {}
 
   getProviders() {
@@ -82,14 +80,14 @@ export class PaymentsService {
       );
     }
 
-    const paymentMethod =
-      paymentMethodID ?
-        await this.paymentMethodsService.findActivePaymentMethodById(
-          paymentMethodID
-        )
-      : await this.paymentMethodsService.findActivePaymentMethodBySlug(
-          paymentMethodSlug || ''
-        );
+    const paymentMethod = await this.prisma.paymentMethod.findFirst({
+      where: {
+        id: paymentMethodID ? paymentMethodID : undefined,
+        slug: paymentMethodID ? undefined : paymentMethodSlug,
+        active: true,
+      },
+    });
+
     if (!paymentMethod) {
       throw new UserInputError(
         `PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`
@@ -212,10 +210,12 @@ export class PaymentsService {
     userId,
     migrateToTargetPaymentMethodID,
   }: CreatePaymentWithProvider): Promise<Payment> {
-    const paymentMethod =
-      await this.paymentMethodsService.findActivePaymentMethodById(
-        migrateToTargetPaymentMethodID || paymentMethodID
-      );
+    const paymentMethod = await this.prisma.paymentMethod.findUnique({
+      where: {
+        id: migrateToTargetPaymentMethodID || paymentMethodID,
+        active: true,
+      },
+    });
 
     if (!paymentMethod) {
       throw new Error('Payment method not found');

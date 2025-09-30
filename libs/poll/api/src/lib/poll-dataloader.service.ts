@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
 import {
   Poll,
@@ -18,7 +18,7 @@ export type PrismaFullPoll = Poll & {
   })[];
 };
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class PollDataloaderService extends DataLoaderService<PrismaFullPoll> {
   constructor(private prisma: PrismaClient) {
     super();
