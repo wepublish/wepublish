@@ -35,7 +35,7 @@ export const CommentListItemActionsButtons = styled('div')`
   justify-content: space-between;
 `;
 
-export const buttonStyles = (theme: Theme) => css`
+const buttonStyles = (theme: Theme) => css`
   border-width: 1px;
 
   &:hover {
@@ -232,7 +232,7 @@ const CommentWarningWrapper = styled('div')`
   padding-bottom: ${({ theme }) => `${theme.spacing(1)}`};
 `;
 
-export const CommentListItemStateWarnings = (
+const CommentListItemStateWarnings = (
   props: Pick<BuilderCommentListItemProps, 'state'>
 ) => {
   const {
