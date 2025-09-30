@@ -51,7 +51,6 @@ export const LoginWrapper = styled('div')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     column-gap: ${({ theme }) => theme.spacing(6)};
-    padding-left: ${({ theme }) => theme.spacing(3)};
   }
 `;
 
