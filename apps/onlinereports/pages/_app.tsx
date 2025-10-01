@@ -279,13 +279,15 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   name="theme-color"
                   content="#ffffff"
                 />
-                <script
-                  src="//servedby.revive-adserver.net/asyncjs.php"
-                  async
-                />
               </Head>
 
+              <Script
+                src="//servedby.revive-adserver.net/asyncjs.php"
+                async
+              />
+
               <AdblockOverlay />
+
               <Spacer>
                 <NavBar
                   categorySlugs={[['categories', 'about-us']]}
@@ -295,6 +297,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   loginBtn={{ href: '/login' }}
                   profileBtn={{ href: '/profile' }}
                 />
+
                 <MainContainer>
                   <MainContent>
                     <WideboardPlacer>
@@ -303,6 +306,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                     <Component {...pageProps} />
                   </MainContent>
                 </MainContainer>
+
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
