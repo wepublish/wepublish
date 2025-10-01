@@ -10,7 +10,9 @@ export const createOptionalsArray = <
   data: Data[],
   attribute: Attribute
 ): Array<Data | null> => {
-  const dataMap = Object.fromEntries(data.map(entry => [entry[attribute], entry]))
+  const dataMap = Object.fromEntries(
+    data.map(entry => [entry[attribute], entry])
+  );
 
-  return keys.map(id => dataMap[id] ?? null)
-}
+  return keys.map(id => dataMap[id] ?? null);
+};

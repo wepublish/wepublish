@@ -1,12 +1,12 @@
-import {useEffect, useState} from 'react'
-import {Form, InputGroup} from 'rsuite'
+import { useEffect, useState } from 'react';
+import { Form, InputGroup } from 'rsuite';
 
 export interface CurrencyInputProps {
-  currency: string
-  centAmount: number
-  onChange(centAmount: number | null): void
-  disabled?: boolean
-  name: string
+  currency: string;
+  centAmount: number;
+  onChange(centAmount: number | null): void;
+  disabled?: boolean;
+  name: string;
 }
 
 export function CurrencyInput({
@@ -14,19 +14,19 @@ export function CurrencyInput({
   centAmount,
   disabled,
   name,
-  onChange
+  onChange,
 }: CurrencyInputProps) {
-  const [amount, setAmount] = useState<number | string | any>(centAmount / 100)
+  const [amount, setAmount] = useState<number | string | any>(centAmount / 100);
 
   useEffect(() => {
-    setAmount((centAmount / 100).toFixed(2))
-  }, [centAmount])
+    setAmount((centAmount / 100).toFixed(2));
+  }, [centAmount]);
 
   const toFloat = (text: string) =>
     text
       .match(/[\d]*[.,]?[\d]{0,2}/)![0]
       .replace(',', '.')
-      .replace(/^\./, '')
+      .replace(/^\./, '');
 
   return (
     <div>
@@ -36,19 +36,19 @@ export function CurrencyInput({
           name={name}
           disabled={disabled}
           onChange={(amount: string) => {
-            amount = toFloat(amount)
-            setAmount(amount)
+            amount = toFloat(amount);
+            setAmount(amount);
           }}
           onBlur={() => {
             if (amount) {
-              onChange(parseFloat(amount as string) * 100)
+              onChange(parseFloat(amount as string) * 100);
             } else {
-              onChange(null)
+              onChange(null);
             }
           }}
         />
         <InputGroup.Addon>{currency}</InputGroup.Addon>
       </InputGroup>
     </div>
-  )
+  );
 }

@@ -1,16 +1,19 @@
-import {Injectable} from '@nestjs/common'
-import {MailTemplate, PrismaClient} from '@prisma/client'
-import {MailContext, MailProviderTemplate} from '@wepublish/mail/api'
+import { Injectable } from '@nestjs/common';
+import { MailTemplate, PrismaClient } from '@prisma/client';
+import { MailContext, MailProviderTemplate } from '@wepublish/mail/api';
 
 export interface MailTemplateSyncDiff {
-  remoteNew: MailProviderTemplate[]
-  remoteExisting: MailProviderTemplate[]
-  localOutdated: MailTemplate[]
+  remoteNew: MailProviderTemplate[];
+  remoteExisting: MailProviderTemplate[];
+  localOutdated: MailTemplate[];
 }
 
 @Injectable()
 export class MailTemplateSyncService {
-  constructor(private prismaService: PrismaClient, private mailContext: MailContext) {}
+  constructor(
+    private prismaService: PrismaClient,
+    private mailContext: MailContext
+  ) {}
 
   /**
    * Synchronizes the local template list with the remote mail provider.
@@ -20,41 +23,51 @@ export class MailTemplateSyncService {
    * - marks any local templates as outdated if their remote counterpart is missing
    */
   async synchronizeTemplates(): Promise<void> {
-    const localTemplates = await this.prismaService.mailTemplate.findMany()
+    const localTemplates = await this.prismaService.mailTemplate.findMany();
 
-    const {mailProvider} = await this.mailContext
-    const remoteTemplates = (await mailProvider.getTemplates()) as MailProviderTemplate[]
+    const { mailProvider } = await this.mailContext;
+    const remoteTemplates =
+      (await mailProvider.getTemplates()) as MailProviderTemplate[];
 
-    const updatedRemoteTemplates = this.findUpdatedRemoteTemplates(localTemplates, remoteTemplates)
+    const updatedRemoteTemplates = this.findUpdatedRemoteTemplates(
+      localTemplates,
+      remoteTemplates
+    );
     for (const remoteTemplate of updatedRemoteTemplates) {
       await this.prismaService.mailTemplate.update({
-        where: {externalMailTemplateId: remoteTemplate.uniqueIdentifier},
+        where: { externalMailTemplateId: remoteTemplate.uniqueIdentifier },
         data: {
           name: remoteTemplate.name,
-          remoteMissing: false
-        }
-      })
+          remoteMissing: false,
+        },
+      });
     }
 
-    const newRemoteTemplates = this.findNewRemoteTemplates(localTemplates, remoteTemplates)
+    const newRemoteTemplates = this.findNewRemoteTemplates(
+      localTemplates,
+      remoteTemplates
+    );
     for (const remoteTemplate of newRemoteTemplates) {
       await this.prismaService.mailTemplate.create({
         data: {
           name: remoteTemplate.name,
           externalMailTemplateId: remoteTemplate.uniqueIdentifier,
-          remoteMissing: false
-        }
-      })
+          remoteMissing: false,
+        },
+      });
     }
 
-    const outdatedLocalTemplates = this.findOutdatedLocalTemplates(localTemplates, remoteTemplates)
+    const outdatedLocalTemplates = this.findOutdatedLocalTemplates(
+      localTemplates,
+      remoteTemplates
+    );
     for (const localTemplate of outdatedLocalTemplates) {
       await this.prismaService.mailTemplate.update({
-        where: {externalMailTemplateId: localTemplate.externalMailTemplateId},
+        where: { externalMailTemplateId: localTemplate.externalMailTemplateId },
         data: {
-          remoteMissing: true
-        }
-      })
+          remoteMissing: true,
+        },
+      });
     }
   }
 
@@ -64,9 +77,11 @@ export class MailTemplateSyncService {
   ): MailProviderTemplate[] {
     return remoteTemplates.filter(remoteTemplate => {
       return localTemplates.find(
-        localTemplate => localTemplate.externalMailTemplateId === remoteTemplate.uniqueIdentifier
-      )
-    })
+        localTemplate =>
+          localTemplate.externalMailTemplateId ===
+          remoteTemplate.uniqueIdentifier
+      );
+    });
   }
 
   private findNewRemoteTemplates(
@@ -75,9 +90,11 @@ export class MailTemplateSyncService {
   ): MailProviderTemplate[] {
     return remoteTemplates.filter(remoteTemplate => {
       return !localTemplates.find(
-        localTemplate => localTemplate.externalMailTemplateId === remoteTemplate.uniqueIdentifier
-      )
-    })
+        localTemplate =>
+          localTemplate.externalMailTemplateId ===
+          remoteTemplate.uniqueIdentifier
+      );
+    });
   }
 
   private findOutdatedLocalTemplates(
@@ -86,8 +103,10 @@ export class MailTemplateSyncService {
   ): MailTemplate[] {
     return localTemplates.filter(localTemplate => {
       return !remoteTemplates.find(
-        remoteTemplate => remoteTemplate.uniqueIdentifier === localTemplate.externalMailTemplateId
-      )
-    })
+        remoteTemplate =>
+          remoteTemplate.uniqueIdentifier ===
+          localTemplate.externalMailTemplateId
+      );
+    });
   }
 }

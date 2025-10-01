@@ -1,39 +1,52 @@
-import {ArticleListWrapper, articleToTeaser} from '@wepublish/article/website'
-import {Article, Teaser, TeaserType} from '@wepublish/website/api'
-import {BuilderArticleListProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useMemo} from 'react'
+import {
+  ArticleListWrapper,
+  articleToTeaser,
+} from '@wepublish/article/website';
+import { Article, Teaser, TeaserType } from '@wepublish/website/api';
+import {
+  BuilderArticleListProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useMemo } from 'react';
 
-export function OnlineReportsArticleList({data, className}: BuilderArticleListProps) {
+export function OnlineReportsArticleList({
+  data,
+  className,
+}: BuilderArticleListProps) {
   const {
-    blocks: {TeaserGrid}
-  } = useWebsiteBuilder()
+    blocks: { TeaserGrid },
+  } = useWebsiteBuilder();
 
   const teasers = useMemo(
     () =>
       enrichTeaserListWithOnlineReportsAds(
-        data?.articles?.nodes.map(article => articleToTeaser(article as Article)) ?? []
+        data?.articles?.nodes.map(article =>
+          articleToTeaser(article as Article)
+        ) ?? []
       ),
     [data?.articles?.nodes]
-  )
+  );
 
   return (
     <ArticleListWrapper className={className}>
-      <TeaserGrid numColumns={3} teasers={teasers} />
+      <TeaserGrid
+        numColumns={3}
+        teasers={teasers}
+      />
     </ArticleListWrapper>
-  )
+  );
 }
 
 function enrichTeaserListWithOnlineReportsAds(teasers: Teaser[]) {
   return teasers.reduce((teasers: Teaser[], teaser: Teaser, index) => {
-    // Add ad placement after every 5th article for OnlineReports specific layout
-    if ((index + 1) % 5 === 0 && index > 0) {
+    if ((index + 3) % 6 === 0) {
       teasers.push({
         __typename: 'CustomTeaser',
         type: TeaserType.Custom,
-        title: 'or-ad-banner'
-      })
+        title: 'ad-small',
+      });
     }
-    teasers.push(teaser)
-    return teasers
-  }, [])
+    teasers.push(teaser);
+    return teasers;
+  }, []);
 }

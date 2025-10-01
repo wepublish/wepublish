@@ -1,21 +1,24 @@
-import {BaseMailProvider, MailProviderProps, SendMailProps} from '@wepublish/api'
-
-import fetch from 'cross-fetch'
+import {
+  MailProviderProps,
+  BaseMailProvider,
+  SendMailProps,
+} from '@wepublish/mail/api';
+import fetch from 'cross-fetch';
 
 export interface SlackMailProviderProps extends MailProviderProps {
-  webhookURL: string
+  webhookURL: string;
 }
 
 export class SlackMailProvider extends BaseMailProvider {
-  readonly webhookURL: string
+  readonly webhookURL: string;
 
   constructor(props: SlackMailProviderProps) {
-    super(props)
-    this.webhookURL = props.webhookURL
+    super(props);
+    this.webhookURL = props.webhookURL;
   }
 
   async webhookForSendMail() {
-    return []
+    return [];
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
@@ -25,21 +28,23 @@ export class SlackMailProvider extends BaseMailProvider {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*From*: ${props.replyToAddress}\n*To*: ${props.recipient}\n*Template*: ${
-              props.template
-            }\n\`\`\`${JSON.stringify(props.templateData)}\`\`\``
-          }
-        }
-      ]
-    }
+            text: `*From*: ${props.replyToAddress}\n*To*: ${
+              props.recipient
+            }\n*Template*: ${props.template}\n\`\`\`${JSON.stringify(
+              props.templateData
+            )}\`\`\``,
+          },
+        },
+      ],
+    };
 
     await fetch(this.webhookURL, {
       method: 'POST',
       headers: {
-        'Conetent-type': 'application/json'
+        'Conetent-type': 'application/json',
       },
-      body: JSON.stringify(message)
-    })
+      body: JSON.stringify(message),
+    });
   }
 
   async getTemplates() {
@@ -47,11 +52,11 @@ export class SlackMailProvider extends BaseMailProvider {
       name: `Slack Template ${key + 1}`,
       uniqueIdentifier: `slack-template-${key + 1}`,
       createdAt: new Date(),
-      updatedAt: new Date()
-    }))
+      updatedAt: new Date(),
+    }));
   }
 
   getTemplateUrl() {
-    return 'http://example.com/'
+    return 'http://example.com/';
   }
 }

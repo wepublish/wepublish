@@ -2,6 +2,7 @@ fragment MemberPlanRef on MemberPlan {
   id
   name
   description
+  shortDescription
   slug
   active
   tags

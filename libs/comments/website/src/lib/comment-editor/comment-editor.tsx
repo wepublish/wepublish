@@ -1,81 +1,85 @@
-import {zodResolver} from '@hookform/resolvers/zod'
-import {css, IconButton, Modal, Theme, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { css, IconButton, Modal, Theme, useTheme } from '@mui/material';
+import styled from '@emotion/styled';
 import {
   Challenge,
   IntendedRouteExpiryInSeconds,
   IntendedRouteStorageKey,
   LoginFormContainer,
-  useUser
-} from '@wepublish/authentication/website'
-import {BlockFormat, toPlaintext} from '@wepublish/richtext'
-import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {setCookie} from 'cookies-next'
-import {add} from 'date-fns'
-import {useMemo, useState} from 'react'
-import {Controller, useForm} from 'react-hook-form'
-import {MdClose, MdLogin, MdSend} from 'react-icons/md'
-import {z} from 'zod'
+  useUser,
+} from '@wepublish/authentication/website';
+import { BlockFormat, toPlaintext } from '@wepublish/richtext';
+import {
+  BuilderCommentEditorProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { setCookie } from 'cookies-next';
+import { add } from 'date-fns';
+import { useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { MdClose, MdLogin, MdSend } from 'react-icons/md';
+import { z } from 'zod';
 
-export const CommentEditorWrapper = styled('form')<{modalOpen: boolean}>`
+export const CommentEditorWrapper = styled('form')<{ modalOpen: boolean }>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
 
-  ${({modalOpen}) => modalOpen && 'filter: blur(4px);'};
-`
+  ${({ modalOpen }) => modalOpen && 'filter: blur(4px);'};
+`;
 
 export const CommentEditorActions = styled('div')`
   justify-self: flex-end;
   display: flex;
   flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
 export const LoginWrapper = styled('div')`
   position: relative;
   display: grid;
   grid-template-columns: 1;
-  padding-top: ${({theme}) => theme.spacing(4)};
+  padding-top: ${({ theme }) => theme.spacing(4)};
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(2, 1fr);
   }
-`
+`;
 
 export const InitialModalWrapper = styled('div')`
   position: relative;
   display: grid;
   grid-template-columns: 1;
-  padding-top: ${({theme}) => theme.spacing(4)};
+  padding-top: ${({ theme }) => theme.spacing(4)};
   align-items: center;
-`
+`;
 
 export const InitialModalContent = styled('div')`
   width: 100%;
   justify-content: space-around;
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-template-columns: repeat(2, 1fr);
   }
-`
+`;
 
 export const Register = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
   grid-column: 1/2;
-  margin: 0 ${({theme}) => theme.spacing(4)};
-  margin-top: ${({theme}) => theme.spacing(3)};
-  border-left: 1px solid ${({theme}) => theme.palette.grey[300]};
+  margin: 0 ${({ theme }) => theme.spacing(4)};
+  margin-top: ${({ theme }) => theme.spacing(3)};
+  border-left: 1px solid ${({ theme }) => theme.palette.grey[300]};
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     grid-column: 2/3;
     margin-top: 0;
   }
-`
+`;
 
 export const initialHeadingStyles = (theme: Theme) => css`
   width: 100%;
@@ -86,11 +90,11 @@ export const initialHeadingStyles = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     margin-bottom: ${theme.spacing(6)};
   }
-`
+`;
 
 export const initialButtonStyles = (theme: Theme) => css`
   text-transform: uppercase;
-`
+`;
 
 export const registerStyles = (theme: Theme) => css`
   font-size: ${theme.typography.body1.fontSize};
@@ -100,29 +104,29 @@ export const registerStyles = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     font-size: ${theme.typography.h4.fontSize};
   }
-`
+`;
 
 export const registerIconStyles = (theme: Theme) => css`
   color: ${theme.palette.common.white};
   margin-right: ${theme.spacing(1)};
-`
+`;
 
-export const linkStyles = (theme: Theme) => css`
-  color: ${theme.palette.common.white};
+export const SignupLink = styled(Link)`
+  color: ${({ theme }) => theme.palette.common.white};
   text-decoration: none;
-  font-size: ${theme.typography.body1.fontSize};
+  font-size: ${({ theme }) => theme.typography.body1.fontSize};
 
-  ${theme.breakpoints.up('md')} {
-    font-size: ${theme.typography.h4.fontSize};
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    font-size: ${({ theme }) => theme.typography.h4.fontSize};
   }
-`
+`;
 
 export const CloseLogin = styled(IconButton)`
   position: absolute;
-  top: ${({theme}) => `${theme.spacing(1)}`};
-  right: ${({theme}) => `${theme.spacing(1)}`};
+  top: ${({ theme }) => `${theme.spacing(1)}`};
+  right: ${({ theme }) => `${theme.spacing(1)}`};
   z-index: 1;
-`
+`;
 
 export const ModalContent = styled('div')`
   position: absolute;
@@ -130,17 +134,17 @@ export const ModalContent = styled('div')`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 95%;
-  max-width: ${({theme}) => theme.spacing(100)};
-  background-color: ${({theme}) => theme.palette.background.paper};
-  box-shadow: ${({theme}) => theme.shadows[24]};
-  padding: ${({theme}) => theme.spacing(2)};
+  max-width: ${({ theme }) => theme.spacing(100)};
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  box-shadow: ${({ theme }) => theme.shadows[24]};
+  padding: ${({ theme }) => theme.spacing(2)};
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     width: 80lvw;
   }
-`
+`;
 
 export const CommentEditor = ({
   className,
@@ -155,35 +159,37 @@ export const CommentEditor = ({
   error,
   parentUrl,
   signUpUrl,
-  anonymousCanComment
+  anonymousCanComment,
 }: BuilderCommentEditorProps) => {
-  const theme = useTheme()
+  const theme = useTheme();
   const {
-    elements: {TextField, Button, Alert, H3, Link}
-  } = useWebsiteBuilder()
-  const {hasUser} = useUser()
-  const [modalOpen, setModalOpen] = useState(!hasUser)
-  const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment)
+    elements: { TextField, Button, Alert, H3, Link },
+  } = useWebsiteBuilder();
+  const { hasUser } = useUser();
+  const [modalOpen, setModalOpen] = useState(!hasUser);
+  const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment);
 
   const handleClose = () => {
-    setModalOpen(false)
-    onCancel()
-  }
+    setModalOpen(false);
+    onCancel();
+  };
 
   const handleGuestComment = () => {
-    setShowInitialModal(false)
-    setModalOpen(false)
-  }
+    setShowInitialModal(false);
+    setModalOpen(false);
+  };
 
   const handleLoginRegister = () => {
-    setShowInitialModal(false)
-  }
+    setShowInitialModal(false);
+  };
 
-  const buttonStyles = useMemo(() => registerStyles(theme), [theme])
-  const iconStyles = useMemo(() => registerIconStyles(theme), [theme])
-  const aStyles = useMemo(() => linkStyles(theme), [theme])
-  const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme])
-  const initialButtonsStyles = useMemo(() => initialButtonStyles(theme), [theme])
+  const buttonStyles = useMemo(() => registerStyles(theme), [theme]);
+  const iconStyles = useMemo(() => registerIconStyles(theme), [theme]);
+  const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme]);
+  const initialButtonsStyles = useMemo(
+    () => initialButtonStyles(theme),
+    [theme]
+  );
 
   const anonymousSchema = useMemo(
     () =>
@@ -193,25 +199,27 @@ export const CommentEditor = ({
         guestUsername: z.string().min(1),
         challenge: z.object({
           challengeSolution: z.string().min(1),
-          challengeID: z.string().min(1)
-        })
+          challengeID: z.string().min(1),
+        }),
       }),
     [maxCommentLength]
-  )
+  );
 
   const loggedInSchema = useMemo(
     () =>
       z.object({
         comment: z.string().min(1).max(maxCommentLength),
-        title: z.string()
+        title: z.string(),
       }),
     [maxCommentLength]
-  )
+  );
 
-  type FormInput = z.infer<typeof loggedInSchema> | z.infer<typeof anonymousSchema>
-  const schema = hasUser ? loggedInSchema : anonymousSchema
+  type FormInput =
+    | z.infer<typeof loggedInSchema>
+    | z.infer<typeof anonymousSchema>;
+  const schema = hasUser ? loggedInSchema : anonymousSchema;
 
-  const {handleSubmit, control, reset} = useForm<FormInput>({
+  const { handleSubmit, control, reset } = useForm<FormInput>({
     resolver: zodResolver(schema),
     defaultValues: {
       comment: toPlaintext(text) ?? '',
@@ -219,13 +227,13 @@ export const CommentEditor = ({
       guestUsername: '',
       challenge: {
         challengeID: challenge?.data?.challenge.challengeID ?? '',
-        challengeSolution: ''
-      }
+        challengeSolution: '',
+      },
     },
-    mode: 'all'
-  })
+    mode: 'all',
+  });
 
-  const submit = handleSubmit(({comment, ...data}) => {
+  const submit = handleSubmit(({ comment, ...data }) => {
     onSubmit({
       ...data,
       text: [
@@ -233,41 +241,45 @@ export const CommentEditor = ({
           type: BlockFormat.Paragraph,
           children: [
             {
-              text: comment
-            }
-          ]
-        }
-      ]
-    })
-  })
+              text: comment,
+            },
+          ],
+        },
+      ],
+    });
+  });
 
   const passRedirectCookie = () => {
     if (!hasUser && typeof window !== 'undefined') {
       setCookie(IntendedRouteStorageKey, parentUrl, {
         expires: add(new Date(), {
-          seconds: IntendedRouteExpiryInSeconds
-        })
-      })
+          seconds: IntendedRouteExpiryInSeconds,
+        }),
+      });
     }
-  }
+  };
 
   const registerRedirect = () => {
-    passRedirectCookie()
-  }
+    passRedirectCookie();
+  };
 
   const handleAfterLoginCallback = () => {
-    passRedirectCookie()
-    setModalOpen(false)
-  }
+    passRedirectCookie();
+    setModalOpen(false);
+  };
 
   return (
     <>
-      <CommentEditorWrapper className={className} onSubmit={submit} modalOpen={modalOpen}>
+      <CommentEditorWrapper
+        className={className}
+        onSubmit={submit}
+        modalOpen={modalOpen}
+      >
         {!hasUser && (
           <Controller
             name={'guestUsername'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 fullWidth
@@ -283,7 +295,7 @@ export const CommentEditor = ({
         <Controller
           name={'title'}
           control={control}
-          render={({field, fieldState: {error}}) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               fullWidth
@@ -298,7 +310,7 @@ export const CommentEditor = ({
         <Controller
           name={'comment'}
           control={control}
-          render={({field, fieldState: {error}}) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               multiline
@@ -316,7 +328,7 @@ export const CommentEditor = ({
           <Controller
             name={'challenge.challengeSolution'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <Challenge
                 {...field}
                 onChange={field.onChange}
@@ -329,30 +341,41 @@ export const CommentEditor = ({
           />
         )}
 
-        {challenge?.error && <Alert severity="error">{challenge.error.message}</Alert>}
+        {challenge?.error && (
+          <Alert severity="error">{challenge.error.message}</Alert>
+        )}
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
         <CommentEditorActions>
-          <Button type="submit" size="small" endIcon={<MdSend />} disabled={loading}>
+          <Button
+            type="submit"
+            size="small"
+            endIcon={<MdSend />}
+            disabled={loading}
+          >
             Kommentieren
           </Button>
 
           <Button
             type="reset"
             onClick={() => {
-              reset()
-              onCancel()
+              reset();
+              onCancel();
             }}
             size="small"
             variant="text"
-            color="secondary">
+            color="secondary"
+          >
             Abbrechen
           </Button>
         </CommentEditorActions>
       </CommentEditorWrapper>
 
-      <Modal open={modalOpen} onClose={handleClose}>
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+      >
         <ModalContent>
           <CloseLogin onClick={handleClose}>
             <MdClose />
@@ -367,12 +390,16 @@ export const CommentEditor = ({
                   <Button
                     onClick={handleGuestComment}
                     variant="outlined"
-                    css={initialButtonsStyles}>
+                    css={initialButtonsStyles}
+                  >
                     als gast kommentieren
                   </Button>
                 )}
 
-                <Button onClick={handleLoginRegister} css={initialButtonsStyles}>
+                <Button
+                  onClick={handleLoginRegister}
+                  css={initialButtonsStyles}
+                >
                   anmelden/registieren
                 </Button>
               </InitialModalContent>
@@ -381,15 +408,21 @@ export const CommentEditor = ({
 
           {!showInitialModal && (
             <LoginWrapper>
-              <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
+              <LoginFormContainer
+                afterLoginCallback={handleAfterLoginCallback}
+              />
 
               <Register>
-                <Button css={buttonStyles} onClick={registerRedirect}>
-                  <MdLogin aria-label="Register" css={iconStyles} />
+                <Button
+                  css={buttonStyles}
+                  onClick={registerRedirect}
+                >
+                  <MdLogin
+                    aria-label="Register"
+                    css={iconStyles}
+                  />
 
-                  <Link href={signUpUrl} css={aStyles}>
-                    Jetzt registrieren
-                  </Link>
+                  <SignupLink href={signUpUrl}>Jetzt registrieren</SignupLink>
                 </Button>
               </Register>
             </LoginWrapper>
@@ -397,5 +430,5 @@ export const CommentEditor = ({
         </ModalContent>
       </Modal>
     </>
-  )
-}
+  );
+};

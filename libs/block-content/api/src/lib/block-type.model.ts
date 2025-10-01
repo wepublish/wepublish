@@ -1,4 +1,4 @@
-import {registerEnumType} from '@nestjs/graphql'
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum BlockType {
   Title = 'title',
@@ -28,9 +28,9 @@ export enum BlockType {
   Crowdfunding = 'crowdfunding',
   Comment = 'comment',
   Event = 'event',
-  Subscribe = 'subscribe'
+  Subscribe = 'subscribe',
 }
 
 registerEnumType(BlockType, {
-  name: 'BlockType'
-})
+  name: 'BlockType',
+});

@@ -4,35 +4,30 @@ exports[`PageRevisionDataloaderService load should load many 1`] = `
 [
   [
     {
-      "orderBy": [
-        {
-          "publishedAt": "desc",
+      "include": {
+        "PagesRevisionDraft": {
+          "include": {
+            "pageRevision": true,
+          },
         },
-        {
-          "createdAt": "desc",
+        "PagesRevisionPending": {
+          "include": {
+            "pageRevision": true,
+          },
         },
-      ],
-      "take": 3,
-      "where": {
-        "archivedAt": null,
-        "pageId": "123",
+        "PagesRevisionPublished": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
       },
-    },
-  ],
-  [
-    {
-      "orderBy": [
-        {
-          "publishedAt": "desc",
-        },
-        {
-          "createdAt": "desc",
-        },
-      ],
-      "take": 3,
       "where": {
-        "archivedAt": null,
-        "pageId": "321",
+        "id": {
+          "in": [
+            "123",
+            "321",
+          ],
+        },
       },
     },
   ],
@@ -43,18 +38,29 @@ exports[`PageRevisionDataloaderService load should load one 1`] = `
 [
   [
     {
-      "orderBy": [
-        {
-          "publishedAt": "desc",
+      "include": {
+        "PagesRevisionDraft": {
+          "include": {
+            "pageRevision": true,
+          },
         },
-        {
-          "createdAt": "desc",
+        "PagesRevisionPending": {
+          "include": {
+            "pageRevision": true,
+          },
         },
-      ],
-      "take": 3,
+        "PagesRevisionPublished": {
+          "include": {
+            "pageRevision": true,
+          },
+        },
+      },
       "where": {
-        "archivedAt": null,
-        "pageId": "123",
+        "id": {
+          "in": [
+            "123",
+          ],
+        },
       },
     },
   ],

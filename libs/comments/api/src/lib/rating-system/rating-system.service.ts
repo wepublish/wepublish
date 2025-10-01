@@ -1,5 +1,5 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class RatingSystemService {
@@ -8,36 +8,36 @@ export class RatingSystemService {
   async getRatingSystem() {
     return this.prisma.commentRatingSystem.findFirst({
       include: {
-        answers: true
-      }
-    })
+        answers: true,
+      },
+    });
   }
 
   async getRatingSystemAnswers() {
-    return this.prisma.commentRatingSystemAnswer.findMany()
+    return this.prisma.commentRatingSystemAnswer.findMany();
   }
 
   async getUserCommentRatings(commentId: string, userId: string | null) {
     if (!userId) {
-      return []
+      return [];
     }
 
     return this.prisma.commentRating.findMany({
       where: {
         commentId,
-        userId
+        userId,
       },
       include: {
-        answer: true
-      }
-    })
+        answer: true,
+      },
+    });
   }
 
   async getCommentRatings(commentId: string) {
     return this.prisma.commentRating.findMany({
       where: {
-        commentId
-      }
-    })
+        commentId,
+      },
+    });
   }
 }

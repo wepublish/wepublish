@@ -1,53 +1,63 @@
-import {ComponentType, PropsWithChildren, useContext, useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Message} from 'rsuite'
+import { ComponentType, PropsWithChildren, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Message } from 'rsuite';
 
-import {AuthContext} from '../authContext'
+import { AuthContext } from '../authContext';
 
 interface RejectionMessageProps {
-  requiredPermissions: string[]
+  requiredPermissions: string[];
 }
 
-export function RejectionMessage({requiredPermissions}: RejectionMessageProps) {
-  const {t} = useTranslation()
+export function RejectionMessage({
+  requiredPermissions,
+}: RejectionMessageProps) {
+  const { t } = useTranslation();
   return (
-    <Message type="error" header={t('permissions.noAccess')} showIcon>
-      {t('permissions.contactAdmin', {permissions: requiredPermissions.join(', ')})}
+    <Message
+      type="error"
+      header={t('permissions.noAccess')}
+      showIcon
+    >
+      {t('permissions.contactAdmin', {
+        permissions: requiredPermissions.join(', '),
+      })}
     </Message>
-  )
+  );
 }
 
 interface PermissionControlProps {
-  qualifyingPermissions: string[]
-  showRejectionMessage?: boolean
+  qualifyingPermissions: string[];
+  showRejectionMessage?: boolean;
 }
 
 export function PermissionControl({
   children,
   qualifyingPermissions,
-  showRejectionMessage
+  showRejectionMessage,
 }: PropsWithChildren<PermissionControlProps>) {
-  const roles = useContext(AuthContext)?.session?.sessionRoles
+  const roles = useContext(AuthContext)?.session?.sessionRoles;
 
   const isAuthorized = useMemo(() => {
     if (!roles) {
-      return true
+      return true;
     }
 
     return qualifyingPermissions.some(qualifyingPermission =>
       roles.some(role =>
-        role.permissions.some(userPermission => userPermission.id === qualifyingPermission)
+        role.permissions.some(
+          userPermission => userPermission.id === qualifyingPermission
+        )
       )
-    )
-  }, [qualifyingPermissions, roles])
+    );
+  }, [qualifyingPermissions, roles]);
 
   if (isAuthorized) {
-    return <>{children}</>
+    return <>{children}</>;
   }
 
   return showRejectionMessage ? (
     <RejectionMessage requiredPermissions={qualifyingPermissions} />
-  ) : null
+  ) : null;
 }
 
 export const createCheckedPermissionComponent =
@@ -62,14 +72,15 @@ export const createCheckedPermissionComponent =
     return (
       <PermissionControl
         qualifyingPermissions={permissions}
-        showRejectionMessage={showRejectionMessage ?? true}>
+        showRejectionMessage={showRejectionMessage ?? true}
+      >
         <ControlledComponent {...props} />
       </PermissionControl>
-    )
-  }
+    );
+  };
 
 export function useAuthorisation(permissionID: string) {
   return useContext(AuthContext)?.session?.sessionRoles?.some(role =>
     role.permissions.some(permission => permission.id === permissionID)
-  )
+  );
 }

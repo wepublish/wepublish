@@ -1,2 +1,2 @@
-export * from './rating-system.service'
-export * from './rating-system.resolver'
+export * from './rating-system.service';
+export * from './rating-system.resolver';

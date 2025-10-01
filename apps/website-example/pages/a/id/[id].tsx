@@ -1,10 +1,10 @@
-import {GetStaticPaths} from 'next'
+import { GetStaticPaths } from 'next';
 
-export {default, getStaticProps} from '../[slug]'
+export { default, getStaticProps } from '../[slug]';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
-  }
-}
+    fallback: 'blocking',
+  };
+};

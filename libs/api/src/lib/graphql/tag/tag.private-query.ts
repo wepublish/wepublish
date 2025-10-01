@@ -1,18 +1,22 @@
-import {Prisma, PrismaClient, TagType} from '@prisma/client'
-import {CanGetTags} from '@wepublish/permissions'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
-import {Context} from '../../context'
-import {authorise} from '../permissions'
+import { Prisma, PrismaClient, TagType } from '@prisma/client';
+import { CanGetTags, CanUpdateTag } from '@wepublish/permissions';
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+} from '@wepublish/utils/api';
+import { Context } from '../../context';
+import { authorise } from '../permissions';
 
 export type TagFilter = {
-  type: TagType
-  tag: string
-}
+  type: TagType;
+  tag: string;
+};
 
 export enum TagSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
-  Tag = 'Tag'
+  Tag = 'Tag',
 }
 
 export const createTagOrder = (
@@ -22,48 +26,54 @@ export const createTagOrder = (
   switch (field) {
     case TagSort.Tag:
       return {
-        tag: graphQLSortOrderToPrisma(sortOrder)
-      }
+        tag: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case TagSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case TagSort.CreatedAt:
     default:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createTypeFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => {
+const createTypeFilter = (
+  filter?: Partial<TagFilter>
+): Prisma.TagWhereInput => {
   if (filter?.type) {
     return {
-      type: filter?.type
-    }
+      type: filter?.type,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createTagNameFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => {
+const createTagNameFilter = (
+  filter?: Partial<TagFilter>
+): Prisma.TagWhereInput => {
   if (filter?.tag) {
     return {
       tag: {
         mode: 'insensitive',
-        contains: filter.tag
-      }
-    }
+        contains: filter.tag,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-export const createTagFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInput => ({
-  AND: [createTypeFilter(filter), createTagNameFilter(filter)]
-})
+export const createTagFilter = (
+  filter?: Partial<TagFilter>
+): Prisma.TagWhereInput => ({
+  AND: [createTypeFilter(filter), createTagNameFilter(filter)],
+});
 
 export const getTags = async (
   filter: Partial<TagFilter>,
@@ -75,32 +85,32 @@ export const getTags = async (
   authenticate: Context['authenticate'],
   tag: PrismaClient['tag']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanGetTags, roles)
+  const { roles } = authenticate();
+  authorise(CanGetTags, roles);
 
-  const orderBy = createTagOrder(sortedField, order)
-  const where = createTagFilter(filter)
+  const orderBy = createTagOrder(sortedField, order);
+  const where = createTagFilter(filter);
 
   const [totalCount, tags] = await Promise.all([
     tag.count({
       where,
-      orderBy
+      orderBy,
     }),
     tag.findMany({
       where,
       skip,
       take: getMaxTake(take) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined
-    })
-  ])
+      cursor: cursorId ? { id: cursorId } : undefined,
+    }),
+  ]);
 
-  const nodes = tags.slice(0, take)
-  const firstTag = nodes[0]
-  const lastTag = nodes[nodes.length - 1]
+  const nodes = tags.slice(0, take);
+  const firstTag = nodes[0];
+  const lastTag = nodes[nodes.length - 1];
 
-  const hasPreviousPage = Boolean(skip)
-  const hasNextPage = tags.length > nodes.length
+  const hasPreviousPage = Boolean(skip);
+  const hasNextPage = tags.length > nodes.length;
 
   return {
     nodes,
@@ -109,7 +119,20 @@ export const getTags = async (
       hasPreviousPage,
       hasNextPage,
       startCursor: firstTag?.id,
-      endCursor: lastTag?.id
-    }
-  }
-}
+      endCursor: lastTag?.id,
+    },
+  };
+};
+
+export const getTag = async (
+  id: string,
+  authenticate: Context['authenticate'],
+  tag: PrismaClient['tag']
+) => {
+  const { roles } = authenticate();
+  authorise(CanUpdateTag, roles);
+
+  return tag.findUnique({
+    where: { id },
+  });
+};

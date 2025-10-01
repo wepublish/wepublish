@@ -1,7 +1,7 @@
-import styled from '@emotion/styled'
-import {PropsWithChildren} from 'react'
-import {Link} from 'react-router-dom'
-import {Avatar} from 'rsuite'
+import styled from '@emotion/styled';
+import { PropsWithChildren } from 'react';
+import { Link } from 'react-router-dom';
+import { Avatar } from 'rsuite';
 
 const InlineAvatarWrapper = styled.div`
   display: flex;
@@ -9,30 +9,40 @@ const InlineAvatarWrapper = styled.div`
   gap: 8px;
   align-items: center;
   width: max-content;
-`
+`;
 
 const FlexLink = styled(Link)`
   display: flex;
-`
+`;
 
 export const InlineAvatar = ({
   children,
   url,
   src,
   title,
-  showAvatar = true
+  showAvatar = true,
 }: PropsWithChildren<{
-  url?: string
-  src?: string | null
-  title?: string | null
-  showAvatar?: boolean
+  url?: string;
+  src?: string | null;
+  title?: string | null;
+  showAvatar?: boolean;
 }>) => {
-  const avatar = showAvatar && <Avatar src={src ?? ''} alt={title ?? undefined} circle size="xs" />
+  const avatar = showAvatar && (
+    <Avatar
+      src={src ?? ''}
+      alt={title ?? undefined}
+      circle
+      size="xs"
+    />
+  );
 
   return (
     <InlineAvatarWrapper>
       {url ? (
-        <FlexLink to={url} title={title ?? undefined}>
+        <FlexLink
+          to={url}
+          title={title ?? undefined}
+        >
           {avatar}
         </FlexLink>
       ) : (
@@ -41,5 +51,5 @@ export const InlineAvatar = ({
 
       {children}
     </InlineAvatarWrapper>
-  )
-}
+  );
+};

@@ -1,13 +1,13 @@
-import {Descendant, Element, Text} from 'slate'
+import { Descendant, Element, Text } from 'slate';
 
 export type BuilderRenderRichtextProps = {
-  elements: Descendant[]
-}
+  elements: Descendant[];
+};
 
 export type BuilderRenderElementProps = {
-  element: Element
-}
+  element: Element;
+};
 
 export type BuilderRenderLeafProps = {
-  element: Text
-}
+  element: Text;
+};

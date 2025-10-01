@@ -1,3 +1,3 @@
 export enum InlineFormat {
-  Link = 'link'
+  Link = 'link',
 }

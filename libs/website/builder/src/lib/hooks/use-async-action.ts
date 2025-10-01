@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useCallback} from 'react'
+import { Dispatch, SetStateAction, useCallback } from 'react';
 
 export const useAsyncAction = (
   setLoading: Dispatch<SetStateAction<boolean>>,
@@ -9,19 +9,19 @@ export const useAsyncAction = (
     <T extends (...args: never[]) => Promise<void>>(action?: T) =>
       async (...args: Parameters<T>) => {
         try {
-          setError(undefined)
-          setLoading(true)
-          await action?.(...args)
-          if (setSuccess) setSuccess(true)
+          setError(undefined);
+          setLoading(true);
+          await action?.(...args);
+          if (setSuccess) setSuccess(true);
         } catch (e) {
-          if (setSuccess) setSuccess(false)
+          if (setSuccess) setSuccess(false);
           if (e instanceof Error) {
-            setError(e)
+            setError(e);
           }
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       },
     [setError, setLoading, setSuccess]
-  )
-}
+  );
+};

@@ -1,13 +1,46 @@
 fragment FullPeerProfile on PeerProfile {
   name
-  hostURL
-  themeColor
-  themeFontColor
   logo {
-    ...ImageRef
+    ...FullImage
   }
   squareLogo {
-    ...ImageRef
+    ...FullImage
+  }
+
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullImage
+  }
+}
+
+fragment FullRemotePeerProfile on RemotePeerProfile {
+  name
+  logo {
+    id
+  }
+  squareLogo {
+    id
+  }
+
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    id
   }
 }
 
@@ -21,7 +54,7 @@ fragment PeerRef on Peer {
 fragment PeerWithProfile on Peer {
   ...PeerRef
   profile {
-    ...FullPeerProfile
+    ...FullRemotePeerProfile
   }
 }
 

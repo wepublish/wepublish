@@ -1,25 +1,26 @@
-import styled from '@emotion/styled'
-import {useTranslation} from 'react-i18next'
-import {MdUploadFile} from 'react-icons/md'
-import {Button, Drawer, Form, Notification, toaster} from 'rsuite'
-import {FileDropInput} from '../atoms'
-import {getImgMinSizeToCompress} from '../utility'
+import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
+import { MdUploadFile } from 'react-icons/md';
+import { Button, Drawer, Form, Notification, toaster } from 'rsuite';
+
+import { FileDropInput } from '../atoms';
+import { getImgMinSizeToCompress } from '../utility';
 
 const InputWrapper = styled.div`
   height: 100px;
-`
+`;
 
 export interface ImageUploadPanelProps {
-  onClose(): void
-  onUpload(file: File): void
+  onClose(): void;
+  onUpload(file: File): void;
 }
 
-export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
-  const {t} = useTranslation()
+export function ImageUploadPanel({ onClose, onUpload }: ImageUploadPanelProps) {
+  const { t } = useTranslation();
   async function handleDrop(files: File[]) {
-    if (files.length === 0) return
+    if (files.length === 0) return;
 
-    const file = files[0]
+    const file = files[0];
 
     if (!file.type.startsWith('image')) {
       toaster.push(
@@ -28,11 +29,11 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
           header={t('articleEditor.panels.învalidImage')}
           duration={5000}
         />,
-        {placement: 'topEnd'}
-      )
+        { placement: 'topEnd' }
+      );
     }
 
-    onUpload(file)
+    onUpload(file);
   }
 
   return (
@@ -41,7 +42,10 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
         <Drawer.Title>{t('articleEditor.panels.uploadImage')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          <Button
+            appearance={'subtle'}
+            onClick={() => onClose?.()}
+          >
             {t('articleEditor.panels.close')}
           </Button>
         </Drawer.Actions>
@@ -57,9 +61,11 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
         </InputWrapper>
         <Form.ControlLabel>
           <br />
-          {t('images.panels.resizedImage', {sizeMB: getImgMinSizeToCompress()})}
+          {t('images.panels.resizedImage', {
+            sizeMB: getImgMinSizeToCompress(),
+          })}
         </Form.ControlLabel>
       </Drawer.Body>
     </>
-  )
+  );
 }

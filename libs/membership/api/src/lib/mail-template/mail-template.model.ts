@@ -1,36 +1,36 @@
-import {Field, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {MailTemplateStatus} from '@wepublish/mail/api'
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { MailTemplateStatus } from '@wepublish/mail/api';
 
 registerEnumType(MailTemplateStatus, {
-  name: 'MailTemplateStatus'
-})
+  name: 'MailTemplateStatus',
+});
 
 @ObjectType()
 export class MailTemplateWithUrlAndStatusModel {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  name!: string
+  name!: string;
 
-  @Field({nullable: true})
-  description?: string
-
-  @Field()
-  externalMailTemplateId!: string
+  @Field({ nullable: true })
+  description?: string;
 
   @Field()
-  remoteMissing!: boolean
+  externalMailTemplateId!: string;
 
   @Field()
-  url!: string
+  remoteMissing!: boolean;
 
   @Field()
-  status!: string
+  url!: string;
+
+  @Field()
+  status!: string;
 }
 
 @ObjectType()
 export class MailProviderModel {
   @Field()
-  name!: string
+  name!: string;
 }

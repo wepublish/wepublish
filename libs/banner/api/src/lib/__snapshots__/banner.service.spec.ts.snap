@@ -1,0 +1,329 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BannerService findMany should return null if no banner found 1`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 0, loggedIn: false, hasSubscription: false } 1`] = `
+{
+  "active": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "LOGGED_OUT",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 0, loggedIn: false, hasSubscription: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "LOGGED_OUT",
+        },
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnPages": {
+        "some": {
+          "id": "1",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 0, loggedIn: true, hasSubscription: false } 1`] = `
+{
+  "active": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "UNSUBSCRIBED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 0, loggedIn: true, hasSubscription: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnPages": {
+        "some": {
+          "id": "1",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 0, loggedIn: true, hasSubscription: true } 1`] = `
+{
+  "active": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "SUBSCRIBED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 0, loggedIn: true, hasSubscription: true } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "SUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnPages": {
+        "some": {
+          "id": "1",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 1, loggedIn: false, hasSubscription: false } 1`] = `
+{
+  "active": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "LOGGED_OUT",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 1, loggedIn: false, hasSubscription: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "LOGGED_OUT",
+        },
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: false } 1`] = `
+{
+  "active": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "UNSUBSCRIBED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: false } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "UNSUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: true } 1`] = `
+{
+  "active": true,
+  "createdAt": 2023-01-01T00:00:00.000Z,
+  "cta": null,
+  "delay": 0,
+  "html": null,
+  "id": "1",
+  "imageId": null,
+  "modifiedAt": 2023-01-01T00:00:00.000Z,
+  "showForLoginStatus": "SUBSCRIBED",
+  "showOnArticles": true,
+  "showOnPages": [
+    {
+      "id": "1",
+      "title": "Page 1",
+    },
+    {
+      "id": "2",
+      "title": "Page 2",
+    },
+  ],
+  "text": "Test Banner Text",
+  "title": "Test Banner",
+}
+`;
+
+exports[`BannerService findMany should return the first active banner for { documentType: 1, loggedIn: true, hasSubscription: true } 2`] = `
+[
+  {
+    "where": {
+      "OR": [
+        {
+          "showForLoginStatus": "SUBSCRIBED",
+        },
+        {
+          "showForLoginStatus": "LOGGED_IN",
+        },
+        {
+          "showForLoginStatus": "ALL",
+        },
+      ],
+      "active": true,
+      "showOnArticles": true,
+    },
+  },
+]
+`;
