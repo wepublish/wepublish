@@ -8,7 +8,6 @@ import {
 } from '@wepublish/website/builder';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useState } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -44,17 +43,22 @@ const loginFormSchema = z.union([
   withCredentialsFormSchema,
 ]);
 
-const autofocus = (node: HTMLElement | null, focusDelay?: number) => {
-  const inputNode = node?.querySelector('input') ?? node;
-  console.log(inputNode, focusDelay);
-  if (focusDelay && focusDelay > 0) {
-    (async () => {
-      await new Promise(resolve => setTimeout(resolve, focusDelay));
-      inputNode?.focus();
-    })();
-    return;
-  }
-  inputNode?.focus();
+const focusSetter = {
+  focusDelay: 0,
+  autofocus: (node: HTMLDivElement | null) => {
+    const inputNode = node?.querySelector('input') ?? node;
+    console.log(inputNode, focusSetter.focusDelay);
+    if (focusSetter.focusDelay > 0) {
+      (async () => {
+        await new Promise(resolve =>
+          setTimeout(resolve, focusSetter.focusDelay)
+        );
+        inputNode?.focus();
+      })();
+      return;
+    }
+    inputNode?.focus();
+  },
 };
 
 export function LoginForm({
@@ -70,7 +74,6 @@ export function LoginForm({
   const {
     elements: { Alert, TextField },
   } = useWebsiteBuilder();
-  const [awaitingWithCredentials, setAwaitingWithCredentials] = useState(false);
 
   type FormInput = z.infer<typeof loginFormSchema>;
   const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
@@ -86,11 +89,7 @@ export function LoginForm({
 
   const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
     if (requirePassword) {
-      setAwaitingWithCredentials(true);
-      return (async () => {
-        await onSubmitLoginWithCredentials(email, password);
-        setAwaitingWithCredentials(false);
-      })();
+      onSubmitLoginWithCredentials(email, password);
     }
 
     return onSubmitLoginWithEmail(email);
@@ -106,6 +105,9 @@ export function LoginForm({
   const loading =
     (!loginWithPassword && loginWithEmail.loading) ||
     (loginWithPassword && loginWithCredentials.loading);
+  const awaitingLoginConfirmed = loginWithPassword && loading;
+
+  focusSetter.focusDelay = Number(focusDelay);
 
   return (
     <LoginFormWrapper className={className}>
@@ -136,11 +138,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
-              ref={
-                Number(focusDelay) > 0 ?
-                  ref => autofocus(ref, Number(focusDelay))
-                : autofocus
-              }
+              ref={focusSetter.autofocus}
             />
           )}
         />
@@ -163,7 +161,7 @@ export function LoginForm({
           />
         )}
 
-        {awaitingWithCredentials && !error && !loginLinkSent && (
+        {awaitingLoginConfirmed && (
           <Alert severity="info">
             Einen Moment bitte, die eingegebenen Anmeldedaten werden
             überprüft...

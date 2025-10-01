@@ -20,7 +20,6 @@ import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdClose, MdLogin, MdSend } from 'react-icons/md';
 import { z } from 'zod';
-import { H1 } from '@wepublish/ui';
 
 export const CommentEditorWrapper = styled('form')<{ modalOpen: boolean }>`
   display: grid;
@@ -475,12 +474,12 @@ export const CommentEditor = ({
           {!showInitialModal && (
             <LoginWrapper>
               <ExistingAccountsLoginWrapper>
-                <H1
+                <H3
                   css={existingAccountsHeadingStyles}
                   gutterBottom={true}
                 >
                   Login für Leserinnen und Leser
-                </H1>
+                </H3>
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
                   css={loginFormContainerStyles}
@@ -489,12 +488,12 @@ export const CommentEditor = ({
               </ExistingAccountsLoginWrapper>
 
               <NewAccountsLoginWrapper>
-                <H1
+                <H3
                   css={newAccountsHeadingStyles}
                   gutterBottom={true}
                 >
                   Noch kein Account?
-                </H1>
+                </H3>
                 <Register>
                   <Button
                     css={buttonStyles}
