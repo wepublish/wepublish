@@ -170,7 +170,7 @@ function ArticleEditor() {
           !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)?.value,
         paywall:
           meta.paywall ??
-          !!data.settings.find(setting => setting.name === SettingName.NewArticlePeering)?.value
+          !!data.settings.find(setting => setting.name === SettingName.NewArticlePaywall)?.value
       }))
     }
   })
