@@ -483,7 +483,6 @@ export const CommentEditor = ({
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
                   css={loginFormContainerStyles}
-                  focusDelay={300}
                 />
               </ExistingAccountsLoginWrapper>
 

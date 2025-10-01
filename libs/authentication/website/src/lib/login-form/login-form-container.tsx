@@ -13,7 +13,6 @@ export type LoginFormContainerProps = BuilderContainerProps & {
   afterLoginCallback?: () => void;
   defaults?: BuilderLoginFormProps['defaults'];
   disablePasswordLogin?: BuilderLoginFormProps['disablePasswordLogin'];
-  focusDelay?: number;
 };
 
 export function LoginFormContainer({
@@ -21,7 +20,6 @@ export function LoginFormContainer({
   afterLoginCallback,
   defaults,
   disablePasswordLogin,
-  focusDelay,
 }: LoginFormContainerProps) {
   const { LoginForm } = useWebsiteBuilder();
   const { setToken } = useUser();
@@ -59,7 +57,6 @@ export function LoginFormContainer({
       loginWithEmail={withEmail}
       defaults={defaults}
       disablePasswordLogin={disablePasswordLogin}
-      focusDelay={focusDelay}
     />
   );
 }

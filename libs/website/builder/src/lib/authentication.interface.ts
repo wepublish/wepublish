@@ -30,8 +30,6 @@ export type BuilderLoginFormProps = {
     'data' | 'loading' | 'error'
   >;
   onSubmitLoginWithCredentials: (email: string, password: string) => void;
-
-  focusDelay?: number;
 };
 
 export type AddressShape = z.ZodObject<{
