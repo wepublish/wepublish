@@ -8,6 +8,7 @@ import {
 } from '@wepublish/website/builder';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useCallback } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -43,22 +44,19 @@ const loginFormSchema = z.union([
   withCredentialsFormSchema,
 ]);
 
-const focusSetter = {
-  focusDelay: 0,
-  autofocus: (node: HTMLDivElement | null) => {
-    const inputNode = node?.querySelector('input') ?? node;
-    console.log(inputNode, focusSetter.focusDelay);
-    if (focusSetter.focusDelay > 0) {
-      (async () => {
-        await new Promise(resolve =>
-          setTimeout(resolve, focusSetter.focusDelay)
-        );
-        inputNode?.focus();
-      })();
-      return;
-    }
-    inputNode?.focus();
-  },
+const autofocus = (node: HTMLElement | null, focusDelay?: number) => {
+  const inputNode = node?.querySelector('input') ?? node;
+
+  if (focusDelay && focusDelay > 0) {
+    (async () => {
+      await new Promise(resolve => setTimeout(resolve, focusDelay));
+      inputNode?.focus();
+    })();
+
+    return;
+  }
+
+  inputNode?.focus();
 };
 
 export function LoginForm({
@@ -107,7 +105,12 @@ export function LoginForm({
     (loginWithPassword && loginWithCredentials.loading);
   const awaitingLoginConfirmed = loginWithPassword && loading;
 
-  focusSetter.focusDelay = Number(focusDelay);
+  const delayedAutofocus = useCallback(
+    (node: HTMLElement | null) => {
+      autofocus(node, Number(focusDelay));
+    },
+    [focusDelay]
+  );
 
   return (
     <LoginFormWrapper className={className}>
@@ -138,7 +141,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
-              ref={focusSetter.autofocus}
+              ref={Number(focusDelay) > 0 ? delayedAutofocus : autofocus}
             />
           )}
         />
