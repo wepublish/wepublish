@@ -16,6 +16,5 @@ export type BuilderNavbarProps = PropsWithChildren<
     subscribeBtn?: ButtonProps | null;
     hasUnpaidInvoices: boolean;
     hasRunningSubscription: boolean;
-    headerMax?: number;
   }
 >;

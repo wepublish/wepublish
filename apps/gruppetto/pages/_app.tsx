@@ -18,6 +18,7 @@ import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
   NavbarContainer,
+  NavbarLink,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { theme } from '@wepublish/ui';
@@ -119,6 +120,9 @@ const MainSpacer = styled(Container)`
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
+  ${NavbarLink}:nth-child(n+3) {
+    display: none;
+  }
 `;
 
 const { publicRuntimeConfig } = getConfig();
@@ -188,7 +192,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                headerMax={2}
               />
 
               <main>
