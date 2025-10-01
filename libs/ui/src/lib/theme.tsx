@@ -157,6 +157,7 @@ export const theme = createTheme({
       }
     },
     caption: {
+      ...baseTheme.typography.h6,
       lineHeight: 1.7
     },
     subtitle1: {
