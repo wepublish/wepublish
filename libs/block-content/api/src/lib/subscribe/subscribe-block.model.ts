@@ -9,25 +9,32 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { MemberPlan } from '@wepublish/member-plan/api';
 
-export enum SubscribeBlockFields {
+export enum SubscribeBlockField {
   FirstName = 'firstName',
   Address = 'address',
   Birthday = 'birthday',
   EmailRepeated = 'emailRepeated',
   Password = 'password',
-  PasswordRepeat = 'passwordRepeat',
+  PasswordRepeated = 'passwordRepeated',
 }
 
-registerEnumType(SubscribeBlockFields, {
-  name: 'SubscribeBlockFields',
+registerEnumType(SubscribeBlockField, {
+  name: 'SubscribeBlockField',
 });
 
 @ObjectType({
   implements: BaseBlock,
 })
 export class SubscribeBlock extends BaseBlock<typeof BlockType.Subscribe> {
-  @Field(() => [SubscribeBlockFields])
-  fields!: SubscribeBlockFields[];
+  @Field(() => [SubscribeBlockField], {
+    defaultValue: [
+      SubscribeBlockField.FirstName,
+      SubscribeBlockField.Password,
+      SubscribeBlockField.PasswordRepeated,
+      SubscribeBlockField.Address,
+    ],
+  })
+  fields!: SubscribeBlockField[];
 
   @Field(() => [String], { nullable: true })
   memberPlanIds?: string[];

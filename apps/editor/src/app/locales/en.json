@@ -351,8 +351,15 @@
         "label": "Subscribe",
         "selectMemberPlans": "Displayed plans",
         "selectMemberPlansPlaceholder": "Show all plans",
-        "selectionHintAll": "Leave empty to display every active plan.",
-        "selectionHintCount": "Showing {{count}} selected {{count, plural, one {plan} other {plans}}}."
+        "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
+        "selectFields": "Input fields",
+        "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "FirstName": "First name",
+        "Birthday": "Birthday",
+        "Address": "Address",
+        "EmailRepeated": "Repeat email",
+        "Password": "Password",
+        "PasswordRepeated": "Repeat password"
       },
       "image": {
         "label": "Image",

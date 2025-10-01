@@ -110,6 +110,7 @@ fragment BlockWithoutTeaser on BlockContent {
     memberPlans {
       ...FullMemberPlan
     }
+    fields
   }
 
   ... on EventBlock {

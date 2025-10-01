@@ -82,7 +82,6 @@ import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
 import { PrintLogo } from '../src/components/print-logo';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
-import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -169,7 +168,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
           blocks={{
-            Subscribe: MitmachenInner,
             Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
             BaseTeaser: HauptstadtTeaser,

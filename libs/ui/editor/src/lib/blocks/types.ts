@@ -10,6 +10,7 @@ import {
   FullImageFragment,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlockField,
   TeaserInput,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
@@ -68,6 +69,7 @@ export interface HTMLBlockValue extends BaseBlockValue {
 
 export interface SubscribeBlockValue extends BaseBlockValue {
   memberPlanIds: string[];
+  fields: SubscribeBlockField[];
 }
 
 export interface PollBlockValue extends BaseBlockValue {
@@ -466,10 +468,8 @@ export function mapBlockValueToBlockInput(
       return {
         subscribe: {
           blockStyle: block.value.blockStyle,
-          memberPlanIds:
-            block.value.memberPlanIds.length ?
-              block.value.memberPlanIds
-            : undefined,
+          memberPlanIds: block.value.memberPlanIds ?? [],
+          fields: block.value.fields,
         },
       };
 
@@ -1018,6 +1018,7 @@ export function blockForQueryBlock(
         type: EditorBlockType.Subscribe,
         value: {
           blockStyle: block.blockStyle,
+          fields: block.fields ?? [],
           memberPlanIds: block.memberPlanIds ?? [],
         },
       };

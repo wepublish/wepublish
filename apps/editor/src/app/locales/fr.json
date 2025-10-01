@@ -299,8 +299,15 @@
         "label": "S'abonner",
         "selectMemberPlans": "Plans affichés",
         "selectMemberPlansPlaceholder": "Afficher tous les plans",
-        "selectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
-        "selectionHintCount": "Affichage de {{count}} {{count, plural, one {plan sélectionné} other {plans sélectionnés}}}."
+        "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
+        "selectFields": "Champs de saisie",
+        "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "FirstName": "Prénom",
+        "Birthday": "Date de naissance",
+        "Address": "Adresse",
+        "EmailRepeated": "Répéter l’email",
+        "Password": "Mot de passe",
+        "PasswordRepeated": "Répéter le mot de passe"
       },
       "image": {
         "label": "Image",

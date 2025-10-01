@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 import { ProductType, useMemberPlanListQuery } from '@wepublish/editor/api';
+import { SubscribeBlockField } from '@wepublish/editor/api-v2';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckPicker, Panel as RPanel } from 'rsuite';
 import type { CheckPickerProps } from 'rsuite';
+import { CheckPicker, Panel as RPanel } from 'rsuite';
 
 import { BlockProps } from '../atoms/blockList';
 import { SubscribeBlockValue } from '.';
@@ -13,12 +14,16 @@ const Panel = styled(RPanel)`
   padding: 0;
   overflow: hidden;
   background-color: #f7f9fa;
+
+  .rs-panel-body {
+    display: grid;
+    gap: 24px;
+  }
 `;
 
 const Content = styled.div`
   display: grid;
   gap: 12px;
-  padding: 16px 20px;
 `;
 
 const Heading = styled('p')`
@@ -43,6 +48,7 @@ export const SubscribeBlock = ({
   onChange,
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
+  console.log(value);
   const { t } = useTranslation();
   const { data, loading } = useMemberPlanListQuery({
     variables: {
@@ -71,13 +77,25 @@ export const SubscribeBlock = ({
     [data?.memberPlans?.nodes, productTypeLabels]
   );
 
-  const handleChange = useCallback<
+  const handleMemberPlansChange = useCallback<
     NonNullable<CheckPickerProps<string>['onChange']>
   >(
     (memberPlanIds, _event) => {
       onChange(current => ({
         ...current,
         memberPlanIds: memberPlanIds ?? [],
+      }));
+    },
+    [onChange]
+  );
+
+  const handleFieldsChange = useCallback<
+    NonNullable<CheckPickerProps<string>['onChange']>
+  >(
+    (fields, _event) => {
+      onChange(current => ({
+        ...current,
+        fields: (fields as SubscribeBlockField[]) ?? [],
       }));
     },
     [onChange]
@@ -94,23 +112,60 @@ export const SubscribeBlock = ({
         <StyledCheckPicker
           cleanable
           block
-          virtualized
           disabled={disabled}
           loading={loading}
           searchable
           data={memberPlanOptions}
           value={value.memberPlanIds}
-          onChange={handleChange}
+          onChange={handleMemberPlansChange}
           placeholder={t('blocks.subscribe.selectMemberPlansPlaceholder')}
         />
 
         <Hint>
-          {value.memberPlanIds.length ?
-            t('blocks.subscribe.selectionHintCount', {
-              count: value.memberPlanIds.length,
-            })
-          : t('blocks.subscribe.selectionHintAll')}
+          {!value.memberPlanIds.length &&
+            t('blocks.subscribe.selectMemberPlansSelectionHintAll')}
         </Hint>
+      </Content>
+
+      <Content>
+        <Heading>{t('blocks.subscribe.selectFields')}</Heading>
+
+        <StyledCheckPicker
+          block
+          disabled={disabled}
+          data={[
+            {
+              label: t(`blocks.subscribe.${SubscribeBlockField.FirstName}`),
+              value: SubscribeBlockField.FirstName,
+            },
+            {
+              label: t(`blocks.subscribe.${SubscribeBlockField.Birthday}`),
+              value: SubscribeBlockField.Birthday,
+            },
+            {
+              label: t(`blocks.subscribe.${SubscribeBlockField.Address}`),
+              value: SubscribeBlockField.Address,
+            },
+            {
+              label: t(`blocks.subscribe.${SubscribeBlockField.EmailRepeated}`),
+              value: SubscribeBlockField.EmailRepeated,
+            },
+            {
+              label: t(`blocks.subscribe.${SubscribeBlockField.Password}`),
+              value: SubscribeBlockField.Password,
+            },
+            {
+              label: t(
+                `blocks.subscribe.${SubscribeBlockField.PasswordRepeated}`
+              ),
+              value: SubscribeBlockField.PasswordRepeated,
+            },
+          ]}
+          value={value.fields}
+          onChange={handleFieldsChange}
+        />
+
+        <Hint>{t('blocks.subscribe.selectFieldsSelectionHint')}</Hint>
       </Content>
     </Panel>
   );

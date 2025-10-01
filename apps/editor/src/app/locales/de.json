@@ -352,8 +352,15 @@
         "label": "Abonnieren",
         "selectMemberPlans": "Anzuzeigende Pläne",
         "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
-        "selectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
-        "selectionHintCount": "Zeige {{count}} ausgewählte {{count, plural, one {Plan} other {Pläne}}}."
+        "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
+        "selectFields": "Eingabefelder",
+        "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "FirstName": "Vorname",
+        "Birthday": "Geburtstag",
+        "Address": "Adresse",
+        "EmailRepeated": "Email wiederholen",
+        "Password": "Passwort",
+        "PasswordRepeated": "Passwort wiederholen"
       },
       "image": {
         "label": "Bild",

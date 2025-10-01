@@ -1,17 +1,24 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { SubscribeBlock } from './subscribe-block.model';
-import { MemberPlan, MemberPlanDataloader } from '@wepublish/member-plan/api';
+import {
+  MemberPlan,
+  MemberPlanDataloader,
+  MemberPlanService,
+} from '@wepublish/member-plan/api';
 
 @Resolver(() => SubscribeBlock)
 export class SubscribeBlockResolver {
-  constructor(private memberPlanDataloader: MemberPlanDataloader) {}
+  constructor(
+    private memberPlanDataloader: MemberPlanDataloader,
+    private memberPlanService: MemberPlanService
+  ) {}
 
   @ResolveField(() => [MemberPlan])
-  memberPlans(@Parent() parent: SubscribeBlock) {
+  async memberPlans(@Parent() parent: SubscribeBlock) {
     const { memberPlanIds } = parent;
 
     if (!memberPlanIds?.length) {
-      return [];
+      return await this.memberPlanService.getActiveMemberPlans();
     }
 
     return this.memberPlanDataloader.loadMany(memberPlanIds);

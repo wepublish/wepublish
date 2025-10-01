@@ -86,6 +86,18 @@ export class MemberPlanService {
       },
     };
   }
+
+  @PrimeDataLoader(MemberPlanDataloader)
+  async getActiveMemberPlans() {
+    return this.prisma.memberPlan.findMany({
+      where: {
+        active: true,
+      },
+      include: {
+        availablePaymentMethods: true,
+      },
+    });
+  }
 }
 
 export const createMemberPlanOrder = (
