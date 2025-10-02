@@ -185,38 +185,6 @@ const navigations = [
   },
 ] as Navigation[];
 
-const extendedHeaderLinks = [
-  {
-    __typename: 'PageNavigationLink',
-    label: 'Mitglied werden',
-    page: { url: '/mitglied-werden' },
-  },
-  {
-    __typename: 'PageNavigationLink',
-    label: 'Newsletter',
-    page: { url: '/newsletter' },
-  },
-  {
-    __typename: 'PageNavigationLink',
-    label: 'Mediadaten',
-    page: { url: '/mediadaten' },
-  },
-  {
-    __typename: 'PageNavigationLink',
-    label: 'Foo',
-    page: { url: '/foo' },
-  },
-  {
-    __typename: 'PageNavigationLink',
-    label: 'Bar',
-    page: { url: '/bar' },
-  },
-];
-
-const navigationsHeaderExtended: Navigation[] = navigations.map(nav =>
-  nav.key === 'header' ? { ...nav, links: extendedHeaderLinks } : nav
-);
-
 const logo = mockImage();
 
 export default {
@@ -228,20 +196,6 @@ export const Default = {
   args: {
     data: {
       navigations,
-    },
-    loading: false,
-    slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']],
-    headerSlug: 'header',
-    iconSlug: 'icons',
-    logo,
-  },
-};
-
-export const WithExtendedHeaderLinks = {
-  args: {
-    data: {
-      navigations: navigationsHeaderExtended,
     },
     loading: false,
     slug: 'main',
