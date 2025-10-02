@@ -5,7 +5,7 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -280,10 +280,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
               </Spacer>
 
               <RoutedAdminBar />
-
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
 
               {publicRuntimeConfig.env.GTM_ID && (
                 <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
