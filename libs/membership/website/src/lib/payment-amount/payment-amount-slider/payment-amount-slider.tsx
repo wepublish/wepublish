@@ -35,27 +35,8 @@ export const PaymentAmountSlider = forwardRef<
 
     return (
       <PaymentAmountSliderWrapper className={className}>
-        {donate ?
-          <TextField
-            name={name}
-            value={value / 100}
-            onChange={event => onChange(+event.target.value * 100)}
-            type="number"
-            fullWidth
-            onFocus={event => event.target.select()}
-            inputProps={{
-              step: 'any',
-              min: amountPerMonthMin / 100,
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {currency ?? Currency.Chf}
-                </InputAdornment>
-              ),
-            }}
-          />
-        : <Slider
+        {!donate && (
+          <Slider
             ref={ref}
             name={name}
             value={value}
@@ -68,7 +49,28 @@ export const PaymentAmountSlider = forwardRef<
             step={100}
             color="secondary"
           />
-        }
+        )}
+
+        {donate && (
+          <TextField
+            name={name}
+            value={value / 100}
+            onChange={event => onChange(+event.target.value * 100)}
+            type={'number'}
+            fullWidth
+            inputProps={{
+              step: 'any',
+              min: amountPerMonthMin / 100,
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {currency ?? Currency.Chf}
+                </InputAdornment>
+              ),
+            }}
+          />
+        )}
       </PaymentAmountSliderWrapper>
     );
   }
