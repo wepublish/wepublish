@@ -10,7 +10,7 @@ import { HasImage, Image } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
 import { PaymentMethod } from '@wepublish/payment-method/api';
-import { PaymentPeriodicity } from '@prisma/client';
+import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
 
 export enum MemberPlanSort {
   createdAt = 'createdAt',
@@ -21,19 +21,9 @@ registerEnumType(MemberPlanSort, {
   name: 'MemberPlanSort',
 });
 
-enum Currency {
-  CHF = 'CHF',
-  EUR = 'EUR',
-}
-
 registerEnumType(Currency, {
   name: 'Currency',
 });
-
-export enum ProductType {
-  SUBSCRIPTION = 'SUBSCRIPTION',
-  DONATION = 'DONATION',
-}
 
 registerEnumType(ProductType, {
   name: 'ProductType',
