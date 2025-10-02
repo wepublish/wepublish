@@ -120,6 +120,7 @@ const MainSpacer = styled(Container)`
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
+
   ${NavbarLink}:nth-child(n+3) {
     display: none;
   }
