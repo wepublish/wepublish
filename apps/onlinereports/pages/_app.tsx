@@ -128,11 +128,7 @@ const MainContent = styled('main')`
   }
 `;
 
-const WideboardPlacer = styled('div')`
-  * {
-    margin-bottom: -${({ theme }) => theme.spacing(5)};
-  }
-`;
+const WideboardPlacer = styled('div')``;
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
@@ -145,6 +141,9 @@ const OnlineReportsTitle = styled(TitleBlock)`
     font-size: ${({ theme }) => theme.typography.h1.fontSize};
     font-family: ${({ theme }) => theme.typography.h1.fontFamily};
     font-weight: ${({ theme }) => theme.typography.h1.fontWeight};
+    &:has(+ ${TitleBlockLead}) {
+      margin-bottom: -${({ theme }) => theme.spacing(2)};
+    }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       font-size: 44px;

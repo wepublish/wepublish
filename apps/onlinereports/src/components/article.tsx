@@ -38,7 +38,7 @@ export const ArticlePreTitle = styled('div')`
   grid-row-start: 1;
   font-weight: 500;
   line-height: 1.2;
-  
+
   ${({ theme }) => theme.breakpoints.up('sm')} {
     margin-top: ${({ theme }) => theme.spacing(4)};
     margin-bottom: -${({ theme }) => theme.spacing(3)};
@@ -78,7 +78,7 @@ export function OnlineReportsArticle({
     const el = document.getElementById('comments');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-  }
+    }
   };
 
   const adsDisabled = useMemo(
