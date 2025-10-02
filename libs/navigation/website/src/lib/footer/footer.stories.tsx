@@ -260,6 +260,14 @@ export const Default = {
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema', 'test'], ['about']],
     iconSlug: 'icons',
+    wepublishLogo: 'light',
+  },
+};
+
+export const WithDarkWepublish = {
+  args: {
+    ...Default.args,
+    wepublishLogo: 'dark',
   },
 };
 
@@ -271,6 +279,7 @@ export const WithLoading = {
     loading: true,
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']],
+    wepublishLogo: 'light',
   },
 };
 
@@ -285,6 +294,7 @@ export const WithError = {
     }),
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']],
+    wepublishLogo: 'light',
   },
 };
 
@@ -296,5 +306,21 @@ export const WithoutItems = {
     loading: false,
     slug: '',
     categorySlugs: [],
+    wepublishLogo: 'light',
+  },
+};
+
+export const WithoutWepublish = {
+  args: {
+    ...Default.args,
+    wepublishLogo: 'hidden',
+  },
+};
+
+export const WithoutIcons = {
+  args: {
+    ...Default.args,
+    iconSlug: '',
+    wepublishLogo: 'hidden',
   },
 };
