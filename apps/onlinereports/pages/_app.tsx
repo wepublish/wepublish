@@ -54,8 +54,8 @@ import { OnlineReportsArticleAuthors } from '../src/components/online-reports-ar
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
-import {OnlineReportsTeaserGridFlexBlock} from '../src/onlinereports-teaser-grid-flex-blocks';
-import {OnlineReportsTeaserGridBlock} from '../src/onlinereports-teaser-grid-block';
+import { OnlineReportsTeaserGridFlexBlock } from '../src/onlinereports-teaser-grid-flex-blocks';
+import { OnlineReportsTeaserGridBlock } from '../src/onlinereports-teaser-grid-block';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
 import { AdsProvider } from '../src/context/ads-context';
 import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
@@ -180,6 +180,7 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const siteTitle = 'OnlineReports';
+
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();

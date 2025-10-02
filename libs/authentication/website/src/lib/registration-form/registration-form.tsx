@@ -62,11 +62,11 @@ export const defaultRegisterSchema = z.object({
   password: z.string().min(8),
   passwordRepeated: z.string().min(8),
   emailRepeated: z.string().email().min(1),
-  birthday: z.coerce.date().max(new Date())
+  birthday: z.coerce.date().max(new Date()),
 });
 
 export function RegistrationForm<
-  T extends Exclude<BuilderUserFormFields, 'flair'>
+  T extends Exclude<BuilderUserFormFields, 'flair'>,
 >({
   challenge,
   fields = ['firstName', 'address', 'password', 'passwordRepeated'] as T[],

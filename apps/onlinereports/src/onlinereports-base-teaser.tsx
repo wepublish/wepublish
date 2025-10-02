@@ -111,10 +111,12 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   ${TeaserImageWrapper} {
     &:empty {
       display: none;
-      ${({theme}) => theme.breakpoints.up('sm')} {
+
+      ${({ theme }) => theme.breakpoints.up('sm')} {
         display: unset;
       }
     }
+
     img {
       aspect-ratio: 4/3;
       max-height: unset;

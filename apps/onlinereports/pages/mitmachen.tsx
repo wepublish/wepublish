@@ -44,7 +44,7 @@ export const MitmachenInner = () => (
   <OnlineReportsSubscribePageWrapper>
     <SubscribePage fields={['firstName']} />
   </OnlineReportsSubscribePageWrapper>
-)
+);
 
 export default function Mitmachen() {
   const { setAdsDisabled } = useAdsContext();

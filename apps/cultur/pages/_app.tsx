@@ -199,6 +199,7 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
                 <Component {...pageProps} />
               </MainSpacer>
             </main>
+
             <FooterContainer
               slug="footer"
               categorySlugs={[['categories']]}

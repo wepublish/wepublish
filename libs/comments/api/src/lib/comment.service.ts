@@ -150,11 +150,7 @@ export class CommentService {
         ],
       },
       include: {
-        revisions: {
-          orderBy: {
-            createdAt: order === SortOrder.Ascending ? 'asc' : 'desc',
-          },
-        },
+        revisions: { orderBy: { createdAt: 'asc' } },
         ratings: true,
         overriddenRatings: true,
         tags: { include: { tag: true } },
@@ -217,10 +213,10 @@ export class CommentService {
 
       if (!input.guestUsername) throw new AnonymousCommentError();
       if (!input.challenge) throw new ChallengeMissingCommentError();
-      
+
       const challengeValidationResult =
         await this.challengeService.validateChallenge({
-        challengeID: input.challenge.challengeID,
+          challengeID: input.challenge.challengeID,
           solution: input.challenge.challengeSolution,
         });
 
@@ -279,7 +275,7 @@ export class CommentService {
     const commentEditingSetting = await this.settingsService.settingByName(
       SettingName.ALLOW_COMMENT_EDITING
     );
-    
+
     if (
       !commentEditingSetting?.value &&
       comment.state !== CommentState.pendingUserChanges
@@ -303,7 +299,7 @@ export class CommentService {
           canSkipApproval ?
             CommentState.approved
           : CommentState.pendingApproval,
-        },
+      },
       select: {
         revisions: { orderBy: { createdAt: 'asc' } },
         overriddenRatings: true,

@@ -215,9 +215,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   <Component {...pageProps} />
                 </MainSpacer>
               </main>
+
               <FooterContainer
                 slug="main"
-
                 categorySlugs={[['about']]}
                 iconSlug="icons"
               />

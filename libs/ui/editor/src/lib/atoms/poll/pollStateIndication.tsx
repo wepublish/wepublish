@@ -1,28 +1,32 @@
-import styled from '@emotion/styled'
-import {useTranslation} from 'react-i18next'
-import {MdHourglassEmpty, MdPlayCircleOutline, MdPowerOff} from 'react-icons/md'
-import {Tooltip, Whisper} from 'rsuite'
+import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
+import {
+  MdHourglassEmpty,
+  MdPlayCircleOutline,
+  MdPowerOff,
+} from 'react-icons/md';
+import { Tooltip, Whisper } from 'rsuite';
 
 const ClosedIcon = styled(MdPowerOff)`
   color: red;
-`
+`;
 
 const OpensIcon = styled(MdPlayCircleOutline)`
   color: green;
-`
+`;
 
 interface PollStateIndicationProps {
-  closedAt: string | null | undefined
-  opensAt: string
+  closedAt: string | null | undefined;
+  opensAt: string;
 }
 
 export function PollStateIndication({
   closedAt: pollClosedAt,
-  opensAt: pollOpensAt
+  opensAt: pollOpensAt,
 }: PollStateIndicationProps) {
-  const {t} = useTranslation()
-  const now = new Date()
-  const closedAt = pollClosedAt ? new Date(pollClosedAt) : undefined
+  const { t } = useTranslation();
+  const now = new Date();
+  const closedAt = pollClosedAt ? new Date(pollClosedAt) : undefined;
 
   // poll has been closed
   if (closedAt && now.getTime() >= closedAt.getTime()) {
@@ -32,11 +36,11 @@ export function PollStateIndication({
           <ClosedIcon />
         </span>
       </Whisper>
-    )
+    );
   }
 
   // poll is open
-  const opensAt = new Date(pollOpensAt)
+  const opensAt = new Date(pollOpensAt);
   if (now.getTime() > opensAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
@@ -44,18 +48,21 @@ export function PollStateIndication({
           <OpensIcon />
         </span>
       </Whisper>
-    )
+    );
   }
 
   // poll is waiting to be opened
   return (
     <Whisper
       speaker={
-        <Tooltip>{t('pollStateIndication.waiting', {date: new Date(pollOpensAt)})}</Tooltip>
-      }>
+        <Tooltip>
+          {t('pollStateIndication.waiting', { date: new Date(pollOpensAt) })}
+        </Tooltip>
+      }
+    >
       <span>
         <MdHourglassEmpty />
       </span>
     </Whisper>
-  )
+  );
 }

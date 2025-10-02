@@ -21,6 +21,7 @@ import { allPass } from 'ramda';
 import { Advertisement } from '../components/advertisement';
 import { BlueBox } from '../components/blue-box';
 import { NewsTeaser } from '../custom-teasers/news';
+
 export const isNewsTeasers = (
   block: BlockContent
 ): block is TeaserGridBlock | TeaserListBlock =>
@@ -83,7 +84,7 @@ const NewsTeaserListWrapper = styled(Box)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   row-gap: ${({ theme }) => theme.spacing(3)};
-  
+
   ${({ theme }) => theme.breakpoints.up('sm')} {
     row-gap: ${({ theme }) => theme.spacing(2.5)};
     column-gap: ${({ theme }) => theme.spacing(2.5)};

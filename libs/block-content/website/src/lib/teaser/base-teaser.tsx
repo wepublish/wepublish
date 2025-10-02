@@ -1,5 +1,5 @@
-import { Chip, css, SxProps, Typography } from '@mui/material';
 import styled from '@emotion/styled';
+import { Chip, css, SxProps, Typography } from '@mui/material';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
 import { FlexAlignment, Teaser as TeaserType } from '@wepublish/website/api';
 import {
@@ -7,10 +7,10 @@ import {
   Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { isImageBlock } from '../image/image-block';
-import { isTitleBlock } from '../title/title-block';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isImageBlock } from '../image/image-block';
+import { isTitleBlock } from '../title/title-block';
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -390,8 +390,8 @@ const TeaserContent = ({
       </Link>
     );
   }
-  return (
 
+  return (
     <TeaserContentWrapper className={className}>
       {children}
     </TeaserContentWrapper>
@@ -449,6 +449,7 @@ export const BaseTeaser = ({
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
+
         <Typography
           variant="teaserTitle"
           component={TeaserTitle}
@@ -463,19 +464,22 @@ export const BaseTeaser = ({
             {lead}
           </Typography>
         )}
+
         <Typography
           variant="teaserMeta"
           component={TeaserMetadata}
         >
-          {authors && authors?.length ? (
+          {authors && authors?.length ?
             <TeaserAuthors>
-              Von {authors?.join(t('teaser.author.seperator'))}
+              {t('teaser.author.text', {
+                authors: authors?.join(t('teaser.author.seperator')),
+              })}
             </TeaserAuthors>
-          ) : null}
+          : null}
 
-          {publishDate && authors && authors?.length
-            ? `${t('teaser.meta.seperator')}`
-            : null}
+          {publishDate && authors && authors?.length ?
+            `${t('teaser.meta.seperator')}`
+          : null}
 
           {publishDate && (
             <TeaserTime
