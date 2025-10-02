@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Box, css, useTheme } from '@mui/material';
 import {
+  BaseTeaser,
   selectTeaserTags,
-  Teaser,
   TeaserAuthors,
   TeaserImageWrapper,
   TeaserLead,
@@ -84,7 +84,8 @@ export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
 
   return <OnlineReportsBaseTeaserStyled {...props} />;
 };
-export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
+
+export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
   color: inherit;
   text-decoration: none;
   display: grid;
