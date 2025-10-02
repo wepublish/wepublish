@@ -120,9 +120,9 @@ export function OnlineReportsArticleAuthors({
     <MetaWrapper>
       <ArticleAuthorsWrapper>
         <AuthorAvatars>
-          {authors?.map(author => (
-            <>
-              {author.image && (
+          {authors?.map(
+            author =>
+              author.image && (
                 <AuthorChipImageWrapper key={author.id}>
                   <Image
                     image={author.image}
@@ -131,10 +131,10 @@ export function OnlineReportsArticleAuthors({
                     maxWidth={200}
                   />
                 </AuthorChipImageWrapper>
-              )}
-            </>
-          ))}
+              )
+          )}
         </AuthorAvatars>
+
         <AuthorNames>
           {authors?.map((author, i) => (
             <AuthorChipName key={author.id}>
@@ -143,10 +143,12 @@ export function OnlineReportsArticleAuthors({
             </AuthorChipName>
           ))}
         </AuthorNames>
+
         <div style={{ gridArea: 'date' }}>
           <ArticleDate article={article} />
         </div>
       </ArticleAuthorsWrapper>
+
       <CommentsShareBox>
         {!article?.disableComments && (
           <CommentListItemShareWrapper>
