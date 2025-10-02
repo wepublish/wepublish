@@ -40,6 +40,7 @@ const countComments = (comments: CommentWithChildren[] | []): number => {
 };
 
 export const FrageDesTagesContainer = styled('div')`
+  grid-column: -1/1;
   padding: ${({ theme }) => `${theme.spacing(1.5)}`};
 
   ${({ theme }) => css`
