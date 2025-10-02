@@ -75,7 +75,7 @@ export function LoginForm({
 
   const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
     if (requirePassword) {
-      onSubmitLoginWithCredentials(email, password);
+      return onSubmitLoginWithCredentials(email, password);
     }
 
     return onSubmitLoginWithEmail(email);
