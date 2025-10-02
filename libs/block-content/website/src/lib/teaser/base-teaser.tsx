@@ -469,17 +469,17 @@ export const BaseTeaser = ({
           variant="teaserMeta"
           component={TeaserMetadata}
         >
-          {authors && authors?.length ?
+          {authors && authors?.length ? (
             <TeaserAuthors>
               {t('teaser.author.text', {
                 authors: authors?.join(t('teaser.author.seperator')),
               })}
             </TeaserAuthors>
-          : null}
+          ) : null}
 
-          {publishDate && authors && authors?.length ?
-            `${t('teaser.meta.seperator')}`
-          : null}
+          {publishDate && authors && authors?.length
+            ? `${t('teaser.meta.seperator')}`
+            : null}
 
           {publishDate && (
             <TeaserTime
