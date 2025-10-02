@@ -54,8 +54,6 @@ import { OnlineReportsArticleAuthors } from '../src/components/online-reports-ar
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
-import { OnlineReportsTeaserGridFlexBlock } from '../src/onlinereports-teaser-grid-flex-blocks';
-import { OnlineReportsTeaserGridBlock } from '../src/onlinereports-teaser-grid-block';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
 import { AdsProvider } from '../src/context/ads-context';
 import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
@@ -63,6 +61,8 @@ import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
 import { OnlineReportsBlockRenderer } from '../src/onlinereports-block-renderer';
 import { OnlineReportsGlobalStyles } from '../src/onlinereports-global-styles';
 import { OnlineReportsTeaser } from '../src/onlinereports-teaser';
+import { OnlineReportsTeaserGridBlock } from '../src/onlinereports-teaser-grid-block';
+import { OnlineReportsTeaserGridFlexBlock } from '../src/onlinereports-teaser-grid-flex-blocks';
 import { OnlineReportsTeaserListBlock } from '../src/onlinereports-teaser-list-block';
 import { OnlineReportsRenderElement } from '../src/render-element';
 import { Structure } from '../src/structure';
@@ -286,13 +286,15 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   name="theme-color"
                   content="#ffffff"
                 />
-                <script
-                  src="//servedby.revive-adserver.net/asyncjs.php"
-                  async
-                />
               </Head>
 
+              <script
+                src="//servedby.revive-adserver.net/asyncjs.php"
+                async
+              />
+
               <AdblockOverlay />
+
               <Spacer>
                 <NavBar
                   categorySlugs={[['categories', 'about-us']]}
