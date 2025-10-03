@@ -684,6 +684,7 @@ export type CustomTeaser = BaseTeaser & HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
+  openInNewTab?: Maybe<Scalars['Boolean']>;
   preTitle?: Maybe<Scalars['String']>;
   properties?: Maybe<Array<NonDbProperty>>;
   title?: Maybe<Scalars['String']>;
@@ -694,6 +695,7 @@ export type CustomTeaserInput = {
   contentUrl?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
+  openInNewTab?: InputMaybe<Scalars['Boolean']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   title?: InputMaybe<Scalars['String']>;
@@ -1385,6 +1387,7 @@ export type MemberPlan = HasImage & {
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -2603,7 +2606,9 @@ export type PublicSubscription = HasPaymentMethod & HasUser & {
   canExtend: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -4310,4 +4315,3 @@ export const PeerProfile = gql`
   }
 };
       export default result;
-    

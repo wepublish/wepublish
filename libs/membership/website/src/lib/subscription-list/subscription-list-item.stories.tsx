@@ -17,18 +17,6 @@ export default {
   title: 'Components/SubscriptionList/Item',
 } as Meta;
 
-const clickPay: StoryObj['play'] = async ({ canvasElement, step }) => {
-  const canvas = within(canvasElement);
-
-  const button = canvas.getByText('Jetzt Bezahlen', {
-    selector: 'button',
-  });
-
-  await step('Click Pay', async () => {
-    await userEvent.click(button);
-  });
-};
-
 const clickCancel: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
 
@@ -303,6 +291,28 @@ export const WithCurrency: StoryObj = {
         ...subscription.memberPlan,
         currency: Currency.Eur,
       },
+    },
+  },
+};
+
+export const WithExternalReward: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    subscription: {
+      ...subscription,
+      externalReward: 'API Token: <FOOBAR>',
+    },
+  },
+};
+
+export const WithExternalRewardLink: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    subscription: {
+      ...subscription,
+      externalReward: 'https://example.com',
     },
   },
 };

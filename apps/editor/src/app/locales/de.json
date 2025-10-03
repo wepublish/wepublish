@@ -778,7 +778,8 @@
       "tags": "Tags",
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
-      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
+      "externalReward": "Link oder Beschreibung zu einer externer Belohnung (nur für Abonnenten sichtbar)"
     },
     "memberPlanList": {
       "action": "Aktionen",
