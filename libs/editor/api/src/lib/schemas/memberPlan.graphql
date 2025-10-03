@@ -9,21 +9,11 @@ fragment MemberPlanRef on MemberPlan {
   image {
     ...FullImage
   }
+  externalReward
 
   successPageId
-  # successPage {
-  #   ...PageRef
-  # }
-
   failPageId
-  # failPage {
-  #   ...PageRef
-  # }
-
   confirmationPageId
-  # confirmationPage {
-  #   ...PageRef
-  # }
 }
 
 fragment FullMemberPlan on MemberPlan {
@@ -53,7 +43,7 @@ query MemberPlanList(
   $sort: MemberPlanSort
 ) {
   memberPlans(
-    filter: {name: $filter}
+    filter: { name: $filter }
     cursor: $cursor
     take: $take
     skip: $skip

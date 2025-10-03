@@ -25,10 +25,11 @@
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
-    "subscriptionIsUnpaid": "Abo ist unbezahlt",
-    "cancelSubscription": "Abo kündigen",
-    "cancelSubscriptionConfirmationText": "Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
-    "renewSubscriptionConfirmationText": "Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "unpaid": "Abo ist unbezahlt",
+    "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
+    "cancel": "Abo kündigen",
+    "cancelConfirmation": "Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
+    "renewConfirmation": "Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen."
   },

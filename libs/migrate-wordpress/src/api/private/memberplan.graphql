@@ -30,7 +30,12 @@ fragment FullMemberPlan on MemberPlan {
 }
 
 query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+  memberPlans(
+    filter: { name: $filter }
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
     nodes {
       ...FullMemberPlan
     }
