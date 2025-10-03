@@ -94,7 +94,7 @@ export const MemberPlanItem = forwardRef<
                   locale
                 ),
                 extendable,
-                exactAmount: props.tags?.includes('hide-payment-amount')
+                exactAmount: props.tags?.includes('hide-payment-amount'),
               })}
             </MemberPlanItemPrice>
           </MemberPlanItemContent>

@@ -21,6 +21,7 @@ import {
   AvailablePaymentMethod,
   Currency,
   PaymentPeriodicity,
+  ProductType,
 } from '@prisma/client';
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
@@ -28,6 +29,14 @@ export const GraphQLSupportedCurrency = new GraphQLEnumType({
   values: {
     CHF: { value: Currency.CHF },
     EUR: { value: Currency.EUR },
+  },
+});
+
+export const GraphQLProductType = new GraphQLEnumType({
+  name: 'ProductType',
+  values: {
+    SUBSCRIPTION: { value: ProductType.SUBSCRIPTION },
+    DONATION: { value: ProductType.DONATION },
   },
 });
 
@@ -102,6 +111,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     maxCount: { type: GraphQLInt },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    productType: { type: new GraphQLNonNull(GraphQLProductType) },
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod))
@@ -138,6 +148,7 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     active: { type: GraphQLBoolean },
     tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
+    productType: { type: GraphQLProductType },
   }),
 });
 
@@ -193,6 +204,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     amountPerMonthTarget: { type: GraphQLInt },
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    productType: { type: new GraphQLNonNull(GraphQLProductType) },
     maxCount: { type: GraphQLInt },
     availablePaymentMethods: {
       type: new GraphQLNonNull(
