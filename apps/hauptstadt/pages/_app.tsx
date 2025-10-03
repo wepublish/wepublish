@@ -60,6 +60,7 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock,
 } from '../src/components/hauptstadt-image-block';
+import { HauptstadtListicle } from '../src/components/hauptstadt-listicle';
 import {
   HauptstadtMemberPlanItem,
   HauptstadtMemberPlanPicker,
@@ -131,9 +132,9 @@ const Main = styled('main')`
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
-  includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
+  includeTime
+    ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+    : format(date, 'dd. MMMM yyyy');
 
 type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
@@ -179,6 +180,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Image: HauptstadtImageBlock,
             ImageGallery: HauptstadtImageGalleryBlock,
             Break: HauptstadtBreakBlock,
+            Listicle: HauptstadtListicle,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
