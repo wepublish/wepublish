@@ -163,12 +163,12 @@ export function TeaserSelectPanel({
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<TeaserMetadataProperty>[]
   >(
-    initialTeaser.type === TeaserType.Custom && initialTeaser.properties
-      ? initialTeaser.properties.map(metaDataProperty => ({
-          id: generateID(),
-          value: metaDataProperty,
-        }))
-      : []
+    initialTeaser.type === TeaserType.Custom && initialTeaser.properties ?
+      initialTeaser.properties.map(metaDataProperty => ({
+        id: generateID(),
+        value: metaDataProperty,
+      }))
+    : []
   );
 
   const client = getApiClientV2();
@@ -329,14 +329,14 @@ export function TeaserSelectPanel({
       case TeaserType.Article:
         return (
           <>
-            {isArticleListLoading ? (
+            {isArticleListLoading ?
               <RList.Item>
                 <Loader />
               </RList.Item>
-            ) : null}
-            {!isArticleListLoading && articles.length === 0 ? (
+            : null}
+            {!isArticleListLoading && articles.length === 0 ?
               <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
-            ) : null}
+            : null}
             {articles.map(article => {
               const states = [];
 
@@ -388,14 +388,14 @@ export function TeaserSelectPanel({
       case TeaserType.Page:
         return (
           <>
-            {isPageListLoading ? (
+            {isPageListLoading ?
               <RList.Item>
                 <Loader />
               </RList.Item>
-            ) : null}
-            {!isPageListLoading && pages.length === 0 ? (
+            : null}
+            {!isPageListLoading && pages.length === 0 ?
               <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
-            ) : null}
+            : null}
             {pages.map(page => {
               const states = [];
 
@@ -441,14 +441,14 @@ export function TeaserSelectPanel({
       case TeaserType.Event:
         return (
           <>
-            {isEventListLoading ? (
+            {isEventListLoading ?
               <RList.Item>
                 <Loader />
               </RList.Item>
-            ) : null}
-            {!isEventListLoading && events.length === 0 ? (
+            : null}
+            {!isEventListLoading && events.length === 0 ?
               <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
-            ) : null}
+            : null}
             {events.map(event => {
               return (
                 <RList.Item key={event.id}>

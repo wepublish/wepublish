@@ -47,7 +47,7 @@ export class ProfileResolver {
     @CurrentUser() { user }: UserSession
   ) {
     if (password !== passwordRepeated) {
-      throw new UserInputError('password and passwordRepeat are not equal');
+      throw new UserInputError('password and passwordRepeated are not equal');
     }
 
     return this.userService.updateUserPassword(user.id, password);

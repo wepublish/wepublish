@@ -34,6 +34,7 @@ import {
   FullTeaserGridFlexBlockFragment,
   FlexAlignment,
   CrowdfundingBlock,
+  SubscribeBlock,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
@@ -514,6 +515,20 @@ export const mockTeaserGridFlexBlock = ({
   __typename: 'TeaserGridFlexBlock',
   blockStyle: null,
   flexTeasers,
+});
+
+export const mockSubscribeBlock = ({
+  fields = [],
+  memberPlans = [],
+  memberPlanIds = [],
+}: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
+  type: BlockType.Subscribe,
+  __typename: 'SubscribeBlock',
+  blockStyle: null,
+  blockStyleName: null,
+  fields,
+  memberPlans,
+  memberPlanIds,
 });
 
 export const mockBlockContent = ({

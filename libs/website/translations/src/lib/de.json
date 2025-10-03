@@ -35,6 +35,7 @@
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
     "activeSubscriptions": "Aktive Abos",
+    "activeDonationSubscriptions": "Aktive Spenden-Abos",
     "viewCancelledSubscriptions": "Gekündigte Abos anzeigen"
   },
   "zod": {

@@ -65,7 +65,6 @@ import { OnlineReportsTeaserListBlock } from '../src/onlinereports-teaser-list-b
 import { OnlineReportsRenderElement } from '../src/render-element';
 import { Structure } from '../src/structure';
 import theme from '../src/theme';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -202,7 +201,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
               Quote: OnlineReportsQuoteBlock,
-              Subscribe: Mitmachen,
               Title: OnlineReportsTitle,
             }}
             date={{ format: dateFormatter }}

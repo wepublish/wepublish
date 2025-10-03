@@ -79,14 +79,14 @@ export function TeaserEditPanel({
 }: TeaserEditPanelProps) {
   const [image, setImage] = useState(initialTeaser.image);
   const [contentUrl, setContentUrl] = useState(
-    initialTeaser.type === TeaserType.Custom
-      ? initialTeaser.contentUrl
-      : undefined
+    initialTeaser.type === TeaserType.Custom ?
+      initialTeaser.contentUrl
+    : undefined
   );
   const [openInNewTab, setOpenInNewTab] = useState(
-    initialTeaser.type === TeaserType.Custom
-      ? initialTeaser.openInNewTab
-      : false
+    initialTeaser.type === TeaserType.Custom ?
+      initialTeaser.openInNewTab
+    : false
   );
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle);
   const [title, setTitle] = useState(initialTeaser.title);
@@ -94,12 +94,12 @@ export function TeaserEditPanel({
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<TeaserMetadataProperty>[]
   >(
-    initialTeaser.type === TeaserType.Custom && initialTeaser.properties
-      ? initialTeaser.properties.map(metaDataProperty => ({
-          id: generateID(),
-          value: metaDataProperty,
-        }))
-      : []
+    initialTeaser.type === TeaserType.Custom && initialTeaser.properties ?
+      initialTeaser.properties.map(metaDataProperty => ({
+        id: generateID(),
+        value: metaDataProperty,
+      }))
+    : []
   );
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
@@ -337,9 +337,9 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
         )}
         {openInNewTab !== undefined && (
           <DescriptionListItem label={t('articleEditor.panels.openInNewTab')}>
-            {openInNewTab
-              ? t('articleEditor.panels.yes')
-              : t('articleEditor.panels.no')}
+            {openInNewTab ?
+              t('articleEditor.panels.yes')
+            : t('articleEditor.panels.no')}
           </DescriptionListItem>
         )}
         <DescriptionListItem label={t('articleEditor.panels.type')}>
