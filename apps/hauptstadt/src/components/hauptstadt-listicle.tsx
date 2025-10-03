@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled, { CSSObject } from '@emotion/styled';
 import {
   ListicleBlock,
   ListicleBlockItemCounter,
@@ -17,8 +17,8 @@ export const HauptstadtListicle = styled(ListicleBlock)`
   }
 
   ${ListicleItemTitle} {
+    ${({ theme }) => theme.typography.h4 as CSSObject};
     order: 2;
-    ${({ theme }) => theme.typography.h4};
     justify-self: start;
   }
 
