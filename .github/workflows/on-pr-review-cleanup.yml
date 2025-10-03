@@ -7,11 +7,16 @@ on:
 concurrency:
   group: review-${{ github.head_ref }}
   cancel-in-progress: true
+env:
+  RUN_REVIEW: ${{ !(
+    (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
+    (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')) }}
 
 
 jobs:
   uninstall_helm_release:
     name: Uninstall helm release
+    if: ${{ env.RUN_REVIEW == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -53,6 +58,7 @@ jobs:
 
   cleanup-website-matrix:
     runs-on: ubuntu-latest
+    if: ${{ env.RUN_REVIEW == 'true' }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
