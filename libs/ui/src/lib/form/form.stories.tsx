@@ -1,191 +1,231 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {z} from 'zod'
-import {EmailInputSchema} from './email/email'
-import {action} from '@storybook/addon-actions'
-import {PasswordInputSchema} from './password/password'
-import {ZIPInputSchema} from './zip/zip'
-import {createSelectInputSchema} from './select/select'
-import {TagInputSchema} from './tag/tag'
-import {createTextareaInputSchema} from './textarea/textarea'
-import {Button} from '../button/button'
-import {StandardForm} from '../form-layouts/standard'
-import {MultistepForm} from '../form-layouts/multistep'
-import {HeaderForm} from '../form-layouts/header'
-import {SectionForm} from '../form-layouts/section'
-import {PropertiesInputSchema} from '../form-domain/properties/properties'
-import {ImageArrayInputSchema} from '../form-domain/image/image'
-import {LinksInputSchema} from '../form-domain/links/links'
+import { Meta, StoryObj } from '@storybook/react';
+import { EmailInputSchema } from './email/email';
+import { action } from '@storybook/addon-actions';
+import { PasswordInputSchema } from './password/password';
+import { ZIPInputSchema } from './zip/zip';
+import { TagInputSchema } from './tag/tag';
+import { Button } from '../button/button';
+import { StandardForm } from '../form-layouts/standard';
+import { MultistepForm } from '../form-layouts/multistep';
+import { HeaderForm } from '../form-layouts/header';
+import { SectionForm } from '../form-layouts/section';
+import { PropertiesInputSchema } from '../form-domain/properties/properties';
+import { ImageArrayInputSchema } from '../form-domain/image/image';
+import { LinksInputSchema } from '../form-domain/links/links';
+import * as v from 'valibot';
+import { TextareaInputSchema } from './textarea/textarea';
+import { SELECT_BRANDING } from './select/select';
 
 export default {
   title: 'UI/Form',
-  component: StandardForm
-} as Meta<typeof StandardForm>
+  component: StandardForm,
+} as Meta<typeof StandardForm>;
 
 export const Standard = {
   args: {
-    schema: z.object({
-      name: z.string().min(1).describe('Name'),
-      email: EmailInputSchema.describe('E-Mail'),
-      password: PasswordInputSchema.describe(
-        'Passwort // Keep your password safe! We do not have a recovery yet'
+    schema: v.object({
+      name: v.pipe(v.string(), v.nonEmpty(), v.title('Name')),
+      email: v.pipe(EmailInputSchema, v.title('E-Mail')),
+      password: v.pipe(
+        PasswordInputSchema,
+        v.nonEmpty(),
+        v.title('Passwort'),
+        v.description('Keep your password safe! We do not have a recovery yet')
       ),
-      consent: z.boolean().describe('Sign me up for the newsletter')
+      consent: v.pipe(v.boolean(), v.title('Sign me up for the newsletter')),
     }),
     defaultValues: {
-      consent: true
+      consent: true,
     },
     renderAfter: () => <Button type="submit">Signup</Button>,
-    onSubmit: action('submit')
-  }
-} as StoryObj<typeof StandardForm>
+    onSubmit: action('submit'),
+  },
+} as StoryObj<typeof StandardForm>;
+
+enum Bands {
+  Nickleback = 'Nickleback',
+  Foofighters = 'Foofighters',
+}
 
 export const Section = {
   args: {
     sections: [
       {
         title: 'Account',
-        schema: z.object({
-          avatar: ImageArrayInputSchema.describe('Avatar'),
-          name: z.string().min(1).describe('Name'),
-          email: EmailInputSchema.describe('E-Mail'),
-          password: PasswordInputSchema.describe(
-            'Passwort // Keep your password safe! We do not have a recovery yet'
-          )
-        })
+        schema: v.object({
+          avatar: v.pipe(ImageArrayInputSchema, v.title('Avatar')),
+          name: v.pipe(v.string(), v.nonEmpty(), v.title('Name')),
+          email: v.pipe(EmailInputSchema, v.title('E-Mail')),
+          password: v.pipe(
+            PasswordInputSchema,
+            v.title('Passwort'),
+            v.description(
+              'Keep your password safe! We do not have a recovery yet'
+            )
+          ),
+        }),
       },
       {
         title: 'Preferences',
-        schema: z
-          .object({
-            favouriteBand: createSelectInputSchema(z.enum(['Nickleback', 'Foofighters'])).describe(
-              'Your favourite band // Obviously not Nickleback'
-            ),
-            favouriteColors: TagInputSchema.describe("Your favourite colors // Don't choose green"),
-            about: createTextareaInputSchema(z.string().max(255)).describe(
-              'Über dich // Deine Geheimnisse sind bei uns sicher'
+        schema: v.object({
+          favouriteBand: v.pipe(
+            v.pipe(
+              v.enum(Bands),
+              v.title('Your favourite band'),
+              v.description('Obviously not Nickleback'),
+              v.brand(SELECT_BRANDING)
             )
-          })
-          .partial(),
-        props: {
+          ),
+          favouriteColors: v.pipe(
+            TagInputSchema,
+            v.title('Your favourite colors'),
+            v.description("Don't choose green")
+          ),
+          about: v.pipe(
+            TextareaInputSchema,
+            v.maxLength(255),
+            v.title('Über dich'),
+            v.description('Deine Geheimnisse sind bei uns sicher')
+          ),
+        }),
+        inputProps: {
           favouriteColors: {
             items: [
-              {value: 'black', label: 'Black'},
-              {value: 'red', label: 'Red'},
-              {value: 'green', label: 'Grün'}
-            ]
-          }
+              { value: 'black', label: 'Black' },
+              { value: 'red', label: 'Red' },
+              { value: 'green', label: 'Grün' },
+            ],
+          },
         },
-        optional: true
+        optional: true,
       },
       {
         title: 'Consents',
-        schema: z.object({
-          zip: ZIPInputSchema.describe('PLZ (optional)').nullish(),
-          consent: z.boolean().default(true).describe('Sign me up for the newsletter')
+        schema: v.object({
+          zip: v.pipe(ZIPInputSchema, v.title('PLZ (optional)')),
+          consent: v.pipe(
+            v.boolean(),
+            v.title('Sign me up for the newsletter')
+          ),
         }),
         defaultValues: {
-          consent: true
-        }
+          consent: true,
+        },
       },
       {
         title: 'Properties',
-        schema: z.object({
-          properties: PropertiesInputSchema
-        })
+        schema: v.object({
+          properties: PropertiesInputSchema,
+        }),
       },
       {
         title: 'Links',
-        schema: z.object({
-          links: LinksInputSchema
-        })
-      }
+        schema: v.object({
+          links: LinksInputSchema,
+        }),
+      },
     ] as const,
-    onSubmit: action('submit')
+    onSubmit: action('submit'),
   },
-  render: args => <SectionForm {...args} />
-} as StoryObj<typeof SectionForm>
+  render: args => <SectionForm {...args} />,
+} as StoryObj<typeof SectionForm>;
 
 export const Multistep = {
   args: {
     steps: [
       {
         title: 'Account',
-        schema: z.object({
-          name: z.string().min(1).describe('Name'),
-          email: EmailInputSchema.describe('E-Mail'),
-          password: PasswordInputSchema.describe(
-            'Passwort // Keep your password safe! We do not have a recovery yet'
-          )
-        })
+        schema: v.object({
+          name: v.pipe(v.string(), v.nonEmpty(), v.title('Name')),
+          email: v.pipe(EmailInputSchema, v.title('E-Mail')),
+          password: v.pipe(
+            PasswordInputSchema,
+            v.title('Passwort'),
+            v.description(
+              'Keep your password safe! We do not have a recovery yet'
+            )
+          ),
+        }),
       },
       {
         title: 'Preferences',
-        schema: z
-          .object({
-            about: createTextareaInputSchema(z.string().max(255)).describe(
-              'Über dich // Deine Geheimnisse sind bei uns sicher'
-            ),
-            favouriteBand: createSelectInputSchema(z.enum(['Nickleback', 'Foofighters'])).describe(
-              'Your favourite band // Obviously not Nickleback'
-            ),
-            favouriteColors: TagInputSchema.describe("Your favourite colors // Don't choose green")
-          })
-          .partial(),
-        props: {
+        schema: v.object({
+          about: v.pipe(
+            TextareaInputSchema,
+            v.maxLength(255),
+            v.title('Über dich'),
+            v.description('Deine Geheimnisse sind bei uns sicher')
+          ),
+          favouriteBand: v.pipe(
+            v.enum(Bands),
+            v.title('Your favourite band'),
+            v.description('Obviously not Nickleback'),
+            v.brand(SELECT_BRANDING)
+          ),
+          favouriteColors: v.pipe(
+            TagInputSchema,
+            v.title('Your favourite colors'),
+            v.description("Don't choose green")
+          ),
+        }),
+        inutProps: {
           favouriteColors: {
             items: [
-              {value: 'black', label: 'Black'},
-              {value: 'red', label: 'Red'},
-              {value: 'green', label: 'Grün'}
-            ]
-          }
+              { value: 'black', label: 'Black' },
+              { value: 'red', label: 'Red' },
+              { value: 'green', label: 'Grün' },
+            ],
+          },
         },
-        optional: true
+        optional: true,
       },
       {
         title: 'Consents',
-        schema: z.object({
-          zip: ZIPInputSchema.describe('PLZ (optional)').nullish(),
-          consent: z.boolean().default(true).describe('Sign me up for the newsletter')
+        schema: v.object({
+          zip: v.pipe(ZIPInputSchema, v.title('PLZ (optional)')),
+          consent: v.pipe(
+            v.boolean(),
+            v.title('Sign me up for the newsletter')
+          ),
         }),
         defaultValues: {
-          consent: true
-        }
-      }
+          consent: true,
+        },
+      },
     ] as const,
-    onSubmit: action('submit')
+    onSubmit: action('submit'),
   },
-  render: args => <MultistepForm {...args} />
-} as StoryObj<typeof MultistepForm>
+  render: args => <MultistepForm {...args} />,
+} as StoryObj<typeof MultistepForm>;
 
 export const Header = {
   args: {
-    schema: z.object({
-      state: createSelectInputSchema(z.enum(['all', 'draft', 'pending', 'published'])),
-      sort: createSelectInputSchema(z.enum(['asc', 'desc', 'desc-updated']))
+    schema: v.object({
+      state: v.pipe(v.string(), v.brand(SELECT_BRANDING)),
+      sort: v.pipe(v.string(), v.brand(SELECT_BRANDING)),
     }),
-    props: {
+    inputProps: {
       state: {
         items: [
-          {value: 'all', label: 'All articles'},
-          {value: 'draft', label: 'Draft articles'},
-          {value: 'pending', label: 'Pending articles'},
-          {value: 'published', label: 'Published articles'}
-        ]
+          { value: 'all', label: 'All articles' },
+          { value: 'draft', label: 'Draft articles' },
+          { value: 'pending', label: 'Pending articles' },
+          { value: 'published', label: 'Published articles' },
+        ],
       },
       sort: {
         items: [
-          {value: 'desc', label: 'Newest first'},
-          {value: 'asc', label: 'Oldest first'},
-          {value: 'desc-updated', label: 'Recently updated'}
-        ]
-      }
+          { value: 'desc', label: 'Newest first' },
+          { value: 'asc', label: 'Oldest first' },
+          { value: 'desc-updated', label: 'Recently updated' },
+        ],
+      },
     },
     defaultValues: {
       state: 'all',
-      sort: 'desc'
+      sort: 'desc',
     },
-    onSubmit: action('submit')
+    onSubmit: action('submit'),
   },
-  render: args => <HeaderForm {...args} />
-} as StoryObj<typeof HeaderForm>
+  render: args => <HeaderForm {...args} />,
+} as StoryObj<typeof HeaderForm>;
