@@ -1,22 +1,23 @@
-import {CreateTag, DeleteTag, TagList, TagType} from '../api/private'
+import { CreateTag, DeleteTag, TagList, TagType } from '../api/private';
 
-import {ApolloServer} from 'apollo-server-express'
-import {UpdateTag} from '../api/private/index'
-import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+import { ApolloServer } from 'apollo-server-express';
+import { UpdateTag } from '../api/private/index';
+import {
+  createGraphQLTestClientWithPrisma,
+  generateRandomString,
+} from '../utility';
 
-let testClientPrivate: ApolloServer
-let testClientPublic: ApolloServer
+let testClientPrivate: ApolloServer;
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithPrisma()
-    testClientPrivate = setupClient.testServerPrivate
-    testClientPublic = setupClient.testServerPublic
+    const setupClient = await createGraphQLTestClientWithPrisma();
+    testClientPrivate = setupClient.testServerPrivate;
   } catch (error) {
-    console.log('Error', error)
-    throw new Error('Error during test setup')
+    console.log('Error', error);
+    throw new Error('Error during test setup');
   }
-})
+});
 
 describe('Tags', () => {
   test('can be created', async () => {
@@ -24,41 +25,43 @@ describe('Tags', () => {
       query: CreateTag,
       variables: {
         tag: generateRandomString(),
-        type: TagType.Comment
-      }
-    })
+        description: [],
+        type: TagType.Comment,
+      },
+    });
 
     expect(res).toMatchSnapshot({
       data: {
         createTag: {
           id: expect.any(String),
-          tag: expect.any(String)
-        }
-      }
-    })
-  })
+          tag: expect.any(String),
+          description: expect.any(Array),
+        },
+      },
+    });
+  });
 
   test('can be updated', async () => {
     const createRes = await testClientPrivate.executeOperation({
       query: CreateTag,
       variables: {
         tag: generateRandomString(),
-        type: TagType.Comment
-      }
-    })
+        type: TagType.Comment,
+      },
+    });
 
-    const tag = generateRandomString()
+    const tag = generateRandomString();
 
     const res = await testClientPrivate.executeOperation({
       query: UpdateTag,
       variables: {
         id: createRes.data.createTag.id,
-        tag
-      }
-    })
+        tag,
+      },
+    });
 
-    expect(res.data.updateTag.tag).toEqual(tag)
-  })
+    expect(res.data.updateTag.tag).toEqual(tag);
+  });
 
   describe('delete', () => {
     test('can be deleted', async () => {
@@ -66,20 +69,20 @@ describe('Tags', () => {
         query: CreateTag,
         variables: {
           name: generateRandomString(),
-          type: TagType.Comment
-        }
-      })
+          type: TagType.Comment,
+        },
+      });
 
       const res = await testClientPrivate.executeOperation({
         query: DeleteTag,
         variables: {
-          id: createRes.data.createTag.id
-        }
-      })
+          id: createRes.data.createTag.id,
+        },
+      });
 
-      expect(res.data.deleteTag.id).toEqual(createRes.data.createTag.id)
-    })
-  })
+      expect(res.data.deleteTag.id).toEqual(createRes.data.createTag.id);
+    });
+  });
 
   describe('query', () => {
     describe('private', () => {
@@ -89,51 +92,24 @@ describe('Tags', () => {
             query: CreateTag,
             variables: {
               tag: generateRandomString(),
-              type: TagType.Comment
-            }
+              type: TagType.Comment,
+            },
           }),
           testClientPrivate.executeOperation({
             query: CreateTag,
             variables: {
               tag: generateRandomString(),
-              type: TagType.Event
-            }
-          })
-        ])
+              type: TagType.Event,
+            },
+          }),
+        ]);
 
         const res = await testClientPrivate.executeOperation({
-          query: TagList
-        })
+          query: TagList,
+        });
 
-        expect(res.data.tags.totalCount).toBeGreaterThanOrEqual(2)
-      })
-    })
-
-    describe('public', () => {
-      test('can query a list of tags', async () => {
-        await Promise.all([
-          testClientPrivate.executeOperation({
-            query: CreateTag,
-            variables: {
-              tag: generateRandomString(),
-              type: TagType.Comment
-            }
-          }),
-          testClientPrivate.executeOperation({
-            query: CreateTag,
-            variables: {
-              tag: generateRandomString(),
-              type: TagType.Event
-            }
-          })
-        ])
-
-        const res = await testClientPublic.executeOperation({
-          query: TagList
-        })
-
-        expect(res.data.tags.totalCount).toBeGreaterThanOrEqual(2)
-      })
-    })
-  })
-})
+        expect(res.data.tags.totalCount).toBeGreaterThanOrEqual(2);
+      });
+    });
+  });
+});

@@ -1,30 +1,31 @@
-import {TextFormat} from '@wepublish/richtext'
-import {BuilderRenderLeafProps} from '@wepublish/website/builder'
+import { TextFormat } from '@wepublish/richtext';
+import { BuilderRenderLeafProps } from '@wepublish/website/builder';
+import { ReactNode } from 'react';
 
-export function RenderLeaf({attributes, children, leaf}: BuilderRenderLeafProps): JSX.Element {
-  if (leaf[TextFormat.Bold]) {
-    children = <strong {...attributes}>{children}</strong>
+export function RenderLeaf({ element }: BuilderRenderLeafProps): ReactNode {
+  if (element[TextFormat.Bold]) {
+    return <strong>{element.text}</strong>;
   }
 
-  if (leaf[TextFormat.Italic]) {
-    children = <em {...attributes}>{children}</em>
+  if (element[TextFormat.Italic]) {
+    return <em>{element.text}</em>;
   }
 
-  if (leaf[TextFormat.Underline]) {
-    children = <u {...attributes}>{children}</u>
+  if (element[TextFormat.Underline]) {
+    return <u>{element.text}</u>;
   }
 
-  if (leaf[TextFormat.Strikethrough]) {
-    children = <del {...attributes}>{children}</del>
+  if (element[TextFormat.Strikethrough]) {
+    return <del>{element.text}</del>;
   }
 
-  if (leaf[TextFormat.Superscript]) {
-    children = <sup {...attributes}>{children}</sup>
+  if (element[TextFormat.Superscript]) {
+    return <sup>{element.text}</sup>;
   }
 
-  if (leaf[TextFormat.Subscript]) {
-    children = <sub {...attributes}>{children}</sub>
+  if (element[TextFormat.Subscript]) {
+    return <sub>{element.text}</sub>;
   }
 
-  return children
+  return element.text;
 }

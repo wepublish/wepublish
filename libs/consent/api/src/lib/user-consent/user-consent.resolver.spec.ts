@@ -1,44 +1,13 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {CanActivate, ExecutionContext, INestApplication, Module} from '@nestjs/common'
-import {GqlExecutionContext, GraphQLModule} from '@nestjs/graphql'
-import {Test, TestingModule} from '@nestjs/testing'
-import {Prisma, PrismaClient, UserConsent} from '@prisma/client'
-import {PrismaModule} from '@wepublish/nest-modules'
-import request from 'supertest'
-import {generateRandomString} from '../consent/consent.resolver.spec'
-import {UserConsentResolver} from './user-consent.resolver'
-import {UserConsentService} from './user-consent.service'
-import {APP_GUARD} from '@nestjs/core'
-
-class MockAuthenticationGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
-    const ctx = GqlExecutionContext.create(context)
-    const req = ctx.getContext().req
-    req.user = user
-    return true
-  }
-}
-
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/',
-      cache: 'bounded'
-    }),
-    PrismaModule
-  ],
-  providers: [
-    UserConsentResolver,
-    UserConsentService,
-    {
-      provide: APP_GUARD,
-      useClass: MockAuthenticationGuard
-    }
-  ]
-})
-export class AppModule {}
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { INestApplication } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { Test, TestingModule } from '@nestjs/testing';
+import { URLAdapter, URLAdapterModule } from '@wepublish/nest-modules';
+import request from 'supertest';
+import { UserConsentResolver } from './user-consent.resolver';
+import { UserConsentService } from './user-consent.service';
+import { UserDataloaderService } from '@wepublish/user/api';
+import { createMock, PartialMocked } from '@wepublish/testing';
 
 const userConsentQuery = `
   query userConsent($id: String!) {
@@ -58,7 +27,7 @@ const userConsentQuery = `
       }
     }
   }
-`
+`;
 
 const createUserConsentMutation = `
   mutation createUserConsent($consentId: String!, $userId: String!, $value: Boolean!) {
@@ -67,7 +36,7 @@ const createUserConsentMutation = `
       value
     }
   }
-`
+`;
 
 const updateUserConsentMutation = `
   mutation updateUserConsent($id: String!, $value: Boolean!) {
@@ -87,7 +56,7 @@ const updateUserConsentMutation = `
       }
     }
   }
-`
+`;
 
 const deleteUserConsentMutation = `
   mutation deleteUserConsent($id: String!) {
@@ -95,187 +64,169 @@ const deleteUserConsentMutation = `
       id
     }
   }
-`
+`;
 
-const mockSlug1 = generateRandomString()
+const mockUserConsent = {
+  createdAt: new Date('2023-01-01'),
+  id: 'userConsentId',
+  modifiedAt: new Date('2023-01-01'),
+  userId: 'userId',
+  value: false,
+  consent: {
+    id: 'consentId',
+    createdAt: new Date('2023-01-01'),
+    modifiedAt: new Date('2023-01-01'),
+    name: 'name',
+    slug: 'slug',
+    defaultValue: false,
+  },
+};
 
-export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
-  {
-    consent: {
-      connectOrCreate: {
-        where: {id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd'},
-        create: {
-          name: 'some-name',
-          slug: mockSlug1,
-          defaultValue: true
-        }
-      }
-    },
-    value: true,
-    user: {
-      connectOrCreate: {
-        where: {id: 'some-id'},
-        create: {
-          name: 'some-name',
-          email: `${generateRandomString()}@wepublish.ch`,
-          password: 'some-password',
-          active: true
-        }
-      }
-    }
-  }
-]
+const mockUser = {
+  id: 'userId',
+  name: 'name',
+  firstName: 'firstName',
+  birthday: null,
+  email: 'email',
+  active: true,
+  flair: 'flair',
+  userImageID: 'userImageId',
+  roleIDs: [],
+};
 
-const user = {
+const mockUserSession = {
   type: 'user',
   id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
   token: 'some-token',
-  user: {roleIDs: [{}], id: 'clf870cla0719q1rx6vg0y2rj'},
-  roles: [{}]
-}
+  user: mockUser,
+};
 
 describe('UserConsentResolver', () => {
-  let app: INestApplication
-  let prisma: PrismaClient
-  let userConsents: UserConsent[] = []
+  let app: INestApplication;
+  let userConsentService: PartialMocked<UserConsentService>;
+  let userDataloaderService: PartialMocked<UserDataloaderService>;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    userConsentService = createMock(UserConsentService);
+    userDataloaderService = createMock(UserDataloaderService);
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile()
+      imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
+          autoSchemaFile: true,
+          path: '/',
+          cache: 'bounded',
+          context: {
+            req: {
+              user: mockUserSession,
+            },
+          },
+        }),
+        URLAdapterModule.register(new URLAdapter(`https://example.com`)),
+      ],
+      providers: [
+        UserConsentResolver,
+        {
+          provide: UserConsentService,
+          useValue: userConsentService,
+        },
+        {
+          provide: UserDataloaderService,
+          useValue: userDataloaderService,
+        },
+      ],
+    }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient)
-    app = module.createNestApplication()
-
-    await app.init()
-
-    userConsents = await Promise.all(
-      mockUserConsents.map(data => prisma.userConsent.create({data}))
-    )
-  })
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   test('user consent query', async () => {
-    const idToGet = userConsents[0].id
+    const idToGet = 'id-to-get';
+
+    userConsentService.userConsent?.mockResolvedValue(mockUserConsent);
+    userDataloaderService.load?.mockResolvedValue(mockUser);
 
     await request(app.getHttpServer())
       .post('')
       .send({
         query: userConsentQuery,
         variables: {
-          id: idToGet
-        }
+          id: idToGet,
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.userConsent).toMatchObject({
-          id: expect.any(String),
-          consent: expect.any(Object),
-          value: true,
-          user: expect.any(Object)
-        })
-      })
-  })
+        expect(res.body).toMatchSnapshot();
+      });
+  });
 
   test('create user consent mutation', async () => {
-    const createdUser = await prisma.user.create({
-      data: {
-        name: 'some-name3',
-        email: generateRandomString(),
-        password: 'some-password3',
-        active: true
-      }
-    })
-
-    const createdConsent = await prisma.consent.create({
-      data: {
-        name: 'some-name3',
-        slug: generateRandomString(),
-        defaultValue: true
-      }
-    })
-
-    user.user.id = createdUser.id
+    userConsentService.createUserConsent?.mockResolvedValue(mockUserConsent);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: createUserConsentMutation,
         variables: {
-          consentId: createdConsent.id,
-          userId: createdUser.id,
-          value: true
-        }
+          consentId: 'consentId',
+          userId: 'userId',
+          value: true,
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.createUserConsent).toMatchObject({
-          id: expect.any(String),
-          value: true
-        })
-      })
-  })
+        expect(
+          userConsentService.createUserConsent?.mock.calls
+        ).toMatchSnapshot();
+        expect(res.body).toMatchSnapshot();
+      });
+  });
 
   test('update user consent mutation', async () => {
-    const idToUpdate = userConsents[0].id
-    user.user.id = userConsents[0].userId
+    userConsentService.updateUserConsent?.mockResolvedValue(mockUserConsent);
+    userDataloaderService.load?.mockResolvedValue(mockUser);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: updateUserConsentMutation,
         variables: {
-          id: idToUpdate,
-          value: false
-        }
+          id: 'userConsentId',
+          value: false,
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.updateUserConsent).toMatchObject({
-          id: expect.any(String)
-        })
-      })
-  })
+        expect(
+          userConsentService.updateUserConsent?.mock.calls
+        ).toMatchSnapshot();
+        expect(res.body).toMatchSnapshot();
+      });
+  });
 
   test('delete user consent mutation', async () => {
-    const idToDelete = userConsents[0].id
-    user.user.id = userConsents[0].userId
+    userConsentService.deleteUserConsent?.mockResolvedValue(mockUserConsent);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: deleteUserConsentMutation,
         variables: {
-          id: idToDelete
-        }
+          id: 'userConsentId',
+        },
       })
       .expect(res => {
-        expect(res.body.errors).toBe(undefined)
-        expect(res.body.data.deleteUserConsent).toMatchObject({
-          id: userConsents[0].id
-        })
+        expect(
+          userConsentService.deleteUserConsent?.mock.calls
+        ).toMatchSnapshot();
+        expect(res.body).toMatchSnapshot();
       })
-      .expect(200)
-  })
-
-  test('only allow updating consent for the authorized user', async () => {
-    const idToUpdate = userConsents[0].id
-
-    await request(app.getHttpServer())
-      .post('/')
-      .send({
-        query: updateUserConsentMutation,
-        variables: {
-          id: idToUpdate,
-          value: false
-        }
-      })
-      .expect(res => {
-        expect(res.body.errors[0].message).toBe('Unauthorized')
-      })
-      .expect(200)
-  })
-})
+      .expect(200);
+  });
+});

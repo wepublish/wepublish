@@ -1,6 +1,6 @@
 //@ts-check
 
-const {join} = require('path')
+const { join } = require('path');
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -8,42 +8,28 @@ const {join} = require('path')
 const nextConfig = {
   output: 'standalone',
   nx: {
-    svgr: true
+    svgr: true,
   },
   poweredByHeader: false,
   reactStrictMode: true,
   compiler: {
-    // This is needed so that we can use components as selectors in Emotion
-    emotion: {
-      sourceMap: true,
-      importMap: {
-        '@mui/material': {
-          styled: {
-            canonicalImport: ['@emotion/styled', 'default'],
-            styledBaseImport: ['@mui/material', 'styled']
-          }
-        },
-        '@mui/material/styles': {
-          styled: {
-            canonicalImport: ['@emotion/styled', 'default'],
-            styledBaseImport: ['@mui/material/styles', 'styled']
-          }
-        }
-      }
-    }
+    emotion: true,
   },
-  webpack(config, {webpack}) {
+  env: {
+    DEPLOY_ENV: process.env.DEPLOY_ENV,
+  },
+  webpack(config, { webpack }) {
     /**
      * Tells Apollo turn run in production mode
      * @see https://www.apollographql.com/docs/react/development-testing/reducing-bundle-size
      */
     config.plugins.push(
       new webpack.DefinePlugin({
-        'globalThis.__DEV__': false
+        'globalThis.__DEV__': false,
       })
-    )
+    );
 
-    return config
+    return config;
   },
   async headers() {
     return [
@@ -53,32 +39,32 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
-          }
-        ]
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public',
+          },
+        ],
       },
       {
         source: '/',
         headers: [
           {
             key: 'Cache-Control',
-            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
-          }
-        ]
-      }
-    ]
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public',
+          },
+        ],
+      },
+    ];
   },
   async redirects() {
     return [
       {
         source: '/profile/subscription',
         destination: '/profile',
-        permanent: true
-      }
-    ]
+        permanent: true,
+      },
+    ];
   },
   experimental: {
-    scrollRestoration: true
+    scrollRestoration: true,
   },
   outputFileTracingRoot: join(__dirname, '../../../../../'),
   outputFileTracingExcludes: {
@@ -89,20 +75,20 @@ const nextConfig = {
       '**/node_modules/webpack',
       '**/node_modules/sass',
       '**/node_modules/terser',
-      '**/node_modules/uglify-js'
-    ]
+      '**/node_modules/uglify-js',
+    ],
   },
   // Not needed for the monorepository but for demo purposes.
   // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
   // This will transpile the ES Modules to CommonJS
-  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet']
-}
+  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
 
 // Injected content via Sentry wizard below
 
-const {withSentryConfig} = require('@sentry/nextjs')
+const { withSentryConfig } = require('@sentry/nextjs');
 
 module.exports = withSentryConfig(module.exports, {
   // For all available options, see:
@@ -122,7 +108,7 @@ module.exports = withSentryConfig(module.exports, {
 
   // Automatically annotate React components to show their full name in breadcrumbs and session replay
   reactComponentAnnotation: {
-    enabled: true
+    enabled: true,
   },
 
   // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
@@ -141,5 +127,5 @@ module.exports = withSentryConfig(module.exports, {
   // See the following for more information:
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true
-})
+  automaticVercelMonitors: true,
+});

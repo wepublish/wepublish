@@ -1,19 +1,18 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasComment, HasOptionalComment} from './has-comment.model'
-import {Comment} from '../comment.model'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { HasComment, HasOptionalComment } from './has-comment.model';
+import { Comment } from '../comment.model';
+import { CommentDataloaderService } from '../comment-dataloader.service';
 
 @Resolver(() => HasComment)
 export class HasCommentResolver {
-  @ResolveField(() => Comment, {nullable: true})
-  public comment(@Parent() {commentId}: HasOptionalComment | HasComment) {
-    if (!commentId) {
-      return null
-    }
+  constructor(private commentDataloaderService: CommentDataloaderService) {}
 
-    return {
-      __typename: 'Comment',
-      id: commentId
+  @ResolveField(() => Comment, { nullable: true })
+  public comment(@Parent() { commentId }: HasOptionalComment | HasComment) {
+    if (!commentId) {
+      return null;
     }
+    return this.commentDataloaderService.load(commentId);
   }
 }
 

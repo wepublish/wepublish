@@ -1,25 +1,43 @@
-import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {UserConsent, UserConsentInput, UserConsentFilter} from './user-consent.model'
-import {UserConsentService} from './user-consent.service'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import {
+  UserConsent,
+  UserConsentFilter,
+  UserConsentInput,
+} from './user-consent.model';
+import { UserConsentService } from './user-consent.service';
 
-import {ForbiddenException} from '@nestjs/common'
-import {UserSession, CurrentUser} from '@wepublish/authentication/api'
-import {User} from '@wepublish/user/api'
-import {Public, Authenticated} from '@wepublish/authentication/api'
+import { ForbiddenException } from '@nestjs/common';
+import {
+  Authenticated,
+  CurrentUser,
+  Public,
+  UserSession,
+} from '@wepublish/authentication/api';
+import { User, UserDataloaderService } from '@wepublish/user/api';
 
 @Resolver(() => UserConsent)
 export class UserConsentResolver {
-  constructor(private userConsents: UserConsentService) {}
+  constructor(
+    private userConsents: UserConsentService,
+    private userDataloaderService: UserDataloaderService
+  ) {}
 
   @Public()
   @Query(returns => [UserConsent], {
     name: 'userConsents',
     description: `
       Returns a list of userConsents. Possible to filter.
-    `
+    `,
   })
-  userConsentList(@Args({nullable: true}) filter?: UserConsentFilter) {
-    return this.userConsents.userConsentList(filter)
+  userConsentList(@Args({ nullable: true }) filter?: UserConsentFilter) {
+    return this.userConsents.userConsentList(filter);
   }
 
   @Public()
@@ -27,10 +45,10 @@ export class UserConsentResolver {
     name: 'userConsent',
     description: `
       Returns a single userConsent by id.
-    `
+    `,
   })
   userConsent(@Args('id') id: string) {
-    return this.userConsents.userConsent(id)
+    return this.userConsents.userConsent(id);
   }
 
   @Authenticated()
@@ -39,16 +57,21 @@ export class UserConsentResolver {
     description: `
       Creates a new userConsent based on input.
       Returns created userConsent.
-    `
+    `,
   })
-  createUserConsent(@CurrentUser() user: UserSession, @Args() userConsent: UserConsentInput) {
+  createUserConsent(
+    @CurrentUser() user: UserSession,
+    @Args() userConsent: UserConsentInput
+  ) {
     // only allow creating for admin or affected user
-    console.log({user})
-    if (!user.user.roleIDs.includes('admin') && user.user.id !== userConsent.userId) {
-      throw new ForbiddenException(`Unauthorized`)
+    if (
+      !user.user.roleIDs.includes('admin') &&
+      user.user.id !== userConsent.userId
+    ) {
+      throw new ForbiddenException(`Unauthorized`);
     }
 
-    return this.userConsents.createUserConsent(userConsent)
+    return this.userConsents.createUserConsent(userConsent);
   }
 
   @Authenticated()
@@ -57,14 +80,14 @@ export class UserConsentResolver {
     description: `
       Updates an existing userConsent based on input.
       Returns updated userConsent.
-    `
+    `,
   })
   updateUserConsent(
     @CurrentUser() user: UserSession,
     @Args('id') id: string,
-    @Args('value', {type: () => Boolean}) value: boolean
+    @Args('value', { type: () => Boolean }) value: boolean
   ) {
-    return this.userConsents.updateUserConsent(id, value, user)
+    return this.userConsents.updateUserConsent(id, value, user);
   }
 
   @Authenticated()
@@ -73,14 +96,14 @@ export class UserConsentResolver {
     description: `
       Delete an existing userConsent by id.
       Returns deleted userConsent.
-    `
+    `,
   })
   deleteUserConsent(@Args('id') id: string, @CurrentUser() user: UserSession) {
-    return this.userConsents.deleteUserConsent(id, user)
+    return this.userConsents.deleteUserConsent(id, user);
   }
 
   @ResolveField(returns => User)
   user(@Parent() userConsent: UserConsent) {
-    return {__typename: 'User', id: userConsent.userId}
+    return this.userDataloaderService.load(userConsent.userId);
   }
 }

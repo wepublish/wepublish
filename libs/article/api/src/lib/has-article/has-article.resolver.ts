@@ -1,29 +1,32 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import {
   HasArticle,
   HasArticleLc,
   HasOptionalArticle,
-  HasOptionalArticleLc
-} from './has-article.model'
-import {Article} from '../article.model'
-import {ArticleDataloaderService} from '../article-dataloader.service'
+  HasOptionalArticleLc,
+} from './has-article.model';
+import { Article } from '../article.model';
+import { ArticleDataloaderService } from '../article-dataloader.service';
 
 @Resolver(() => HasArticle)
 export class HasArticleResolver {
   constructor(private dataloader: ArticleDataloaderService) {}
 
-  @ResolveField(() => Article, {nullable: true})
+  @ResolveField(() => Article, { nullable: true })
   public article(
-    @Parent() block: HasOptionalArticle | HasArticle | HasOptionalArticleLc | HasArticleLc
+    @Parent()
+    block: HasOptionalArticle | HasArticle | HasOptionalArticleLc | HasArticleLc
   ) {
     const id =
-      'articleId' in block ? block.articleId : 'articleID' in block ? block.articleID : null
+      'articleId' in block ? block.articleId
+      : 'articleID' in block ? block.articleID
+      : null;
 
     if (!id) {
-      return null
+      return null;
     }
 
-    return this.dataloader.load(id)
+    return this.dataloader.load(id);
   }
 }
 

@@ -1,43 +1,43 @@
-import {Context} from '../../context'
-import {authorise} from '../permissions'
-import {CanCreateUserRole, CanDeleteUserRole} from '@wepublish/permissions'
-import {Prisma, PrismaClient} from '@prisma/client'
+import { Context } from '../../context';
+import { authorise } from '../permissions';
+import { CanCreateUserRole, CanDeleteUserRole } from '@wepublish/permissions';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 export const deleteUserRoleById = async (
   id: string,
   authenticate: Context['authenticate'],
   userRole: PrismaClient['userRole']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanDeleteUserRole, roles)
+  const { roles } = authenticate();
+  authorise(CanDeleteUserRole, roles);
 
   const role = await userRole.findUnique({
-    where: {id}
-  })
+    where: { id },
+  });
 
   if (role?.systemRole) {
-    throw new Error('Can not delete SystemRoles')
+    throw new Error('Can not delete SystemRoles');
   }
 
   return userRole.delete({
     where: {
-      id
-    }
-  })
-}
+      id,
+    },
+  });
+};
 
 export const createUserRole = (
   input: Omit<Prisma.UserRoleUncheckedCreateInput, 'modifiedAt' | 'systemRole'>,
   authenticate: Context['authenticate'],
   userRole: PrismaClient['userRole']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateUserRole, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateUserRole, roles);
 
   return userRole.create({
-    data: {...input, systemRole: false}
-  })
-}
+    data: { ...input, systemRole: false },
+  });
+};
 
 export const updateUserRole = async (
   id: string,
@@ -45,21 +45,21 @@ export const updateUserRole = async (
   authenticate: Context['authenticate'],
   userRole: PrismaClient['userRole']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateUserRole, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateUserRole, roles);
 
   const role = await userRole.findUnique({
-    where: {id}
-  })
+    where: { id },
+  });
 
   if (role?.systemRole) {
-    throw new Error('Can not change SystemRoles')
+    throw new Error('Can not change SystemRoles');
   }
 
   return userRole.update({
     where: {
-      id
+      id,
     },
-    data: input
-  })
-}
+    data: input,
+  });
+};

@@ -1,11 +1,18 @@
-import styled from '@emotion/styled'
-import {BuilderSubscriptionListProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {SubscriptionListItemContent, SubscriptionListItemWrapper} from './subscription-list-item'
+import styled from '@emotion/styled';
+import {
+  BuilderSubscriptionListProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import {
+  SubscriptionListItemContent,
+  SubscriptionListItemWrapper,
+} from './subscription-list-item';
+import { useTranslation } from 'react-i18next';
 
 export const SubscriptionListWrapper = styled('article')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
 
 export const SubscriptionList = ({
   data,
@@ -15,12 +22,13 @@ export const SubscriptionList = ({
   onCancel,
   onExtend,
   className,
-  subscribeUrl
+  subscribeUrl,
 }: BuilderSubscriptionListProps) => {
   const {
     SubscriptionListItem,
-    elements: {Alert, Link}
-  } = useWebsiteBuilder()
+    elements: { Alert, Link },
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <SubscriptionListWrapper className={className}>
@@ -28,7 +36,8 @@ export const SubscriptionList = ({
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
             <strong>
-              Du hast noch kein aktives Abo. <Link href={subscribeUrl}>Jetzt ein Abo lösen.</Link>
+              {t('subscription.noActiveSubscriptions')}{' '}
+              <Link href={subscribeUrl}>{t('subscription.subscribeNow')}</Link>
             </strong>
           </SubscriptionListItemContent>
         </SubscriptionListItemWrapper>
@@ -45,5 +54,5 @@ export const SubscriptionList = ({
         />
       ))}
     </SubscriptionListWrapper>
-  )
-}
+  );
+};

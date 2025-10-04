@@ -1,37 +1,41 @@
-import {Field, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
-import {BaseBlock} from '../base-block.model'
-import {BlockType} from '../block-type.model'
-import {Teaser, TeaserInput} from './teaser.model'
+import { Field, InputType, Int, ObjectType, OmitType } from '@nestjs/graphql';
+import { BaseBlock } from '../base-block.model';
+import { BlockType } from '../block-type.model';
+import { Teaser, TeaserInput } from './teaser.model';
 
 @ObjectType()
 export class FlexAlignment {
   @Field()
-  i!: string
+  i!: string;
 
   @Field(() => Int)
-  x!: number
+  x!: number;
   @Field(() => Int)
-  y!: number
+  y!: number;
 
   @Field(() => Int)
-  w!: number
+  w!: number;
   @Field(() => Int)
-  h!: number
+  h!: number;
 
   @Field()
-  static!: boolean
+  static!: boolean;
 }
 
 @InputType()
-export class FlexAlignmentInput extends OmitType(FlexAlignment, [] as const, InputType) {}
+export class FlexAlignmentInput extends OmitType(
+  FlexAlignment,
+  [] as const,
+  InputType
+) {}
 
 @ObjectType()
 export class FlexTeaser {
   @Field(() => FlexAlignment)
-  alignment!: FlexAlignment
+  alignment!: FlexAlignment;
 
-  @Field(() => Teaser, {nullable: true})
-  teaser?: typeof Teaser
+  @Field(() => Teaser, { nullable: true })
+  teaser?: typeof Teaser | null;
 }
 
 @InputType()
@@ -41,18 +45,18 @@ export class FlexTeaserInput extends OmitType(
   InputType
 ) {
   @Field(() => FlexAlignmentInput)
-  alignment!: FlexAlignmentInput
+  alignment!: FlexAlignmentInput;
 
-  @Field(() => TeaserInput, {nullable: true})
-  teaser?: TeaserInput
+  @Field(() => TeaserInput, { nullable: true })
+  teaser?: TeaserInput | null;
 }
 
 @ObjectType({
-  implements: () => [BaseBlock]
+  implements: () => [BaseBlock],
 })
 export class TeaserGridFlexBlock extends BaseBlock<BlockType.TeaserGridFlex> {
   @Field(() => [FlexTeaser])
-  flexTeasers!: FlexTeaser[]
+  flexTeasers!: FlexTeaser[];
 }
 
 @InputType()
@@ -62,5 +66,11 @@ export class TeaserGridFlexBlockInput extends OmitType(
   InputType
 ) {
   @Field(() => [FlexTeaserInput])
-  flexTeasers!: FlexTeaserInput[]
+  flexTeasers!: FlexTeaserInput[];
+}
+
+export function isTeaserGridFlexBlock(
+  block: BaseBlock<BlockType>
+): block is TeaserGridFlexBlock {
+  return block.type === BlockType.TeaserGridFlex;
 }

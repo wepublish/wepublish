@@ -1,22 +1,38 @@
-import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {PageDataloaderService} from './page-dataloader.service'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { PageDataloaderService } from './page-dataloader.service';
 import {
   CreatePageInput,
   Page,
   PageListArgs,
   PageRevision,
   PaginatedPages,
-  UpdatePageInput
-} from './page.model'
-import {Tag} from '@wepublish/tag/api'
-import {PageService} from './page.service'
-import {PageRevisionDataloaderService} from './page-revision-dataloader.service'
-import {URLAdapter} from '@wepublish/nest-modules'
-import {Page as PPage} from '@prisma/client'
-import {BadRequestException} from '@nestjs/common'
-import {CurrentUser, Public, UserSession} from '@wepublish/authentication/api'
-import {CanCreatePage, CanDeletePage, CanGetPage, CanPublishPage} from '@wepublish/permissions'
-import {hasPermission, Permissions, PreviewMode} from '@wepublish/permissions/api'
+  UpdatePageInput,
+} from './page.model';
+import { Tag, TagService } from '@wepublish/tag/api';
+import { PageService } from './page.service';
+import { PageRevisionDataloaderService } from './page-revision-dataloader.service';
+import { URLAdapter } from '@wepublish/nest-modules';
+import { Page as PPage } from '@prisma/client';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  CurrentUser,
+  Public,
+  UserSession,
+} from '@wepublish/authentication/api';
+import {
+  CanCreatePage,
+  CanDeletePage,
+  CanGetPage,
+  CanPublishPage,
+} from '@wepublish/permissions';
+import { Permissions, PreviewMode } from '@wepublish/permissions/api';
 
 @Resolver(() => Page)
 export class PageResolver {
@@ -24,148 +40,168 @@ export class PageResolver {
     private pageDataloader: PageDataloaderService,
     private pageRevisionsDataloader: PageRevisionDataloaderService,
     private pageService: PageService,
+    private tagService: TagService,
     private urlAdapter: URLAdapter
   ) {}
 
   @Public()
-  @Query(() => Page, {description: `Returns an page by id or slug.`})
+  @Query(() => Page, { description: `Returns an page by id or slug.` })
   public async page(
-    @Args('id', {nullable: true}) id?: string,
-    @Args('slug', {nullable: true}) slug?: string
+    @Args('id', { nullable: true }) id?: string,
+    @Args('slug', { nullable: true }) slug?: string
   ) {
     if (id != null) {
-      return this.pageDataloader.load(id)
+      const page = await this.pageDataloader.load(id);
+
+      if (!page) {
+        throw new NotFoundException(`Page with id ${id} was not found.`);
+      }
+
+      return page;
     }
 
     if (slug != null) {
-      return this.pageService.getPageBySlug(slug)
+      const page = await this.pageService.getPageBySlug(slug);
+
+      if (!page) {
+        throw new NotFoundException(`Page with slug ${slug} was not found.`);
+      }
+
+      return page;
     }
 
-    throw new BadRequestException('id or slug required.')
+    throw new BadRequestException('Page id or slug required.');
   }
 
   @Public()
   @Query(() => PaginatedPages, {
-    description: `Returns a paginated list of pages based on the filters given.`
+    description: `Returns a paginated list of pages based on the filters given.`,
   })
-  public pages(@Args() args: PageListArgs, @CurrentUser() user: UserSession | undefined) {
-    if (!hasPermission(CanGetPage, user?.roles ?? [])) {
+  public pages(@Args() args: PageListArgs, @PreviewMode() isPreview: boolean) {
+    if (!isPreview) {
       args.filter = {
         ...args.filter,
         draft: undefined,
         pending: undefined,
-        published: true
-      }
+        published: true,
+      };
     }
 
-    return this.pageService.getPages(args)
+    return this.pageService.getPages(args);
   }
 
   @Permissions(CanCreatePage)
   @Mutation(() => Page, {
-    description: `Creates an page.`
+    description: `Creates an page.`,
   })
-  public createPage(@Args() input: CreatePageInput, @CurrentUser() user: UserSession | undefined) {
-    return this.pageService.createPage(input, user?.user?.id)
+  public createPage(
+    @Args() input: CreatePageInput,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.pageService.createPage(input, user?.user?.id);
   }
 
   @Permissions(CanCreatePage)
   @Mutation(() => Page, {
-    description: `Updates an page.`
+    description: `Updates an page.`,
   })
-  public updatePage(@Args() input: UpdatePageInput, @CurrentUser() user: UserSession | undefined) {
-    return this.pageService.updatePage(input, user?.user?.id)
+  public updatePage(
+    @Args() input: UpdatePageInput,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.pageService.updatePage(input, user?.user?.id);
   }
 
   @Permissions(CanCreatePage)
   @Mutation(() => Page, {
-    description: `Duplicates an page.`
+    description: `Duplicates an page.`,
   })
-  public duplicatePage(@Args('id') id: string, @CurrentUser() user: UserSession | undefined) {
-    return this.pageService.duplicatePage(id, user?.user?.id)
+  public duplicatePage(
+    @Args('id') id: string,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    return this.pageService.duplicatePage(id, user?.user?.id);
   }
 
   @Permissions(CanDeletePage)
   @Mutation(() => String, {
-    description: `Deletes an page.`
+    description: `Deletes an page.`,
   })
   public async deletePage(@Args('id') id: string) {
-    return (await this.pageService.deletePage(id)).id
+    return (await this.pageService.deletePage(id)).id;
   }
 
   @Permissions(CanPublishPage)
   @Mutation(() => Page, {
-    description: `Publishes an page at the given time.`
+    description: `Publishes an page at the given time.`,
   })
-  public publishPage(@Args('id') id: string, @Args('publishedAt') publishedAt: Date) {
-    return this.pageService.publishPage(id, publishedAt)
+  public publishPage(
+    @Args('id') id: string,
+    @Args('publishedAt') publishedAt: Date
+  ) {
+    return this.pageService.publishPage(id, publishedAt);
   }
 
   @Permissions(CanPublishPage)
   @Mutation(() => Page, {
-    description: `Unpublishes all revisions of an page.`
+    description: `Unpublishes all revisions of an page.`,
   })
   public unpublishPage(@Args('id') id: string) {
-    return this.pageService.unpublishPage(id)
+    return this.pageService.unpublishPage(id);
   }
 
   @ResolveField(() => PageRevision)
-  async latest(
-    @Parent() parent: PPage,
-    @CurrentUser() user: UserSession | undefined,
-    @PreviewMode() isPreview: boolean
-  ) {
-    const {id: pageId} = parent
-    const {draft, pending, published} = await this.pageRevisionsDataloader.load(pageId)
+  async latest(@Parent() parent: PPage, @PreviewMode() isPreview: boolean) {
+    const { id: pageId } = parent;
+    const { draft, pending, published } =
+      await this.pageRevisionsDataloader.load(pageId);
 
-    if (!isPreview || !hasPermission(CanGetPage, user?.roles ?? [])) {
-      return published
+    if (!isPreview) {
+      return published;
     }
 
-    return draft ?? pending ?? published
+    return draft ?? pending ?? published;
   }
 
   @Permissions(CanGetPage)
-  @ResolveField(() => PageRevision, {nullable: true})
+  @ResolveField(() => PageRevision, { nullable: true })
   async draft(@Parent() parent: PPage) {
-    const {id: pageId} = parent
-    const {draft} = await this.pageRevisionsDataloader.load(pageId)
+    const { id: pageId } = parent;
+    const { draft } = await this.pageRevisionsDataloader.load(pageId);
 
-    return draft
+    return draft;
   }
 
   @Permissions(CanGetPage)
-  @ResolveField(() => PageRevision, {nullable: true})
+  @ResolveField(() => PageRevision, { nullable: true })
   async pending(@Parent() parent: PPage) {
-    const {id: pageId} = parent
-    const {pending} = await this.pageRevisionsDataloader.load(pageId)
+    const { id: pageId } = parent;
+    const { pending } = await this.pageRevisionsDataloader.load(pageId);
 
-    return pending
+    return pending;
   }
 
-  @ResolveField(() => PageRevision, {nullable: true})
+  @ResolveField(() => PageRevision, { nullable: true })
   async published(@Parent() parent: PPage) {
-    const {id: pageId} = parent
-    const {published} = await this.pageRevisionsDataloader.load(pageId)
+    const { id: pageId } = parent;
+    const { published } = await this.pageRevisionsDataloader.load(pageId);
 
-    return published
+    return published;
   }
 
-  @ResolveField(() => String, {nullable: true})
+  @ResolveField(() => String, { nullable: true })
   async url(@Parent() parent: PPage) {
-    return this.urlAdapter.getPageUrl(parent)
+    return this.urlAdapter.getPageUrl(parent);
   }
 
-  @ResolveField(() => String, {nullable: true})
+  @ResolveField(() => String, { nullable: true })
   async previewUrl(@Parent() parent: PPage) {
-    return this.urlAdapter.getPagePreviewUrl(parent)
+    return this.urlAdapter.getPagePreviewUrl(parent);
   }
 
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PPage) {
-    const {id: pageId} = parent
-    const tagIds = await this.pageService.getTagIds(pageId)
-
-    return tagIds.map(({id}) => ({__typename: 'Tag', id}))
+    const { id: pageId } = parent;
+    return this.tagService.getTagsByPageId(pageId);
   }
 }

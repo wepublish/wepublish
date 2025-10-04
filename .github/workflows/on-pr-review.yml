@@ -2,12 +2,11 @@ name: Review
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened]
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: review-${{ github.head_ref }}
   cancel-in-progress: true
-
 
 env:
   API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
@@ -16,7 +15,6 @@ env:
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
-
 
 jobs:
   publish_docker_base_image:
@@ -86,9 +84,19 @@ jobs:
             rootUser: ${S3_ACCESS_KEY_ID}
             rootPassword: ${S3_SECRET_ACCESS_KEY}
           disableWebUI: true
+          console:
+            enabled: false
           defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
+          resourcesPreset: "none"
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "50m"
+            limits:
+              memory: "300Mi"
+              cpu: "200m"
           service:
             type: LoadBalancer
             port: 9000
@@ -109,9 +117,15 @@ jobs:
                 database: wepublish
           primary:
             resourcesPreset: "none"
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
-
 
   helm_deployment:
     name: Helm deployment
@@ -157,8 +171,21 @@ jobs:
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
+            requests:
+              memory: "200Mi"
+              cpu: "30m"
+            limits:
+              memory: "500Mi"
+              cpu: "200m"
           api:
             image: ghcr.io/wepublish/api:${{ github.sha }}
+            resources:
+              requests:
+                memory: "200Mi"
+                cpu: "100m"
+              limits:
+                memory: "1024Mi"
+                cpu: "1000m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -177,15 +204,6 @@ jobs:
                 id: slackMail
                 fromAddress: dev@wepublish.ch
                 webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
-              OAuthProviders:
-                - name: 'google'
-                  discoverUrl: 'https://accounts.google.com'
-                  clientId: '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com'
-                  clientKey: 't267ZLqkV9dacrkPQp_pF-G2'
-                  redirectUri:
-                    - ${WEBSITE_URL}/auth/google
-                  scopes:
-                    - 'openid profile email'
 
               paymentProviders:
                 - type: payrexx
@@ -238,7 +256,7 @@ jobs:
                   invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
                   invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
                   markInvoiceAsOpen: False
-          
+
                 - type: mollie
                   id: mollie
                   name: Mollie
@@ -251,7 +269,7 @@ jobs:
                 type: 'turnstile'
                 secret: 1x0000000000000000000000000000000AA
                 siteKey: 1x00000000000000000000AA
-          
+
               trackingPixelProviders:
                 - type: prolitteris
                   id: prolitteris
@@ -267,10 +285,24 @@ jobs:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
               PEER_BY_DEFAULT: "true"
+            resources:
+              requests:
+                memory: "32Mi"
+                cpu: "20m"
+              limits:
+                memory: "64Mi"
+                cpu: "100m"
           storybook:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
+            resources:
+              requests:
+                memory: "8Mi"
+                cpu: "5m"
+              limits:
+                memory: "32Mi"
+                cpu: "50m"
           media:
             image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
@@ -279,6 +311,13 @@ jobs:
               S3_SECRET_KEY: secretKey
               S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
               S3_PORT: '9000'
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "512Mi"
+                cpu: "150m"
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
@@ -295,13 +334,13 @@ jobs:
         id: set-matrix
         run: deployment/read_deployment_config.sh '.website.review.deployment' true
 
-
   publish_docker_website_image:
     name: Build Docker Website
     needs: [setup-website-matrix, helm_deployment, publish_docker_base_image]
     if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
+      fail-fast: false
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
       website_project: ${{ matrix.target }}
@@ -311,20 +350,17 @@ jobs:
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
 
-
-
-#  helm_deployment_website:
-#    name: Helm Deployment Website
-#    needs: [publish_docker_website_image, setup-website-matrix]
-#    if: ${{ needs.publish_docker_website_image.result == 'success' }}
-#    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
-#    strategy:
-#      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
-#    with:
-#      website_project: ${{ matrix.target }}
-#      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-#    secrets: inherit
-
+  #  helm_deployment_website:
+  #    name: Helm Deployment Website
+  #    needs: [publish_docker_website_image, setup-website-matrix]
+  #    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+  #    uses: ./.github/workflows/on-demand-deploy-helm-website.yml
+  #    strategy:
+  #      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+  #    with:
+  #      website_project: ${{ matrix.target }}
+  #      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  #    secrets: inherit
 
   notify:
     name: Notify

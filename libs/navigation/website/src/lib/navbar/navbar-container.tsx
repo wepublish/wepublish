@@ -1,11 +1,17 @@
-import {useHasRunningSubscription, useHasUnpaidInvoices} from '@wepublish/membership/website'
-import {useNavigationListQuery, usePeerProfileQuery} from '@wepublish/website/api'
+import {
+  useHasRunningSubscription,
+  useHasUnpaidInvoices,
+} from '@wepublish/membership/website';
+import {
+  useNavigationListQuery,
+  usePeerProfileQuery,
+} from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {PropsWithChildren} from 'react'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
 
 export type NavbarContainerProps = PropsWithChildren<
   Pick<
@@ -14,12 +20,12 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'slug'
     | 'headerSlug'
     | 'iconSlug'
-    | 'loginUrl'
-    | 'profileUrl'
-    | 'subscribeUrl'
+    | 'loginBtn'
+    | 'profileBtn'
+    | 'subscribeBtn'
   > &
     BuilderContainerProps
->
+>;
 
 export function NavbarContainer({
   className,
@@ -27,18 +33,18 @@ export function NavbarContainer({
   headerSlug,
   slug,
   iconSlug,
-  loginUrl,
-  profileUrl,
-  subscribeUrl,
-  children
+  loginBtn,
+  profileBtn,
+  subscribeBtn,
+  children,
 }: NavbarContainerProps) {
-  const {Navbar} = useWebsiteBuilder()
-  const {data, loading, error} = useNavigationListQuery()
-  const {data: peerInfoData} = usePeerProfileQuery()
-  const hasUnpaidInvoices = useHasUnpaidInvoices()
-  const hasRunningSubscription = useHasRunningSubscription()
+  const { Navbar } = useWebsiteBuilder();
+  const { data, loading, error } = useNavigationListQuery();
+  const { data: peerInfoData } = usePeerProfileQuery();
+  const hasUnpaidInvoices = useHasUnpaidInvoices();
+  const hasRunningSubscription = useHasRunningSubscription();
 
-  const logo = peerInfoData?.peerProfile.logo
+  const logo = peerInfoData?.peerProfile.logo;
 
   return (
     <Navbar
@@ -46,17 +52,18 @@ export function NavbarContainer({
       headerSlug={headerSlug}
       categorySlugs={categorySlugs}
       slug={slug}
-      loginUrl={loginUrl}
-      profileUrl={profileUrl}
-      subscribeUrl={subscribeUrl}
+      loginBtn={loginBtn}
+      profileBtn={profileBtn}
+      subscribeBtn={subscribeBtn}
       data={data}
       loading={loading}
       error={error}
       className={className}
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
-      hasRunningSubscription={!!hasRunningSubscription}>
+      hasRunningSubscription={!!hasRunningSubscription}
+    >
       {children}
     </Navbar>
-  )
+  );
 }

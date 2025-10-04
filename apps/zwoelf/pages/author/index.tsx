@@ -1,56 +1,56 @@
-import {AuthorListContainer} from '@wepublish/author/website'
-import {AuthorSort, SortOrder} from '@wepublish/website/api'
+import { AuthorListContainer } from '@wepublish/author/website';
+import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
   AuthorListDocument,
   getV1ApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  useAuthorListQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {useMemo} from 'react'
-import {z} from 'zod'
+  useAuthorListQuery,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { z } from 'zod';
 
-const take = 25
+const take = 25;
 
 const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional()
-})
+  page: z.coerce.number().gte(1).optional(),
+});
 
 export default function AuthorList() {
   const {
-    elements: {Pagination}
-  } = useWebsiteBuilder()
+    elements: { Pagination },
+  } = useWebsiteBuilder();
 
-  const {query, replace} = useRouter()
-  const {page} = pageSchema.parse(query)
+  const { query, replace } = useRouter();
+  const { page } = pageSchema.parse(query);
 
   const variables = useMemo(
     () => ({
       sort: AuthorSort.Name,
       order: SortOrder.Ascending,
       take,
-      skip: ((page ?? 1) - 1) * take
+      skip: ((page ?? 1) - 1) * take,
     }),
     [page]
-  )
+  );
 
-  const {data} = useAuthorListQuery({
+  const { data } = useAuthorListQuery({
     fetchPolicy: 'cache-only',
-    variables
-  })
+    variables,
+  });
 
   const pageCount = useMemo(() => {
     if (data?.authors.totalCount && data?.authors.totalCount > take) {
-      return Math.ceil(data.authors.totalCount / take)
+      return Math.ceil(data.authors.totalCount / take);
     }
 
-    return 1
-  }, [data?.authors.totalCount])
+    return 1;
+  }, [data?.authors.totalCount]);
 
   return (
     <>
@@ -63,26 +63,26 @@ export default function AuthorList() {
           onChange={(_, value) =>
             replace(
               {
-                query: {...query, page: value}
+                query: { ...query, page: value },
               },
               undefined,
-              {shallow: true, scroll: true}
+              { shallow: true, scroll: true }
             )
           }
         />
       )}
     </>
-  )
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig} = getConfig()
+  const { publicRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
-    return {props: {}, revalidate: 1}
+    return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
   await Promise.all([
     client.query({
       query: AuthorListDocument,
@@ -90,21 +90,21 @@ export const getStaticProps: GetStaticProps = async () => {
         take,
         skip: 0,
         sort: AuthorSort.Name,
-        order: SortOrder.Ascending
-      }
+        order: SortOrder.Ascending,
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
-  }
-}
+    revalidate: 60, // every 60 seconds
+  };
+};

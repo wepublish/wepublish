@@ -1,126 +1,106 @@
-import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
-import {onError} from '@apollo/client/link/error'
-import {CssBaseline, ThemeProvider} from '@mui/material'
-import * as Sentry from '@sentry/react'
-import {getSettings, LocalStorageKey} from '@wepublish/editor/api-v2'
-import {theme} from '@wepublish/ui'
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  InMemoryCache,
+} from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import * as Sentry from '@sentry/react';
+import { possibleTypes } from '@wepublish/editor/api';
+import { getSettings, LocalStorageKey } from '@wepublish/editor/api-v2';
+import { theme } from '@wepublish/ui';
 import {
   AuthProvider,
   FacebookProvider,
   InstagramProvider,
-  TwitterProvider
-} from '@wepublish/ui/editor'
-import {createUploadLink} from 'apollo-upload-client'
-import ReactDOM from 'react-dom'
-import {IconContext} from 'react-icons'
+  TwitterProvider,
+} from '@wepublish/ui/editor';
+import { createUploadLink } from 'apollo-upload-client';
+import { createRoot } from 'react-dom/client';
+import { IconContext } from 'react-icons';
 
-import {App} from './app/app'
-import {initI18N} from './app/i18n'
-import {ElementID} from './shared/elementID'
+import { App } from './app/app';
+import { initI18N } from './app/i18n';
+import { ElementID } from './shared/elementID';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+  ],
   tracesSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0
-})
-
-// See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
-export async function fetchIntrospectionQueryResultData(url: string) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      variables: {},
-      query: `
-      {
-        __schema {
-          types {
-            kind
-            name
-            possibleTypes {
-              name
-            }
-          }
-        }
-      }
-    `
-    })
-  })
-
-  const result = await response.json()
-
-  const possibleTypes: any = {}
-
-  result.data.__schema.types.forEach((supertype: any) => {
-    if (supertype.possibleTypes) {
-      possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype: any) => subtype.name)
-    }
-  })
-
-  return possibleTypes
-}
+  replaysOnErrorSampleRate: 1.0,
+});
 
 const onDOMContentLoaded = async () => {
-  const {apiURL} = getSettings()
+  const { apiURL } = getSettings();
 
-  const adminAPIURL = `${apiURL}/v1/admin`
+  const adminAPIURL = `${apiURL}/v1/admin`;
 
   const authLink = new ApolloLink((operation, forward) => {
-    const token = localStorage.getItem(LocalStorageKey.SessionToken)
-    const context = operation.getContext()
+    const token = localStorage.getItem(LocalStorageKey.SessionToken);
+    const context = operation.getContext();
 
     operation.setContext({
       headers: {
         authorization: token ? `Bearer ${token}` : '',
         preview: 'preview',
-        ...context.headers
+        ...context.headers,
       },
       credentials: 'include',
-      ...context
-    })
+      ...context,
+    });
 
-    return forward(operation)
-  })
+    return forward(operation);
+  });
 
-  const authErrorLink = onError(({graphQLErrors, /* networkError, */ operation, forward}) => {
-    if (graphQLErrors) {
-      graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
-        if (
-          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(
-            (extensions?.code as string | undefined) ?? ''
-          ) &&
-          !(
-            window.location.pathname.includes('/logout') ||
-            window.location.pathname.includes('/login')
-          )
-        ) {
-          localStorage.removeItem(LocalStorageKey.SessionToken)
-          // TODO: implement this handling console.warn()
-        }
-      })
+  const authErrorLink = onError(
+    ({ graphQLErrors, /* networkError, */ operation, forward }) => {
+      if (graphQLErrors) {
+        graphQLErrors.forEach(
+          ({ /* message, locations, path, */ extensions }) => {
+            if (
+              ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(
+                (extensions?.code as string | undefined) ?? ''
+              ) &&
+              !(
+                window.location.pathname.includes('/logout') ||
+                window.location.pathname.includes('/login')
+              )
+            ) {
+              localStorage.removeItem(LocalStorageKey.SessionToken);
+              // TODO: implement this handling console.warn()
+            }
+          }
+        );
+      }
+
+      forward(operation);
     }
+  );
 
-    forward(operation)
-  })
-
-  const mainLink = createUploadLink({uri: adminAPIURL})
+  const mainLink = createUploadLink({ uri: adminAPIURL });
 
   const client = new ApolloClient({
     link: authLink.concat(authErrorLink).concat(mainLink),
     cache: new InMemoryCache({
-      possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
-    })
-  })
+      possibleTypes: possibleTypes.possibleTypes,
+    }),
+  });
 
-  window.addEventListener('dragover', e => e.preventDefault())
-  window.addEventListener('drop', e => e.preventDefault())
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('drop', e => e.preventDefault());
 
-  ReactDOM.render(
+  const container = document.getElementById(ElementID.ReactRoot);
+  const root = createRoot(container!);
+
+  root.render(
     <ApolloProvider client={client}>
       <AuthProvider>
-        <IconContext.Provider value={{className: 'rs-icon'}}>
+        <IconContext.Provider value={{ className: 'rs-icon' }}>
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
@@ -133,21 +113,20 @@ const onDOMContentLoaded = async () => {
           </FacebookProvider>
         </IconContext.Provider>
       </AuthProvider>
-    </ApolloProvider>,
-    document.getElementById(ElementID.ReactRoot)
-  )
-}
+    </ApolloProvider>
+  );
+};
 
-initI18N()
+initI18N();
 
 if (document.readyState !== 'loading') {
-  onDOMContentLoaded().catch(console.error)
+  onDOMContentLoaded().catch(console.error);
 } else {
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      await onDOMContentLoaded()
+      await onDOMContentLoaded();
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  })
+  });
 }

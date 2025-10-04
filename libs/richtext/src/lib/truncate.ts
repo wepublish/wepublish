@@ -1,46 +1,49 @@
-import {Element, Node, Text} from 'slate'
-import {compose} from 'ramda'
-
-export const isNodeText = (node: Node): node is Text => 'text' in node
-export const isNodeElement = (node: Node): node is Element => 'children' in node
+import { Descendant, Element, Node, Text } from 'slate';
+import { compose } from 'ramda';
 
 export const truncateParagraph =
   (maxLength: number) =>
-  (paragraph: Node | undefined): Node | undefined => {
-    let textLength = 0
+  (paragraph: Node | undefined): Descendant | undefined => {
+    let textLength = 0;
 
-    if (paragraph && !isNodeElement(paragraph)) {
-      return
+    if (!Element.isElement(paragraph)) {
+      return;
     }
 
-    const truncated = (paragraph?.children as Node[] | undefined)?.reduce(
+    const truncated = paragraph.children.reduce(
       (acc: Element, curr) => {
-        if (!isNodeText(curr)) {
-          return acc
+        if (!Text.isText(curr)) {
+          return acc;
         }
 
-        let newText = curr.text
+        let newText = curr.text;
 
         if (textLength + curr.text.length > maxLength) {
-          newText = curr.text.substring(0, Math.max(0, maxLength - textLength))
+          newText = curr.text.substring(0, Math.max(0, maxLength - textLength));
         }
 
         acc.children.push({
           ...curr,
-          text: newText
-        })
-        textLength += newText.length
+          text: newText,
+        });
+        textLength += newText.length;
 
-        return acc
+        return acc;
       },
-      {...paragraph, children: []}
-    )
+      { ...paragraph, children: [] }
+    );
 
-    return truncated
-  }
+    return truncated;
+  };
 
-export const findFirstParagraph = (nodes: Node[] | undefined | null) =>
-  nodes?.find((node): node is Node => node['type'] === 'paragraph')
+export const findFirstParagraph = (
+  nodes: Node[] | undefined | null
+): Node | undefined =>
+  nodes?.find(node => Element.isElement(node) && node.type === 'paragraph');
 
 export const truncateFirstParagraph = (maxLength: number) =>
-  compose(node => (node ? [node] : node), truncateParagraph(maxLength), findFirstParagraph)
+  compose(
+    node => (node ? [node] : node),
+    truncateParagraph(maxLength),
+    findFirstParagraph
+  );

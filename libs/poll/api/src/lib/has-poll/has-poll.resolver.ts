@@ -1,19 +1,18 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasPoll, HasOptionalPoll} from './has-poll.model'
-import {FullPoll} from '../poll.model'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { HasOptionalPoll, HasPoll } from './has-poll.model';
+import { FullPoll } from '../poll.model';
+import { PollDataloaderService } from '../poll-dataloader.service';
 
 @Resolver(() => HasPoll)
 export class HasPollResolver {
-  @ResolveField(() => FullPoll, {nullable: true})
-  public poll(@Parent() {pollId}: HasOptionalPoll | HasPoll) {
-    if (!pollId) {
-      return null
-    }
+  constructor(readonly pollDataloaderService: PollDataloaderService) {}
 
-    return {
-      __typename: 'FullPoll',
-      id: pollId
+  @ResolveField(() => FullPoll, { nullable: true })
+  public poll(@Parent() { pollId }: HasOptionalPoll | HasPoll) {
+    if (!pollId) {
+      return null;
     }
+    return this.pollDataloaderService.load(pollId);
   }
 }
 

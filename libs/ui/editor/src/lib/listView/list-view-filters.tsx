@@ -1,17 +1,29 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   AuthorRefFragment,
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
+  TagType,
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
-  useTagListLazyQuery,
-  useUserRoleListLazyQuery
-} from '@wepublish/editor/api'
-import {useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdClose} from 'react-icons/md'
+  useUserRoleListLazyQuery,
+} from '@wepublish/editor/api';
+import {
+  ArticleFilter,
+  DateFilterComparison,
+  EventFilter,
+  getApiClientV2,
+  InputMaybe,
+  PageFilter,
+  PeerArticleFilter,
+  PollVoteFilter,
+  Scalars,
+  useEventProvidersLazyQuery,
+} from '@wepublish/editor/api-v2';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
 import {
   Button,
   CheckPicker as RCheckPicker,
@@ -19,62 +31,50 @@ import {
   Form as RForm,
   Input,
   SelectPicker as RSelectPicker,
-  Toggle as RToggle
-} from 'rsuite'
+  Toggle as RToggle,
+} from 'rsuite';
 
-import {AuthorCheckPicker} from '../panel/authorCheckPicker'
-import {
-  ArticleFilter,
-  InputMaybe,
-  PageFilter,
-  PollVoteFilter,
-  Scalars,
-  useEventProvidersLazyQuery,
-  DateFilterComparison,
-  EventFilter,
-  PeerArticleFilter
-} from '@wepublish/editor/api-v2'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
-import {TagCheckPicker, TagRefFragment} from '../panel/tagCheckPicker'
+import { SelectTags } from '../atoms/tag/selectTags';
+import { AuthorCheckPicker } from '../panel/authorCheckPicker';
 
-const {Group} = RForm
+const { Group } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
   flex-wrap: wrap;
   margin-top: 15px;
-`
+`;
 
 const CloseIcon = styled(MdClose)`
   margin-right: 5px;
-`
+`;
 
 const SelectPicker = styled(RSelectPicker)`
   width: 150px;
-`
+`;
 
 const CheckPicker = styled(RCheckPicker)`
   width: 200px;
-`
+`;
 
 const Toggle = styled(RToggle)`
   display: inline-block;
   margin-top: 6px;
-`
+`;
 
 const FormGroup = styled(Group)`
   width: 100%;
-`
+`;
 
 const WideInput = styled(Input)`
   width: 400px;
-`
+`;
 
 const formInputStyle = {
   marginRight: '15px',
   marginTop: '0',
-  marginBottom: '10px'
-}
+  marginBottom: '10px',
+};
 
 type Field =
   | 'title'
@@ -96,13 +96,13 @@ type Field =
   | 'includeHidden'
   | 'answerIds'
   | 'fingerprint'
-  | 'tags'
+  | 'tags';
 
 export type ImportableEventFilter = {
-  startsAt?: InputMaybe<Scalars['String']>
-  endsAt?: InputMaybe<Scalars['String']>
-  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
-}
+  startsAt?: InputMaybe<Scalars['String']>;
+  endsAt?: InputMaybe<Scalars['String']>;
+  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
 
 type Filter = ArticleFilter &
   PeerArticleFilter &
@@ -110,101 +110,106 @@ type Filter = ArticleFilter &
   UserFilter &
   EventFilter &
   ImportableEventFilter &
-  PollVoteFilter
+  PollVoteFilter;
 
 export interface ListViewFiltersProps {
-  fields: Field[]
-  filter: Partial<Filter>
-  isLoading: boolean
-  onSetFilter(filter: Filter): void
-  className?: string
+  fields: Field[];
+  filter: Partial<Filter>;
+  isLoading: boolean;
+  onSetFilter(filter: Filter): void;
+  className?: string;
+  tagType?: TagType;
 }
 
-export function ListViewFilters({fields, filter, onSetFilter, className}: ListViewFiltersProps) {
-  const client = useMemo(() => getApiClientV2(), [])
-  const {t} = useTranslation()
-  const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
-  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
-  const [answers, setAnswers] = useState<PollAnswerWithVoteCount[]>([])
+export function ListViewFilters({
+  fields,
+  filter,
+  onSetFilter,
+  className,
+  tagType,
+}: ListViewFiltersProps) {
+  const client = useMemo(() => getApiClientV2(), []);
+  const { t } = useTranslation();
+  const [resetFilterKey, setResetFilterkey] = useState<string>(
+    new Date().getTime().toString()
+  );
+  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
+  const [answers, setAnswers] = useState<PollAnswerWithVoteCount[]>([]);
 
-  const [providersFetch, {data: providersData}] = useEventProvidersLazyQuery({
+  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery({
     client,
-    fetchPolicy: 'network-only'
-  })
+    fetchPolicy: 'network-only',
+  });
 
-  const [userRoleFetch, {data: userRoleData}] = useUserRoleListLazyQuery({
+  const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
     fetchPolicy: 'network-only',
     variables: {
-      take: 200
-    }
-  })
+      take: 200,
+    },
+  });
 
-  const [peerListFetch, {data: peerListData}] = usePeerListLazyQuery({
-    fetchPolicy: 'network-only'
-  })
+  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({
+    fetchPolicy: 'network-only',
+  });
 
-  const [pollFetch, {data: pollData}] = usePollLazyQuery({
-    fetchPolicy: 'network-only'
-  })
-
-  const [tagFetch, {data: tagData}] = useTagListLazyQuery({
-    fetchPolicy: 'network-only'
-  })
+  const [pollFetch, { data: pollData }] = usePollLazyQuery({
+    fetchPolicy: 'network-only',
+  });
 
   // check whether or not we need to get some data based on which filters are required
-  const isAnswerFilter = fields.includes('answerIds')
-  const isProviderFilter = fields.includes('providers')
-  const isUserRoleFilter = fields.includes('userRole')
-  const isPeerFilter = fields.includes('peerId')
+  const isAnswerFilter = fields.includes('answerIds');
+  const isProviderFilter = fields.includes('providers');
+  const isUserRoleFilter = fields.includes('userRole');
+  const isPeerFilter = fields.includes('peerId');
 
   // conditionally get some additional data
   useEffect(() => {
     if (isPeerFilter) {
-      peerListFetch()
+      peerListFetch();
     }
-  }, [isPeerFilter, peerListFetch])
+  }, [isPeerFilter, peerListFetch]);
 
   useEffect(() => {
     if (isUserRoleFilter) {
-      userRoleFetch()
+      userRoleFetch();
     }
-  }, [isUserRoleFilter, userRoleFetch])
+  }, [isUserRoleFilter, userRoleFetch]);
 
   useEffect(() => {
     if (isProviderFilter) {
-      providersFetch()
+      providersFetch();
     }
-  }, [isProviderFilter, providersFetch])
+  }, [isProviderFilter, providersFetch]);
 
   useEffect(() => {
     if (isAnswerFilter && filter.pollId) {
       pollFetch({
         variables: {
-          pollId: filter.pollId
-        }
-      })
+          pollId: filter.pollId,
+        },
+      });
     }
-  }, [isAnswerFilter, pollFetch, filter])
+  }, [isAnswerFilter, pollFetch, filter]);
 
   /**
    * Setup user roles, whenever user role data object changes
    */
   useEffect(() => {
     if (userRoleData?.userRoles?.nodes) {
-      setUserRoles(userRoleData.userRoles.nodes)
+      setUserRoles(userRoleData.userRoles.nodes);
     }
-  }, [userRoleData?.userRoles])
+  }, [userRoleData?.userRoles]);
 
   /**
    * Setup poll
    */
   useEffect(() => {
     if (pollData?.poll?.answers) {
-      setAnswers(pollData?.poll?.answers)
+      setAnswers(pollData?.poll?.answers);
     }
-  }, [pollData?.poll?.answers])
+  }, [pollData?.poll?.answers]);
 
-  const allPeers = peerListData?.peers
+  const allPeers = peerListData?.peers;
 
   /**
    * helper functions to manage filter
@@ -213,80 +218,85 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
     for (const [filterKey, filterValue] of Object.entries(filter)) {
       if (
         filterKey &&
-        fields.includes(mapFilterFieldToField(filterKey as keyof Filter) as Field) &&
+        fields.includes(
+          mapFilterFieldToField(filterKey as keyof Filter) as Field
+        ) &&
         filterValue
       ) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   function mapFilterFieldToField(name: keyof Filter): Field | null {
     if (name === 'from' || name === 'to') {
-      return 'dates'
+      return 'dates';
     } else if (fields.includes(name as Field)) {
-      return name as Field
+      return name as Field;
     } else {
-      return null
+      return null;
     }
   }
 
   function resetFilter(): void {
-    const cleanFilter: Record<string, any> = {}
+    const cleanFilter: Record<string, any> = {};
 
     for (const filterKey in filter) {
-      const possibleField = mapFilterFieldToField(filterKey as keyof Filter)
+      const possibleField = mapFilterFieldToField(filterKey as keyof Filter);
 
       if (!possibleField || !fields.includes(possibleField)) {
-        cleanFilter[filterKey] = filter[filterKey as keyof Filter]
+        cleanFilter[filterKey] = filter[filterKey as keyof Filter];
       }
     }
 
-    onSetFilter(cleanFilter)
-    setResetFilterkey(new Date().getTime().toString())
+    onSetFilter(cleanFilter);
+    setResetFilterkey(new Date().getTime().toString());
   }
 
   const updateFilter = (value: Partial<Filter>) => {
     if (value.authors && !value.authors.length) {
-      value = {authors: null}
+      value = { authors: null };
     }
 
     if (value.userRole && !value.userRole.length) {
-      value = {userRole: null}
+      value = { userRole: null };
     }
 
     if (value.answerIds && !value.answerIds.length) {
-      value = {answerIds: null}
+      value = { answerIds: null };
     }
 
     const newFilter = {
       ...filter,
-      ...value
-    }
-    onSetFilter(newFilter)
-  }
+      ...value,
+    };
+    onSetFilter(newFilter);
+  };
 
   /**
    * UI helper functions
    */
   function resetFilterView() {
     if (!isAnyFilterSet()) {
-      return null
+      return null;
     }
 
     return (
       <FormGroup>
-        <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+        <Button
+          onClick={() => resetFilter()}
+          color="red"
+          appearance="ghost"
+        >
           <CloseIcon />
           {t('articleList.filter.reset')}
         </Button>
       </FormGroup>
-    )
+    );
   }
 
-  const authorsData = filter?.authors?.map(author => ({id: author})) || []
-  const tagsData = filter?.tags?.map(tag => ({id: tag})) || []
+  const authorsData = filter?.authors?.map(author => ({ id: author })) || [];
   return (
     <>
       <Form className={className}>
@@ -295,7 +305,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <WideInput
               value={filter.text || ''}
               placeholder={t('subscriptionList.filter.searchPlaceholder')}
-              onChange={value => updateFilter({text: value})}
+              onChange={value => updateFilter({ text: value })}
             />
           </Group>
         )}
@@ -309,17 +319,19 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
               value={filter?.userRole || []}
               data={userRoles.map(userRole => ({
                 value: userRole.id,
-                label: userRole.name
+                label: userRole.name,
               }))}
               placement="auto"
               onChange={value => {
                 updateFilter({
                   userRole:
-                    userRoles.filter(userRole => value.includes(userRole.id)).map(r => r.id) || null
-                })
+                    userRoles
+                      .filter(userRole => value.includes(userRole.id))
+                      .map(r => r.id) || null,
+                });
               }}
               onClean={() => {
-                onSetFilter({userRole: []})
+                onSetFilter({ userRole: [] });
               }}
               placeholder={t('userCreateOrEditView.userRoles')}
             />
@@ -335,14 +347,16 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
               value={filter?.answerIds || []}
               data={answers.map(answer => ({
                 value: answer.id,
-                label: answer.answer
+                label: answer.answer,
               }))}
               placement="auto"
               onChange={value => {
                 updateFilter({
                   answerIds:
-                    answers.filter(answer => value.includes(answer.id)).map(r => r.id) || null
-                })
+                    answers
+                      .filter(answer => value.includes(answer.id))
+                      .map(r => r.id) || null,
+                });
               }}
               placeholder={t('pollVoteList.answerId')}
             />
@@ -354,7 +368,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.title || ''}
               placeholder={t('articleList.filter.title')}
-              onChange={value => updateFilter({title: value})}
+              onChange={value => updateFilter({ title: value })}
             />
           </Group>
         )}
@@ -364,7 +378,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.description || ''}
               placeholder={t('articleList.filter.description')}
-              onChange={value => updateFilter({description: value})}
+              onChange={value => updateFilter({ description: value })}
             />
           </Group>
         )}
@@ -374,7 +388,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.preTitle || ''}
               placeholder={t('articleList.filter.preTitle')}
-              onChange={value => updateFilter({preTitle: value})}
+              onChange={value => updateFilter({ preTitle: value })}
             />
           </Group>
         )}
@@ -384,7 +398,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.lead || ''}
               placeholder={t('articleList.filter.lead')}
-              onChange={value => updateFilter({lead: value})}
+              onChange={value => updateFilter({ lead: value })}
             />
           </Group>
         )}
@@ -394,7 +408,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.fingerprint || ''}
               placeholder={t('pollVoteList.fingerprint')}
-              onChange={value => updateFilter({fingerprint: value})}
+              onChange={value => updateFilter({ fingerprint: value })}
             />
           </Group>
         )}
@@ -404,7 +418,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.name || ''}
               placeholder={t('articleList.filter.name')}
-              onChange={value => updateFilter({name: value})}
+              onChange={value => updateFilter({ name: value })}
             />
           </Group>
         )}
@@ -414,7 +428,7 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <Input
               value={filter.location || ''}
               placeholder={t('articleList.filter.location')}
-              onChange={value => updateFilter({location: value})}
+              onChange={value => updateFilter({ location: value })}
             />
           </Group>
         )}
@@ -424,7 +438,9 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
             <AuthorCheckPicker
               list={authorsData as AuthorRefFragment[]}
               onChange={value => {
-                return updateFilter({authors: value ? value.map(author => author.id) : []})
+                return updateFilter({
+                  authors: value ? value.map(author => author.id) : [],
+                });
               }}
             />
           </Group>
@@ -432,11 +448,11 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
 
         {fields.includes('tags') && (
           <Group style={formInputStyle}>
-            <TagCheckPicker
-              list={tagsData as TagRefFragment[]}
-              onChange={value => {
-                return updateFilter({tags: value ? value.map(tag => tag.id) : []})
-              }}
+            <SelectTags
+              defaultTags={[]}
+              tagType={tagType ?? TagType.Article}
+              setSelectedTags={tags => updateFilter({ tags })}
+              placeholder={t('navbar.articleTags')}
             />
           </Group>
         )}
@@ -450,20 +466,21 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
               cleanable
               value={filter.providers || []}
               data={
-                providersData
-                  ? providersData?.eventProviders.map(provider => ({
-                      value: provider,
-                      label: provider
-                    }))
-                  : [{value: undefined, label: undefined}]
+                providersData ?
+                  providersData?.eventProviders.map(provider => ({
+                    value: provider,
+                    label: provider,
+                  }))
+                : [{ value: undefined, label: undefined }]
               }
               placeholder={t('articleList.filter.providers')}
               onChange={providers => {
                 updateFilter({
-                  providers: providers.length
-                    ? (providers.filter(p => p !== '') as string[])
-                    : undefined
-                })
+                  providers:
+                    providers.length ?
+                      (providers.filter(p => p !== '') as string[])
+                    : undefined,
+                });
               }}
               block
             />
@@ -474,7 +491,8 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.draft}
-              onChange={value => updateFilter({draft: value || null})}
+              checked={!!filter.draft}
+              onChange={value => updateFilter({ draft: value || null })}
               checkedChildren={t('articleList.filter.isDraft')}
               unCheckedChildren={t('articleList.filter.isDraft')}
             />
@@ -485,7 +503,8 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.pending}
-              onChange={value => updateFilter({pending: value || null})}
+              checked={!!filter.pending}
+              onChange={value => updateFilter({ pending: value || null })}
               checkedChildren={t('articleList.filter.isPending')}
               unCheckedChildren={t('articleList.filter.isPending')}
             />
@@ -496,7 +515,8 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.published}
-              onChange={value => updateFilter({published: value || null})}
+              checked={!!filter.published}
+              onChange={value => updateFilter({ published: value || null })}
               checkedChildren={t('articleList.filter.isPublished')}
               unCheckedChildren={t('articleList.filter.isPublished')}
             />
@@ -515,17 +535,20 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
                   updateFilter({
                     publicationDateFrom: {
                       date: value[0]?.toISOString(),
-                      comparison: DateFilterComparison.GreaterThan
+                      comparison: DateFilterComparison.GreaterThan,
                     },
                     publicationDateTo: {
                       date: value[1]?.toISOString(),
-                      comparison: DateFilterComparison.LowerThanOrEqual
-                    }
-                  })
+                      comparison: DateFilterComparison.LowerThanOrEqual,
+                    },
+                  });
                 }
               }}
               onClean={() =>
-                updateFilter({publicationDateFrom: undefined, publicationDateTo: undefined})
+                updateFilter({
+                  publicationDateFrom: undefined,
+                  publicationDateTo: undefined,
+                })
               }
             />
           </Group>
@@ -540,22 +563,22 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
               placement="auto"
               onChange={value => {
                 if (value && value[0] && value[1]) {
-                  const [from, to] = value
-                  from.setHours(0)
-                  from.setMinutes(0)
-                  from.setSeconds(0)
-                  from.setMilliseconds(0)
-                  to.setHours(23)
-                  to.setMinutes(59)
-                  to.setSeconds(59)
-                  to.setMilliseconds(999)
+                  const [from, to] = value;
+                  from.setHours(0);
+                  from.setMinutes(0);
+                  from.setSeconds(0);
+                  from.setMilliseconds(0);
+                  to.setHours(23);
+                  to.setMinutes(59);
+                  to.setSeconds(59);
+                  to.setMilliseconds(999);
                   updateFilter({
                     from: from.toISOString(),
-                    to: to.toISOString()
-                  })
+                    to: to.toISOString(),
+                  });
                 }
               }}
-              onClean={() => updateFilter({from: undefined, to: undefined})}
+              onClean={() => updateFilter({ from: undefined, to: undefined })}
             />
           </Group>
         )}
@@ -567,12 +590,12 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
               value={filter.peerId ?? null}
               data={allPeers.map(peer => ({
                 value: peer.id,
-                label: peer.name
+                label: peer.name,
               }))}
               placeholder={t('peerArticles.filterByPeer')}
               searchable
-              onSelect={value => updateFilter({peerId: value})}
-              onClean={() => updateFilter({peerId: undefined})}
+              onSelect={value => updateFilter({ peerId: value })}
+              onClean={() => updateFilter({ peerId: undefined })}
             />
           </Group>
         )}
@@ -581,7 +604,8 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
           <Group style={formInputStyle}>
             <Toggle
               defaultChecked={!!filter.includeHidden}
-              onChange={value => updateFilter({includeHidden: value || null})}
+              checked={!!filter.includeHidden}
+              onChange={value => updateFilter({ includeHidden: value || null })}
               checkedChildren={t('articleList.filter.includeHidden')}
               unCheckedChildren={t('articleList.filter.includeHidden')}
             />
@@ -590,5 +614,5 @@ export function ListViewFilters({fields, filter, onSetFilter, className}: ListVi
       </Form>
       {resetFilterView()}
     </>
-  )
+  );
 }

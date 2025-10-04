@@ -1,90 +1,74 @@
-import {Injectable, Scope} from '@nestjs/common'
-import {PageRevision, PrismaClient} from '@prisma/client'
-import {Primeable} from '@wepublish/utils/api'
-import DataLoader from 'dataloader'
+import { Injectable, Scope } from '@nestjs/common';
+import { PageRevision, PrismaClient } from '@prisma/client';
+import { Primeable } from '@wepublish/utils/api';
+import DataLoader from 'dataloader';
 
 type RevisionMap = Partial<{
-  draft: PageRevision
-  pending: PageRevision
-  published: PageRevision
-}>
+  draft: PageRevision;
+  pending: PageRevision;
+  published: PageRevision;
+}>;
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
 export class PageRevisionDataloaderService implements Primeable<RevisionMap> {
-  private readonly dataloader = new DataLoader<string, RevisionMap>(
+  private dataloader = new DataLoader<string, RevisionMap>(
     async (pageIds: readonly string[]) => {
-      const revisionPromises = []
-
-      for (const pageId of pageIds) {
-        revisionPromises.push(
-          this.prisma.pageRevision.findFirst({
-            where: {
-              pageId
+      const pages = await this.prisma.page.findMany({
+        where: {
+          id: {
+            in: pageIds as string[],
+          },
+        },
+        include: {
+          PagesRevisionPublished: {
+            include: {
+              pageRevision: true,
             },
-            orderBy: {
-              createdAt: 'desc'
-              // on purpose not checking for publishedAt
-              // so we only get the latest revision, we check for it later on
-            }
-          }),
-          this.prisma.pageRevision.findFirst({
-            where: {
-              pageId,
-              publishedAt: {
-                gt: new Date()
-              }
+          },
+          PagesRevisionDraft: {
+            include: {
+              pageRevision: true,
             },
-            orderBy: {
-              createdAt: 'desc'
-            }
-          }),
-          this.prisma.pageRevision.findFirst({
-            where: {
-              pageId,
-              publishedAt: {
-                lte: new Date()
-              }
+          },
+          PagesRevisionPending: {
+            include: {
+              pageRevision: true,
             },
-            orderBy: {
-              createdAt: 'desc'
-            }
-          })
-        )
-      }
+          },
+        },
+      });
 
-      const revisions = (await Promise.all(revisionPromises)).filter((rev): rev is PageRevision =>
-        Boolean(rev)
-      )
+      return pageIds.map((pageIds): RevisionMap => {
+        const rev = pages.find(rev => rev.id === pageIds);
+        const published = rev?.PagesRevisionPublished?.pageRevision;
+        const draft = rev?.PagesRevisionDraft?.pageRevision;
+        const pending = rev?.PagesRevisionPending?.pageRevision;
 
-      return pageIds.map((pageId): RevisionMap => {
-        const published = revisions.find(
-          rev => rev.pageId === pageId && rev.publishedAt && new Date() > new Date(rev.publishedAt)
-        )
-
-        const draft = revisions.find(rev => rev.pageId === pageId && !rev.publishedAt)
-        const pending = revisions.find(
-          rev => rev.pageId === pageId && rev.publishedAt && new Date(rev.publishedAt) > new Date()
-        )
-
-        return {draft, pending, published}
-      })
+        return { draft, pending, published };
+      });
     },
-    {name: 'PageRevisionDataloader'}
-  )
+    { name: 'PageRevisionDataloader' }
+  );
 
   constructor(private prisma: PrismaClient) {}
 
-  public prime(...parameters: Parameters<DataLoader<string, RevisionMap>['prime']>) {
-    return this.dataloader.prime(...parameters)
+  public prime(
+    ...parameters: Parameters<DataLoader<string, RevisionMap>['prime']>
+  ) {
+    return this.dataloader.prime(...parameters);
   }
 
-  public load(...parameters: Parameters<DataLoader<string, RevisionMap>['load']>) {
-    return this.dataloader.load(...parameters)
+  public load(
+    ...parameters: Parameters<DataLoader<string, RevisionMap>['load']>
+  ) {
+    return this.dataloader.load(...parameters);
   }
 
-  public loadMany(...parameters: Parameters<DataLoader<string, RevisionMap>['loadMany']>) {
-    return this.dataloader.loadMany(...parameters)
+  public loadMany(
+    ...parameters: Parameters<DataLoader<string, RevisionMap>['loadMany']>
+  ) {
+    return this.dataloader.loadMany(...parameters);
   }
 }

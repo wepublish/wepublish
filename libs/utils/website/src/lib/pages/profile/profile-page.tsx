@@ -1,90 +1,100 @@
-import {css} from '@mui/material'
-import styled from '@emotion/styled'
-import {setCookie} from 'cookies-next'
-import {NextPage, NextPageContext} from 'next'
-import getConfig from 'next/config'
-import {withAuthGuard} from '../../auth-guard'
-import {ssrAuthLink} from '../../auth-link'
-import {getSessionTokenProps} from '../../get-session-token-props'
-import {ComponentProps} from 'react'
-import {UserSession} from '@wepublish/website/api'
-import {AuthTokenStorageKey} from '@wepublish/authentication/website'
-import {ContentWrapper} from '@wepublish/content/website'
+import styled from '@emotion/styled';
+import { css } from '@mui/material';
+import { AuthTokenStorageKey } from '@wepublish/authentication/website';
+import { ContentWrapper } from '@wepublish/content/website';
 import {
-  useHasUnpaidInvoices,
   InvoiceListContainer,
+  InvoiceListItemWrapper,
   SubscriptionListContainer,
-  InvoiceListItemContent
-} from '@wepublish/membership/website'
-import {PersonalDataFormContainer} from '@wepublish/user/website'
+  SubscriptionListItemContent,
+  SubscriptionListItemWrapper,
+  useHasUnpaidInvoices,
+} from '@wepublish/membership/website';
+import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
-  useSubscriptionsQuery,
+  addClientCacheToV1Props,
   getV1ApiClient,
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  addClientCacheToV1Props
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+  SessionWithTokenWithoutUser,
+  useSubscriptionsQuery,
+} from '@wepublish/website/api';
+import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import { setCookie } from 'cookies-next';
+import { NextPage, NextPageContext } from 'next';
+import getConfig from 'next/config';
+import { ComponentProps } from 'react';
+import { useTranslation } from 'react-i18next';
+import { withAuthGuard } from '../../auth-guard';
+import { ssrAuthLink } from '../../auth-link';
+import { getSessionTokenProps } from '../../get-session-token-props';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       flex-wrap: nowrap;
       gap: ${theme.spacing(10)};
     }
   `}
-`
+`;
 const SubscriptionListWrapper = styled('div')`
   display: flex;
   flex-flow: column;
   width: 100%;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       width: 50%;
     }
   `}
-`
+`;
 
 const UnpaidInvoiceListContainer = styled(InvoiceListContainer)`
-  ${InvoiceListItemContent} {
-    border: 8px solid ${({theme}) => theme.palette.primary.main};
-    border-radius: ${({theme}) => theme.shape.borderRadius}px;
+  ${InvoiceListItemWrapper} {
+    border-width: 4px;
+    border-color: ${({ theme }) => theme.palette.error.main};
   }
-`
+`;
 
 const DeactivatedSubscriptions = styled('div')`
   display: grid;
   justify-content: center;
-`
+`;
 
-const ProfileWrapper = styled(ContentWrapper)`
-  gap: ${({theme}) => theme.spacing(2)};
-`
+export const ProfileWrapper = styled(ContentWrapper)`
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
 
-type ProfilePageProps = Omit<ComponentProps<typeof PersonalDataFormContainer>, ''>
+type ProfilePageProps = Omit<
+  ComponentProps<typeof PersonalDataFormContainer>,
+  ''
+>;
 
 function ProfilePage(props: ProfilePageProps) {
   const {
-    elements: {Link, H4}
-  } = useWebsiteBuilder()
+    elements: { H4 },
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
-  const {data: subscriptonData} = useSubscriptionsQuery({
-    fetchPolicy: 'cache-only'
-  })
+  const { data: subscriptonData } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+  });
 
   const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
     subscription => subscription.deactivation
-  )
+  );
+  const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
+    subscription => !subscription.deactivation
+  );
 
-  const hasUnpaidInvoices = useHasUnpaidInvoices()
+  const hasUnpaidInvoices = useHasUnpaidInvoices();
 
   return (
     <>
@@ -96,7 +106,10 @@ function ProfilePage(props: ProfilePageProps) {
             <UnpaidInvoiceListContainer
               filter={invoices =>
                 invoices.filter(
-                  invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
+                  invoice =>
+                    invoice.subscription &&
+                    !invoice.canceledAt &&
+                    !invoice.paidAt
                 )
               }
             />
@@ -104,7 +117,7 @@ function ProfilePage(props: ProfilePageProps) {
         )}
 
         <SubscriptionListWrapper>
-          <H4 component={'h1'}>Aktive Abos</H4>
+          <H4 component={'h1'}>{t('user.activeSubscriptions')}</H4>
 
           <SubscriptionListContainer
             filter={subscriptions =>
@@ -112,9 +125,24 @@ function ProfilePage(props: ProfilePageProps) {
             }
           />
 
+          {hasActiveSubscriptions && (
+            <SubscriptionListItemWrapper>
+              <SubscriptionListItemContent>
+                <Button
+                  LinkComponent={Link}
+                  href={'/mitmachen'}
+                >
+                  Anderes Abo lösen.
+                </Button>
+              </SubscriptionListItemContent>
+            </SubscriptionListItemWrapper>
+          )}
+
           {hasDeactivatedSubscriptions && (
             <DeactivatedSubscriptions>
-              <Link href="/profile/subscription/deactivated">Gekündigte Abos anzeigen</Link>
+              <Link href="/profile/subscription/deactivated">
+                {t('user.viewCancelledSubscriptions')}
+              </Link>
             </DeactivatedSubscriptions>
           )}
         </SubscriptionListWrapper>
@@ -126,52 +154,63 @@ function ProfilePage(props: ProfilePageProps) {
         <PersonalDataFormContainer {...props} />
       </ProfileWrapper>
     </>
-  )
+  );
 }
 
-const GuardedProfile = withAuthGuard(ProfilePage) as NextPage<ComponentProps<typeof ProfilePage>>
+const GuardedProfile = withAuthGuard(ProfilePage) as NextPage<
+  ComponentProps<typeof ProfilePage>
+>;
 GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
-    return {}
+    return {};
   }
 
-  const {publicRuntimeConfig} = getConfig()
+  const { publicRuntimeConfig } = getConfig();
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
-  ])
+    ssrAuthLink(
+      async () => (await getSessionTokenProps(ctx)).sessionToken?.token
+    ),
+  ]);
 
   if (ctx.query.jwt) {
     const data = await client.mutate({
       mutation: LoginWithJwtDocument,
       variables: {
-        jwt: ctx.query.jwt
-      }
-    })
+        jwt: ctx.query.jwt,
+      },
+    });
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(
+        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
+      ),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
+      }
+    );
   }
 
-  const sessionProps = getSessionTokenProps(ctx)
+  const sessionProps = await getSessionTokenProps(ctx);
 
   if (sessionProps.sessionToken) {
     await Promise.all([
       client.query({
-        query: MeDocument
+        query: MeDocument,
       }),
       client.query({
-        query: NavigationListDocument
-      })
-    ])
+        query: NavigationListDocument,
+      }),
+    ]);
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps)
+  const props = addClientCacheToV1Props(client, sessionProps);
 
-  return props
-}
+  return props;
+};
 
-export {GuardedProfile as ProfilePage}
+export { GuardedProfile as ProfilePage };

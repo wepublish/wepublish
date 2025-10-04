@@ -78,6 +78,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
         "noImagesFound": "Aucune image trouvée",
+        "openInNewTab": "URL du contenu ouvre dans un nouvel onglet",
         "pagePreviewLink": "Lien de prévisualisation de la page",
         "peerDisabled": "Ce peer est actuellement désactivé",
         "peeredArticlePreview": "Prévisualisation",
@@ -131,7 +132,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Texte",
-        "default": "Default"
+        "default": "Default",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -214,6 +216,14 @@
       }
     },
     "blocks": {
+      "crowdfunding": {
+        "edit": "Modifier",
+        "label": "Crowdfunding",
+        "title": "Sélectionner le crowdfunding",
+        "name": "Nom du crowdfunding",
+        "select": "Sélectionner",
+        "open": "Ouvrir"
+      },
       "comment": {
         "cherryPick": "Select specific comments",
         "comments": "{{count}} Comment",
@@ -356,10 +366,14 @@
       "teaserGrid6": {
         "label": "6 Col"
       },
+      "teaserSlots": {
+        "label": "Machines à sous tease"
+      },
       "title": {
         "label": "Titre",
-        "leadText": "Lead ",
-        "title": "Titre"
+        "leadText": "Lead",
+        "title": "Titre",
+        "preTitle": "Pré-titre"
       }
     },
     "cancel": "Annuler",
@@ -501,7 +515,9 @@
       "newUser": "Nouvel <0>utilisateur</0> ajouté",
       "noData": "Pas de données actuelles sur les abonnés",
       "user": "Utilisateur",
-      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée"
+      "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
+      "audience": "Audience",
+      "goToAudienceDashboard": "Audience Dashboard"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -692,6 +708,7 @@
       "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
+      "shortDescription": "Brève description",
       "editPaymentSetting": "Modifier les paramètres de paiement",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
@@ -716,10 +733,12 @@
       "paymentMethods": "Méthodes de paiement possibles",
       "paymentPeriodicities": "Périodicités de paiement",
       "paymentPeriodicity": {
-        "biannual": "Bi-annuelles",
-        "monthly": "Mensuelles",
-        "quarterly": "Trimestrielles",
-        "yearly": "Annuelles"
+        "biannual": "Semestriel",
+        "monthly": "Mensuel",
+        "quarterly": "Trimestriel",
+        "yearly": "Annuel",
+        "biennial": "Biennal",
+        "lifetime": "À vie"
       },
       "title": "Plans membres"
     },
@@ -754,8 +773,9 @@
       "userConsents": "Consentement de l'utilisateur",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur & Abonnements",
-      "authorTags": "Tags"
+      "audience": "Audience",
+      "authorTags": "Tags",
+      "audienceDashboard": "Dashboard"
     },
     "navigation": {
       "overview": {
@@ -926,6 +946,7 @@
         "editPeerInfo": "Modifier les informations de mon profil peer",
         "getRemote": "Récupérer le profil du peer à distance",
         "image": "Image",
+        "squareImage": "Image carrée",
         "information": "Information",
         "leaveEmpty": "Laissez vide si vous ne voulez pas le modifier",
         "name": "Nom",
@@ -1346,14 +1367,13 @@
     "resources": {
       "teaserType": {
         "article": "Article",
-        "peerArticle": "Peer Article",
         "page": "Page",
         "event": "Event",
         "custom": "Custom"
       },
       "teaserSort": {
-        "hotAndTrending": "Hot & Trending",
-        "publishedAt": "Publication date"
+        "HotAndTrending": "Hot & Trending",
+        "PublishedAt": "Publication date"
       }
     },
     "authorEditPanel": {
@@ -1364,6 +1384,131 @@
     },
     "selectableItemsActions": {
       "selectedItems": "{{numberOfItems}} éléments sélectionnés"
+    },
+    "audienceDashboard": {
+      "title": "Audience Dashboard"
+    },
+    "crowdfunding": {
+      "list": {
+        "title": "Crowdfundings",
+        "name": "Nom",
+        "delete": "Supprimer",
+        "createNew": "Créer"
+      },
+      "delete": {
+        "title": "Supprimer définitivement?",
+        "body": "Le crowdfunding doit-il être supprimé définitivement?",
+        "delete": "Supprimer"
+      },
+      "create": {
+        "title": "Créer un nouveau crowdfunding"
+      },
+      "edit": {
+        "title": "Modifier {{crowdfundingName}}"
+      },
+      "form": {
+        "name": "Nom du crowdfunding (ne sera pas publié)",
+        "memberPlans": "Plans d'abonnement",
+        "filter": "Filtrer les revenus",
+        "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "selectMemberPlans": "Choisir des plans d'abonnement",
+        "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
+        "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
+        "revenue": "Déjà CHF {{revenue}} financé",
+        "goals": "Objectifs"
+      },
+      "goalsForm": {
+        "title": "Titre",
+        "description": "Description",
+        "amount": "Montant cible",
+        "remove": "Supprimer",
+        "add": "Ajouter un objectif"
+      }
+    },
+    "audienceFilter": {
+      "daily": "Quotidien",
+      "monthly": "Mensuel",
+      "rangePickerPlaceholder": "de - à",
+      "filterSubscriptionPlans": "Filtrer par plans d'abonnement",
+      "chart": "Graphique",
+      "table": "Tableau",
+      "panelHeader": "Sélection des données",
+      "rangeLastWeek": "Semaine dernière",
+      "rangeLastMonth": "Mois dernier",
+      "rangeLastQuarter": "Dernier trimestre",
+      "rangeLastYear": "Année dernière"
+    },
+    "audience": {
+      "legend": {
+        "info": {
+          "totalActiveSubscriptionCount": "Abonnements actifs et payés à la date de référence.",
+          "overdueSubscriptionCount": "Abonnements renouvelés dont le paiement est dû. Ne sont pas inclus les abonnements achetés pour la première fois et qui n'ont pas été payés.",
+          "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
+          "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
+          "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai)."
+        },
+        "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
+        "overdueSubscriptionCount": "Abonnements renouvelés et non payés",
+        "renewedSubscriptionCount": "Abonnements renouvelés et payés",
+        "createdSubscriptionCount": "Nouveaux abonnements payés",
+        "deactivatedSubscriptionCount": "Abonnements désactivés",
+        "replacedSubscriptionCount": "Abonnements remplacés",
+        "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
+        "renewalRate": "Taux de renouvellement",
+        "cancellationRate": "Taux de résiliation",
+        "createdSubscriptionUsers": "Nouveaux abonnements payés",
+        "overdueSubscriptionUsers": "Abonnements renouvelés et non payés",
+        "deactivatedSubscriptionUsers": "Abonnements désactivés",
+        "renewedSubscriptionUsers": "Abonnements renouvelés payés",
+        "replacedSubscriptionUsers": "Abonnements remplacés"
+      }
+    },
+    "audienceDetailDrawer": {
+      "selectStat": "Filtrer les utilisateurs par",
+      "id": "ID",
+      "firstName": "Prénom",
+      "name": "Nom",
+      "email": "E-mail",
+      "goToUser": "Lien vers l'utilisateur",
+      "close": "Fermer",
+      "userBtn": "Lien vers l'utilisateur"
+    },
+    "audienceTable": {
+      "header": {
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "showUsers": "Afficher les détails",
+      "byDate": "Par",
+      "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
+      "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
+      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Modifier le paywall",
+        "name": "Nom du paywall (NON visible par l'utilisateur)",
+        "description": "Texte du paywall (visible par l'utilisateur)",
+        "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
+        "active": "Actif",
+        "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
+        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
+        "bypasses": "Contournements",
+        "bypassToken": "Token de contournement",
+        "newBypassToken": "Créer un nouveau token de contournement",
+        "addBypass": "Ajouter",
+        "qrCodeTitle": "Code QR pour le token de contournement",
+        "downloadSvg": "Télécharger SVG",
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Délai de paiement",
+      "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
+      "days": "Jours"
     }
   }
 }

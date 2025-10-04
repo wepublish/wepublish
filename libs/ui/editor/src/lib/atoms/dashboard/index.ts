@@ -1,2 +1,1 @@
-export * from './activityFeed'
-export * from './subscriberChart'
+export * from './activityFeed';

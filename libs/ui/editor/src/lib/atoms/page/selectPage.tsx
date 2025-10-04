@@ -1,31 +1,20 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
-import {getApiClientV2, PageSort, SortOrder, usePageListQuery} from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
+import { ApolloError } from '@apollo/client';
 import {
-  Divider as RDivider,
-  Message,
-  Pagination as RPagination,
-  toaster,
-  SelectPicker
-} from 'rsuite'
-
-import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
-
-const Divider = styled(RDivider)`
-  margin: '12px 0';
-`
-
-const Pagination = styled(RPagination)`
-  margin: 0 12px 12px;
-`
+  getApiClientV2,
+  PageSort,
+  SortOrder,
+  usePageListQuery,
+} from '@wepublish/editor/api-v2';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Message, SelectPicker, toaster } from 'rsuite';
 
 interface SelectPageProps {
-  className?: string
-  disabled?: boolean
-  name?: string
-  selectedPage?: string | null
-  setSelectedPage(page: string | null): void
+  className?: string;
+  disabled?: boolean;
+  name?: string;
+  selectedPage?: string | null;
+  setSelectedPage(page: string | null): void;
 }
 
 export function SelectPage({
@@ -33,9 +22,9 @@ export function SelectPage({
   disabled,
   name,
   selectedPage,
-  setSelectedPage
+  setSelectedPage,
 }: SelectPageProps) {
-  const [page, setPage] = useState(1)
+  const { t } = useTranslation();
 
   /**
    * Error handling
@@ -43,45 +32,49 @@ export function SelectPage({
    */
   const showErrors = (error: ApolloError): void => {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error.message}
       </Message>
-    )
-  }
+    );
+  };
 
   /**
    * Loading page
    */
-  const client = getApiClientV2()
-  const {data: pageData, refetch} = usePageListQuery({
+  const client = getApiClientV2();
+  const { data: pageData, refetch } = usePageListQuery({
     client,
     variables: {
       sort: PageSort.PublishedAt,
       order: SortOrder.Ascending,
-      take: 50
+      take: 200,
     },
     fetchPolicy: 'no-cache',
-    onError: showErrors
-  })
+    onError: showErrors,
+  });
 
   /**
    * Prepare available page
    */
   const availablePages = useMemo(() => {
     if (!pageData?.pages?.nodes) {
-      return []
+      return [];
     }
 
     return pageData.pages.nodes.map(page => ({
-      label: page.latest.title,
-      value: page.id
-    }))
-  }, [pageData])
+      label: page.latest.title || <i>{t('pages.overview.untitled')}</i>,
+      value: page.id,
+    }));
+  }, [pageData]);
 
   return (
     <SelectPicker
       block
-      virtualized
       disabled={disabled}
       className={className}
       name={name}
@@ -90,35 +83,11 @@ export function SelectPage({
       onSearch={word => {
         refetch({
           filter: {
-            title: word
-          }
-        })
+            title: word,
+          },
+        });
       }}
       onChange={(value, item) => setSelectedPage(value)}
-      renderMenu={menu => {
-        return (
-          <>
-            {menu}
-
-            <Divider />
-
-            <Pagination
-              limit={50}
-              maxButtons={DEFAULT_MAX_TABLE_PAGES}
-              first
-              last
-              prev
-              next
-              ellipsis
-              boundaryLinks
-              layout={['total', '-', '|', 'pager']}
-              total={pageData?.pages?.totalCount ?? 0}
-              activePage={page}
-              onChangePage={page => setPage(page)}
-            />
-          </>
-        )
-      }}
     />
-  )
+  );
 }

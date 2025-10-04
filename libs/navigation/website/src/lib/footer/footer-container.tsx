@@ -1,16 +1,30 @@
-import {useNavigationListQuery} from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren} from 'react'
+import { useNavigationListQuery } from '@wepublish/website/api';
+import {
+  BuilderContainerProps,
+  BuilderFooterProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
 
-export type FooterContainerProps = PropsWithChildren<{
-  slug: string
-  categorySlugs: string[][]
-}> &
-  BuilderContainerProps
+export type FooterContainerProps = PropsWithChildren<
+  Pick<BuilderFooterProps, 'slug' | 'iconSlug' | 'categorySlugs'> &
+    Partial<
+      Pick<BuilderFooterProps, 'hideBannerOnIntersecting' | 'wepublishLogo'>
+    >
+> &
+  BuilderContainerProps;
 
-export function FooterContainer({slug, children, className, categorySlugs}: FooterContainerProps) {
-  const {Footer} = useWebsiteBuilder()
-  const {data, loading, error} = useNavigationListQuery()
+export function FooterContainer({
+  slug,
+  iconSlug,
+  categorySlugs,
+  children,
+  className,
+  hideBannerOnIntersecting = true,
+  wepublishLogo = 'light',
+}: FooterContainerProps) {
+  const { Footer } = useWebsiteBuilder();
+  const { data, loading, error } = useNavigationListQuery();
 
   return (
     <Footer
@@ -19,8 +33,12 @@ export function FooterContainer({slug, children, className, categorySlugs}: Foot
       error={error}
       slug={slug}
       className={className}
-      categorySlugs={categorySlugs}>
+      iconSlug={iconSlug}
+      categorySlugs={categorySlugs}
+      hideBannerOnIntersecting={hideBannerOnIntersecting}
+      wepublishLogo={wepublishLogo}
+    >
       {children}
     </Footer>
-  )
+  );
 }

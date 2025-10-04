@@ -6,4 +6,4 @@ Allow: /
 User-agent: GPTBot
 Disallow: /
 
-Sitemap: https://flimmer.ch/api/sitemap
+Sitemap: https://flimmer.media/api/sitemap
