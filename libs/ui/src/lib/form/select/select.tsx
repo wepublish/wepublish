@@ -1,25 +1,31 @@
-import {FormControl, FormHelperText, InputLabel, MenuItem, Select} from '@mui/material'
-import {useId} from 'react'
-import {InputComponentProps} from '@wepublish/website/form-builder'
-import * as v from 'valibot'
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material';
+import { useId } from 'react';
+import { InputComponentProps } from '@wepublish/website/form-builder';
+import * as v from 'valibot';
 
-export const SELECT_BRANDING = 'select'
-export const SelectInputSchema = v.pipe(v.string(), v.brand(SELECT_BRANDING))
+export const SELECT_BRANDING = 'select';
+export const SelectInputSchema = v.pipe(v.string(), v.brand(SELECT_BRANDING));
 
 export function SelectInput({
   field,
-  fieldState: {error},
+  fieldState: { error },
   description,
   title,
   name,
-  items
-}: InputComponentProps & {items?: {value: string; label: string}[]}) {
-  const id = useId()
-  // const enums = useExtractEnumValues() ?? [] // @TODO:
-  const enums = [] as any[]
-
-  const options = items ?? enums.map(val => ({value: val, label: val}))
-  const helperText = error?.message ?? description
+  items,
+  enums,
+}: InputComponentProps & { items?: { value: string; label: string }[] }) {
+  const id = useId();
+  const options =
+    items ??
+    Object.values(enums ?? {}).map(val => ({ value: val, label: val }));
+  const helperText = error?.message ?? description;
 
   return (
     <FormControl fullWidth>
@@ -31,13 +37,16 @@ export function SelectInput({
         label={title}
         labelId={id}
         error={!!error}
-        onChange={e => field.onChange(e.target.value)}>
+        onChange={e => field.onChange(e.target.value)}
+      >
         {options.map(item => (
           <MenuItem value={item.value}>{item.label}</MenuItem>
         ))}
       </Select>
 
-      {helperText && <FormHelperText error={!!error}>{helperText}</FormHelperText>}
+      {helperText && (
+        <FormHelperText error={!!error}>{helperText}</FormHelperText>
+      )}
     </FormControl>
-  )
+  );
 }

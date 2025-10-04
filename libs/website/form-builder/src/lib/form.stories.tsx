@@ -1,10 +1,10 @@
-import * as v from 'valibot'
-import {createFormLayout} from './create-form-layout'
-import {StoryObj} from '@storybook/react'
-import styled from '@emotion/styled'
-import {action} from '@storybook/addon-actions'
-import {FormSchemaMapping} from './utility/input-schema-mapping'
-import {TextField} from '@mui/material'
+import * as v from 'valibot';
+import { createFormLayout } from './create-form-layout';
+import { StoryObj } from '@storybook/react';
+import styled from '@emotion/styled';
+import { action } from '@storybook/addon-actions';
+import { FormSchemaMapping } from './utility/input-schema-mapping';
+import { TextField } from '@mui/material';
 
 const testFormSchema: FormSchemaMapping = [
   [
@@ -17,7 +17,7 @@ const testFormSchema: FormSchemaMapping = [
         error={!!props.fieldState.error}
         helperText={props.fieldState.error?.message}
       />
-    )
+    ),
   ],
   [
     v.pipe(v.string(), v.brand('Email')),
@@ -30,7 +30,7 @@ const testFormSchema: FormSchemaMapping = [
         error={!!props.fieldState.error}
         helperText={props.fieldState.error?.message ?? props.description}
       />
-    )
+    ),
   ],
   [
     v.number(),
@@ -43,23 +43,23 @@ const testFormSchema: FormSchemaMapping = [
         error={!!props.fieldState.error}
         helperText={props.fieldState.error?.message}
       />
-    )
-  ]
-] as const
+    ),
+  ],
+] as const;
 
 const TestForm = styled.form`
   display: grid;
   gap: 12px;
-`
+`;
 
 const Result = createFormLayout(testFormSchema, {
-  FormComponent: TestForm
-})
+  FormComponent: TestForm,
+});
 
 export default {
   title: 'FormBuilder/Form',
-  component: Result
-}
+  component: Result,
+};
 
 export const Form: StoryObj<typeof Result> = {
   args: {
@@ -67,11 +67,11 @@ export const Form: StoryObj<typeof Result> = {
     formProps: {},
     inputProps: {
       email: {
-        test: 'abc'
-      }
+        test: 'abc',
+      },
     },
     defaultValues: {
-      email: 'info@karl-merkli.ch'
+      email: 'info@karl-merkli.ch',
     },
     schema: v.object({
       email: v.pipe(
@@ -85,8 +85,13 @@ export const Form: StoryObj<typeof Result> = {
         v.title('Email2'),
         v.description('Enter an invalid email please!')
       ),
-      number: v.pipe(v.string(), v.decimal(), v.transform(Number), v.maxValue(5))
+      number: v.pipe(
+        v.string(),
+        v.decimal(),
+        v.transform(Number),
+        v.maxValue(5)
+      ),
     }),
-    onSubmit: action('onSubmit')
-  }
-}
+    onSubmit: action('onSubmit'),
+  },
+};

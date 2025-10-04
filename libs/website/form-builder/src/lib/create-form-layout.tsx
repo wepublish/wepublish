@@ -1,29 +1,57 @@
-import * as v from 'valibot'
-import {getComponentBySchema} from './get-component-by-schema'
-import {ComponentType, createContext, Fragment, PropsWithChildren} from 'react'
-import {Controller, Path, useForm, UseFormProps, UseFormReturn} from 'react-hook-form'
-import {valibotResolver} from '@hookform/resolvers/valibot'
-import {FormSchemaMapping, InputComponentProps} from './utility/input-schema-mapping'
-import {getDescription, getTitle} from './utility/get-description'
+import * as v from 'valibot';
+import { getComponentBySchema } from './get-component-by-schema';
+import {
+  ComponentType,
+  createContext,
+  Fragment,
+  PropsWithChildren,
+} from 'react';
+import {
+  Controller,
+  Path,
+  useForm,
+  UseFormProps,
+  UseFormReturn,
+} from 'react-hook-form';
+import { valibotResolver } from '@hookform/resolvers/valibot';
+import {
+  FormSchemaMapping,
+  InputComponentProps,
+} from './utility/input-schema-mapping';
+import { getDescription, getTitle } from './utility/get-description';
+import { getEnums } from './utility/get-enum';
 
-export const InputComponentContext = createContext<InputComponentProps | null>(null)
+export const InputComponentContext = createContext<InputComponentProps | null>(
+  null
+);
 
-export const createFormLayout = <Mapping extends FormSchemaMapping, FormProps extends object>(
+export const createFormLayout = <
+  Mapping extends FormSchemaMapping,
+  FormProps extends object,
+>(
   mapping: Mapping,
   {
     FormComponent,
     useFormProps = {
       mode: 'onTouched',
-      reValidateMode: 'onChange'
-    }
+      reValidateMode: 'onChange',
+    },
   }: {
-    FormComponent: ComponentType<PropsWithChildren<FormProps>>
-    useFormProps?: Omit<UseFormProps, 'defaultValues' | 'values' | 'resolver' | 'progressive'>
+    FormComponent: ComponentType<
+      PropsWithChildren<FormProps> & { onSubmit: () => Promise<void> }
+    >;
+    useFormProps?: Omit<
+      UseFormProps,
+      'defaultValues' | 'values' | 'resolver' | 'progressive'
+    >;
   }
 ) => {
   return <
-    Schema extends v.ObjectSchema<Record<string, v.BaseSchema<any, any, any>>, any>,
-    Keys extends keyof Schema['entries']
+    Schema extends v.ObjectSchema<
+      Record<string, v.BaseSchema<any, any, any>>,
+      any
+    >,
+    Keys extends keyof Schema['entries'],
   >({
     schema,
     formProps,
@@ -32,37 +60,41 @@ export const createFormLayout = <Mapping extends FormSchemaMapping, FormProps ex
     form,
     onSubmit,
     renderAfter: RenderAfter,
-    renderBefore: RenderBefore
+    renderBefore: RenderBefore,
   }: {
-    schema: Schema
-    formProps?: FormProps
-    inputProps?: Record<Keys, unknown>
-    defaultValues?: Partial<v.InferInput<Schema>>
-    form?: UseFormReturn<v.InferOutput<Schema>>
-    onSubmit: (data: v.InferOutput<Schema>) => void | Promise<void>
-    renderAfter?: ComponentType
-    renderBefore?: ComponentType
+    schema: Schema;
+    formProps?: FormProps;
+    inputProps?: Record<Keys, unknown>;
+    defaultValues?: Partial<v.InferInput<Schema>>;
+    form?: UseFormReturn<v.InferOutput<Schema>>;
+    onSubmit: (data: v.InferOutput<Schema>) => void | Promise<void>;
+    renderAfter?: ComponentType;
+    renderBefore?: ComponentType;
   }) => {
     const internalForm = useForm<v.InferOutput<Schema>>({
       resolver: valibotResolver(schema),
       progressive: true,
-      ...useFormProps
-    })
+      ...useFormProps,
+    });
 
-    const {handleSubmit, control} = form || internalForm
+    const { handleSubmit, control } = form || internalForm;
     const submit = handleSubmit(async data => {
-      await onSubmit(data)
-    })
+      await onSubmit(data);
+    });
 
     return (
-      <FormComponent {...formProps} onSubmit={submit}>
+      // @ts-expect-error somehow it believes FormProps can be not an object
+      <FormComponent
+        {...(formProps ?? {})}
+        onSubmit={submit}
+      >
         {RenderBefore && <RenderBefore />}
 
         {Object.keys(schema.entries).map(key => {
-          const Component = getComponentBySchema(mapping, schema.entries[key])
+          const Component = getComponentBySchema(mapping, schema.entries[key]);
 
           if (!Component) {
-            return <Fragment key={key} />
+            return <Fragment key={key} />;
           }
 
           return (
@@ -71,7 +103,7 @@ export const createFormLayout = <Mapping extends FormSchemaMapping, FormProps ex
               name={key as Path<v.InferOutput<Schema>>}
               control={control}
               defaultValue={defaultValues?.[key]}
-              render={({field, fieldState}) => (
+              render={({ field, fieldState }) => (
                 <InputComponentContext.Provider
                   value={{
                     name: key,
@@ -79,8 +111,10 @@ export const createFormLayout = <Mapping extends FormSchemaMapping, FormProps ex
                     fieldState,
                     schema: schema.entries[key],
                     title: getTitle(schema.entries[key]),
-                    description: getDescription(schema.entries[key])
-                  }}>
+                    description: getDescription(schema.entries[key]),
+                    enums: getEnums(schema.entries[key]),
+                  }}
+                >
                   <Component
                     {...(inputProps?.[key as keyof typeof inputProps] ?? {})}
                     key={key}
@@ -90,15 +124,16 @@ export const createFormLayout = <Mapping extends FormSchemaMapping, FormProps ex
                     name={key}
                     title={getTitle(schema.entries[key])}
                     description={getDescription(schema.entries[key])}
+                    enums={getEnums(schema.entries[key])}
                   />
                 </InputComponentContext.Provider>
               )}
             />
-          )
+          );
         })}
 
         {RenderAfter && <RenderAfter />}
       </FormComponent>
-    )
-  }
-}
+    );
+  };
+};
