@@ -2,19 +2,44 @@ import styled from '@emotion/styled';
 import {
   FooterCategory,
   FooterCategoryLinks,
-  FooterContainer,
+  FooterIcons,
+  FooterIconsWrapper,
+  FooterMainLinks,
   FooterName,
   FooterPaperWrapper,
+  FooterWrapper as FooterWrapperDefault,
+  navigationLinkToUrl,
+  WepublishDark,
+  WepublishLight,
 } from '@wepublish/navigation/website';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { TextToIcon } from '@wepublish/ui';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import {
+  BuilderFooterProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
 
-const OnlineReportsFooterContainer = styled(FooterContainer)`
+export const FooterWrapper = styled(FooterWrapperDefault)`
   grid-column: -1/1;
+  display: grid;
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: ${({ theme }) => theme.spacing(6)};
+    row-gap: ${({ theme }) => theme.spacing(12)};
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    grid-template-rows: min-content min-content;
+    grid-row-gap: 0;
+  }
 
   ${FooterPaperWrapper} {
     color: ${({ theme }) => theme.palette.common.white};
     background-color: #323232;
     font-size: 18px !important;
+    grid-template-columns: subgrid;
+    grid-area: 1 / 1 / 1 / 3;
   }
 
   ${FooterName} {
@@ -24,19 +49,137 @@ const OnlineReportsFooterContainer = styled(FooterContainer)`
 
   ${FooterCategoryLinks} {
     font-size: 18px;
+    grid-area: 2 / 1 / 3 / 1;
+  }
+
+  ${FooterMainLinks} {
+    gap: 0;
+  }
+
+  ${FooterIconsWrapper} {
+    background-color: #323232;
+    padding: calc(var(--footer-paddingY) / 2) var(--footer-paddingX)
+      var(--footer-paddingY);
+    grid-area: 2 / 1 / 3 / 3;
+    grid-template-columns: subgrid;
+    display: grid;
+  }
+
+  ${FooterIcons} {
+    grid-area: 2 / 2 / 3 / 3;
+    justify-self: unset;
   }
 `;
 
-export const OnlineReportsFooter = () => {
+export function OnlineReportsFooter({
+  className,
+  categorySlugs,
+  slug,
+  iconSlug,
+  data,
+  loading,
+  error,
+  hideBannerOnIntersecting,
+  wepublishLogo,
+  children,
+}: BuilderFooterProps) {
   const {
     elements: { H6 },
   } = useWebsiteBuilder();
+  const { ref } = useIntersectionObserver({
+    initialIsIntersecting: false,
+    threshold: 0.9,
+  });
+
+  const mainItems = data?.navigations?.find(({ key }) => key === slug);
+  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
+
   return (
-    <OnlineReportsFooterContainer
-      slug={''}
-      categorySlugs={[['footer']]}
-      wepublishLogo="hidden"
+    <FooterWrapper
+      className={className}
+      ref={ref}
     >
+      <FooterPaper
+        main={mainItems}
+        categories={[]}
+        children={children} // eslint-disable-line react/no-children-prop
+        style={
+          !!iconItems?.links.length || wepublishLogo !== 'hidden' ?
+            { paddingBottom: 0 }
+          : {}
+        }
+      />
+
+      {(!!iconItems?.links.length || wepublishLogo !== 'hidden') && (
+        <FooterIconsWrapper>
+          <FooterIcons>
+            {iconItems?.links.map((link, index) => (
+              <Link
+                key={index}
+                href={navigationLinkToUrl(link)}
+                color="inherit"
+              >
+                <TextToIcon
+                  title={link.label}
+                  size={32}
+                />
+              </Link>
+            ))}
+
+            {wepublishLogo === 'light' && (
+              <Link href="https://wepublish.ch/de/das-projekt/#cms">
+                <WepublishLight height={40} />
+              </Link>
+            )}
+
+            {wepublishLogo === 'dark' && (
+              <Link href="https://wepublish.ch/de/das-projekt/#cms">
+                <WepublishDark height={40} />
+              </Link>
+            )}
+          </FooterIcons>
+        </FooterIconsWrapper>
+      )}
+    </FooterWrapper>
+  );
+}
+
+export const FooterPaper = ({
+  main,
+  categories,
+  children,
+  style,
+}: PropsWithChildren<{
+  main: FullNavigationFragment | null | undefined;
+  categories: FullNavigationFragment[][];
+  style?: React.CSSProperties;
+}>) => {
+  const {
+    elements: { H6 },
+  } = useWebsiteBuilder();
+
+  return (
+    <FooterPaperWrapper style={style}>
+      {!!main?.links.length && (
+        <FooterMainLinks>
+          {main.links.map((link, index) => (
+            <Link
+              key={index}
+              href={navigationLinkToUrl(link)}
+              color="inherit"
+              underline="none"
+            >
+              <H6
+                component="span"
+                css={{ lineHeight: 1.4 }}
+              >
+                {link.label}
+              </H6>
+            </Link>
+          ))}
+        </FooterMainLinks>
+      )}
+
       <FooterCategory>
         <FooterCategoryLinks>
           <H6>OnlineReports GmbH</H6>
@@ -45,6 +188,8 @@ export const OnlineReportsFooter = () => {
           <H6>+41 76 392 04 76 / +41 77 443 36 35</H6>
         </FooterCategoryLinks>
       </FooterCategory>
-    </OnlineReportsFooterContainer>
+
+      {children}
+    </FooterPaperWrapper>
   );
 };
