@@ -69,12 +69,10 @@ export const Section = {
         title: 'Preferences',
         schema: v.object({
           favouriteBand: v.pipe(
-            v.pipe(
-              v.enum(Bands),
-              v.title('Your favourite band'),
-              v.description('Obviously not Nickleback'),
-              v.brand(SELECT_BRANDING)
-            )
+            v.enum(Bands),
+            v.title('Your favourite band'),
+            v.description('Obviously not Nickleback'),
+            v.brand(SELECT_BRANDING)
           ),
           favouriteColors: v.pipe(
             TagInputSchema,
@@ -229,3 +227,17 @@ export const Header = {
   },
   render: args => <HeaderForm {...args} />,
 } as StoryObj<typeof HeaderForm>;
+
+export const Array = {
+  args: {
+    schema: v.object({
+      properties: PropertiesInputSchema,
+      links: LinksInputSchema,
+    }),
+    defaultValues: {
+      properties: [{ id: '1234', key: 'foo', value: 'bar', public: false }],
+    },
+    renderAfter: () => <Button type="submit">Signup</Button>,
+    onSubmit: action('submit'),
+  },
+} as StoryObj<typeof StandardForm>;

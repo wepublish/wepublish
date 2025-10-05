@@ -16,24 +16,24 @@ export enum LinkType {
 }
 
 const baseLinkSchema = v.object({
-  id: v.pipe(HiddenInputSchema, v.empty()),
+  id: v.optional(HiddenInputSchema),
   label: v.pipe(v.string(), v.title('Label')),
   type: v.pipe(v.enum(LinkType), v.brand(SELECT_BRANDING), v.title('Type')),
 });
 
 const externalLinkSchema = v.object({
   ...baseLinkSchema.entries,
-  url: v.pipe(URLInputSchema, v.empty(), v.title('URL')),
+  url: v.pipe(URLInputSchema, v.title('URL')),
 });
 
 const pageLinkSchema = v.object({
   ...baseLinkSchema.entries,
-  pageId: v.pipe(v.string(), v.empty(), v.title('Page')),
+  pageId: v.pipe(v.string(), v.title('Page')),
 });
 
 const articleLinkSchema = v.object({
   ...baseLinkSchema.entries,
-  articleId: v.pipe(ArticleInputSchema, v.empty(), v.title('Article')),
+  articleId: v.pipe(ArticleInputSchema, v.title('Article')),
 });
 
 const linkSchema = v.union([
@@ -41,6 +41,7 @@ const linkSchema = v.union([
   pageLinkSchema,
   articleLinkSchema,
 ]);
+
 export const LinksInputSchema = v.pipe(
   v.array(linkSchema),
   v.brand(LINKS_BRANDING)

@@ -1,12 +1,11 @@
-import {z} from 'zod'
-import {HiddenInputSchema} from '../../form/hidden/hidden'
-import {createArrayInputSchema} from '../array/array'
+import { HiddenInputSchema } from '../../form/hidden/hidden';
+import * as v from 'valibot';
 
-const propertySchema = z.object({
-  id: HiddenInputSchema,
-  key: z.string().nullish().describe('Key'),
-  value: z.string().nullish().describe('Value'),
-  public: z.boolean().nullish().describe('Public')
-})
+const propertySchema = v.object({
+  id: v.optional(HiddenInputSchema),
+  key: v.pipe(v.string(), v.title('Key')),
+  value: v.pipe(v.string(), v.title('Value')),
+  public: v.pipe(v.boolean(), v.title('Public')),
+});
 
-export const PropertiesInputSchema = createArrayInputSchema(propertySchema)
+export const PropertiesInputSchema = v.array(propertySchema);

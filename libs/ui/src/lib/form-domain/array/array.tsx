@@ -6,10 +6,7 @@ import { IconButton } from '../../icon-button/icon-button';
 import { remove, update } from 'ramda';
 import { ComponentProps, memo } from 'react';
 import { SubForm } from './sub-form';
-import {
-  InputComponentProps,
-  isArraySchema,
-} from '@wepublish/website/form-builder';
+import { InputComponentProps } from '@wepublish/website/form-builder';
 import styled from '@emotion/styled';
 import * as v from 'valibot';
 
@@ -33,9 +30,6 @@ export const ArrayInput = memo(
     getDefaultItem?: () => T;
     getSubFormProps?: (item: T) => Partial<ComponentProps<typeof SubForm>>;
   } & InputComponentProps<v.ArraySchema<any, any>>) => {
-    const elementSchema =
-      isArraySchema(schema) && (schema.item.entries || schema.item);
-
     return (
       <ArrayInputWrapper ref={field.ref}>
         <Button
@@ -58,7 +52,7 @@ export const ArrayInput = memo(
             }}
           >
             <SubForm
-              schema={elementSchema}
+              schema={schema.item}
               defaultValues={item}
               {...getSubFormProps?.(item)}
               onSubmit={newItem =>
