@@ -45,7 +45,6 @@ const loginFormSchema = z.union([
 
 const autofocus = (node: HTMLElement | null) => {
   const inputNode = node?.querySelector('input') ?? node;
-  console.log(inputNode);
   inputNode?.focus();
 };
 
@@ -70,8 +69,8 @@ export function LoginForm({
       password: '',
       requirePassword: defaults?.requirePassword || false,
     },
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
   });
 
   const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
@@ -92,6 +91,7 @@ export function LoginForm({
   const loading =
     (!loginWithPassword && loginWithEmail.loading) ||
     (loginWithPassword && loginWithCredentials.loading);
+  const awaitingLoginConfirmed = loginWithPassword && loading;
 
   return (
     <LoginFormWrapper className={className}>
@@ -122,7 +122,7 @@ export function LoginForm({
               label={'Email'}
               error={!!error}
               helperText={error?.message}
-              ref={autofocus}
+              inputRef={autofocus}
             />
           )}
         />
@@ -143,6 +143,13 @@ export function LoginForm({
               />
             )}
           />
+        )}
+
+        {awaitingLoginConfirmed && (
+          <Alert severity="info">
+            Einen Moment bitte, die eingegebenen Anmeldedaten werden
+            überprüft...
+          </Alert>
         )}
 
         {error && <Alert severity="error">{error.message}</Alert>}
