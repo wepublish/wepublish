@@ -20,6 +20,7 @@ import {
 } from './utility/input-schema-mapping';
 import { getDescription, getTitle } from './utility/get-description';
 import { getEnums } from './utility/get-enum';
+import { isArraySchema } from './utility/is-schema';
 
 export const InputComponentContext = createContext<InputComponentProps | null>(
   null
@@ -82,6 +83,11 @@ export const createFormLayout = <
       await onSubmit(data);
     });
 
+    console.log({
+      schema,
+      entries: schema.entries,
+    });
+
     return (
       // @ts-expect-error somehow it believes FormProps can be not an object
       <FormComponent
@@ -91,41 +97,44 @@ export const createFormLayout = <
         {RenderBefore && <RenderBefore />}
 
         {Object.keys(schema.entries).map(key => {
-          const Component = getComponentBySchema(mapping, schema.entries[key]);
-
-          if (!Component) {
-            return <Fragment key={key} />;
-          }
+          const schem = schema.entries[key];
+          const Component = getComponentBySchema(mapping, schem);
+          const schemaDefault: Partial<v.InferInput<Schema>> | undefined =
+            isArraySchema(schem) ? [] : undefined;
 
           return (
             <Controller
               key={key}
               name={key as Path<v.InferOutput<Schema>>}
               control={control}
-              defaultValue={defaultValues?.[key]}
+              defaultValue={defaultValues?.[key] ?? schemaDefault}
               render={({ field, fieldState }) => (
                 <InputComponentContext.Provider
                   value={{
                     name: key,
                     field,
                     fieldState,
-                    schema: schema.entries[key],
-                    title: getTitle(schema.entries[key]),
-                    description: getDescription(schema.entries[key]),
-                    enums: getEnums(schema.entries[key]),
+                    schema: schem,
+                    title: getTitle(schem),
+                    description: getDescription(schem),
+                    enums: getEnums(schem),
                   }}
                 >
-                  <Component
-                    {...(inputProps?.[key as keyof typeof inputProps] ?? {})}
-                    key={key}
-                    schema={schema}
-                    field={field}
-                    fieldState={fieldState}
-                    name={key}
-                    title={getTitle(schema.entries[key])}
-                    description={getDescription(schema.entries[key])}
-                    enums={getEnums(schema.entries[key])}
-                  />
+                  {Component && (
+                    <Component
+                      {...(inputProps?.[key as keyof typeof inputProps] ?? {})}
+                      key={key}
+                      schema={schem}
+                      field={field}
+                      fieldState={fieldState}
+                      name={key}
+                      title={getTitle(schem)}
+                      description={getDescription(schem)}
+                      enums={getEnums(schem)}
+                    />
+                  )}
+
+                  {!Component && <Fragment key={key} />}
                 </InputComponentContext.Provider>
               )}
             />
