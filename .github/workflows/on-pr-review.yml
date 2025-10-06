@@ -83,14 +83,9 @@ jobs:
           rootUser: accessKey
           rootPassword: secretKey
           
-          replicas: 1        
-          zones: 1           
-          drivesPerNode: 1  
-          pools: 1    
-          
-          console:
-            enabled: false
-      
+          mode: standalone
+          replicas: 1
+        
           env:
             - name: MINIO_BROWSER
               value: "off"
@@ -123,7 +118,7 @@ jobs:
           EOF
       
           helm repo add minio https://charts.min.io
-          helm upgrade --install review-${{ github.event.pull_request.number }}-minio minio/minio -n reviews -f values.yaml
+          helm upgrade --install review-${{ github.event.pull_request.number }}-minio minio/minio --version 4.0.15 -n reviews -f values.yaml
 
       - name: Helm deploy database
         run: |
