@@ -83,9 +83,13 @@ jobs:
           rootUser: accessKey
           rootPassword: secretKey
           
-          mode: standalone
-          replicas: 1
-          numberOfServers: 1
+          replicas: 1        
+          zones: 1           
+          drivesPerNode: 1  
+          pools: 1    
+          
+          console:
+            enabled: false
       
           env:
             - name: MINIO_BROWSER
