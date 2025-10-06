@@ -195,7 +195,7 @@ jobs:
           migration:
             image: ghcr.io/wepublish/migration:${{ github.sha }}
             env:
-              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgres.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
             requests:
               memory: "200Mi"
@@ -214,7 +214,7 @@ jobs:
                 cpu: "1000m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgres.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
