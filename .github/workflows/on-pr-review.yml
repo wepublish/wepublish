@@ -107,25 +107,34 @@ jobs:
       - name: Helm deploy database
         run: |
           cat > values.yaml <<EOF
-          global:
-            postgresql:
-              auth:
-                enablePostgresUser: true
-                postgresPassword: "foo"
-                username: wepublish
-                password: wepublish
-                database: wepublish
-          primary:
-            resourcesPreset: "none"
+            image:
+              repository: postgres
+              tag: "17.6"
+              pullPolicy: IfNotPresent
+            settings:
+              superuserPassword:
+                value: "foo"
+        
+            userDatabase:
+              name:
+                value: "wepublish"
+              user:
+                value: "wepublish"
+              password:
+                value: "wepublish"
+            storage:
+              requestedSize: 8Gi
+              className: standard-rwo
             resources:
               requests:
-                memory: "256Mi"
-                cpu: "100m"
+                cpu: "25m"
+                memory: "128Mi"
               limits:
-                memory: "512Mi"
-                cpu: "500m"
+                cpu: "200m"
+                memory: "256Mi"
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
+          helm repo add groundhog2k https://groundhog2k.github.io/helm-charts
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database groundhog2k/postgres -n reviews -f values.yaml --wait
 
   helm_deployment:
     name: Helm deployment
