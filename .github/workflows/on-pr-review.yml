@@ -82,6 +82,10 @@ jobs:
           cat > values.yaml <<'EOF'
           rootUser: ${S3_ACCESS_KEY_ID}
           rootPassword: ${S3_SECRET_ACCESS_KEY}
+          
+          mode: standalone
+          replicas: 1
+          numberOfServers: 1
       
           env:
             - name: MINIO_BROWSER
