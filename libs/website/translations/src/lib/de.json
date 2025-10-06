@@ -25,18 +25,20 @@
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
-    "subscriptionIsUnpaid": "Abo ist unbezahlt",
-    "cancelSubscription": "Abo kündigen",
-    "cancelSubscriptionConfirmationText": "Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
-    "renewSubscriptionConfirmationText": "Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "unpaid": "{type, select, DONATION {Spende} other {Abo}} ist unbezahlt",
+    "cancel": "{type, select, DONATION {Spende} other {Abo}} kündigen",
+    "cancelConfirmation": "Das {type, select, DONATION {Spende} other {Abo}} wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
+    "extendEarly": "{type, select, DONATION {Spende} other {Abo}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, DONATION {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen."
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
-    "activeSubscriptions": "Aktive Abos",
-    "activeDonationSubscriptions": "Aktive Spenden-Abos",
-    "viewCancelledSubscriptions": "Gekündigte Abos anzeigen"
+    "activeSubscriptions": "Aktive {type, select, DONATION {Spenden} other {Abos}}",
+    "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",
+    "subscriptionsDetail": "{type, select, DONATION {Spende} other {Abo}}",
+    "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen"
   },
   "zod": {
     "errors": {

@@ -69,7 +69,7 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: { image, name, currency },
+  memberPlan: { image, name, currency, productType },
   url,
   cancel,
   canExtend,
@@ -161,8 +161,11 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung
-              ist unbezahlt
+              <MdOutlinePayments />
+
+              {t('subscription.unpaid', {
+                type: productType,
+              })}
             </SubscriptionListItemMetaItem>
           )}
 
@@ -198,7 +201,9 @@ export function SubscriptionListItem({
               variant="text"
               color="secondary"
             >
-              Abo kündigen
+              {t('subscription.cancel', {
+                type: productType,
+              })}
             </Button>
 
             {canExtend && (
@@ -220,12 +225,16 @@ export function SubscriptionListItem({
           await callAction(cancel)();
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={t('subscription.cancelSubscription')}
+        submitText={t('subscription.cancel', {
+          type: productType,
+        })}
       >
         <H5 component="h1">{name} wirklich kündigen?</H5>
 
         <Paragraph gutterBottom={false}>
-          {t('subscription.cancelSubscriptionConfirmationText')}
+          {t('subscription.cancelConfirmation', {
+            type: productType,
+          })}
         </Paragraph>
       </Modal>
 
@@ -238,10 +247,14 @@ export function SubscriptionListItem({
         }}
         submitText={`Jetzt um ${subscriptionDuration} Verlängern`}
       >
-        <H5 component="h1">Abo frühzeitig verlängern?</H5>
+        <H5 component="h1">
+          {t('subscription.extendEarly', {
+            type: productType,
+          })}
+        </H5>
 
         <Paragraph gutterBottom={false}>
-          {t('subscription.renewSubscriptionConfirmationText', {
+          {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,
           })}
         </Paragraph>
