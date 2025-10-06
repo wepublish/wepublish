@@ -79,17 +79,27 @@ jobs:
 
       - name: Helm deploy minio server
         run: |
-          cat > values.yaml <<EOF
-          auth:
-            rootUser: ${S3_ACCESS_KEY_ID}
-            rootPassword: ${S3_SECRET_ACCESS_KEY}
-          disableWebUI: true
-          console:
-            enabled: false
-          defaultBuckets: wepublish-staff,wepublish-transformed
+          cat > values.yaml <<'EOF'
+          rootUser: ${S3_ACCESS_KEY_ID}
+          rootPassword: ${S3_SECRET_ACCESS_KEY}
+      
+          env:
+            - name: MINIO_BROWSER
+              value: "off"
+            - name: MINIO_BROWSER_REDIRECT
+              value: "false"
+      
+          buckets:
+            - name: wepublish-staff
+              policy: none
+              purge: false
+            - name: wepublish-transformed
+              policy: none
+              purge: false
+      
           persistence:
             enabled: false
-          resourcesPreset: "none"
+      
           resources:
             requests:
               memory: "200Mi"
@@ -97,12 +107,15 @@ jobs:
             limits:
               memory: "300Mi"
               cpu: "200m"
+      
           service:
             type: LoadBalancer
-            port: 9000
+            ports:
+              api: 9000
           EOF
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml
+      
+          helm repo add minio https://charts.min.io
+          helm upgrade --install review-${{ github.event.pull_request.number }}-minio minio/minio -n reviews -f values.yaml
 
       - name: Helm deploy database
         run: |
