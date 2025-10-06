@@ -16,7 +16,7 @@ export enum LinkType {
 }
 
 const baseLinkSchema = v.object({
-  id: v.optional(HiddenInputSchema),
+  id: v.nullable(HiddenInputSchema),
   label: v.pipe(v.string(), v.title('Label')),
   type: v.pipe(v.enum(LinkType), v.brand(SELECT_BRANDING), v.title('Type')),
 });
