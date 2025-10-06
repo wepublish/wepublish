@@ -80,8 +80,8 @@ jobs:
       - name: Helm deploy minio server
         run: |
           cat > values.yaml <<'EOF'
-          rootUser: ${S3_ACCESS_KEY_ID}
-          rootPassword: ${S3_SECRET_ACCESS_KEY}
+          rootUser: accessKey
+          rootPassword: secretKey
           
           mode: standalone
           replicas: 1
