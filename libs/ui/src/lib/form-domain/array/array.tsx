@@ -3,12 +3,12 @@ import { Box } from '@mui/material';
 import { Button } from '../../button/button';
 import { MdDelete } from 'react-icons/md';
 import { IconButton } from '../../icon-button/icon-button';
-import { remove, update } from 'ramda';
 import { ComponentProps, memo } from 'react';
 import { SubForm } from './sub-form';
 import { InputComponentProps } from '@wepublish/website/form-builder';
 import styled from '@emotion/styled';
 import * as v from 'valibot';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 const ArrayInputWrapper = styled('div')`
   display: grid;
@@ -30,15 +30,15 @@ export const ArrayInput = memo(
     getDefaultItem?: () => T;
     getSubFormProps?: (item: T) => Partial<ComponentProps<typeof SubForm>>;
   } & InputComponentProps<v.ArraySchema<any, any>>) => {
+    const form = useFormContext();
+    const { append, remove } = useFieldArray({
+      control: form.control,
+      name,
+    });
+
     return (
       <ArrayInputWrapper ref={field.ref}>
-        <Button
-          onClick={() =>
-            field.onChange([getDefaultItem?.() ?? {}, ...(field.value ?? [])])
-          }
-        >
-          +
-        </Button>
+        <Button onClick={() => append(getDefaultItem?.())}>+</Button>
 
         {field.value?.map((item, index) => (
           <Box
@@ -55,16 +55,12 @@ export const ArrayInput = memo(
               schema={schema.item}
               defaultValues={item}
               {...getSubFormProps?.(item)}
-              onSubmit={newItem =>
-                field.onChange(update(index, newItem, field.value ?? []))
-              }
+              index={index}
             />
 
             <IconButton
               color="error"
-              onClick={() =>
-                field.onChange(remove(index, 1, field.value ?? []))
-              }
+              onClick={() => remove(index)}
             >
               <MdDelete />
             </IconButton>

@@ -8,6 +8,7 @@ import {
 } from 'react';
 import {
   Controller,
+  FormProvider,
   Path,
   useForm,
   UseFormProps,
@@ -20,7 +21,7 @@ import {
 } from './utility/input-schema-mapping';
 import { getDescription, getTitle } from './utility/get-description';
 import { getEnums } from './utility/get-enum';
-import { isArraySchema } from './utility/is-schema';
+import { getDefaultBySchema } from './get-default-by-schema';
 
 export const InputComponentContext = createContext<InputComponentProps | null>(
   null
@@ -49,11 +50,12 @@ export const createFormLayout = <
 ) => {
   return <
     Schema extends v.ObjectSchema<
-      Record<string, v.BaseSchema<any, any, any>>,
+      Record<string, v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>,
       any
     >,
     Keys extends keyof Schema['entries'],
   >({
+    index,
     schema,
     formProps,
     inputProps,
@@ -63,6 +65,7 @@ export const createFormLayout = <
     renderAfter: RenderAfter,
     renderBefore: RenderBefore,
   }: {
+    index?: number;
     schema: Schema;
     formProps?: FormProps;
     inputProps?: Record<Keys, unknown>;
@@ -78,14 +81,10 @@ export const createFormLayout = <
       ...useFormProps,
     });
 
-    const { handleSubmit, control } = form || internalForm;
+    const actualForm = form || internalForm;
+    const { handleSubmit, control } = actualForm;
     const submit = handleSubmit(async data => {
       await onSubmit(data);
-    });
-
-    console.log({
-      schema,
-      entries: schema.entries,
     });
 
     return (
@@ -97,30 +96,33 @@ export const createFormLayout = <
         {RenderBefore && <RenderBefore />}
 
         {Object.keys(schema.entries).map(key => {
-          const schem = schema.entries[key];
-          const Component = getComponentBySchema(mapping, schem);
-          const schemaDefault: Partial<v.InferInput<Schema>> | undefined =
-            isArraySchema(schem) ? [] : undefined;
+          const schem = v.unwrap(schema.entries[key]) ?? schema.entries[key];
+          const defaults = defaultValues?.[key] ?? getDefaultBySchema(schem);
+          const Component = getComponentBySchema(mapping, schem) ?? Fragment;
+
+          const name = (index ? `${key}.${index}` : key) as Path<
+            v.InferOutput<Schema>
+          >;
 
           return (
             <Controller
               key={key}
-              name={key as Path<v.InferOutput<Schema>>}
+              name={name}
               control={control}
-              defaultValue={defaultValues?.[key] ?? schemaDefault}
+              defaultValue={defaults}
               render={({ field, fieldState }) => (
-                <InputComponentContext.Provider
-                  value={{
-                    name: key,
-                    field,
-                    fieldState,
-                    schema: schem,
-                    title: getTitle(schem),
-                    description: getDescription(schem),
-                    enums: getEnums(schem),
-                  }}
-                >
-                  {Component && (
+                <FormProvider {...actualForm}>
+                  <InputComponentContext.Provider
+                    value={{
+                      name: key,
+                      field,
+                      fieldState,
+                      schema: schem,
+                      title: getTitle(schem),
+                      description: getDescription(schem),
+                      enums: getEnums(schem),
+                    }}
+                  >
                     <Component
                       {...(inputProps?.[key as keyof typeof inputProps] ?? {})}
                       key={key}
@@ -132,10 +134,8 @@ export const createFormLayout = <
                       description={getDescription(schem)}
                       enums={getEnums(schem)}
                     />
-                  )}
-
-                  {!Component && <Fragment key={key} />}
-                </InputComponentContext.Provider>
+                  </InputComponentContext.Provider>
+                </FormProvider>
               )}
             />
           );

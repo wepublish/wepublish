@@ -10,20 +10,24 @@ type ControllerRenderProps<T> = Omit<FormControllerRenderProps, 'value'> & {
 };
 
 export type InputComponentProps<
-  T extends v.BaseSchema<any, any, any> = v.BaseSchema<any, any, any>,
+  T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>> = v.BaseSchema<
+    unknown,
+    unknown,
+    v.BaseIssue<unknown>
+  >,
   Value = v.InferOutput<T>,
 > = {
   fieldState: ControllerFieldState;
   field: ControllerRenderProps<Value>;
   schema: T;
   name: string;
-  title: string | null;
-  description: string | null;
-  enums: Record<string, string> | null;
+  title: string | null | undefined;
+  description: string | null | undefined;
+  enums: Record<string, string> | null | undefined;
 };
 
 export type InputSchemaMapping = readonly [
-  v.BaseSchema<any, any, any>,
+  v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
   ComponentType<InputComponentProps<any>>,
 ];
 

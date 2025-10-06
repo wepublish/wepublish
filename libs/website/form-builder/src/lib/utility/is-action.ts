@@ -25,19 +25,22 @@ export const hasBrandAction = (input: unknown): boolean => {
 export const isPipeAction = (
   input: unknown
 ): input is v.SchemaWithPipe<
-  [v.BaseSchema<any, any, any>, v.PipeItem<any, any, any>]
+  [
+    v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+    v.PipeItem<unknown, unknown, v.BaseIssue<unknown>>,
+  ]
 > => {
   return 'pipe' in (input as any);
 };
 
 export const isDescriptionAction = (
   input: unknown
-): input is v.DescriptionAction<any, any> => {
+): input is v.DescriptionAction<unknown, string> => {
   return (input as any).type === 'description';
 };
 
 export const isTitleAction = (
   input: unknown
-): input is v.TitleAction<any, any> => {
+): input is v.TitleAction<unknown, string> => {
   return (input as any).type === 'title';
 };
