@@ -25,6 +25,11 @@ import { useIntersectionObserver } from 'usehooks-ts';
 export const FooterWrapper = styled(FooterWrapperDefault)`
   grid-column: -1/1;
   display: grid;
+  grid-template-rows: min-content min-content min-content;
+  grid-template-columns: 1fr;
+  row-gap: ${({ theme }) => theme.spacing(4)};
+  background-color: #323232;
+
   ${({ theme }) => theme.breakpoints.up('md')} {
     column-gap: ${({ theme }) => theme.spacing(6)};
     row-gap: ${({ theme }) => theme.spacing(12)};
@@ -38,8 +43,11 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
     color: ${({ theme }) => theme.palette.common.white};
     background-color: #323232;
     font-size: 18px !important;
-    grid-template-columns: subgrid;
-    grid-area: 1 / 1 / 1 / 3;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-template-columns: subgrid;
+      grid-area: 1 / 1 / 1 / 3;
+    }
   }
 
   ${FooterName} {
@@ -49,7 +57,10 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
 
   ${FooterCategoryLinks} {
     font-size: 18px;
-    grid-area: 2 / 1 / 3 / 1;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-area: 2 / 1 / 3 / 1;
+    }
   }
 
   ${FooterMainLinks} {
@@ -60,14 +71,44 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
     background-color: #323232;
     padding: calc(var(--footer-paddingY) / 2) var(--footer-paddingX)
       var(--footer-paddingY);
-    grid-area: 2 / 1 / 3 / 3;
-    grid-template-columns: subgrid;
-    display: grid;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-area: 2 / 1 / 3 / 3;
+      grid-template-columns: subgrid;
+      display: grid;
+    }
   }
 
   ${FooterIcons} {
-    grid-area: 2 / 2 / 3 / 3;
-    justify-self: unset;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+
+    & > a {
+      float: left;
+      margin: ${({ theme }) => theme.spacing(0, 2, 2, 0)};
+      display: block;
+
+      &[href*='wepublish'] {
+        clear: left;
+      }
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      float: unset;
+      display: grid;
+      overflow: unset;
+
+      & > a {
+        margin: 0;
+        clear: unset;
+        display: unset;
+      }
+      grid-area: 2 / 2 / 3 / 3;
+      justify-self: unset;
+      grid-auto-rows: auto;
+      row-break: auto;
+    }
   }
 `;
 
