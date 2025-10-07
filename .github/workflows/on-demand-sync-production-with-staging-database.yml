@@ -44,7 +44,7 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/wnti-database-postgresql 5432:5432 &
+          kubectl port-forward -n staging svc/wnti-database-postgres 5432:5432 &
 
       - name: Install PostgreSQL Client
         run: |
