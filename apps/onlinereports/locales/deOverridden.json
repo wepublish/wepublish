@@ -4,7 +4,11 @@
   },
   "teaser": {
     "author": {
-      "text": "{authors}"
+      "text": "{authors}",
+      "seperator": ""
+    },
+    "meta": {
+      "seperator": ""
     }
   },
   "subscription": {
