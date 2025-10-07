@@ -132,25 +132,6 @@
         "paywall": "Paywall"
       }
     },
-    "articleList": {
-      "filter": {
-        "dates": "Daten",
-        "description": "Nach Beschreibung filtern",
-        "isDraft": "Entwurf",
-        "isPending": "Geplant",
-        "isPublished": "Publiziert",
-        "lead": "Nach Lead filtern",
-        "location": "Veranstaltungsort",
-        "name": "Name",
-        "preTitle": "Nach Pre-Titel filtern",
-        "providers": "Anbieter",
-        "publicationDate": "Publikationsdatum",
-        "reset": "Filter zurücksetzen",
-        "title": "Nach Titel filtern",
-        "includeHidden": "Ausgeblendete Artikel",
-        "includeHiddenPages": "Ausgeblendete Seiten"
-      }
-    },
     "articles": {
       "overview": {
         "action": "Aktion",
@@ -649,6 +630,25 @@
         "name": "Name",
         "startsAt": "Startet um {{startsAt, ccc PP p}}",
         "title": "Events"
+      }
+    },
+    "filterableList": {
+      "filter": {
+        "dates": "Daten",
+        "description": "Nach Beschreibung filtern",
+        "isDraft": "Entwurf",
+        "isPending": "Geplant",
+        "isPublished": "Publiziert",
+        "lead": "Nach Lead filtern",
+        "location": "Veranstaltungsort",
+        "name": "Name",
+        "preTitle": "Nach Pre-Titel filtern",
+        "providers": "Anbieter",
+        "publicationDate": "Publikationsdatum",
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "includeHiddenArticles": "Ausgeblendete Artikel",
+        "includeHiddenPages": "Ausgeblendete Seiten"
       }
     },
     "images": {

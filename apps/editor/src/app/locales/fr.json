@@ -136,25 +136,6 @@
         "paywall": "Paywall"
       }
     },
-    "articleList": {
-      "filter": {
-        "dates": "Dates",
-        "description": "Filtrer par description",
-        "isDraft": "Brouillon",
-        "isPending": "En attente",
-        "isPublished": "Publié",
-        "lead": "Filtrer par lead",
-        "location": "Location",
-        "name": "Nom",
-        "preTitle": "Filtrer par pré-titre",
-        "providers": "Fournisseurs",
-        "publicationDate": "Date de publication",
-        "reset": "Réinitialiser les filtres",
-        "title": "Filtrer par titre",
-        "includeHidden": "Inclure cachés",
-        "includeHiddenPages": "Inclure cachés"
-      }
-    },
     "articles": {
       "overview": {
         "action": "Action",
@@ -596,6 +577,25 @@
         "name": "Name",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "title": "Events"
+      }
+    },
+    "filterableList": {
+      "filter": {
+        "dates": "Dates",
+        "description": "Filtrer par description",
+        "isDraft": "Brouillon",
+        "isPending": "En attente",
+        "isPublished": "Publié",
+        "lead": "Filtrer par lead",
+        "location": "Location",
+        "name": "Nom",
+        "preTitle": "Filtrer par pré-titre",
+        "providers": "Fournisseurs",
+        "publicationDate": "Date de publication",
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "includeHiddenArticles": "Inclure cachés",
+        "includeHiddenPages": "Inclure cachés"
       }
     },
     "images": {

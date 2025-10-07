@@ -290,7 +290,7 @@ export function ListViewFilters({
           appearance="ghost"
         >
           <CloseIcon />
-          {t('articleList.filter.reset')}
+          {t('filterableList.filter.reset')}
         </Button>
       </FormGroup>
     );
@@ -367,7 +367,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.title || ''}
-              placeholder={t('articleList.filter.title')}
+              placeholder={t('filterableList.filter.title')}
               onChange={value => updateFilter({ title: value })}
             />
           </Group>
@@ -377,7 +377,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.description || ''}
-              placeholder={t('articleList.filter.description')}
+              placeholder={t('filterableList.filter.description')}
               onChange={value => updateFilter({ description: value })}
             />
           </Group>
@@ -387,7 +387,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.preTitle || ''}
-              placeholder={t('articleList.filter.preTitle')}
+              placeholder={t('filterableList.filter.preTitle')}
               onChange={value => updateFilter({ preTitle: value })}
             />
           </Group>
@@ -397,7 +397,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.lead || ''}
-              placeholder={t('articleList.filter.lead')}
+              placeholder={t('filterableList.filter.lead')}
               onChange={value => updateFilter({ lead: value })}
             />
           </Group>
@@ -417,7 +417,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.name || ''}
-              placeholder={t('articleList.filter.name')}
+              placeholder={t('filterableList.filter.name')}
               onChange={value => updateFilter({ name: value })}
             />
           </Group>
@@ -427,7 +427,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <Input
               value={filter.location || ''}
-              placeholder={t('articleList.filter.location')}
+              placeholder={t('filterableList.filter.location')}
               onChange={value => updateFilter({ location: value })}
             />
           </Group>
@@ -473,7 +473,7 @@ export function ListViewFilters({
                   }))
                 : [{ value: undefined, label: undefined }]
               }
-              placeholder={t('articleList.filter.providers')}
+              placeholder={t('filterableList.filter.providers')}
               onChange={providers => {
                 updateFilter({
                   providers:
@@ -493,8 +493,8 @@ export function ListViewFilters({
               defaultChecked={!!filter.draft}
               checked={!!filter.draft}
               onChange={value => updateFilter({ draft: value || null })}
-              checkedChildren={t('articleList.filter.isDraft')}
-              unCheckedChildren={t('articleList.filter.isDraft')}
+              checkedChildren={t('filterableList.filter.isDraft')}
+              unCheckedChildren={t('filterableList.filter.isDraft')}
             />
           </Group>
         )}
@@ -505,8 +505,8 @@ export function ListViewFilters({
               defaultChecked={!!filter.pending}
               checked={!!filter.pending}
               onChange={value => updateFilter({ pending: value || null })}
-              checkedChildren={t('articleList.filter.isPending')}
-              unCheckedChildren={t('articleList.filter.isPending')}
+              checkedChildren={t('filterableList.filter.isPending')}
+              unCheckedChildren={t('filterableList.filter.isPending')}
             />
           </Group>
         )}
@@ -517,8 +517,8 @@ export function ListViewFilters({
               defaultChecked={!!filter.published}
               checked={!!filter.published}
               onChange={value => updateFilter({ published: value || null })}
-              checkedChildren={t('articleList.filter.isPublished')}
-              unCheckedChildren={t('articleList.filter.isPublished')}
+              checkedChildren={t('filterableList.filter.isPublished')}
+              unCheckedChildren={t('filterableList.filter.isPublished')}
             />
           </Group>
         )}
@@ -527,7 +527,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <DateRangePicker
               key={`publication-date-${resetFilterKey}`}
-              placeholder={t('articleList.filter.publicationDate')}
+              placeholder={t('filterableList.filter.publicationDate')}
               block
               placement="auto"
               onChange={value => {
@@ -558,7 +558,7 @@ export function ListViewFilters({
           <Group style={formInputStyle}>
             <DateRangePicker
               key={`dates-${resetFilterKey}`}
-              placeholder={t('articleList.filter.dates')}
+              placeholder={t('filterableList.filter.dates')}
               block
               placement="auto"
               onChange={value => {
@@ -608,17 +608,17 @@ export function ListViewFilters({
               onChange={value => updateFilter({ includeHidden: value || null })}
               checkedChildren={
                 tagType === TagType.Article ?
-                  t('articleList.filter.includeHidden')
+                  t('filterableList.filter.includeHiddenArticles')
                 : tagType === TagType.Page ?
-                  t('articleList.filter.includeHiddenPages')
-                : t('articleList.filter.includeHidden')
+                  t('filterableList.filter.includeHiddenPages')
+                : t('filterableList.filter.includeHiddenArticles')
               }
               unCheckedChildren={
                 tagType === TagType.Article ?
-                  t('articleList.filter.includeHidden')
+                  t('filterableList.filter.includeHiddenArticles')
                 : tagType === TagType.Page ?
-                  t('articleList.filter.includeHiddenPages')
-                : t('articleList.filter.includeHidden')
+                  t('filterableList.filter.includeHiddenPages')
+                : t('filterableList.filter.includeHiddenArticles')
               }
             />
           </Group>
