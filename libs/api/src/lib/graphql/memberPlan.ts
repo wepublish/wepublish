@@ -102,6 +102,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     maxCount: { type: GraphQLInt },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    externalReward: { type: GraphQLString },
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod))
@@ -109,26 +110,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     },
     migrateToTargetPaymentMethodID: { type: GraphQLString },
     successPageId: { type: GraphQLString },
-    // successPage: {
-    //   type: GraphQLPage,
-    //   resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
-    //     return successPageId ? loaders.pages.load(successPageId) : null
-    //   })
-    // },
     failPageId: { type: GraphQLString },
-    // failPage: {
-    //   type: GraphQLPage,
-    //   resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
-    //     return failPageId ? loaders.pages.load(failPageId) : null
-    //   })
-    // },
     confirmationPageId: { type: GraphQLString },
-    // confirmationPage: {
-    //   type: GraphQLPage,
-    //   resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
-    //     return confirmationPageId ? loaders.pages.load(confirmationPageId) : null
-    //   })
-    // }
   }),
 });
 
@@ -193,6 +176,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     amountPerMonthTarget: { type: GraphQLInt },
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    externalReward: { type: GraphQLString },
     maxCount: { type: GraphQLInt },
     availablePaymentMethods: {
       type: new GraphQLNonNull(

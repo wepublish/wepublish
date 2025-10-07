@@ -17,6 +17,8 @@ import {
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
+  InvoicesDocument,
+  SubscriptionsDocument,
   SessionWithTokenWithoutUser,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
@@ -204,6 +206,12 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
       }),
       client.query({
         query: NavigationListDocument,
+      }),
+      client.query({
+        query: InvoicesDocument,
+      }),
+      client.query({
+        query: SubscriptionsDocument,
       }),
     ]);
   }
