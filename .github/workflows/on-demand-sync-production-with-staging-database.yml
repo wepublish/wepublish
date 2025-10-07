@@ -1,16 +1,16 @@
 name: Synchronize production with staging database
 
-#on:
-#  workflow_dispatch:
-#   inputs:
-#      project:
-#        description: 'Name of the project you want to sync the database for'
-#        required: true
-#        type: string
-
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+   inputs:
+      project:
+        description: 'Name of the project you want to sync the database'
+        required: true
+        type: string
+      akk:
+        description: 'Are you sure you want to overwrite the existing staging database? [Yes]'
+        required: true
+        type: string
 
 jobs:
   sync-db:
@@ -21,6 +21,15 @@ jobs:
       id-token: 'write'
 
     steps:
+      - name: Confirm destructive action
+        shell: bash
+        run: |
+          VAL="$(printf '%s' "${{ inputs.akk }}" | tr -d '[:space:]')"
+          if ! printf '%s\n' "$VAL" | grep -qiE '^yes$'; then
+            echo "::error::Confirmation failed. You must type exactly 'yes' to proceed. You entered: '${{ inputs.akk }}'"
+            exit 1
+          fi  
+
       - uses: actions/checkout@v3
 
       - name: Set up Helm
@@ -44,7 +53,7 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/wnti-database-postgres 5432:5432 &
+          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgres 5432:5432 &
 
       - name: Install PostgreSQL Client
         run: |
@@ -55,7 +64,7 @@ jobs:
 
       - name: Get and unpack project production database
         run: |
-          curl --output database.dump.gz https://${{ secrets.HTTP_PROD_DUMP_SHARE_USER }}:${{ secrets.HTTP_PROD_DUMP_SHARE_PASSWORD }}@${{ secrets.HTTP_PROD_DUMP_SHARE_URL }}/wnti.sql.gz
+          curl --output database.dump.gz https://${{ secrets.HTTP_PROD_DUMP_SHARE_USER }}:${{ secrets.HTTP_PROD_DUMP_SHARE_PASSWORD }}@${{ secrets.HTTP_PROD_DUMP_SHARE_URL }}/${{ inputs.project }}.sql.gz
           gzip -d database.dump.gz
 
       - name: Restore Dump to Review Database
@@ -66,7 +75,7 @@ jobs:
 
       - name: Rerun database migrations
         run: |
-          JOB_NAME=$(kubectl -n staging get jobs --sort-by='{.metadata.creationTimestamp}' |grep "wnti-app-wepublish-migration" |tail -n 1 | awk '{print $1}')
+          JOB_NAME=$(kubectl -n staging get jobs --sort-by='{.metadata.creationTimestamp}' |grep "${{ inputs.project }}-app-wepublish-migration" |tail -n 1 | awk '{print $1}')
           kubectl -n staging get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
             .metadata.name = $name
             | del(
