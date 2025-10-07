@@ -147,7 +147,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           blocks={{
             Blocks: MannschaftBlocks,
             Renderer: MannschaftBlockRenderer,
-            Teaser: MannschaftTeaser,
+            BaseTeaser: MannschaftTeaser,
             TeaserGrid: MannschaftTeaserGrid,
             Break: MannschaftBreakBlock,
             RichText: MannschaftRichtextBlock,

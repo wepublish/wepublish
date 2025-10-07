@@ -12,4 +12,8 @@ export * from './lib/payment.dataloader';
 export * from './lib/payments.module';
 export * from './lib/payments-module-options';
 export * from './lib/payment.model';
-export * from './lib/payrexx';
+
+export * from './lib/payrexx/gateway-client';
+export * from './lib/payrexx/transaction-client';
+export * from './lib/payrexx/payrexx-client';
+export * from './lib/payrexx/payrexx-factory';

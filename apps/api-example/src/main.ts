@@ -3,7 +3,10 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
 import { MediaAdapter } from '@wepublish/image/api';
-import { PaymentsService } from '@wepublish/payment/api';
+import {
+  PAYMENTS_MODULE_OPTIONS,
+  PaymentsModuleOptions,
+} from '@wepublish/payment/api';
 import { MAIL_WEBHOOK_PATH_PREFIX, MailContext } from '@wepublish/mail/api';
 import helmet from 'helmet';
 import {
@@ -50,7 +53,9 @@ async function bootstrap() {
 
   nestApp.use(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }));
   const mediaAdapter = nestApp.get(MediaAdapter);
-  const paymentProviders = nestApp.get(PaymentsService).paymentProviders;
+  const paymentProviders = nestApp.get<PaymentsModuleOptions>(
+    PAYMENTS_MODULE_OPTIONS
+  ).paymentProviders;
   const mailProvider = nestApp.get(MailContext).mailProvider;
   const hotAndTrendingDataSource = nestApp.get<HotAndTrendingDataSource>(
     HOT_AND_TRENDING_DATA_SOURCE

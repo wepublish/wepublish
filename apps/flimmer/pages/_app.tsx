@@ -150,7 +150,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           PaymentAmount={PaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           blocks={{
-            Teaser: FlimmerTeaser,
+            BaseTeaser: FlimmerTeaser,
             Break: FlimmerBreakBlock,
             RichText: FlimmerRichText,
             Title: FlimmerTitle,

@@ -11,6 +11,8 @@ import { PropsWithChildren } from 'react';
 import { TextToIcon } from '@wepublish/ui';
 import { useIntersectionObserver } from 'usehooks-ts';
 import { forceHideBanner } from '@wepublish/banner/website';
+import { ReactComponent as WepublishLight } from './wepublish-light.svg';
+import { ReactComponent as WepublishDark } from './wepublish-dark.svg';
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
@@ -62,6 +64,7 @@ export const FooterIcons = styled.div`
   gap: ${({ theme }) => theme.spacing(3)};
   grid-auto-flow: column;
   grid-auto-columns: max-content;
+  align-items: center;
   justify-self: center;
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
@@ -78,6 +81,7 @@ export function Footer({
   loading,
   error,
   hideBannerOnIntersecting,
+  wepublishLogo,
   children,
 }: BuilderFooterProps) {
   const { isIntersecting, ref } = useIntersectionObserver({
@@ -114,10 +118,10 @@ export function Footer({
         children={children}
       />
 
-      {!!iconItems?.links.length && (
+      {(!!iconItems?.links.length || wepublishLogo !== 'hidden') && (
         <FooterIconsWrapper>
           <FooterIcons>
-            {iconItems.links.map((link, index) => (
+            {iconItems?.links.map((link, index) => (
               <Link
                 key={index}
                 href={navigationLinkToUrl(link)}
@@ -129,6 +133,18 @@ export function Footer({
                 />
               </Link>
             ))}
+
+            {wepublishLogo === 'light' && (
+              <Link href="https://wepublish.ch/de/das-projekt/#cms">
+                <WepublishLight height={40} />
+              </Link>
+            )}
+
+            {wepublishLogo === 'dark' && (
+              <Link href="https://wepublish.ch/de/das-projekt/#cms">
+                <WepublishDark height={40} />
+              </Link>
+            )}
           </FooterIcons>
         </FooterIconsWrapper>
       )}
