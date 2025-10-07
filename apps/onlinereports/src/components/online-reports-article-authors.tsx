@@ -125,6 +125,7 @@ export function OnlineReportsArticleAuthors({
               author.image && (
                 <AuthorChipImageWrapper key={author.id}>
                   <Image
+                    key={author.id}
                     image={author.image}
                     square
                     css={avatarImageStyles}
@@ -170,6 +171,7 @@ export function OnlineReportsArticleAuthors({
             }
           </CommentListItemShareWrapper>
         )}
+
         <CommentListItemShare
           title={article.latest.title ?? ''}
           url={url}

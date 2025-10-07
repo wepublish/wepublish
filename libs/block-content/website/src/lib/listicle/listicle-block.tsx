@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import {
   BuilderListicleBlockProps,
+  Image,
+  RichTextBlock,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import {
@@ -38,13 +40,16 @@ export const ListicleBlockItemCounter = styled('div')`
   height: 2em;
 `;
 
+export const ListicleItemTitle = styled('h3')``;
+export const ListicleImage = styled(Image)``;
+export const ListicleRichtText = styled(RichTextBlock)``;
+
 export const ListicleBlock = ({
   items,
   className,
 }: BuilderListicleBlockProps) => {
   const {
-    elements: { H3, Image },
-    blocks: { RichText },
+    elements: { H3 },
   } = useWebsiteBuilder();
 
   return (
@@ -53,9 +58,9 @@ export const ListicleBlock = ({
         <ListicleBlockItem key={index}>
           <ListicleBlockItemCounter>{index + 1}</ListicleBlockItemCounter>
 
-          <H3>{item.title}</H3>
-          {item.image && <Image image={item.image} />}
-          <RichText richText={item.richText} />
+          <H3 component={ListicleItemTitle}>{item.title}</H3>
+          {item.image && <ListicleImage image={item.image} />}
+          <ListicleRichtText richText={item.richText} />
         </ListicleBlockItem>
       ))}
     </ListicleBlockWrapper>

@@ -52,6 +52,7 @@ import { OnlineReportsAuthorChip } from '../src/components/author-chip';
 import { OnlineReportsFooter } from '../src/components/footer';
 import { OnlineReportsArticleAuthors } from '../src/components/online-reports-article-authors';
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
+import { OnlineReportsCommentListItem } from '../src/components/online-reports-comment-list-item';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
@@ -197,6 +198,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ArticleList={OnlineReportsArticleList}
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
+            CommentListItem={OnlineReportsCommentListItem}
             Page={OnlineReportsPage}
             RegistrationForm={OnlineReportsRegistrationForm}
             PaymentAmount={OnlineReportsPaymentAmount}
@@ -288,7 +290,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 />
               </Head>
 
-              <script
+              <Script
                 src="//servedby.revive-adserver.net/asyncjs.php"
                 async
               />
@@ -304,6 +306,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   loginBtn={{ href: '/login' }}
                   profileBtn={{ href: '/profile' }}
                 />
+
                 <MainContainer>
                   <MainContent>
                     <WideboardPlacer>
@@ -312,6 +315,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                     <Component {...pageProps} />
                   </MainContent>
                 </MainContainer>
+
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
