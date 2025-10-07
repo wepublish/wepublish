@@ -1,4 +1,4 @@
-name: Setup database for review build
+name: Synchronize production with staging database
 
 #on:
 #  workflow_dispatch:
@@ -51,7 +51,7 @@ jobs:
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
           wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
           sudo apt-get update
-          sudo apt-get install -y postgresql-client-17 curl gzip
+          sudo apt-get install -y postgresql-client-17 curl gzip jq
 
       - name: Get and unpack project production database
         run: |
@@ -63,6 +63,31 @@ jobs:
           PGPASSWORD: foo
         run: |
           psql -h 127.0.0.1 -U postgres -d wepublish -f database.dump
+
+      - name: Rerun database migrations
+        run: |
+          JOB_NAME=$(kubectl -n staging get jobs --sort-by='{.metadata.creationTimestamp}' |grep "wnti-app-wepublish-migration" |tail -n 1 | awk '{print $1}')
+          kubectl -n staging get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
+            .metadata.name = $name
+            | del(
+            .metadata.uid,
+            .metadata.resourceVersion,
+            .metadata.creationTimestamp,
+            .metadata.managedFields,
+            .status
+            )
+            | del(.spec.selector, .spec.manualSelector)
+            | (.spec.template.metadata.labels // {}) as $l
+            | .spec.template.metadata.labels = ($l
+            | del(
+            .["job-name"],
+            .["batch.kubernetes.io/job-name"],
+            .["controller-uid"],
+            .["batch.kubernetes.io/controller-uid"],
+            .["pod-template-hash"]
+            )
+            )
+            ' | kubectl -n staging apply -f -          
 
       - name: Cleanup
         run: rm database.dump
