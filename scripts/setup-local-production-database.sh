@@ -56,8 +56,12 @@ gzip -d "${TMP_DIR}/database.dump.gz"
 echo "✅  Unpack database duump successful!"
 
 echo "⏳  Replacing database: $DATABASE_URL"
-psql "$DATABASE_URL" -f "${TMP_DIR}/database.dump" 1> /dev/null
-echo "✅  Replacing database successful"
+psql "$DATABASE_URL" -f "${TMP_DIR}/database.dump"  1> ${TMP_DIR}/database_restore.log 2>&1
+if [[ $? != 0 ]]; then
+  echo "❌  Error: Replacing database failed see log ${TMP_DIR}/database_restore.log" >&2
+else
+  echo "✅  Replacing database successful"
+fi
 
 echo "⏳  Cleaning up database dump"
 rm "${TMP_DIR}/database.dump"
