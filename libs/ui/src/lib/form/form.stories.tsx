@@ -106,9 +106,6 @@ export const Section = {
             v.title('Sign me up for the newsletter')
           ),
         }),
-        defaultValues: {
-          consent: true,
-        },
       },
       {
         title: 'Properties',
@@ -186,9 +183,6 @@ export const Multistep = {
             v.title('Sign me up for the newsletter')
           ),
         }),
-        defaultValues: {
-          consent: true,
-        },
       },
     ] as const,
     onSubmit: action('submit'),
@@ -232,7 +226,7 @@ export const Array = {
   args: {
     schema: v.object({
       properties: PropertiesInputSchema,
-      links: LinksInputSchema,
+      // links: LinksInputSchema,
     }),
     defaultValues: {
       properties: [{ id: '1234', key: 'foo', value: 'bar', public: false }],

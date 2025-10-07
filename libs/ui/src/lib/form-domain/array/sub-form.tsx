@@ -16,9 +16,7 @@ const SubFormInternal = createFormLayout(
 );
 
 export function SubForm(
-  props: Omit<ComponentProps<typeof SubFormInternal>, 'form' | 'onSubmit'> & {
-    index: number;
-  }
+  props: Omit<ComponentProps<typeof SubFormInternal>, 'form' | 'onSubmit'>
 ) {
   const form = useFormContext();
 
