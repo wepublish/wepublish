@@ -9,12 +9,13 @@ import {
   addClientCacheToV1Props,
   ArticleDocument,
   ArticleListDocument,
+  ArticleSort,
   CommentItemType,
   CommentListDocument,
   getV1ApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
+  SortOrder,
   useArticleQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -22,8 +23,6 @@ import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
-
-import { Advertisement } from '../../src/components/advertisement';
 
 export const ArticleWrapper = styled('div')`
   display: grid;
@@ -33,6 +32,7 @@ export const ArticleWrapper = styled('div')`
   }
 `;
 
+const nrOfRecentArticles = 4;
 export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
@@ -64,13 +64,14 @@ export default function ArticleBySlugOrId() {
 
           <ArticleListContainer
             variables={{
-              filter: { tags: data.article.tags.map(tag => tag.id) },
-              take: 4,
+              sort: ArticleSort.PublishedAt,
+              order: SortOrder.Descending,
+              take: nrOfRecentArticles + 1,
             }}
             filter={articles =>
               articles
                 .filter(article => article.id !== data.article?.id)
-                .splice(0, 3)
+                .splice(0, nrOfRecentArticles)
             }
           />
           <div id={'comments'} />
@@ -86,7 +87,6 @@ export default function ArticleBySlugOrId() {
           />
         </ArticleWrapper>
       )}
-      <Advertisement type={'small'} />
     </>
   );
 }
@@ -130,10 +130,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       client.query({
         query: ArticleListDocument,
         variables: {
-          filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
-          },
-          take: 4,
+          sort: ArticleSort.PublishedAt,
+          order: SortOrder.Descending,
+          take: nrOfRecentArticles + 1,
         },
       }),
       client.query({

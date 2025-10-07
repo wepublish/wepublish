@@ -41,11 +41,13 @@ const Buttons = styled('div')`
   flex-direction: row;
   gap: ${({ theme }) => theme.spacing(3)};
 `;
+
 export const AdblockOverlay = () => {
   const { adsDisabled } = useAdsContext();
 
   return <>{!adsDisabled && <AdblockOverlayComponent />}</>;
 };
+
 export const AdblockOverlayComponent = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const {

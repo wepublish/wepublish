@@ -44,8 +44,8 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgresql 5432:5432 &
-          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgresql 5433:5432 &
+          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgres 5432:5432 &
+          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgres 5433:5432 &
 
       - name: Install PostgreSQL Client
         run: |
