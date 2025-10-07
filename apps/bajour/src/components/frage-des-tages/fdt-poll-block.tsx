@@ -49,6 +49,9 @@ export const FrageDesTagesWrapper = styled('div')`
 `;
 
 export const PollWrapper = styled('div')`
+  position: sticky;
+  top: ${({ theme }) => theme.spacing(14)};
+  align-self: start;
   grid-column: 1/13;
 
   ${({ theme }) => css`
@@ -93,7 +96,6 @@ const StyledInfoBox = styled(InfoBox)`
 `;
 
 const PollBlockStyled = styled(PollBlock)`
-  position: sticky;
   top: ${({ theme }) => theme.spacing(14)};
 
   button {
