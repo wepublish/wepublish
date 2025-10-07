@@ -60,6 +60,7 @@ import {
   HauptstadtImageBlock,
   HauptstadtImageGalleryBlock,
 } from '../src/components/hauptstadt-image-block';
+import { HauptstadtListicle } from '../src/components/hauptstadt-listicle';
 import {
   HauptstadtMemberPlanItem,
   HauptstadtMemberPlanPicker,
@@ -179,6 +180,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Image: HauptstadtImageBlock,
             ImageGallery: HauptstadtImageGalleryBlock,
             Break: HauptstadtBreakBlock,
+            Listicle: HauptstadtListicle,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,

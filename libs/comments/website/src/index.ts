@@ -3,6 +3,7 @@ export * from './lib/comment-list/comment-list-item';
 export * from './lib/comment-list/comment-list-item-child';
 export * from './lib/comment-list/comment-list';
 export * from './lib/comment-list/comment-list-container';
+export * from './lib/comment-list/comment-list.state';
 export * from './lib/comment-editor/comment-editor';
 export * from './lib/comment-ratings/comment-ratings';
 export * from './lib/comment-ratings/comment-ratings.context';

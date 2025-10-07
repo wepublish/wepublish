@@ -35,6 +35,7 @@ export const OnlineReportsFooter = () => {
     <OnlineReportsFooterContainer
       slug={''}
       categorySlugs={[['footer']]}
+      wepublishLogo="hidden"
     >
       <FooterCategory>
         <FooterCategoryLinks>

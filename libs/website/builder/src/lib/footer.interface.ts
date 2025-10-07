@@ -9,5 +9,6 @@ export type BuilderFooterProps = PropsWithChildren<
     iconSlug?: string;
     categorySlugs: string[][];
     hideBannerOnIntersecting?: boolean;
+    wepublishLogo: 'light' | 'dark' | 'hidden';
   }
 >;
