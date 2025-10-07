@@ -112,15 +112,6 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
   }
 `;
 
-/*
-  !!iconItems?.links.length||wepublishLogo !== 'hidden' ? {
-    paddingbottom: 0;
-  }
-  : {
-  }
-*/
-//var(--footer-paddingY)
-
 export const footerPaperCSS = (
   theme: Theme,
   iconItems: { links: [] },
