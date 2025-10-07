@@ -1,30 +1,41 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { css } from '@mui/material';
 import { useHotAndTrendingQuery } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { Image, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 
-const ArticleChatsWrapper = styled('article')`
+const ArticleChartsWrapper = styled('article')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(2)};
+  padding: 0 ${({ theme }) => theme.spacing(4)};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: 2/12;
+    padding-left: calc((100% / 12) * 2);
+    padding-right: calc((100% / 12) * 2);
+  }
+`;
+
+const ArticleChartsContent = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(1)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: 2/12;
     gap: ${({ theme }) => theme.spacing(5)};
   }
 `;
 
-const ArticleChatsList = styled('ul')`
+const ArticleChartsTitle = styled('h2')`
+  padding-left: ${({ theme }) => theme.spacing(3)};
+  padding-right: ${({ theme }) => theme.spacing(3)};
+`;
+
+const ArticleChartsList = styled('ul')`
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
   counter-reset: article 0;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    padding-left: calc((100% / 12) * 2);
-    padding-right: calc((100% / 12) * 2);
-  }
 `;
 
 const ArticleChartsItem = styled('div')`
@@ -49,71 +60,80 @@ const ArticleChartsItemTitle = styled('div')`
 
 const ArticleChartsItemLead = styled('div')``;
 
-const articleChartsItemImage = css`
+const ArticleChartsItemImage = styled(Image)`
   width: 75px;
   height: 75px;
   object-fit: cover;
 `;
 
-const articleChartsBigItemImage = css`
+const ArticleChartsBigItemImage = styled(Image)`
   object-fit: cover;
   justify-self: center;
   aspect-ratio: 16/9;
 `;
 
-export const ArticleCharts = () => {
-  const {
-    elements: { Image, Link },
-  } = useWebsiteBuilder();
+const uppercase = css`
+  text-transform: uppercase;
+`;
 
+export const ArticleCharts = () => {
   const { data } = useHotAndTrendingQuery({
     variables: {
       take: 4,
     },
   });
+  const {
+    elements: { H5 },
+  } = useWebsiteBuilder();
 
   if (!data?.hotAndTrending.length) {
     return null;
   }
 
   return (
-    <ArticleChatsWrapper>
-      {data.hotAndTrending[0].latest.image && (
-        <Image
-          image={data.hotAndTrending[0].latest.image}
-          css={articleChartsBigItemImage}
-        />
-      )}
+    <ArticleChartsWrapper>
+      <H5
+        component={ArticleChartsTitle}
+        css={uppercase}
+      >
+        Artikel Charts
+      </H5>
 
-      <ArticleChatsList>
-        {data.hotAndTrending.map((article, index) => (
-          <li key={article.id}>
-            <Link
-              href={article.url}
-              color="inherit"
-              underline="none"
-            >
-              <ArticleChartsItem>
-                <ArticleChartsItemText>
-                  <ArticleChartsItemTitle>
-                    {article.latest.title}
-                  </ArticleChartsItemTitle>
-                  <ArticleChartsItemLead>
-                    {article.latest.lead}
-                  </ArticleChartsItemLead>
-                </ArticleChartsItemText>
+      <ArticleChartsContent>
+        {data.hotAndTrending[0].latest.image && (
+          <ArticleChartsBigItemImage
+            image={data.hotAndTrending[0].latest.image}
+          />
+        )}
 
-                {index !== 0 && article.latest.image && (
-                  <Image
-                    image={article.latest.image}
-                    css={articleChartsItemImage}
-                  />
-                )}
-              </ArticleChartsItem>
-            </Link>
-          </li>
-        ))}
-      </ArticleChatsList>
-    </ArticleChatsWrapper>
+        <ArticleChartsList>
+          {data.hotAndTrending.map((article, index) => (
+            <li key={article.id}>
+              <Link
+                href={article.url}
+                color="inherit"
+                underline="none"
+              >
+                <ArticleChartsItem>
+                  <ArticleChartsItemText>
+                    <ArticleChartsItemTitle>
+                      {article.latest.title}
+                    </ArticleChartsItemTitle>
+
+                    <ArticleChartsItemLead>
+                      {article.latest.lead}
+                    </ArticleChartsItemLead>
+                  </ArticleChartsItemText>
+
+                  {index !== 0 && article.latest.image && (
+                    <ArticleChartsItemImage image={article.latest.image} />
+                  )}
+                </ArticleChartsItem>
+              </Link>
+            </li>
+          ))}
+        </ArticleChartsList>
+      </ArticleChartsContent>
+    </ArticleChartsWrapper>
   );
 };
