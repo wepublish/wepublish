@@ -85,6 +85,10 @@ jobs:
           
           mode: standalone
           replicas: 1
+    
+          serviceAccount:
+            create: true
+            name: review-${{ github.event.pull_request.number }}-minio-sa
         
           env:
             - name: MINIO_BROWSER
