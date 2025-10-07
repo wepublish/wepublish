@@ -151,7 +151,8 @@
         "publicationDate": "Date de publication",
         "reset": "Réinitialiser les filtres",
         "title": "Filtrer par titre",
-        "includeHidden": "Inclure cachés"
+        "includeHidden": "Inclure cachés",
+        "includeHiddenPages": "Inclure cachés"
       }
     },
     "articles": {
@@ -848,6 +849,8 @@
         "publishAtDateCheckbox": "Définir une date différente pour la disponibilité en ligne",
         "publishDate": "Date de publication",
         "publishPage": "Publier la page",
+        "hidden": "Cacher",
+        "setAsHidden": "Les pages cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
         "slug": "Slug",
         "socialMediaDescription": "Description pour les réseaux sociaux",
         "socialMediaImage": "Image pour les médias sociaux",

@@ -606,8 +606,20 @@ export function ListViewFilters({
               defaultChecked={!!filter.includeHidden}
               checked={!!filter.includeHidden}
               onChange={value => updateFilter({ includeHidden: value || null })}
-              checkedChildren={t('articleList.filter.includeHidden')}
-              unCheckedChildren={t('articleList.filter.includeHidden')}
+              checkedChildren={
+                tagType === TagType.Article ?
+                  t('articleList.filter.includeHidden')
+                : tagType === TagType.Page ?
+                  t('articleList.filter.includeHiddenPages')
+                : t('articleList.filter.includeHidden')
+              }
+              unCheckedChildren={
+                tagType === TagType.Article ?
+                  t('articleList.filter.includeHidden')
+                : tagType === TagType.Page ?
+                  t('articleList.filter.includeHiddenPages')
+                : t('articleList.filter.includeHidden')
+              }
             />
           </Group>
         )}

@@ -147,7 +147,8 @@
         "publicationDate": "Publikationsdatum",
         "reset": "Filter zurücksetzen",
         "title": "Nach Titel filtern",
-        "includeHidden": "Ausgeblendete Artikel"
+        "includeHidden": "Ausgeblendete Artikel",
+        "includeHiddenPages": "Ausgeblendete Seiten"
       }
     },
     "articles": {
@@ -912,6 +913,8 @@
         "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "publishDate": "Publikationsdatum",
         "publishPage": "Seite publizieren",
+        "hidden": "Ausblenden",
+        "setAsHidden": "Ausgeblendete Seiten werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
