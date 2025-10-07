@@ -40,32 +40,33 @@ export const ArrayInput = memo(
       <ArrayInputWrapper ref={field.ref}>
         <Button onClick={() => append(getDefaultItem?.())}>+</Button>
 
-        {field.value?.map((item, index) => (
-          <Box
-            key={index}
-            sx={{
-              display: 'grid',
-              gap: 2,
-              gridAutoFlow: 'column',
-              gridAutoColumns: 'auto',
-              alignItems: 'center',
-            }}
-          >
-            <SubForm
-              schema={schema.item}
-              defaultValues={item}
-              {...getSubFormProps?.(item)}
-              index={index}
-            />
-
-            <IconButton
-              color="error"
-              onClick={() => remove(index)}
+        {field.value?.map((item, index) => {
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: 'grid',
+                gap: 2,
+                gridAutoFlow: 'column',
+                gridAutoColumns: 'auto',
+                alignItems: 'center',
+              }}
             >
-              <MdDelete />
-            </IconButton>
-          </Box>
-        ))}
+              <SubForm
+                schema={schema.item}
+                {...getSubFormProps?.(item)}
+                name={`${name}.${index}`}
+              />
+
+              <IconButton
+                color="error"
+                onClick={() => remove(index)}
+              >
+                <MdDelete />
+              </IconButton>
+            </Box>
+          );
+        })}
       </ArrayInputWrapper>
     );
   }

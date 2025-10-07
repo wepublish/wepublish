@@ -55,7 +55,7 @@ export const createFormLayout = <
     >,
     Keys extends keyof Schema['entries'],
   >({
-    index,
+    name,
     schema,
     formProps,
     inputProps,
@@ -65,7 +65,7 @@ export const createFormLayout = <
     renderAfter: RenderAfter,
     renderBefore: RenderBefore,
   }: {
-    index?: number;
+    name?: string;
     schema: Schema;
     formProps?: FormProps;
     inputProps?: Record<Keys, unknown>;
@@ -100,14 +100,14 @@ export const createFormLayout = <
           const defaults = defaultValues?.[key] ?? getDefaultBySchema(schem);
           const Component = getComponentBySchema(mapping, schem) ?? Fragment;
 
-          const name = (index ? `${key}.${index}` : key) as Path<
+          const actualName = (name ? `${name}.${key}` : key) as Path<
             v.InferOutput<Schema>
           >;
 
           return (
             <Controller
               key={key}
-              name={name}
+              name={actualName}
               control={control}
               defaultValue={defaults}
               render={({ field, fieldState }) => (

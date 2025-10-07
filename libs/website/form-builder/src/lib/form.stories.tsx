@@ -71,7 +71,7 @@ export const Form: StoryObj<typeof Result> = {
       },
     },
     defaultValues: {
-      email: 'info@karl-merkli.ch',
+      email: 'karl@wepublish.ch',
     },
     schema: v.object({
       email: v.pipe(

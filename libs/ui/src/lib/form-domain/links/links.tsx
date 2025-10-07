@@ -1,4 +1,3 @@
-import { HiddenInputSchema } from '../../form/hidden/hidden';
 import { ArrayInput } from '../array/array';
 import { ComponentProps, useCallback } from 'react';
 import { ArticleInputSchema } from '../article/article';
@@ -16,7 +15,7 @@ export enum LinkType {
 }
 
 const baseLinkSchema = v.object({
-  id: v.nullable(HiddenInputSchema),
+  // id: v.nullable(HiddenInputSchema),
   label: v.pipe(v.string(), v.title('Label')),
   type: v.pipe(v.enum(LinkType), v.brand(SELECT_BRANDING), v.title('Type')),
 });
