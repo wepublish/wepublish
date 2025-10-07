@@ -319,6 +319,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   slug="footer"
                   categorySlugs={[['about-us']]}
                   iconSlug="icons"
+                  wepublishLogo="hidden"
                 />
               </Spacer>
 

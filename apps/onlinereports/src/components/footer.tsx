@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css, Theme, useTheme } from '@mui/material';
 import {
   FooterCategory,
   FooterCategoryLinks,
@@ -19,15 +20,14 @@ import {
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { useIntersectionObserver } from 'usehooks-ts';
 
 export const FooterWrapper = styled(FooterWrapperDefault)`
   grid-column: -1/1;
   display: grid;
-  grid-template-rows: min-content min-content min-content;
   grid-template-columns: 1fr;
-  row-gap: ${({ theme }) => theme.spacing(4)};
+  row-gap: ${({ theme }) => theme.spacing(8)};
   background-color: #323232;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -53,6 +53,7 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
   ${FooterName} {
     font-size: 18px;
     text-transform: unset;
+    display: none;
   }
 
   ${FooterCategoryLinks} {
@@ -69,8 +70,7 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
 
   ${FooterIconsWrapper} {
     background-color: #323232;
-    padding: calc(var(--footer-paddingY) / 2) var(--footer-paddingX)
-      var(--footer-paddingY);
+    padding: calc(var(--footer-paddingY) / 2) var(--footer-paddingX);
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       grid-area: 2 / 1 / 3 / 3;
@@ -112,6 +112,27 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
   }
 `;
 
+/*
+  !!iconItems?.links.length||wepublishLogo !== 'hidden' ? {
+    paddingbottom: 0;
+  }
+  : {
+  }
+*/
+//var(--footer-paddingY)
+
+export const footerPaperCSS = (
+  theme: Theme,
+  iconItems: { links: [] },
+  wepublishLogo: 'hidden' | 'light' | 'dark'
+) => css`
+  ${theme.breakpoints.up('md')} {
+    padding-bottom: ${iconItems?.links.length || wepublishLogo !== 'hidden' ?
+      '0'
+    : 'calc(var(--footer-paddingY) / 2)'};
+  }
+`;
+
 export function OnlineReportsFooter({
   className,
   categorySlugs,
@@ -121,7 +142,7 @@ export function OnlineReportsFooter({
   loading,
   error,
   hideBannerOnIntersecting,
-  wepublishLogo,
+  wepublishLogo = 'hidden',
   children,
 }: BuilderFooterProps) {
   const {
@@ -131,9 +152,20 @@ export function OnlineReportsFooter({
     initialIsIntersecting: false,
     threshold: 0.9,
   });
+  const theme = useTheme();
 
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
+
+  const footerPaperStyles = useMemo(
+    () =>
+      footerPaperCSS(
+        theme,
+        iconItems as unknown as { links: [] },
+        wepublishLogo
+      ),
+    [theme, iconItems, wepublishLogo]
+  );
 
   return (
     <FooterWrapper
@@ -143,13 +175,10 @@ export function OnlineReportsFooter({
       <FooterPaper
         main={mainItems}
         categories={[]}
-        children={children} // eslint-disable-line react/no-children-prop
-        style={
-          !!iconItems?.links.length || wepublishLogo !== 'hidden' ?
-            { paddingBottom: 0 }
-          : {}
-        }
-      />
+        css={footerPaperStyles}
+      >
+        {children}
+      </FooterPaper>
 
       {(!!iconItems?.links.length || wepublishLogo !== 'hidden') && (
         <FooterIconsWrapper>
@@ -186,21 +215,22 @@ export function OnlineReportsFooter({
 }
 
 export const FooterPaper = ({
+  className,
   main,
   categories,
   children,
-  style,
 }: PropsWithChildren<{
+  className?: string;
   main: FullNavigationFragment | null | undefined;
   categories: FullNavigationFragment[][];
-  style?: React.CSSProperties;
 }>) => {
   const {
     elements: { H6 },
   } = useWebsiteBuilder();
 
   return (
-    <FooterPaperWrapper style={style}>
+    <FooterPaperWrapper className={className}>
+      <FooterName>OnlineReports</FooterName>
       {!!main?.links.length && (
         <FooterMainLinks>
           {main.links.map((link, index) => (
