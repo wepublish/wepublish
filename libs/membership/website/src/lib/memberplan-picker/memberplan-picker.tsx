@@ -95,7 +95,8 @@ export const MemberPlanPicker = forwardRef<
         {selectedMemberPlan?.image && (
           <Image image={selectedMemberPlan.image} />
         )}
-        {selectedMemberPlan?.description && (
+
+        {!!selectedMemberPlan?.description?.length && (
           <RichText richText={selectedMemberPlan.description} />
         )}
       </MemberPlanPickerWrapper>

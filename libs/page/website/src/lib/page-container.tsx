@@ -1,4 +1,7 @@
-import { PollBlockProvider } from '@wepublish/block-content/website';
+import {
+  PollBlockProvider,
+  SubscribeBlockProvider,
+} from '@wepublish/block-content/website';
 import { BannerDocumentType, usePageQuery } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -29,19 +32,21 @@ export function PageContainer({
 
   return (
     <PollBlockProvider>
-      <BannerContainer
-        documentId={data?.page?.id}
-        documentType={BannerDocumentType.Page}
-      />
+      <SubscribeBlockProvider>
+        <BannerContainer
+          documentId={data?.page?.id}
+          documentType={BannerDocumentType.Page}
+        />
 
-      <Page
-        data={data}
-        loading={loading}
-        error={error}
-        className={className}
-      >
-        {children}
-      </Page>
+        <Page
+          data={data}
+          loading={loading}
+          error={error}
+          className={className}
+        >
+          {children}
+        </Page>
+      </SubscribeBlockProvider>
     </PollBlockProvider>
   );
 }
