@@ -24,8 +24,6 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
-import { Advertisement } from '../../src/components/advertisement';
-
 export const ArticleWrapper = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
@@ -89,7 +87,6 @@ export default function ArticleBySlugOrId() {
           />
         </ArticleWrapper>
       )}
-      <Advertisement type={'small'} />
     </>
   );
 }

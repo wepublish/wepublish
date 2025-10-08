@@ -79,17 +79,34 @@ jobs:
 
       - name: Helm deploy minio server
         run: |
-          cat > values.yaml <<EOF
-          auth:
-            rootUser: ${S3_ACCESS_KEY_ID}
-            rootPassword: ${S3_SECRET_ACCESS_KEY}
-          disableWebUI: true
-          console:
-            enabled: false
-          defaultBuckets: wepublish-staff,wepublish-transformed
+          cat > values.yaml <<'EOF'
+          rootUser: accessKey
+          rootPassword: secretKey
+          
+          mode: standalone
+          replicas: 1
+    
+          serviceAccount:
+            create: true
+            name: review-${{ github.event.pull_request.number }}-minio-sa
+        
+          env:
+            - name: MINIO_BROWSER
+              value: "off"
+            - name: MINIO_BROWSER_REDIRECT
+              value: "false"
+      
+          buckets:
+            - name: wepublish-staff
+              policy: none
+              purge: false
+            - name: wepublish-transformed
+              policy: none
+              purge: false
+      
           persistence:
             enabled: false
-          resourcesPreset: "none"
+      
           resources:
             requests:
               memory: "200Mi"
@@ -97,35 +114,47 @@ jobs:
             limits:
               memory: "300Mi"
               cpu: "200m"
+      
           service:
             type: LoadBalancer
-            port: 9000
+            ports:
+              api: 9000
           EOF
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml
+      
+          helm repo add minio https://charts.min.io
+          helm upgrade --install review-${{ github.event.pull_request.number }}-minio minio/minio --version 4.0.15 -n reviews -f values.yaml
 
       - name: Helm deploy database
         run: |
           cat > values.yaml <<EOF
-          global:
-            postgresql:
-              auth:
-                enablePostgresUser: true
-                postgresPassword: "foo"
-                username: wepublish
-                password: wepublish
-                database: wepublish
-          primary:
-            resourcesPreset: "none"
+            image:
+              repository: postgres
+              tag: "17.6"
+              pullPolicy: IfNotPresent
+            settings:
+              superuserPassword:
+                value: "foo"
+        
+            userDatabase:
+              name:
+                value: "wepublish"
+              user:
+                value: "wepublish"
+              password:
+                value: "wepublish"
+            storage:
+              requestedSize: 8Gi
+              className: standard-rwo
             resources:
               requests:
-                memory: "256Mi"
-                cpu: "100m"
+                cpu: "25m"
+                memory: "128Mi"
               limits:
-                memory: "512Mi"
-                cpu: "500m"
+                cpu: "200m"
+                memory: "256Mi"
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
+          helm repo add groundhog2k https://groundhog2k.github.io/helm-charts
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database groundhog2k/postgres -n reviews -f values.yaml --wait
 
   helm_deployment:
     name: Helm deployment
@@ -169,7 +198,7 @@ jobs:
           migration:
             image: ghcr.io/wepublish/migration:${{ github.sha }}
             env:
-              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgres.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
             requests:
               memory: "200Mi"
@@ -188,7 +217,7 @@ jobs:
                 cpu: "1000m"
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgres.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'

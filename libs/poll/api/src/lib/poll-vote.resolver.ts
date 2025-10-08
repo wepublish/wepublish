@@ -12,6 +12,7 @@ import { Permissions } from '@wepublish/permissions/api';
 import {
   Authenticated,
   CurrentUser,
+  Public,
   RequestFingerprint,
   UserSession,
 } from '@wepublish/authentication/api';
@@ -45,6 +46,7 @@ export class PollVoteResolver {
     return this.pollService.userPollVote(pollId, user.id);
   }
 
+  @Public()
   @Mutation(() => PollVote, {
     nullable: true,
     description: `This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous`,

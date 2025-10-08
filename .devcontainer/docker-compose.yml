@@ -19,14 +19,15 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   database:
-    image: bitnami/postgresql:14
+    image: postgres:17
     ports:
       - 5432:5432
     volumes:
-      - database_data:/bitnami/postgresql
+      - database_data:/var/lib/postgresql/data
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - POSTGRESQL_DATABASE=wepublish
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=wepublish
+      - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
       - default
 
@@ -36,7 +37,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4:9.7
     platform: linux/amd64
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
       PGADMIN_DEFAULT_PASSWORD: 'root'
@@ -54,11 +54,14 @@ services:
       - database
 
   storage:
-    image: bitnami/minio:latest
+    image: minio/minio:latest
     environment:
       - MINIO_ROOT_USER=root
       - MINIO_ROOT_PASSWORD=password
-      - MINIO_DEFAULT_BUCKETS=wepublish-staff,wepublish-transformed
+    entrypoint: ["/bin/sh"]
+    command: ["-ec",
+      "mkdir -p /data/wepublish-staff /data/wepublish-transformed; \
+               exec minio server /data --console-address=:9001"]
     ports:
       - 9000:9000
       - 9001:9001

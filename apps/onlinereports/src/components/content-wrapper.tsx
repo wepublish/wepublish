@@ -20,14 +20,16 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   fullWidth?: boolean;
 }>`
   display: grid;
-  gap: ${({ theme }) => theme.spacing(7)};
+  row-gap: ${({ theme }) => theme.spacing(4)};
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    gap: ${({ theme }) => theme.spacing(7)};
+  }
 
   ${({ theme, fullWidth }) =>
     !fullWidth &&
     css`
-      ${theme.breakpoints.down('md')} {
-        row-gap: ${theme.spacing(5)};
-      }
+      row-gap: ${theme.spacing(3)};
 
       ${theme.breakpoints.up('md')} {
         row-gap: ${theme.spacing(4)};

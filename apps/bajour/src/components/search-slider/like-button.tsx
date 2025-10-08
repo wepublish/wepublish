@@ -17,6 +17,32 @@ const iconButtonStyles = css`
   }
 `;
 
+export const VideoLikeButton = ({
+  isLiked,
+  likes,
+  onLike,
+}: LikeButtonProps) => {
+  const {
+    elements: { IconButton },
+  } = useWebsiteBuilder();
+
+  return (
+    <IconButton
+      aria-label="Like"
+      size={'small'}
+      onClick={onLike}
+      color="primary"
+      css={iconButtonStyles}
+      disableRipple
+    >
+      {isLiked ?
+        <MdFavorite style={{ color: 'red' }} />
+      : <MdFavoriteBorder />}
+      {likes}
+    </IconButton>
+  );
+};
+
 export const LikeButton = ({ isLiked, likes, onLike }: LikeButtonProps) => {
   const {
     elements: { IconButton },
