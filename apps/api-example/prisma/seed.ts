@@ -896,6 +896,10 @@ async function seed() {
   const prisma = new PrismaClient();
   await prisma.$connect();
 
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('Seeding in production is not allowed');
+  }
+
   try {
     const [adminUserRole, editorUserRole] = await rootSeed(prisma);
 
@@ -949,7 +953,9 @@ async function seed() {
         where: {
           email: 'dev@wepublish.ch',
         },
-        update: {},
+        update: {
+          password: await hashPassword('123'),
+        },
         create: {
           email: 'dev@wepublish.ch',
           emailVerifiedAt: new Date(),
@@ -963,7 +969,9 @@ async function seed() {
         where: {
           email: 'editor@wepublish.ch',
         },
-        update: {},
+        update: {
+          password: await hashPassword('123'),
+        },
         create: {
           email: 'editor@wepublish.ch',
           emailVerifiedAt: new Date(),
