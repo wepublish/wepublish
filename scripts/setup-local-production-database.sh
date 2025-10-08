@@ -51,9 +51,9 @@ if [ "$HTTP_CODE" -ne 200 ]; then
 fi
 echo "✅  Download successful (${HTTP_CODE})"
 
-echo "⏳  Unpack database dump"
+echo "⏳  Unpack database dump..."
 gzip -d "${TMP_DIR}/database.dump.gz"
-echo "✅  Unpack database duump successful!"
+echo "✅  Unpack database dump successful"
 
 echo "⏳  Replacing database: $DATABASE_URL"
 psql "$DATABASE_URL" -f "${TMP_DIR}/database.dump"  1> ${TMP_DIR}/database_restore.log 2>&1
@@ -63,6 +63,6 @@ else
   echo "✅  Replacing database successful"
 fi
 
-echo "⏳  Cleaning up database dump"
+echo "⏳  Cleaning up database dump..."
 rm "${TMP_DIR}/database.dump"
 echo "✅  Cleaning up database dump"
