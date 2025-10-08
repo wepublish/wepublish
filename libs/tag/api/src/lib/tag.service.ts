@@ -160,5 +160,32 @@ function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     });
   }
 
+  if (filter?.tags && filter.tags.length > 0) {
+    conditions.push({
+      tag: {
+        in: filter.tags,
+        mode: 'insensitive',
+      },
+    });
+  }
+
+  if (filter?.notIn && filter.notIn.length > 0) {
+    conditions.push({
+      tag: {
+        notIn: filter.notIn,
+        mode: 'insensitive',
+      },
+    });
+  }
+
+  if (filter?.tags && filter.tags.length > 0) {
+    conditions.push({
+      tag: {
+        in: filter.tags,
+        mode: 'insensitive',
+      },
+    });
+  }
+
   return conditions.length ? { AND: conditions } : {};
 }

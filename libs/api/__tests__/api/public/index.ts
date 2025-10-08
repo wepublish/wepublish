@@ -98,6 +98,7 @@ export type ArticleFilter = {
   published?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  tagsNotIn?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -3350,7 +3351,9 @@ export type TagConnection = {
 };
 
 export type TagFilter = {
+  notIn?: InputMaybe<Array<Scalars['String']>>;
   tag?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
   type?: InputMaybe<TagType>;
 };
 

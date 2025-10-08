@@ -16,7 +16,11 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
+  Tag,
+  TagListDocument,
+  TagType,
   useArticleQuery,
+  useTagListQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
@@ -33,6 +37,7 @@ export const ArticleWrapper = styled('div')`
 `;
 
 const nrOfRecentArticles = 4;
+const excludeTags = ['Gelesen & gedacht'];
 export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
@@ -49,6 +54,16 @@ export default function ArticleBySlugOrId() {
     },
   });
 
+  const tags = useTagListQuery({
+    variables: {
+      filter: {
+        tags: excludeTags,
+        type: TagType.Article,
+      },
+      take: 100,
+    },
+  });
+
   const containerProps = {
     slug,
     id,
@@ -58,7 +73,7 @@ export default function ArticleBySlugOrId() {
     <>
       <ArticleContainer {...containerProps} />
 
-      {data?.article && (
+      {data?.article && tags.data && (
         <ArticleWrapper>
           <H2 component={'h2'}>Aktuelle Beiträge</H2>
 
@@ -67,6 +82,9 @@ export default function ArticleBySlugOrId() {
               sort: ArticleSort.PublishedAt,
               order: SortOrder.Descending,
               take: nrOfRecentArticles + 1,
+              filter: {
+                tagsNotIn: tags.data.tags.nodes.map((tag: Tag) => tag.id),
+              },
             }}
             filter={articles =>
               articles
@@ -126,6 +144,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   if (article.data?.article) {
+    const tagsToExclude = await client.query({
+      query: TagListDocument,
+      variables: {
+        type: TagType.Article,
+        filter: {
+          tags: excludeTags,
+        },
+        take: 100,
+      },
+    });
+
     await Promise.all([
       client.query({
         query: ArticleListDocument,
@@ -133,6 +162,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           sort: ArticleSort.PublishedAt,
           order: SortOrder.Descending,
           take: nrOfRecentArticles + 1,
+          filter: {
+            tagsNotIn:
+              tagsToExclude.data ?
+                tagsToExclude.data.tags.nodes.map((tag: Tag) => tag.id)
+              : [],
+          },
         },
       }),
       client.query({
