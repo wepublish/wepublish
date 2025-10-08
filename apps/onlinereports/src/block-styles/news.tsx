@@ -1,34 +1,46 @@
-import styled from '@emotion/styled'
-import {Box} from '@mui/material'
-
+import styled from '@emotion/styled';
+import { Box } from '@mui/material';
 import {
   alignmentForTeaserBlock,
   hasBlockStyle,
   isFilledTeaser,
-  isTeaserListBlock
-} from '@wepublish/block-content/website'
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {BuilderTeaserListBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {allPass} from 'ramda'
+  isTeaserListBlock,
+} from '@wepublish/block-content/website';
+import {
+  BlockContent,
+  TeaserGridBlock,
+  TeaserListBlock,
+} from '@wepublish/website/api';
+import {
+  BuilderTeaserListBlockProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { allPass } from 'ramda';
 
-import {Advertisement} from '../components/advertisement'
-import {BlueBox} from '../components/blue-box'
-import {NewsTeaser} from '../custom-teasers/news'
+import { Advertisement } from '../components/advertisement';
+import { BlueBox } from '../components/blue-box';
+import { NewsTeaser } from '../custom-teasers/news';
 
-export const isNewsTeasers = (block: BlockContent): block is TeaserGridBlock | TeaserListBlock =>
-  allPass([hasBlockStyle('News'), isTeaserListBlock])(block)
+export const isNewsTeasers = (
+  block: BlockContent
+): block is TeaserGridBlock | TeaserListBlock =>
+  allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 
 export const NewsBlockStyle = ({
   title,
   teasers,
   blockStyle,
-  className
-}: Pick<BuilderTeaserListBlockProps, 'teasers' | 'title' | 'blockStyle' | 'className'>) => {
-  const filledTeasers = teasers.filter(isFilledTeaser)
-  const numColumns = 1
+  className,
+}: Pick<
+  BuilderTeaserListBlockProps,
+  'teasers' | 'title' | 'blockStyle' | 'className'
+>) => {
+  const filledTeasers = teasers.filter(isFilledTeaser);
+  const numColumns = 1;
   const {
-    elements: {H2, Link}
-  } = useWebsiteBuilder()
+    elements: { H2 },
+  } = useWebsiteBuilder();
 
   return (
     <>
@@ -43,9 +55,11 @@ export const NewsBlockStyle = ({
                 numColumns={numColumns}
                 alignment={alignmentForTeaserBlock(index, numColumns)}
                 blockStyle={blockStyle}
+                index={index}
               />
             ))}
           </TeaserList>
+
           <Link href={'/a/tag/news'}>
             <b>Weitere News {'->'}</b>
           </Link>
@@ -56,25 +70,30 @@ export const NewsBlockStyle = ({
         </Filler>
       </NewsTeaserListWrapper>
     </>
-  )
-}
+  );
+};
 
 const TeaserList = styled('div')`
   display: flex;
   flex-direction: column;
-`
+`;
 
-const Filler = styled(Box)``
+const Filler = styled(Box)``;
 
 const NewsTeaserListWrapper = styled(Box)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${({theme}) => theme.spacing(2.5)};
+  row-gap: ${({ theme }) => theme.spacing(3)};
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    row-gap: ${({ theme }) => theme.spacing(2.5)};
+    column-gap: ${({ theme }) => theme.spacing(2.5)};
+  }
 
   ${BlueBox} {
     grid-column: span 3;
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       grid-column: span 2;
     }
   }
@@ -82,8 +101,8 @@ const NewsTeaserListWrapper = styled(Box)`
   ${Filler} {
     grid-column: span 3;
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       grid-column: span 1;
     }
   }
-`
+`;

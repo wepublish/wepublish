@@ -1,24 +1,24 @@
-import {Meta} from '@storybook/react'
-import {QuoteBlock} from './quote-block'
-import {mockQuoteBlock} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { QuoteBlock } from './quote-block';
+import { mockQuoteBlock } from '@wepublish/storybook/mocks';
 
 export default {
   component: QuoteBlock,
-  title: 'Blocks/Quote'
-} as Meta
+  title: 'Blocks/Quote',
+} as Meta;
 
 export const Default = {
   args: mockQuoteBlock({
-    image: null
-  })
-}
+    image: null,
+  }),
+};
 
 export const WithImage = {
-  args: mockQuoteBlock()
-}
+  args: mockQuoteBlock(),
+};
 
 export const WithImageAndShortText = {
   args: mockQuoteBlock({
-    quote: 'This is a quote.'
-  })
-}
+    quote: 'This is a quote.',
+  }),
+};

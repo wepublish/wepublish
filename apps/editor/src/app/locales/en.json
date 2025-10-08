@@ -75,6 +75,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",
         "noImagesFound": "No Images found",
+        "openInNewTab": "Content URL opens in a new tab",
         "pagePreviewLink": "Page Preview Link",
         "peerDisabled": "Currently this peer is disabled",
         "peeredArticlePreview": "Preview",
@@ -125,7 +126,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articleList": {
@@ -233,7 +235,9 @@
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
-          "LOGGED_OUT": "logged out visitors"
+          "LOGGED_OUT": "logged out visitors",
+          "SUBSCRIBED": "subscribed visitors",
+          "UNSUBSCRIBED": "unsubscribed visitors"
         },
         "actions": "Actions",
         "image": "Image",
@@ -264,6 +268,7 @@
     },
     "blocks": {
       "crowdfunding": {
+        "crowdfundingName": "Crowdfunding {{name}}",
         "edit": "Edit",
         "label": "Crowdfunding",
         "title": "Select Crowdfunding",
@@ -414,12 +419,21 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Teaser Slots"
+        "autoLoading": "Auto-loading:",
+        "fillManually": "All slots will be manually filled",
+        "teasersLoaded": "teasers loaded",
+        "configure": "Configure",
+        "latest": "Latest",
+        "addSlot": "Add slot",
+        "label": "Teaser Slots",
+        "filter": "Filter by tags",
+        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering."
       },
       "title": {
         "label": "Title",
-        "leadText": "Lead Text ",
-        "title": "Title"
+        "leadText": "Lead Text",
+        "title": "Title",
+        "preTitle": "Pre-title"
       }
     },
     "cancel": "Cancel",
@@ -767,6 +781,7 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "createMemberPlanHeader": "Create Memberplan",
       "description": "Description",
+      "shortDescription": "Short description",
       "editPaymentSetting": "Edit payment setting",
       "forceAutoRenewal": "Force Auto Renew",
       "loadingTitle": "Loading",
@@ -1180,6 +1195,8 @@
       "successTitle": "Saved",
       "articlePage": "Articles & Pages",
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
+      "newArticlePeering": "Freshly created articles will be peered by default",
+      "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1198,7 +1215,9 @@
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "revenueApiPublic": "Exposes invoices anonymized to the public.",
-        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before."
+        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before.",
+        "newArticlePeering": "Will not affect already created articles",
+        "newArticlePaywall": "Will not affect already created articles"
       }
     },
     "subscriptionFlow": {
@@ -1287,8 +1306,11 @@
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
         "createTag": "New Tag",
+        "editTag": "Edit {{tag}}",
         "placeholder": "Name of tag",
         "title": "Tags",
+        "name": "Name",
+        "description": "Description",
         "markAsMain": "Use as main tag"
       }
     },
@@ -1540,7 +1562,10 @@
     "trackingPixels": {
       "noPixelInfoHeader": "No tracking integration available",
       "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
-      "errorHeader": "Error"
+      "errorHeader": "Error",
+      "providerId": "Provider ID:",
+      "trackingId": "Tracking ID:",
+      "trackingURI": "Tracking URI:"
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"
@@ -1641,6 +1666,31 @@
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
       "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
       "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Edit Paywall",
+        "name": "Name of the paywall (NOT visible to the user)",
+        "description": "Paywall text (visible to the user)",
+        "circumventDescription": "Paywall text when the article content is not hidden (visible to the user)",
+        "active": "Active",
+        "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
+        "anyMemberPlan": "Allow any subscription to pass the paywall",
+        "memberPlans": "Only specific subscriptions can pass the paywall",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass token",
+        "newBypassToken": "Create new bypass token",
+        "addBypass": "add",
+        "qrCodeTitle": "QR Code for Bypass Token",
+        "downloadSvg": "Download SVG",
+        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Grace Period",
+      "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
+      "days": "days"
     }
   }
 }

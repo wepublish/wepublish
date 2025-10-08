@@ -19,8 +19,14 @@ exports[`TagResolver can query a list of tags 2`] = `
 [
   [
     {
+      "createdAt": 2023-01-01T00:00:00.000Z,
+      "description": [],
       "id": "id1",
+      "main": false,
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "peerId": null,
       "tag": "tag1",
+      "type": "Article",
     },
   ],
 ]

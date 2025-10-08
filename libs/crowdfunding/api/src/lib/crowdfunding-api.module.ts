@@ -1,13 +1,13 @@
-import {Module} from '@nestjs/common'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {CrowdfundingService} from './crowdfunding.service'
-import {CrowdfundingResolver} from './crowdfunding.resolver'
-import {CrowdfundingGoalService} from './crowdfunding-goal.service'
+import { Module } from '@nestjs/common';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { CrowdfundingService } from './crowdfunding.service';
+import { CrowdfundingResolver } from './crowdfunding.resolver';
+import { CrowdfundingGoalService } from './crowdfunding-goal.service';
 import {
   HasCrowdfundingResolver,
-  HasOptionalCrowdfundingResolver
-} from './has-crowdfunding/has-crowdfunding.resolver'
-import {CrowdfundingDataloaderService} from './crowdfunding-dataloader.service'
+  HasOptionalCrowdfundingResolver,
+} from './has-crowdfunding/has-crowdfunding.resolver';
+import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
 
 @Module({
   imports: [PrismaModule],
@@ -17,8 +17,8 @@ import {CrowdfundingDataloaderService} from './crowdfunding-dataloader.service'
     CrowdfundingGoalService,
     CrowdfundingDataloaderService,
     HasCrowdfundingResolver,
-    HasOptionalCrowdfundingResolver
+    HasOptionalCrowdfundingResolver,
   ],
-  exports: [CrowdfundingService, CrowdfundingDataloaderService]
+  exports: [CrowdfundingService, CrowdfundingDataloaderService],
 })
 export class CrowdfundingApiModule {}

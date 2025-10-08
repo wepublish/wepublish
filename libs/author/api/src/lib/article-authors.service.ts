@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {PrimeDataLoader} from '@wepublish/utils/api'
-import {AuthorDataloaderService} from './author-dataloader.service'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { PrimeDataLoader } from '@wepublish/utils/api';
+import { AuthorDataloaderService } from './author-dataloader.service';
 
 @Injectable()
 export class ArticleAuthorsService {
@@ -13,14 +13,14 @@ export class ArticleAuthorsService {
       where: {
         articlesAsSocialMediaAuthor: {
           some: {
-            revisionId
-          }
-        }
+            revisionId,
+          },
+        },
       },
       include: {
-        links: true
-      }
-    })
+        links: true,
+      },
+    });
   }
 
   @PrimeDataLoader(AuthorDataloaderService)
@@ -29,13 +29,13 @@ export class ArticleAuthorsService {
       where: {
         articlesAsAuthor: {
           some: {
-            revisionId
-          }
-        }
+            revisionId,
+          },
+        },
       },
       include: {
-        links: true
-      }
-    })
+        links: true,
+      },
+    });
   }
 }

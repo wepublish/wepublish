@@ -1,22 +1,22 @@
-import {Field, InterfaceType} from '@nestjs/graphql'
-import {Peer} from '../peer.model'
+import { Field, InterfaceType } from '@nestjs/graphql';
+import { Peer } from '../peer.model';
 
 @InterfaceType()
 export abstract class HasOptionalPeer {
-  @Field({nullable: true})
-  peerID?: string
+  @Field({ nullable: true })
+  peerID?: string;
 
-  @Field(() => Peer, {nullable: true})
-  peer?: Peer
+  @Field(() => Peer, { nullable: true })
+  peer?: Peer;
 }
 
 @InterfaceType()
 export abstract class HasPeer {
   @Field()
-  peerID!: string
+  peerID!: string;
 
   @Field(() => Peer)
-  peer!: Peer
+  peer!: Peer;
 }
 
 // New Style
@@ -24,17 +24,17 @@ export abstract class HasPeer {
 @InterfaceType()
 export abstract class HasPeerLc {
   @Field()
-  peerId!: string
+  peerId!: string;
 
   @Field(() => Peer)
-  peer!: Peer
+  peer!: Peer;
 }
 
 @InterfaceType()
 export abstract class HasOptionalPeerLc {
-  @Field({nullable: true})
-  peerId?: string
+  @Field({ nullable: true })
+  peerId?: string;
 
-  @Field(() => Peer, {nullable: true})
-  peer?: Peer
+  @Field(() => Peer, { nullable: true })
+  peer?: Peer;
 }

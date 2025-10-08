@@ -1,11 +1,15 @@
-import {Meta} from '@storybook/react'
-import {TeaserSlider} from './teaser-slider'
-import {mockArticleTeaser, mockEventTeaser, mockPageTeaser} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { TeaserSlider } from './teaser-slider';
+import {
+  mockArticleTeaser,
+  mockEventTeaser,
+  mockPageTeaser,
+} from '@wepublish/storybook/mocks';
 
 export default {
   component: TeaserSlider,
-  title: 'Blocks/Teaser List/Block Styles/Slider'
-} as Meta
+  title: 'Blocks/Teaser List/Block Styles/Slider',
+} as Meta;
 
 export const Article = {
   args: {
@@ -14,10 +18,10 @@ export const Article = {
       mockArticleTeaser(),
       mockArticleTeaser(),
       mockArticleTeaser(),
-      mockArticleTeaser()
-    ]
-  }
-}
+      mockArticleTeaser(),
+    ],
+  },
+};
 
 export const Page = {
   ...Article,
@@ -28,10 +32,10 @@ export const Page = {
       mockPageTeaser(),
       mockPageTeaser(),
       mockPageTeaser(),
-      mockPageTeaser()
-    ]
-  }
-}
+      mockPageTeaser(),
+    ],
+  },
+};
 
 export const Event = {
   ...Article,
@@ -42,15 +46,15 @@ export const Event = {
       mockEventTeaser(),
       mockEventTeaser(),
       mockEventTeaser(),
-      mockEventTeaser()
-    ]
-  }
-}
+      mockEventTeaser(),
+    ],
+  },
+};
 
 export const WithTitle = {
   ...Article,
   args: {
     ...Article.args,
-    title: 'Foobar Title'
-  }
-}
+    title: 'Foobar Title',
+  },
+};

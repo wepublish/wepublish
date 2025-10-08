@@ -1,86 +1,86 @@
-import React from 'react'
+import React from 'react';
 import {
   CreateBannerActionInput,
   CreateBannerInput,
   getApiClientV2,
   FullImageFragment,
   useCreateBannerMutation,
-  LoginStatus
-} from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {useNavigate} from 'react-router-dom'
-import {BannerForm} from './banner-form'
-import {SingleViewTitle} from '@wepublish/ui/editor'
-import {Form, Schema} from 'rsuite'
+  LoginStatus,
+} from '@wepublish/editor/api-v2';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { BannerForm } from './banner-form';
+import { SingleViewTitle } from '@wepublish/ui/editor';
+import { Form, Schema } from 'rsuite';
 
 export const CreateBannerForm = () => {
-  const navigate = useNavigate()
-  const {t} = useTranslation()
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
-  const closePath = '/banners'
+  const closePath = '/banners';
 
   const [banner, setBanner] = useState({
     active: false,
     showOnArticles: false,
     showForLoginStatus: LoginStatus.All,
-    delay: 0
-  } as CreateBannerInput & {image?: FullImageFragment | null})
+    delay: 0,
+  } as CreateBannerInput & { image?: FullImageFragment | null });
 
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
     title: StringType().isRequired(),
-    text: StringType().isRequired()
-  })
+    text: StringType().isRequired(),
+  });
 
-  const [shouldClose, setShouldClose] = useState(false)
+  const [shouldClose, setShouldClose] = useState(false);
 
-  const client = useMemo(() => getApiClientV2(), [])
-  const [createBanner, {loading}] = useCreateBannerMutation({
+  const client = useMemo(() => getApiClientV2(), []);
+  const [createBanner, { loading }] = useCreateBannerMutation({
     client,
     onError: error => {
-      console.log(error)
+      console.log(error);
     },
     onCompleted: banner => {
       if (shouldClose) {
-        navigate(closePath)
+        navigate(closePath);
       }
-    }
-  })
+    },
+  });
 
   const onSubmit = () => {
-    const {image, ...bannerWithoutImage} = banner
+    const { image, ...bannerWithoutImage } = banner;
     const processedBanner = {
       ...bannerWithoutImage,
       actions: banner.actions?.map(removeIdAndTypename),
-      showOnPages: banner.showOnPages?.map(removeTypename)
-    }
-    createBanner({variables: {input: processedBanner}})
-  }
+      showOnPages: banner.showOnPages?.map(removeTypename),
+    };
+    createBanner({ variables: { input: processedBanner } });
+  };
 
   const removeIdAndTypename = (action: CreateBannerActionInput) => {
-    const {id, __typename, ...actionCleaned} = action as any
-    return actionCleaned
-  }
+    const { id, __typename, ...actionCleaned } = action as any;
+    return actionCleaned;
+  };
 
   const removeTypename = (page: any) => {
-    const {__typename, ...pageCleaned} = page
-    return pageCleaned
-  }
+    const { __typename, ...pageCleaned } = page;
+    return pageCleaned;
+  };
 
   const handleAddAction = (action: CreateBannerActionInput) => {
     setBanner({
       ...banner,
-      actions: [...(banner.actions || []), action]
-    })
-  }
+      actions: [...(banner.actions || []), action],
+    });
+  };
 
   const handleRemoveAction = (index: number) => {
     setBanner({
       ...banner,
-      actions: banner.actions?.filter((_, i) => i !== index) || []
-    })
-  }
+      actions: banner.actions?.filter((_, i) => i !== index) || [],
+    });
+  };
 
   return (
     <Form
@@ -88,7 +88,8 @@ export const CreateBannerForm = () => {
       formValue={banner}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}
+    >
       <SingleViewTitle
         loading={loading}
         title={t('banner.create.title')}
@@ -107,5 +108,5 @@ export const CreateBannerForm = () => {
         onRemoveAction={handleRemoveAction}
       />
     </Form>
-  )
-}
+  );
+};

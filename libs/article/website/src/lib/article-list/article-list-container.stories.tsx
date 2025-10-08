@@ -1,14 +1,14 @@
-import {Meta} from '@storybook/react'
-import {Article, ArticleListDocument} from '@wepublish/website/api'
-import {ArticleListContainer} from './article-list-container'
-import {mockArticle} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { Article, ArticleListDocument } from '@wepublish/website/api';
+import { ArticleListContainer } from './article-list-container';
+import { mockArticle } from '@wepublish/storybook/mocks';
 
-const article = mockArticle()
+const article = mockArticle();
 
 export default {
   component: ArticleListContainer,
-  title: 'Container/ArticleList'
-} as Meta
+  title: 'Container/ArticleList',
+} as Meta;
 
 export const Default = {
   args: {},
@@ -19,7 +19,7 @@ export const Default = {
         {
           request: {
             query: ArticleListDocument,
-            variables: {}
+            variables: {},
           },
           result: {
             data: {
@@ -30,20 +30,20 @@ export const Default = {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+                  startCursor: null,
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const WithFilter = {
   ...Default,
   args: {
-    filter: (articles: Article[]) => articles.filter(a => a.id !== article.id)
-  }
-}
+    filter: (articles: Article[]) => articles.filter(a => a.id !== article.id),
+  },
+};

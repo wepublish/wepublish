@@ -36,7 +36,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4:9.7
     platform: linux/amd64
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
       PGADMIN_DEFAULT_PASSWORD: 'root'

@@ -1,8 +1,8 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import {KulturagendaParser} from './kulturagenda-parser'
-import {XMLEventType} from './xmlTypes'
-import {HttpService} from '@nestjs/axios'
-import {of} from 'rxjs'
+import { Test, TestingModule } from '@nestjs/testing';
+import { KulturagendaParser } from './kulturagenda-parser';
+import { XMLEventType } from './xmlTypes';
+import { HttpService } from '@nestjs/axios';
+import { of } from 'rxjs';
 
 const XMLEventMock: XMLEventType = {
   Title: ['Event 1'],
@@ -18,7 +18,7 @@ const XMLEventMock: XMLEventType = {
     startDate: '',
     startTime: '',
     endDate: '',
-    endTime: ''
+    endTime: '',
   },
   CastInformation: ['Cast info 1'],
   PriceInformation: [''],
@@ -29,8 +29,8 @@ const XMLEventMock: XMLEventType = {
     {
       LocationId: [''],
       LocationName: [''],
-      LocationAdress: ['']
-    }
+      LocationAdress: [''],
+    },
   ],
   ActivityDates: [
     {
@@ -45,26 +45,26 @@ const XMLEventMock: XMLEventType = {
             startDate: '',
             startTime: '',
             endDate: '',
-            endTime: ''
-          }
-        }
-      ]
-    }
+            endTime: '',
+          },
+        },
+      ],
+    },
   ],
   ActivityMultimedia: [
     {
       Images: [],
-      Videos: ['']
-    }
+      Videos: [''],
+    },
   ],
   ActivitySettings: [
     {
       Branches: [''],
       Genres: [''],
-      EventTypes: ['']
-    }
-  ]
-}
+      EventTypes: [''],
+    },
+  ],
+};
 
 // Mocked XML data for testing
 const mockedXMLData = {
@@ -74,7 +74,7 @@ const mockedXMLData = {
         Activity: [
           {
             ...XMLEventMock,
-            Title: ['Event 1']
+            Title: ['Event 1'],
           },
           {
             ...XMLEventMock,
@@ -87,12 +87,12 @@ const mockedXMLData = {
                       startDate: '2030-06-29',
                       startTime: '14:00:00',
                       endDate: '2030-06-29',
-                      endTime: '16:00:00'
-                    }
-                  }
-                ]
-              }
-            ]
+                      endTime: '16:00:00',
+                    },
+                  },
+                ],
+              },
+            ],
           },
           {
             ...XMLEventMock,
@@ -105,12 +105,12 @@ const mockedXMLData = {
                       startDate: '2030-06-30',
                       startTime: '18:00:00',
                       endDate: '2030-06-30',
-                      endTime: '20:00:00'
-                    }
-                  }
-                ]
-              }
-            ]
+                      endTime: '20:00:00',
+                    },
+                  },
+                ],
+              },
+            ],
           },
           {
             ...XMLEventMock,
@@ -123,27 +123,27 @@ const mockedXMLData = {
                       startDate: '2022-06-25',
                       startTime: '10:00:00',
                       endDate: '2022-06-25',
-                      endTime: '12:00:00'
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-}
+                      endTime: '12:00:00',
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+};
 
 jest.mock('xml2js', () => ({
   Parser: jest.fn().mockImplementation(() => ({
-    parseStringPromise: jest.fn(() => Promise.resolve(mockedXMLData))
-  }))
-}))
+    parseStringPromise: jest.fn(() => Promise.resolve(mockedXMLData)),
+  })),
+}));
 
 describe('fetchAndParseKulturagenda', () => {
-  let parser: KulturagendaParser
+  let parser: KulturagendaParser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -152,31 +152,31 @@ describe('fetchAndParseKulturagenda', () => {
         {
           provide: HttpService,
           useValue: {
-            get: () => of({data: mockedXMLData})
-          }
-        }
-      ]
-    }).compile()
+            get: () => of({ data: mockedXMLData }),
+          },
+        },
+      ],
+    }).compile();
 
-    parser = module.get<KulturagendaParser>(KulturagendaParser)
-  })
+    parser = module.get<KulturagendaParser>(KulturagendaParser);
+  });
 
   it('should fetch XML data and parse upcoming events correctly', async () => {
-    const url = 'https://example.com/events.xml'
-    const source = 'Kulturagenda'
+    const url = 'https://example.com/events.xml';
+    const source = 'Kulturagenda';
 
-    const events = await parser.fetchAndParseKulturagenda(url, source)
+    const events = await parser.fetchAndParseKulturagenda(url, source);
 
-    expect(events).toHaveLength(2)
+    expect(events).toHaveLength(2);
 
-    expect(events[0].name).toBe('Event 2')
-    expect(events[0].startsAt).toEqual(new Date('2030-06-29T14:00:00.000Z'))
-    expect(events[0].endsAt).toEqual(new Date('2030-06-29T16:00:00'))
+    expect(events[0].name).toBe('Event 2');
+    expect(events[0].startsAt).toEqual(new Date('2030-06-29T14:00:00.000Z'));
+    expect(events[0].endsAt).toEqual(new Date('2030-06-29T16:00:00'));
 
-    expect(events[1].name).toBe('Event 3')
-    expect(events[1].startsAt).toEqual(new Date('2030-06-30T18:00:00'))
-    expect(events[1].endsAt).toEqual(new Date('2030-06-30T20:00:00'))
-  })
+    expect(events[1].name).toBe('Event 3');
+    expect(events[1].startsAt).toEqual(new Date('2030-06-30T18:00:00'));
+    expect(events[1].endsAt).toEqual(new Date('2030-06-30T20:00:00'));
+  });
 
   it('should return undefined if the event has a past start date', () => {
     const XMLEvent = {
@@ -190,15 +190,15 @@ describe('fetchAndParseKulturagenda', () => {
                 startDate: '2022-06-25',
                 startTime: '10:00:00',
                 endDate: '2022-06-25',
-                endTime: '12:00:00'
-              }
-            }
-          ]
-        }
-      ]
-    }
+                endTime: '12:00:00',
+              },
+            },
+          ],
+        },
+      ],
+    };
 
-    const result = parser.upcomingOnly(XMLEvent as XMLEventType)
-    expect(result).toBeUndefined()
-  })
-})
+    const result = parser.upcomingOnly(XMLEvent as XMLEventType);
+    expect(result).toBeUndefined();
+  });
+});
