@@ -984,6 +984,44 @@ async function seed() {
       articles.map(({ id }) => id)
     );
 
+    
+    console.log('Seeding users');
+    await Promise.all([
+      prisma.user.upsert({
+        where: {
+          email: 'dev@wepublish.ch',
+        },
+        update: {
+          password: await hashPassword('123'),
+        },
+        create: {
+          email: 'dev@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Dev User',
+          active: true,
+          roleIDs: [adminUserRole.id],
+          password: await hashPassword('123'),
+        },
+      }),
+      prisma.user.upsert({
+        where: {
+          email: 'editor@wepublish.ch',
+        },
+        update: {
+          password: await hashPassword('123'),
+        },
+        create: {
+          email: 'editor@wepublish.ch',
+          emailVerifiedAt: new Date(),
+          name: 'Editor User',
+          active: true,
+          roleIDs: [editorUserRole.id],
+          password: await hashPassword('123'),
+        },
+      }),
+    ]);
+
+
     console.log('Seeding Payment Methods');
     await seedPaymentMethods(prisma);
 
