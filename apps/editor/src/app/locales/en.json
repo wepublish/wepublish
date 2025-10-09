@@ -130,24 +130,6 @@
         "paywall": "Paywall"
       }
     },
-    "articleList": {
-      "filter": {
-        "dates": "Dates",
-        "description": "Filter by description",
-        "isDraft": "Draft",
-        "isPending": "Pending",
-        "isPublished": "Published",
-        "lead": "Filter by lead",
-        "location": "Location",
-        "name": "Name",
-        "preTitle": "Filter by pre-title",
-        "providers": "Providers",
-        "publicationDate": "Publication Date",
-        "reset": "Reset Filter",
-        "title": "Filter by title",
-        "includeHidden": "Include hidden"
-      }
-    },
     "articles": {
       "overview": {
         "action": "Action",
@@ -662,6 +644,25 @@
         "upcomingOnly": "Upcoming only"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Dates",
+        "description": "Filter by description",
+        "isDraft": "Draft",
+        "isPending": "Pending",
+        "isPublished": "Published",
+        "lead": "Filter by lead",
+        "location": "Location",
+        "name": "Name",
+        "preTitle": "Filter by pre-title",
+        "providers": "Providers",
+        "publicationDate": "Publication Date",
+        "reset": "Reset Filter",
+        "title": "Filter by title",
+        "includeHiddenArticles": "Include hidden",
+        "includeHiddenPages": "Include hidden"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -931,6 +932,8 @@
         "publishAtDateCheckbox": "Set a different date for online availibility",
         "publishDate": "Publish Date",
         "publishPage": "Publish Page",
+        "hidden": "Hide",
+        "setAsHidden": "Hidden pages are excluded by default but can still be queried on demand.",
         "slug": "Slug",
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
