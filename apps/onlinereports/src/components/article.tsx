@@ -99,7 +99,7 @@ export function OnlineReportsArticle({
       {article && <ArticleSEO article={article} />}
 
       <Blocks
-        key={article.id}
+        key={article?.id}
         blocks={(article?.latest.blocks as BlockContent[]) ?? []}
         type="Article"
       />
@@ -107,11 +107,11 @@ export function OnlineReportsArticle({
         {article && <ArticleAuthors article={article} />}
       </ArticleTopMeta>
 
-      <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
+      <ArticlePreTitle>{article?.latest.preTitle}</ArticlePreTitle>
 
       <ArticleBottomMeta>
         {article && <ArticleMeta article={article} />}
-        {!data?.article?.disableComments && (
+        {article?.disableComments && (
           <>
             <H3>Ihre Meinung zu diesem Artikel</H3>
             <Button onClick={scrollToComments}>Kommentare</Button>

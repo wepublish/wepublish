@@ -19,7 +19,14 @@ import { PeerImage } from '@wepublish/image/api';
 @InputType()
 export class PeerArticleFilter extends OmitType(
   ArticleFilter,
-  ['draft', 'pending', 'published', 'includeHidden', 'shared'] as const,
+  [
+    'draft',
+    'pending',
+    'published',
+    'includeHidden',
+    'shared',
+    'tagsNotIn',
+  ] as const,
   InputType
 ) {
   @Field({ nullable: true })

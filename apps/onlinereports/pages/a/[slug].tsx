@@ -1,7 +1,6 @@
-import styled from '@emotion/styled';
 import {
-  ArticleContainer,
-  ArticleListContainer,
+  ArticleRecent,
+  ArticleRecentWrapper,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { getArticlePathsBasedOnPage } from '@wepublish/utils/website';
@@ -16,23 +15,18 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
+  Tag,
+  TagListDocument,
+  TagType,
   useArticleQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import { ComponentProps } from 'react';
-
-export const ArticleWrapper = styled('div')`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: 1/12;
-  }
-`;
 
 const nrOfRecentArticles = 4;
+const excludeTags = ['Gelesen & gedacht'];
 export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
@@ -49,43 +43,24 @@ export default function ArticleBySlugOrId() {
     },
   });
 
-  const containerProps = {
-    slug,
-    id,
-  } as ComponentProps<typeof ArticleContainer>;
-
   return (
     <>
-      <ArticleContainer {...containerProps} />
-
       {data?.article && (
-        <ArticleWrapper>
-          <H2 component={'h2'}>Aktuelle Beiträge</H2>
-
-          <ArticleListContainer
-            variables={{
-              sort: ArticleSort.PublishedAt,
-              order: SortOrder.Descending,
-              take: nrOfRecentArticles + 1,
-            }}
-            filter={articles =>
-              articles
-                .filter(article => article.id !== data.article?.id)
-                .splice(0, nrOfRecentArticles)
-            }
-          />
-          <div id={'comments'} />
-        </ArticleWrapper>
+        <ArticleRecent
+          article={data.article}
+          excludeTags={excludeTags}
+          nrOfRecentArticles={nrOfRecentArticles}
+        />
       )}
 
       {data?.article && !data.article.disableComments && (
-        <ArticleWrapper>
+        <ArticleRecentWrapper>
           <H2 component={'h2'}>Kommentare</H2>
           <CommentListContainer
             id={data!.article!.id}
             type={CommentItemType.Article}
           />
-        </ArticleWrapper>
+        </ArticleRecentWrapper>
       )}
     </>
   );
@@ -126,6 +101,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   if (article.data?.article) {
+    const tagsToExclude = await client.query({
+      query: TagListDocument,
+      variables: {
+        type: TagType.Article,
+        filter: {
+          tags: excludeTags,
+        },
+        take: 100,
+      },
+    });
+
     await Promise.all([
       client.query({
         query: ArticleListDocument,
@@ -133,6 +119,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           sort: ArticleSort.PublishedAt,
           order: SortOrder.Descending,
           take: nrOfRecentArticles + 1,
+          filter: {
+            tagsNotIn:
+              tagsToExclude.data ?
+                tagsToExclude.data.tags.nodes.map((tag: Tag) => tag.id)
+              : [],
+          },
         },
       }),
       client.query({
