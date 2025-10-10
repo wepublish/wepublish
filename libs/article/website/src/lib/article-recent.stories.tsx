@@ -157,33 +157,6 @@ const excludeTags = [mockTags.tag2.tag, mockTags.tag4.tag] as string[];
 
 const nrOfRecentArticles = 4;
 
-/*
-const Render = (args: any) => {
-  return (
-    <ArticleRecent {...(args as ComponentProps<typeof ArticleRecent>)}>
-
-
-      <ArticleListContainer
-        variables={{
-          sort: ArticleSort.PublishedAt,
-          order: SortOrder.Descending,
-          take: nrOfRecentArticles + 1,
-          filter: {
-            tagsNotIn:
-              args.excludeTags ? [mockTags.tag2.id, mockTags.tag4.id] : [],
-          },
-        }}
-        filter={articles =>
-          articles
-            .filter(article => article.id !== args.article.id)
-            .splice(0, nrOfRecentArticles)
-        }
-      />
-    </ArticleRecent>
-  );
-};
-*/
-
 const Render = (args: any) => {
   return <ArticleRecent {...(args as ComponentProps<typeof ArticleRecent>)} />;
 };
