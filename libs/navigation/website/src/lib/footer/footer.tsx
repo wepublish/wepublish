@@ -217,7 +217,7 @@ export const FooterMainLinks = styled(FooterCategoryLinks)`
   grid-auto-rows: max-content;
 `;
 
-const FooterPaper = ({
+export const FooterPaper = ({
   main,
   categories,
   children,

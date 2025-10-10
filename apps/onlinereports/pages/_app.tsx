@@ -12,7 +12,10 @@ import {
   TitleBlockTitle,
 } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { NavbarContainer } from '@wepublish/navigation/website';
+import {
+  FooterContainer,
+  NavbarContainer,
+} from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
@@ -197,6 +200,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ArticleAuthors={OnlineReportsArticleAuthors}
             ArticleList={OnlineReportsArticleList}
             Navbar={OnlineReportsNavbar}
+            Footer={OnlineReportsFooter}
             Article={OnlineReportsArticle}
             CommentListItem={OnlineReportsCommentListItem}
             Page={OnlineReportsPage}
@@ -320,7 +324,12 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
 
-                <OnlineReportsFooter />
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[['about-us']]}
+                  iconSlug="icons"
+                  wepublishLogo="hidden"
+                />
               </Spacer>
 
               <RoutedAdminBar />
