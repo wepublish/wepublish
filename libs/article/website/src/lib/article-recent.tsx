@@ -22,16 +22,14 @@ export const ArticleRecentWrapper = styled('div')`
 
 export type ArticleRecentProps = {
   article: ArticleQuery['article'];
-  className?: string;
-  children?: React.ReactNode;
-  excludeTags?: string[];
-  nrOfRecentArticles?: number;
+  excludeTags: string[];
+  nrOfRecentArticles: number;
 };
 
 export function ArticleRecent({
   article,
-  excludeTags = [],
-  nrOfRecentArticles = 4,
+  excludeTags,
+  nrOfRecentArticles,
 }: ArticleRecentProps) {
   const tags = useTagListQuery({
     variables: {
