@@ -147,9 +147,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const tagsToExclude = await client.query({
       query: TagListDocument,
       variables: {
-        type: TagType.Article,
         filter: {
           tags: excludeTags,
+          type: TagType.Article,
         },
       },
     });
