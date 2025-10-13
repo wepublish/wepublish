@@ -302,14 +302,9 @@ const clickPayTransactionFees: StoryObj['play'] = async ({
 const clickSubscribe: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
 
-  let submitButton = canvas.getByText('Abonnieren', {
+  const submitButton = canvas.getByText('Abonnieren', {
     exact: false,
   });
-  if (!submitButton) {
-    submitButton = canvas.getByText('Spenden', {
-      exact: false,
-    });
-  }
 
   await step('Submit form', async () => {
     await userEvent.click(submitButton);
