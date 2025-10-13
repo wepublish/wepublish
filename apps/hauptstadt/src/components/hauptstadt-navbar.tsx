@@ -49,32 +49,26 @@ enum ScrollDirection {
 const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
   :root {
     --navbar-height: 80px;
-    --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '80px' : (
-      '55px'
-    )};
+    --scrolled-navbar-height: 55px;
+    --changing-navbar-height: ${state.includes(NavbarState.Regular) ?
+      'var(--navbar-height)'
+    : 'var(--scrolled-navbar-height)'};
 
     ${theme.breakpoints.up('sm')} {
       --navbar-height: 109px;
-      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '109px'
-      : '55px'};
     }
 
     ${theme.breakpoints.up('lg')} {
       --navbar-height: 145px;
-      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '145px'
-      : '80px'};
+      --scrolled-navbar-height: 80px;
     }
 
     ${theme.breakpoints.up('xl')} {
       --navbar-height: 173px;
-      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '173px'
-      : '80px'};
     }
 
     ${theme.breakpoints.up('xxl')} {
       --navbar-height: 208px;
-      --changing-navbar-height: ${state.includes(NavbarState.Regular) ? '208px'
-      : '80px'};
     }
   }
 `;
