@@ -1,22 +1,22 @@
-import {Field, InterfaceType} from '@nestjs/graphql'
-import {Article} from '../article.model'
+import { Field, InterfaceType } from '@nestjs/graphql';
+import { Article } from '../article.model';
 
 @InterfaceType()
 export abstract class HasOptionalArticle {
-  @Field({nullable: true})
-  articleID?: string
+  @Field({ nullable: true })
+  articleID?: string;
 
-  @Field(() => Article, {nullable: true})
-  article?: Article
+  @Field(() => Article, { nullable: true })
+  article?: Article;
 }
 
 @InterfaceType()
 export abstract class HasArticle {
   @Field()
-  articleID!: string
+  articleID!: string;
 
   @Field(() => Article)
-  article!: Article
+  article!: Article;
 }
 
 // New Style
@@ -24,17 +24,17 @@ export abstract class HasArticle {
 @InterfaceType()
 export abstract class HasArticleLc {
   @Field()
-  articleId!: string
+  articleId!: string;
 
   @Field(() => Article)
-  article!: Article
+  article!: Article;
 }
 
 @InterfaceType()
 export abstract class HasOptionalArticleLc {
-  @Field({nullable: true})
-  articleId?: string
+  @Field({ nullable: true })
+  articleId?: string;
 
-  @Field(() => Article, {nullable: true})
-  article?: Article
+  @Field(() => Article, { nullable: true })
+  article?: Article;
 }

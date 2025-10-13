@@ -6,4 +6,15 @@ Allow: /
 User-agent: GPTBot
 Disallow: /
 
-Sitemap: https://wepublish.ch/api/sitemap
+# Duplicate Content durch Weiterleitungen und Parameter verhindern
+User-agent: *
+Disallow: /*?articleId=
+Disallow: /page/
+Disallow: /*?rechte_autor=
+Disallow: /*?rechte_titel=
+Disallow: /*?jahr=
+Disallow: /*?next=
+Disallow: /*?trk=
+Disallow: /*?from=
+
+Sitemap: https://hauptstadt.be/api/sitemap

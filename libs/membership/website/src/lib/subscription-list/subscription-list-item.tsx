@@ -1,11 +1,11 @@
-import styled from '@emotion/styled'
-import {SubscriptionDeactivationReason} from '@wepublish/website/api'
+import styled from '@emotion/styled';
+import { SubscriptionDeactivationReason } from '@wepublish/website/api';
 import {
   BuilderSubscriptionListItemProps,
   useAsyncAction,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {useState} from 'react'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useState } from 'react';
 import {
   MdAttachMoney,
   MdAutorenew,
@@ -13,51 +13,54 @@ import {
   MdCancel,
   MdHistory,
   MdOutlinePayments,
-  MdTimelapse
-} from 'react-icons/md'
-import {formatCurrency} from '../formatters/format-currency'
-import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
-import {MembershipModal} from '../membership-modal/membership-modal'
-import {t} from 'i18next'
+  MdTimelapse,
+} from 'react-icons/md';
+import { formatCurrency } from '../formatters/format-currency';
+import {
+  formatPaymentPeriod,
+  formatPaymentTimeline,
+} from '../formatters/format-payment-period';
+import { Modal } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  border-radius: ${({theme}) => theme.shape.borderRadius}px;
-  border: 1px solid ${({theme}) => theme.palette.divider};
+  gap: ${({ theme }) => theme.spacing(1)};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  border: 1px solid ${({ theme }) => theme.palette.divider};
   overflow: hidden;
   container-type: inline-size;
-`
+`;
 
 export const SubscriptionListItemContent = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
-  padding: ${({theme}) => theme.spacing(2)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(2)};
+`;
 
 export const SubscriptionListItemMeta = styled('ul')`
   list-style: none;
   margin: 0;
   padding: 0;
-`
+`;
 
 export const SubscriptionListItemMetaItem = styled('li')`
   display: grid;
   grid-auto-flow: column;
   align-items: center;
   justify-content: start;
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
 export const SubscriptionListItemActions = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
 
-  @container (min-width: 45ch) {
+  @container (min-width: 35ch) {
     display: flex;
     justify-content: space-between;
   }
-`
+`;
 
 export function SubscriptionListItem({
   autoRenew,
@@ -66,28 +69,29 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: {image, name, currency},
+  memberPlan: { image, name, currency },
   url,
   cancel,
   canExtend,
   extend,
-  className
+  className,
 }: BuilderSubscriptionListItemProps) {
   const {
-    meta: {locale},
-    elements: {Image, H6, Button, Link, Alert, H5, Paragraph},
-    date
-  } = useWebsiteBuilder()
+    meta: { locale },
+    elements: { Image, H6, Button, Link, Alert, H5, Paragraph },
+    date,
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error>();
+  const callAction = useAsyncAction(setLoading, setError);
 
-  const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity)
-  const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity)
+  const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity);
+  const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity);
 
-  const [confirmCancel, setConfirmCancel] = useState(false)
-  const [confirmExtend, setConfirmExtend] = useState<boolean>(false)
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -101,7 +105,10 @@ export function SubscriptionListItem({
             <MdCalendarMonth />
             <span>
               Abgeschlossen am{' '}
-              <time suppressHydrationWarning dateTime={startsAt}>
+              <time
+                suppressHydrationWarning
+                dateTime={startsAt}
+              >
                 {date.format(new Date(startsAt))}
               </time>
             </span>
@@ -112,7 +119,10 @@ export function SubscriptionListItem({
               <MdOutlinePayments />
               <span>
                 Bezahlt bis{' '}
-                <time suppressHydrationWarning dateTime={paidUntil}>
+                <time
+                  suppressHydrationWarning
+                  dateTime={paidUntil}
+                >
                   {date.format(new Date(paidUntil))}
                 </time>
               </span>
@@ -125,13 +135,17 @@ export function SubscriptionListItem({
                 <MdCancel />
                 <span>
                   Gekündigt am{' '}
-                  <time suppressHydrationWarning dateTime={deactivation.date}>
+                  <time
+                    suppressHydrationWarning
+                    dateTime={deactivation.date}
+                  >
                     {date.format(new Date(deactivation.date))}
                   </time>
                 </span>
               </SubscriptionListItemMetaItem>
 
-              {deactivation.reason === SubscriptionDeactivationReason.InvoiceNotPaid && (
+              {deactivation.reason ===
+                SubscriptionDeactivationReason.InvoiceNotPaid && (
                 <SubscriptionListItemMetaItem>
                   <MdCancel /> Automatisch gekündigt
                 </SubscriptionListItemMetaItem>
@@ -147,7 +161,8 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung ist unbezahlt
+              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung
+              ist unbezahlt
             </SubscriptionListItemMetaItem>
           )}
 
@@ -164,8 +179,8 @@ export function SubscriptionListItem({
           )}
 
           <SubscriptionListItemMetaItem>
-            <MdAttachMoney /> Kostet {formatCurrency(monthlyAmount / 100, currency, locale)} pro
-            Monat
+            <MdAttachMoney /> Kostet{' '}
+            {formatCurrency(monthlyAmount / 100, currency, locale)} pro Monat
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
@@ -181,49 +196,56 @@ export function SubscriptionListItem({
               onClick={() => setConfirmCancel(true)}
               disabled={loading}
               variant="text"
-              color="secondary">
+              color="secondary"
+            >
               Abo kündigen
             </Button>
 
             {canExtend && (
-              <Button onClick={() => setConfirmExtend(true)} disabled={loading}>
-                Jetzt Verlängern
+              <Button
+                onClick={() => setConfirmExtend(true)}
+                disabled={loading}
+              >
+                Jetzt verlängern
               </Button>
             )}
           </SubscriptionListItemActions>
         )}
       </SubscriptionListItemContent>
 
-      <MembershipModal
+      <Modal
         open={!!confirmCancel}
         onSubmit={async () => {
-          setConfirmCancel(false)
-          await callAction(cancel)()
+          setConfirmCancel(false);
+          await callAction(cancel)();
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={t('subscription.cancelSubscription')}>
-        <H5 id="modal-modal-title" component="h1">
-          {name} wirklich kündigen?
-        </H5>
+        submitText={t('subscription.cancelSubscription')}
+      >
+        <H5 component="h1">{name} wirklich kündigen?</H5>
 
         <Paragraph gutterBottom={false}>
           {t('subscription.cancelSubscriptionConfirmationText')}
         </Paragraph>
-      </MembershipModal>
+      </Modal>
 
-      <MembershipModal
+      <Modal
         open={confirmExtend}
         onCancel={() => setConfirmExtend(false)}
         onSubmit={async () => {
-          setConfirmExtend(false)
-          await callAction(extend)()
+          setConfirmExtend(false);
+          await callAction(extend)();
         }}
-        submitText={'Jetzt Verlängern'}>
+        submitText={`Jetzt um ${subscriptionDuration} verlängern`}
+      >
         <H5 component="h1">Abo frühzeitig verlängern?</H5>
+
         <Paragraph gutterBottom={false}>
-          {t('subscription.renewSubscriptionConfirmationText', {subscriptionDuration})}
+          {t('subscription.renewSubscriptionConfirmationText', {
+            subscriptionDuration,
+          })}
         </Paragraph>
-      </MembershipModal>
+      </Modal>
     </SubscriptionListItemWrapper>
-  )
+  );
 }

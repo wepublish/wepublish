@@ -1,4 +1,8 @@
-import {CommentItemType, TagType, useCreateCommentMutation} from '@wepublish/editor/api'
+import {
+  CommentItemType,
+  TagType,
+  useCreateCommentMutation,
+} from '@wepublish/editor/api';
 import {
   ArticleFilter,
   ArticleListDocument,
@@ -9,9 +13,9 @@ import {
   useArticleListQuery,
   useDeleteArticleMutation,
   useDuplicateArticleMutation,
-  useUnpublishArticleMutation
-} from '@wepublish/editor/api-v2'
-import {CanPreview} from '@wepublish/permissions'
+  useUnpublishArticleMutation,
+} from '@wepublish/editor/api-v2';
+import { CanPreview } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -30,63 +34,73 @@ import {
   PermissionControl,
   StatusBadge,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdComment, MdContentCopy, MdDelete, MdUnpublished} from 'react-icons/md'
-import {Link, useNavigate} from 'react-router-dom'
-import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  MdAdd,
+  MdComment,
+  MdContentCopy,
+  MdDelete,
+  MdUnpublished,
+} from 'react-icons/md';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Message, Modal, Pagination, Table as RTable } from 'rsuite';
 
-const {Column, HeaderCell, Cell} = RTable
+const { Column, HeaderCell, Cell } = RTable;
 
 interface State {
-  state: string
-  text: string
+  state: string;
+  text: string;
 }
 
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish',
-  Duplicate = 'duplicate'
+  Duplicate = 'duplicate',
 }
 
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   switch (columnField) {
     case 'createdAt':
-      return ArticleSort.CreatedAt
+      return ArticleSort.CreatedAt;
     case 'modifiedAt':
-      return ArticleSort.ModifiedAt
+      return ArticleSort.ModifiedAt;
     case 'publishedAt':
-      return ArticleSort.PublishedAt
+      return ArticleSort.PublishedAt;
     default:
-      return null
+      return null;
   }
 }
 
 type ArticleListProps = {
-  initialFilter?: ArticleFilter
-}
+  initialFilter?: ArticleFilter;
+};
 
-function ArticleList({initialFilter = {}}: ArticleListProps) {
-  const {t} = useTranslation()
-  const navigate = useNavigate()
+function ArticleList({ initialFilter = {} }: ArticleListProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const [filter, setFilter] = useState(initialFilter)
+  const [filter, setFilter] = useState(initialFilter);
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [currentArticle, setCurrentArticle] = useState<FullArticleFragment>();
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('modifiedAt')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortField, setSortField] = useState('modifiedAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const client = getApiClientV2()
-  const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation({client})
-  const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation({client})
-  const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation({client})
+  const client = getApiClientV2();
+  const [deleteArticle, { loading: isDeleting }] = useDeleteArticleMutation({
+    client,
+  });
+  const [unpublishArticle, { loading: isUnpublishing }] =
+    useUnpublishArticleMutation({ client });
+  const [duplicateArticle, { loading: isDuplicating }] =
+    useDuplicateArticleMutation({ client });
 
   const articleListVariables = useMemo(
     () => ({
@@ -94,32 +108,32 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
       take: limit,
       skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
-      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     }),
     [filter, limit, page, sortField, sortOrder]
-  )
+  );
 
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
   } = useArticleListQuery({
     client,
     variables: articleListVariables,
-    fetchPolicy: 'cache-and-network'
-  })
-  const [createComment] = useCreateCommentMutation()
+    fetchPolicy: 'cache-and-network',
+  });
+  const [createComment] = useCreateCommentMutation();
 
-  const articles = useMemo(() => data?.articles?.nodes ?? [], [data])
-  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
+  const articles = useMemo(() => data?.articles?.nodes ?? [], [data]);
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
 
   useEffect(() => {
     const timerID = setTimeout(() => {
-      setHighlightedRowId(null)
-    }, 3000)
+      setHighlightedRowId(null);
+    }, 3000);
 
-    return () => clearTimeout(timerID)
-  }, [highlightedRowId])
+    return () => clearTimeout(timerID);
+  }, [highlightedRowId]);
 
   return (
     <>
@@ -131,7 +145,11 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <ListViewActions>
             <Link to="/articles/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <IconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdAdd />}
+              >
                 {t('articles.overview.newArticle')}
               </IconButton>
             </Link>
@@ -150,7 +168,7 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             'published',
             'publicationDate',
             'includeHidden',
-            'peerId'
+            'peerId',
           ]}
           filter={filter}
           isLoading={isLoading}
@@ -166,33 +184,54 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
+          rowClassName={rowData =>
+            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
+          }
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc')
-            setSortField(sortColumn)
-          }}>
-          <Column width={125} align="left" resizable>
+            setSortOrder(sortType ?? 'asc');
+            setSortField(sortColumn);
+          }}
+        >
+          <Column
+            width={125}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: FullArticleFragment) => {
-                const states: State[] = []
+                const states: State[] = [];
 
-                if (rowData.draft) states.push({state: 'draft', text: t('articles.overview.draft')})
+                if (rowData.draft)
+                  states.push({
+                    state: 'draft',
+                    text: t('articles.overview.draft'),
+                  });
                 if (rowData.pending)
-                  states.push({state: 'pending', text: t('articles.overview.pending')})
+                  states.push({
+                    state: 'pending',
+                    text: t('articles.overview.pending'),
+                  });
                 if (rowData.published)
-                  states.push({state: 'published', text: t('articles.overview.published')})
+                  states.push({
+                    state: 'published',
+                    text: t('articles.overview.published'),
+                  });
 
                 return (
                   <StatusBadge states={states.map(st => st.state)}>
                     {states.map(st => st.text).join(' / ')}
                   </StatusBadge>
-                )
+                );
               }}
             </Cell>
           </Column>
 
-          <Column width={400} align="left" resizable>
+          <Column
+            width={400}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: FullArticleFragment) => (
@@ -205,86 +244,118 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             </Cell>
           </Column>
 
-          <Column width={200} align="left" resizable>
+          <Column
+            width={200}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
               {(rowData: FullArticleFragment) => {
                 return (rowData as FullArticleFragment).latest.authors.reduce(
                   (allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
+                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`;
                   },
                   ''
-                )
+                );
               }}
             </Cell>
           </Column>
 
-          <Column width={210} align="left" resizable sortable>
+          <Column
+            width={210}
+            align="left"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
               {(articleRef: FullArticleFragment) =>
-                articleRef.published?.publishedAt
-                  ? t('articleEditor.overview.publishedAt', {
-                      publicationDate: new Date(articleRef.published.publishedAt)
-                    })
-                  : articleRef.pending?.publishedAt
-                  ? t('articleEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(articleRef.pending?.publishedAt)
-                    })
-                  : t('articles.overview.notPublished')
+                articleRef.published?.publishedAt ?
+                  t('articleEditor.overview.publishedAt', {
+                    publicationDate: new Date(articleRef.published.publishedAt),
+                  })
+                : articleRef.pending?.publishedAt ?
+                  t('articleEditor.overview.publishedAtIfPending', {
+                    publishedAtIfPending: new Date(
+                      articleRef.pending?.publishedAt
+                    ),
+                  })
+                : t('articles.overview.notPublished')
               }
             </Cell>
           </Column>
 
-          <Column width={210} align="left" resizable sortable>
+          <Column
+            width={210}
+            align="left"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullArticleFragment) =>
+              {({ modifiedAt }: FullArticleFragment) =>
                 t('articleEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt)
+                  modificationDate: new Date(modifiedAt),
                 })
               }
             </Cell>
           </Column>
 
-          <Column width={220} align="center" fixed="right">
+          <Column
+            width={220}
+            align="center"
+            fixed="right"
+          >
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <IconButtonCell>
               {(rowData: FullArticleFragment) => (
                 <>
-                  <PermissionControl qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}>
-                    <IconButtonTooltip caption={t('articleEditor.overview.unpublish')}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_PUBLISH_ARTICLE']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('articleEditor.overview.unpublish')}
+                    >
                       <IconButton
                         icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
                         onClick={e => {
-                          setCurrentArticle(rowData as FullArticleFragment)
-                          setConfirmAction(ConfirmAction.Unpublish)
-                          setConfirmationDialogOpen(true)
+                          setCurrentArticle(rowData as FullArticleFragment);
+                          setConfirmAction(ConfirmAction.Unpublish);
+                          setConfirmationDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
-                    <IconButtonTooltip caption={t('articleEditor.overview.duplicate')}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_CREATE_ARTICLE']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('articleEditor.overview.duplicate')}
+                    >
                       <IconButton
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
                         onClick={() => {
-                          setCurrentArticle(rowData as FullArticleFragment)
-                          setConfirmAction(ConfirmAction.Duplicate)
-                          setConfirmationDialogOpen(true)
+                          setCurrentArticle(rowData as FullArticleFragment);
+                          setConfirmAction(ConfirmAction.Duplicate);
+                          setConfirmationDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
-                    <IconButtonTooltip caption={t('articleEditor.overview.createComment')}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_UPDATE_COMMENTS']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('articleEditor.overview.createComment')}
+                    >
                       <IconButton
                         icon={<MdComment />}
                         circle
@@ -293,18 +364,22 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                           createComment({
                             variables: {
                               itemID: rowData.id,
-                              itemType: CommentItemType.Article
+                              itemType: CommentItemType.Article,
                             },
                             onCompleted(data) {
-                              navigate(`/comments/edit/${data?.createComment.id}`)
-                            }
-                          })
+                              navigate(
+                                `/comments/edit/${data?.createComment.id}`
+                              );
+                            },
+                          });
                         }}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_ARTICLE']}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_DELETE_ARTICLE']}
+                  >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         icon={<MdDelete />}
@@ -313,9 +388,9 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                         appearance="ghost"
                         color="red"
                         onClick={() => {
-                          setCurrentArticle(rowData as FullArticleFragment)
-                          setConfirmAction(ConfirmAction.Delete)
-                          setConfirmationDialogOpen(true)
+                          setCurrentArticle(rowData as FullArticleFragment);
+                          setConfirmAction(ConfirmAction.Delete);
+                          setConfirmationDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
@@ -347,14 +422,15 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
       <Modal
         open={isConfirmationDialogOpen}
         size="sm"
-        onClose={() => setConfirmationDialogOpen(false)}>
+        onClose={() => setConfirmationDialogOpen(false)}
+      >
         <Modal.Header>
           <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish
-              ? t('articles.panels.unpublishArticle')
-              : confirmAction === ConfirmAction.Delete
-              ? t('articles.panels.deleteArticle')
-              : t('articles.panels.duplicateArticle')}
+            {confirmAction === ConfirmAction.Unpublish ?
+              t('articles.panels.unpublishArticle')
+            : confirmAction === ConfirmAction.Delete ?
+              t('articles.panels.deleteArticle')
+            : t('articles.panels.duplicateArticle')}
           </Modal.Title>
         </Modal.Header>
 
@@ -373,27 +449,31 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             <DescriptionListItem label={t('articles.panels.createdAt')}>
               {currentArticle?.createdAt &&
                 t('articles.panels.createdAtDate', {
-                  createdAtDate: new Date(currentArticle.createdAt)
+                  createdAtDate: new Date(currentArticle.createdAt),
                 })}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('articles.panels.updatedAt')}>
               {currentArticle?.latest.createdAt &&
                 t('articles.panels.updatedAtDate', {
-                  updatedAtDate: new Date(currentArticle.latest.createdAt)
+                  updatedAtDate: new Date(currentArticle.latest.createdAt),
                 })}
             </DescriptionListItem>
 
             {currentArticle?.latest.publishedAt && (
               <DescriptionListItem label={t('articles.panels.publishedAt')}>
                 {t('articles.panels.publishedAtDate', {
-                  publishedAtDate: new Date(currentArticle.latest.publishedAt)
+                  publishedAtDate: new Date(currentArticle.latest.publishedAt),
                 })}
               </DescriptionListItem>
             )}
           </DescriptionList>
 
-          <Message showIcon type="warning" title={t('articleEditor.overview.warningLabel')}>
+          <Message
+            showIcon
+            type="warning"
+            title={t('articleEditor.overview.warningLabel')}
+          >
             {t('articleEditor.overview.unpublishWarningMessage')}
           </Message>
         </Modal.Body>
@@ -403,19 +483,19 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
             appearance="primary"
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
-              if (!currentArticle) return
+              if (!currentArticle) return;
 
               switch (confirmAction) {
                 case ConfirmAction.Delete:
                   await deleteArticle({
-                    variables: {id: currentArticle.id},
+                    variables: { id: currentArticle.id },
                     update: cache => {
                       const query = cache.readQuery<ArticleListQuery>({
                         query: ArticleListDocument,
-                        variables: articleListVariables
-                      })
+                        variables: articleListVariables,
+                      });
 
-                      if (!query) return
+                      if (!query) return;
 
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
@@ -424,64 +504,71 @@ function ArticleList({initialFilter = {}}: ArticleListProps) {
                             ...query.articles,
                             nodes: query.articles.nodes.filter(
                               article => article.id !== currentArticle.id
-                            )
-                          }
+                            ),
+                          },
                         },
-                        variables: articleListVariables
-                      })
-                    }
-                  })
-                  break
+                        variables: articleListVariables,
+                      });
+                    },
+                  });
+                  break;
 
                 case ConfirmAction.Unpublish:
                   await unpublishArticle({
-                    variables: {id: currentArticle.id}
-                  })
-                  setHighlightedRowId(currentArticle.id)
-                  break
+                    variables: { id: currentArticle.id },
+                  });
+                  setHighlightedRowId(currentArticle.id);
+                  break;
 
                 case ConfirmAction.Duplicate:
                   duplicateArticle({
-                    variables: {id: currentArticle.id},
+                    variables: { id: currentArticle.id },
                     update: cache => {
-                      refetch(articleListVariables)
+                      refetch(articleListVariables);
                       const query = cache.readQuery<ArticleListQuery>({
                         query: ArticleListDocument,
-                        variables: articleListVariables
-                      })
+                        variables: articleListVariables,
+                      });
 
-                      if (!query) return
+                      if (!query) return;
                       cache.writeQuery<ArticleListQuery>({
                         query: ArticleListDocument,
                         data: {
                           articles: {
-                            ...query.articles
-                          }
+                            ...query.articles,
+                          },
                         },
-                        variables: articleListVariables
-                      })
-                    }
+                        variables: articleListVariables,
+                      });
+                    },
                   }).then(output => {
                     if (output.data) {
-                      navigate(`/articles/edit/${output.data?.duplicateArticle.id}`, {
-                        replace: true
-                      })
+                      navigate(
+                        `/articles/edit/${output.data?.duplicateArticle.id}`,
+                        {
+                          replace: true,
+                        }
+                      );
                     }
-                  })
-                  break
+                  });
+                  break;
               }
 
-              setConfirmationDialogOpen(false)
-            }}>
+              setConfirmationDialogOpen(false);
+            }}
+          >
             {t('articles.panels.confirm')}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
             {t('articles.panels.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
@@ -489,6 +576,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLE',
   'CAN_CREATE_ARTICLE',
   'CAN_DELETE_ARTICLE',
-  CanPreview.id
-])(ArticleList)
-export {CheckedPermissionComponent as ArticleList}
+  CanPreview.id,
+])(ArticleList);
+export { CheckedPermissionComponent as ArticleList };

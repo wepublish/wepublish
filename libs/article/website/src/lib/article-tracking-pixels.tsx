@@ -1,10 +1,12 @@
-import {FullTrackingPixelFragment} from '@wepublish/website/api'
+import { FullTrackingPixelFragment } from '@wepublish/website/api';
 
 export type ArticleTrackingPixelsProps = {
-  trackingPixels?: (FullTrackingPixelFragment | null)[] | null
-}
+  trackingPixels?: (FullTrackingPixelFragment | null)[] | null;
+};
 
-export const ArticleTrackingPixels = ({trackingPixels}: ArticleTrackingPixelsProps) => (
+export const ArticleTrackingPixels = ({
+  trackingPixels,
+}: ArticleTrackingPixelsProps) => (
   <>
     {trackingPixels?.map(trackingPixel => {
       if (trackingPixel?.uri) {
@@ -16,10 +18,10 @@ export const ArticleTrackingPixels = ({trackingPixels}: ArticleTrackingPixelsPro
             height="1"
             alt="tracking pixel"
           />
-        )
+        );
       }
 
-      return null
+      return null;
     })}
   </>
-)
+);

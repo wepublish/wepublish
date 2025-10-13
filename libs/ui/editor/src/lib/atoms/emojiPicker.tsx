@@ -1,26 +1,26 @@
-import 'emoji-mart/css/emoji-mart.css'
+import 'emoji-mart/css/emoji-mart.css';
 
-import {css, Global} from '@emotion/react'
-import styled from '@emotion/styled'
-import {BaseEmoji, Picker} from 'emoji-mart'
-import {useContext} from 'react'
-import {MdClose} from 'react-icons/md'
-import {Col as RCol, IconButton, Row} from 'rsuite'
+import { css, Global } from '@emotion/react';
+import styled from '@emotion/styled';
+import { BaseEmoji, Picker } from 'emoji-mart';
+import { useContext } from 'react';
+import { MdClose } from 'react-icons/md';
+import { Col as RCol, IconButton, Row } from 'rsuite';
 
-import {SubMenuContext} from './toolbar'
+import { SubMenuContext } from './toolbar';
 
 interface EmojiPickerProps {
-  setEmoji: (emoji: string) => void
+  setEmoji: (emoji: string) => void;
 }
 
 const Col = styled(RCol)`
   text-align: right;
   margin-top: 0px;
   margin-bottom: 10px;
-`
+`;
 
-export function EmojiPicker({setEmoji}: EmojiPickerProps) {
-  const {closeMenu} = useContext(SubMenuContext)
+export function EmojiPicker({ setEmoji }: EmojiPickerProps) {
+  const { closeMenu } = useContext(SubMenuContext);
 
   return (
     <>
@@ -40,15 +40,18 @@ export function EmojiPicker({setEmoji}: EmojiPickerProps) {
       />
       <Row>
         <Col xs={24}>
-          <IconButton icon={<MdClose />} onClick={() => closeMenu()} />
+          <IconButton
+            icon={<MdClose />}
+            onClick={() => closeMenu()}
+          />
         </Col>
       </Row>
       <Picker
-        onSelect={({native}: BaseEmoji) => {
-          closeMenu()
-          setEmoji(native)
+        onSelect={({ native }: BaseEmoji) => {
+          closeMenu();
+          setEmoji(native);
         }}
       />
     </>
-  )
+  );
 }

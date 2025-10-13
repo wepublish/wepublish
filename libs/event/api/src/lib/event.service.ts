@@ -1,19 +1,23 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common'
-import {Event, Prisma, PrismaClient} from '@prisma/client'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Event, Prisma, PrismaClient } from '@prisma/client';
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
   PrimeDataLoader,
-  SortOrder
-} from '@wepublish/utils/api'
-import {EventDataloaderService} from './event-dataloader.service'
+  SortOrder,
+} from '@wepublish/utils/api';
+import { EventDataloaderService } from './event-dataloader.service';
 import {
   CreateEventInput,
   EventFilter,
   EventListArgs,
   EventSort,
-  UpdateEventInput
-} from './event.model'
+  UpdateEventInput,
+} from './event.model';
 
 @Injectable()
 export class EventService {
@@ -26,31 +30,31 @@ export class EventService {
     sort = EventSort.StartsAt,
     order = SortOrder.Ascending,
     take = 10,
-    skip
+    skip,
   }: EventListArgs) {
-    const orderBy = createEventOrder(sort, order)
-    const where = createEventFilter(filter)
+    const orderBy = createEventOrder(sort, order);
+    const where = createEventFilter(filter);
 
     const [totalCount, events] = await Promise.all([
       this.prisma.event.count({
         where,
-        orderBy
+        orderBy,
       }),
       this.prisma.event.findMany({
         where,
         skip,
         take: getMaxTake(take) + 1,
         orderBy,
-        cursor: cursorId ? {id: cursorId} : undefined
-      })
-    ])
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
 
-    const nodes = events.slice(0, take)
-    const firstEvent = nodes[0]
-    const lastEvent = nodes[nodes.length - 1]
+    const nodes = events.slice(0, take);
+    const firstEvent = nodes[0];
+    const lastEvent = nodes[nodes.length - 1];
 
-    const hasPreviousPage = Boolean(skip)
-    const hasNextPage = events.length > nodes.length
+    const hasPreviousPage = Boolean(skip);
+    const hasNextPage = events.length > nodes.length;
 
     return {
       nodes,
@@ -59,106 +63,110 @@ export class EventService {
         hasPreviousPage,
         hasNextPage,
         startCursor: firstEvent?.id,
-        endCursor: lastEvent?.id
-      }
-    }
+        endCursor: lastEvent?.id,
+      },
+    };
   }
 
   @PrimeDataLoader(EventDataloaderService)
   async getEventById(id: string) {
     const event = await this.prisma.event.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
     if (!event) {
-      throw new NotFoundException()
+      throw new NotFoundException();
     }
 
-    return event
+    return event;
   }
 
   @PrimeDataLoader(EventDataloaderService)
-  async updateEvent({id, tagIds, description, ...input}: UpdateEventInput) {
+  async updateEvent({ id, tagIds, description, ...input }: UpdateEventInput) {
     const oldEvent = await this.prisma.event.findUnique({
-      where: {id}
-    })
+      where: { id },
+    });
 
     if (!oldEvent) {
-      throw new NotFoundException()
+      throw new NotFoundException();
     }
 
-    validateEvent({...oldEvent, ...input})
+    validateEvent({ ...oldEvent, ...input });
 
     return this.prisma.event.update({
       where: {
-        id
+        id,
       },
       data: {
         ...input,
         description: description as any[],
-        tags: tagIds
-          ? {
+        tags:
+          tagIds ?
+            {
               connectOrCreate: tagIds.map(tagId => ({
                 where: {
                   eventId_tagId: {
                     eventId: id,
-                    tagId
-                  }
+                    tagId,
+                  },
                 },
                 create: {
-                  tagId
-                }
+                  tagId,
+                },
               })),
               deleteMany: {
                 eventId: id,
                 tagId: {
-                  notIn: tagIds
-                }
-              }
+                  notIn: tagIds,
+                },
+              },
             }
-          : undefined
-      }
-    })
+          : undefined,
+      },
+    });
   }
 
   @PrimeDataLoader(EventDataloaderService)
-  async createEvent({tagIds, description, ...input}: CreateEventInput) {
-    validateEvent(input)
+  async createEvent({ tagIds, description, ...input }: CreateEventInput) {
+    validateEvent(input);
 
     return this.prisma.event.create({
       data: {
         ...input,
         description: description as any[],
-        tags: tagIds?.length
-          ? {
+        tags:
+          tagIds?.length ?
+            {
               createMany: {
-                data: tagIds?.map(tagId => ({tagId}))
-              }
+                data: tagIds?.map(tagId => ({ tagId })),
+              },
             }
-          : undefined
-      }
-    })
+          : undefined,
+      },
+    });
   }
 
   async deleteEvent(id: string) {
     return this.prisma.event.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 }
 
 const validateEvent = ({
   startsAt,
-  endsAt
-}: Pick<Event, 'startsAt' | 'endsAt'> | Pick<CreateEventInput, 'startsAt' | 'endsAt'>) => {
+  endsAt,
+}:
+  | Pick<Event, 'startsAt' | 'endsAt'>
+  | Pick<CreateEventInput, 'startsAt' | 'endsAt'>) => {
   if (endsAt && new Date(startsAt) > new Date(endsAt)) {
-    throw new BadRequestException('endsAt can not be earlier than startsAt')
+    throw new BadRequestException('endsAt can not be earlier than startsAt');
   }
-}
+};
 
 export const createEventOrder = (
   field: EventSort,
@@ -167,147 +175,161 @@ export const createEventOrder = (
   switch (field) {
     case EventSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case EventSort.CreatedAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case EventSort.EndsAt:
       return {
-        endsAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        endsAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case EventSort.StartsAt:
     default:
       return {
-        startsAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        startsAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createTagFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+const createTagFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => {
   if (filter?.tags?.length) {
     return {
       tags: {
         some: {
           tagId: {
-            in: filter?.tags
-          }
-        }
-      }
-    }
+            in: filter?.tags,
+          },
+        },
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createUpcomingOnlyFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+const createUpcomingOnlyFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => {
   if (filter?.upcomingOnly) {
     return {
       OR: [
         {
           startsAt: {
-            gte: new Date()
-          }
+            gte: new Date(),
+          },
         },
         {
           endsAt: {
-            gte: new Date()
-          }
-        }
-      ]
-    }
+            gte: new Date(),
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createFromFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+const createFromFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => {
   if (filter?.from) {
     return {
       OR: [
         {
           startsAt: {
-            gte: filter.from
-          }
+            gte: filter.from,
+          },
         },
         {
           endsAt: {
-            gte: filter.from
-          }
-        }
-      ]
-    }
+            gte: filter.from,
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createToFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+const createToFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => {
   if (filter?.to) {
     return {
       OR: [
         {
           startsAt: {
-            lte: filter.to
-          }
+            lte: filter.to,
+          },
         },
         {
           endsAt: {
-            lte: filter.to
-          }
-        }
-      ]
-    }
+            lte: filter.to,
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createNameFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+const createNameFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => {
   if (filter?.name) {
     return {
       OR: [
         {
           name: {
             contains: filter.name,
-            mode: 'insensitive'
-          }
-        }
-      ]
-    }
+            mode: 'insensitive',
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createLocationFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+const createLocationFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => {
   if (filter?.location) {
     return {
       OR: [
         {
           location: {
             contains: filter.location,
-            mode: 'insensitive'
-          }
-        }
-      ]
-    }
+            mode: 'insensitive',
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createEventFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => ({
+const createEventFilter = (
+  filter?: Partial<EventFilter>
+): Prisma.EventWhereInput => ({
   AND: [
     createUpcomingOnlyFilter(filter),
     createFromFilter(filter),
     createToFilter(filter),
     createTagFilter(filter),
     createNameFilter(filter),
-    createLocationFilter(filter)
-  ]
-})
+    createLocationFilter(filter),
+  ],
+});

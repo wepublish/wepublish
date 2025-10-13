@@ -1,1 +1,1 @@
-export * from './lib/versionInformation.module'
+export * from './lib/versionInformation.module';

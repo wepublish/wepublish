@@ -2,8 +2,6 @@ export enum ErrorCode {
   TokenExpired = 'TOKEN_EXPIRED',
   InvalidCredentials = 'INVALID_CREDENTIALS',
   UserNotFound = 'USER_NOT_FOUND',
-  InvalidOAuth2Token = 'INVALID_OAUTH_TOKEN',
-  OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND',
   NotAuthenticated = 'NOT_AUTHENTICATED',
   NotAuthorised = 'NOT_AUTHORISED',
   UserNotActive = 'USER_NOT_ACTIVE',
@@ -21,5 +19,5 @@ export enum ErrorCode {
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
   ChallengeFailed = 'ChallengeFailed',
   InvalidSettingData = 'INVALID_SETTING_DATA',
-  PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING'
+  PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING',
 }

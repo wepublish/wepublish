@@ -1,7 +1,11 @@
-import {MemberPlan, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult} from '../../db/common'
-import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import { MemberPlan, Prisma, PrismaClient } from '@prisma/client';
+import { ConnectionResult } from '../../db/common';
+import { MemberPlanFilter, MemberPlanSort } from '../../db/memberPlan';
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+} from '@wepublish/utils/api';
 
 export const createMemberPlanOrder = (
   field: MemberPlanSort,
@@ -10,53 +14,63 @@ export const createMemberPlanOrder = (
   switch (field) {
     case MemberPlanSort.CreatedAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case MemberPlanSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createNameFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
+const createNameFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
   if (filter?.name) {
     return {
-      name: filter.name
-    }
+      name: filter.name,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createActiveFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
+const createActiveFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
   if (filter?.active != null) {
     return {
-      active: filter.active
-    }
+      active: filter.active,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createTagsFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
+const createTagsFilter = (
+  filter: Partial<MemberPlanFilter>
+): Prisma.MemberPlanWhereInput => {
   if (filter?.tags?.length) {
     return {
       tags: {
-        hasSome: filter.tags
-      }
-    }
+        hasSome: filter.tags,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
 export const createMemberPlanFilter = (
   filter: Partial<MemberPlanFilter>
 ): Prisma.MemberPlanWhereInput => ({
-  AND: [createNameFilter(filter), createActiveFilter(filter), createTagsFilter(filter)]
-})
+  AND: [
+    createNameFilter(filter),
+    createActiveFilter(filter),
+    createTagsFilter(filter),
+  ],
+});
 
 export const getMemberPlans = async (
   filter: Partial<MemberPlanFilter>,
@@ -67,32 +81,32 @@ export const getMemberPlans = async (
   take: number,
   memberPlan: PrismaClient['memberPlan']
 ): Promise<ConnectionResult<MemberPlan>> => {
-  const orderBy = createMemberPlanOrder(sortedField, order)
-  const where = createMemberPlanFilter(filter)
+  const orderBy = createMemberPlanOrder(sortedField, order);
+  const where = createMemberPlanFilter(filter);
 
   const [totalCount, memberplans] = await Promise.all([
     memberPlan.count({
       where,
-      orderBy
+      orderBy,
     }),
     memberPlan.findMany({
       where,
       skip,
       take: getMaxTake(take) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined,
+      cursor: cursorId ? { id: cursorId } : undefined,
       include: {
-        availablePaymentMethods: true
-      }
-    })
-  ])
+        availablePaymentMethods: true,
+      },
+    }),
+  ]);
 
-  const nodes = memberplans.slice(0, take)
-  const firstMemberPlan = nodes[0]
-  const lastMemberPlan = nodes[nodes.length - 1]
+  const nodes = memberplans.slice(0, take);
+  const firstMemberPlan = nodes[0];
+  const lastMemberPlan = nodes[nodes.length - 1];
 
-  const hasPreviousPage = Boolean(skip)
-  const hasNextPage = memberplans.length > nodes.length
+  const hasPreviousPage = Boolean(skip);
+  const hasNextPage = memberplans.length > nodes.length;
 
   return {
     nodes,
@@ -101,7 +115,7 @@ export const getMemberPlans = async (
       hasPreviousPage,
       hasNextPage,
       startCursor: firstMemberPlan?.id,
-      endCursor: lastMemberPlan?.id
-    }
-  }
-}
+      endCursor: lastMemberPlan?.id,
+    },
+  };
+};

@@ -1,152 +1,127 @@
-import styled from '@emotion/styled'
-import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Article as ArticleType, BlockContent} from '@wepublish/website/api'
-import {CommentListWrapper} from '@wepublish/comments/website'
-import {ContentWrapper} from '@wepublish/content/website'
-import {ArticleListWrapper, ArticleTrackingPixels} from '@wepublish/article/website'
-import {ArticleProvider} from '../context/article-context'
-import {OnlineReportsQuoteBlockWrapper} from './quote-block'
-
+import styled from '@emotion/styled';
 import {
-  BreakBlockWrapper,
-  EventBlockWrapper,
-  HeadingWithImage,
-  HeadingWithoutImage,
-  ImageBlockCaption,
-  ImageBlockInnerWrapper,
-  ImageBlockWrapper,
-  RichTextBlockWrapper,
-  SliderWrapper,
-  TitleBlockWrapper
-} from '@wepublish/block-content/website'
+  ArticleListWrapper,
+  ArticleTrackingPixels,
+} from '@wepublish/article/website';
+import { CommentListWrapper } from '@wepublish/comments/website';
+import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import {
+  BuilderArticleProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useEffect, useMemo } from 'react';
 
-export const ArticlePreTitle = styled('div')`
-  margin-top: ${({theme}) => theme.spacing(4)};
-  margin-bottom: -${({theme}) => theme.spacing(5)};
+import { useAdsContext } from '../context/ads-context';
+import { OnlineReportsContentWrapper } from './content-wrapper';
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-bottom: -${({theme}) => theme.spacing(3.5)};
-  }
+const articleAdsDisabledTags = [
+  'Anzeige',
+  'Publireportage',
+  'Monatsgespräch',
+  'Das Monatsgespräch',
+  'NB',
+  'No Banner',
+];
 
-  color: ${({theme}) => theme.palette.primary.main};
-  grid-row-start: 1;
-  font-weight: 500;
-`
-
-export const ArticleTopMeta = styled('aside')`
-  grid-row-start: 3;
-`
-export const ArticleBottomMeta = styled('aside')`
-  display: flex;
-  flex-direction: column;
-  gap: ${({theme}) => theme.spacing(5)};
-  align-items: start;
-`
-
-export const ArticleWrapper = styled(ContentWrapper)`
-  ${({theme}) => theme.breakpoints.up('md')} {
+export const ArticleWrapper = styled(OnlineReportsContentWrapper)`
+  ${({ theme }) => theme.breakpoints.up('md')} {
     & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
       grid-column: 2/12;
     }
   }
+`;
 
-  ${({theme}) => theme.breakpoints.down('md')} {
-    row-gap: ${({theme}) => theme.spacing(5)};
+export const ArticlePreTitle = styled('div')`
+  margin-top: ${({ theme }) => theme.spacing(0.5)};
+  margin-bottom: -${({ theme }) => theme.spacing(2.75)};
+  color: ${({ theme }) => theme.palette.primary.main};
+  grid-row-start: 1;
+  font-weight: 500;
+  line-height: 1.2;
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    margin-top: ${({ theme }) => theme.spacing(4)};
+    margin-bottom: -${({ theme }) => theme.spacing(3)};
   }
+`;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    row-gap: ${({theme}) => theme.spacing(4)};
-
-    &
-      > :is(
-        ${RichTextBlockWrapper},
-          ${ArticleTopMeta},
-          ${ArticleBottomMeta},
-          ${ArticlePreTitle},
-          ${TitleBlockWrapper},
-          ${OnlineReportsQuoteBlockWrapper}
-      ) {
-      grid-column: 3/11;
-    }
-
-    ${RichTextBlockWrapper} {
-    }
-
-    & > :is(${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
-      grid-column: 2/12;
-    }
-  }
-
-  ${HeadingWithoutImage}, ${HeadingWithImage} {
-    text-transform: none;
-    font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
-    font-style: ${({theme}) => theme.typography.subtitle2.fontStyle};
-    font-weight: ${({theme}) => theme.typography.subtitle2.fontWeight};
-  }
-
-  ${ImageBlockInnerWrapper} {
-    gap: ${({theme}) => theme.spacing(1)};
-  }
-
-  ${ImageBlockCaption} {
-    color: #7c7c7c;
-    font-size: 14px;
-  }
-`
+export const ArticleTopMeta = styled('aside')`
+  grid-row-start: 3;
+`;
+export const ArticleBottomMeta = styled('aside')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(5)};
+  align-items: start;
+`;
 
 export function OnlineReportsArticle({
   className,
   data,
   children,
   loading,
-  error
+  error,
 }: BuilderArticleProps) {
   const {
     ArticleSEO,
     ArticleAuthors,
     ArticleMeta,
-    blocks: {Blocks},
-    elements: {H3, Button}
-  } = useWebsiteBuilder()
+    blocks: { Blocks },
+    elements: { H3, Button },
+  } = useWebsiteBuilder();
 
-  const article = data?.article as ArticleType
+  const { setAdsDisabled } = useAdsContext();
+
+  const article = data?.article as ArticleType;
 
   const scrollToComments = () => {
-    const el = document.getElementById('comments')
+    const el = document.getElementById('comments');
     if (el) {
-      el.scrollIntoView({behavior: 'smooth'})
+      el.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+  };
+
+  const adsDisabled = useMemo(
+    () =>
+      article?.tags?.some(
+        ({ tag }) => tag && articleAdsDisabledTags.includes(tag)
+      ) ?? false,
+    [article]
+  );
+
+  useEffect(() => {
+    setAdsDisabled(adsDisabled);
+    return () => setAdsDisabled(false);
+  }, [adsDisabled, setAdsDisabled]);
 
   return (
-    <ArticleProvider article={article}>
-      <ArticleWrapper className={className}>
-        {article && <ArticleSEO article={article} />}
+    <ArticleWrapper className={className}>
+      {article && <ArticleSEO article={article} />}
 
-        <Blocks
-          key={article.id}
-          blocks={(article?.latest.blocks as BlockContent[]) ?? []}
-          type="Article"
-        />
+      <Blocks
+        key={article.id}
+        blocks={(article?.latest.blocks as BlockContent[]) ?? []}
+        type="Article"
+      />
+      <ArticleTopMeta>
+        {article && <ArticleAuthors article={article} />}
+      </ArticleTopMeta>
 
-        <ArticleTopMeta>{article && <ArticleAuthors article={article} />}</ArticleTopMeta>
+      <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
 
-        <ArticlePreTitle>{article.latest.preTitle}</ArticlePreTitle>
+      <ArticleBottomMeta>
+        {article && <ArticleMeta article={article} />}
+        {!data?.article?.disableComments && (
+          <>
+            <H3>Ihre Meinung zu diesem Artikel</H3>
+            <Button onClick={scrollToComments}>Kommentare</Button>
+          </>
+        )}
+      </ArticleBottomMeta>
 
-        <ArticleBottomMeta>
-          {article && <ArticleMeta article={article} />}
-          {!data?.article?.disableComments && (
-            <>
-              <H3>Ihre Meinung zu diesem Artikel</H3>
-              <Button onClick={scrollToComments}>Kommentare</Button>
-            </>
-          )}
-        </ArticleBottomMeta>
+      {children}
 
-        {children}
-
-        <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
-      </ArticleWrapper>
-    </ArticleProvider>
-  )
+      <ArticleTrackingPixels trackingPixels={article?.trackingPixels} />
+    </ArticleWrapper>
+  );
 }

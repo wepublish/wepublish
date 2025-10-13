@@ -1,8 +1,8 @@
 export interface SoundCloudTrackEmbedProps {
-  trackID: string | null | undefined
+  trackID: string | null | undefined;
 }
 
-export const SoundCloudTrackEmbed = ({trackID}: SoundCloudTrackEmbedProps) =>
+export const SoundCloudTrackEmbed = ({ trackID }: SoundCloudTrackEmbedProps) =>
   trackID && (
     <iframe
       src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${encodeURIComponent(
@@ -14,4 +14,4 @@ export const SoundCloudTrackEmbed = ({trackID}: SoundCloudTrackEmbedProps) =>
       scrolling="no"
       frameBorder="0"
     />
-  )
+  );

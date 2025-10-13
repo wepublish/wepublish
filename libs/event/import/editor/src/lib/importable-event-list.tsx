@@ -1,18 +1,18 @@
-import {ApolloError} from '@apollo/client'
+import { ApolloError } from '@apollo/client';
 import {
   ImportedEventFilter,
   createWithV2ApiClient,
   useImportEventMutation,
   useImportedEventListQuery,
-  useImportedEventsIdsQuery
-} from '@wepublish/editor/api-v2'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Message, Pagination, Table as RTable, toaster} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
-import {Event} from '@wepublish/editor/api-v2'
+  useImportedEventsIdsQuery,
+} from '@wepublish/editor/api-v2';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, Message, Pagination, Table as RTable, toaster } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
+import { Event } from '@wepublish/editor/api-v2';
 
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
@@ -21,100 +21,120 @@ import {
   ListViewHeader,
   Table,
   TableWrapper,
-  createCheckedPermissionComponent
-} from '@wepublish/ui/editor'
-import {format as formatDate} from 'date-fns'
-import {useNavigate} from 'react-router-dom'
+  createCheckedPermissionComponent,
+} from '@wepublish/ui/editor';
+import { format as formatDate } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
 const Cell = styled(RCell)`
   .rs-table-cell-content {
     display: flex;
     align-items: center;
   }
-`
+`;
 
-export function EventStartsAtView({startsAt}: {startsAt: string}) {
-  const startsAtDate = new Date(startsAt)
+export function EventStartsAtView({ startsAt }: { startsAt: string }) {
+  const startsAtDate = new Date(startsAt);
 
   return (
-    <time suppressHydrationWarning dateTime={startsAtDate.toISOString()}>
+    <time
+      suppressHydrationWarning
+      dateTime={startsAtDate.toISOString()}
+    >
       {formatDate(startsAtDate, 'PPP p')}
     </time>
-  )
+  );
 }
 
-export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
-  const endsAtDate = endsAt ? new Date(endsAt) : undefined
-  const {t} = useTranslation()
+export function EventEndsAtView({
+  endsAt,
+}: {
+  endsAt: string | null | undefined;
+}) {
+  const endsAtDate = endsAt ? new Date(endsAt) : undefined;
+  const { t } = useTranslation();
 
   if (endsAtDate) {
     return (
-      <time suppressHydrationWarning dateTime={endsAtDate.toISOString()}>
+      <time
+        suppressHydrationWarning
+        dateTime={endsAtDate.toISOString()}
+      >
         {formatDate(endsAtDate, 'PPP p')}
       </time>
-    )
+    );
   }
-  return <>{t('event.list.endsAtNone')}</>
+  return <>{t('event.list.endsAtNone')}</>;
 }
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error?.message}
       </Message>
-    )
+    );
   }
-}
+};
 
 export default function ImportableEventListView() {
-  const [filter, setFilter] = useState({} as ImportedEventFilter)
-  const navigate = useNavigate()
-  const {t} = useTranslation()
-  const [page, setPage] = useState<number>(1)
-  const [limit, setLimit] = useState<number>(10)
+  const [filter, setFilter] = useState({} as ImportedEventFilter);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
 
   const importedEventListVariables = {
     filter: filter || undefined,
     take: limit,
-    skip: (page - 1) * limit
-  }
+    skip: (page - 1) * limit,
+  };
 
   const updateFilter = (filter: ImportedEventFilter) => {
-    setFilter(filter)
-    setPage(1) // reset page to first
-  }
+    setFilter(filter);
+    setPage(1); // reset page to first
+  };
 
-  const {data, loading: queryLoading} = useImportedEventListQuery({
+  const { data, loading: queryLoading } = useImportedEventListQuery({
     fetchPolicy: 'cache-and-network',
     variables: importedEventListVariables,
-    onError: onErrorToast
-  })
+    onError: onErrorToast,
+  });
 
-  const [createEvent, {loading: mutationLoading}] = useImportEventMutation({
+  const [createEvent, { loading: mutationLoading }] = useImportEventMutation({
     onCompleted: data => {
       toaster.push(
-        <Message type="success" showIcon closable duration={3000}>
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={3000}
+        >
           {t('toast.createdSuccess')}
         </Message>
-      )
-      navigate(`/events/edit/${data.importEvent}`)
+      );
+      navigate(`/events/edit/${data.importEvent}`);
     },
-    onError: onErrorToast
-  })
+    onError: onErrorToast,
+  });
 
-  const {data: ids} = useImportedEventsIdsQuery({
-    fetchPolicy: 'cache-and-network'
-  })
-  const alreadyImported = ids?.importedEventsIds
+  const { data: ids } = useImportedEventsIdsQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+  const alreadyImported = ids?.importedEventsIds;
 
   const importEvent = async (id: string, source: string) => {
-    createEvent({variables: {id, source}})
-  }
+    createEvent({ variables: { id, source } });
+  };
 
-  const isLoading = queryLoading || mutationLoading
+  const isLoading = queryLoading || mutationLoading;
 
   return (
     <>
@@ -135,46 +155,72 @@ export default function ImportableEventListView() {
           fillHeight
           rowHeight={60}
           loading={isLoading}
-          data={data?.importedEvents.nodes || []}>
-          <Column width={200} resizable>
+          data={data?.importedEvents.nodes || []}
+        >
+          <Column
+            width={200}
+            resizable
+          >
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>{(rowData: RowDataType<Event>) => rowData.name}</Cell>
           </Column>
 
-          <Column width={220} resizable>
+          <Column
+            width={220}
+            resizable
+          >
             <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => <EventStartsAtView startsAt={rowData.startsAt} />}
+              {(rowData: RowDataType<Event>) => (
+                <EventStartsAtView startsAt={rowData.startsAt} />
+              )}
             </Cell>
           </Column>
 
-          <Column width={220} resizable>
+          <Column
+            width={220}
+            resizable
+          >
             <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
+              {(rowData: RowDataType<Event>) => (
+                <EventEndsAtView endsAt={rowData.endsAt} />
+              )}
             </Cell>
           </Column>
 
-          <Column width={150} resizable>
+          <Column
+            width={150}
+            resizable
+          >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
-            <Cell>{(rowData: RowDataType<Event>) => rowData.externalSourceName}</Cell>
+            <Cell>
+              {(rowData: RowDataType<Event>) => rowData.externalSourceName}
+            </Cell>
           </Column>
 
-          <Column width={150} resizable>
+          <Column
+            width={150}
+            resizable
+          >
             <HeaderCell>{t('event.list.source')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) =>
-                alreadyImported && alreadyImported.includes(rowData.id) ? (
-                  <Button appearance="ghost" disabled>
+                alreadyImported && alreadyImported.includes(rowData.id) ?
+                  <Button
+                    appearance="ghost"
+                    disabled
+                  >
                     {t('importableEvent.imported')}
                   </Button>
-                ) : (
-                  <Button
-                    onClick={() => importEvent(rowData.id, rowData.externalSourceName)}
-                    appearance="primary">
+                : <Button
+                    onClick={() =>
+                      importEvent(rowData.id, rowData.externalSourceName)
+                    }
+                    appearance="primary"
+                  >
                     {t('importableEvent.import')}
                   </Button>
-                )
               }
             </Cell>
           </Column>
@@ -198,7 +244,7 @@ export default function ImportableEventListView() {
         />
       </TableWrapper>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createWithV2ApiClient(
@@ -206,8 +252,8 @@ const CheckedPermissionComponent = createWithV2ApiClient(
     'CAN_GET_EVENT',
     'CAN_CREATE_EVENT',
     'CAN_UPDATE_EVENT',
-    'CAN_DELETE_EVENT'
+    'CAN_DELETE_EVENT',
   ])(ImportableEventListView)
-)
+);
 
-export {CheckedPermissionComponent as ImportableEventListView}
+export { CheckedPermissionComponent as ImportableEventListView };
