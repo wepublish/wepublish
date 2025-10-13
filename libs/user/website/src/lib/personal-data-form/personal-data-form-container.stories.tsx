@@ -29,9 +29,6 @@ const mockUser: User = {
   },
   image: mockImage(),
   paymentProviderCustomers: [],
-  properties: [{ id: '007', key: 'isVIP', value: 'true', public: true }],
-  birthday: '1990-01-01',
-  permissions: ['read', 'write'],
 };
 
 const onUpdateVariables = {

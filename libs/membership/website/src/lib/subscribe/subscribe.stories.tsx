@@ -301,7 +301,6 @@ const clickPayTransactionFees: StoryObj['play'] = async ({
 
 const clickSubscribe: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
-
   const submitButton = canvas.getByText('Abonnieren', {
     exact: false,
   });
