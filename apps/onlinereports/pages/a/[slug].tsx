@@ -73,7 +73,7 @@ export default function ArticleBySlugOrId() {
     <>
       <ArticleContainer {...containerProps} />
 
-      {tags.data && (
+      {data?.article && tags.data && (
         <ArticleWrapper>
           <H2 component={'h2'}>Aktuelle Beiträge</H2>
 
