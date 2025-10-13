@@ -7,7 +7,7 @@ import { allPass } from 'ramda';
 
 export const BannerWrapper = styled('a')`
   aspect-ratio: 2.7/1;
-  width: 100%;
+  min-width: 100%;
   background-color: ${({ theme }) => theme.palette.info.main};
   text-decoration: none;
   color: inherit;
