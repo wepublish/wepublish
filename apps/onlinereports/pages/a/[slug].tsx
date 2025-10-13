@@ -55,6 +55,7 @@ export default function ArticleBySlugOrId() {
   });
 
   const tags = useTagListQuery({
+    fetchPolicy: 'cache-only',
     variables: {
       filter: {
         tags: excludeTags,
