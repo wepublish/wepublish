@@ -80,6 +80,11 @@ export const NavbarWrapper = styled('nav')`
   right: 0;
   z-index: 10;
   height: var(--navbar-height);
+  pointer-events: none;
+
+  > * {
+    pointer-events: all;
+  }
 `;
 
 const getNavbarState = (
