@@ -60,7 +60,6 @@ export default function ArticleBySlugOrId() {
         tags: excludeTags,
         type: TagType.Article,
       },
-      take: 100,
     },
   });
 
@@ -151,7 +150,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         filter: {
           tags: excludeTags,
         },
-        take: 100,
       },
     });
 
