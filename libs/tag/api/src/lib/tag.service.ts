@@ -160,7 +160,7 @@ function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     });
   }
 
-  if (filter?.tags && filter.tags.length > 0) {
+  if (filter?.tags?.length) {
     conditions.push({
       tag: {
         in: filter.tags,
