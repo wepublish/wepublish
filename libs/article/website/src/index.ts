@@ -7,4 +7,3 @@ export * from './lib/article-authors';
 export * from './lib/article-list/article-list';
 export * from './lib/article-list/article-list-container';
 export * from './lib/article-tracking-pixels';
-export * from './lib/article-recent';

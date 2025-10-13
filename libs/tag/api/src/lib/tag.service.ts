@@ -169,14 +169,5 @@ function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     });
   }
 
-  if (filter?.notIn && filter.notIn.length > 0) {
-    conditions.push({
-      tag: {
-        notIn: filter.notIn,
-        mode: 'insensitive',
-      },
-    });
-  }
-
   return conditions.length ? { AND: conditions } : {};
 }

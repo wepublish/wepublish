@@ -2460,7 +2460,6 @@ type TagConnection {
 }
 
 input TagFilter {
-  notIn: [String!]
   tag: String
   tags: [String!]
   type: TagType

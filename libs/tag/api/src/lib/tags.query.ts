@@ -20,9 +20,6 @@ export class TagFilter {
 
   @Field(() => [String], { nullable: true })
   tags?: string[];
-
-  @Field(() => [String], { nullable: true })
-  notIn?: string[];
 }
 
 registerEnumType(TagType, {

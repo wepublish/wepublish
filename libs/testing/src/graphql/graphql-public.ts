@@ -3301,7 +3301,6 @@ export type TagConnection = {
 };
 
 export type TagFilter = {
-  notIn?: InputMaybe<Array<Scalars['String']>>;
   tag?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   type?: InputMaybe<TagType>;
