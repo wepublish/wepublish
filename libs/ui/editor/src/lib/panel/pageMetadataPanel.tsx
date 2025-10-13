@@ -80,6 +80,7 @@ export interface PageMetadata {
   readonly socialMediaTitle?: string;
   readonly socialMediaDescription?: string;
   readonly socialMediaImage?: FullImageFragment;
+  readonly hidden?: boolean | null;
 }
 
 export interface PageMetadataPanelProps {
@@ -101,6 +102,7 @@ function PageMetadataPanel({
     slug,
     defaultTags,
     tags,
+    hidden,
     image,
     socialMediaTitle,
     socialMediaDescription,
@@ -135,7 +137,7 @@ function PageMetadataPanel({
         properties: metaDataProperties.map(({ value }) => value),
       });
     }
-  }, [metaDataProperties]);
+  }, [metaDataProperties, onChange, value]);
 
   function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
@@ -271,6 +273,19 @@ function PageMetadataPanel({
                 }
                 tagType={TagType.Page}
               />
+            </Form.Group>
+            <Form.Group controlId="hidden">
+              <Form.ControlLabel>
+                {t('pageEditor.panels.hidden')}
+              </Form.ControlLabel>
+              <Toggle
+                checked={hidden ? true : false}
+                disabled={!isAuthorized}
+                onChange={hidden => onChange?.({ ...value, hidden })}
+              />
+              <Form.HelpText>
+                {t('pageEditor.panels.setAsHidden')}
+              </Form.HelpText>
             </Form.Group>
             <Form.Group>
               <Form.ControlLabel>
