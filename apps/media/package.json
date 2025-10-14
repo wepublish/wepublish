@@ -34,8 +34,5 @@
   },
   "devDependencies": {
     "@types/multer": "^1.4.11"
-  },
-  "overrides": {
-    "stylus": "0.0.1-security"
   }
 }
