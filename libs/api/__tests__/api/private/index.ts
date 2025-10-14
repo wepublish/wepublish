@@ -408,6 +408,7 @@ export type MemberPlan = {
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -443,6 +444,7 @@ export type MemberPlanInput = {
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
   failPageId?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   maxCount?: InputMaybe<Scalars['Int']>;

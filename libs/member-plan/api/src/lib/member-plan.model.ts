@@ -87,6 +87,9 @@ export class MemberPlan {
   availablePaymentMethods!: AvailablePaymentMethod[];
 
   @Field({ nullable: true })
+  externalReward?: string;
+
+  @Field({ nullable: true })
   successPageId?: string;
 
   @Field({ nullable: true })

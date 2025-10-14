@@ -103,6 +103,7 @@ function MemberPlanEdit() {
       tags: [],
       slug: '',
       name: '',
+      externalReward: undefined,
       extendable: true,
       maxCount: undefined,
     };
@@ -192,6 +193,7 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
+      externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,
