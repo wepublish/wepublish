@@ -983,6 +983,7 @@ model User {
   roleIDs         String[]
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
+  note            String?
 
   address                  UserAddress?
   properties               MetadataProperty[]

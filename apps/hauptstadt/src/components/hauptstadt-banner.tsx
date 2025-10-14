@@ -92,8 +92,8 @@ export const HauptstadtBannerContainer = styled(Container, {
   z-index: 100;
   left: 50%;
   transition:
-    transform 300ms ease-out,
-    top 300ms ease-out;
+    clip-path 10000ms ease-out,
+    transform 300ms ease-out;
   transform: translate3d(
     -50%,
     ${({ isScrolled }) =>
@@ -116,22 +116,6 @@ export const HauptstadtBannerContainer = styled(Container, {
     display: none;
   }
 
-  ::before {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    transform: translateY(-100%);
-    background: ${({ theme }) => theme.palette.primary.main};
-    height: 50px;
-
-    ${({ isScrolled }) =>
-      isScrolled &&
-      css`
-        content: '';
-      `}
-  }
-
   :has([data-collapsed='true']) {
     clip-path: unset;
 
@@ -139,9 +123,10 @@ export const HauptstadtBannerContainer = styled(Container, {
       transform: translate3d(
         -50%,
         ${({ isScrolled }) =>
-          isScrolled ? `calc(var(--changing-navbar-height) / -2)` : '0'},
+          isScrolled ? `calc(var(--changing-navbar-height) / -2)` : 0},
         0
       );
+
       ${({ isScrolled }) =>
         isScrolled &&
         css`

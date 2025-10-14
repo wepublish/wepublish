@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
-} from '@mui/material-nextjs/v13-pagesRouter';
+} from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleTagManager } from '@next/third-parties/google';
 import {
   TitleBlock,
@@ -52,6 +52,7 @@ import { OnlineReportsAuthorChip } from '../src/components/author-chip';
 import { OnlineReportsFooter } from '../src/components/footer';
 import { OnlineReportsArticleAuthors } from '../src/components/online-reports-article-authors';
 import { OnlineReportsArticleList } from '../src/components/online-reports-article-list';
+import { OnlineReportsCommentListItem } from '../src/components/online-reports-comment-list-item';
 import { OnlineReportsPage } from '../src/components/page';
 import { OnlineReportsPaymentAmount } from '../src/components/payment-amount';
 import { OnlineReportsQuoteBlock } from '../src/components/quote-block';
@@ -61,6 +62,8 @@ import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
 import { OnlineReportsBlockRenderer } from '../src/onlinereports-block-renderer';
 import { OnlineReportsGlobalStyles } from '../src/onlinereports-global-styles';
 import { OnlineReportsTeaser } from '../src/onlinereports-teaser';
+import { OnlineReportsTeaserGridBlock } from '../src/onlinereports-teaser-grid-block';
+import { OnlineReportsTeaserGridFlexBlock } from '../src/onlinereports-teaser-grid-flex-blocks';
 import { OnlineReportsTeaserListBlock } from '../src/onlinereports-teaser-list-block';
 import { OnlineReportsRenderElement } from '../src/render-element';
 import { Structure } from '../src/structure';
@@ -113,7 +116,11 @@ const MainContainer = styled('div')`
 const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
-  row-gap: ${({ theme }) => theme.spacing(7.5)};
+  row-gap: ${({ theme }) => theme.spacing(4)};
+
+  ${theme.breakpoints.up('sm')} {
+    row-gap: ${({ theme }) => theme.spacing(7.5)};
+  }
 
   ${theme.breakpoints.down('lg')} {
     padding-left: ${({ theme }) => theme.spacing(2.5)};
@@ -121,11 +128,7 @@ const MainContent = styled('main')`
   }
 `;
 
-const WideboardPlacer = styled('div')`
-  * {
-    margin-bottom: -${({ theme }) => theme.spacing(5)};
-  }
-`;
+const WideboardPlacer = styled('div')``;
 
 const NavBar = styled(NavbarContainer)`
   grid-column: -1/1;
@@ -138,6 +141,9 @@ const OnlineReportsTitle = styled(TitleBlock)`
     font-size: ${({ theme }) => theme.typography.h1.fontSize};
     font-family: ${({ theme }) => theme.typography.h1.fontFamily};
     font-weight: ${({ theme }) => theme.typography.h1.fontWeight};
+    &:has(+ ${TitleBlockLead}) {
+      margin-bottom: -${({ theme }) => theme.spacing(2)};
+    }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       font-size: 44px;
@@ -191,15 +197,18 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ArticleList={OnlineReportsArticleList}
             Navbar={OnlineReportsNavbar}
             Article={OnlineReportsArticle}
+            CommentListItem={OnlineReportsCommentListItem}
             Page={OnlineReportsPage}
             RegistrationForm={OnlineReportsRegistrationForm}
             PaymentAmount={OnlineReportsPaymentAmount}
             richtext={{ RenderElement: OnlineReportsRenderElement }}
             elements={{ Link: NextWepublishLink }}
             blocks={{
-              Teaser: OnlineReportsTeaser,
+              BaseTeaser: OnlineReportsTeaser,
               Renderer: OnlineReportsBlockRenderer,
               TeaserList: OnlineReportsTeaserListBlock,
+              TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
+              TeaserGrid: OnlineReportsTeaserGridBlock,
               Quote: OnlineReportsQuoteBlock,
               Title: OnlineReportsTitle,
             }}
@@ -277,13 +286,15 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   name="theme-color"
                   content="#ffffff"
                 />
-                <script
-                  src="//servedby.revive-adserver.net/asyncjs.php"
-                  async
-                />
               </Head>
 
+              <Script
+                src="//servedby.revive-adserver.net/asyncjs.php"
+                async
+              />
+
               <AdblockOverlay />
+
               <Spacer>
                 <NavBar
                   categorySlugs={[['categories', 'about-us']]}
@@ -293,6 +304,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   loginBtn={{ href: '/login' }}
                   profileBtn={{ href: '/profile' }}
                 />
+
                 <MainContainer>
                   <MainContent>
                     <WideboardPlacer>
@@ -301,6 +313,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                     <Component {...pageProps} />
                   </MainContent>
                 </MainContainer>
+
                 <AdvertisementPlacer>
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>

@@ -143,6 +143,7 @@ type User {
   birthday: DateTime
   address: UserAddress
   flair: String
+  note: String
   userImage: Image
   active: Boolean!
   lastLogin: DateTime
@@ -891,6 +892,7 @@ input UserInput {
   birthday: DateTime
   address: UserAddressInput
   flair: String
+  note: String
   userImageID: String
   active: Boolean!
   properties: [PropertiesInput!]!

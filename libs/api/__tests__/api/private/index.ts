@@ -1594,6 +1594,7 @@ export type User = {
   lastLogin?: Maybe<Scalars['DateTime']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   properties: Array<Properties>;
   roles: Array<UserRole>;
@@ -1642,6 +1643,7 @@ export type UserInput = {
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  note?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
   userImageID?: InputMaybe<Scalars['String']>;

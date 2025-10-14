@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { unselectPassword } from './unselect-password';
 import { CreateUserInput } from './user.input';
 import { UserInputError } from '@nestjs/apollo';
 import { Validator } from '@wepublish/user';
+import { unselectPassword } from '@wepublish/authentication/api';
 
 @Injectable()
 export class UserService {

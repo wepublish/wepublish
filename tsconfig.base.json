@@ -60,7 +60,6 @@
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/membership/website": ["libs/membership/website/src/index.ts"],
-      "@wepublish/migrate-wordpress": ["libs/migrate-wordpress/src/index.ts"],
       "@wepublish/navigation/api": ["libs/navigation/api/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],

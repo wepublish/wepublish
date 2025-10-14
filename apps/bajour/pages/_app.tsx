@@ -196,7 +196,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           date={{ format: dateFormatter }}
           blocks={{
             Renderer: BajourBlockRenderer,
-            Teaser: BajourTeaser,
+            BaseTeaser: BajourTeaser,
             TeaserGrid: BajourTeaserGrid,
             TeaserList: BajourTeaserList,
             Break: BajourBreakBlock,

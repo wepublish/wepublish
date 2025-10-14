@@ -188,7 +188,7 @@ export class NovaMediaAdapter implements MediaAdapter {
     const quality =
       transformations?.quality ?
         sanitizeImageQuality(transformations.quality)
-      : 65;
+      : 0.65;
     // Max quality is 80 so 1 => 80
     queryParameters.push(`quality=${Math.ceil(quality * 80)}`);
 

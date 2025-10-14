@@ -2,7 +2,7 @@ general:
   apolloPlayground: true
   apolloIntrospection: true
   bcryptHashCostFactor: 12
-  urlAdapter: hauptstadt
+  urlAdapter: default
 mailProvider:
   id: slackMail # allowed is mailchimp/mailgun
   fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun

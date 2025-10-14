@@ -101,6 +101,8 @@ export const NavbarLinks = styled('div', {
   @media (min-width: 740px) {
     // custom for maximum space usage
     display: flex;
+    white-space: nowrap;
+    flex-wrap: nowrap;
   }
 `;
 

@@ -15,7 +15,7 @@ const OpensIcon = styled(MdPlayCircleOutline)`
   color: green;
 `;
 
-interface PollStateIndicationPorps {
+interface PollStateIndicationProps {
   closedAt: string | null | undefined;
   opensAt: string;
 }
@@ -23,7 +23,7 @@ interface PollStateIndicationPorps {
 export function PollStateIndication({
   closedAt: pollClosedAt,
   opensAt: pollOpensAt,
-}: PollStateIndicationPorps) {
+}: PollStateIndicationProps) {
   const { t } = useTranslation();
   const now = new Date();
   const closedAt = pollClosedAt ? new Date(pollClosedAt) : undefined;
@@ -32,7 +32,9 @@ export function PollStateIndication({
   if (closedAt && now.getTime() >= closedAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.closed')}</Tooltip>}>
-        <ClosedIcon />
+        <span>
+          <ClosedIcon />
+        </span>
       </Whisper>
     );
   }
@@ -42,7 +44,9 @@ export function PollStateIndication({
   if (now.getTime() > opensAt.getTime()) {
     return (
       <Whisper speaker={<Tooltip>{t('pollStateIndication.open')}</Tooltip>}>
-        <OpensIcon />
+        <span>
+          <OpensIcon />
+        </span>
       </Whisper>
     );
   }
@@ -56,7 +60,9 @@ export function PollStateIndication({
         </Tooltip>
       }
     >
-      <MdHourglassEmpty />
+      <span>
+        <MdHourglassEmpty />
+      </span>
     </Whisper>
   );
 }
