@@ -132,24 +132,6 @@
         "paywall": "Paywall"
       }
     },
-    "articleList": {
-      "filter": {
-        "dates": "Daten",
-        "description": "Nach Beschreibung filtern",
-        "isDraft": "Entwurf",
-        "isPending": "Geplant",
-        "isPublished": "Publiziert",
-        "lead": "Nach Lead filtern",
-        "location": "Veranstaltungsort",
-        "name": "Name",
-        "preTitle": "Nach Pre-Titel filtern",
-        "providers": "Anbieter",
-        "publicationDate": "Publikationsdatum",
-        "reset": "Filter zurücksetzen",
-        "title": "Nach Titel filtern",
-        "includeHidden": "Ausgeblendete Artikel"
-      }
-    },
     "articles": {
       "overview": {
         "action": "Aktion",
@@ -650,6 +632,25 @@
         "title": "Events"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Daten",
+        "description": "Nach Beschreibung filtern",
+        "isDraft": "Entwurf",
+        "isPending": "Geplant",
+        "isPublished": "Publiziert",
+        "lead": "Nach Lead filtern",
+        "location": "Veranstaltungsort",
+        "name": "Name",
+        "preTitle": "Nach Pre-Titel filtern",
+        "providers": "Anbieter",
+        "publicationDate": "Publikationsdatum",
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "includeHiddenArticles": "Ausgeblendete Artikel",
+        "includeHiddenPages": "Ausgeblendete Seiten"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Aktionen",
@@ -912,6 +913,8 @@
         "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "publishDate": "Publikationsdatum",
         "publishPage": "Seite publizieren",
+        "hidden": "Ausblenden",
+        "setAsHidden": "Ausgeblendete Seiten werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -1325,7 +1328,9 @@
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
       "zipCode": "PLZ",
-      "birthday": "Geburtstag"
+      "birthday": "Geburtstag",
+      "note": "Notiz",
+      "noteHelpText": "Nicht für den Nutzer sichtbar."
     },
     "userList": {
       "overview": {
