@@ -46,10 +46,10 @@ import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
-import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 import { MitmachenInner } from './mitmachen';
 
@@ -127,7 +127,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          Navbar={TsriNavbar}
+          Navbar={TsriV2Navbar}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           PaymentAmount={PaymentAmountPicker}
