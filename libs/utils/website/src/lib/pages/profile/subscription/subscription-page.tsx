@@ -11,6 +11,7 @@ import { ComponentProps } from 'react';
 import {
   SessionWithTokenWithoutUser,
   SubscriptionsQuery,
+  useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -26,8 +27,9 @@ import {
   InvoicesDocument,
   addClientCacheToV1Props,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { fetch404 } from '../../../fetch-404';
+import { useTranslation } from 'react-i18next';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -54,13 +56,23 @@ function SubscriptionPage() {
     query: { id },
   } = useRouter();
   const {
-    elements: { H4, Link },
+    elements: { H4 },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
+
+  const { data } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+  });
+  const subscription = data?.subscriptions.find(sub => sub.id === id);
 
   return (
     <SubscriptionsWrapper>
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Abo</H4>
+        <H4 component={'h1'}>
+          {t('user.subscriptionsDetail', {
+            type: subscription?.memberPlan.productType,
+          })}
+        </H4>
 
         <SubscriptionListContainer
           filter={subscriptions =>

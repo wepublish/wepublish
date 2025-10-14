@@ -17,6 +17,7 @@ import {
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
+  ProductType,
   SessionWithTokenWithoutUser,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
@@ -91,7 +92,14 @@ function ProfilePage(props: ProfilePageProps) {
     subscription => subscription.deactivation
   );
   const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
-    subscription => !subscription.deactivation
+    subscription =>
+      !subscription.deactivation &&
+      subscription.memberPlan.productType === ProductType.Subscription
+  );
+  const hasActiveDonations = subscriptonData?.subscriptions.some(
+    subscription =>
+      !subscription.deactivation &&
+      subscription.memberPlan.productType === ProductType.Donation
   );
 
   const hasUnpaidInvoices = useHasUnpaidInvoices();
@@ -117,13 +125,43 @@ function ProfilePage(props: ProfilePageProps) {
         )}
 
         <SubscriptionListWrapper>
-          <H4 component={'h1'}>{t('user.activeSubscriptions')}</H4>
+          <H4 component={'h1'}>
+            {t('user.activeSubscriptions', {
+              type: ProductType.Subscription,
+            })}
+          </H4>
 
           <SubscriptionListContainer
             filter={subscriptions =>
-              subscriptions.filter(subscription => !subscription.deactivation)
+              subscriptions.filter(
+                subscription =>
+                  !subscription.deactivation &&
+                  subscription.memberPlan.productType ===
+                    ProductType.Subscription
+              )
             }
           />
+
+          {hasActiveDonations && (
+            <>
+              <H4 component={'h2'}>
+                {t('user.activeSubscriptions', {
+                  type: ProductType.Donation,
+                })}
+              </H4>
+
+              <SubscriptionListContainer
+                filter={subscriptions =>
+                  subscriptions.filter(
+                    subscription =>
+                      !subscription.deactivation &&
+                      subscription.memberPlan.productType ===
+                        ProductType.Donation
+                  )
+                }
+              />
+            </>
+          )}
 
           {hasActiveSubscriptions && (
             <SubscriptionListItemWrapper>

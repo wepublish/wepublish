@@ -41,7 +41,6 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import theme from '../src/theme';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -115,7 +114,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{ Link: NextWepublishLink }}
-          blocks={{ Subscribe: Mitmachen }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
         >

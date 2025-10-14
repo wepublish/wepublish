@@ -15,6 +15,7 @@ import {
   FullSubscriptionFragment,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   SubscriptionDeactivationReason,
 } from '@wepublish/website/api';
 import { z } from 'zod';
@@ -30,6 +31,7 @@ const memberPlan = {
   image: mockImage(),
   name: 'Foobar Memberplan',
   amountPerMonthMin: 1200,
+  productType: ProductType.Subscription,
   availablePaymentMethods: [
     {
       forceAutoRenewal: false,
@@ -128,6 +130,7 @@ const memberPlan4 = {
   name: 'Donate Memberplan',
   amountPerMonthMin: 0,
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]],
+  productType: ProductType.Subscription,
 } as Exact<FullMemberPlanFragment>;
 
 const challenge = {
@@ -745,8 +748,7 @@ export const WithCurrency: StoryObj<typeof Subscribe> = {
 
 export const WithDonate: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
-  args: {
-    ...LoggedIn.args,
-    donate: () => true,
-  },
+  play: waitForInitialDataIsSet(async ctx => {
+    await changeMemberPlan(memberPlan4)(ctx);
+  }),
 };
