@@ -30,6 +30,7 @@ import { ComponentProps } from 'react';
 
 const nrOfRecentArticles = 4;
 const excludeTags = ['Gelesen & gedacht', 'RückSpiegel'];
+
 export const ArticleWrapper = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
