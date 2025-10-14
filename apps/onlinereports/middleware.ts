@@ -1,20 +1,24 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {redirectMap} from './redirectMap'
+import path from 'path'
 
 export async function middleware(request: NextRequest) {
   const {pathname} = request.nextUrl
   console.log(`Checking ${pathname}`)
 
+  // Normalize path to prevent traversal attacks like "/../" or "//"
+  const normalizedPath = path.posix.normalize(pathname)
+
+  // Reject if normalization changed the path (means suspicious input)
+  if (normalizedPath !== pathname) {
+    console.warn(`Path normalization changed path: ${pathname} -> ${normalizedPath}`)
+    return NextResponse.next()
+  }
+
   // Validate pathname to prevent SSRF attacks
   const pathValidation = /^\/[a-zA-Z0-9\-_/]+\.html$/
   if (!pathValidation.test(pathname)) {
     console.warn(`Invalid pathname pattern: ${pathname}`)
-    return NextResponse.next()
-  }
-
-  // Additional security: prevent path traversal attacks
-  if (pathname.includes('..') || pathname.includes('//') || pathname.includes('\\')) {
-    console.warn(`Path traversal attempt detected: ${pathname}`)
     return NextResponse.next()
   }
 
