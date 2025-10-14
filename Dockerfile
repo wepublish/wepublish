@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE=node:24.10.0-bookworm-slim
-ARG PLAIN_BUILD_IMAGE=node:24.10.0-bookworm-slim
+ARG BUILD_IMAGE=node:22.20.0-bookworm-slim
+ARG PLAIN_BUILD_IMAGE=node:22.20.0-bookworm-slim
 
 #######
 ## Base Image
