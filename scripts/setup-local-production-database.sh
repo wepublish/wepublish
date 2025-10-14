@@ -15,8 +15,27 @@ command -v psql >/dev/null || { echo "psql not found" >&2; exit 2; }
 if [[ ! -f $SOURCE_FILE_LOCAL ]]; then
   missing_config
 fi
-source $SOURCE_FILE_LOCAL
-source $SOURCE_FILE_TEMPLATE
+
+load_env_file() {
+  local file=$1
+  local override=${2:-false}
+
+  [[ -f "$file" ]] || return 0
+
+  while IFS='=' read -r key value; do
+    [[ $key == '' || $key == \#* ]] && continue
+    value=${value%$'\r'}
+    if [[ $override == true ]]; then
+      export "$key=$value"
+    elif [[ -z ${!key} ]]; then
+      export "$key=$value"
+    fi
+  done < "$file"
+}
+
+load_env_file "$SOURCE_FILE_TEMPLATE"
+load_env_file "$SOURCE_FILE_LOCAL" true
+
 if [[ -z $PRODUCTION_DUMP_WEB_URL ]]; then
   missing_config
 fi
