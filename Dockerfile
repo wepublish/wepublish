@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE=node:18.19.1-bookworm-slim
-ARG PLAIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
+ARG BUILD_IMAGE=node:22.20.0-bookworm-slim
+ARG PLAIN_BUILD_IMAGE=node:22.20.0-bookworm-slim
 
 #######
 ## Base Image
@@ -70,7 +70,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 #######
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
-RUN npm install -g pkg && \
+RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
@@ -103,7 +103,7 @@ CMD /wepublish/api
 
 FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
-RUN npm install -g pkg && \
+RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
@@ -161,7 +161,7 @@ CMD ["bash", "./start.sh"]
 ## Media Server
 #######
 
-FROM node:18.20.4-bullseye-slim  AS base-media
+FROM ${PLAIN_BUILD_IMAGE} AS base-media
 FROM base-media AS build-media
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
