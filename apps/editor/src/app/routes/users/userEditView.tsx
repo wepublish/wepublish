@@ -18,6 +18,7 @@ import {
   ListInput,
   ListValue,
   SingleViewTitle,
+  Textarea,
   toggleRequiredLabel,
   useAuthorisation,
   UserSubscriptionsList,
@@ -108,9 +109,10 @@ function UserEditView() {
 
   // user props
   const [name, setName] = useState('');
-  const [firstName, setFirstName] = useState<string | undefined | null>();
+  const [firstName, setFirstName] = useState<string | undefined>();
+  const [note, setNote] = useState<string>();
   const [birthday, setBirthday] = useState<Date>();
-  const [flair, setFlair] = useState<string | undefined>();
+  const [flair, setFlair] = useState<string>();
   const [email, setEmail] = useState('');
   const [emailVerifiedAt, setEmailVerifiedAt] = useState<Date | null>(null);
   const [password, setPassword] = useState('');
@@ -118,8 +120,8 @@ function UserEditView() {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([]);
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [address, setAddress] = useState<UserAddress | null>(null);
-  const [userImage, setUserImage] = useState<FullImageFragment | undefined>();
-  const [user, setUser] = useState<FullUserFragment | undefined | null>(null);
+  const [userImage, setUserImage] = useState<FullImageFragment>();
+  const [user, setUser] = useState<FullUserFragment | null>(null);
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<UserProperty>[]
   >([]);
@@ -151,11 +153,16 @@ function UserEditView() {
    */
   useEffect(() => {
     const tmpUser = data?.user;
-    if (!tmpUser) return;
+
+    if (!tmpUser) {
+      return;
+    }
+
     setUser(tmpUser);
-    setFirstName(tmpUser.firstName);
+    setFirstName(tmpUser.firstName ?? undefined);
     setName(tmpUser.name);
-    setFlair(tmpUser.flair || undefined);
+    setNote(tmpUser.note ?? undefined);
+    setFlair(tmpUser.flair ?? undefined);
     setBirthday(tmpUser.birthday ? new Date(tmpUser.birthday) : undefined);
     setEmail(tmpUser.email);
     setMetadataProperties(
@@ -172,6 +179,7 @@ function UserEditView() {
     setActive(tmpUser.active);
     setAddress(tmpUser.address ? tmpUser.address : null);
     setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined);
+
     if (tmpUser.roles) {
       setRoles(tmpUser.roles as FullUserRoleFragment[]);
     }
@@ -265,6 +273,7 @@ function UserEditView() {
             input: {
               name,
               firstName: firstName || undefined,
+              note,
               flair,
               birthday: birthday?.toISOString() ?? null,
               email,
@@ -325,6 +334,7 @@ function UserEditView() {
             input: {
               name,
               firstName,
+              note,
               flair,
               birthday: birthday?.toISOString(),
               email,
@@ -669,6 +679,27 @@ function UserEditView() {
                             )
                           }
                         />
+                      </Form.Group>
+                    </Col>
+
+                    <Col xs={24}>
+                      <Form.Group controlId="note">
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.note')}
+                        </Form.ControlLabel>
+
+                        <Form.Control
+                          name="note"
+                          rows={5}
+                          accepter={Textarea}
+                          value={note || ''}
+                          disabled={isDisabled}
+                          onChange={setNote}
+                        />
+
+                        <Form.HelpText>
+                          {t('userCreateOrEditView.noteHelpText')}
+                        </Form.HelpText>
                       </Form.Group>
                     </Col>
                   </Row>

@@ -1387,7 +1387,9 @@
       "userDataTitle": "User Data",
       "userRoles": "User Roles",
       "zipCode": "ZIP",
-      "birthday": "Birthday"
+      "birthday": "Birthday",
+      "note": "Note",
+      "noteHelpText": "Not visible to the user."
     },
     "userList": {
       "overview": {
