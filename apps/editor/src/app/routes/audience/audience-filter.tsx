@@ -77,7 +77,10 @@ export function AudienceFilter({
   setComponentFilter,
   audienceStatsByPeriod,
 }: AudienceFilterProps) {
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
 
   const { initDownload, getCsv } = useExportSubscriptionsAsCsv();
 
@@ -118,23 +121,30 @@ export function AudienceFilter({
     ];
   }, [t]);
 
-  const handleClick = (filterKey: string) => {
+  const dateString = useMemo<string>(() => {
+    const dateTimeFormat: Intl.DateTimeFormatOptions = { dateStyle: 'short' };
     /*
-    console.log(
-      filterKey,
-      audienceStatsByPeriod,
-      audienceStatsByPeriod[0][
-        filterKeyMap[filterKey] as keyof AudienceStatsComputed
-      ],
-      filterKeyMap[filterKey] as keyof AudienceStatsComputed
-    );
-    */
+    if (resolution === 'monthly') {
+      dateTimeFormat = { month: 'short', year: 'numeric' };
+    }
+      */
+    // DateRange
+    const fromDate = apiFilter.dateRange ? apiFilter.dateRange[0] : null;
+    const toDate = apiFilter.dateRange ? apiFilter.dateRange[1] : null;
 
+    return `${fromDate?.toLocaleDateString(language, dateTimeFormat)}-${toDate?.toLocaleDateString(
+      language,
+      dateTimeFormat
+    )}`;
+  }, [apiFilter.dateRange, language, resolution]);
+
+  const handleClick = (filterKey: string) => {
     let statsUsers: DailySubscriptionStatsUser[];
-    if (
-      (filterKeyMap[filterKey] as keyof AudienceStatsComputed as string) ===
-      'totalActiveSubscriptionUsers'
-    ) {
+    const statsUsersKey = filterKeyMap[
+      filterKey
+    ] as keyof AudienceStatsComputed;
+
+    if ((statsUsersKey as string) === 'totalActiveSubscriptionUsers') {
       const renewedUsers = audienceStatsByPeriod[0][
         'renewedSubscriptionUsers'
       ] as DailySubscriptionStatsUser[];
@@ -148,7 +158,7 @@ export function AudienceFilter({
       statsUsers = [...createdUsers, ...renewedUsers, ...replacedUsers];
     } else {
       statsUsers = audienceStatsByPeriod[0][
-        filterKeyMap[filterKey] as keyof AudienceStatsComputed
+        statsUsersKey
       ] as DailySubscriptionStatsUser[];
     }
 
@@ -156,7 +166,12 @@ export function AudienceFilter({
       userIDs: statsUsers.map((user: DailySubscriptionStatsUser) => user.id),
     };
 
-    initDownload(getCsv, filter);
+    initDownload({
+      getCsv,
+      filter,
+      filename: `${dateString}-${statsUsersKey as string}`,
+      prefixByDate: false,
+    });
   };
 
   return (
