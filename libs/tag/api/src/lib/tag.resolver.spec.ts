@@ -52,7 +52,7 @@ describe('TagResolver', () => {
     await app.close();
   });
 
-  test('can query a list of tags', async () => {
+  test('can query a list of tags and return one tag with its URL', async () => {
     urlAdapter.getTagURL?.mockResolvedValue('url-id1');
     tagService.getTags?.mockResolvedValue({
       nodes: [
@@ -68,12 +68,12 @@ describe('TagResolver', () => {
         },
       ],
       pageInfo: {
-        startCursor: 'startCursor',
-        endCursor: 'endCursor',
+        startCursor: 'id1',
+        endCursor: 'id1',
         hasNextPage: false,
         hasPreviousPage: false,
       },
-      totalCount: 0,
+      totalCount: 1,
     });
 
     await request(app.getHttpServer())
@@ -83,6 +83,60 @@ describe('TagResolver', () => {
         variables: {
           filter: {
             tag: 'tag1',
+          },
+        },
+      })
+      .expect(response => {
+        expect(tagService.getTags?.mock.calls).toMatchSnapshot();
+        expect(urlAdapter.getTagURL?.mock.calls).toMatchSnapshot();
+        expect(response.body.errors).toBeUndefined();
+        expect(response.body.data).toMatchSnapshot();
+      });
+  });
+
+  test('can query a list of tags and return a list of tags each with its URL', async () => {
+    urlAdapter.getTagURL?.mockResolvedValueOnce('url-id2');
+    urlAdapter.getTagURL?.mockResolvedValueOnce('url-id3');
+    tagService.getTags?.mockResolvedValue({
+      nodes: [
+        {
+          id: 'id2',
+          tag: 'tag2',
+          createdAt: new Date('2023-01-01'),
+          description: [],
+          main: false,
+          modifiedAt: new Date('2023-01-01'),
+          peerId: null,
+          type: TagType.Article,
+        },
+        {
+          id: 'id3',
+          tag: 'tag3',
+          createdAt: new Date('2023-01-01'),
+          description: [],
+          main: false,
+          modifiedAt: new Date('2023-01-01'),
+          peerId: null,
+          type: TagType.Article,
+        },
+      ],
+      pageInfo: {
+        startCursor: 'id2',
+        endCursor: 'id3',
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+      totalCount: 2,
+    });
+
+    await request(app.getHttpServer())
+      .post('')
+      .send({
+        query: TagList,
+        variables: {
+          filter: {
+            type: TagType.Article,
+            tags: ['tag2', 'tag3'],
           },
         },
       })

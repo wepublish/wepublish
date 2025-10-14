@@ -68,6 +68,7 @@ input ArticleFilter {
   published: Boolean
   shared: Boolean
   tags: [String!]
+  tagsNotIn: [String!]
   title: String
 }
 
@@ -2460,6 +2461,7 @@ type TagConnection {
 
 input TagFilter {
   tag: String
+  tags: [String!]
   type: TagType
 }
 

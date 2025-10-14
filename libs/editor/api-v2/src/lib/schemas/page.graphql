@@ -38,6 +38,7 @@ fragment PageWithoutBlocks on Page {
   slug
   url
   previewUrl
+  hidden
 
   tags {
     ...FullTag

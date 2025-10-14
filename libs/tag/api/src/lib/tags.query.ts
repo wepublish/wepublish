@@ -17,6 +17,9 @@ export class TagFilter {
 
   @Field(() => TagType, { nullable: true })
   type?: TagType;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 }
 
 registerEnumType(TagType, {

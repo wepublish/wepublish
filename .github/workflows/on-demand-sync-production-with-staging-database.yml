@@ -73,7 +73,7 @@ jobs:
         run: |
           psql -h 127.0.0.1 -U postgres -d wepublish -f database.dump
 
-      - name: Rerun database migrations
+      - name: Rerun database migration
         run: |
           JOB_NAME=$(kubectl -n staging get jobs --sort-by='{.metadata.creationTimestamp}' |grep "${{ inputs.project }}-app-wepublish-migration" |tail -n 1 | awk '{print $1}')
           kubectl -n staging get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
