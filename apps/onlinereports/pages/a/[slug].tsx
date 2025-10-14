@@ -89,7 +89,7 @@ export default function ArticleBySlugOrId() {
             }}
             filter={articles =>
               articles
-                .filter(article => article.id !== id)
+                .filter(article => article.id !== data.article?.id)
                 .splice(0, nrOfRecentArticles)
             }
           />
