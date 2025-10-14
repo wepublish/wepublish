@@ -22,3 +22,5 @@ ignore:
   - "scripts"
   - "tools"
   - "**/*.stories.tsx"
+  - "libs/testing"
+  - "libs/storybook"
