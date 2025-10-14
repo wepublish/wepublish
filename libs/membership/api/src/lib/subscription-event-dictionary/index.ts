@@ -1,1 +1,1 @@
-export * from './subscription-event-dictionary'
+export * from './subscription-event-dictionary';

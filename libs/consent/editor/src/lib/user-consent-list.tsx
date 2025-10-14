@@ -1,33 +1,38 @@
-import {ApolloError} from '@apollo/client'
-import {IconButton, Message, Table as RTable, toaster} from 'rsuite'
-import {MdAdd, MdDelete} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {useTranslation} from 'react-i18next'
+import { ApolloError } from '@apollo/client';
+import { IconButton, Message, Table as RTable, toaster } from 'rsuite';
+import { MdAdd, MdDelete } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
+  TableWrapper,
+} from '@wepublish/ui/editor';
 import {
   useUserConsentsQuery,
   useDeleteUserConsentMutation,
-  UserConsent
-} from '@wepublish/editor/api-v2'
-import {RowDataType} from 'rsuite-table'
-import {useMemo} from 'react'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
+  UserConsent,
+} from '@wepublish/editor/api-v2';
+import { RowDataType } from 'rsuite-table';
+import { useMemo } from 'react';
+import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
-const {Column, HeaderCell, Cell} = RTable
+const { Column, HeaderCell, Cell } = RTable;
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
 /* eslint-disable-next-line */
 export interface UserConsentListProps {}
@@ -35,44 +40,49 @@ export interface UserConsentListProps {}
 const consentValues = [
   {
     value: true,
-    label: 'Accepted'
+    label: 'Accepted',
   },
   {
     value: false,
-    label: 'Rejected'
-  }
-]
+    label: 'Rejected',
+  },
+];
 
 export function UserConsentList(props: UserConsentListProps) {
-  const client = useMemo(() => getApiClientV2(), [])
-  const {t} = useTranslation()
+  const client = useMemo(() => getApiClientV2(), []);
+  const { t } = useTranslation();
 
-  const {loading, data, refetch} = useUserConsentsQuery({
+  const { loading, data, refetch } = useUserConsentsQuery({
     client,
     fetchPolicy: 'cache-and-network',
-    onError: onErrorToast
-  })
+    onError: onErrorToast,
+  });
 
   const [deleteUserConsent] = useDeleteUserConsentMutation({
     client,
     onError: onErrorToast,
     onCompleted: () => {
       toaster.push(
-        <Message type="success" showIcon closable duration={3000}>
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={3000}
+        >
           {t('toast.deletedSuccess')}
         </Message>
-      )
-      refetch()
-    }
-  })
+      );
+      refetch();
+    },
+  });
 
   const onDeleteUserConsent = (id: string) => {
     deleteUserConsent({
       variables: {
-        id
-      }
-    })
-  }
+        id,
+      },
+    });
+  };
 
   return (
     <>
@@ -82,7 +92,11 @@ export function UserConsentList(props: UserConsentListProps) {
         </ListViewHeader>
         <ListViewActions>
           <Link to="/userConsents/create">
-            <IconButton appearance="primary" disabled={loading} icon={<MdAdd />}>
+            <IconButton
+              appearance="primary"
+              disabled={loading}
+              icon={<MdAdd />}
+            >
               {t('userConsents.create')}
             </IconButton>
           </Link>
@@ -90,8 +104,15 @@ export function UserConsentList(props: UserConsentListProps) {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.userConsents || []}>
-          <Column width={200} resizable>
+        <Table
+          fillHeight
+          loading={loading}
+          data={data?.userConsents || []}
+        >
+          <Column
+            width={200}
+            resizable
+          >
             <HeaderCell>{t('userConsents.user')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<UserConsent>) => (
@@ -102,32 +123,50 @@ export function UserConsentList(props: UserConsentListProps) {
             </Cell>
           </Column>
 
-          <Column width={200} resizable>
+          <Column
+            width={200}
+            resizable
+          >
             <HeaderCell>{t('userConsents.consentName')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<UserConsent>) => <span>{rowData.consent.name}</span>}
+              {(rowData: RowDataType<UserConsent>) => (
+                <span>{rowData.consent.name}</span>
+              )}
             </Cell>
           </Column>
 
-          <Column width={200} resizable>
+          <Column
+            width={200}
+            resizable
+          >
             <HeaderCell>{t('userConsents.consentSlug')}</HeaderCell>
             <Cell>
-              {(rowData: RowDataType<UserConsent>) => <span>{rowData.consent.slug}</span>}
+              {(rowData: RowDataType<UserConsent>) => (
+                <span>{rowData.consent.slug}</span>
+              )}
             </Cell>
           </Column>
 
-          <Column width={200} resizable>
+          <Column
+            width={200}
+            resizable
+          >
             <HeaderCell>{t('userConsents.value')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<UserConsent>) => (
-                <span>{consentValues.find(v => v.value === rowData.value)?.label}</span>
+                <span>
+                  {consentValues.find(v => v.value === rowData.value)?.label}
+                </span>
               )}
             </Cell>
           </Column>
 
           <Column resizable>
             <HeaderCell align={'center'}>{t('delete')}</HeaderCell>
-            <Cell align={'center'} style={{padding: '5px 0'}}>
+            <Cell
+              align={'center'}
+              style={{ padding: '5px 0' }}
+            >
               {(rowData: RowDataType<UserConsent>) => (
                 <IconButton
                   icon={<MdDelete />}
@@ -143,7 +182,7 @@ export function UserConsentList(props: UserConsentListProps) {
         </Table>
       </TableWrapper>
     </>
-  )
+  );
 }
 
-export default UserConsentList
+export default UserConsentList;

@@ -1,31 +1,35 @@
-import {css} from '@mui/material'
-import styled from '@emotion/styled'
-import {ComponentProps} from 'react'
+import styled from '@emotion/styled';
+import { css } from '@mui/material';
 import {
+  BreakBlockHeading,
   BreakBlockWrapper,
   EventBlockWrapper,
-  HeadingWithImage,
-  HeadingWithoutImage,
   ImageBlockCaption,
   ImageBlockInnerWrapper,
   ImageBlockWrapper,
   RichTextBlockWrapper,
-  SliderWrapper
-} from '@wepublish/block-content/website'
-import {ContentWrapperStyled, useFullWidthContent} from '@wepublish/content/website'
+  SliderWrapper,
+} from '@wepublish/block-content/website';
+import {
+  ContentWrapperStyled,
+  useFullWidthContent,
+} from '@wepublish/content/website';
+import { ComponentProps } from 'react';
 
 export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
-  fullWidth?: boolean
+  fullWidth?: boolean;
 }>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(7)};
+  row-gap: ${({ theme }) => theme.spacing(4)};
 
-  ${({theme, fullWidth}) =>
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    gap: ${({ theme }) => theme.spacing(7)};
+  }
+
+  ${({ theme, fullWidth }) =>
     !fullWidth &&
     css`
-      ${theme.breakpoints.down('md')} {
-        row-gap: ${theme.spacing(5)};
-      }
+      row-gap: ${theme.spacing(3)};
 
       ${theme.breakpoints.up('md')} {
         row-gap: ${theme.spacing(4)};
@@ -39,13 +43,16 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
 
         &
           > :is(
-            ${ImageBlockWrapper}, ${SliderWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}
+            ${ImageBlockWrapper},
+              ${SliderWrapper},
+              ${EventBlockWrapper},
+              ${BreakBlockWrapper}
           ) {
           grid-column: 2/12;
         }
       }
 
-      ${HeadingWithoutImage}, ${HeadingWithImage} {
+      ${BreakBlockHeading} {
         text-transform: none;
         font-family: ${theme.typography.subtitle2.fontFamily};
         font-style: ${theme.typography.subtitle2.fontStyle};
@@ -61,12 +68,17 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         font-size: 14px;
       }
     `}
-`
+`;
 
 export const OnlineReportsContentWrapper = (
   props: ComponentProps<typeof OnlineReportsContentWrapperStyled>
 ) => {
-  const fullWidth = useFullWidthContent()
+  const fullWidth = useFullWidthContent();
 
-  return <OnlineReportsContentWrapperStyled fullWidth={fullWidth} {...props} />
-}
+  return (
+    <OnlineReportsContentWrapperStyled
+      fullWidth={fullWidth}
+      {...props}
+    />
+  );
+};

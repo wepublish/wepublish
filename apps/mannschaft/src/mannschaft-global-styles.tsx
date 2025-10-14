@@ -1,4 +1,5 @@
-import {css, GlobalStyles} from '@mui/material'
+import { css, GlobalStyles } from '@mui/material';
+import { memo } from 'react';
 
 const globalCSS = css`
   html {
@@ -6,6 +7,8 @@ const globalCSS = css`
     -webkit-hyphenate-limit-before: 10;
     -webkit-hyphenate-limit-after: 10;
   }
-`
+`;
 
-export const MannschaftGlobalStyles = () => <GlobalStyles styles={globalCSS} />
+export const MannschaftGlobalStyles = memo(function MannschaftGlobalStyles() {
+  return <GlobalStyles styles={globalCSS} />;
+});

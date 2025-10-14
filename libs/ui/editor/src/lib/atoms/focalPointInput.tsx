@@ -1,9 +1,9 @@
-import styled from '@emotion/styled'
-import {useLayoutEffect, useRef, useState} from 'react'
-import {MdCropSquare} from 'react-icons/md'
-import {Panel as RPanel} from 'rsuite'
+import styled from '@emotion/styled';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { MdCropSquare } from 'react-icons/md';
+import { Panel as RPanel } from 'rsuite';
 
-import {Draggable, DraggableContainer, Point} from './draggable'
+import { Draggable, DraggableContainer, Point } from './draggable';
 
 const FocalPointElement = styled.div`
   width: 50px;
@@ -16,7 +16,7 @@ const FocalPointElement = styled.div`
   align-items: center;
   fill: #ffffff;
   font-size: 24px;
-`
+`;
 
 const DraggableContainerWrapper = styled.div`
   position: absolute;
@@ -24,11 +24,11 @@ const DraggableContainerWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-`
+`;
 
 const Image = styled.img`
   max-height: 300px;
-`
+`;
 
 const Panel = styled(RPanel)`
   overflow: hidden;
@@ -37,31 +37,31 @@ const Panel = styled(RPanel)`
   align-items: center;
   height: 100%;
   width: 100%;
-`
+`;
 
 const PanelWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-`
+`;
 
 const FocalPointInputWrapper = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
-`
+`;
 
 export interface FocalPointInputProps {
-  imageURL: string
-  imageWidth: number
-  imageHeight: number
-  maxHeight: number
+  imageURL: string;
+  imageWidth: number;
+  imageHeight: number;
+  maxHeight: number;
 
-  focalPoint?: Point | null
-  disabled?: boolean
+  focalPoint?: Point | null;
+  disabled?: boolean;
 
-  onChange?: (point: Point) => void
+  onChange?: (point: Point) => void;
 }
 
 export function FocalPointInput({
@@ -71,42 +71,42 @@ export function FocalPointInput({
   maxHeight,
   focalPoint,
   disabled,
-  onChange
+  onChange,
 }: FocalPointInputProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const imageContainer = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageContainer = useRef<HTMLDivElement>(null);
 
-  const [layouted, setLayouted] = useState(false)
+  const [layouted, setLayouted] = useState(false);
 
   useLayoutEffect(() => {
     function layout() {
-      const containerWidth = containerRef.current!.clientWidth
-      const imageAspectRatio = imageWidth / imageHeight
+      const containerWidth = containerRef.current!.clientWidth;
+      const imageAspectRatio = imageWidth / imageHeight;
 
-      let imageContainerWidth = containerWidth
-      let imageContainerHeight = containerWidth / imageAspectRatio
+      let imageContainerWidth = containerWidth;
+      let imageContainerHeight = containerWidth / imageAspectRatio;
 
       if (imageContainerHeight > maxHeight) {
-        imageContainerWidth = maxHeight * imageAspectRatio
-        imageContainerHeight = maxHeight
+        imageContainerWidth = maxHeight * imageAspectRatio;
+        imageContainerHeight = maxHeight;
       }
 
-      imageContainer.current!.style.width = `${imageContainerWidth}px`
-      imageContainer.current!.style.height = `${imageContainerHeight}px`
+      imageContainer.current!.style.width = `${imageContainerWidth}px`;
+      imageContainer.current!.style.height = `${imageContainerHeight}px`;
     }
 
     function handleResize() {
-      layout()
+      layout();
     }
 
-    layout()
-    setLayouted(true)
+    layout();
+    setLayouted(true);
 
     // TODO: Consider using ResizeObserver
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <FocalPointInputWrapper ref={containerRef}>
@@ -119,7 +119,11 @@ export function FocalPointInput({
             <DraggableContainerWrapper>
               <DraggableContainer>
                 {focalPoint && (
-                  <Draggable point={focalPoint} onChange={onChange} disabled={disabled}>
+                  <Draggable
+                    point={focalPoint}
+                    onChange={onChange}
+                    disabled={disabled}
+                  >
                     <FocalPoint />
                   </Draggable>
                 )}
@@ -129,7 +133,7 @@ export function FocalPointInput({
         )}
       </div>
     </FocalPointInputWrapper>
-  )
+  );
 }
 
 export function FocalPoint() {
@@ -137,5 +141,5 @@ export function FocalPoint() {
     <FocalPointElement>
       <MdCropSquare />
     </FocalPointElement>
-  )
+  );
 }

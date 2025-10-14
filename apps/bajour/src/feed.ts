@@ -1,18 +1,18 @@
-import {generateFeed} from '@wepublish/feed/website'
-import {SortOrder} from '@wepublish/website/api'
+import { generateFeed } from '@wepublish/feed/website';
+import { SortOrder } from '@wepublish/website/api';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient
-} from '@wepublish/website/api'
-import {Feed} from 'feed'
-import {NextApiRequest} from 'next'
-import getConfig from 'next/config'
-import process from 'node:process'
+  getV1ApiClient,
+} from '@wepublish/website/api';
+import { Feed } from 'feed';
+import { NextApiRequest } from 'next';
+import getConfig from 'next/config';
+import process from 'node:process';
 
 export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
-  const siteUrl = process.env.WEBSITE_URL || ''
+  const siteUrl = process.env.WEBSITE_URL || '';
 
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
@@ -25,23 +25,23 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
     feedLinks: {
       json: `${siteUrl + req.url}/api/json-feed`,
       atom: `${siteUrl + req.url}/api/atom-feed`,
-      rss: `${siteUrl + req.url}/api/rss-feed`
-    }
-  })
+      rss: `${siteUrl + req.url}/api/rss-feed`,
+    },
+  });
 
-  const {publicRuntimeConfig} = getConfig()
+  const { publicRuntimeConfig } = getConfig();
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
-    typePolicies: {}
-  })
+    typePolicies: {},
+  });
 
-  const {data} = await client.query({
+  const { data } = await client.query({
     query: ArticleListDocument,
     variables: {
       take: 50,
       sort: ArticleSort.PublishedAt,
-      order: SortOrder.Descending
-    } as ArticleListQueryVariables
-  })
+      order: SortOrder.Descending,
+    } as ArticleListQueryVariables,
+  });
 
-  return generate(data.articles.nodes ?? [])
-}
+  return generate(data.articles.nodes ?? []);
+};

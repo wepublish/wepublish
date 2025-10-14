@@ -1,49 +1,53 @@
-import {useResetUserPasswordMutation} from '@wepublish/editor/api'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Checkbox, Form, Notification, Schema, toaster} from 'rsuite'
+import { useResetUserPasswordMutation } from '@wepublish/editor/api';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, Checkbox, Form, Notification, Schema, toaster } from 'rsuite';
 
 export interface ResetUserPasswordPanelProps {
-  userID?: string
-  userName?: string
-  onClose(): void
+  userID?: string;
+  userName?: string;
+  onClose(): void;
 }
 
-export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPasswordPanelProps) {
-  const [password, setPassword] = useState('')
-  const [sendMail, setSendMail] = useState<boolean>(false)
+export function ResetUserPasswordForm({
+  userID,
+  userName,
+  onClose,
+}: ResetUserPasswordPanelProps) {
+  const [password, setPassword] = useState('');
+  const [sendMail, setSendMail] = useState<boolean>(false);
 
-  const [resetUserPassword, {loading: isUpdating, error: updateError}] =
-    useResetUserPasswordMutation()
+  const [resetUserPassword, { loading: isUpdating, error: updateError }] =
+    useResetUserPasswordMutation();
 
-  const isDisabled = isUpdating
+  const isDisabled = isUpdating;
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   // Schema used for form validation
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
     password: StringType()
       .isRequired(t('errorMessages.noPasswordErrorMessage'))
-      .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
-  })
+      .minLength(8, t('errorMessages.passwordTooShortErrorMessage')),
+  });
 
   return (
     <Form
       fluid
       model={validationModel}
       onSubmit={async (validationPassed, e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!userID || !password) {
-          return
+          return;
         }
-        const {data} = await resetUserPassword({
+        const { data } = await resetUserPassword({
           variables: {
             id: userID,
             password,
-            sendMail
-          }
-        })
+            sendMail,
+          },
+        });
         if (data?.resetUserPassword) {
           toaster.push(
             <Notification
@@ -51,14 +55,15 @@ export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPass
               header={t('userCreateOrEditView.passwordChangeSuccess')}
               duration={5000}
             />,
-            {placement: 'topEnd'}
-          )
-          onClose()
+            { placement: 'topEnd' }
+          );
+          onClose();
         }
-      }}>
+      }}
+    >
       <Form.Group controlId="password">
         <Form.ControlLabel>
-          {t('userCreateOrEditView.resetPasswordFor', {userName})}
+          {t('userCreateOrEditView.resetPasswordFor', { userName })}
         </Form.ControlLabel>
         <Form.Control
           name="password"
@@ -71,16 +76,22 @@ export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPass
         />
 
         <Checkbox
-          style={{marginTop: '8px'}}
+          style={{ marginTop: '8px' }}
           checked={sendMail}
-          onChange={(value, checked) => setSendMail(checked)}>
+          onChange={(value, checked) => setSendMail(checked)}
+        >
           {t('resetUserPasswordForm.sendMail')}
         </Checkbox>
       </Form.Group>
 
-      <Button type="submit" disabled={isDisabled} appearance="primary" color="red">
+      <Button
+        type="submit"
+        disabled={isDisabled}
+        appearance="primary"
+        color="red"
+      >
         {t('userCreateOrEditView.resetPassword')}
       </Button>
     </Form>
-  )
+  );
 }

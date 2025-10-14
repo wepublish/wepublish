@@ -1,11 +1,11 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   ContextBox,
   ContextBoxCollapse,
   ContextBoxIcon,
   ContextBoxLine,
-  ContextBoxTitle
-} from '@wepublish/block-content/website'
+  ContextBoxTitle,
+} from '@wepublish/block-content/website';
 
 export const TsriContextBox = styled(ContextBox)`
   ${ContextBoxIcon} {
@@ -14,8 +14,8 @@ export const TsriContextBox = styled(ContextBox)`
 
   ${ContextBoxTitle} {
     grid-column: 2/3;
-    font-size: ${({theme}) => theme.typography.h6.fontSize};
-    font-weight: ${({theme}) => theme.typography.fontWeightBold};
+    font-size: ${({ theme }) => theme.typography.h6.fontSize};
+    font-weight: ${({ theme }) => theme.typography.fontWeightBold};
   }
 
   ${ContextBoxTitle}, ${ContextBoxCollapse} {
@@ -23,6 +23,6 @@ export const TsriContextBox = styled(ContextBox)`
   }
 
   ${ContextBoxLine} {
-    width: ${({theme}) => theme.spacing(0.25)};
+    width: ${({ theme }) => theme.spacing(0.25)};
   }
-`
+`;

@@ -11,6 +11,9 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "../../utils/api/src/lib/dataloader/prime-dataloaders.decorator.ts"],
+  "include": [
+    "src/**/*.ts",
+    "../../utils/api/src/lib/dataloader/prime-dataloaders.decorator.ts"
+  ],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

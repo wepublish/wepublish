@@ -1,25 +1,25 @@
-import {NoSsr} from '@mui/material'
-import styled from '@emotion/styled'
-import {useUser} from '@wepublish/authentication/website'
+import { NoSsr } from '@mui/material';
+import styled from '@emotion/styled';
+import { useUser } from '@wepublish/authentication/website';
 import {
   CalculatedRating,
   CommentRating,
   OverriddenRating,
   RateCommentMutationVariables,
-  RatingSystemType
-} from '@wepublish/website/api'
+  RatingSystemType,
+} from '@wepublish/website/api';
 import {
   BuilderCommentRatingsProps,
   useAsyncAction,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {Fragment, useCallback, useState} from 'react'
-import {useCommentRating} from './comment-ratings.context'
-import {StarRating} from './star-rating'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { Fragment, useCallback, useState } from 'react';
+import { useCommentRating } from './comment-ratings.context';
+import { StarRating } from './star-rating';
 
 export const CommentRatingsWrapper = styled('div')`
   display: grid;
-`
+`;
 
 const getCommentRating = (
   answerId: string,
@@ -27,68 +27,78 @@ const getCommentRating = (
   calculatedRatings: Pick<CalculatedRating, 'answer' | 'mean'>[],
   overriddenRatings: Pick<OverriddenRating, 'answerId' | 'value'>[]
 ) => {
-  const overriddenRating = overriddenRatings.find(rating => rating.answerId === answerId)
-  const calculatedRating = calculatedRatings.find(rating => rating.answer.id === answerId)
-  const userRating = userRatings.find(rating => rating.answer.id === answerId)
+  const overriddenRating = overriddenRatings.find(
+    rating => rating.answerId === answerId
+  );
+  const calculatedRating = calculatedRatings.find(
+    rating => rating.answer.id === answerId
+  );
+  const userRating = userRatings.find(rating => rating.answer.id === answerId);
 
-  return userRating?.value ?? overriddenRating?.value ?? calculatedRating?.mean ?? 0
-}
+  return (
+    userRating?.value ?? overriddenRating?.value ?? calculatedRating?.mean ?? 0
+  );
+};
 
-const hasUserRated = (answerId: string, userRatings: Pick<CommentRating, 'answer' | 'value'>[]) => {
-  const userRating = userRatings.find(rating => rating.answer.id === answerId)
+const hasUserRated = (
+  answerId: string,
+  userRatings: Pick<CommentRating, 'answer' | 'value'>[]
+) => {
+  const userRating = userRatings.find(rating => rating.answer.id === answerId);
 
-  return Boolean(userRating)
-}
+  return Boolean(userRating);
+};
 
 export const CommentRatings = ({
   commentId,
   ratingSystem,
   userRatings,
   calculatedRatings,
-  overriddenRatings
+  overriddenRatings,
 }: BuilderCommentRatingsProps) => {
   const {
-    elements: {Alert}
-  } = useWebsiteBuilder()
+    elements: { Alert },
+  } = useWebsiteBuilder();
 
-  const {canRateAnonymously, getAnonymousRate, rate} = useCommentRating()
-  const {hasUser} = useUser()
+  const { canRateAnonymously, getAnonymousRate, rate } = useCommentRating();
+  const { hasUser } = useUser();
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error>();
+  const callAction = useAsyncAction(setLoading, setError);
 
-  const canVote = hasUser || canRateAnonymously
-  const allUserRatings = hasUser
-    ? userRatings
-    : ratingSystem.answers.flatMap(answer => {
-        const value = getAnonymousRate(commentId, answer.id)
+  const canVote = hasUser || canRateAnonymously;
+  const allUserRatings =
+    hasUser ? userRatings : (
+      ratingSystem.answers.flatMap(answer => {
+        const value = getAnonymousRate(commentId, answer.id);
 
         if (!value) {
-          return []
+          return [];
         }
 
         return {
           answer,
-          value
-        }
+          value,
+        };
       })
+    );
 
   const rateComment = useCallback(
-    async ({answerId, commentId, value}: RateCommentMutationVariables) =>
+    async ({ answerId, commentId, value }: RateCommentMutationVariables) =>
       callAction(async () => {
         await rate({
           variables: {
             commentId,
             answerId,
-            value
-          }
-        })
+            value,
+          },
+        });
       })(),
     [callAction, rate]
-  )
+  );
 
-  const showRatingNames = ratingSystem.answers.length > 1
+  const showRatingNames = ratingSystem.answers.length > 1;
 
   return (
     <CommentRatingsWrapper>
@@ -109,7 +119,7 @@ export const CommentRatings = ({
                   rateComment({
                     answerId: answer.id,
                     commentId,
-                    value: rating
+                    value: rating,
                   })
                 }
                 readOnly={!canVote}
@@ -121,5 +131,5 @@ export const CommentRatings = ({
 
       {error && <Alert severity="error">{error.message}</Alert>}
     </CommentRatingsWrapper>
-  )
-}
+  );
+};

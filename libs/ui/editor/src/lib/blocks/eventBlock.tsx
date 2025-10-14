@@ -1,47 +1,53 @@
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdEdit} from 'react-icons/md'
-import {Drawer, IconButton, Panel} from 'rsuite'
+import { FullEventFragment } from '@wepublish/editor/api-v2';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdEdit } from 'react-icons/md';
+import { Drawer, IconButton, Panel } from 'rsuite';
 
-import {BlockProps} from '../atoms/blockList'
-import {PlaceholderInput} from '../atoms/placeholderInput'
-import {SelectEventPanel} from '../panel/selectEventsPanel'
-import {EventBlockValue} from './types'
-import {FullEventFragment} from '@wepublish/editor/api-v2'
+import { BlockProps } from '../atoms/blockList';
+import { PlaceholderInput } from '../atoms/placeholderInput';
+import { SelectEventPanel } from '../panel/selectEventsPanel';
+import { EventBlockValue } from './types';
 
-export function EventStartsAtView({startsAt}: {startsAt: string}) {
-  const startsAtDate = new Date(startsAt)
-  const {t} = useTranslation()
+export function EventStartsAtView({ startsAt }: { startsAt: string }) {
+  const startsAtDate = new Date(startsAt);
+  const { t } = useTranslation();
 
-  return <>{t('event.list.startsAt', {startsAt: startsAtDate})}</>
+  return <>{t('event.list.startsAt', { startsAt: startsAtDate })}</>;
 }
 
-export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
-  const endsAtDate = endsAt ? new Date(endsAt) : undefined
-  const {t} = useTranslation()
+export function EventEndsAtView({
+  endsAt,
+}: {
+  endsAt: string | null | undefined;
+}) {
+  const endsAtDate = endsAt ? new Date(endsAt) : undefined;
+  const { t } = useTranslation();
 
   if (endsAt) {
-    return <>{t('event.list.endsAt', {endsAt: endsAtDate})}</>
+    return <>{t('event.list.endsAt', { endsAt: endsAtDate })}</>;
   }
-  return <>{t('event.list.endsAtNone')}</>
+  return <>{t('event.list.endsAtNone')}</>;
 }
 
-const EventPreview = ({event}: {event: FullEventFragment}) => (
+const EventPreview = ({ event }: { event: FullEventFragment }) => (
   <Panel
     key={event.id}
     bordered
     style={{
       background: '#fff',
       display: 'grid',
-      alignItems: 'center'
-    }}>
+      alignItems: 'center',
+    }}
+  >
     <div
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 2fr',
         gap: '12px',
-        alignItems: 'center'
-      }}>
+        alignItems: 'center',
+      }}
+    >
       <img
         src={event.image?.previewURL ?? '/static/placeholder-240x240.png'}
         alt={event.image?.description ?? ''}
@@ -49,11 +55,11 @@ const EventPreview = ({event}: {event: FullEventFragment}) => (
         width={event.image?.width}
         style={{
           width: '100%',
-          height: 'auto'
+          height: 'auto',
         }}
       />
 
-      <div style={{display: 'grid'}}>
+      <div style={{ display: 'grid' }}>
         {event.name}
 
         <small>
@@ -66,24 +72,24 @@ const EventPreview = ({event}: {event: FullEventFragment}) => (
       </div>
     </div>
   </Panel>
-)
+);
 
 export const EventBlock = ({
-  value: {filter, events},
+  value: { filter, events },
   onChange,
-  autofocus
+  autofocus,
 }: BlockProps<EventBlockValue>) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const {t} = useTranslation()
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { t } = useTranslation();
 
-  const isEmpty = !events.length
-  const eventsToDisplay = events.slice(0, 4)
+  const isEmpty = !events.length;
+  const eventsToDisplay = events.slice(0, 4);
 
   useEffect(() => {
     if (autofocus && isEmpty) {
-      setIsDialogOpen(true)
+      setIsDialogOpen(true);
     }
-  }, [autofocus, isEmpty])
+  }, [autofocus, isEmpty]);
 
   return (
     <>
@@ -94,23 +100,30 @@ export const EventBlock = ({
           minHeight: 150,
           overflow: 'hidden',
           backgroundColor: '#f7f9fa',
-          display: 'grid'
-        }}>
+          display: 'grid',
+        }}
+      >
         <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
           {!isEmpty && (
             <div
               style={{
                 position: 'relative',
-                width: '100%'
-              }}>
+                width: '100%',
+              }}
+            >
               <div
                 style={{
                   position: 'absolute',
                   zIndex: 100,
                   height: '100%',
-                  right: 0
-                }}>
-                <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
+                  right: 0,
+                }}
+              >
+                <IconButton
+                  size={'lg'}
+                  icon={<MdEdit />}
+                  onClick={() => setIsDialogOpen(true)}
+                >
                   {t('blocks.event.edit')}
                 </IconButton>
               </div>
@@ -120,16 +133,23 @@ export const EventBlock = ({
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
                   gap: '12px',
-                  padding: '24px'
-                }}>
+                  padding: '24px',
+                }}
+              >
                 {eventsToDisplay.map(event => (
-                  <EventPreview key={event.id} event={event} />
+                  <EventPreview
+                    key={event.id}
+                    event={event}
+                  />
                 ))}
               </div>
 
-              <p style={{marginBottom: '12px', textAlign: 'center'}}>
+              <p style={{ marginBottom: '12px', textAlign: 'center' }}>
                 {t('blocks.event.events', {
-                  count: events.length ? events.length : filter.events?.length ?? 0
+                  count:
+                    events.length ?
+                      events.length
+                    : (filter.events?.length ?? 0),
                 })}
               </p>
             </div>
@@ -137,16 +157,20 @@ export const EventBlock = ({
         </PlaceholderInput>
       </Panel>
 
-      <Drawer size="lg" open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+      <Drawer
+        size="lg"
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      >
         <SelectEventPanel
           selectedFilter={filter}
           onClose={() => setIsDialogOpen(false)}
           onSelect={(newFilter, newEvents) => {
-            setIsDialogOpen(false)
-            onChange({filter: newFilter, events: newEvents})
+            setIsDialogOpen(false);
+            onChange({ filter: newFilter, events: newEvents });
           }}
         />
       </Drawer>
     </>
-  )
-}
+  );
+};

@@ -1,11 +1,11 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   CommentFilter,
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListQuery
-} from '@wepublish/editor/api'
+  useCommentListQuery,
+} from '@wepublish/editor/api';
 import {
   CommentStateDropdown,
   createCheckedPermissionComponent,
@@ -21,66 +21,66 @@ import {
   PermissionControl,
   RichTextBlock,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdEdit} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {Pagination, Table as RTable, Toggle} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdEdit } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { Pagination, Table as RTable, Toggle } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
-const {Column, HeaderCell, Cell} = RTable
+const { Column, HeaderCell, Cell } = RTable;
 
 const EditIcon = styled.span`
   margin-right: 5px;
-`
+`;
 
 function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
   switch (columnField) {
     case 'createdAt':
-      return CommentSort.CreatedAt
+      return CommentSort.CreatedAt;
     case 'modifiedAt':
-      return CommentSort.ModifiedAt
+      return CommentSort.ModifiedAt;
     default:
-      return null
+      return null;
   }
 }
 
 function CommentList() {
-  const {t} = useTranslation()
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('modifiedAt')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const { t } = useTranslation();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortField, setSortField] = useState('modifiedAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [filter, setFilter] = useState<CommentFilter>({
     states: [
       CommentState.Approved,
       CommentState.PendingApproval,
       CommentState.PendingUserChanges,
-      CommentState.Rejected
-    ]
-  })
+      CommentState.Rejected,
+    ],
+  });
 
-  const [comments, setComments] = useState<FullCommentFragment[]>([])
+  const [comments, setComments] = useState<FullCommentFragment[]>([]);
 
   const commentListVariables = {
     take: limit,
     skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
-    filter
-  }
+    filter,
+  };
 
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
   } = useCommentListQuery({
     variables: commentListVariables,
-    fetchPolicy: 'cache-and-network'
-  })
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     refetch({
@@ -88,18 +88,18 @@ function CommentList() {
       skip: (page - 1) * limit,
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
-      filter
-    })
-  }, [filter, page, limit, sortOrder, sortField])
+      filter,
+    });
+  }, [filter, page, limit, sortOrder, sortField]);
 
   useEffect(() => {
     if (data?.comments?.nodes) {
-      setComments(data.comments.nodes)
+      setComments(data.comments.nodes);
       if (data.comments.totalCount + 9 < page * limit) {
-        setPage(1)
+        setPage(1);
       }
     }
-  }, [data?.comments])
+  }, [data?.comments]);
 
   return (
     <>
@@ -116,14 +116,15 @@ function CommentList() {
             defaultChecked={filter.states?.includes?.(CommentState.Approved)}
             onChange={enabled =>
               setFilter(f => {
-                const states = f.states || []
+                const states = f.states || [];
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.Approved]
-                    : states.filter(val => val !== CommentState.Approved)
-                }
+                  states:
+                    enabled ?
+                      [...states, CommentState.Approved]
+                    : states.filter(val => val !== CommentState.Approved),
+                };
               })
             }
             checkedChildren={t('comments.state.approved')}
@@ -131,17 +132,22 @@ function CommentList() {
           />
 
           <Toggle
-            defaultChecked={filter.states?.includes?.(CommentState.PendingApproval)}
+            defaultChecked={filter.states?.includes?.(
+              CommentState.PendingApproval
+            )}
             onChange={enabled =>
               setFilter(f => {
-                const states = f.states || []
+                const states = f.states || [];
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.PendingApproval]
-                    : states.filter(val => val !== CommentState.PendingApproval)
-                }
+                  states:
+                    enabled ?
+                      [...states, CommentState.PendingApproval]
+                    : states.filter(
+                        val => val !== CommentState.PendingApproval
+                      ),
+                };
               })
             }
             checkedChildren={t('comments.state.pendingApproval')}
@@ -149,17 +155,22 @@ function CommentList() {
           />
 
           <Toggle
-            defaultChecked={filter.states?.includes?.(CommentState.PendingUserChanges)}
+            defaultChecked={filter.states?.includes?.(
+              CommentState.PendingUserChanges
+            )}
             onChange={enabled =>
               setFilter(f => {
-                const states = f.states || []
+                const states = f.states || [];
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.PendingUserChanges]
-                    : states.filter(val => val !== CommentState.PendingUserChanges)
-                }
+                  states:
+                    enabled ?
+                      [...states, CommentState.PendingUserChanges]
+                    : states.filter(
+                        val => val !== CommentState.PendingUserChanges
+                      ),
+                };
               })
             }
             checkedChildren={t('comments.state.pendingUserChanges')}
@@ -170,14 +181,15 @@ function CommentList() {
             defaultChecked={filter.states?.includes?.(CommentState.Rejected)}
             onChange={enabled =>
               setFilter(f => {
-                const states = f.states || []
+                const states = f.states || [];
 
                 return {
                   ...f,
-                  states: enabled
-                    ? [...states, CommentState.Rejected]
-                    : states.filter(val => val !== CommentState.Rejected)
-                }
+                  states:
+                    enabled ?
+                      [...states, CommentState.Rejected]
+                    : states.filter(val => val !== CommentState.Rejected),
+                };
               })
             }
             checkedChildren={t('comments.state.rejected')}
@@ -193,15 +205,15 @@ function CommentList() {
           rowClassName={rowData => {
             switch (rowData?.state) {
               case CommentState.Approved:
-                return 'approved'
+                return 'approved';
               case CommentState.PendingApproval:
-                return 'pending-approval'
+                return 'pending-approval';
               case CommentState.PendingUserChanges:
-                return 'pending-user'
+                return 'pending-user';
               case CommentState.Rejected:
-                return 'rejected'
+                return 'rejected';
               default:
-                return ''
+                return '';
             }
           }}
           loading={isLoading}
@@ -209,30 +221,44 @@ function CommentList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc')
-            setSortField(sortColumn)
-          }}>
+            setSortOrder(sortType ?? 'asc');
+            setSortField(sortColumn);
+          }}
+        >
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Column width={350} align="left" verticalAlign="middle" resizable>
+          <Column
+            width={350}
+            align="left"
+            verticalAlign="middle"
+            resizable
+          >
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) =>
-                rowData.revisions?.length ? (
+                rowData.revisions?.length ?
                   <RichTextBlock
                     displayOnly
                     displayOneLine
                     disabled
                     onChange={() => {
-                      return undefined
+                      return undefined;
                     }}
-                    value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
+                    value={
+                      rowData.revisions[rowData.revisions?.length - 1]?.text ||
+                      []
+                    }
                   />
-                ) : null
+                : null
               }
             </Cell>
           </Column>
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Column width={150} align="left" verticalAlign="middle" resizable>
+          <Column
+            width={150}
+            align="left"
+            verticalAlign="middle"
+            resizable
+          >
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<FullCommentFragment>) =>
@@ -241,26 +267,41 @@ function CommentList() {
             </Cell>
           </Column>
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Column width={150} align="left" verticalAlign="middle" resizable sortable>
+          <Column
+            width={150}
+            align="left"
+            verticalAlign="middle"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<FullCommentFragment>) =>
-                t('comments.overview.modifiedAtDate', {modifiedAtDate: new Date(modifiedAt)})
+              {({ modifiedAt }: RowDataType<FullCommentFragment>) =>
+                t('comments.overview.modifiedAtDate', {
+                  modifiedAtDate: new Date(modifiedAt),
+                })
               }
             </Cell>
           </Column>
 
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Column width={200} align="right" verticalAlign="middle" fixed="right">
+          <Column
+            width={200}
+            align="right"
+            verticalAlign="middle"
+            fixed="right"
+          >
             <HeaderCell>{t('comments.overview.editState')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
-                <PermissionControl qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_TAKE_COMMENT_ACTION']}
+                >
                   <CommentStateDropdown
                     comment={rowData as FullCommentFragment}
                     size="xs"
                     onStateChanged={async () => {
-                      await refetch()
+                      await refetch();
                     }}
                   />
                 </PermissionControl>
@@ -269,16 +310,27 @@ function CommentList() {
           </Column>
 
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <Column width={150} align="center" verticalAlign="middle" fixed="right">
+          <Column
+            width={150}
+            align="center"
+            verticalAlign="middle"
+            fixed="right"
+          >
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<FullCommentFragment>) => (
-                <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_UPDATE_COMMENTS']}
+                >
                   {/* edit comment */}
                   <EditIcon>
                     <IconButtonTooltip caption={t('comments.overview.edit')}>
                       <Link to={`edit/${rowData.id}`}>
-                        <IconButton icon={<MdEdit />} circle size="sm" />
+                        <IconButton
+                          icon={<MdEdit />}
+                          circle
+                          size="sm"
+                        />
                       </Link>
                     </IconButtonTooltip>
                   </EditIcon>
@@ -315,11 +367,11 @@ function CommentList() {
         />
       </TableWrapper>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_COMMENTS',
-  'CAN_TAKE_COMMENT_ACTION'
-])(CommentList)
-export {CheckedPermissionComponent as CommentList}
+  'CAN_TAKE_COMMENT_ACTION',
+])(CommentList);
+export { CheckedPermissionComponent as CommentList };

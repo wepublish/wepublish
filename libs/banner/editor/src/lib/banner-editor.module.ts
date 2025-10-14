@@ -1,8 +1,8 @@
-import {Module} from '@nestjs/common'
+import { Module } from '@nestjs/common';
 
 @Module({
   controllers: [],
   providers: [],
-  exports: []
+  exports: [],
 })
 export class BannerEditorModule {}

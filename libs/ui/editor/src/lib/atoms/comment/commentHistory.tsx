@@ -3,20 +3,20 @@ import {
   CommentSort,
   CommentState,
   FullCommentFragment,
-  useCommentListLazyQuery
-} from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd} from 'react-icons/md'
-import {FlexboxGrid} from 'rsuite'
+  useCommentListLazyQuery,
+} from '@wepublish/editor/api';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd } from 'react-icons/md';
+import { FlexboxGrid } from 'rsuite';
 
-import {CommentPreview, RevisionProps} from './commentPreview'
-import {CreateCommentBtn} from './createCommentBtn'
+import { CommentPreview, RevisionProps } from './commentPreview';
+import { CreateCommentBtn } from './createCommentBtn';
 
 interface ChildCommentsProps extends RevisionProps {
-  comments?: FullCommentFragment[]
-  comment: FullCommentFragment
-  originComment?: FullCommentFragment
+  comments?: FullCommentFragment[];
+  comment: FullCommentFragment;
+  originComment?: FullCommentFragment;
 }
 
 function ChildComments({
@@ -24,22 +24,37 @@ function ChildComments({
   comment,
   originComment,
   revision,
-  setRevision
+  setRevision,
 }: ChildCommentsProps): JSX.Element {
   if (!comments) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>
+    return <></>;
   }
-  const childComments = comments.filter(tmpComment => tmpComment.parentComment?.id === comment.id)
+  const childComments = comments.filter(
+    tmpComment => tmpComment.parentComment?.id === comment.id
+  );
   return (
-    <div style={{marginTop: '20px', borderLeft: '1px lightgrey solid', paddingLeft: '20px'}}>
+    <div
+      style={{
+        marginTop: '20px',
+        borderLeft: '1px lightgrey solid',
+        paddingLeft: '20px',
+      }}
+    >
       {childComments.map(childComment => (
         <div
           key={childComment.id}
-          id={childComment.id === originComment?.id ? `comment-${originComment.id}` : ''}>
+          id={
+            childComment.id === originComment?.id ?
+              `comment-${originComment.id}`
+            : ''
+          }
+        >
           <CommentPreview
             comment={childComment}
-            originComment={childComment.id === originComment?.id ? originComment : undefined}
+            originComment={
+              childComment.id === originComment?.id ? originComment : undefined
+            }
             revision={revision}
             setRevision={setRevision}
           />
@@ -54,13 +69,13 @@ function ChildComments({
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 interface CommentHistoryProps extends RevisionProps {
-  commentItemType: CommentItemType
-  commentItemID: string
-  originComment?: FullCommentFragment
+  commentItemType: CommentItemType;
+  commentItemID: string;
+  originComment?: FullCommentFragment;
 }
 
 export function CommentHistory({
@@ -68,11 +83,11 @@ export function CommentHistory({
   commentItemID,
   revision,
   setRevision,
-  originComment
+  originComment,
 }: CommentHistoryProps) {
-  const {t} = useTranslation()
-  const [comments, setComments] = useState<FullCommentFragment[] | undefined>()
-  const [fetchCommentList, {data}] = useCommentListLazyQuery({
+  const { t } = useTranslation();
+  const [comments, setComments] = useState<FullCommentFragment[] | undefined>();
+  const [fetchCommentList, { data }] = useCommentListLazyQuery({
     variables: {
       filter: {
         itemType: commentItemType,
@@ -81,28 +96,34 @@ export function CommentHistory({
           CommentState.Approved,
           CommentState.PendingUserChanges,
           CommentState.PendingApproval,
-          CommentState.Rejected
-        ]
+          CommentState.Rejected,
+        ],
       },
       sort: CommentSort.CreatedAt,
-      take: 1000
+      take: 1000,
     },
-    fetchPolicy: 'cache-and-network'
-  })
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
-    setComments(data?.comments?.nodes)
-  }, [data])
+    setComments(data?.comments?.nodes);
+  }, [data]);
 
   // re-load comments whenever the comment id changes
   useEffect(() => {
-    fetchCommentList()
-  }, [originComment?.id])
+    fetchCommentList();
+  }, [originComment?.id]);
 
   return (
     <>
-      <FlexboxGrid align="bottom" justify="end">
-        <FlexboxGrid.Item style={{textAlign: 'end', paddingBottom: '20px'}} colspan={24}>
+      <FlexboxGrid
+        align="bottom"
+        justify="end"
+      >
+        <FlexboxGrid.Item
+          style={{ textAlign: 'end', paddingBottom: '20px' }}
+          colspan={24}
+        >
           <CreateCommentBtn
             itemID={commentItemID}
             itemType={commentItemType}
@@ -111,7 +132,7 @@ export function CommentHistory({
             appearance="ghost"
             icon={<MdAdd />}
             onCommentCreated={async () => {
-              await fetchCommentList()
+              await fetchCommentList();
             }}
           />
         </FlexboxGrid.Item>
@@ -140,5 +161,5 @@ export function CommentHistory({
           </div>
         ))}
     </>
-  )
+  );
 }

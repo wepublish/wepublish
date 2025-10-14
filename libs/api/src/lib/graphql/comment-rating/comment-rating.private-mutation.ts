@@ -1,9 +1,13 @@
-import {PrismaClient, RatingSystemType} from '@prisma/client'
-import {CanUpdateCommentRatingSystem} from '@wepublish/permissions'
-import {Context} from '../../context'
-import {authorise} from '../permissions'
+import { PrismaClient, RatingSystemType } from '@prisma/client';
+import { CanUpdateCommentRatingSystem } from '@wepublish/permissions';
+import { Context } from '../../context';
+import { authorise } from '../permissions';
 
-type UpdateCommentRatingAnswer = {id: string; answer: string; type: RatingSystemType}
+type UpdateCommentRatingAnswer = {
+  id: string;
+  answer: string;
+  type: RatingSystemType;
+};
 
 export const updateRatingSystem = (
   ratingSystemId: string,
@@ -12,27 +16,27 @@ export const updateRatingSystem = (
   authenticate: Context['authenticate'],
   ratingSystem: PrismaClient['commentRatingSystem']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanUpdateCommentRatingSystem, roles)
+  const { roles } = authenticate();
+  authorise(CanUpdateCommentRatingSystem, roles);
 
   return ratingSystem.update({
-    where: {id: ratingSystemId},
+    where: { id: ratingSystemId },
     data: {
       name,
       answers: {
         update: answers?.map(answer => ({
-          where: {id: answer.id},
+          where: { id: answer.id },
           data: {
-            answer: answer.answer
-          }
-        }))
-      }
+            answer: answer.answer,
+          },
+        })),
+      },
     },
     include: {
-      answers: true
-    }
-  })
-}
+      answers: true,
+    },
+  });
+};
 
 export const createCommentRatingAnswer = async (
   ratingSystemId: string,
@@ -41,8 +45,8 @@ export const createCommentRatingAnswer = async (
   authenticate: Context['authenticate'],
   ratingAnswer: PrismaClient['commentRatingSystemAnswer']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanUpdateCommentRatingSystem, roles)
+  const { roles } = authenticate();
+  authorise(CanUpdateCommentRatingSystem, roles);
 
   return ratingAnswer.create({
     data: {
@@ -50,22 +54,22 @@ export const createCommentRatingAnswer = async (
       answer,
       ratingSystem: {
         connect: {
-          id: ratingSystemId
-        }
-      }
-    }
-  })
-}
+          id: ratingSystemId,
+        },
+      },
+    },
+  });
+};
 
 export const deleteCommentRatingAnswer = async (
   answerId: string,
   authenticate: Context['authenticate'],
   commentRatingAnswer: PrismaClient['commentRatingSystemAnswer']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanUpdateCommentRatingSystem, roles)
+  const { roles } = authenticate();
+  authorise(CanUpdateCommentRatingSystem, roles);
 
   return commentRatingAnswer.delete({
-    where: {id: answerId}
-  })
-}
+    where: { id: answerId },
+  });
+};

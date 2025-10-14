@@ -1,9 +1,9 @@
-import {MockedProvider} from '@apollo/client/testing'
-import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
-import * as stories from './footer-container.stories'
+import { MockedProvider } from '@apollo/client/testing';
+import { composeStories } from '@storybook/react';
+import { render } from '@testing-library/react';
+import * as stories from './footer-container.stories';
 
-const storiesCmp = composeStories(stories)
+const storiesCmp = composeStories(stories);
 
 describe('Footer Container', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
@@ -12,7 +12,7 @@ describe('Footer Container', () => {
         <MockedProvider {...Component.parameters?.apolloClient}>
           <Component />
         </MockedProvider>
-      )
-    })
-  })
-})
+      );
+    });
+  });
+});
