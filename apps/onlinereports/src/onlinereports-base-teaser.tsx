@@ -84,7 +84,6 @@ export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
 
   return <OnlineReportsBaseTeaserStyled {...props} />;
 };
-
 export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
   color: inherit;
   text-decoration: none;
@@ -98,7 +97,7 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
     'lead'
     'tags'
     'authors';
-  grid-template-rows: min-content 12px min-content min-content min-content min-content;
+  grid-template-rows: repeat(6, min-content);
 
   .MuiChip-root {
     color: inherit;
@@ -110,6 +109,14 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
   }
 
   ${TeaserImageWrapper} {
+    &:empty {
+      display: none;
+
+      ${({ theme }) => theme.breakpoints.up('sm')} {
+        display: unset;
+      }
+    }
+
     img {
       aspect-ratio: 4/3;
       max-height: unset;
@@ -122,7 +129,7 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
 
   ${TeaserPreTitleWrapper} {
     margin-bottom: 0;
-    padding: 0;
+    padding: ${({ theme }) => theme.spacing(0.5)} 0 0 0;
     height: unset;
     color: ${({ theme }) => theme.palette.primary.main};
     background-color: transparent;
@@ -143,6 +150,10 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
     font-size: ${({ theme }) => theme.typography.h3.fontSize};
     font-weight: ${({ theme }) => theme.typography.h3.fontWeight};
     color: ${({ theme }) => theme.typography.h3.color};
+    margin-bottom: ${({ theme }) => theme.spacing(0.25)};
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      margin-bottom: ${({ theme }) => theme.spacing(1)};
+    }
   }
 
   ${TeaserLead} {

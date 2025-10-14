@@ -163,6 +163,7 @@ export const theme = createTheme({
       },
     },
     caption: {
+      ...baseTheme.typography.body1,
       lineHeight: 1.7,
     },
     subtitle1: {

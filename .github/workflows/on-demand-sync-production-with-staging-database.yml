@@ -1,24 +1,20 @@
-name: Setup production database for review build
+name: Synchronize production with staging database
 
 on:
   workflow_dispatch:
-    inputs:
-      pull_request_number:
-        description: 'The pull request number you find it in the pullrequest view behind a # eg #1234=>1234'
-        required: true
-        type: string
+   inputs:
       project:
-        description: 'Name of the project you want to get database from eg. bajour'
+        description: 'Name of the project you want to sync the database'
         required: true
         type: string
       akk:
-        description: 'Are you sure you want to overwrite the existing review database? [Yes]'
+        description: 'Are you sure you want to overwrite the existing staging database? [Yes]'
         required: true
         type: string
 
 jobs:
   sync-db:
-    name: Copy Database
+    name: Sync staging with production database
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -57,14 +53,14 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgres 5432:5432 &
+          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgres 5432:5432 &
 
       - name: Install PostgreSQL Client
         run: |
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
           wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
           sudo apt-get update
-          sudo apt-get install -y postgresql-client-17
+          sudo apt-get install -y postgresql-client-17 curl gzip jq
 
       - name: Get and unpack project production database
         run: |
@@ -79,8 +75,8 @@ jobs:
 
       - name: Rerun database migration
         run: |
-          JOB_NAME=$(kubectl -n reviews get jobs --sort-by='{.metadata.creationTimestamp}' |grep "review-${{ inputs.pull_request_number }}-app-wepublish-migration"  |tail -n 1 | awk '{print $1}')
-          kubectl -n reviews get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
+          JOB_NAME=$(kubectl -n staging get jobs --sort-by='{.metadata.creationTimestamp}' |grep "${{ inputs.project }}-app-wepublish-migration" |tail -n 1 | awk '{print $1}')
+          kubectl -n staging get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
             .metadata.name = $name
             | del(
             .metadata.uid,
@@ -100,7 +96,7 @@ jobs:
             .["pod-template-hash"]
             )
             )
-            ' | kubectl -n reviews apply -f -          
+            ' | kubectl -n staging apply -f -          
 
       - name: Cleanup
         run: rm database.dump

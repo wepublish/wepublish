@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-const take = 25;
+const take = 30;
 
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),

@@ -31,7 +31,8 @@
     "prepare": "prisma generate",
     "postinstall": "node build/postInstall.js",
     "deploy:production": "node deployment/deploy_production.js",
-    "deploy:production:tags": "bash deployment/clean_deploy_tags.sh"
+    "deploy:production:tags": "bash deployment/clean_deploy_tags.sh",
+    "setup:production:local": "bash scripts/setup-local-production-database.sh"
   },
   "nx": {
     "includedScripts": [
