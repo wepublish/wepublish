@@ -7,6 +7,7 @@ import {
   CommentListDocument,
   CommentSort,
   getV1ApiClient,
+  HotAndTrendingDocument,
   NavigationListDocument,
   PageDocument,
   PageQuery,
@@ -88,6 +89,12 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
     client.query({
       query: SettingListDocument,
+    }),
+    client.query({
+      query: HotAndTrendingDocument,
+      variables: {
+        take: 4,
+      },
     }),
   ]);
 

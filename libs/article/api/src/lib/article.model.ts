@@ -249,6 +249,8 @@ export class ArticleFilter {
   authors?: string[];
   @Field(() => [String], { nullable: true })
   tags?: string[];
+  @Field(() => [String], { nullable: true })
+  tagsNotIn?: string[];
 
   @Field({ nullable: true })
   peerId?: string;
