@@ -797,7 +797,8 @@
       "tags": "Tags",
       "savedChanges": "Saved",
       "successPage": "Redirect to page on payment success",
-      "failPage": "Redirect to page on payment error"
+      "failPage": "Redirect to page on payment error",
+      "externalReward": "Link or description to an external reward (only visible to subscribers)"
     },
     "memberPlanList": {
       "action": "Actions",

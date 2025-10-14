@@ -301,6 +301,27 @@ export function MemberPlanForm({
                 )}
               </div>
             </Col>
+
+            <Col xs={24}>
+              <Form.ControlLabel>
+                {t('memberPlanEdit.externalReward')}
+              </Form.ControlLabel>
+
+              <Form.Control
+                name="externalReward"
+                value={memberPlan?.externalReward || ''}
+                onChange={(newexternalReward: string | undefined) => {
+                  if (!memberPlan) {
+                    return;
+                  }
+
+                  setMemberPlan({
+                    ...memberPlan,
+                    externalReward: newexternalReward,
+                  });
+                }}
+              />
+            </Col>
           </Row>
         </PanelWidth100>
       </Col>

@@ -581,6 +581,7 @@ model MemberPlan {
   migrateToTargetPaymentMethodID String?
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
+  externalReward                 String?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
