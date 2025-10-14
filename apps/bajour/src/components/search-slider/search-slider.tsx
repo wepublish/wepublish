@@ -392,7 +392,7 @@ export function SearchSlider({
       async (query: string, slider: KeenSliderInstance) => {
         await fetchMore({
           variables: {
-            cursor: null,
+            cursorId: null,
             order: SortOrder.Descending,
             filter: {
               body: query,

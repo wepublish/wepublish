@@ -136,24 +136,6 @@
         "paywall": "Paywall"
       }
     },
-    "articleList": {
-      "filter": {
-        "dates": "Dates",
-        "description": "Filtrer par description",
-        "isDraft": "Brouillon",
-        "isPending": "En attente",
-        "isPublished": "Publié",
-        "lead": "Filtrer par lead",
-        "location": "Location",
-        "name": "Nom",
-        "preTitle": "Filtrer par pré-titre",
-        "providers": "Fournisseurs",
-        "publicationDate": "Date de publication",
-        "reset": "Réinitialiser les filtres",
-        "title": "Filtrer par titre",
-        "includeHidden": "Inclure cachés"
-      }
-    },
     "articles": {
       "overview": {
         "action": "Action",
@@ -597,6 +579,25 @@
         "title": "Events"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Dates",
+        "description": "Filtrer par description",
+        "isDraft": "Brouillon",
+        "isPending": "En attente",
+        "isPublished": "Publié",
+        "lead": "Filtrer par lead",
+        "location": "Location",
+        "name": "Nom",
+        "preTitle": "Filtrer par pré-titre",
+        "providers": "Fournisseurs",
+        "publicationDate": "Date de publication",
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "includeHiddenArticles": "Inclure cachés",
+        "includeHiddenPages": "Inclure cachés"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -848,6 +849,8 @@
         "publishAtDateCheckbox": "Définir une date différente pour la disponibilité en ligne",
         "publishDate": "Date de publication",
         "publishPage": "Publier la page",
+        "hidden": "Cacher",
+        "setAsHidden": "Les pages cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
         "slug": "Slug",
         "socialMediaDescription": "Description pour les réseaux sociaux",
         "socialMediaImage": "Image pour les médias sociaux",
@@ -1222,7 +1225,9 @@
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
       "zipCode": "Code Postal",
-      "birthday": "Birthday"
+      "birthday": "Birthday",
+      "note": "Note",
+      "noteHelpText": "Non visible pour l'utilisateur."
     },
     "userList": {
       "overview": {
