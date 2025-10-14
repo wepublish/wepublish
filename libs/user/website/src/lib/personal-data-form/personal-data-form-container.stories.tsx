@@ -29,7 +29,6 @@ const mockUser: User = {
   },
   image: mockImage(),
   paymentProviderCustomers: [],
-  properties: [],
 };
 
 const onUpdateVariables = {

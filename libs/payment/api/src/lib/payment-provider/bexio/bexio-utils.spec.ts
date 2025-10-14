@@ -54,6 +54,7 @@ const mockUser: User = {
   lastLogin: new Date('2023-01-02T00:00:00.000Z'),
   roleIDs: ['role1', 'role2'],
   userImageID: 'image-1',
+  note: null,
 };
 
 describe('bexio-utils', () => {
