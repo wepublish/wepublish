@@ -1,11 +1,10 @@
-import fetch from 'cross-fetch'
-import {loadErrorMessages, loadDevMessages} from '@apollo/client/dev'
+import fetch from 'cross-fetch';
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
 
-loadDevMessages()
-loadErrorMessages()
+loadDevMessages();
+loadErrorMessages();
 
-const originalConsoleError = console.error
-const originalConsoleWarn = console.warn
+const originalConsoleError = console.error;
 
 global.console.error = (message, ...optionalParams) => {
   if (typeof message === 'string') {
@@ -14,21 +13,25 @@ global.console.error = (message, ...optionalParams) => {
         /Warning: The current testing environment is not configured to support act(...)/gi
       )
     ) {
-      return
+      return;
     }
   }
 
-  if (typeof message === 'object' && 'message' in message && typeof message.message === 'string') {
+  if (
+    typeof message === 'object' &&
+    'message' in message &&
+    typeof message.message === 'string'
+  ) {
     // JSDOM doesn't always support every new CSS property (e.g. container queries)
     // This hides the console.error from it.
     if (message.message.match(/.*Could not parse CSS stylesheet/gi)) {
-      return
+      return;
     }
   }
 
-  originalConsoleError(message, ...optionalParams)
-}
+  originalConsoleError(message, ...optionalParams);
+};
 
 if (global.fetch === undefined) {
-  global.fetch = fetch
+  global.fetch = fetch;
 }

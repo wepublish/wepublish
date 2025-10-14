@@ -1,16 +1,16 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {CrowdfundingBlock} from './crowdfunding-block'
-import {mockCrowdfundingBlock} from '@wepublish/storybook/mocks'
+import { Meta, StoryObj } from '@storybook/react';
+import { CrowdfundingBlock } from './crowdfunding-block';
+import { mockCrowdfundingBlock } from '@wepublish/storybook/mocks';
 
 export default {
   component: CrowdfundingBlock,
-  title: 'Blocks/Crowdfunding'
-} as Meta
+  title: 'Blocks/Crowdfunding',
+} as Meta;
 
 export const Default: StoryObj = {
-  args: mockCrowdfundingBlock()
-}
+  args: mockCrowdfundingBlock(),
+};
 
 export const Empty: StoryObj = {
-  args: {}
-}
+  args: {},
+};

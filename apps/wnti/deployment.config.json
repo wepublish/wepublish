@@ -8,7 +8,8 @@
         "GA_ID": "",
         "SPARKLOOP_ID": "",
         "STRIPE_PUBLIC_KEY": "",
-        "GTM_ID": "GTM-KJHWZPB9"
+        "GTM_ID": "GTM-KJHWZPB9",
+        "DEPLOY_ENV": "production"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
@@ -16,14 +17,16 @@
       "deployment": true,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us17",
-        "GTM_ID": "GTM-KJHWZPB9"
+        "GTM_ID": "GTM-KJHWZPB9",
+        "DEPLOY_ENV": "staging"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "review": {
       "deployment": true,
       "env": {
-        "MAILCHIMP_SERVER_PREFIX": "us17"
+        "MAILCHIMP_SERVER_PREFIX": "us17",
+        "DEPLOY_ENV": "review"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     }

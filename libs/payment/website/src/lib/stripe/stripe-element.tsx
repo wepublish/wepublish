@@ -1,27 +1,34 @@
-import {Elements} from '@stripe/react-stripe-js'
-import {loadStripe} from '@stripe/stripe-js/pure'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useMemo} from 'react'
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js/pure';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { PropsWithChildren, useMemo } from 'react';
 
 export type StripeElementProps = {
-  clientSecret?: string
-}
+  clientSecret?: string;
+};
 
-export function StripeElement({clientSecret, children}: PropsWithChildren<StripeElementProps>) {
+export function StripeElement({
+  clientSecret,
+  children,
+}: PropsWithChildren<StripeElementProps>) {
   const {
-    thirdParty: {stripe}
-  } = useWebsiteBuilder()
+    thirdParty: { stripe },
+  } = useWebsiteBuilder();
 
-  const stripePromise = useMemo(() => (stripe ? loadStripe(stripe) : null), [stripe])
+  const stripePromise = useMemo(
+    () => (stripe ? loadStripe(stripe) : null),
+    [stripe]
+  );
 
   return (
     <Elements
       stripe={stripePromise}
       options={{
         clientSecret,
-        locale: 'de'
-      }}>
+        locale: 'de',
+      }}
+    >
       {children}
     </Elements>
-  )
+  );
 }

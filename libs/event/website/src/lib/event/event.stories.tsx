@@ -1,44 +1,44 @@
-import {Meta} from '@storybook/react'
-import {Event} from './event'
-import {ApolloError} from '@apollo/client'
-import {mockEvent} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { Event } from './event';
+import { ApolloError } from '@apollo/client';
+import { mockEvent } from '@wepublish/storybook/mocks';
 
-const event = mockEvent()
+const event = mockEvent();
 
 export default {
   component: Event,
-  title: 'Components/Event'
-} as Meta
+  title: 'Components/Event',
+} as Meta;
 
 export const Default = {
   args: {
     data: {
-      event
-    }
-  }
-}
+      event,
+    },
+  },
+};
 
 export const WithLoading = {
   args: {
     data: undefined,
-    loading: true
-  }
-}
+    loading: true,
+  },
+};
 
 export const WithError = {
   args: {
     data: undefined,
     loading: false,
     error: new ApolloError({
-      errorMessage: 'Foobar'
-    })
-  }
-}
+      errorMessage: 'Foobar',
+    }),
+  },
+};
 
 export const WithoutImage = {
   args: {
     data: {
-      event: {...event, image: null}
-    }
-  }
-}
+      event: { ...event, image: null },
+    },
+  },
+};

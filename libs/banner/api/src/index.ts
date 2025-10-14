@@ -1,1 +1,1 @@
-export * from './lib/banner-api.module'
+export * from './lib/banner-api.module';

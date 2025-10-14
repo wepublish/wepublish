@@ -132,7 +132,8 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "editor:browser:development"
+          "buildTarget": "editor:browser:development",
+          "host": "0.0.0.0"
         },
         "production": {
           "buildTarget": "editor:browser:production",

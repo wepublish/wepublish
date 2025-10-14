@@ -1,25 +1,25 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import {DashboardInvoiceService} from './dashboard-invoice.service'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {PrismaClient} from '@prisma/client'
+import { Test, TestingModule } from '@nestjs/testing';
+import { DashboardInvoiceService } from './dashboard-invoice.service';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { PrismaClient } from '@prisma/client';
 
 describe('DashboardInvoiceService', () => {
-  let service: DashboardInvoiceService
-  let prisma: PrismaClient
+  let service: DashboardInvoiceService;
+  let prisma: PrismaClient;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
-      providers: [DashboardInvoiceService]
-    }).compile()
+      providers: [DashboardInvoiceService],
+    }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient)
-    service = module.get<DashboardInvoiceService>(DashboardInvoiceService)
-  })
+    prisma = module.get<PrismaClient>(PrismaClient);
+    service = module.get<DashboardInvoiceService>(DashboardInvoiceService);
+  });
 
   test('should be defined', () => {
-    expect(service).toBeDefined()
-  })
+    expect(service).toBeDefined();
+  });
 
   test('should get the revenue of a month', async () => {
     const mockValue = Promise.resolve([
@@ -34,14 +34,14 @@ describe('DashboardInvoiceService', () => {
         items: [
           {
             quantity: 1,
-            amount: 50
+            amount: 50,
           },
           {
             quantity: 2,
-            amount: 50
-          }
+            amount: 50,
+          },
         ],
-        subscription: {memberPlan: {name: 'Foo Subscription'}}
+        subscription: { memberPlan: { name: 'Foo Subscription' } },
       },
       {
         id: 'cld32r1kb0225qppx8ptpwukz',
@@ -54,24 +54,26 @@ describe('DashboardInvoiceService', () => {
         items: [
           {
             quantity: 1,
-            amount: 100
+            amount: 100,
           },
           {
             quantity: 2,
-            amount: 50
-          }
+            amount: 50,
+          },
         ],
-        subscription: {memberPlan: {name: 'Foo Subscription'}}
-      }
-    ])
-    const start = new Date('2023-01-01')
-    const end = new Date('2023-02-01')
-    const mockFunction = jest.spyOn(prisma.invoice, 'findMany').mockReturnValue(mockValue as any)
+        subscription: { memberPlan: { name: 'Foo Subscription' } },
+      },
+    ]);
+    const start = new Date('2023-01-01');
+    const end = new Date('2023-02-01');
+    const mockFunction = jest
+      .spyOn(prisma.invoice, 'findMany')
+      .mockReturnValue(mockValue as any);
 
-    const result = await service.revenue(start, end)
-    expect(result).toMatchSnapshot()
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
-  })
+    const result = await service.revenue(start, end);
+    expect(result).toMatchSnapshot();
+    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+  });
 
   test('should get the expected revenue of a month', async () => {
     const mockValue = Promise.resolve([
@@ -82,14 +84,14 @@ describe('DashboardInvoiceService', () => {
         items: [
           {
             quantity: 1,
-            amount: 50
+            amount: 50,
           },
           {
             quantity: 2,
-            amount: 50
-          }
+            amount: 50,
+          },
         ],
-        subscription: {memberPlan: {name: 'Foo Subscription'}}
+        subscription: { memberPlan: { name: 'Foo Subscription' } },
       },
       {
         dueAt: '2023-01-19T12:33:55.859Z',
@@ -98,14 +100,14 @@ describe('DashboardInvoiceService', () => {
         items: [
           {
             quantity: 1,
-            amount: 100
+            amount: 100,
           },
           {
             quantity: 2,
-            amount: 50
-          }
+            amount: 50,
+          },
         ],
-        subscription: {memberPlan: {name: 'Foo Subscription'}}
+        subscription: { memberPlan: { name: 'Foo Subscription' } },
       },
       {
         id: 'cld33096g0486tnpxz8espm6e',
@@ -120,22 +122,24 @@ describe('DashboardInvoiceService', () => {
         items: [
           {
             quantity: 1,
-            amount: 500
+            amount: 500,
           },
           {
             quantity: 2,
-            amount: 250
-          }
+            amount: 250,
+          },
         ],
-        subscription: {memberPlan: {name: 'Foo Subscription'}}
-      }
-    ])
-    const start = new Date('2023-01-01')
-    const end = new Date('2023-02-01')
-    const mockFunction = jest.spyOn(prisma.invoice, 'findMany').mockReturnValue(mockValue as any)
+        subscription: { memberPlan: { name: 'Foo Subscription' } },
+      },
+    ]);
+    const start = new Date('2023-01-01');
+    const end = new Date('2023-02-01');
+    const mockFunction = jest
+      .spyOn(prisma.invoice, 'findMany')
+      .mockReturnValue(mockValue as any);
 
-    const result = await service.expectedRevenue(start, end)
-    expect(result).toMatchSnapshot()
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
-  })
-})
+    const result = await service.expectedRevenue(start, end);
+    expect(result).toMatchSnapshot();
+    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+  });
+});

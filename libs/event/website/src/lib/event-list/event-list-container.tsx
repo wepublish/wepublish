@@ -1,22 +1,22 @@
-import {useEventListQuery} from '@wepublish/website/api'
+import { useEventListQuery } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderEventListProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
 export type EventListContainerProps = BuilderContainerProps &
-  Pick<BuilderEventListProps, 'variables' | 'onVariablesChange'>
+  Pick<BuilderEventListProps, 'variables' | 'onVariablesChange'>;
 
 export function EventListContainer({
   className,
   variables,
-  onVariablesChange
+  onVariablesChange,
 }: EventListContainerProps) {
-  const {EventList} = useWebsiteBuilder()
-  const {data, loading, error} = useEventListQuery({
-    variables
-  })
+  const { EventList } = useWebsiteBuilder();
+  const { data, loading, error } = useEventListQuery({
+    variables,
+  });
 
   return (
     <EventList
@@ -27,5 +27,5 @@ export function EventListContainer({
       variables={variables}
       onVariablesChange={onVariablesChange}
     />
-  )
+  );
 }

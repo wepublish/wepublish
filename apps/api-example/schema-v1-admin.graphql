@@ -7,7 +7,6 @@ type Query {
   peer(id: String!): Peer
   me: User
   sessions: [Session!]!
-  authProviders(redirectUri: String): [AuthProvider!]!
   user(id: String): User
   users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
   subscription(id: String!): Subscription
@@ -32,10 +31,9 @@ type Query {
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   payment(id: String): Payment
   payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
-  setting(name: String!): Setting
-  settings: [Setting!]!
   ratingSystem: FullCommentRatingSystem!
   tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
+  tag(id: String!): Tag
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
   newSubscribersPerMonth(monthsBack: Int): [SubscribersPerMonth]
@@ -130,6 +128,7 @@ type Peer {
   slug: String!
   isDisabled: Boolean
   hostURL: String!
+  information: RichText
   profile: PeerProfile
 }
 
@@ -144,13 +143,13 @@ type User {
   birthday: DateTime
   address: UserAddress
   flair: String
+  note: String
   userImage: Image
   active: Boolean!
   lastLogin: DateTime
   properties: [Properties!]!
   roles: [UserRole!]!
   paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
   subscriptions: [UserSubscription!]!
 }
 
@@ -186,12 +185,6 @@ type Permission {
 type PaymentProviderCustomer {
   paymentProviderID: String!
   customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
 }
 
 type UserSubscription {
@@ -256,6 +249,7 @@ type MemberPlan {
   slug: String!
   image: Image
   description: RichText
+  shortDescription: RichText
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
@@ -285,6 +279,7 @@ type PaymentMethod {
   description: String!
   paymentProvider: PaymentProvider
   active: Boolean!
+  gracePeriod: Int!
   imageId: String
   image: Image
 }
@@ -325,11 +320,6 @@ type Session {
   user: User!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type AuthProvider {
-  name: String!
-  url: String!
 }
 
 type UserConnection {
@@ -478,6 +468,7 @@ type Tag {
   tag: String
   type: TagType
   main: Boolean!
+  description: RichText
   url: String!
 }
 
@@ -678,44 +669,6 @@ enum PaymentSort {
   modifiedAt
 }
 
-type Setting {
-  id: String!
-  name: SettingName!
-  value: GraphQLSettingValueType!
-  settingRestriction: SettingRestriction
-}
-
-enum SettingName {
-  allowGuestCommenting
-  allowGuestCommentRating
-  allowGuestPollVoting
-  sendLoginJwtExpiresMin
-  resetPasswordJwtExpiresMin
-  peeringTimeoutInMs
-  makeActiveSubscribersApiPublic
-  makeNewSubscribersApiPublic
-  makeRenewingSubscribersApiPublic
-  makeNewDeactivationsApiPublic
-  makeExpectedRevenueApiPublic
-  makeRevenueApiPublic
-  commentCharLimit
-  allowCommentEditing
-}
-
-scalar GraphQLSettingValueType
-
-type SettingRestriction {
-  maxValue: Int
-  minValue: Int
-  inputLength: Int
-  allowedValues: AllowedSettingVals
-}
-
-type AllowedSettingVals {
-  stringChoice: [String]
-  boolChoice: Boolean
-}
-
 type FullCommentRatingSystem {
   id: String!
   name: String
@@ -817,7 +770,6 @@ type Mutation {
   deletePeer(id: String!): Peer
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
   revokeSession(id: String!): Boolean!
   revokeActiveSession: Boolean!
   sessions: [Session!]!
@@ -861,7 +813,6 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
   deleteComment(id: String!): Comment!
-  updateSettingList(value: [UpdateSettingArgs]): [Setting]
   createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
   updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
@@ -872,8 +823,8 @@ type Mutation {
   deletePoll(id: String!): FullPoll
   deletePollAnswer(id: String!): PollAnswerWithVoteCount
   deletePollExternalVoteSource(id: String!): PollExternalVoteSource
-  createTag(tag: String, type: TagType!, main: Boolean): Tag
-  updateTag(id: String!, tag: String, main: Boolean): Tag
+  createTag(tag: String, description: RichText, type: TagType!, main: Boolean): Tag
+  updateTag(id: String!, tag: String, description: RichText, main: Boolean): Tag
   deleteTag(id: String!): Tag
 }
 
@@ -893,6 +844,7 @@ input CreatePeerInput {
   name: String!
   slug: String!
   hostURL: String!
+  information: RichText
   token: String!
 }
 
@@ -901,6 +853,7 @@ input UpdatePeerInput {
   slug: String
   hostURL: String
   isDisabled: Boolean
+  information: RichText
   token: String
 }
 
@@ -932,6 +885,7 @@ input UserInput {
   birthday: DateTime
   address: UserAddressInput
   flair: String
+  note: String
   userImageID: String
   active: Boolean!
   properties: [PropertiesInput!]!
@@ -1032,6 +986,7 @@ input MemberPlanInput {
   slug: String!
   imageID: String
   description: RichText
+  shortDescription: RichText
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
@@ -1058,6 +1013,7 @@ input PaymentMethodInput {
   description: String!
   paymentProviderID: String!
   active: Boolean!
+  gracePeriod: Int!
   imageId: String
 }
 
@@ -1095,11 +1051,6 @@ input CommentRevisionUpdateInput {
 input CommentRatingOverrideUpdateInput {
   answerId: String!
   value: Int
-}
-
-input UpdateSettingArgs {
-  name: SettingName!
-  value: GraphQLSettingValueType!
 }
 
 input UpdateCommentRatingSystemAnswer {

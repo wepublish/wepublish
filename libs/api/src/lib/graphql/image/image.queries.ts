@@ -1,7 +1,11 @@
-import {Image, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult} from '../../db/common'
-import {ImageFilter, ImageSort} from '../../db/image'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import { Image, Prisma, PrismaClient } from '@prisma/client';
+import { ConnectionResult } from '../../db/common';
+import { ImageFilter, ImageSort } from '../../db/image';
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+} from '@wepublish/utils/api';
 
 export const createImageOrder = (
   field: ImageSort,
@@ -10,54 +14,60 @@ export const createImageOrder = (
   switch (field) {
     case ImageSort.CreatedAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case ImageSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createTitleFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput => {
+const createTitleFilter = (
+  filter: Partial<ImageFilter>
+): Prisma.ImageWhereInput => {
   if (filter?.title) {
     return {
       OR: [
         {
           title: {
             contains: filter.title,
-            mode: 'insensitive'
-          }
+            mode: 'insensitive',
+          },
         },
         {
           filename: {
             contains: filter.title,
-            mode: 'insensitive'
-          }
-        }
-      ]
-    }
+            mode: 'insensitive',
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createTagsFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput => {
+const createTagsFilter = (
+  filter: Partial<ImageFilter>
+): Prisma.ImageWhereInput => {
   if (filter?.tags?.length) {
     return {
       tags: {
-        hasSome: filter.tags
-      }
-    }
+        hasSome: filter.tags,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-export const createImageFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput => ({
-  AND: [createTitleFilter(filter), createTagsFilter(filter)]
-})
+export const createImageFilter = (
+  filter: Partial<ImageFilter>
+): Prisma.ImageWhereInput => ({
+  AND: [createTitleFilter(filter), createTagsFilter(filter)],
+});
 
 export const getImages = async (
   filter: Partial<ImageFilter>,
@@ -68,32 +78,32 @@ export const getImages = async (
   take: number,
   image: PrismaClient['image']
 ): Promise<ConnectionResult<Image>> => {
-  const orderBy = createImageOrder(sortedField, order)
-  const where = createImageFilter(filter)
+  const orderBy = createImageOrder(sortedField, order);
+  const where = createImageFilter(filter);
 
   const [totalCount, images] = await Promise.all([
     image.count({
       where,
-      orderBy
+      orderBy,
     }),
     image.findMany({
       where,
       skip,
       take: getMaxTake(take) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined,
+      cursor: cursorId ? { id: cursorId } : undefined,
       include: {
-        focalPoint: true
-      }
-    })
-  ])
+        focalPoint: true,
+      },
+    }),
+  ]);
 
-  const nodes = images.slice(0, take)
-  const firstImage = nodes[0]
-  const lastImage = nodes[nodes.length - 1]
+  const nodes = images.slice(0, take);
+  const firstImage = nodes[0];
+  const lastImage = nodes[nodes.length - 1];
 
-  const hasPreviousPage = Boolean(skip)
-  const hasNextPage = images.length > nodes.length
+  const hasPreviousPage = Boolean(skip);
+  const hasNextPage = images.length > nodes.length;
 
   return {
     nodes,
@@ -102,7 +112,7 @@ export const getImages = async (
       hasPreviousPage,
       hasNextPage,
       startCursor: firstImage?.id,
-      endCursor: lastImage?.id
-    }
-  }
-}
+      endCursor: lastImage?.id,
+    },
+  };
+};

@@ -10,6 +10,7 @@ query TagList(
     nodes {
       id
       tag
+      description
       main
     }
 
@@ -24,18 +25,29 @@ query TagList(
   }
 }
 
-mutation CreateTag($tag: String, $type: TagType!) {
-  createTag(tag: $tag, type: $type) {
+query Tag($id: String!) {
+  tag(id: $id) {
     id
     tag
+    description
     main
   }
 }
 
-mutation UpdateTag($id: String!, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, main: $main) {
+mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
     id
     tag
+    description
+    main
+  }
+}
+
+mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
+  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
+    id
+    tag
+    description
     main
   }
 }
@@ -44,6 +56,7 @@ mutation DeleteTag($id: String!) {
   deleteTag(id: $id) {
     id
     tag
+    description
     main
   }
 }
