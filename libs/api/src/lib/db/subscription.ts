@@ -29,6 +29,7 @@ export interface SubscriptionFilter {
   readonly paymentPeriodicity?: PaymentPeriodicity;
   readonly userHasAddress?: boolean;
   readonly userID?: string;
+  readonly userIDs?: string[];
   readonly extendable?: boolean;
 }
 

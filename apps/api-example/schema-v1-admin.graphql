@@ -394,6 +394,7 @@ input SubscriptionFilter {
   paymentPeriodicity: PaymentPeriodicity
   userHasAddress: Boolean
   userID: String
+  userIDs: [String!]
   extendable: Boolean
 }
 

@@ -248,8 +248,32 @@ export function useAudience({
     getRenewalFigures,
   ]);
 
+  const audienceStatsByPeriod = useMemo<AudienceStatsComputed[]>(() => {
+    const result: Partial<AudienceStatsComputed> = {};
+    const userKeys: AggregatedUsers[] = [
+      'createdSubscriptionUsers',
+      'overdueSubscriptionUsers',
+      'deactivatedSubscriptionUsers',
+      'renewedSubscriptionUsers',
+      'replacedSubscriptionUsers',
+    ];
+    userKeys.forEach(key => {
+      const users = audienceStatsComputed
+        .flatMap(stat => stat[key] as DailySubscriptionStatsUser[])
+        .reduce<DailySubscriptionStatsUser[]>((acc, user) => {
+          if (!acc.find(u => u.id === user.id)) {
+            acc.push(user);
+          }
+          return acc;
+        }, []);
+      result[key] = users;
+    });
+    return [result as AudienceStatsComputed];
+  }, [audienceStatsComputed]);
+
   return {
     audienceStatsComputed,
     audienceStatsAggregatedByMonth,
+    audienceStatsByPeriod,
   };
 }

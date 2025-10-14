@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import {
+  SubscriptionFilter,
+  useMemberPlanListQuery,
+} from '@wepublish/editor/api';
+import { DailySubscriptionStatsUser } from '@wepublish/editor/api-v2';
+import { useExportSubscriptionsAsCsv } from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +21,7 @@ import {
 import { RangeType } from 'rsuite/esm/DateRangePicker';
 
 import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
+import { AudienceStatsComputed } from './useAudience';
 import {
   AudienceApiFilter,
   AudienceClientFilter,
@@ -48,7 +54,17 @@ export interface AudienceFilterProps {
   setApiFilter: (data: AudienceApiFilter) => void;
   componentFilter: AudienceComponentFilter;
   setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>;
+  audienceStatsByPeriod: AudienceStatsComputed[];
 }
+
+const filterKeyMap: Record<string, string> = {
+  createdSubscriptionCount: 'createdSubscriptionUsers',
+  overdueSubscriptionCount: 'overdueSubscriptionUsers',
+  renewedSubscriptionCount: 'renewedSubscriptionUsers',
+  replacedSubscriptionCount: 'replacedSubscriptionUsers',
+  totalActiveSubscriptionCount: 'totalActiveSubscriptionUsers',
+  deactivatedSubscriptionCount: 'deactivatedSubscriptionUsers',
+};
 
 export function AudienceFilter({
   resolution,
@@ -59,8 +75,11 @@ export function AudienceFilter({
   setApiFilter,
   componentFilter,
   setComponentFilter,
+  audienceStatsByPeriod,
 }: AudienceFilterProps) {
   const { t } = useTranslation();
+
+  const { initDownload, getCsv } = useExportSubscriptionsAsCsv();
 
   // load available subscription plans
   const { data: memberPlans } = useMemberPlanListQuery();
@@ -98,6 +117,47 @@ export function AudienceFilter({
       },
     ];
   }, [t]);
+
+  const handleClick = (filterKey: string) => {
+    /*
+    console.log(
+      filterKey,
+      audienceStatsByPeriod,
+      audienceStatsByPeriod[0][
+        filterKeyMap[filterKey] as keyof AudienceStatsComputed
+      ],
+      filterKeyMap[filterKey] as keyof AudienceStatsComputed
+    );
+    */
+
+    let statsUsers: DailySubscriptionStatsUser[];
+    if (
+      (filterKeyMap[filterKey] as keyof AudienceStatsComputed as string) ===
+      'totalActiveSubscriptionUsers'
+    ) {
+      const renewedUsers = audienceStatsByPeriod[0][
+        'renewedSubscriptionUsers'
+      ] as DailySubscriptionStatsUser[];
+      const replacedUsers = audienceStatsByPeriod[0][
+        'replacedSubscriptionUsers'
+      ] as DailySubscriptionStatsUser[];
+      const createdUsers = audienceStatsByPeriod[0][
+        'createdSubscriptionUsers'
+      ] as DailySubscriptionStatsUser[];
+
+      statsUsers = [...createdUsers, ...renewedUsers, ...replacedUsers];
+    } else {
+      statsUsers = audienceStatsByPeriod[0][
+        filterKeyMap[filterKey] as keyof AudienceStatsComputed
+      ] as DailySubscriptionStatsUser[];
+    }
+
+    const filter: SubscriptionFilter = {
+      userIDs: statsUsers.map((user: DailySubscriptionStatsUser) => user.id),
+    };
+
+    initDownload(getCsv, filter);
+  };
 
   return (
     <Grid style={{ width: '100%' }}>
@@ -177,6 +237,7 @@ export function AudienceFilter({
                     clientFilter={clientFilter}
                     setClientFilter={setClientFilter}
                   />
+                  <button onClick={() => handleClick(filterKey)}>CSV</button>
                 </Col>
               ))}
             </Row>
