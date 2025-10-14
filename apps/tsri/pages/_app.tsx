@@ -48,7 +48,7 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
-import { TsriV2Navbar } from '../src/components/tsri-v2-navbar'; // test comment to trigger diff
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -115,12 +115,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
-  const router = useRouter();
-
-  const pageTypeBasedContent = getPageTypeBasedContent(
-    pageProps,
-    router.asPath
-  );
 
   return (
     <AppCacheProvider emotionCache={cache}>
