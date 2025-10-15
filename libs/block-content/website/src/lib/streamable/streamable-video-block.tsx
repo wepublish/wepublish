@@ -19,7 +19,7 @@ const AspectBox = styled('div')<{ $aspectRatio: string }>`
   /* haelt die Flaeche proportional, egal ob Hoch- oder Querformat */
   aspect-ratio: ${({ $aspectRatio }) => $aspectRatio || '16/9'};
 
-  ${({ theme }) => theme.breakpoints.between('sm', 'lg')} {
+  ${({ theme }) => theme.breakpoints.between('sm', 'xl')} {
     max-height: 80vh;
   }
 
@@ -64,8 +64,6 @@ export function StreamableVideoBlock({
           streamableUrl
         )}`;
         const res = await fetch(oembedUrl);
-
-        console.log('Streamable oEmbed', { oembedUrl, json: await res.json() });
         if (!res.ok) throw new Error(`oEmbed HTTP ${res.status}`);
         const data: { width?: number; height?: number } = await res.json();
         if (!cancelled) {
