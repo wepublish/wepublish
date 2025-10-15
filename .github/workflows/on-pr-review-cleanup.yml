@@ -7,14 +7,14 @@ on:
     types: [closed]
 
 concurrency:
-  group: review-${{ github.head_ref }}
+  group: review-${{ github.event.pull_request.number }}-${{ github.event.action }}
   cancel-in-progress: true
 
 
 jobs:
   uninstall_helm_release:
     name: Uninstall helm release
-    if: ${{ github.event_name == 'pull_request' && !(
+    if: ${{!(
       (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
       (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')
       ) }}
@@ -54,7 +54,6 @@ jobs:
           
           # Delete Helm releases if they exist
           helm get all review-$PR_NUM-app -n reviews && helm uninstall review-$PR_NUM-app -n reviews
-          helm get all review-$PR_NUM-media -n reviews && helm uninstall review-$PR_NUM-media-server -n reviews
           helm get all review-$PR_NUM-database -n reviews && helm uninstall review-$PR_NUM-database -n reviews
           helm get all review-$PR_NUM-minio -n reviews && helm uninstall review-$PR_NUM-minio -n reviews
           # Delete PVCs associated with the PR
@@ -62,7 +61,7 @@ jobs:
 
   cleanup-website-matrix:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && !(
+    if: ${{!(
       (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
       (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')
       ) }}
