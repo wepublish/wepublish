@@ -296,7 +296,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -317,6 +317,7 @@ export type BlockContentInput = {
   quote?: InputMaybe<QuoteBlockInput>;
   richText?: InputMaybe<RichTextBlockInput>;
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
+  streamableVideo?: InputMaybe<StreamableVideoBlockInput>;
   subscribe?: InputMaybe<SubscribeBlockInput>;
   teaserGrid?: InputMaybe<TeaserGridBlockInput>;
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
@@ -357,6 +358,7 @@ export enum BlockType {
   Quote = 'Quote',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
+  StreamableVideo = 'StreamableVideo',
   Subscribe = 'Subscribe',
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -3260,6 +3262,20 @@ export type Stats = {
   articlesCount: Scalars['Int'];
   authorsCount: Scalars['Int'];
   firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
+export type StreamableVideoBlock = BaseBlock & {
+  __typename?: 'StreamableVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  type: BlockType;
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type StreamableVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  videoID?: InputMaybe<Scalars['String']>;
 };
 
 export type SubscribeBlock = BaseBlock & {

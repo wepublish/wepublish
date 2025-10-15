@@ -92,6 +92,10 @@ import {
   CrowdfundingBlock,
   CrowdfundingBlockInput,
 } from './crowdfunding/crowdfunding-block.model';
+import {
+  StreamableVideoBlock,
+  StreamableVideoBlockInput,
+} from './embed/streamable-block.model';
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -120,6 +124,7 @@ export const BlockContent = createUnionType({
       TikTokVideoBlock,
       TwitterTweetBlock,
       VimeoVideoBlock,
+      StreamableVideoBlock,
       YouTubeVideoBlock,
       SubscribeBlock,
       TeaserGridBlock,
@@ -161,6 +166,8 @@ export const BlockContent = createUnionType({
         return FacebookPostBlock.name;
       case BlockType.FacebookVideo:
         return FacebookVideoBlock.name;
+      case BlockType.StreamableVideo:
+        return StreamableVideoBlock.name;
       case BlockType.InstagramPost:
         return InstagramPostBlock.name;
       case BlockType.PolisConversation:
@@ -186,10 +193,6 @@ export const BlockContent = createUnionType({
       case BlockType.TeaserSlots:
         return TeaserSlotsBlock.name;
     }
-
-    console.warn(`Block ${value.type} not implemented!`);
-
-    return UnknownBlock.name;
   },
 });
 
@@ -240,6 +243,8 @@ export class BlockContentInput {
   [BlockType.SoundCloudTrack]?: SoundCloudTrackBlockInput;
   @Field(() => TikTokVideoBlockInput, { nullable: true })
   [BlockType.TikTokVideo]?: TikTokVideoBlockInput;
+  @Field(() => StreamableVideoBlockInput, { nullable: true })
+  [BlockType.StreamableVideo]?: StreamableVideoBlockInput;
   @Field(() => TwitterTweetBlockInput, { nullable: true })
   [BlockType.TwitterTweet]?: TwitterTweetBlockInput;
   @Field(() => VimeoVideoBlockInput, { nullable: true })

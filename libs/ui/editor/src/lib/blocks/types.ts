@@ -119,6 +119,7 @@ export enum EmbedType {
   TwitterTweet = 'twitterTweet',
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
+  StreamableVideo = 'streamableVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
   TikTokVideo = 'tikTokVideo',
@@ -135,6 +136,11 @@ interface FacebookPostEmbed extends BaseBlockValue {
 interface FacebookVideoEmbed extends BaseBlockValue {
   type: EmbedType.FacebookVideo;
   userID: string | null | undefined;
+  videoID: string | null | undefined;
+}
+
+interface StreamableVideoEmbed extends BaseBlockValue {
+  type: EmbedType.StreamableVideo;
   videoID: string | null | undefined;
 }
 
@@ -193,6 +199,7 @@ export interface OtherEmbed extends BaseBlockValue {
 export type EmbedBlockValue =
   | FacebookPostEmbed
   | FacebookVideoEmbed
+  | StreamableVideoEmbed
   | InstagramPostEmbed
   | TwitterTweetEmbed
   | VimeoVideoEmbed
@@ -546,94 +553,115 @@ export function mapBlockValueToBlockInput(
 
     case EditorBlockType.Embed: {
       const { value } = block;
+      const { blockStyle } = value;
+      let embedBlock: BlockContentInput | undefined;
 
       switch (value.type) {
         case EmbedType.FacebookPost:
-          return {
+          embedBlock = {
             facebookPost: {
               userID: value.userID,
               postID: value.postID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.FacebookVideo:
-          return {
+          embedBlock = {
             facebookVideo: {
               userID: value.userID,
               videoID: value.videoID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.InstagramPost:
-          return {
+          embedBlock = {
             instagramPost: {
               postID: value.postID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.TwitterTweet:
-          return {
+          embedBlock = {
             twitterTweet: {
               userID: value.userID,
               tweetID: value.tweetID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.VimeoVideo:
-          return {
+          embedBlock = {
             vimeoVideo: {
               videoID: value.videoID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.YouTubeVideo:
-          return {
+          embedBlock = {
             youTubeVideo: {
               videoID: value.videoID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.SoundCloudTrack:
-          return {
+          embedBlock = {
             soundCloudTrack: {
               trackID: value.trackID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.PolisConversation:
-          return {
+          embedBlock = {
             polisConversation: {
               conversationID: value.conversationID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.TikTokVideo:
-          return {
+          embedBlock = {
             tikTokVideo: {
               videoID: value.videoID,
               userID: value.userID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
 
         case EmbedType.BildwurfAd:
-          return {
+          embedBlock = {
             bildwurfAd: {
               zoneID: value.zoneID,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
+
+        case EmbedType.StreamableVideo:
+          embedBlock = {
+            streamableVideo: {
+              videoID: value.videoID,
+              blockStyle,
+            },
+          };
+          break;
 
         case EmbedType.Other:
-          return {
+          embedBlock = {
             embed: {
               title: value.title,
               url: value.url,
@@ -641,10 +669,16 @@ export function mapBlockValueToBlockInput(
               height: value.height,
               styleCustom: value.styleCustom,
               sandbox: value.sandbox,
-              blockStyle: block.value.blockStyle,
+              blockStyle,
             },
           };
+          break;
       }
+
+      if (embedBlock) {
+        return embedBlock;
+      }
+
       break;
     }
 
@@ -668,16 +702,16 @@ export function mapBlockValueToBlockInput(
         teaserSlots: {
           title: block.value.title,
           autofillConfig: {
-            ...(block.value.autofillConfig.enabled
-              ? {
-                  ...block.value.autofillConfig,
-                  filter: {
-                    tags: block.value.autofillConfig.filter?.tags,
-                  },
-                }
-              : {
-                  enabled: false,
-                }),
+            ...(block.value.autofillConfig.enabled ?
+              {
+                ...block.value.autofillConfig,
+                filter: {
+                  tags: block.value.autofillConfig.filter?.tags,
+                },
+              }
+            : {
+                enabled: false,
+              }),
             enabled: block.value.autofillConfig.enabled ?? false,
           },
           slots: block.value.slots.map(({ teaser, ...slot }) => {
@@ -727,6 +761,8 @@ export function mapBlockValueToBlockInput(
         },
       };
   }
+  // Add a default return to satisfy the return type
+  throw new Error('Unsupported block type in mapBlockValueToBlockInput');
 }
 
 export function mapTeaserToTeaserInput(
@@ -890,6 +926,17 @@ export function blockForQueryBlock(
         },
       };
 
+    case 'StreamableVideoBlock':
+      return {
+        key,
+        type: EditorBlockType.Embed,
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.StreamableVideo,
+          videoID: block.videoID,
+        },
+      };
+
     case 'InstagramPostBlock':
       return {
         key,
@@ -1032,13 +1079,10 @@ export function blockForQueryBlock(
             {
               ...teaser,
               type:
-                teaser?.__typename === 'ArticleTeaser'
-                  ? TeaserType.Article
-                  : teaser?.__typename === 'PageTeaser'
-                  ? TeaserType.Page
-                  : teaser?.__typename === 'EventTeaser'
-                  ? TeaserType.Event
-                  : TeaserType.Custom,
+                teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
+                : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                : TeaserType.Custom,
             } as Teaser,
           ]),
         },
@@ -1068,9 +1112,9 @@ export function blockForQueryBlock(
       return {
         key,
         type:
-          block.numColumns === 1
-            ? EditorBlockType.TeaserGrid1
-            : EditorBlockType.TeaserGrid6,
+          block.numColumns === 1 ?
+            EditorBlockType.TeaserGrid1
+          : EditorBlockType.TeaserGrid6,
         value: {
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
@@ -1089,19 +1133,17 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           slots: block.slots.map(({ teaser, type }) => ({
             type,
-            teaser: !teaser
-              ? null
-              : ({
+            teaser:
+              !teaser ? null : (
+                ({
                   ...teaser,
                   type:
-                    teaser?.__typename === 'ArticleTeaser'
-                      ? TeaserType.Article
-                      : teaser?.__typename === 'PageTeaser'
-                      ? TeaserType.Page
-                      : teaser?.__typename === 'EventTeaser'
-                      ? TeaserType.Event
-                      : TeaserType.Custom,
-                } as Teaser),
+                    teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
+                    : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                    : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                    : TeaserType.Custom,
+                } as Teaser)
+              ),
           })),
           autofillConfig: block.autofillConfig,
           autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
@@ -1181,8 +1223,8 @@ const mapTeaserToQueryTeaser = (
   }
   switch (teaser.__typename) {
     case 'ArticleTeaser':
-      return teaser.article
-        ? {
+      return teaser.article ?
+          {
             type: TeaserType.Article,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
@@ -1193,8 +1235,8 @@ const mapTeaserToQueryTeaser = (
         : null;
 
     case 'PageTeaser':
-      return teaser.page
-        ? {
+      return teaser.page ?
+          {
             type: TeaserType.Page,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
@@ -1205,8 +1247,8 @@ const mapTeaserToQueryTeaser = (
         : null;
 
     case 'EventTeaser':
-      return teaser.event
-        ? {
+      return teaser.event ?
+          {
             type: TeaserType.Event,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,
@@ -1217,8 +1259,8 @@ const mapTeaserToQueryTeaser = (
         : null;
 
     case 'CustomTeaser':
-      return teaser
-        ? {
+      return teaser ?
+          {
             type: TeaserType.Custom,
             image: teaser.image ?? undefined,
             preTitle: teaser.preTitle ?? undefined,

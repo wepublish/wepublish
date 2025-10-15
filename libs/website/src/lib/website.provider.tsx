@@ -51,6 +51,7 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
+  StreamableVideoBlock,
   YouTubeVideoBlock,
   AlternatingTeaserGridBlock,
   AlternatingTeaserListBlock,
@@ -274,6 +275,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             TikTokVideo: TikTokVideoBlock,
             TwitterTweet: TwitterTweetBlock,
             VimeoVideo: VimeoVideoBlock,
+            StreamableVideo: StreamableVideoBlock,
             YouTubeVideo: YouTubeVideoBlock,
           }}
           blockStyles={{
