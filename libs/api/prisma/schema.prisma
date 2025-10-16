@@ -1038,6 +1038,7 @@ model Tag {
   tag         String?
   description Json?
   main        Boolean @default(false)
+  bgColor     String?
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?

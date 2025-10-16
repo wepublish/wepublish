@@ -623,6 +623,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
+  bgColor?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -855,6 +856,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  bgColor?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
@@ -1476,6 +1478,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
+  bgColor?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
@@ -2270,40 +2273,42 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, bgColor?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type TagQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type TagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
+export type TagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, bgColor?: string | null } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
+  bgColor?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, bgColor?: string | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
   description?: InputMaybe<Scalars['RichText']>;
   tag?: InputMaybe<Scalars['String']>;
   main?: InputMaybe<Scalars['Boolean']>;
+  bgColor?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, bgColor?: string | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, bgColor?: string | null } | null };
 
 export type TokenRefFragment = { __typename?: 'Token', id: string, name: string };
 
@@ -5336,6 +5341,7 @@ export const TagListDocument = gql`
       tag
       description
       main
+      bgColor
     }
     pageInfo {
       startCursor
@@ -5387,6 +5393,7 @@ export const TagDocument = gql`
     tag
     description
     main
+    bgColor
   }
 }
     `;
@@ -5419,12 +5426,13 @@ export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
 export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
 export type TagQueryResult = Apollo.QueryResult<TagQuery, TagQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $bgColor: String) {
+  createTag(tag: $tag, description: $description, type: $type, bgColor: $bgColor) {
     id
     tag
     description
     main
+    bgColor
   }
 }
     `;
@@ -5446,6 +5454,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  *      tag: // value for 'tag'
  *      description: // value for 'description'
  *      type: // value for 'type'
+ *      bgColor: // value for 'bgColor'
  *   },
  * });
  */
@@ -5457,12 +5466,19 @@ export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
+    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean, $bgColor: String) {
+  updateTag(
+    id: $id
+    tag: $tag
+    description: $description
+    main: $main
+    bgColor: $bgColor
+  ) {
     id
     tag
     description
     main
+    bgColor
   }
 }
     `;
@@ -5485,6 +5501,7 @@ export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, Upd
  *      description: // value for 'description'
  *      tag: // value for 'tag'
  *      main: // value for 'main'
+ *      bgColor: // value for 'bgColor'
  *   },
  * });
  */
@@ -5502,6 +5519,7 @@ export const DeleteTagDocument = gql`
     tag
     description
     main
+    bgColor
   }
 }
     `;

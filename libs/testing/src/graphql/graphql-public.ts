@@ -3288,6 +3288,7 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag';
+  bgColor?: Maybe<Scalars['Color']>;
   description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
@@ -4262,6 +4263,7 @@ export type TagListQuery = {
       id: string;
       tag?: string | null;
       url: string;
+      bgColor?: string | null;
     }>;
     pageInfo: {
       __typename?: 'PageInfo';
@@ -4571,6 +4573,7 @@ export const TagList = `
       id
       tag
       url
+      bgColor
     }
     pageInfo {
       startCursor

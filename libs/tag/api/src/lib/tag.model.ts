@@ -2,6 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { TagType } from '@prisma/client';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
+import { ColorScalar } from '@wepublish/peering/api';
 
 @ObjectType()
 export class Tag {
@@ -22,4 +23,7 @@ export class Tag {
 
   @Field()
   url!: string;
+
+  @Field(() => ColorScalar, { nullable: true })
+  bgColor?: string;
 }

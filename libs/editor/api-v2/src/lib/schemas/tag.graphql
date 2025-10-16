@@ -5,4 +5,5 @@ fragment FullTag on Tag {
   type
   main
   url
+  bgColor
 }

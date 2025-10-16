@@ -1072,12 +1072,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         description: { type: GraphQLRichText },
         type: { type: new GraphQLNonNull(GraphQLTagType) },
         main: { type: GraphQLBoolean },
+        bgColor: { type: GraphQLString },
       },
       resolve: (
         root,
-        { tag, description, type, main },
+        { tag, description, type, main, bgColor },
         { authenticate, prisma }
-      ) => createTag(tag, description, type, main, authenticate, prisma.tag),
+      ) =>
+        createTag(
+          tag,
+          description,
+          type,
+          main,
+          bgColor,
+          authenticate,
+          prisma.tag
+        ),
     },
 
     updateTag: {
@@ -1087,12 +1097,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         tag: { type: GraphQLString },
         description: { type: GraphQLRichText },
         main: { type: GraphQLBoolean },
+        bgColor: { type: GraphQLString },
       },
       resolve: (
         root,
-        { id, tag, description, main },
+        { id, tag, description, main, bgColor },
         { authenticate, prisma }
-      ) => updateTag(id, tag, description, main, authenticate, prisma.tag),
+      ) =>
+        updateTag(
+          id,
+          tag,
+          description,
+          main,
+          bgColor,
+          authenticate,
+          prisma.tag
+        ),
     },
 
     deleteTag: {

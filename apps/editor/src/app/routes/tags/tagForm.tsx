@@ -3,7 +3,11 @@ import {
   MutationCreateTagArgs,
   MutationUpdateTagArgs,
 } from '@wepublish/editor/api';
-import { RichTextBlock, RichTextBlockValue } from '@wepublish/ui/editor';
+import {
+  ColorPicker,
+  RichTextBlock,
+  RichTextBlockValue,
+} from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, Form, Panel } from 'rsuite';
 
@@ -34,6 +38,16 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
             name="name"
             value={tag.tag ?? ''}
             onChange={(tag: string) => onChange({ tag })}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="bgColor">
+          <Form.ControlLabel>{t('tags.overview.bgColor')}</Form.ControlLabel>
+          <ColorPicker
+            setColor={color => {
+              onChange({ bgColor: color });
+            }}
+            currentColor={tag.bgColor || '#000000'}
           />
         </Form.Group>
 

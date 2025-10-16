@@ -13,6 +13,7 @@ export const createTag = (
   description: Descendant[],
   type: TagType,
   main = false,
+  bgColor: string | null = null,
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
@@ -25,6 +26,7 @@ export const createTag = (
       type,
       description: description as any[],
       main,
+      bgColor,
     },
   });
 };
@@ -49,6 +51,7 @@ export const updateTag = (
   tag: string,
   description: Descendant[],
   main: boolean | undefined,
+  bgColor: string | null = null,
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
@@ -63,6 +66,7 @@ export const updateTag = (
       tag,
       main,
       description: description as any[],
+      bgColor,
     },
   });
 };

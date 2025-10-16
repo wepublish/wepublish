@@ -65,6 +65,7 @@ describe('TagResolver', () => {
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
           type: TagType.Article,
+          bgColor: '#ffffff',
         },
       ],
       pageInfo: {
@@ -108,6 +109,7 @@ describe('TagResolver', () => {
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
           type: TagType.Article,
+          bgColor: '#ffffff',
         },
         {
           id: 'id3',
@@ -118,6 +120,7 @@ describe('TagResolver', () => {
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
           type: TagType.Article,
+          bgColor: '#ffffff',
         },
       ],
       pageInfo: {

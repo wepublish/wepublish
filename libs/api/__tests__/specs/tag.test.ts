@@ -27,6 +27,7 @@ describe('Tags', () => {
         tag: generateRandomString(),
         description: [],
         type: TagType.Comment,
+        bgColor: '#ff0000',
       },
     });
 
@@ -36,6 +37,7 @@ describe('Tags', () => {
           id: expect.any(String),
           tag: expect.any(String),
           description: expect.any(Array),
+          bgColor: expect.any(String),
         },
       },
     });
