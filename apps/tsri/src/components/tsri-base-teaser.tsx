@@ -259,9 +259,11 @@ export const TeaserTitle = styled('h1')`
   grid-column: 2 / 3;
   background-color: white;
   margin: 0 !important;
-  padding: ${({ theme }) => `0 ${theme.spacing(0.5)}`};
+  margin-bottom: 0 !important;
   @container teaser (width > 200px) {
     font-size: calc((9 * 100cqw / 16) * 0.08) !important;
+    line-height: 1.05 !important;
+    padding: 0 0.5cqw;
   }
 `;
 
@@ -279,12 +281,12 @@ export const TeaserPreTitleWrapper = styled('div')`
 
 export const TeaserPreTitle = styled('div')`
   color: white;
-  padding: ${({ theme }) => `0 ${theme.spacing(0.5)}`};
+  position: relative;
   @container teaser (width > 200px) {
     font-size: calc((9 * 100cqw / 16) * 0.045) !important;
     font-weight: bold;
     top: calc((9 * 100cqw / 16) * -0.012);
-    position: relative;
+    padding: 0 0.5cqw;
   }
 `;
 
@@ -292,11 +294,11 @@ export const TeaserMetadata = styled('div')`
   grid-row: 4;
   grid-column: 2 / 3;
   background-color: white;
-  padding: ${({ theme }) => `0 ${theme.spacing(0.5)}`};
   margin: 0;
   @container teaser (width > 200px) {
     font-size: calc((9 * 100cqw / 16) * 0.04) !important;
     font-weight: bold;
+    padding: 0 0.5cqw;
   }
 `;
 
