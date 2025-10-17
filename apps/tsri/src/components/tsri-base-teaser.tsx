@@ -193,7 +193,7 @@ export const TeaserWrapper = styled('li')<FlexAlignment>`
   overflow: hidden;
   background-color: transparent;
   cursor: pointer;
-  border-radius: 1.55%;
+  container: teaser/inline-size;
   display: grid;
 
   ${({ theme, w }) =>
@@ -222,10 +222,6 @@ export const TeaserWrapper = styled('li')<FlexAlignment>`
       grid-row-end: ${y + 1 + h};
     }
   `}
-
-  &:hover {
-    background-color: orange;
-  }
 `;
 
 export const TeaserImageWrapper = styled('figure')`
@@ -250,8 +246,14 @@ export const TeaserContentWrapper = styled('article')`
   display: grid;
   grid-template-rows: 38.5% 5.75% 42.5% 7.5% 6.75%;
   grid-template-columns: 50% 50%;
-  container: teaser/inline-size;
   gap: 0;
+  @container teaser (width > 200px) {
+    border-radius: calc((9 * 100cqw / 16) * 0.02);
+  }
+
+  &:hover {
+    background-color: orange;
+  }
 `;
 
 export const TeaserTitle = styled('h1')`
