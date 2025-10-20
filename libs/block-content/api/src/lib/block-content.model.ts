@@ -193,6 +193,8 @@ export const BlockContent = createUnionType({
       case BlockType.TeaserSlots:
         return TeaserSlotsBlock.name;
     }
+    console.warn(`Block ${value.type} not implemented!`);
+    return UnknownBlock.name;
   },
 });
 
