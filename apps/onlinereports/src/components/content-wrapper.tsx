@@ -21,6 +21,11 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
 }>`
   display: grid;
   row-gap: ${({ theme }) => theme.spacing(4)};
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    & > * {
+      max-width: calc(100vw - ${({ theme }) => theme.spacing(5)});
+    }
+  }
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     gap: ${({ theme }) => theme.spacing(7)};
