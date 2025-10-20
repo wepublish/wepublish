@@ -18,7 +18,7 @@ const AspectBox = styled('div')<{ $aspectRatio: number }>`
   width: 100%;
   aspect-ratio: ${({ $aspectRatio }) => $aspectRatio || 16 / 9};
 
-  ${({ theme }) => theme.breakpoints.not('xl')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     max-height: 80vh;
   }
 `;
