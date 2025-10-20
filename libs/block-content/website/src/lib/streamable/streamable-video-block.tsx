@@ -67,10 +67,9 @@ export function StreamableVideoBlock({
   if (!videoID || !streamableUrl) return null;
 
   return (
-    <StreamableVideoBlockWrapper>
+    <StreamableVideoBlockWrapper className={className}>
       <AspectBox $aspectRatio={aspectRatio}>
         <StreamableVideoBlockPlayer
-          className="react-player"
           url={streamableUrl}
           controls
           playsinline
