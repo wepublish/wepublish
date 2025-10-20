@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   SubscribeAmount,
+  SubscribeCancelable,
   SubscribeNarrowSection,
   SubscribeSection,
   SubscribeWrapper,
@@ -14,16 +15,22 @@ import { useAdsContext } from '../src/context/ads-context';
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
-    font-weight: bold;
+    display: grid;
+    align-content: start;
+    grid-template-columns: 100%;
     grid-template-areas:
       'returning'
       'userForm'
       'memberPlans'
       'monthlyAmount'
       'paymentPeriodicity'
+      'challenge'
       'transactionFee'
       'challenge'
       'submit';
+    ${({ theme }) => theme.breakpoints.down('md')} {
+      gap: ${({ theme }) => theme.spacing(2.5)};
+    }
   }
 
   ${SubscribeSection},
@@ -44,6 +51,10 @@ const SubscribePageWrapper = styled('div')`
 
   ${SubscribeAmount} {
     background: ${({ theme }) => theme.palette.secondary.main};
+  }
+
+  ${SubscribeCancelable} {
+    font-weight: bold;
   }
 `;
 
