@@ -14,9 +14,9 @@ export const isStreamableVideoBlock = (
 
 export const StreamableVideoBlockWrapper = styled('div')``;
 
-const AspectBox = styled('div')<{ $aspectRatio: [number, number] }>`
+const AspectBox = styled('div')<{ $aspectRatio: number }>`
   width: 100%;
-  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio.join('/') || '16/9'};
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio || 16 / 9};
 
   ${({ theme }) => theme.breakpoints.not('xl')} {
     max-height: 80vh;
@@ -32,7 +32,7 @@ export function StreamableVideoBlock({
   videoID,
   className,
 }: BuilderStreamableVideoBlockProps) {
-  const [aspectRatio, setAspectRatio] = useState<[number, number]>([16, 9]);
+  const [aspectRatio, setAspectRatio] = useState<number>(16 / 9);
 
   const streamableUrl = useMemo(() => {
     if (!videoID) return null;
@@ -50,10 +50,12 @@ export function StreamableVideoBlock({
         const res = await fetch(oembedUrl);
         const data: { width?: number; height?: number } = await res.json();
         if (!cancelled) {
-          setAspectRatio([data.width || 16, data.height || 9]);
+          setAspectRatio(
+            data.width && data.height ? data.width / data.height : 16 / 9
+          );
         }
       } catch {
-        if (!cancelled) setAspectRatio([16, 9]);
+        if (!cancelled) setAspectRatio(16 / 9);
       }
     }
     fetchOEmbed();
@@ -75,7 +77,7 @@ export function StreamableVideoBlock({
           width="100%"
           height="100%"
           // wenn Streamable mal spinnt, bleiben wir einfach beim aktuellen Ratio
-          onError={() => setAspectRatio(r => r || [16, 9])}
+          onError={() => setAspectRatio(r => r || 16 / 9)}
         />
       </AspectBox>
     </StreamableVideoBlockWrapper>
