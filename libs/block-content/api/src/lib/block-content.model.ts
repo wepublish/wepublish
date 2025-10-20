@@ -194,6 +194,7 @@ export const BlockContent = createUnionType({
         return TeaserSlotsBlock.name;
     }
     console.warn(`Block ${value.type} not implemented!`);
+
     return UnknownBlock.name;
   },
 });
