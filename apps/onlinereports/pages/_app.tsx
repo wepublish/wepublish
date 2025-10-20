@@ -64,6 +64,7 @@ import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
 import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
 import { OnlineReportsBlockRenderer } from '../src/onlinereports-block-renderer';
 import { OnlineReportsGlobalStyles } from '../src/onlinereports-global-styles';
+import { OnlineReportsTag } from '../src/onlinereports-tag';
 import { OnlineReportsTeaser } from '../src/onlinereports-teaser';
 import { OnlineReportsTeaserGridBlock } from '../src/onlinereports-teaser-grid-block';
 import { OnlineReportsTeaserGridFlexBlock } from '../src/onlinereports-teaser-grid-flex-blocks';
@@ -96,8 +97,9 @@ i18next
   });
 z.setErrorMap(zodI18nMap);
 
+// 0-height of last row is needed to make sticky ads work correctly
 const Spacer = styled(Structure)`
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr 0;
   min-height: 100vh;
 
   main {
@@ -155,7 +157,10 @@ const OnlineReportsTitle = styled(TitleBlock)`
   }
 
   ${TitleBlockLead} {
-    font-size: -${({ theme }) => theme.typography.body1.fontSize};
+    font-size: ${({ theme }) => theme.typography.body1.fontSize}px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
   }
 `;
 
@@ -206,6 +211,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Page={OnlineReportsPage}
             RegistrationForm={OnlineReportsRegistrationForm}
             PaymentAmount={OnlineReportsPaymentAmount}
+            Tag={OnlineReportsTag}
             richtext={{ RenderElement: OnlineReportsRenderElement }}
             elements={{ Link: NextWepublishLink }}
             blocks={{
