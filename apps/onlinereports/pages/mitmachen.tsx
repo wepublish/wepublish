@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
 import {
   SubscribeAmount,
-  SubscribeCancelable,
-  SubscribeNarrowSection,
-  SubscribeSection,
   SubscribeWrapper,
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
