@@ -113,13 +113,13 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
 }
 
 export enum EmbedType {
+  StreamableVideo = 'streamableVideo',
   FacebookPost = 'facebookPost',
   FacebookVideo = 'facebookVideo',
   InstagramPost = 'instagramPost',
   TwitterTweet = 'twitterTweet',
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
-  StreamableVideo = 'streamableVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
   TikTokVideo = 'tikTokVideo',
@@ -199,13 +199,13 @@ export interface OtherEmbed extends BaseBlockValue {
 export type EmbedBlockValue =
   | FacebookPostEmbed
   | FacebookVideoEmbed
-  | StreamableVideoEmbed
   | InstagramPostEmbed
   | TwitterTweetEmbed
   | VimeoVideoEmbed
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | StreamableVideoEmbed
   | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed;
@@ -553,115 +553,102 @@ export function mapBlockValueToBlockInput(
 
     case EditorBlockType.Embed: {
       const { value } = block;
-      const { blockStyle } = value;
-      let embedBlock: BlockContentInput | undefined;
 
       switch (value.type) {
         case EmbedType.FacebookPost:
-          embedBlock = {
+          return {
             facebookPost: {
               userID: value.userID,
               postID: value.postID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.FacebookVideo:
-          embedBlock = {
+          return {
             facebookVideo: {
               userID: value.userID,
               videoID: value.videoID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
+
+        case EmbedType.StreamableVideo:
+          return {
+            streamableVideo: {
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle,
+            },
+          };
 
         case EmbedType.InstagramPost:
-          embedBlock = {
+          return {
             instagramPost: {
               postID: value.postID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.TwitterTweet:
-          embedBlock = {
+          return {
             twitterTweet: {
               userID: value.userID,
               tweetID: value.tweetID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.VimeoVideo:
-          embedBlock = {
+          return {
             vimeoVideo: {
               videoID: value.videoID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.YouTubeVideo:
-          embedBlock = {
+          return {
             youTubeVideo: {
               videoID: value.videoID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.SoundCloudTrack:
-          embedBlock = {
+          return {
             soundCloudTrack: {
               trackID: value.trackID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.PolisConversation:
-          embedBlock = {
+          return {
             polisConversation: {
               conversationID: value.conversationID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.TikTokVideo:
-          embedBlock = {
+          return {
             tikTokVideo: {
               videoID: value.videoID,
               userID: value.userID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
 
         case EmbedType.BildwurfAd:
-          embedBlock = {
+          return {
             bildwurfAd: {
               zoneID: value.zoneID,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
-
-        case EmbedType.StreamableVideo:
-          embedBlock = {
-            streamableVideo: {
-              videoID: value.videoID,
-              blockStyle,
-            },
-          };
-          break;
 
         case EmbedType.Other:
-          embedBlock = {
+          return {
             embed: {
               title: value.title,
               url: value.url,
@@ -669,16 +656,10 @@ export function mapBlockValueToBlockInput(
               height: value.height,
               styleCustom: value.styleCustom,
               sandbox: value.sandbox,
-              blockStyle,
+              blockStyle: block.value.blockStyle,
             },
           };
-          break;
       }
-
-      if (embedBlock) {
-        return embedBlock;
-      }
-
       break;
     }
 
@@ -761,8 +742,6 @@ export function mapBlockValueToBlockInput(
         },
       };
   }
-  // Add a default return to satisfy the return type
-  throw new Error('Unsupported block type in mapBlockValueToBlockInput');
 }
 
 export function mapTeaserToTeaserInput(
