@@ -23,7 +23,7 @@ const AspectBox = styled('div')<{ $aspectRatio: number }>`
   }
 `;
 
-const StreamableVideoBlockPlayer = styled(ReactPlayer)`
+const ReactVideoPlayer = styled(ReactPlayer)`
   width: 100% !important;
   height: 100% !important;
 `;
@@ -69,7 +69,7 @@ export function StreamableVideoBlock({
   return (
     <StreamableVideoBlockWrapper className={className}>
       <AspectBox $aspectRatio={aspectRatio}>
-        <StreamableVideoBlockPlayer
+        <ReactVideoPlayer
           className="react-player"
           url={streamableUrl}
           controls
