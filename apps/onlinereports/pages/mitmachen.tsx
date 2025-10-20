@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import {
   SubscribeAmount,
+  SubscribeCancelable,
   SubscribeWrapper,
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
@@ -12,16 +13,21 @@ import { useAdsContext } from '../src/context/ads-context';
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
-    font-weight: bold;
+    display: grid;
+    align-content: start;
+    grid-template-columns: 100%;
     grid-template-areas:
       'returning'
-      'userForm'
       'memberPlans'
       'monthlyAmount'
+      'userForm'
       'paymentPeriodicity'
-      'transactionFee'
       'challenge'
-      'cta';
+      'transactionFee'
+      'submit';
+    ${({ theme }) => theme.breakpoints.down('md')} {
+      gap: ${({ theme }) => theme.spacing(2.5)};
+    }
   }
 `;
 
@@ -37,6 +43,10 @@ const SubscribePageWrapper = styled('div')`
 
   ${SubscribeAmount} {
     background: ${({ theme }) => theme.palette.secondary.main};
+  }
+
+  ${SubscribeCancelable} {
+    font-weight: bold;
   }
 `;
 
