@@ -9,6 +9,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import {
   TitleBlock,
   TitleBlockLead,
+  TitleBlockPreTitle,
   TitleBlockTitle,
 } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
@@ -156,6 +157,10 @@ const OnlineReportsTitle = styled(TitleBlock)`
 
   ${TitleBlockLead} {
     font-size: -${({ theme }) => theme.typography.body1.fontSize};
+  }
+
+  ${TitleBlockPreTitle} {
+    display: none;
   }
 `;
 
