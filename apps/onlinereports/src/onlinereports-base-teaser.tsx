@@ -14,8 +14,9 @@ import {
   TeaserTitle,
   TeaserWrapper
 } from '@wepublish/block-content/website'
-import {useMemo} from 'react'
 import {BuilderTeaserProps} from '@wepublish/website/builder'
+import {useMemo} from 'react'
+
 import {Advertisement} from './components/advertisement'
 
 export const useImageStyles = () => {
@@ -170,11 +171,11 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
       padding: 4px 12px;
       margin-top: 2px;
 
-      /* browser specific margin fixes for chips. next two rules target ios only. */
-      @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+      /* browser specific margin fixes for chips. next two rules target ios only up to 932px device-width */
+      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) (-webkit-min-device-pixel-ratio: 2) {
         margin-top: 6px;
       }
-      @media only screen and (min-device-width: 320px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) {
+      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) and (-webkit-min-device-pixel-ratio: 3) {
         margin-top: 6px;
       }
     }
