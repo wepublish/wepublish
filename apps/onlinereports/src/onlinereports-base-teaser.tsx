@@ -172,7 +172,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
       margin-top: 2px;
 
       /* browser specific margin fixes for chips. next two rules target ios only up to 932px device-width */
-      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) (-webkit-min-device-pixel-ratio: 2) {
+      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) and (-webkit-min-device-pixel-ratio: 2) {
         margin-top: 6px;
       }
       @media only screen and (min-device-width: 320px) and (max-device-width: 932px) and (-webkit-min-device-pixel-ratio: 3) {
