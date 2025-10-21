@@ -257,6 +257,7 @@ type MemberPlan {
   currency: Currency!
   maxCount: Int
   extendable: Boolean!
+  externalReward: String
   availablePaymentMethods: [AvailablePaymentMethod!]!
   migrateToTargetPaymentMethodID: String
   successPageId: String
@@ -993,6 +994,7 @@ input MemberPlanInput {
   amountPerMonthTarget: Int
   currency: Currency!
   extendable: Boolean!
+  externalReward: String
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
   migrateToTargetPaymentMethodID: String
