@@ -9,7 +9,9 @@ import { ArticleListWrapper } from '@wepublish/article/website';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { TagTitle, TagTitleWrapper, TagWrapper } from '@wepublish/tag/website';
 import { TagPage as TagPageDefault } from '@wepublish/utils/website';
+import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
+import { z } from 'zod';
 
 const TagArticleListWrapper = styled('div')`
   display: flex;
@@ -40,7 +42,7 @@ export const TagPage = styled(TagPageDefault)`
     margin-top: ${({ theme }) => theme.spacing(1)};
 
     ${TagTitle} {
-      ${({ theme }) => css(theme.typography.h1)}
+      ${({ theme }) => css(theme.typography.h1)};
     }
   }
 
@@ -55,10 +57,20 @@ export const TagPage = styled(TagPageDefault)`
   }
 `;
 
+const pageSchema = z.object({
+  tag: z.string(),
+});
+
 export default function Tags(props: ComponentProps<typeof TagPageDefault>) {
+  const { query } = useRouter();
+  const { tag } = pageSchema.parse(query);
+
   return (
     <TagArticleListWrapper>
-      <TagPage {...props} />
+      <TagPage
+        {...props}
+        tag={tag}
+      />
     </TagArticleListWrapper>
   );
 }

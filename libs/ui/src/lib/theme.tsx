@@ -161,6 +161,9 @@ export const theme = createTheme({
       '&.MuiTypography-gutterBottom': {
         marginBottom: baseTheme.spacing(3),
       },
+      ['&:is(li).MuiTypography-gutterBottom']: {
+        marginBottom: baseTheme.spacing(1),
+      },
     },
     caption: {
       ...baseTheme.typography.body1,
