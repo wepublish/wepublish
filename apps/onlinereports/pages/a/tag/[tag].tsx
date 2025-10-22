@@ -20,11 +20,11 @@ const TagArticleListWrapper = styled('div')`
   margin-top: ${({ theme }) => theme.spacing(4)};
 
   ${ContentWrapperStyled} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      gap: ${({ theme }) => theme.spacing(3)};
+    }
     ${({ theme }) => theme.breakpoints.up('md')} {
       row-gap: ${({ theme }) => theme.spacing(3)};
-      ${({ theme }) => theme.breakpoints.up('sm')} {
-        gap: ${({ theme }) => theme.spacing(3)};
-      }
     }
   }
 `;
@@ -33,7 +33,6 @@ export const TagPage = styled(TagPageDefault)`
   ${TagWrapper} {
     ${({ theme }) => theme.breakpoints.up('md')} {
       gap: ${({ theme }) => theme.spacing(1.5)};
-      background-color: cyan;
     }
   }
 
