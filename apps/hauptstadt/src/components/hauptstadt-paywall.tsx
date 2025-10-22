@@ -1,17 +1,67 @@
 import styled from '@emotion/styled';
+import { useUser } from '@wepublish/authentication/website';
 import { Paywall, useShowPaywall } from '@wepublish/paywall/website';
 import { createWithTheme } from '@wepublish/ui';
-import { Paywall as BuilderPaywall } from '@wepublish/website/builder';
+import { useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  BuilderPaywallProps,
+  Paywall as BuilderPaywall,
+} from '@wepublish/website/builder';
+import { ascend, prop, sortWith } from 'ramda';
+import { useMemo } from 'react';
 
 import theme from '../theme';
 
-export const HauptstadtPaywall = createWithTheme(
-  styled(Paywall)`
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    color: ${({ theme }) => theme.palette.primary.contrastText};
-  `,
-  theme
-);
+const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
+  const { hasUser } = useUser();
+  const url = props.alternativeSubscribeUrl ?? '/mitmachen';
+
+  const { data } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+    skip: !hasUser,
+  });
+
+  const hasRequiredSubscription = useMemo(
+    () =>
+      props.anyMemberPlan ||
+      data?.subscriptions.some(
+        subscription =>
+          props.memberPlans.find(mb => subscription.memberPlan.id === mb.id) &&
+          subscription.extendable
+      ),
+    [data?.subscriptions, props.anyMemberPlan, props.memberPlans]
+  );
+
+  const cheapestSubscription = useMemo(
+    () =>
+      sortWith([ascend(prop('monthlyAmount'))], data?.subscriptions ?? []).at(
+        0
+      ),
+    [data?.subscriptions]
+  );
+
+  const canUpgrade = !hasRequiredSubscription && cheapestSubscription;
+
+  return (
+    <Paywall
+      {...props}
+      alternativeSubscribeUrl={
+        canUpgrade ?
+          `${url}?upgradeSubscriptionId=${encodeURIComponent(cheapestSubscription.id)}`
+        : url
+      }
+      texts={{
+        subscribe: canUpgrade ? 'Jetzt Abo Upgraden' : undefined,
+      }}
+    />
+  );
+})`
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.primary.contrastText};
+`;
+
+const ThemedPaywall = createWithTheme(HauptstadtPaywall, theme);
+export { ThemedPaywall as HauptstadtPaywall };
 
 export const DuplicatedPaywall = ({
   paywall,

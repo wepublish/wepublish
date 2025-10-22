@@ -84,7 +84,7 @@ export const PaywallForm = ({
   create,
 }: PaywallFormProps) => {
   const { t } = useTranslation();
-  const [newBypassToken, setNewBypassToken] = useState('');
+  const [newBypassToken, setNewBypassToken] = useState<string>();
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrBaseUrl, setQrBaseUrl] = useState<string>('https://example.com');
   const [selectedToken, setSelectedToken] = useState('');
@@ -92,11 +92,12 @@ export const PaywallForm = ({
   const [qrSvgString, setQrSvgString] = useState('');
 
   const addBypass = () => {
-    if (newBypassToken.trim()) {
+    if (newBypassToken?.trim()) {
       const newBypass: PaywallBypass = {
         token: newBypassToken.trim(),
       };
       const updatedBypasses = [...(paywall.bypasses || []), newBypass];
+
       onChange({
         bypasses: updatedBypasses,
         bypassTokens: updatedBypasses.map(b => b.token),
@@ -210,6 +211,25 @@ export const PaywallForm = ({
           </Panel>
         </Form.Group>
 
+        <Form.Group controlId="alternativeSubscribeUrl">
+          <Form.ControlLabel>
+            {t('paywall.form.alternativeSubscribeUrl')}
+          </Form.ControlLabel>
+
+          <Form.Control
+            name="alternativeSubscribeUrl"
+            value={paywall.alternativeSubscribeUrl ?? ''}
+            onChange={(alternativeSubscribeUrl: string) =>
+              onChange({ alternativeSubscribeUrl })
+            }
+            type="url"
+          />
+
+          <Form.HelpText>
+            {t('paywall.form.alternativeSubscribeUrlHelpText')}
+          </Form.HelpText>
+        </Form.Group>
+
         <Form.Group controlId="active">
           <Form.Control
             name="active"
@@ -306,7 +326,7 @@ export const PaywallForm = ({
                 appearance="primary"
                 startIcon={<PlusIcon />}
                 onClick={addBypass}
-                disabled={!newBypassToken.trim()}
+                disabled={!newBypassToken?.trim()}
               >
                 {t('paywall.form.addBypass')}
               </Button>

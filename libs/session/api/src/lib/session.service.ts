@@ -6,15 +6,15 @@ import nanoid from 'nanoid/generate';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
 import { UserSession } from '@wepublish/authentication/api';
-import {
-  FIFTEEN_MINUTES_IN_MILLISECONDS,
-  USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-} from '@wepublish/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
 import { User } from '@wepublish/user/api';
-import { logger } from '@wepublish/utils/api';
+import {
+  FIFTEEN_MINUTES_IN_MILLISECONDS,
+  logger,
+  USER_PROPERTY_LAST_LOGIN_LINK_SEND,
+} from '@wepublish/utils/api';
 
 const IDAlphabet =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

@@ -20,6 +20,7 @@ import {
   ProductType,
   InvoicesDocument,
   SubscriptionsDocument,
+  ProductType,
   SessionWithTokenWithoutUser,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';

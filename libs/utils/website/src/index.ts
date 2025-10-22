@@ -17,3 +17,4 @@ export * from './lib/pages/tag-page';
 export * from './lib/routed-admin-bar';
 export * from './lib/with-jwt-handler';
 export * from './lib/with-session-provider';
+export * from './lib/with-builder-router';

@@ -19,10 +19,10 @@ import {
   MemberPlanSort,
 } from './member-plan.model';
 import { MemberPlanService } from './member-plan.service';
-import { UserInputError } from '@nestjs/apollo';
 import { MemberPlanDataloader } from './member-plan.dataloader';
 import { hasPermission } from '@wepublish/permissions/api';
 import { CanGetMemberPlan, CanGetMemberPlans } from '@wepublish/permissions';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver(() => MemberPlan)
 export class MemberPlanResolver {
@@ -41,7 +41,7 @@ export class MemberPlanResolver {
     @Args('slug', { type: () => GraphQLSlug, nullable: true }) slug?: string
   ) {
     if ((!id && !slug) || (id && slug)) {
-      throw new UserInputError('You must provide either `id` or `slug`.');
+      throw new BadRequestException('You must provide either `id` or `slug`.');
     }
 
     return id ?

@@ -34,6 +34,4 @@ export * from './lib/challenges/challengeProvider';
 export * from './lib/challenges/algebraicCaptchaChallenge';
 export * from './lib/challenges/cfTurnstile';
 
-export * from './lib/memberContext';
-
 export { getUserForCredentials } from './lib/graphql/user/user.queries';
