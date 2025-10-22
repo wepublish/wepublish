@@ -36,6 +36,7 @@ import {
   DashboardModule,
   MembershipModule,
   SubscriptionModule,
+  UpgradeSubscriptionModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -477,6 +478,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
       inject: [ConfigService],
     }),
     SubscriptionModule,
+    UpgradeSubscriptionModule,
     NavigationModule,
     TagModule,
     EventsImportModule.registerAsync({

@@ -145,3 +145,24 @@ export type BuilderSubscribeProps<
   transactionFeeText?: string;
   returningUserId?: string;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
+
+export type BuilderUpgradeProps = {
+  memberPlans: Pick<
+    QueryResult<MemberPlanListQuery>,
+    'data' | 'loading' | 'error'
+  >;
+  subscriptionToUpgrade: FullSubscriptionFragment;
+  className?: string;
+  onUpgrade?: (
+    data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) => Promise<void>;
+  defaults?: Partial<{
+    memberPlanSlug: string | null;
+  }>;
+  upgradeFromSubscriptionId?: string;
+  donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
+  hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
+  termsOfServiceUrl?: string;
+  transactionFee?: (monthlyAmount: number) => number;
+  transactionFeeText?: string;
+};

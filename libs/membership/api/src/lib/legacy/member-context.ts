@@ -2,7 +2,6 @@ import {
   Invoice,
   MetadataProperty,
   Payment,
-  PaymentMethod,
   PaymentPeriodicity,
   PaymentProviderCustomer,
   PaymentState,
@@ -14,24 +13,24 @@ import {
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { unselectPassword } from '@wepublish/authentication/api';
-import { DataLoaderContext } from './context';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
 import { MemberPlanWithPaymentMethods } from './db/memberPlan';
 import { SubscriptionWithRelations } from './db/subscription';
 import {
-  InternalError,
-  NotFound,
-  PaymentConfigurationNotAllowed,
-  UserInputError,
-} from './error';
-import { logger } from '@wepublish/utils/api';
-import { ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS } from './utility';
+  logger,
+  ONE_DAY_IN_MILLISECONDS,
+  ONE_MONTH_IN_MILLISECONDS,
+} from '@wepublish/utils/api';
 import {
   Action,
   LookupActionInput,
-  SubscriptionEventDictionary,
-} from '@wepublish/membership/api';
+} from '../subscription-event-dictionary/subscription-event-dictionary.type';
+import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { add, format } from 'date-fns';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations;
@@ -39,6 +38,7 @@ export interface HandleSubscriptionChangeProps {
 
 export interface RenewSubscriptionForUserProps {
   subscription: SubscriptionWithRelations;
+  discount?: number;
 }
 
 export interface ChargeInvoiceProps {
@@ -52,11 +52,6 @@ export interface DeactivateSubscriptionForUserProps {
   subscription: Subscription;
   deactivationReason: SubscriptionDeactivationReason;
 }
-
-type MemberContextDataLoaders = Pick<
-  DataLoaderContext,
-  'activePaymentMethodsByID' | 'activePaymentMethodsBySlug'
->;
 
 export interface MemberContextInterface {
   prisma: PrismaClient;
@@ -209,6 +204,7 @@ export class MemberContext implements MemberContextInterface {
 
   async renewSubscriptionForUser({
     subscription,
+    discount,
   }: RenewSubscriptionForUserProps): Promise<InvoiceWithItems | null> {
     try {
       const { periods = [], paidUntil, deactivation } = subscription;
@@ -262,10 +258,11 @@ export class MemberContext implements MemberContextInterface {
         startDate,
         subscription.paymentPeriodicity as PaymentPeriodicity
       );
-      const amount = calculateAmountForPeriodicity(
-        subscription.monthlyAmount,
-        subscription.paymentPeriodicity as PaymentPeriodicity
-      );
+      const amount =
+        calculateAmountForPeriodicity(
+          subscription.monthlyAmount,
+          subscription.paymentPeriodicity as PaymentPeriodicity
+        ) - (discount ?? 0);
 
       const user = await this.prisma.user.findUnique({
         where: {
@@ -509,7 +506,6 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async cancelInvoicesForSubscription(subscriptionID: string) {
-    // Cancel invoices when subscription is canceled
     const invoices = await this.prisma.invoice.findMany({
       where: {
         subscriptionID,
@@ -517,8 +513,10 @@ export class MemberContext implements MemberContextInterface {
     });
 
     for (const invoice of invoices) {
-      if (!invoice || invoice.paidAt !== null || invoice.canceledAt !== null)
+      if (invoice.paidAt !== null || invoice.canceledAt !== null) {
         continue;
+      }
+
       await this.prisma.invoice.update({
         where: {
           id: invoice.id,
@@ -546,6 +544,7 @@ export class MemberContext implements MemberContextInterface {
         subscription.paidUntil
       : now;
 
+    // Cancel invoices when subscription is canceled
     await this.cancelInvoicesForSubscription(subscription.id);
 
     const updatedSubscription: Subscription =
@@ -638,7 +637,7 @@ export class MemberContext implements MemberContextInterface {
       (memberPlanID == null && memberPlanSlug == null) ||
       (memberPlanID != null && memberPlanSlug != null)
     ) {
-      throw new UserInputError(
+      throw new BadRequestException(
         'You must provide either `memberPlanID` or `memberPlanSlug`.'
       );
     }
@@ -647,37 +646,17 @@ export class MemberContext implements MemberContextInterface {
       (paymentMethodID == null && paymentMethodSlug == null) ||
       (paymentMethodID != null && paymentMethodSlug != null)
     ) {
-      throw new UserInputError(
+      throw new BadRequestException(
         'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
       );
     }
-  }
-
-  async getPaymentMethodByIDOrSlug(
-    loaders: MemberContextDataLoaders,
-    paymentMethodSlug?: string,
-    paymentMethodID?: string
-  ) {
-    const paymentMethod =
-      paymentMethodID ?
-        await loaders.activePaymentMethodsByID.load(paymentMethodID)
-      : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!);
-
-    if (!paymentMethod) {
-      throw new NotFound(
-        'PaymentMethod',
-        paymentMethodID ?? paymentMethodSlug!
-      );
-    }
-
-    return paymentMethod;
   }
 
   async validateSubscriptionPaymentConfiguration(
     memberPlan: MemberPlanWithPaymentMethods,
     autoRenew: boolean,
     paymentPeriodicity: PaymentPeriodicity,
-    paymentMethod: PaymentMethod
+    paymentMethodId: string
   ) {
     if (
       !memberPlan.availablePaymentMethods.some(apm => {
@@ -687,11 +666,13 @@ export class MemberContext implements MemberContextInterface {
 
         return (
           apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-          apm.paymentMethodIDs.includes(paymentMethod.id)
+          apm.paymentMethodIDs.includes(paymentMethodId)
         );
       })
     ) {
-      throw new PaymentConfigurationNotAllowed();
+      throw new BadRequestException(
+        `Payment configuration not allowed. Check method, periodicity and auto renew flag`
+      );
     }
   }
 
@@ -709,19 +690,33 @@ export class MemberContext implements MemberContextInterface {
       : [];
   }
 
-  async createSubscription(
-    userID: string,
-    paymentMethodId: string,
-    paymentPeriodicity: PaymentPeriodicity,
-    monthlyAmount: number,
-    memberPlanId: string,
-    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
-    autoRenew: boolean,
-    extendable: boolean,
-    replacedSubscription?: Subscription | null,
-    startsAt?: Date | string,
-    needsConfirmation?: boolean
-  ): Promise<{
+  async createSubscription({
+    userID,
+    paymentMethodId,
+    paymentPeriodicity,
+    monthlyAmount,
+    memberPlanId,
+    properties,
+    autoRenew,
+    extendable,
+    replacedSubscriptionId,
+    startsAt = new Date(),
+    needsConfirmation,
+    discount,
+  }: {
+    userID: string;
+    paymentMethodId: string;
+    paymentPeriodicity: PaymentPeriodicity;
+    monthlyAmount: number;
+    memberPlanId: string;
+    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
+    autoRenew: boolean;
+    extendable: boolean;
+    replacedSubscriptionId?: string | null;
+    startsAt?: Date | string;
+    needsConfirmation?: boolean;
+    discount?: number;
+  }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
   }> {
@@ -760,8 +755,7 @@ export class MemberContext implements MemberContextInterface {
     const subscription = await this.prisma.subscription.create({
       data: {
         userID,
-        startsAt: startsAt ? startsAt : new Date(),
-        modifiedAt: new Date(),
+        startsAt,
         paymentMethodID: paymentMethodId,
         paymentPeriodicity,
         paidUntil: null,
@@ -772,7 +766,7 @@ export class MemberContext implements MemberContextInterface {
             data: properties,
           },
         },
-        replacesSubscriptionID: replacedSubscription?.id,
+        replacesSubscriptionID: replacedSubscriptionId,
         autoRenew,
         extendable,
         currency: memberPlan.currency,
@@ -790,13 +784,17 @@ export class MemberContext implements MemberContextInterface {
         'Could not create new subscription for userID "%s"',
         userID
       );
-      throw new InternalError();
+
+      throw new InternalServerErrorException();
     }
 
-    const invoice = await this.renewSubscriptionForUser({ subscription });
+    const invoice = await this.renewSubscriptionForUser({
+      subscription,
+      discount,
+    });
 
     if (!invoice) {
-      throw new InternalError();
+      throw new InternalServerErrorException();
     }
 
     // Send subscribe mail
@@ -929,7 +927,7 @@ export class MemberContext implements MemberContextInterface {
         'Could not create new subscription for userID "%s"',
         userID
       );
-      throw new InternalError();
+      throw new InternalServerErrorException();
     }
 
     if (startsAt < now || paidUntil) {
@@ -944,7 +942,7 @@ export class MemberContext implements MemberContextInterface {
       });
 
       if (!user) {
-        throw new InternalError();
+        throw new InternalServerErrorException();
       }
 
       const invoice = await this.prisma.invoice.create({
@@ -992,10 +990,9 @@ export class MemberContext implements MemberContextInterface {
       const invoice = await this.renewSubscriptionForUser({ subscription });
 
       if (!invoice) {
-        throw new InternalError();
+        throw new InternalServerErrorException();
       }
 
-      // Send subscribe mail
       await this.sendMailForSubscriptionEvent(
         SubscriptionEvent.SUBSCRIBE,
         subscription,
@@ -1012,7 +1009,7 @@ export class MemberContext implements MemberContextInterface {
   async sendMailForSubscriptionEvent(
     subscriptionEvent: SubscriptionEvent,
     subscription: Subscription,
-    optionalData: Record<string, any>
+    optionalData: Record<string, unknown>
   ) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -1020,6 +1017,7 @@ export class MemberContext implements MemberContextInterface {
       },
       select: unselectPassword,
     });
+
     if (!user) {
       logger('MemberContext').warn(`User not found %s`, subscription.userID);
       return;
@@ -1036,6 +1034,7 @@ export class MemberContext implements MemberContextInterface {
         subscriptionEvent,
         subscription.id
       );
+
       return;
     }
 
@@ -1049,41 +1048,4 @@ export class MemberContext implements MemberContextInterface {
       mailType: mailLogType.UserFlow,
     });
   }
-}
-
-export async function getMemberPlanByIDOrSlug(
-  loaders: Pick<
-    DataLoaderContext,
-    'activeMemberPlansByID' | 'activeMemberPlansBySlug'
-  >,
-  memberPlanSlug: string,
-  memberPlanID: string
-) {
-  const memberPlan =
-    memberPlanID ?
-      await loaders.activeMemberPlansByID.load(memberPlanID)
-    : await loaders.activeMemberPlansBySlug.load(memberPlanSlug);
-  if (!memberPlan)
-    throw new NotFound('MemberPlan', memberPlanID || memberPlanSlug);
-  return memberPlan;
-}
-
-export async function getPaymentMethodByIDOrSlug(
-  loaders: Pick<
-    DataLoaderContext,
-    'activePaymentMethodsByID' | 'activePaymentMethodsBySlug'
-  >,
-  paymentMethodSlug?: string,
-  paymentMethodID?: string
-) {
-  const paymentMethod =
-    paymentMethodID ?
-      await loaders.activePaymentMethodsByID.load(paymentMethodID)
-    : await loaders.activePaymentMethodsBySlug.load(paymentMethodSlug!);
-
-  if (!paymentMethod) {
-    throw new NotFound('PaymentMethod', paymentMethodID ?? paymentMethodSlug!);
-  }
-
-  return paymentMethod;
 }

@@ -1554,6 +1554,9 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
+  """"""
+  upgradeSubscription(memberPlanId: String!, subscriptionId: String!): Boolean!
+
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
 
@@ -2232,6 +2235,9 @@ type Query {
     take: Int! = 10
   ): TagConnection!
 
+  """"""
+  upgradeSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
@@ -2711,6 +2717,10 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
+}
+
+type UpgradeSubscription {
+  discountAmount: Float!
 }
 
 """The `Upload` scalar type represents a file upload."""

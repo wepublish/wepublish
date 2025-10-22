@@ -41,7 +41,7 @@ import { ApiAlert } from '@wepublish/errors/website';
 import { Modal } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
 
-const subscribeSchema = z.object({
+export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
   paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
