@@ -64,7 +64,6 @@ import { OnlineReportsRegistrationForm } from '../src/forms/registration-form';
 import { OnlineReportsNavbar } from '../src/navigation/onlinereports-navbar';
 import { OnlineReportsBlockRenderer } from '../src/onlinereports-block-renderer';
 import { OnlineReportsGlobalStyles } from '../src/onlinereports-global-styles';
-import { OnlineReportsTag } from '../src/onlinereports-tag';
 import { OnlineReportsTeaser } from '../src/onlinereports-teaser';
 import { OnlineReportsTeaserGridBlock } from '../src/onlinereports-teaser-grid-block';
 import { OnlineReportsTeaserGridFlexBlock } from '../src/onlinereports-teaser-grid-flex-blocks';
@@ -211,7 +210,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Page={OnlineReportsPage}
             RegistrationForm={OnlineReportsRegistrationForm}
             PaymentAmount={OnlineReportsPaymentAmount}
-            Tag={OnlineReportsTag}
             richtext={{ RenderElement: OnlineReportsRenderElement }}
             elements={{ Link: NextWepublishLink }}
             blocks={{
