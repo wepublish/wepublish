@@ -163,12 +163,21 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
   ${TeaserTags} {
     display: ${({ teaser }) => (hasTags(teaser) ? 'block' : 'none')};
 
-    .MuiChip-root {
+    & .MuiChip-root {
       background-color: #7c7c7c;
       border-radius: 5px;
       border: none;
       color: #fff;
       padding: 4px 12px;
+      margin-top: 2px;
+
+      /* browser specific margin fixes for chips. next two rules target ios only up to 932px device-width */
+      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) and (-webkit-min-device-pixel-ratio: 2) {
+        margin-top: 6px;
+      }
+      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) and (-webkit-min-device-pixel-ratio: 3) {
+        margin-top: 6px;
+      }
     }
   }
 
