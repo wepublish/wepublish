@@ -22,10 +22,10 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       'memberPlans'
       'monthlyAmount'
       'paymentPeriodicity'
-      'challenge'
       'transactionFee'
       'challenge'
       'submit';
+
     ${({ theme }) => theme.breakpoints.down('md')} {
       gap: ${({ theme }) => theme.spacing(2.5)};
     }
