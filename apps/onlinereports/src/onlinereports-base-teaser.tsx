@@ -169,13 +169,10 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
       border: none;
       color: #fff;
       padding: 4px 12px;
-      margin-top: 2px;
+      margin-top: 6px;
 
-      /* browser specific margin fixes for chips. next two rules target ios only up to 932px device-width */
-      @media only screen and (min-device-width: 320px) and (max-device-width: 932px) {
-        @supports (background: -webkit-canvas(squares)) {
-          margin-top: 6px;
-        }
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        margin-top: 2px;
       }
     }
   }
