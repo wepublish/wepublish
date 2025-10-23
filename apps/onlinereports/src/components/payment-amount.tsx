@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
 import {
   FormControlLabel,
-  InputAdornment,
-  OutlinedInput,
+  InputAdornment as InputAdornmentDefault,
   RadioGroup,
 } from '@mui/material';
-import {
-  BuilderPaymentAmountProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
-import { forwardRef } from 'react';
+import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { ChangeEvent, forwardRef } from 'react';
+
+import { FieldNumberSpinner } from './number-input/field-number-spinner';
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
@@ -28,7 +26,7 @@ export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   }
 `;
 
-const PaymentAmountInput = styled(OutlinedInput)`
+const PaymentAmountInput = styled(FieldNumberSpinner)`
   background: #fff;
   // Chrome, Safari, Edge
 
@@ -45,8 +43,12 @@ const PaymentAmountInput = styled(OutlinedInput)`
 
 `;
 
+const InputAdornment = styled(InputAdornmentDefault)`
+  padding-left: ${({ theme }) => theme.spacing(3)};
+`;
+
 export const OnlineReportsPaymentAmount = forwardRef<
-  HTMLInputElement,
+  typeof FieldNumberSpinner,
   BuilderPaymentAmountProps
 >(
   (
@@ -63,11 +65,6 @@ export const OnlineReportsPaymentAmount = forwardRef<
     },
     ref
   ) => {
-    const {
-      elements: { TextField },
-      meta: { locale, siteTitle },
-    } = useWebsiteBuilder();
-
     return (
       <PaymentAmountPickerWrapper
         className={className}
@@ -80,21 +77,26 @@ export const OnlineReportsPaymentAmount = forwardRef<
         value={value}
       >
         <FormControlLabel
-          sx={{ width: '180px' }}
+          sx={{ width: '236px' }}
           value={''}
           control={
             <PaymentAmountInput
-              type={'number'}
-              inputMode="numeric"
               startAdornment={
                 <InputAdornment position="start">CHF</InputAdornment>
               }
-              value={value ? value / 100 : ''}
-              onChange={event => onChange(+event.target.value * 100)}
+              value={(value as number) ? (value as number) / 100 : 0}
+              onChange={(param: number | ChangeEvent | undefined) => {
+                if (typeof param === 'number') {
+                  onChange(param ? param * 100 : 0);
+                } else if (param && 'target' in param) {
+                  const newValue = parseInt(
+                    (param.target as HTMLInputElement).value
+                  );
+                  onChange(newValue ? newValue * 100 : 0);
+                }
+              }}
               inputProps={{
                 'aria-label': 'weight',
-                inputMode: 'numeric',
-                step: 'any',
               }}
             />
           }
