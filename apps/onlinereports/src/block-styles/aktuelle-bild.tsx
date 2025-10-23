@@ -143,7 +143,7 @@ const AktuelleBildWrapper = styled(Box)`
     display: block;
     opacity: 0;
     position: absolute;
-    bottom: 23px;
+    bottom: 25px;
     width: 100%;
     padding: 4px 10px 2px 10px;
     margin: 0;
@@ -154,6 +154,11 @@ const AktuelleBildWrapper = styled(Box)`
     font-size: ${({ theme }) => theme.typography.body2.fontSize};
     font-weight: 300;
     color: #fff;
+
+    /* target webkit browsers only */
+    @supports (background: -webkit-canvas(squares)) {
+      bottom: 24px;
+    }
   }
 
   ${TeaserWrapper} {
@@ -166,7 +171,7 @@ const AktuelleBildWrapper = styled(Box)`
       background: rgba(0, 0, 0, 0.7);
       transition: opacity 500ms ease;
       position: absolute;
-      bottom: 0;
+      bottom: 2px;
       width: 100%;
 
       &::before {
