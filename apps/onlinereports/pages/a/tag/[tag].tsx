@@ -20,12 +20,8 @@ const TagArticleListWrapper = styled('div')`
   margin-top: ${({ theme }) => theme.spacing(4)};
 
   ${ContentWrapperStyled} {
-    ${({ theme }) => theme.breakpoints.up('sm')} {
-      gap: ${({ theme }) => theme.spacing(3)};
-    }
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      row-gap: ${({ theme }) => theme.spacing(3)};
-    }
+    gap: ${({ theme }) => theme.spacing(3)};
+    row-gap: ${({ theme }) => theme.spacing(3)};
   }
 `;
 
@@ -68,7 +64,7 @@ export default function Tags(props: ComponentProps<typeof TagPageDefault>) {
     <TagArticleListWrapper>
       <TagPage
         {...props}
-        tag={tag}
+        tag={tag ?? props.tag}
       />
     </TagArticleListWrapper>
   );
