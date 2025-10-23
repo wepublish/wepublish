@@ -136,7 +136,7 @@ const AktuelleBildWrapper = styled(Box)`
       color: #fff;
       font-size: ${({ theme }) => theme.typography.body2.fontSize};
       font-weight: 300;
-      line-height: 1.2em;
+      line-height: 1.2;
       width: 100%;
     }
   }
@@ -189,7 +189,7 @@ const AktuelleBildWrapper = styled(Box)`
         width: 30px;
         font-size: ${({ theme }) => theme.typography.body2.fontSize};
         font-weight: 300;
-        color: white;
+        color: ${({ theme }) => theme.palette.common.white};
         background-color: transparent;
         display: block;
         z-index: 20;

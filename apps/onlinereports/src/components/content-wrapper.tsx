@@ -83,7 +83,7 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         border-radius: ${theme.spacing(4)};
         color: ${theme.palette.common.white};
 
-        :hover {
+        &:hover {
           background-color: ${theme.palette.common.black};
         }
       }
