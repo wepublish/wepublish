@@ -171,7 +171,7 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
       padding: 4px 12px;
       margin-top: 6px;
 
-      ${({ theme }) => theme.breakpoints.up('md')} {
+      ${({ theme }) => theme.breakpoints.up('lg')} {
         margin-top: 2px;
       }
     }
