@@ -329,16 +329,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       ) as PaymentMethod[]) ?? [],
     [selectedMemberPlan?.availablePaymentMethods]
   );
-  /*
-    autoRenew,
-    extendable,
-    paymentPeriodicity,
-    monthlyAmount,
-    currency,
-    locale,
-    t,
-    isButtonText,
-    */
+
   const paymentText = getPaymentText({
     autoRenew,
     extendable: selectedMemberPlan?.extendable ?? true,
