@@ -14,6 +14,7 @@ import { GraphQLPageInfo } from '../common';
 import { TagSort } from './tag.query';
 import { createProxyingResolver } from '../../utility';
 import { GraphQLRichText } from '@wepublish/richtext/api';
+import { ColorScalar } from '@wepublish/peering/api';
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
@@ -40,7 +41,7 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
         return await urlAdapter.getTagURL(tag);
       }),
     },
-    color: { type: GraphQLString },
+    color: { type: ColorScalar },
   },
 });
 
