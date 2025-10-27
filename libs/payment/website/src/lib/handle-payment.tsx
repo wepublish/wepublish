@@ -4,6 +4,7 @@ import {
   usePageLazyQuery,
   usePayInvoiceMutation,
   useSubscribeMutation,
+  useUpgradeMutation,
 } from '@wepublish/website/api';
 import { useCallback, useState } from 'react';
 import { RedirectPages } from './payment-form';
@@ -74,6 +75,78 @@ export const useSubscribe = (
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({
             intent: data.createSubscription ?? undefined,
+            successUrl,
+            failUrl,
+            setStripeClientSecret,
+          });
+        },
+        onError: error =>
+          (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
+      });
+    },
+    [fetchPage, result]
+  );
+
+  return [callback, redirectPages, stripeClientSecret] as const;
+};
+
+export const useUpgrade = (
+  ...params: Parameters<typeof useUpgradeMutation>
+) => {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>();
+  const [redirectPages, setRedirectPages] = useState<RedirectPages>();
+
+  const [fetchPage] = usePageLazyQuery();
+  const [result] = useUpgradeMutation({
+    ...params[0],
+  });
+
+  const callback = useCallback(
+    async (
+      memberPlan: FullMemberPlanFragment | undefined | null,
+      ...callbackParams: Parameters<typeof result>
+    ) => {
+      const [{ data: successPage }, { data: failPage }] = await Promise.all([
+        memberPlan?.successPageId ?
+          fetchPage({
+            variables: {
+              id: memberPlan.successPageId,
+            },
+          })
+        : { data: undefined },
+        memberPlan?.failPageId ?
+          fetchPage({
+            variables: {
+              id: memberPlan.failPageId,
+            },
+          })
+        : { data: undefined },
+      ]);
+
+      const successUrl = relativeToAbsolute(
+        successPage?.page?.url ?? '/profile'
+      );
+      const failUrl = relativeToAbsolute(failPage?.page?.url ?? '/profile');
+
+      setRedirectPages({
+        successUrl,
+        failUrl,
+      });
+
+      return result({
+        ...callbackParams[0],
+        variables:
+          callbackParams[0]?.variables ?
+            {
+              ...callbackParams[0].variables,
+              successURL: successUrl,
+              failureURL: failUrl,
+            }
+          : undefined,
+        onCompleted: data => {
+          callbackParams[0]?.onCompleted?.(data);
+          handlePayment({
+            intent: data.upgradeSubscription ?? undefined,
             successUrl,
             failUrl,
             setStripeClientSecret,

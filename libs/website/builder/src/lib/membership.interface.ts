@@ -13,6 +13,8 @@ import {
   SubscribeMutationVariables,
   SubscriptionsQuery,
   Currency,
+  UpgradeMutationVariables,
+  UpgradeSubscriptionInfoQuery,
 } from '@wepublish/website/api';
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
@@ -151,15 +153,19 @@ export type BuilderUpgradeProps = {
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  upgradeInfo: Pick<
+    QueryResult<UpgradeSubscriptionInfoQuery>,
+    'data' | 'loading' | 'error'
+  >;
   subscriptionToUpgrade: FullSubscriptionFragment;
   className?: string;
   onUpgrade?: (
-    data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+    data: Omit<UpgradeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>;
   defaults?: Partial<{
     memberPlanSlug: string | null;
   }>;
-  upgradeFromSubscriptionId?: string;
+  setSelectedMemberplan: (memberPlanId: string | undefined) => void;
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;

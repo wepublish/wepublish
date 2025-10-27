@@ -37,6 +37,7 @@ export const Paywall = ({
   description,
   circumventDescription,
   hideContent,
+  alternativeSubscribeUrl,
 }: BuilderPaywallProps) => {
   const { t } = useTranslation();
   const { hasUser } = useUser();
@@ -67,7 +68,7 @@ export const Paywall = ({
           variant="contained"
           color="secondary"
           LinkComponent={Link}
-          href={'/mitmachen'}
+          href={alternativeSubscribeUrl ?? '/mitmachen'}
           onClick={setIntendedRoute}
         >
           {t('paywall.subscribe')}

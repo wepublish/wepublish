@@ -1,5 +1,7 @@
 import {
+  AvailablePaymentMethod,
   Invoice,
+  MemberPlan,
   MetadataProperty,
   Payment,
   PaymentPeriodicity,
@@ -7,15 +9,15 @@ import {
   PaymentState,
   PrismaClient,
   Subscription,
+  SubscriptionDeactivation,
   SubscriptionDeactivationReason,
   SubscriptionEvent,
+  SubscriptionPeriod,
   User,
 } from '@prisma/client';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { InvoiceWithItems, PaymentProvider } from '@wepublish/payment/api';
-import { MemberPlanWithPaymentMethods } from './db/memberPlan';
-import { SubscriptionWithRelations } from './db/subscription';
 import {
   logger,
   ONE_DAY_IN_MILLISECONDS,
@@ -31,6 +33,16 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+
+export type MemberPlanWithPaymentMethods = MemberPlan & {
+  availablePaymentMethods: AvailablePaymentMethod[];
+};
+
+export type SubscriptionWithRelations = Subscription & {
+  periods: SubscriptionPeriod[];
+  properties: MetadataProperty[];
+  deactivation: SubscriptionDeactivation | null;
+};
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations;

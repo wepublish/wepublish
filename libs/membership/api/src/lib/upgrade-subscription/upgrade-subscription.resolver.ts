@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UpgradeSubscription } from './upgrade-subscription.model';
 import {
   Authenticated,
@@ -6,28 +6,34 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
+import { Payment } from '@wepublish/payment/api';
 
 @Resolver(() => UpgradeSubscription)
 export class UpgradeSubscriptionResolver {
   constructor(private upgradeSubscriptionService: UpgradeSubscriptionService) {}
 
   @Authenticated()
-  @Mutation(() => Boolean, {
+  @Mutation(() => Payment, {
     description: ``,
   })
   async upgradeSubscription(
     @CurrentUser() session: UserSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
+    @Args('monthlyAmount', {
+      type: () => Int,
+    })
+    monthlyAmount: number,
     @Args('paymentMethodId') paymentMethodId: string,
-    @Args('successURL') successURL: string,
-    @Args('failureURL') failureURL: string
+    @Args('successURL', { nullable: true }) successURL?: string,
+    @Args('failureURL', { nullable: true }) failureURL?: string
   ) {
     return this.upgradeSubscriptionService.upgradeSubscription({
       userId: session.user.id,
       memberPlanId,
       subscriptionId,
       paymentMethodId,
+      monthlyAmount,
       failureURL,
       successURL,
     });

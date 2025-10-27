@@ -1644,6 +1644,7 @@ export type Mutation = {
   updateUserConsent: UserConsent;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  upgradeSubscription: Payment;
   /** This mutation allows to upload and update the user's profile image. */
   uploadUserProfileImage?: Maybe<User>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
@@ -1746,10 +1747,12 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
 
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
+  bypassTokens: Array<Scalars['String']>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
-  memberPlanIds?: Array<Scalars['String']>;
+  memberPlanIds: Array<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
 };
 
@@ -2041,6 +2044,7 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
   bypassTokens?: InputMaybe<Array<Scalars['String']>>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
@@ -2085,6 +2089,15 @@ export type MutationUpdateUserConsentArgs = {
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UserSubscriptionInput;
+};
+
+export type MutationUpgradeSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanId: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodId: Scalars['String'];
+  subscriptionId: Scalars['String'];
+  successURL?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUploadUserProfileImageArgs = {
@@ -2342,6 +2355,7 @@ export enum PaymentState {
 export type Paywall = {
   __typename?: 'Paywall';
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: Maybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
   bypasses: Array<PaywallBypass>;
   circumventDescription?: Maybe<Scalars['RichText']>;
@@ -2803,6 +2817,7 @@ export type Query = {
   systemMails: Array<SystemMailModel>;
   /** This query returns a list of tags */
   tags: TagConnection;
+  upgradeSubscriptionInfo: UpgradeSubscription;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3050,6 +3065,11 @@ export type QueryTagsArgs = {
   skip?: Scalars['Int'];
   sort?: TagSort;
   take?: Scalars['Int'];
+};
+
+export type QueryUpgradeSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  subscriptionId: Scalars['String'];
 };
 
 export type QueryUserConsentArgs = {
@@ -3565,6 +3585,11 @@ export type UpdateCrowdfundingInput = {
   id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name: Scalars['String'];
+};
+
+export type UpgradeSubscription = {
+  __typename?: 'UpgradeSubscription';
+  discountAmount: Scalars['Float'];
 };
 
 export type UploadImageInput = {

@@ -2,11 +2,11 @@ import { ApolloError } from '@apollo/client';
 import {
   FullPaywallFragment,
   getApiClientV2,
-  MutationUpdatePaywallArgs,
+  MutationCreatePaywallArgs,
+  useCreatePaywallMutation,
   usePaywallListQuery,
-  useUpdatePaywallMutation,
 } from '@wepublish/editor/api-v2';
-import { CanUpdatePaywall } from '@wepublish/permissions';
+import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   ListViewActions,
@@ -41,16 +41,16 @@ const onErrorToast = (error: ApolloError) => {
 
 const mapApiDataToInput = (
   paywall: FullPaywallFragment
-): MutationUpdatePaywallArgs => ({
+): MutationCreatePaywallArgs => ({
   ...paywall,
   memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id),
   bypassTokens: paywall.bypasses?.map(bypass => bypass.token) || undefined,
 });
 
-const PaywallEditView = () => {
+const PaywallCreateView = () => {
   const { t } = useTranslation();
   const [paywall, setPaywall] = useState<
-    MutationUpdatePaywallArgs & {
+    MutationCreatePaywallArgs & {
       bypasses?: Array<{ id?: string; token: string }>;
     }
   >();
@@ -66,18 +66,18 @@ const PaywallEditView = () => {
     },
   });
 
-  const [updatePaywall, { loading: updateLoading }] = useUpdatePaywallMutation({
+  const [createPaywall, { loading: updateLoading }] = useCreatePaywallMutation({
     client,
     onError: onErrorToast,
     onCompleted: data => {
-      if (data.updatePaywall) {
-        setPaywall(mapApiDataToInput(data.updatePaywall));
+      if (data.createPaywall) {
+        setPaywall(mapApiDataToInput(data.createPaywall));
       }
     },
   });
 
   const loading = dataLoading || updateLoading;
-  const onSubmit = () => updatePaywall({ variables: paywall });
+  const onSubmit = () => createPaywall({ variables: paywall });
 
   const { StringType, BooleanType, ArrayType } = Schema.Types;
   const validationModel = Schema.Model({
@@ -128,6 +128,6 @@ const PaywallEditView = () => {
 };
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
-  CanUpdatePaywall.id,
-])(PaywallEditView);
-export { CheckedPermissionComponent as PaywallEditView };
+  CanCreatePaywall.id,
+])(PaywallCreateView);
+export { CheckedPermissionComponent as PaywallCreateView };

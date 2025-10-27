@@ -3,7 +3,11 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionPeriod,
 } from '@prisma/client';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { descend, sort } from 'ramda';
 import { ForbiddenError } from '@nestjs/apollo';
@@ -30,6 +34,7 @@ const leftoverSubscriptionPeriodAmount = (period: SubscriptionPeriod) => {
   return discountAmount;
 };
 
+@Injectable()
 export class UpgradeSubscriptionService {
   constructor(
     private prisma: PrismaClient,
@@ -155,15 +160,17 @@ export class UpgradeSubscriptionService {
     paymentMethodId,
     successURL,
     failureURL,
+    monthlyAmount,
   }: {
     userId: string;
     subscriptionId: string;
     memberPlanId: string;
     paymentMethodId: string;
-    successURL: string;
-    failureURL: string;
+    successURL?: string;
+    failureURL?: string;
+    monthlyAmount: number;
   }) {
-    const { newMemberplan, oldSubscription, oldSubscriptionPeriod } =
+    const { oldSubscription, oldSubscriptionPeriod } =
       await this.validateForUpgrade({
         memberPlanId,
         subscriptionId,
@@ -175,7 +182,7 @@ export class UpgradeSubscriptionService {
       userID: userId,
       paymentMethodId,
       paymentPeriodicity: oldSubscription.paymentPeriodicity,
-      monthlyAmount: newMemberplan.amountPerMonthMin,
+      monthlyAmount,
       memberPlanId,
       properties: [],
       autoRenew: oldSubscription.autoRenew,

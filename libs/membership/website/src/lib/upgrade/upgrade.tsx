@@ -3,7 +3,7 @@ import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
-  SubscribeMutationVariables,
+  UpgradeMutationVariables,
 } from '@wepublish/website/api';
 import {
   BuilderUpgradeProps,
@@ -40,11 +40,13 @@ const upgradeSchema = subscribeSchema.pick({
   payTransactionFee: true,
 });
 
-export const Subscribe = ({
+export const Upgrade = ({
   defaults,
   memberPlans,
   subscriptionToUpgrade,
   className,
+  upgradeInfo,
+  setSelectedMemberplan,
   onUpgrade,
   donate,
   termsOfServiceUrl,
@@ -116,15 +118,14 @@ export const Subscribe = ({
   );
 
   const onSubmit = handleSubmit(data => {
-    const subscribeData: SubscribeMutationVariables = {
+    const upgradeData: UpgradeMutationVariables = {
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
-      paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
-      autoRenew: subscriptionToUpgrade.autoRenew,
+      subscriptionId: subscriptionToUpgrade.id,
     };
 
-    return callAction(onUpgrade)(subscribeData);
+    return callAction(onUpgrade)(upgradeData);
   });
 
   useEffect(() => {
@@ -146,7 +147,13 @@ export const Subscribe = ({
     }
   }, [resetField, allPaymentMethods, selectedPaymentMethodId]);
 
+  useEffect(() => {
+    setSelectedMemberplan(selectedMemberPlan?.id);
+  }, [selectedMemberPlan?.id, setSelectedMemberplan]);
+
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
+
+  console.log(upgradeInfo);
 
   return (
     <SubscribeWrapper

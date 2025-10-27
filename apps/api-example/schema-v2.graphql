@@ -1376,7 +1376,7 @@ type Mutation {
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]!, name: String): Paywall!
 
   """Creates a paywall bypass token."""
   createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
@@ -1527,7 +1527,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!], name: String): Paywall!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1555,7 +1555,7 @@ type Mutation {
   updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
   """"""
-  upgradeSubscription(memberPlanId: String!, subscriptionId: String!): Boolean!
+  upgradeSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
@@ -1790,6 +1790,7 @@ enum PaymentState {
 
 type Paywall {
   active: Boolean!
+  alternativeSubscribeUrl: String
   anyMemberPlan: Boolean!
   bypasses: [PaywallBypass!]!
   circumventDescription: RichText
