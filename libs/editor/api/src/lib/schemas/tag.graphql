@@ -12,7 +12,7 @@ query TagList(
       tag
       description
       main
-      bgColor
+      color
     }
 
     pageInfo {
@@ -32,27 +32,27 @@ query Tag($id: String!) {
     tag
     description
     main
-    bgColor
+    color
   }
 }
 
-mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $bgColor: String) {
-  createTag(tag: $tag, description: $description, type: $type, bgColor: $bgColor) {
+mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $color: String) {
+  createTag(tag: $tag, description: $description, type: $type, color: $color) {
     id
     tag
     description
     main
-    bgColor
+    color
   }
 }
 
-mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean, $bgColor: String) {
-  updateTag(id: $id, tag: $tag, description: $description, main: $main, bgColor: $bgColor) {
+mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean, $color: String) {
+  updateTag(id: $id, tag: $tag, description: $description, main: $main, color: $color) {
     id
     tag
     description
     main
-    bgColor
+    color
   }
 }
 
@@ -62,6 +62,6 @@ mutation DeleteTag($id: String!) {
     tag
     description
     main
-    bgColor
+    color
   }
 }

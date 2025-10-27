@@ -41,13 +41,13 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
           />
         </Form.Group>
 
-        <Form.Group controlId="bgColor">
-          <Form.ControlLabel>{t('tags.overview.bgColor')}</Form.ControlLabel>
+        <Form.Group controlId="color">
+          <Form.ControlLabel>{t('tags.overview.color')}</Form.ControlLabel>
           <ColorPicker
             setColor={color => {
-              onChange({ bgColor: color });
+              onChange({ color: color });
             }}
-            currentColor={tag.bgColor || '#000000'}
+            currentColor={tag.color || '#000000'}
           />
         </Form.Group>
 

@@ -148,6 +148,7 @@ import { GraphQLUserRole, GraphQLUserRoleInput } from './userRole';
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
 import { GraphQLSubscriptionDeactivationReason } from './subscriptionDeactivation';
+import { ColorScalar } from '@wepublish/peering/api';
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -1072,11 +1073,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         description: { type: GraphQLRichText },
         type: { type: new GraphQLNonNull(GraphQLTagType) },
         main: { type: GraphQLBoolean },
-        bgColor: { type: GraphQLString },
+        color: { type: ColorScalar },
       },
       resolve: (
         root,
-        { tag, description, type, main, bgColor },
+        { tag, description, type, main, color },
         { authenticate, prisma }
       ) =>
         createTag(
@@ -1084,7 +1085,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           description,
           type,
           main,
-          bgColor,
+          color,
           authenticate,
           prisma.tag
         ),
@@ -1097,22 +1098,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         tag: { type: GraphQLString },
         description: { type: GraphQLRichText },
         main: { type: GraphQLBoolean },
-        bgColor: { type: GraphQLString },
+        color: { type: ColorScalar },
       },
       resolve: (
         root,
-        { id, tag, description, main, bgColor },
+        { id, tag, description, main, color },
         { authenticate, prisma }
       ) =>
-        updateTag(
-          id,
-          tag,
-          description,
-          main,
-          bgColor,
-          authenticate,
-          prisma.tag
-        ),
+        updateTag(id, tag, description, main, color, authenticate, prisma.tag),
     },
 
     deleteTag: {

@@ -1309,7 +1309,7 @@
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
-        "bgColor": "Background Color",
+        "color": "Background Color",
         "createTag": "New Tag",
         "editTag": "Edit {{tag}}",
         "placeholder": "Name of tag",

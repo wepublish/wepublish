@@ -25,5 +25,5 @@ export class Tag {
   url!: string;
 
   @Field(() => ColorScalar, { nullable: true })
-  bgColor?: string;
+  color?: string;
 }

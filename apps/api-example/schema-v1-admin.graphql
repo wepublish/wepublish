@@ -471,7 +471,7 @@ type Tag {
   main: Boolean!
   description: RichText
   url: String!
-  bgColor: String
+  color: String
 }
 
 enum TagType {
@@ -825,8 +825,8 @@ type Mutation {
   deletePoll(id: String!): FullPoll
   deletePollAnswer(id: String!): PollAnswerWithVoteCount
   deletePollExternalVoteSource(id: String!): PollExternalVoteSource
-  createTag(tag: String, description: RichText, type: TagType!, main: Boolean, bgColor: String): Tag
-  updateTag(id: String!, tag: String, description: RichText, main: Boolean, bgColor: String): Tag
+  createTag(tag: String, description: RichText, type: TagType!, main: Boolean, color: String): Tag
+  updateTag(id: String!, tag: String, description: RichText, main: Boolean, color: String): Tag
   deleteTag(id: String!): Tag
 }
 

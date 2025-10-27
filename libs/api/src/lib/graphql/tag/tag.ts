@@ -40,7 +40,7 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
         return await urlAdapter.getTagURL(tag);
       }),
     },
-    bgColor: { type: GraphQLString },
+    color: { type: GraphQLString },
   },
 });
 

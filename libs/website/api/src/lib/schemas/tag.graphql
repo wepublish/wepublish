@@ -5,7 +5,7 @@ fragment FullTag on Tag {
   type
   main
   url
-  bgColor
+  color
 }
 
 query Tag($tag: String!, $type: TagType!) {

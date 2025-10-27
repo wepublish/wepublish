@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "tags" ADD COLUMN "bgColor" TEXT;
+ALTER TABLE "tags" ADD COLUMN "color" TEXT;
