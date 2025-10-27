@@ -74,6 +74,7 @@ export const TagPageGetStaticProps = (async ({ params }) => {
   if (!tagResult.error && !tagResult.data.tags.nodes.length) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
 
