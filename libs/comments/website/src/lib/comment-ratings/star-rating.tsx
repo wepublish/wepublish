@@ -17,17 +17,17 @@ export const StarRatingName = styled('div')`
 
 export type StarRatingProps = {
   className?: string;
-  rating?: number;
+  averageRating?: number;
+  userRating?: number;
   name?: string | null;
-  hasRated?: boolean;
   readOnly?: boolean;
   onChange?: (rating: number) => void;
 };
 
 export const StarRating = ({
   className,
-  hasRated,
-  rating = 0,
+  averageRating,
+  userRating,
   readOnly,
   name,
   onChange,
@@ -41,10 +41,10 @@ export const StarRating = ({
       {name && <StarRatingName>{name}</StarRatingName>}
 
       <Rating
-        value={rating}
+        averageRating={averageRating || 0}
+        userRating={userRating || 0}
         readOnly={readOnly}
         onChange={(_, newValue) => newValue && onChange?.(newValue)}
-        showFilledIcon={hasRated}
       />
     </StarRatingWrapper>
   );
