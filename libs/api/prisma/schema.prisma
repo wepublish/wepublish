@@ -562,6 +562,11 @@ enum Currency {
   EUR @map("EUR")
 }
 
+enum ProductType {
+  Subscription @map("Subscription")
+  Donation     @map("Donation")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -582,6 +587,7 @@ model MemberPlan {
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
   externalReward                 String?
+  productType                    ProductType              @default(Subscription)
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])

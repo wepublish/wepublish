@@ -330,7 +330,18 @@
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
       },
       "subscribe": {
-        "label": "Subscribe"
+        "label": "Subscribe",
+        "selectMemberPlans": "Displayed plans",
+        "selectMemberPlansPlaceholder": "Show all plans",
+        "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
+        "selectFields": "Input fields",
+        "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "FirstName": "First name",
+        "Birthday": "Birthday",
+        "Address": "Address",
+        "EmailRepeated": "Repeat email",
+        "Password": "Password",
+        "PasswordRepeated": "Repeat password"
       },
       "image": {
         "label": "Image",
@@ -815,7 +826,8 @@
         "quarterly": "Quarterly",
         "yearly": "Yearly",
         "biennial": "Biennial",
-        "lifetime": "Lifetime"
+        "lifetime": "Lifetime",
+        "donationOnce": "One-time donation"
       },
       "title": "Member Plans"
     },
@@ -1520,6 +1532,8 @@
       "extendableHelpText": "Determine whether a user's subscription can be renewed - automatically or manually - or not. As a rule, trial subscriptions cannot be renewed.",
       "maxCount": "Maximum number of subscriptions per user",
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
+      "maxCountDonation": "Maximum number of donations per user",
+      "maxCountDonationHelpText": "Limit the number of donations that a user can make for this plan.",
       "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
@@ -1529,7 +1543,11 @@
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
       "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
       "confirmationPage": "Redirect to page for existing users (retargeting)",
-      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page."
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
+      "productType": "Product type",
+      "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation.",
+      "productTypeSubscription": "Subscription",
+      "productTypeDonation": "Donation"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",

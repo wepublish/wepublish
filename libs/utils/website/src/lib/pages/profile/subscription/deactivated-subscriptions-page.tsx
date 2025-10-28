@@ -18,7 +18,8 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
+import { Link } from '@wepublish/website/builder';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -28,13 +29,12 @@ const SubscriptionsWrapper = styled(ContentWrapper)`
 `;
 
 function DeactivatedSubscriptions() {
-  const {
-    elements: { Link },
-  } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   return (
     <SubscriptionsWrapper>
-      <h1>Gekündigte Abos</h1>
+      <h1>{t('user.cancelledSubscriptions')}</h1>
+
       <SubscriptionListContainer
         filter={subscriptions =>
           subscriptions.filter(subscription => subscription.deactivation)

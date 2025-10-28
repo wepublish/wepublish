@@ -258,11 +258,17 @@ type MemberPlan {
   maxCount: Int
   extendable: Boolean!
   externalReward: String
+  productType: ProductType!
   availablePaymentMethods: [AvailablePaymentMethod!]!
   migrateToTargetPaymentMethodID: String
   successPageId: String
   failPageId: String
   confirmationPageId: String
+}
+
+enum ProductType {
+  Subscription
+  Donation
 }
 
 type AvailablePaymentMethod {
@@ -600,6 +606,7 @@ input MemberPlanFilter {
   name: String
   active: Boolean
   tags: [String!]
+  productType: ProductType
 }
 
 enum MemberPlanSort {
@@ -995,6 +1002,7 @@ input MemberPlanInput {
   currency: Currency!
   extendable: Boolean!
   externalReward: String
+  productType: ProductType!
   maxCount: Int
   availablePaymentMethods: [AvailablePaymentMethodInput!]!
   migrateToTargetPaymentMethodID: String

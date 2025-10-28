@@ -13,6 +13,7 @@ import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
@@ -178,7 +179,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate,
   hidePaymentAmount = memberPlan =>
     !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
@@ -309,6 +309,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
+  const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
+
   const paymentText = getPaymentText(
     autoRenew,
     selectedMemberPlan?.extendable ?? true,
@@ -438,7 +440,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     return (
       userSubscriptions.data?.subscriptions.some(
         ({ memberPlan, deactivation }) =>
-          memberPlan.id === selectedMemberPlanId && !deactivation
+          memberPlan.id === selectedMemberPlanId &&
+          memberPlan.productType === ProductType.Subscription &&
+          !deactivation
       ) ?? false
     );
   }, [
@@ -535,7 +539,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   {...field}
                   error={error}
                   slug={selectedMemberPlan?.slug}
-                  donate={!!donate?.(selectedMemberPlan)}
+                  donate={isDonation}
                   amountPerMonthMin={amountPerMonthMin}
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
@@ -682,8 +686,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?

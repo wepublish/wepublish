@@ -140,7 +140,6 @@ export type BuilderSubscribeProps<
     firstName: string;
   }>;
   deactivateSubscriptionId?: string;
-  donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
