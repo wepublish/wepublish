@@ -10,7 +10,6 @@ import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
 } from './payment.model';
-import { Injectable } from '@nestjs/common';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -22,7 +21,6 @@ interface CreatePaymentWithProvider {
   migrateToTargetPaymentMethodID?: string;
 }
 
-@Injectable()
 export class PaymentsService {
   constructor(
     readonly prisma: PrismaClient,
