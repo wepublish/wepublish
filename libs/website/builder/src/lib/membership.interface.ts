@@ -164,7 +164,7 @@ export type BuilderUpgradeProps = {
   defaults?: Partial<{
     memberPlanSlug: string | null;
   }>;
-  setSelectedMemberplan: (memberPlanId: string | undefined) => void;
+  onSelect: (memberPlanId: string | undefined) => void;
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;

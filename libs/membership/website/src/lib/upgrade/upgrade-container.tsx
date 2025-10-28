@@ -4,16 +4,16 @@ import {
   FullMemberPlanFragment,
   useMemberPlanListQuery,
   useSubscriptionsQuery,
-  useUpgradeSubscriptionInfoQuery,
+  useUpgradeSubscriptionInfoLazyQuery,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
   BuilderUpgradeProps,
+  Upgrade,
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
 import { sortBy } from 'ramda';
-import { useMemo, useState } from 'react';
-import { Upgrade } from './upgrade';
+import { useMemo } from 'react';
 
 export type UpgradeContainerProps = BuilderContainerProps &
   Pick<
@@ -38,16 +38,9 @@ export const UpgradeContainer = ({
   upgradeSubscriptionId,
   ...props
 }: UpgradeContainerProps) => {
-  const [selectedMemberplanId, setSelectedMemberplanId] = useState<string>();
   const { hasUser } = useUser();
 
-  const upgradeInfo = useUpgradeSubscriptionInfoQuery({
-    skip: !hasUser || !upgradeSubscriptionId || !selectedMemberplanId,
-    variables: {
-      memberPlanId: selectedMemberplanId!,
-      subscriptionId: upgradeSubscriptionId,
-    },
-  });
+  const [fetchUpgradeInfo, upgradeInfo] = useUpgradeSubscriptionInfoLazyQuery();
 
   const userSubscriptions = useSubscriptionsQuery({
     skip: !hasUser,
@@ -93,7 +86,16 @@ export const UpgradeContainer = ({
           subscriptionToUpgrade={subscriptionToUpgrade}
           memberPlans={filteredMemberPlans}
           upgradeInfo={upgradeInfo}
-          setSelectedMemberplan={setSelectedMemberplanId}
+          onSelect={memberPlanId => {
+            if (memberPlanId) {
+              fetchUpgradeInfo({
+                variables: {
+                  memberPlanId,
+                  subscriptionId: upgradeSubscriptionId,
+                },
+              });
+            }
+          }}
           onUpgrade={async formData => {
             const selectedMemberplan =
               filteredMemberPlans.data?.memberPlans.nodes.find(

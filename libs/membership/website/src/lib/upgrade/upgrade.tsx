@@ -46,7 +46,7 @@ export const Upgrade = ({
   subscriptionToUpgrade,
   className,
   upgradeInfo,
-  setSelectedMemberplan,
+  onSelect,
   onUpgrade,
   donate,
   termsOfServiceUrl,
@@ -148,8 +148,8 @@ export const Upgrade = ({
   }, [resetField, allPaymentMethods, selectedPaymentMethodId]);
 
   useEffect(() => {
-    setSelectedMemberplan(selectedMemberPlan?.id);
-  }, [selectedMemberPlan?.id, setSelectedMemberplan]);
+    onSelect(selectedMemberPlan?.id);
+  }, [selectedMemberPlan?.id, onSelect]);
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 

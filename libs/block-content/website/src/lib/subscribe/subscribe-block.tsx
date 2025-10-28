@@ -3,12 +3,14 @@ import {
   SubscribeBlock as SubscribeBlockType,
 } from '@wepublish/website/api';
 import {
+  BuilderRouterContext,
   BuilderSubscribeBlockProps,
   BuilderSubscribeProps,
   Subscribe,
+  Upgrade,
 } from '@wepublish/website/builder';
 import { replace, toLower } from 'ramda';
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 import { useSubscribeBlock } from './subscribe-block.context';
 import { PaymentForm } from '@wepublish/payment/website';
 
@@ -26,10 +28,22 @@ export const SubscribeBlock = ({
   const {
     register: [register],
     subscribe,
+    upgrade,
+    upgradeInfo: [fetchUpgradeInfo, upgradeInfo],
     stripeClientSecret,
     redirectPages,
     ...subscribeProps
   } = useSubscribeBlock();
+  const { userSubscriptions } = subscribeProps;
+  const {
+    query: { upgradeSubscriptionId },
+  } = use(BuilderRouterContext);
+
+  const subscriptionToUpgrade = useMemo(() => {
+    return userSubscriptions.data?.subscriptions.find(
+      subscription => subscription.id === upgradeSubscriptionId
+    );
+  }, [upgradeSubscriptionId, userSubscriptions.data?.subscriptions]);
 
   const memberPlansObj = useMemo(
     () =>
@@ -56,50 +70,87 @@ export const SubscribeBlock = ({
         redirectPages={redirectPages}
       />
 
-      <Subscribe
-        {...subscribeProps}
-        className={className}
-        memberPlans={memberPlansObj}
-        fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
-        onSubscribe={async formData => {
-          const selectedMemberplan = memberPlans.find(
-            mb => mb.id === formData.memberPlanId
-          );
+      {!!subscriptionToUpgrade && (
+        <Subscribe
+          {...subscribeProps}
+          className={className}
+          memberPlans={memberPlansObj}
+          fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
+          onSubscribe={async formData => {
+            const selectedMemberplan = memberPlans.find(
+              mb => mb.id === formData.memberPlanId
+            );
 
-          const result = await subscribe(selectedMemberplan, {
-            variables: {
-              ...formData,
-            },
-          });
+            const result = await subscribe(selectedMemberplan, {
+              variables: {
+                ...formData,
+              },
+            });
 
-          if (result.errors) {
-            throw result.errors;
-          }
-        }}
-        onSubscribeWithRegister={async formData => {
-          const { errors: registerErrors } = await register({
-            variables: formData.register,
-          });
+            if (result.errors) {
+              throw result.errors;
+            }
+          }}
+          onSubscribeWithRegister={async formData => {
+            const { errors: registerErrors } = await register({
+              variables: formData.register,
+            });
 
-          if (registerErrors) {
-            throw registerErrors;
-          }
+            if (registerErrors) {
+              throw registerErrors;
+            }
 
-          const selectedMemberplan = memberPlans.find(
-            mb => mb.id === formData.subscribe.memberPlanId
-          );
+            const selectedMemberplan = memberPlans.find(
+              mb => mb.id === formData.subscribe.memberPlanId
+            );
 
-          const result = await subscribe(selectedMemberplan, {
-            variables: {
-              ...formData.subscribe,
-            },
-          });
+            const result = await subscribe(selectedMemberplan, {
+              variables: {
+                ...formData.subscribe,
+              },
+            });
 
-          if (result.errors) {
-            throw result.errors;
-          }
-        }}
-      />
+            if (result.errors) {
+              throw result.errors;
+            }
+          }}
+        />
+      )}
+
+      {subscriptionToUpgrade && (
+        <Upgrade
+          {...subscribeProps}
+          className={className}
+          memberPlans={memberPlansObj}
+          subscriptionToUpgrade={subscriptionToUpgrade}
+          upgradeInfo={upgradeInfo}
+          onSelect={memberPlanId => {
+            if (memberPlanId) {
+              fetchUpgradeInfo({
+                variables: {
+                  memberPlanId,
+                  subscriptionId: upgradeSubscriptionId as string,
+                },
+              });
+            }
+          }}
+          onUpgrade={async formData => {
+            const selectedMemberplan = memberPlans.find(
+              mb => mb.id === formData.memberPlanId
+            );
+
+            const result = await upgrade(selectedMemberplan, {
+              variables: {
+                ...formData,
+              },
+            });
+
+            if (result.errors) {
+              throw result.errors;
+            }
+          }}
+        />
+      )}
     </>
   );
 };
