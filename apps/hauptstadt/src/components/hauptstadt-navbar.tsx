@@ -111,6 +111,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 })<{
   navbarState: NavbarState[];
 }>`
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
   row-gap: ${({ theme }) => theme.spacing(0.5)};
@@ -143,8 +145,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     clip-path: polygon(
       0 100%,
       100% 100%,
-      100% calc(100% - 1px),
-      0 calc(100% - 1px)
+      100% calc(100% - 10px),
+      0 calc(100% - 10px)
     );
     z-index: 2;
   }
@@ -174,7 +176,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     navbarState.includes(NavbarState.Diagonal) &&
     css`
       clip-path: polygon(0px 0px, 100% 0px, 100% 50%, 0px 100%);
-      box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
+      filter: drop-shadow(0 10px 14px rgba(255, 0, 0, 0.75));
 
       &::before {
         clip-path: polygon(0 88%, 100% 38%, 100% 50%, 0 100%);
@@ -210,6 +212,20 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     padding: 0;
     row-gap: ${({ theme }) => theme.spacing(1.5)};
   }
+`;
+
+const NAVBAR_SHADOW_CLIP_MIN = 0;
+const NAVBAR_SHADOW_BOTTOM_EXTEND = 20;
+
+const NavBackgroundWrapper = styled('div', {
+  shouldForwardProp: propName =>
+    propName !== 'clipLeft' && propName !== 'clipRight',
+})<{ clipLeft: number; clipRight: number }>`
+  filter: drop-shadow(0px 1px 5px rgba(0, 0, 0, 0.19));
+  clip-path: inset(
+    0 ${({ clipRight }) => clipRight}px -${NAVBAR_SHADOW_BOTTOM_EXTEND}px
+      ${({ clipLeft }) => clipLeft}px
+  );
 `;
 
 export const NavbarLinks = styled('div', {
@@ -543,6 +559,66 @@ export function HauptstadtNavbar({
   );
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
 
+  const [clipInset, setClipInset] = useState({
+    left: NAVBAR_SHADOW_CLIP_MIN,
+    right: NAVBAR_SHADOW_CLIP_MIN,
+  });
+  const navBackgroundRef = useRef<HTMLDivElement | null>(null);
+  const navInnerRef = useRef<HTMLDivElement | null>(null);
+
+  // Justiere die Clip-Insets dynamisch anhand der tatsächlichen Nav-Breite.
+  useEffect(() => {
+    const backgroundElement = navBackgroundRef.current;
+    const innerElement = navInnerRef.current;
+
+    if (!backgroundElement || !innerElement) {
+      return;
+    }
+
+    const updateClipInset = () => {
+      const backgroundRect = backgroundElement.getBoundingClientRect();
+      const innerRect = innerElement.getBoundingClientRect();
+
+      const nextLeft = Math.max(
+        NAVBAR_SHADOW_CLIP_MIN,
+        Math.round(innerRect.left - backgroundRect.left) + 1
+      );
+      const nextRight = Math.max(
+        NAVBAR_SHADOW_CLIP_MIN,
+        Math.round(backgroundRect.right - innerRect.right) + 1
+      );
+
+      setClipInset(previous => {
+        if (previous.left === nextLeft && previous.right === nextRight) {
+          return previous;
+        }
+
+        return {
+          left: nextLeft,
+          right: nextRight,
+        };
+      });
+    };
+
+    const handleResize = () => {
+      window.requestAnimationFrame(updateClipInset);
+    };
+
+    const observer =
+      typeof ResizeObserver !== 'undefined' ?
+        new ResizeObserver(handleResize)
+      : null;
+
+    updateClipInset();
+    observer?.observe(backgroundElement);
+    observer?.observe(innerElement);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [navbarState]);
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarHeight} />
@@ -553,86 +629,97 @@ export function HauptstadtNavbar({
         elevation={0}
         color={'transparent'}
       >
-        <NavbarInnerWrapper navbarState={navbarState}>
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <NavbarMenuButton
-                size="small"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <FiMenu />}
-                {isMenuOpen && <FiPlus css={{ transform: 'rotate(45deg)' }} />}
-
-                {hasUnpaidInvoices && profileBtn && (
-                  <HauptstadtOpenInvoices>
-                    <MdWarning size={24} />
-
-                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Abo Jetzt Bezahlen
-                    </Box>
-                  </HauptstadtOpenInvoices>
-                )}
-              </NavbarMenuButton>
-            </NavbarIconButtonWrapper>
-
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
-                  >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
-            )}
-          </NavbarMain>
-
-          <NavbarLoginLink
-            href="/"
-            aria-label="Startseite"
-            isMenuOpen={isMenuOpen}
+        <NavBackgroundWrapper
+          ref={navBackgroundRef}
+          clipLeft={clipInset.left}
+          clipRight={clipInset.right}
+        >
+          <NavbarInnerWrapper
+            ref={navInnerRef}
+            navbarState={navbarState}
           >
-            <NavbarLogoWrapper>
-              <HauptstadtLogo
-                src="/logo.svg"
-                alt="Hauptstadt"
+            <NavbarMain>
+              <NavbarIconButtonWrapper>
+                <NavbarMenuButton
+                  size="small"
+                  aria-label="Menu"
+                  onClick={toggleMenu}
+                  color={'inherit'}
+                >
+                  {!isMenuOpen && <FiMenu />}
+                  {isMenuOpen && (
+                    <FiPlus css={{ transform: 'rotate(45deg)' }} />
+                  )}
+
+                  {hasUnpaidInvoices && profileBtn && (
+                    <HauptstadtOpenInvoices>
+                      <MdWarning size={24} />
+
+                      <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                        Abo Jetzt Bezahlen
+                      </Box>
+                    </HauptstadtOpenInvoices>
+                  )}
+                </NavbarMenuButton>
+              </NavbarIconButtonWrapper>
+
+              {!!headerItems?.links.length && (
+                <NavbarLinks isMenuOpen={isMenuOpen}>
+                  {headerItems.links.map((link, index) => (
+                    <NavbarLink
+                      key={index}
+                      href={navigationLinkToUrl(link)}
+                    >
+                      {link.label}
+                    </NavbarLink>
+                  ))}
+                </NavbarLinks>
+              )}
+            </NavbarMain>
+
+            <NavbarLoginLink
+              href="/"
+              aria-label="Startseite"
+              isMenuOpen={isMenuOpen}
+            >
+              <NavbarLogoWrapper>
+                <HauptstadtLogo
+                  src="/logo.svg"
+                  alt="Hauptstadt"
+                  isScrolled={isScrolled}
+                  isMenuOpen={isMenuOpen}
+                />
+              </NavbarLogoWrapper>
+            </NavbarLoginLink>
+
+            <NavbarActions isMenuOpen={isMenuOpen}>
+              {(!isScrolled || isMenuOpen) && (
+                <Link
+                  href="/search"
+                  color="inherit"
+                >
+                  <NavbarSearchIconButtonWrapper>
+                    <NavbarMenuButton
+                      color="inherit"
+                      size="small"
+                    >
+                      <MdSearch aria-label="Suche" />
+                    </NavbarMenuButton>
+                  </NavbarSearchIconButtonWrapper>
+                </Link>
+              )}
+            </NavbarActions>
+
+            <HauptstadtClaimWrapper>
+              <HauptstadtClaim
+                src="/logo-claim.svg"
+                alt="Neuer Berner Journalismus"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
               />
-            </NavbarLogoWrapper>
-          </NavbarLoginLink>
-
-          <NavbarActions isMenuOpen={isMenuOpen}>
-            {(!isScrolled || isMenuOpen) && (
-              <Link
-                href="/search"
-                color="inherit"
-              >
-                <NavbarSearchIconButtonWrapper>
-                  <NavbarMenuButton
-                    color="inherit"
-                    size="small"
-                  >
-                    <MdSearch aria-label="Suche" />
-                  </NavbarMenuButton>
-                </NavbarSearchIconButtonWrapper>
-              </Link>
-            )}
-          </NavbarActions>
-
-          <HauptstadtClaimWrapper>
-            <HauptstadtClaim
-              src="/logo-claim.svg"
-              alt="Neuer Berner Journalismus"
-              isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
-            />
-          </HauptstadtClaimWrapper>
-        </NavbarInnerWrapper>
+            </HauptstadtClaimWrapper>
+          </NavbarInnerWrapper>
+        </NavBackgroundWrapper>
       </AppBar>
 
       {Boolean(mainItems || categories?.length) && (
