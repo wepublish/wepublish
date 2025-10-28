@@ -2005,8 +2005,8 @@ enum PollVoteSort {
 }
 
 enum ProductType {
-  DONATION
-  SUBSCRIPTION
+  Donation
+  Subscription
 }
 
 type Property {

@@ -563,8 +563,8 @@ enum Currency {
 }
 
 enum ProductType {
-  SUBSCRIPTION @map("SUBSCRIPTION")
-  DONATION @map("DONATION")
+  Subscription @map("Subscription")
+  Donation     @map("Donation")
 }
 
 model MemberPlan {
@@ -586,7 +586,7 @@ model MemberPlan {
   migrateToTargetPaymentMethodID String?
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
-  productType                    ProductType              @default(SUBSCRIPTION)
+  productType                    ProductType              @default(Subscription)
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])

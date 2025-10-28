@@ -35,8 +35,8 @@ export const GraphQLSupportedCurrency = new GraphQLEnumType({
 export const GraphQLProductType = new GraphQLEnumType({
   name: 'ProductType',
   values: {
-    SUBSCRIPTION: { value: ProductType.SUBSCRIPTION },
-    DONATION: { value: ProductType.DONATION },
+    Subscription: { value: ProductType.Subscription },
+    Donation: { value: ProductType.Donation },
   },
 });
 

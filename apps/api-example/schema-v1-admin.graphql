@@ -266,8 +266,8 @@ type MemberPlan {
 }
 
 enum ProductType {
-  SUBSCRIPTION
-  DONATION
+  Subscription
+  Donation
 }
 
 type AvailablePaymentMethod {

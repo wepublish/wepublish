@@ -1093,8 +1093,8 @@ export type PollWithAnswers = {
 };
 
 export enum ProductType {
-  Donation = 'DONATION',
-  Subscription = 'SUBSCRIPTION'
+  Donation = 'Donation',
+  Subscription = 'Subscription'
 }
 
 export type Properties = {

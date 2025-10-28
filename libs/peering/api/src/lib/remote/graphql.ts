@@ -2587,8 +2587,8 @@ export enum PollVoteSort {
 }
 
 export enum ProductType {
-  Donation = 'DONATION',
-  Subscription = 'SUBSCRIPTION'
+  Donation = 'Donation',
+  Subscription = 'Subscription'
 }
 
 export type Property = {
