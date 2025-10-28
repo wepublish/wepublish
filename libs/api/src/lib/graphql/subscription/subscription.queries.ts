@@ -267,6 +267,27 @@ const createHasAddressFilter = (
   return {};
 };
 
+const createUserIDsFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.userIDs) {
+    if (filter.userIDs.length > 0) {
+      return {
+        id: {
+          in: filter.userIDs,
+        },
+      };
+    } else {
+      return {
+        id: {
+          in: ['___none___'],
+        },
+      };
+    }
+  }
+  return {};
+};
+
 const createUserFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => {
@@ -300,6 +321,7 @@ export const createSubscriptionFilter = (
     createHasAddressFilter(filter),
     createUserFilter(filter),
     createExtendableFilter(filter),
+    createUserIDsFilter(filter),
   ],
 });
 
@@ -314,7 +336,6 @@ export const getSubscriptions = async (
 ): Promise<ConnectionResult<Subscription>> => {
   const orderBy = createSubscriptionOrder(sortedField, order);
   const where = createSubscriptionFilter(filter);
-
   const [totalCount, subscriptions] = await Promise.all([
     subscription.count({
       where,
