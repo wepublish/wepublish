@@ -9,15 +9,10 @@ class InvalidSettingValueError extends UnprocessableEntityException {
 
 export function checkSettingRestrictions(
   val: unknown,
-  currentVal: unknown,
   restriction: SettingRestriction | undefined
 ) {
   if (!restriction) {
     return;
-  }
-
-  if (typeof val !== typeof currentVal) {
-    throw new InvalidSettingValueError();
   }
 
   if (restriction.allowedValues?.boolChoice && typeof val !== 'boolean') {

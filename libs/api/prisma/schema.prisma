@@ -1015,8 +1015,8 @@ model Setting {
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
-  value              Json
-  settingRestriction Json
+  value              Json?
+  settingRestriction Json?
 
   @@map("settings")
 }

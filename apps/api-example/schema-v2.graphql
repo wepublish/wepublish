@@ -1377,9 +1377,6 @@ type Mutation {
 
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]!, name: String): Paywall!
-
-  """Creates a paywall bypass token."""
-  createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1422,9 +1419,6 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
-
-  """Deletes a paywall bypass token."""
-  deletePaywallBypass(id: String!): String!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!

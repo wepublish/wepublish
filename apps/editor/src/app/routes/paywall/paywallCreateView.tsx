@@ -4,25 +4,16 @@ import {
   getApiClientV2,
   MutationCreatePaywallArgs,
   useCreatePaywallMutation,
-  usePaywallListQuery,
 } from '@wepublish/editor/api-v2';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
+  SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdOutlineSave } from 'react-icons/md';
-import {
-  Form,
-  IconButton as RIconButton,
-  Message,
-  Schema,
-  toaster,
-} from 'rsuite';
+import { useNavigate } from 'react-router-dom';
+import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
@@ -49,34 +40,37 @@ const mapApiDataToInput = (
 
 const PaywallCreateView = () => {
   const { t } = useTranslation();
+  const [shouldClose, setShouldClose] = useState(false);
+  const navigate = useNavigate();
+  const closePath = './../..';
+
   const [paywall, setPaywall] = useState<
     MutationCreatePaywallArgs & {
       bypasses?: Array<{ id?: string; token: string }>;
     }
-  >();
+  >(() => ({
+    active: true,
+    anyMemberPlan: false,
+    bypassTokens: [],
+    memberPlanIds: [],
+  }));
 
   const client = getApiClientV2();
-  const { loading: dataLoading } = usePaywallListQuery({
-    client,
-    onError: onErrorToast,
-    onCompleted: data => {
-      if (data.paywalls) {
-        setPaywall(mapApiDataToInput(data.paywalls[0]));
-      }
-    },
-  });
-
   const [createPaywall, { loading: updateLoading }] = useCreatePaywallMutation({
     client,
     onError: onErrorToast,
     onCompleted: data => {
       if (data.createPaywall) {
-        setPaywall(mapApiDataToInput(data.createPaywall));
+        if (shouldClose) {
+          navigate(`./..`);
+        } else {
+          navigate(`./../edit/${data.createPaywall.id}`);
+        }
       }
     },
   });
 
-  const loading = dataLoading || updateLoading;
+  const loading = updateLoading;
   const onSubmit = () => createPaywall({ variables: paywall });
 
   const { StringType, BooleanType, ArrayType } = Schema.Types;
@@ -100,22 +94,15 @@ const PaywallCreateView = () => {
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}
     >
-      <ListViewContainer>
-        <ListViewHeader>
-          <h2>{t('paywall.form.title')}</h2>
-        </ListViewHeader>
-
-        <ListViewActions>
-          <RIconButton
-            type="submit"
-            appearance="primary"
-            disabled={loading}
-            icon={<MdOutlineSave />}
-          >
-            {t('save')}
-          </RIconButton>
-        </ListViewActions>
-      </ListViewContainer>
+      <SingleViewTitle
+        loading={loading}
+        title={t('paywall.form.createTitle')}
+        loadingTitle={t('loading')}
+        saveBtnTitle={t('save')}
+        saveAndCloseBtnTitle={t('saveAndClose')}
+        closePath={closePath}
+        setCloseFn={setShouldClose}
+      />
 
       <PaywallForm
         paywall={paywall}

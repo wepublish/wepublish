@@ -12,47 +12,52 @@ import { useMemo } from 'react';
 
 import theme from '../theme';
 
-const StyledPaywall = styled(Paywall)`
+const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
+  const { hasUser } = useUser();
+  const url = props.alternativeSubscribeUrl ?? '/mitmachen';
+
+  const { data } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+    skip: !hasUser,
+  });
+
+  const hasRequiredSubscription = useMemo(
+    () =>
+      props.anyMemberPlan ||
+      data?.subscriptions.some(subscription =>
+        props.memberPlans.find(mb => subscription.memberPlan.id === mb.id)
+      ),
+    [data?.subscriptions, props.anyMemberPlan, props.memberPlans]
+  );
+  const cheapestSubscription = useMemo(
+    () =>
+      sortWith([ascend(prop('monthlyAmount'))], data?.subscriptions ?? []).at(
+        0
+      ),
+    [data?.subscriptions]
+  );
+  const canUpgrade = !hasRequiredSubscription && cheapestSubscription;
+
+  return (
+    <Paywall
+      {...props}
+      alternativeSubscribeUrl={
+        canUpgrade ?
+          `${url}?upgradeSubscriptionId=${cheapestSubscription.id}`
+        : url
+      }
+      texts={{
+        subscribe: canUpgrade ? 'Jetzt Abo Upgraden' : undefined,
+      }}
+    />
+  );
+})`
   background-color: ${({ theme }) => theme.palette.primary.main};
   color: ${({ theme }) => theme.palette.primary.contrastText};
 `;
 
-export const HauptstadtPaywall = createWithTheme(
-  (props: BuilderPaywallProps) => {
-    const { hasUser } = useUser();
-    const url = props.alternativeSubscribeUrl ?? '/mitmachen';
-
-    const { data } = useSubscriptionsQuery({
-      skip: !hasUser,
-    });
-
-    const hasRequiredSubscription =
-      props.anyMemberPlan ||
-      data?.subscriptions.some(subscription =>
-        props.memberPlans.find(mb => subscription.memberPlan.id === mb.id)
-      );
-    const cheapestSubscription = useMemo(() => {
-      if (hasRequiredSubscription) {
-        return;
-      }
-
-      return sortWith(
-        [ascend(prop('monthlyAmount'))],
-        data?.subscriptions ?? []
-      ).at(0);
-    }, [data?.subscriptions, hasRequiredSubscription]);
-
-    return (
-      <StyledPaywall
-        {...props}
-        alternativeSubscribeUrl={
-          cheapestSubscription ? `${url}?id=${cheapestSubscription.id}` : url
-        }
-      />
-    );
-  },
-  theme
-);
+const ThemedPaywall = createWithTheme(HauptstadtPaywall, theme);
+export { ThemedPaywall as HauptstadtPaywall };
 
 export const DuplicatedPaywall = ({
   paywall,

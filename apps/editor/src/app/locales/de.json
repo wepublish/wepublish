@@ -1605,7 +1605,8 @@
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Paywall bearbeiten",
+        "editTitle": "Paywall bearbeiten",
+        "createTitle": "Paywall erstellen",
         "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
         "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
         "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
@@ -1620,6 +1621,17 @@
         "qrCodeTitle": "QR-Code für Bypass-Token",
         "downloadSvg": "SVG herunterladen",
         "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch"
+      },
+      "overview": {
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Die Paywall „{{ paywall }}“ wird dauerhaft gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Paywall löschen",
+        "createPaywall": "Neue Paywall",
+        "title": "Paywalls",
+        "name": "Name",
+        "active": "Aktiv",
+        "memberPlans": "Abo-Pläne",
+        "anyMemberPlan": "Alle Abo-Pläne"
       }
     },
     "paymentMethodEditPanel": {

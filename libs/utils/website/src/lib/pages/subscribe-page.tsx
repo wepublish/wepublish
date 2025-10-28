@@ -48,6 +48,7 @@ export function SubscribePage(props: SubscribePageProps) {
   const { hasUser } = useUser();
 
   const userSubscriptions = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
     skip: !hasUser,
   });
 

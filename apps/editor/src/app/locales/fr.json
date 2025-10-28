@@ -1494,7 +1494,8 @@
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Modifier le paywall",
+        "editTitle": "Modifier le paywall",
+        "createTitle": "Créer un paywall",
         "name": "Nom du paywall (NON visible par l'utilisateur)",
         "description": "Texte du paywall (visible par l'utilisateur)",
         "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
@@ -1509,6 +1510,17 @@
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
         "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+      },
+      "overview": {
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le paywall « {{ paywall }} » sera supprimé définitivement et ne peut pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le paywall",
+        "createPaywall": "Nouveau paywall",
+        "title": "Paywalls",
+        "name": "Nom",
+        "active": "Actif",
+        "memberPlans": "Plans d’abonnement",
+        "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
     "paymentMethodEditPanel": {
