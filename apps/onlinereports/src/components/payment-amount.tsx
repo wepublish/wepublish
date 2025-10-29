@@ -1,3 +1,4 @@
+import { NumberField } from '@base-ui-components/react/number-field';
 import styled from '@emotion/styled';
 import {
   FormControlLabel,
@@ -5,9 +6,9 @@ import {
   RadioGroup,
 } from '@mui/material';
 import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
-import { ChangeEvent, forwardRef } from 'react';
+import { forwardRef } from 'react';
 
-import { FieldNumberSpinner } from './number-input/field-number-spinner';
+import { CurrencyNumberSpinner } from './currency-number-spinner';
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
@@ -26,7 +27,7 @@ export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   }
 `;
 
-const PaymentAmountInput = styled(FieldNumberSpinner)`
+const PaymentAmountInput = styled(CurrencyNumberSpinner)`
   background: #fff;
   // Chrome, Safari, Edge
 
@@ -48,7 +49,7 @@ const InputAdornment = styled(InputAdornmentDefault)`
 `;
 
 export const OnlineReportsPaymentAmount = forwardRef<
-  typeof FieldNumberSpinner,
+  typeof CurrencyNumberSpinner,
   BuilderPaymentAmountProps
 >(
   (
@@ -81,22 +82,15 @@ export const OnlineReportsPaymentAmount = forwardRef<
           value={''}
           control={
             <PaymentAmountInput
-              startAdornment={
-                <InputAdornment position="start">CHF</InputAdornment>
-              }
-              value={(value as number) ? (value as number) / 100 : 0}
-              onChange={(param: number | ChangeEvent | undefined) => {
-                if (typeof param === 'number') {
-                  onChange(param ? param * 100 : 0);
-                } else if (param && 'target' in param) {
-                  const newValue = parseInt(
-                    (param.target as HTMLInputElement).value
-                  );
-                  onChange(newValue ? newValue * 100 : 0);
+              onValueChange={(
+                value: number | null,
+                eventDetails: NumberField.Root.ChangeEventDetails
+              ) => {
+                if (typeof value === 'number' && value >= 0) {
+                  onChange(value ? value * 100 : 0);
+                } else {
+                  onChange(0);
                 }
-              }}
-              inputProps={{
-                'aria-label': 'weight',
               }}
             />
           }
