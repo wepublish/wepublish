@@ -63,7 +63,11 @@ export class UpgradeSubscriptionService {
             availablePaymentMethods: true,
           },
         },
-        periods: true,
+        periods: {
+          include: {
+            invoice: true,
+          },
+        },
       },
     });
 
@@ -143,8 +147,9 @@ export class UpgradeSubscriptionService {
     // In case a user has extended the subscription before running out
     // We ignore the period before the extension that might still be running.
     const oldSubscriptionPeriod = sort(
-      descend<SubscriptionPeriod>(period => period.endsAt)
-    )(oldSubscription.periods).at(0);
+      descend(period => period.endsAt),
+      oldSubscription.periods.filter(period => !!period.invoice.paidAt)
+    ).at(0);
 
     if (!oldSubscriptionPeriod || new Date() > oldSubscriptionPeriod.endsAt) {
       throw new BadRequestException(`Subscription is unpaid ${memberPlanId}`);

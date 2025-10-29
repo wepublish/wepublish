@@ -43,7 +43,7 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
       {...props}
       alternativeSubscribeUrl={
         canUpgrade ?
-          `${url}?upgradeSubscriptionId=${cheapestSubscription.id}`
+          `${url}?upgradeSubscriptionId=${encodeURIComponent(cheapestSubscription.id)}`
         : url
       }
       texts={{

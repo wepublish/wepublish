@@ -270,11 +270,13 @@ export class MemberContext implements MemberContextInterface {
         startDate,
         subscription.paymentPeriodicity as PaymentPeriodicity
       );
-      const amount =
+      const amount = Math.max(
         calculateAmountForPeriodicity(
           subscription.monthlyAmount,
           subscription.paymentPeriodicity as PaymentPeriodicity
-        ) - (discount ?? 0);
+        ) - (discount ?? 0),
+        0 // in case discount is bigger than the amount
+      );
 
       const user = await this.prisma.user.findUnique({
         where: {

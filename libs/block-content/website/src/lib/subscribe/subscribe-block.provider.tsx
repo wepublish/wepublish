@@ -22,6 +22,9 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
     useSubscribe();
   const [upgrade, upgradeRedirectPages, upgradeStripeClientSecret] =
     useUpgrade();
+  const upgradeInfo = useUpgradeSubscriptionInfoLazyQuery({
+    fetchPolicy: 'cache-first',
+  });
   const { register, challenge } = useRegister();
 
   return (
@@ -31,7 +34,7 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
         userInvoices,
         subscribe,
         upgrade,
-        upgradeInfo: useUpgradeSubscriptionInfoLazyQuery(),
+        upgradeInfo,
         redirectPages: subscribeRedirectPages ?? upgradeRedirectPages,
         stripeClientSecret:
           subscribeStripeClientSecret ?? upgradeStripeClientSecret,

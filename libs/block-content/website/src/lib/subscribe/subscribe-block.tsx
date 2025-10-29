@@ -10,7 +10,7 @@ import {
   Upgrade,
 } from '@wepublish/website/builder';
 import { replace, toLower } from 'ramda';
-import { use, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { useSubscribeBlock } from './subscribe-block.context';
 import { PaymentForm } from '@wepublish/payment/website';
 
@@ -37,7 +37,7 @@ export const SubscribeBlock = ({
   const { userSubscriptions } = subscribeProps;
   const {
     query: { upgradeSubscriptionId },
-  } = use(BuilderRouterContext);
+  } = useContext(BuilderRouterContext);
 
   const subscriptionToUpgrade = useMemo(() => {
     return userSubscriptions.data?.subscriptions.find(
@@ -63,6 +63,20 @@ export const SubscribeBlock = ({
     [memberPlans]
   );
 
+  const handleOnSelect = useCallback(
+    (memberPlanId: string | undefined) => {
+      if (memberPlanId) {
+        fetchUpgradeInfo({
+          variables: {
+            memberPlanId,
+            subscriptionId: upgradeSubscriptionId as string,
+          },
+        });
+      }
+    },
+    [fetchUpgradeInfo, upgradeSubscriptionId]
+  );
+
   return (
     <>
       <PaymentForm
@@ -70,7 +84,7 @@ export const SubscribeBlock = ({
         redirectPages={redirectPages}
       />
 
-      {!!subscriptionToUpgrade && (
+      {!subscriptionToUpgrade && (
         <Subscribe
           {...subscribeProps}
           className={className}
@@ -124,16 +138,7 @@ export const SubscribeBlock = ({
           memberPlans={memberPlansObj}
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}
-          onSelect={memberPlanId => {
-            if (memberPlanId) {
-              fetchUpgradeInfo({
-                variables: {
-                  memberPlanId,
-                  subscriptionId: upgradeSubscriptionId as string,
-                },
-              });
-            }
-          }}
+          onSelect={handleOnSelect}
           onUpgrade={async formData => {
             const selectedMemberplan = memberPlans.find(
               mb => mb.id === formData.memberPlanId
