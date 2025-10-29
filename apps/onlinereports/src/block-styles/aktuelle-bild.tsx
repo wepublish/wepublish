@@ -130,7 +130,7 @@ const AktuelleBildWrapper = styled(Box)`
       color: #fff;
       font-size: ${({ theme }) => theme.typography.body2.fontSize};
       font-weight: 300;
-      line-height: 1.2em;
+      line-height: 1.2;
       width: 100%;
     }
   }
@@ -143,7 +143,7 @@ const AktuelleBildWrapper = styled(Box)`
     display: block;
     opacity: 0;
     position: absolute;
-    bottom: 22px;
+    bottom: 25px;
     width: 100%;
     padding: 4px 10px 2px 10px;
     margin: 0;
@@ -154,6 +154,11 @@ const AktuelleBildWrapper = styled(Box)`
     font-size: ${({ theme }) => theme.typography.body2.fontSize};
     font-weight: 300;
     color: #fff;
+
+    /* target webkit browsers only */
+    @supports (background: -webkit-canvas(squares)) {
+      bottom: 24px;
+    }
   }
 
   ${TeaserWrapper} {
@@ -162,12 +167,27 @@ const AktuelleBildWrapper = styled(Box)`
     }
     ${TeaserMetadata} {
       opacity: 1;
-      padding: 2px 10px 4px 10px;
+      padding: 2px 10px 4px 40px;
       background: rgba(0, 0, 0, 0.7);
       transition: opacity 500ms ease;
       position: absolute;
-      bottom: 0;
+      bottom: 2px;
       width: 100%;
+
+      &::before {
+        content: 'Von ';
+        position: absolute;
+        left: 10px;
+        height: 100%;
+        top: -2px;
+        width: 30px;
+        font-size: ${({ theme }) => theme.typography.body2.fontSize};
+        font-weight: 300;
+        color: ${({ theme }) => theme.palette.common.white};
+        background-color: transparent;
+        display: block;
+        z-index: 20;
+      }
     }
 
     ${({ theme }) => theme.breakpoints.up('sm')} {
