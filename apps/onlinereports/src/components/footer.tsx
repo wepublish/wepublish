@@ -59,10 +59,6 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
   ${FooterCategoryLinks} {
     font-size: 18px;
 
-    span {
-      font-weight: inherit;
-    }
-
     ${({ theme }) => theme.breakpoints.up('md')} {
       grid-area: 2 / 1 / 3 / 1;
     }
