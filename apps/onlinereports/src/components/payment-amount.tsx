@@ -1,10 +1,6 @@
 import { NumberField } from '@base-ui-components/react/number-field';
 import styled from '@emotion/styled';
-import {
-  FormControlLabel,
-  InputAdornment as InputAdornmentDefault,
-  RadioGroup,
-} from '@mui/material';
+import { RadioGroup } from '@mui/material';
 import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
@@ -44,8 +40,8 @@ const PaymentAmountInput = styled(CurrencyNumberSpinner)`
 
 `;
 
-const InputAdornment = styled(InputAdornmentDefault)`
-  padding-left: ${({ theme }) => theme.spacing(3)};
+const PaymentAmountInputWrapper = styled('div')`
+  width: 236px;
 `;
 
 export const OnlineReportsPaymentAmount = forwardRef<
@@ -77,25 +73,20 @@ export const OnlineReportsPaymentAmount = forwardRef<
         }}
         value={value}
       >
-        <FormControlLabel
-          sx={{ width: '236px' }}
-          value={''}
-          control={
-            <PaymentAmountInput
-              onValueChange={(
-                value: number | null,
-                eventDetails: NumberField.Root.ChangeEventDetails
-              ) => {
-                if (typeof value === 'number' && value >= 0) {
-                  onChange(value ? value * 100 : 0);
-                } else {
-                  onChange(0);
-                }
-              }}
-            />
-          }
-          label={'Manuell'}
-        />
+        <PaymentAmountInputWrapper>
+          <PaymentAmountInput
+            onValueChange={(
+              value: number | null,
+              eventDetails: NumberField.Root.ChangeEventDetails
+            ) => {
+              if (typeof value === 'number' && value >= 0) {
+                onChange(value ? value * 100 : 0);
+              } else {
+                onChange(0);
+              }
+            }}
+          />
+        </PaymentAmountInputWrapper>
       </PaymentAmountPickerWrapper>
     );
   }

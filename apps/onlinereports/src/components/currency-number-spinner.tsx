@@ -42,7 +42,7 @@ const rootStyles = (theme: Theme) => css`
 
   &:hover {
     ${FieldSet} {
-      border-color: rgba(0, 0, 0, 0.8);
+      border-color: rgba(0, 0, 0, 0.7);
     }
   }
 `;
@@ -84,24 +84,18 @@ const buttonStyles = (theme: Theme) => css`
   width: 40px;
   height: 40px;
   flex-shrink: 0;
+  overflow: hidden;
 
-  &[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
+  @media (hover: hover) {
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-const buttonMinusStyles = (theme: Theme) => css`
-  &:hover:not([disabled]) {
-    color: rgba(0, 0, 0, 0.87);
-    background-color: rgba(0, 0, 0, 0.04);
-  }
-`;
-
-const buttonPlusStyles = (theme: Theme) => css`
-  &:hover:not([disabled]) {
-    color: rgba(0, 0, 0, 0.87);
-    background-color: rgba(0, 0, 0, 0.04);
+    &:hover:not([disabled]) {
+      color: rgba(0, 0, 0, 0.87);
+      background-color: rgba(0, 0, 0, 0.04);
+    }
   }
 `;
 
@@ -223,12 +217,16 @@ export const CurrencyNumberSpinner = (
         <NumberField.Decrement css={buttonStyles}>
           <MinusIcon css={iconStyles} />
         </NumberField.Decrement>
+
         <CurrencyLabel>{currency}</CurrencyLabel>
+
         <NumberField.Input css={inputStyles} />
+
         <NumberField.Increment css={buttonStyles}>
           <PlusIcon css={iconStyles} />
         </NumberField.Increment>
       </NumberField.Group>
+
       <FieldSet />
     </NumberField.Root>
   );
