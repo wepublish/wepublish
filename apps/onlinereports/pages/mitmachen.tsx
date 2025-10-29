@@ -23,12 +23,12 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       'paymentPeriodicity'
       'transactionFee'
       'challenge'
-      'cta';
+      'submit';
   }
 
   ${SubscribeSection},
   ${SubscribeNarrowSection} {
-    grid-area: attr(data-area);
+    grid-area: var(--grid-area);
   }
 `;
 

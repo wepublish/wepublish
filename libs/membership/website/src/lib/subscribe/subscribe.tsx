@@ -64,7 +64,12 @@ export const SubscribeWrapper = styled('form')`
   align-content: start;
 `;
 
-export const SubscribeSection = styled('div')`
+export type SubscribeSectionProps = {
+  area?: string;
+};
+
+export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+  --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
   align-content: start;
@@ -458,7 +463,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       noValidate
     >
       {!hasUser && returningUserId && (
-        <SubscribeSection data-area="returning">
+        <SubscribeSection area="returning">
           <H5 component="h2">
             {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
             , willkommen zurück!
@@ -466,7 +471,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribeSection>
       )}
 
-      <SubscribeSection data-area="memberPlans">
+      <SubscribeSection area="memberPlans">
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
         )}
@@ -506,7 +511,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         )}
       </SubscribeSection>
 
-      <SubscribeSection data-area="monthlyAmount">
+      <SubscribeSection area="monthlyAmount">
         {!hidePaymentAmount(selectedMemberPlan) && (
           <Controller
             name={'monthlyAmount'}
@@ -539,7 +544,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       {!hasUserContext && (
-        <SubscribeSection data-area={'userForm'}>
+        <SubscribeSection area={'userForm'}>
           <UserForm
             control={control}
             fields={fields}
@@ -547,7 +552,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribeSection>
       )}
 
-      <SubscribeSection data-area="paymentPeriodicity">
+      <SubscribeSection area="paymentPeriodicity">
         {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
@@ -604,7 +609,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       {!hasUserContext && (
-        <SubscribeSection data-area="challenge">
+        <SubscribeSection area="challenge">
           <H5 component="h2">Spam-Schutz</H5>
 
           {challenge.data?.challenge && (
@@ -641,7 +646,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       {!!watch<'monthlyAmount'>('monthlyAmount') && (
-        <SubscribeSection data-area="transactionFee">
+        <SubscribeSection area="transactionFee">
           <Controller
             name={'payTransactionFee'}
             control={control}
@@ -655,7 +660,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribeSection>
       )}
 
-      <SubscribeNarrowSection data-area="submit">
+      <SubscribeNarrowSection area="submit">
         <SubscribeButton
           size={'large'}
           disabled={
