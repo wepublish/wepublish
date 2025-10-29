@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import {
   SubscribeAmount,
+  SubscribeNarrowSection,
+  SubscribeSection,
   SubscribeWrapper,
   TransactionFeeIcon,
 } from '@wepublish/membership/website';
@@ -22,6 +24,11 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       'transactionFee'
       'challenge'
       'cta';
+  }
+
+  ${SubscribeSection},
+  ${SubscribeNarrowSection} {
+    grid-area: attr(data-area);
   }
 `;
 

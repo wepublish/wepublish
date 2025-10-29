@@ -227,7 +227,7 @@ export const Upgrade = ({
       onSubmit={onSubmit}
       noValidate
     >
-      <SubscribeSection area="memberPlans">
+      <SubscribeSection data-area="memberPlans">
         {!!availableMemberplans.length && <H5 component="h2">Abo wählen</H5>}
 
         <Controller
@@ -257,7 +257,7 @@ export const Upgrade = ({
         )}
       </SubscribeSection>
 
-      <SubscribeSection area="monthlyAmount">
+      <SubscribeSection data-area="monthlyAmount">
         {!hidePaymentAmount(selectedMemberPlan) && (
           <Controller
             name={'monthlyAmount'}
@@ -290,8 +290,8 @@ export const Upgrade = ({
         )}
       </SubscribeSection>
 
-      <SubscribeSection area="paymentPeriodicity">
-        {allPaymentMethods && allPaymentMethods.length > 1 && (
+      <SubscribeSection data-area="paymentPeriodicity">
+        {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
 
@@ -322,7 +322,7 @@ export const Upgrade = ({
       )}
 
       {!!watch('monthlyAmount') && (
-        <SubscribeSection area="transactionFee">
+        <SubscribeSection data-area="transactionFee">
           <Controller
             name={'payTransactionFee'}
             control={control}
@@ -336,7 +336,7 @@ export const Upgrade = ({
         </SubscribeSection>
       )}
 
-      <SubscribeNarrowSection area="submit">
+      <SubscribeNarrowSection data-area="submit">
         <SubscribeButton
           size={'large'}
           disabled={loading}

@@ -24,11 +24,14 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
   const hasRequiredSubscription = useMemo(
     () =>
       props.anyMemberPlan ||
-      data?.subscriptions.some(subscription =>
-        props.memberPlans.find(mb => subscription.memberPlan.id === mb.id)
+      data?.subscriptions.some(
+        subscription =>
+          props.memberPlans.find(mb => subscription.memberPlan.id === mb.id) &&
+          subscription.extendable
       ),
     [data?.subscriptions, props.anyMemberPlan, props.memberPlans]
   );
+
   const cheapestSubscription = useMemo(
     () =>
       sortWith([ascend(prop('monthlyAmount'))], data?.subscriptions ?? []).at(
@@ -36,6 +39,7 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
       ),
     [data?.subscriptions]
   );
+
   const canUpgrade = !hasRequiredSubscription && cheapestSubscription;
 
   return (
