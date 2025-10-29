@@ -13,7 +13,7 @@ import {
 } from '@wepublish/website/builder';
 import { produce } from 'immer';
 import { sortBy } from 'ramda';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export type UpgradeContainerProps = BuilderContainerProps &
   Pick<
@@ -40,7 +40,19 @@ export const UpgradeContainer = ({
 }: UpgradeContainerProps) => {
   const { hasUser } = useUser();
 
-  const [fetchUpgradeInfo, upgradeInfo] = useUpgradeSubscriptionInfoLazyQuery();
+  const [upgrade, redirectPages, stripeClientSecret] = useUpgrade();
+  const [fetchUpgradeInfo, upgradeInfo] = useUpgradeSubscriptionInfoLazyQuery({
+    fetchPolicy: 'cache-first',
+  });
+
+  const memberPlanList = useMemberPlanListQuery({
+    variables: {
+      take: 50,
+      filter: {
+        active: true,
+      },
+    },
+  });
 
   const userSubscriptions = useSubscriptionsQuery({
     skip: !hasUser,
@@ -52,16 +64,19 @@ export const UpgradeContainer = ({
     );
   }, [upgradeSubscriptionId, userSubscriptions.data?.subscriptions]);
 
-  const memberPlanList = useMemberPlanListQuery({
-    variables: {
-      take: 50,
-      filter: {
-        active: true,
-      },
+  const handleOnSelect = useCallback(
+    (memberPlanId: string | undefined) => {
+      if (memberPlanId) {
+        fetchUpgradeInfo({
+          variables: {
+            memberPlanId,
+            subscriptionId: upgradeSubscriptionId as string,
+          },
+        });
+      }
     },
-  });
-
-  const [upgrade, redirectPages, stripeClientSecret] = useUpgrade();
+    [fetchUpgradeInfo, upgradeSubscriptionId]
+  );
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
@@ -86,16 +101,7 @@ export const UpgradeContainer = ({
           subscriptionToUpgrade={subscriptionToUpgrade}
           memberPlans={filteredMemberPlans}
           upgradeInfo={upgradeInfo}
-          onSelect={memberPlanId => {
-            if (memberPlanId) {
-              fetchUpgradeInfo({
-                variables: {
-                  memberPlanId,
-                  subscriptionId: upgradeSubscriptionId,
-                },
-              });
-            }
-          }}
+          onSelect={handleOnSelect}
           onUpgrade={async formData => {
             const selectedMemberplan =
               filteredMemberPlans.data?.memberPlans.nodes.find(

@@ -146,13 +146,19 @@ export class UpgradeSubscriptionService {
 
     // In case a user has extended the subscription before running out
     // We ignore the period before the extension that might still be running.
-    const oldSubscriptionPeriod = sort(
+    const oldSubscriptionPeriods = sort(
       descend(period => period.endsAt),
-      oldSubscription.periods.filter(period => !!period.invoice.paidAt)
-    ).at(0);
+      oldSubscription.periods
+    );
 
-    if (!oldSubscriptionPeriod || new Date() > oldSubscriptionPeriod.endsAt) {
-      throw new BadRequestException(`Subscription is unpaid ${memberPlanId}`);
+    const oldSubscriptionPeriod =
+      oldSubscriptionPeriods.filter(period => !!period.invoice.paidAt).at(0) ??
+      oldSubscriptionPeriods.at(0);
+
+    if (!oldSubscriptionPeriod) {
+      throw new BadRequestException(
+        `Subscription has no subscription period ${oldSubscription.id}`
+      );
     }
 
     return { newMemberplan, oldSubscription, oldSubscriptionPeriod };
@@ -194,7 +200,10 @@ export class UpgradeSubscriptionService {
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
-      discount: leftoverSubscriptionPeriodAmount(oldSubscriptionPeriod),
+      discount:
+        oldSubscriptionPeriod.invoice.paidAt ?
+          leftoverSubscriptionPeriodAmount(oldSubscriptionPeriod)
+        : undefined,
     });
 
     await Promise.all([
@@ -256,6 +265,8 @@ export class UpgradeSubscriptionService {
       userId,
     });
 
-    return leftoverSubscriptionPeriodAmount(oldSubscriptionPeriod);
+    return oldSubscriptionPeriod.invoice.paidAt ?
+        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriod)
+      : 0;
   }
 }

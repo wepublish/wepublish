@@ -14,7 +14,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { roundUpTo5Cents } from '../formatters/format-currency';
+import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 
 import { replace, toLower } from 'ramda';
 import { ApolloError } from '@apollo/client';
@@ -32,6 +32,8 @@ import {
   SubscribeSection,
   SubscribeWrapper,
 } from '../subscribe/subscribe';
+import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
+import styled from '@emotion/styled';
 
 const upgradeSchema = subscribeSchema.pick({
   memberPlanId: true,
@@ -39,6 +41,49 @@ const upgradeSchema = subscribeSchema.pick({
   paymentMethodId: true,
   payTransactionFee: true,
 });
+
+export const getUpgradeText = (
+  autoRenew: boolean,
+  extendable: boolean,
+  paymentPeriodicity: PaymentPeriodicity,
+  monthlyAmount: number,
+  discount: number,
+  currency: Currency,
+  locale: string
+) => {
+  if (!monthlyAmount) {
+    return 'Kostenlos';
+  }
+
+  if (autoRenew && extendable) {
+    return `Für ${formatCurrency(
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
+        discount / 100,
+      currency,
+      locale
+    )}`;
+  }
+
+  if (extendable) {
+    return `Für ${formatCurrency(
+      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
+        discount / 100,
+      currency,
+      locale
+    )}`;
+  }
+
+  return `Für ${formatCurrency(
+    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
+      discount / 100,
+    currency,
+    locale
+  )}`;
+};
+
+export const UpgradeContinuation = styled(SubscribeCancelable)`
+  margin-bottom: ${({ theme }) => theme.spacing(1)};
+`;
 
 export const Upgrade = ({
   defaults,
@@ -83,12 +128,25 @@ export const Upgrade = ({
     watch('monthlyAmount') +
     (payTransactionFee ? transactionFee(watch('monthlyAmount')) : 0);
 
+  const availableMemberplans = useMemo(
+    () =>
+      memberPlans.data?.memberPlans.nodes.filter(
+        mb =>
+          mb.amountPerMonthMin >
+          subscriptionToUpgrade.memberPlan.amountPerMonthMin
+      ) ?? [],
+    [
+      memberPlans.data?.memberPlans.nodes,
+      subscriptionToUpgrade.memberPlan.amountPerMonthMin,
+    ]
+  );
+
   const selectedMemberPlan = useMemo(
     () =>
-      memberPlans.data?.memberPlans.nodes.find(
+      availableMemberplans.find(
         memberPlan => memberPlan.id === selectedMemberPlanId
       ),
-    [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
+    [availableMemberplans, selectedMemberPlanId]
   );
 
   const allPaymentMethods = useMemo(
@@ -104,6 +162,16 @@ export const Upgrade = ({
     selectedMemberPlan?.extendable ?? true,
     subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  );
+
+  const upgradeText = getUpgradeText(
+    subscriptionToUpgrade.autoRenew,
+    selectedMemberPlan?.extendable ?? true,
+    subscriptionToUpgrade.paymentPeriodicity,
+    monthlyAmount,
+    upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale
   );
@@ -153,8 +221,6 @@ export const Upgrade = ({
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 
-  console.log(upgradeInfo);
-
   return (
     <SubscribeWrapper
       className={className}
@@ -162,25 +228,23 @@ export const Upgrade = ({
       noValidate
     >
       <SubscribeSection area="memberPlans">
-        {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
-          <H5 component="h2">Abo wählen</H5>
-        )}
+        {!!availableMemberplans.length && <H5 component="h2">Abo wählen</H5>}
 
         <Controller
           name={'memberPlanId'}
           control={control}
           defaultValue={
             defaults?.memberPlanSlug ?
-              memberPlans.data?.memberPlans.nodes.find(
+              availableMemberplans.find(
                 memberPlan => memberPlan.slug === defaults?.memberPlanSlug
               )?.id
-            : memberPlans.data?.memberPlans.nodes[0]?.id
+            : availableMemberplans[0]?.id
           }
           render={({ field }) => (
             <MemberPlanPicker
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
+              memberPlans={availableMemberplans ?? []}
             />
           )}
         />
@@ -236,7 +300,7 @@ export const Upgrade = ({
             name={'paymentMethodId'}
             control={control}
             defaultValue={
-              memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+              availableMemberplans[0]?.availablePaymentMethods[0]
                 ?.paymentMethods[0]?.id
             }
             render={({ field }) => (
@@ -278,9 +342,10 @@ export const Upgrade = ({
           disabled={loading}
           type="submit"
         >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {upgradeText} upgraden
         </SubscribeButton>
+
+        <UpgradeContinuation>Danach {paymentText}</UpgradeContinuation>
 
         {subscriptionToUpgrade.autoRenew && termsOfServiceUrl ?
           <Link
