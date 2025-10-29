@@ -61,15 +61,6 @@ export const SubscribeWrapper = styled('form')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
   align-content: start;
-  grid-template-areas:
-    'returning'
-    'memberPlans'
-    'monthlyAmount'
-    'userForm'
-    'paymentPeriodicity'
-    'challenge'
-    'transactionFee'
-    'submit';
 `;
 
 export type SubscribeSectionProps = {
@@ -77,10 +68,10 @@ export type SubscribeSectionProps = {
 };
 
 export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+  --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
   align-content: start;
-  grid-area: ${({ area = 'auto' }) => area};
 
   &:empty {
     display: none;
