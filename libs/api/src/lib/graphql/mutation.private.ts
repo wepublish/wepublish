@@ -148,7 +148,7 @@ import { GraphQLUserRole, GraphQLUserRoleInput } from './userRole';
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
 import { GraphQLSubscriptionDeactivationReason } from './subscriptionDeactivation';
-import { ColorScalar } from '@wepublish/peering/api';
+import { ColorScalar } from '@wepublish/utils/api';
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',

@@ -621,7 +621,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -854,7 +854,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
@@ -1963,18 +1963,18 @@ export type CreateTagMutationVariables = Exact<{
   description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
   main?: InputMaybe<Scalars['Boolean']>;
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, color?: string | null } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type?: TagType | null, main: boolean, color?: string | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
   tag?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
@@ -2595,7 +2595,7 @@ export const TagList = gql`
 }
     `;
 export const CreateTag = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $main: Boolean, $color: String) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $main: Boolean, $color: Color) {
   createTag(
     tag: $tag
     description: $description
@@ -2606,13 +2606,14 @@ export const CreateTag = gql`
     id
     tag
     description
+    type
     main
     color
   }
 }
     `;
 export const UpdateTag = gql`
-    mutation UpdateTag($id: String!, $tag: String, $description: RichText, $main: Boolean, $color: String) {
+    mutation UpdateTag($id: String!, $tag: String, $description: RichText, $main: Boolean, $color: Color) {
   updateTag(
     id: $id
     tag: $tag

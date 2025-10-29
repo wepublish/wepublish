@@ -623,7 +623,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -856,7 +856,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
@@ -2286,7 +2286,7 @@ export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
@@ -2297,7 +2297,7 @@ export type UpdateTagMutationVariables = Exact<{
   description?: InputMaybe<Scalars['RichText']>;
   tag?: InputMaybe<Scalars['String']>;
   main?: InputMaybe<Scalars['Boolean']>;
-  color?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
@@ -5426,7 +5426,7 @@ export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
 export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
 export type TagQueryResult = Apollo.QueryResult<TagQuery, TagQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $color: String) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $color: Color) {
   createTag(tag: $tag, description: $description, type: $type, color: $color) {
     id
     tag
@@ -5466,7 +5466,7 @@ export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean, $color: String) {
+    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean, $color: Color) {
   updateTag(
     id: $id
     tag: $tag

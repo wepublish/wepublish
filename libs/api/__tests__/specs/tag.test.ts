@@ -27,7 +27,8 @@ describe('Tags', () => {
         tag: generateRandomString(),
         description: [],
         type: TagType.Comment,
-        color: '#ff0000',
+        main: false,
+        color: '#FFFFFF',
       },
     });
 
@@ -37,6 +38,8 @@ describe('Tags', () => {
           id: expect.any(String),
           tag: expect.any(String),
           description: expect.any(Array),
+          type: expect.any(String),
+          main: expect.any(Boolean),
           color: expect.any(String),
         },
       },
@@ -59,6 +62,10 @@ describe('Tags', () => {
       variables: {
         id: createRes.data.createTag.id,
         tag,
+        description: [],
+        type: TagType.Comment,
+        main: false,
+        color: '#FFFFFF',
       },
     });
 

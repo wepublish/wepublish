@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { TagType } from '@prisma/client';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
-import { ColorScalar } from '@wepublish/peering/api';
+import { ColorScalar } from '@wepublish/utils/api';
 
 @ObjectType()
 export class Tag {
