@@ -13,14 +13,12 @@ import { useAdsContext } from '../src/context/ads-context';
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
-    display: grid;
-    align-content: start;
     grid-template-columns: 100%;
     grid-template-areas:
       'returning'
+      'userForm'
       'memberPlans'
       'monthlyAmount'
-      'userForm'
       'paymentPeriodicity'
       'challenge'
       'transactionFee'
