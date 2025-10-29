@@ -1157,7 +1157,7 @@
         "areYouSure": "Êtes-vous sûr ?",
         "areYouSureBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
         "areYouSureConfirmation": "Supprimer le tag",
-        "color": "Couleur de fond",
+        "color": "Couleur",
         "createTag": "Nouveau tag",
         "editTag": "Modifier {{tag}}",
         "placeholder": "Nom du tag",
