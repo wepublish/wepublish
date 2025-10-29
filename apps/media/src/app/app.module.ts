@@ -11,7 +11,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { PassportModule } from '@nestjs/passport';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
-import { ImageCacheService } from './imageCache.service';
+import { ImageCacheService } from './image-cache.service';
 
 @Module({
   imports: [

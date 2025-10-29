@@ -7,6 +7,7 @@ fragment FullPaywall on Paywall {
   circumventDescription
   active
   anyMemberPlan
+  alternativeSubscribeUrl
   memberPlans {
     id
     name
@@ -36,6 +37,8 @@ mutation CreatePaywall(
   $active: Boolean!
   $anyMemberPlan: Boolean!
   $memberPlanIds: [String!]!
+  $bypassTokens: [String!]!
+  $alternativeSubscribeUrl: String
 ) {
   createPaywall(
     name: $name
@@ -44,6 +47,8 @@ mutation CreatePaywall(
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
+    bypassTokens: $bypassTokens
+    alternativeSubscribeUrl: $alternativeSubscribeUrl
   ) {
     ...FullPaywall
   }
@@ -58,6 +63,7 @@ mutation UpdatePaywall(
   $anyMemberPlan: Boolean
   $memberPlanIds: [String!]
   $bypassTokens: [String!]
+  $alternativeSubscribeUrl: String
 ) {
   updatePaywall(
     id: $id
@@ -68,6 +74,7 @@ mutation UpdatePaywall(
     active: $active
     memberPlanIds: $memberPlanIds
     bypassTokens: $bypassTokens
+    alternativeSubscribeUrl: $alternativeSubscribeUrl
   ) {
     ...FullPaywall
   }

@@ -17,6 +17,7 @@ import {
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -57,7 +58,6 @@ import {
   BajourTeaserList,
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled';
 import theme, { navbarTheme } from '../src/styles/theme';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -202,7 +202,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             TeaserList: BajourTeaserList,
             Break: BajourBreakBlock,
             Quote: BajourQuoteBlock,
-            Subscribe: Mitmachen,
           }}
           blockStyles={{
             ContextBox: BajourContextBox,
@@ -259,8 +258,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

@@ -55,7 +55,6 @@ import deOverriden from '../locales/deOverriden.json';
 import background from '../src/background.svg';
 import { GruppettoBreakBlock } from '../src/break-block';
 import { Footer } from '../src/footer';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -149,7 +148,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Script={Script}
           Footer={Footer}
           elements={{ Link: NextWepublishLink }}
-          blocks={{ Break: GruppettoBreakBlock, Subscribe: Mitmachen }}
+          blocks={{ Break: GruppettoBreakBlock }}
         >
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
@@ -225,8 +224,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

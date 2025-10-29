@@ -1313,6 +1313,7 @@ type MemberPlan implements HasImage {
   imageID: String
   maxCount: Int
   name: String!
+  productType: ProductType!
   shortDescription: RichText
   slug: String!
   successPageId: String
@@ -1328,6 +1329,7 @@ type MemberPlanConnection {
 input MemberPlanFilter {
   active: Boolean
   name: String
+  productType: ProductType
   tags: [String!]
 }
 
@@ -1376,10 +1378,7 @@ type Mutation {
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
-
-  """Creates a paywall bypass token."""
-  createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]!, name: String): Paywall!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1422,9 +1421,6 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
-
-  """Deletes a paywall bypass token."""
-  deletePaywallBypass(id: String!): String!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
@@ -1527,7 +1523,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!], name: String): Paywall!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1553,6 +1549,9 @@ type Mutation {
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
+
+  """"""
+  upgradeSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): User
@@ -1787,6 +1786,7 @@ enum PaymentState {
 
 type Paywall {
   active: Boolean!
+  alternativeSubscribeUrl: String
   anyMemberPlan: Boolean!
   bypasses: [PaywallBypass!]!
   circumventDescription: RichText
@@ -2002,6 +2002,11 @@ input PollVoteFilter {
 
 enum PollVoteSort {
   CreatedAt
+}
+
+enum ProductType {
+  Donation
+  Subscription
 }
 
 type Property {
@@ -2232,6 +2237,9 @@ type Query {
     take: Int! = 10
   ): TagConnection!
 
+  """"""
+  upgradeSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
@@ -2386,12 +2394,26 @@ type Stats {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]!
+  memberPlanIds: [String!]
+  memberPlans: [MemberPlan!]!
   type: BlockType!
+}
+
+enum SubscribeBlockField {
+  Address
+  Birthday
+  EmailRepeated
+  FirstName
+  Password
+  PasswordRepeated
 }
 
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  memberPlanIds: [String!]
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
@@ -2711,6 +2733,10 @@ input UpdateCrowdfundingInput {
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
+}
+
+type UpgradeSubscription {
+  discountAmount: Float!
 }
 
 """The `Upload` scalar type represents a file upload."""

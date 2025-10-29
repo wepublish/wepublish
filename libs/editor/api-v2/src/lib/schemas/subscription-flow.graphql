@@ -118,6 +118,7 @@ fragment MailTemplateRef on MailTemplateRef {
 fragment MemberPlanRef on MemberPlan {
   id
   name
+  productType
   amountPerMonthMin
   availablePaymentMethods {
     ...FullAvailablePaymentMethod

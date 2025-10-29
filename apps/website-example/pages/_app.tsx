@@ -41,7 +41,6 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import theme from '../src/theme';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -115,7 +114,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{ Link: NextWepublishLink }}
-          blocks={{ Subscribe: Mitmachen }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
         >
@@ -226,8 +224,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

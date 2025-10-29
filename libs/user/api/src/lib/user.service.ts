@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { CreateUserInput } from './user.input';
-import { UserInputError } from '@nestjs/apollo';
 import { Validator } from '@wepublish/user';
 import { unselectPassword } from '@wepublish/authentication/api';
 
@@ -53,7 +52,7 @@ export class UserService {
     });
 
     if (userExists) {
-      throw new UserInputError(`Email already in use`);
+      throw new BadRequestException(`Email already in use`);
     }
 
     const hashedPassword = await this.hashPassword(password);

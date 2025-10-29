@@ -21,6 +21,7 @@ import {
   BuilderContentWrapperProps,
   ContentWrapper as BuilderContentWrapper,
 } from '@wepublish/website/builder';
+import { SubscribeWrapper } from '@wepublish/membership/website';
 
 export const ContentWidthContext = createContext({
   fullWidth: false,
@@ -77,7 +78,8 @@ export const ContentWrapperStyled = styled(
               ${TeaserGridBlockWrapper},
               ${TeaserListBlockWrapper},
               ${TeaserSlotsBlockWrapper},
-              ${ImageGalleryBlockWrapper}
+              ${ImageGalleryBlockWrapper},
+              ${SubscribeWrapper}
           ) {
           grid-column: -1/1;
         }

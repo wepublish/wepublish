@@ -36,7 +36,6 @@ export type SubscribeContainerProps<
     | 'schema'
     | 'defaults'
     | 'termsOfServiceUrl'
-    | 'donate'
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'

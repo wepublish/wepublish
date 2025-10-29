@@ -17,6 +17,7 @@ import {
   authLink,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -83,7 +84,6 @@ import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
 import { PrintLogo } from '../src/components/print-logo';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
-import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -170,7 +170,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
           blocks={{
-            Subscribe: MitmachenInner,
             Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
             BaseTeaser: HauptstadtTeaser,
@@ -304,9 +303,11 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(
-      withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider)
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(
+        withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider)
+      )
     )
   )
 );

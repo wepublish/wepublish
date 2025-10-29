@@ -27,7 +27,7 @@ import {
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
-import { ImageCacheService } from './imageCache.service';
+import { ImageCacheService } from './image-cache.service';
 
 @Controller({
   version: '1',

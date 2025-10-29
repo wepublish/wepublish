@@ -13,6 +13,8 @@ import {
   SubscribeMutationVariables,
   SubscriptionsQuery,
   Currency,
+  UpgradeMutationVariables,
+  UpgradeSubscriptionInfoQuery,
 } from '@wepublish/website/api';
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
@@ -138,10 +140,34 @@ export type BuilderSubscribeProps<
     firstName: string;
   }>;
   deactivateSubscriptionId?: string;
-  donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
   hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
   returningUserId?: string;
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>;
+
+export type BuilderUpgradeProps = {
+  memberPlans: Pick<
+    QueryResult<MemberPlanListQuery>,
+    'data' | 'loading' | 'error'
+  >;
+  upgradeInfo: Pick<
+    QueryResult<UpgradeSubscriptionInfoQuery>,
+    'data' | 'loading' | 'error'
+  >;
+  subscriptionToUpgrade: FullSubscriptionFragment;
+  className?: string;
+  onUpgrade?: (
+    data: Omit<UpgradeMutationVariables, 'failureURL' | 'successURL'>
+  ) => Promise<void>;
+  defaults?: Partial<{
+    memberPlanSlug: string | null;
+  }>;
+  onSelect: (memberPlanId: string | undefined) => void;
+  donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
+  hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
+  termsOfServiceUrl?: string;
+  transactionFee?: (monthlyAmount: number) => number;
+  transactionFeeText?: string;
+};

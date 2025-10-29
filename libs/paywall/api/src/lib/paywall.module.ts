@@ -7,9 +7,10 @@ import {
   HasOptionalPaywallResolver,
   HasPaywallResolver,
 } from './has-paywall/has-paywall.resolver';
+import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, MemberPlanModule],
   providers: [
     PaywallDataloaderService,
     PaywallService,

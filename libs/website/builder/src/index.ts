@@ -6,7 +6,6 @@ export * from './lib/comment.interface';
 export * from './lib/container.interface';
 export * from './lib/event.interface';
 export * from './lib/footer.interface';
-export * from './lib/membership.interface';
 export * from './lib/navbar.interface';
 export * from './lib/page.interface';
 export * from './lib/richText.interface';
@@ -44,3 +43,8 @@ export * from './lib/peer.components';
 
 export * from './lib/blocks.interface';
 export * from './lib/blocks.components';
+
+export * from './lib/membership.interface';
+export * from './lib/membership.components';
+
+export * from './lib/router/website-router.context';

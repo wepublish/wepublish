@@ -6,16 +6,20 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { RemoteSubscriptionsService } from './remote-subscriptions.service';
 import { PaymentMethodModule } from '@wepublish/payment-method/api';
 import { UserModule } from '@wepublish/user/api';
-import { MemberContextService } from './member-context.service';
+import { MemberContextModule } from '@wepublish/membership/api';
 
 @Module({
-  imports: [PrismaModule, MemberPlanModule, PaymentMethodModule, UserModule],
+  imports: [
+    PrismaModule,
+    MemberPlanModule,
+    PaymentMethodModule,
+    UserModule,
+    MemberContextModule,
+  ],
   providers: [
     UserSubscriptionService,
     RemoteSubscriptionsService,
     UserSubscriptionResolver,
-    MemberContextService,
   ],
-  exports: [],
 })
 export class UserSubscriptionModule {}

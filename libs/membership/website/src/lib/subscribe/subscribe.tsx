@@ -13,6 +13,7 @@ import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
@@ -41,7 +42,7 @@ import { ApiAlert } from '@wepublish/errors/website';
 import { Modal } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
 
-const subscribeSchema = z.object({
+export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
   paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
@@ -61,15 +62,6 @@ export const SubscribeWrapper = styled('form')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
   align-content: start;
-  grid-template-areas:
-    'returning'
-    'memberPlans'
-    'monthlyAmount'
-    'userForm'
-    'paymentPeriodicity'
-    'challenge'
-    'transactionFee'
-    'submit';
 `;
 
 export type SubscribeSectionProps = {
@@ -77,10 +69,10 @@ export type SubscribeSectionProps = {
 };
 
 export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+  --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
   align-content: start;
-  grid-area: ${({ area = 'auto' }) => area};
 
   &:empty {
     display: none;
@@ -178,7 +170,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate,
   hidePaymentAmount = memberPlan =>
     !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
@@ -309,6 +300,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
+  const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
+
   const paymentText = getPaymentText(
     autoRenew,
     selectedMemberPlan?.extendable ?? true,
@@ -438,7 +431,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     return (
       userSubscriptions.data?.subscriptions.some(
         ({ memberPlan, deactivation }) =>
-          memberPlan.id === selectedMemberPlanId && !deactivation
+          memberPlan.id === selectedMemberPlanId &&
+          memberPlan.productType === ProductType.Subscription &&
+          !deactivation
       ) ?? false
     );
   }, [
@@ -535,7 +530,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   {...field}
                   error={error}
                   slug={selectedMemberPlan?.slug}
-                  donate={!!donate?.(selectedMemberPlan)}
+                  donate={isDonation}
                   amountPerMonthMin={amountPerMonthMin}
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
@@ -558,7 +553,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       <SubscribeSection area="paymentPeriodicity">
-        {allPaymentMethods && allPaymentMethods.length > 1 && (
+        {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
 
@@ -682,8 +677,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?

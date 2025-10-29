@@ -154,7 +154,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Break: FlimmerBreakBlock,
             RichText: FlimmerRichText,
             Title: FlimmerTitle,
-            Subscribe: MitmachenInnerStyled,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -271,8 +270,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 
