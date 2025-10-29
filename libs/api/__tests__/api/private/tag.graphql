@@ -6,11 +6,20 @@ query TagList(
   $order: SortOrder
   $sort: TagSort
 ) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  tags(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       id
       tag
       description
+      main
+      color
     }
 
     pageInfo {
@@ -24,19 +33,48 @@ query TagList(
   }
 }
 
-mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
+mutation CreateTag(
+  $tag: String
+  $description: RichText
+  $type: TagType!
+  $main: Boolean
+  $color: Color
+) {
+  createTag(
+    tag: $tag
+    description: $description
+    type: $type
+    main: $main
+    color: $color
+  ) {
     id
     tag
     description
+    type
+    main
+    color
   }
 }
 
-mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
-  updateTag(id: $id, tag: $tag, description: $description) {
+mutation UpdateTag(
+  $id: String!
+  $tag: String
+  $description: RichText
+  $main: Boolean
+  $color: Color
+) {
+  updateTag(
+    id: $id
+    tag: $tag
+    description: $description
+    main: $main
+    color: $color
+  ) {
     id
     tag
     description
+    main
+    color
   }
 }
 

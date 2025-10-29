@@ -621,6 +621,7 @@ export type MutationCreateSubscriptionArgs = {
 
 
 export type MutationCreateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: InputMaybe<Scalars['Boolean']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -853,6 +854,7 @@ export type MutationUpdateSubscriptionArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
@@ -1474,6 +1476,7 @@ export enum SubscriptionSort {
 
 export type Tag = {
   __typename?: 'Tag';
+  color?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
@@ -1953,25 +1956,29 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
+export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, color?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
 
 export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
+  main?: InputMaybe<Scalars['Boolean']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type?: TagType | null, main: boolean, color?: string | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   id: Scalars['String'];
   tag?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
+  main?: InputMaybe<Scalars['Boolean']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean, color?: string | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['String'];
@@ -2574,6 +2581,8 @@ export const TagList = gql`
       id
       tag
       description
+      main
+      color
     }
     pageInfo {
       startCursor
@@ -2586,20 +2595,37 @@ export const TagList = gql`
 }
     `;
 export const CreateTag = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $main: Boolean, $color: Color) {
+  createTag(
+    tag: $tag
+    description: $description
+    type: $type
+    main: $main
+    color: $color
+  ) {
     id
     tag
     description
+    type
+    main
+    color
   }
 }
     `;
 export const UpdateTag = gql`
-    mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
-  updateTag(id: $id, tag: $tag, description: $description) {
+    mutation UpdateTag($id: String!, $tag: String, $description: RichText, $main: Boolean, $color: Color) {
+  updateTag(
+    id: $id
+    tag: $tag
+    description: $description
+    main: $main
+    color: $color
+  ) {
     id
     tag
     description
+    main
+    color
   }
 }
     `;
