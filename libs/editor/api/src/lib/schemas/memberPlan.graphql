@@ -2,27 +2,18 @@ fragment MemberPlanRef on MemberPlan {
   id
   name
   description
+  shortDescription
   slug
   active
   tags
   image {
     ...FullImage
   }
+  externalReward
 
   successPageId
-  # successPage {
-  #   ...PageRef
-  # }
-
   failPageId
-  # failPage {
-  #   ...PageRef
-  # }
-
   confirmationPageId
-  # confirmationPage {
-  #   ...PageRef
-  # }
 }
 
 fragment FullMemberPlan on MemberPlan {
@@ -43,8 +34,22 @@ fragment FullMemberPlan on MemberPlan {
   migrateToTargetPaymentMethodID
 }
 
-query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+query MemberPlanList(
+  $filter: String
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: MemberPlanSort
+) {
+  memberPlans(
+    filter: { name: $filter }
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullMemberPlan
     }

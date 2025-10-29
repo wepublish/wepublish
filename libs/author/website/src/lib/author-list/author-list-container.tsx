@@ -1,22 +1,22 @@
-import {useAuthorListQuery} from '@wepublish/website/api'
+import { useAuthorListQuery } from '@wepublish/website/api';
 import {
   BuilderAuthorListProps,
   BuilderContainerProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
 export type AuthorListContainerProps = BuilderContainerProps &
-  Pick<BuilderAuthorListProps, 'variables' | 'onVariablesChange'>
+  Pick<BuilderAuthorListProps, 'variables' | 'onVariablesChange'>;
 
 export function AuthorListContainer({
   className,
   variables,
-  onVariablesChange
+  onVariablesChange,
 }: AuthorListContainerProps) {
-  const {AuthorList} = useWebsiteBuilder()
-  const {data, loading, error} = useAuthorListQuery({
-    variables
-  })
+  const { AuthorList } = useWebsiteBuilder();
+  const { data, loading, error } = useAuthorListQuery({
+    variables,
+  });
 
   return (
     <AuthorList
@@ -27,5 +27,5 @@ export function AuthorListContainer({
       variables={variables}
       onVariablesChange={onVariablesChange}
     />
-  )
+  );
 }

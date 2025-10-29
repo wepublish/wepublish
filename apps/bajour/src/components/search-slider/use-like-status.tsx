@@ -1,69 +1,72 @@
-import {useDislikeArticleMutation, useLikeArticleMutation} from '@wepublish/website/api'
-import {useCallback, useEffect, useState} from 'react'
-import {useCounter} from 'usehooks-ts'
+import {
+  useDislikeArticleMutation,
+  useLikeArticleMutation,
+} from '@wepublish/website/api';
+import { useCallback, useEffect, useState } from 'react';
+import { useCounter } from 'usehooks-ts';
 
-const LIKED_KEY = 'likedArticles'
+const LIKED_KEY = 'likedArticles';
 
 export function useLikeStatus(articleId: string, articleLikes: number) {
-  const [isLiked, setIsLiked] = useState<boolean>(false)
-  const [isReady, setIsReady] = useState<boolean>(false)
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const {
     count: likes,
     setCount: setLikes,
     increment: incrementLikes,
-    decrement: decrementLikes
-  } = useCounter(articleLikes || 0)
+    decrement: decrementLikes,
+  } = useCounter(articleLikes || 0);
 
   const updateLikeStatus = useCallback(
     (liked: boolean) => {
-      const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]')
+      const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
 
       if (liked && !likedArticles.includes(articleId)) {
-        likedArticles.push(articleId)
+        likedArticles.push(articleId);
       }
 
       if (!liked) {
-        const index = likedArticles.indexOf(articleId)
+        const index = likedArticles.indexOf(articleId);
 
         if (index > -1) {
-          likedArticles.splice(index, 1)
+          likedArticles.splice(index, 1);
         }
       }
 
-      localStorage.setItem(LIKED_KEY, JSON.stringify(likedArticles))
-      setIsLiked(liked)
+      localStorage.setItem(LIKED_KEY, JSON.stringify(likedArticles));
+      setIsLiked(liked);
     },
     [articleId]
-  )
+  );
 
   const [removeLikeMutation] = useDislikeArticleMutation({
     variables: {
-      id: articleId
-    }
-  })
+      id: articleId,
+    },
+  });
 
   const [addLikeMutation] = useLikeArticleMutation({
     variables: {
-      id: articleId
-    }
-  })
+      id: articleId,
+    },
+  });
 
   const handleLike = useCallback(
     async (preventDislike?: boolean) => {
       // wait until isLiked state is properly set and therefore ready
       if (!isReady) {
-        return
+        return;
       }
 
       // prevent dislikes
       if (isLiked && !preventDislike) {
-        decrementLikes()
-        updateLikeStatus(false)
-        await removeLikeMutation()
+        decrementLikes();
+        updateLikeStatus(false);
+        await removeLikeMutation();
       } else if (!isLiked) {
-        incrementLikes()
-        updateLikeStatus(true)
-        await addLikeMutation()
+        incrementLikes();
+        updateLikeStatus(true);
+        await addLikeMutation();
       }
     },
     [
@@ -73,26 +76,26 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
       isLiked,
       removeLikeMutation,
       updateLikeStatus,
-      isReady
+      isReady,
     ]
-  )
+  );
 
   useEffect(() => {
     // if no article id given, avoiding wrong isLiked state
     if (!articleId) {
-      return
+      return;
     }
 
     if (typeof window !== 'undefined') {
-      const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]')
-      setIsLiked(likedArticles.includes(articleId))
-      setIsReady(true)
+      const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
+      setIsLiked(likedArticles.includes(articleId));
+      setIsReady(true);
     }
-  }, [articleId])
+  }, [articleId]);
 
   useEffect(() => {
-    setLikes(articleLikes ?? 0)
-  }, [articleLikes, setLikes])
+    setLikes(articleLikes ?? 0);
+  }, [articleLikes, setLikes]);
 
-  return {likes, isLiked, isReady, handleLike}
+  return { likes, isLiked, isReady, handleLike };
 }

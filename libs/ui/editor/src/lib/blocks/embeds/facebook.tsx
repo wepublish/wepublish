@@ -1,109 +1,126 @@
-import styled from '@emotion/styled'
-import {createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import styled from '@emotion/styled';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-import {useScript} from '../../utility'
+import { useScript } from '../../utility';
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   min-height: 300px;
   padding: 20px;
-`
+`;
 
 // Define some globals set by Facebook SDK.
 declare global {
   interface Window {
-    fbAsyncInit: any
-    FB: any
+    fbAsyncInit: any;
+    FB: any;
   }
 }
 
 export interface FacebookContextState {
-  readonly isLoaded: boolean
-  readonly isLoading: boolean
+  readonly isLoaded: boolean;
+  readonly isLoading: boolean;
 
-  load(): void
+  load(): void;
 }
 
-export const FacebookContext = createContext(null as FacebookContextState | null)
+export const FacebookContext = createContext(
+  null as FacebookContextState | null
+);
 
 export interface FacebookProviderProps {
-  sdkLanguage: string
-  children?: ReactNode
+  sdkLanguage: string;
+  children?: ReactNode;
 }
 
-export function FacebookProvider({children, sdkLanguage}: FacebookProviderProps) {
-  const {isLoading, load} = useScript(
+export function FacebookProvider({
+  children,
+  sdkLanguage,
+}: FacebookProviderProps) {
+  const { isLoading, load } = useScript(
     `https://connect.facebook.net/${encodeURIComponent(sdkLanguage)}/sdk.js#version=v4.0`,
     () => window.FB != null,
     true
-  )
+  );
 
-  const [isLoaded, setLoaded] = useState(false)
+  const [isLoaded, setLoaded] = useState(false);
 
   const contextValue = useMemo(
     () => ({
       isLoading,
       isLoaded,
-      load
+      load,
     }),
     [isLoaded, isLoading, load]
-  )
+  );
 
   useEffect(() => {
     if (window.FB) {
       window.FB.init({
         xfbml: false,
-        version: 'v4.0'
-      })
+        version: 'v4.0',
+      });
 
-      setLoaded(true)
+      setLoaded(true);
     } else {
       window.fbAsyncInit = () => {
         window.FB.init({
           xfbml: false,
-          version: 'v4.0'
-        })
+          version: 'v4.0',
+        });
 
-        setLoaded(true)
-      }
+        setLoaded(true);
+      };
     }
 
     return () => {
-      window.fbAsyncInit = null
-    }
-  }, [])
+      window.fbAsyncInit = null;
+    };
+  }, []);
 
-  return <FacebookContext.Provider value={contextValue}>{children}</FacebookContext.Provider>
+  return (
+    <FacebookContext.Provider value={contextValue}>
+      {children}
+    </FacebookContext.Provider>
+  );
 }
 
 export interface FacebookPostEmbedProps {
-  userID: string | null | undefined
-  postID: string | null | undefined
+  userID: string | null | undefined;
+  postID: string | null | undefined;
 }
 
-export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
-  const wrapperRef = useRef<HTMLDivElement | null>(null)
-  const context = useContext(FacebookContext)
+export function FacebookPostEmbed({ userID, postID }: FacebookPostEmbedProps) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const context = useContext(FacebookContext);
 
   if (!context) {
     throw new Error(
       `Couldn't find FacebookContext, did you include FacebookProvider in the component tree?`
-    )
+    );
   }
 
-  const {isLoaded, isLoading, load} = context
+  const { isLoaded, isLoading, load } = context;
 
   useEffect(() => {
     if (isLoaded) {
-      window.FB.XFBML.parse(wrapperRef.current)
+      window.FB.XFBML.parse(wrapperRef.current);
     } else if (!isLoading) {
-      load()
+      load();
     }
-  }, [isLoaded, isLoading])
+  }, [isLoaded, isLoading]);
 
-  const encodedUserID = encodeURIComponent(userID ?? '')
-  const encodedPostID = encodeURIComponent(postID ?? '')
+  const encodedUserID = encodeURIComponent(userID ?? '');
+  const encodedPostID = encodeURIComponent(postID ?? '');
 
   return (
     <Wrapper ref={wrapperRef}>
@@ -114,36 +131,39 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
         data-width="200"
       />
     </Wrapper>
-  )
+  );
 }
 
 export interface FacebookVideoEmbedProps {
-  userID: string | null | undefined
-  videoID: string | null | undefined
+  userID: string | null | undefined;
+  videoID: string | null | undefined;
 }
 
-export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
-  const wrapperRef = useRef<HTMLDivElement | null>(null)
-  const context = useContext(FacebookContext)
+export function FacebookVideoEmbed({
+  userID,
+  videoID,
+}: FacebookVideoEmbedProps) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const context = useContext(FacebookContext);
 
   if (!context) {
     throw new Error(
       `Couldn't find FacebookContext, did you include FacebookProvider in the component tree?`
-    )
+    );
   }
 
-  const {isLoaded, isLoading, load} = context
+  const { isLoaded, isLoading, load } = context;
 
   useEffect(() => {
     if (isLoaded) {
-      window.FB.XFBML.parse(wrapperRef.current)
+      window.FB.XFBML.parse(wrapperRef.current);
     } else if (!isLoading) {
-      load()
+      load();
     }
-  }, [isLoaded, isLoading])
+  }, [isLoaded, isLoading]);
 
-  const encodedUserID = encodeURIComponent(userID ?? '')
-  const encodedVideoID = encodeURIComponent(videoID ?? '')
+  const encodedUserID = encodeURIComponent(userID ?? '');
+  const encodedVideoID = encodeURIComponent(videoID ?? '');
 
   return (
     <Wrapper ref={wrapperRef}>
@@ -153,5 +173,5 @@ export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
         data-show-text="true"
       />
     </Wrapper>
-  )
+  );
 }

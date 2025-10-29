@@ -1,26 +1,24 @@
-import {Inject, Injectable, UnauthorizedException} from '@nestjs/common'
-import {PassportStrategy} from '@nestjs/passport'
-import {Strategy} from 'passport-http-bearer'
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-http-bearer';
 
-export const TOKEN_MODULE_OPTIONS = 'TOKEN_MODULE_OPTIONS'
+export const TOKEN_MODULE_OPTIONS = 'TOKEN_MODULE_OPTIONS';
 
 export type TokenConfig = {
-  token: string
-}
+  token: string;
+};
 
 @Injectable()
 export class TokenStrategy extends PassportStrategy(Strategy, 'token') {
   constructor(@Inject(TOKEN_MODULE_OPTIONS) private config: TokenConfig) {
-    super({
-      session: false // would use a cookie if set to true
-    })
+    super();
   }
 
   public async validate(token: string) {
     if (token !== this.config.token) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException();
     }
 
-    return true
+    return true;
   }
 }

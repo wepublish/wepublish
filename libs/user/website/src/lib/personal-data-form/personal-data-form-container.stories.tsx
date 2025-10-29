@@ -1,15 +1,19 @@
-import {action} from '@storybook/addon-actions'
-import {StoryObj} from '@storybook/react'
-import {WithUserDecorator} from '@wepublish/storybook'
-import {UpdatePasswordDocument, UpdateUserDocument, User} from '@wepublish/website/api'
-import {PersonalDataFormContainer} from './personal-data-form-container'
-import * as personalDataFormStories from './personal-data-form.stories'
-import {mockImage} from '@wepublish/storybook/mocks'
+import { action } from '@storybook/addon-actions';
+import { StoryObj } from '@storybook/react';
+import { WithUserDecorator } from '@wepublish/storybook';
+import {
+  UpdatePasswordDocument,
+  UpdateUserDocument,
+  User,
+} from '@wepublish/website/api';
+import { PersonalDataFormContainer } from './personal-data-form-container';
+import * as personalDataFormStories from './personal-data-form.stories';
+import { mockImage } from '@wepublish/storybook/mocks';
 
 export default {
   title: 'Container/Personal Data Form',
-  component: PersonalDataFormContainer
-}
+  component: PersonalDataFormContainer,
+};
 
 const mockUser: User = {
   id: '1234',
@@ -21,13 +25,11 @@ const mockUser: User = {
     streetAddress: 'Cool Street',
     zipCode: '12345',
     city: 'Surfers Paradise',
-    country: 'Australia'
+    country: 'Australia',
   },
   image: mockImage(),
-  oauth2Accounts: [],
   paymentProviderCustomers: [],
-  properties: []
-}
+};
 
 const onUpdateVariables = {
   input: {
@@ -39,16 +41,19 @@ const onUpdateVariables = {
       streetAddress: 'Cool StreetMusterstrasse 1',
       zipCode: '123458047',
       city: 'Surfers ParadiseZürich',
-      country: 'Schweiz'
-    }
-  }
-}
+      country: 'Schweiz',
+    },
+  },
+};
 
-const onUpdatePasswordVariables = {password: '12345678', passwordRepeated: '12345678'}
+const onUpdatePasswordVariables = {
+  password: '12345678',
+  passwordRepeated: '12345678',
+};
 
 export const Default: StoryObj = {
   args: {
-    onUpdate: action('onUpdate')
+    onUpdate: action('onUpdate'),
   },
   parameters: {
     apolloClient: {
@@ -56,7 +61,7 @@ export const Default: StoryObj = {
         {
           request: {
             query: UpdateUserDocument,
-            variables: onUpdateVariables
+            variables: onUpdateVariables,
           },
           result: {
             data: {
@@ -72,20 +77,20 @@ export const Default: StoryObj = {
                   zipCode: '12345',
                   city: 'asdf',
                   country: 'Australia',
-                  __typename: 'UserAddress'
+                  __typename: 'UserAddress',
                 },
                 flair: 'CEO & Advisor',
                 paymentProviderCustomers: [],
                 image: mockImage(),
-                __typename: 'User'
-              }
-            }
-          }
+                __typename: 'User',
+              },
+            },
+          },
         },
         {
           request: {
             query: UpdatePasswordDocument,
-            variables: onUpdatePasswordVariables
+            variables: onUpdatePasswordVariables,
           },
           result: {
             data: {
@@ -101,31 +106,31 @@ export const Default: StoryObj = {
                   zipCode: '12345',
                   city: 'asdf',
                   country: 'Australia',
-                  __typename: 'UserAddress'
+                  __typename: 'UserAddress',
                 },
                 flair: 'CEO & Advisor',
                 paymentProviderCustomers: [],
                 image: mockImage(),
-                __typename: 'User'
-              }
-            }
-          }
-        }
-      ]
-    }
+                __typename: 'User',
+              },
+            },
+          },
+        },
+      ],
+    },
   },
-  decorators: [WithUserDecorator(mockUser)]
-}
+  decorators: [WithUserDecorator(mockUser)],
+};
 
 export const Filled: StoryObj = {
   ...Default,
   args: {
-    ...Default.args
+    ...Default.args,
   },
   play: async ctx => {
-    await personalDataFormStories.Filled.play?.(ctx)
-  }
-}
+    await personalDataFormStories.Filled.play?.(ctx);
+  },
+};
 
 // export const DeleteImage: StoryObj = {
 //   ...Default,

@@ -1,5 +1,5 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import {
   BlockStyle,
   EditorBlockType,
@@ -7,8 +7,8 @@ import {
   useBlockStylesQuery,
   useCreateBlockStyleMutation,
   useDeleteBlockStyleMutation,
-  useUpdateBlockStyleMutation
-} from '@wepublish/editor/api-v2'
+  useUpdateBlockStyleMutation,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   IconButtonTooltip,
@@ -16,12 +16,12 @@ import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {equals} from 'ramda'
-import {memo, useCallback, useReducer, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { equals } from 'ramda';
+import { memo, useCallback, useReducer, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdSave } from 'react-icons/md';
 import {
   Button,
   CheckPicker,
@@ -31,58 +31,63 @@ import {
   Loader as RLoader,
   Message,
   Modal,
-  toaster
-} from 'rsuite'
+  toaster,
+} from 'rsuite';
 
 const FlexGridSmallerMargin = styled(FlexboxGrid)`
   margin-bottom: 12px;
   gap: 12px;
-`
+`;
 
 const Content = styled.div`
   margin-top: 2rem;
   height: 100%;
-`
+`;
 
 const IconButton = styled(RIconButton)`
   margin-left: 12px;
-`
+`;
 
 const Flex = styled.div`
   flex: 0 0 auto;
-`
+`;
 
 const FlexWrapper = styled.div`
   max-width: 300px;
   flex: 1 1;
-`
+`;
 
 const Loader = styled(RLoader)`
   margin: 30px;
-`
+`;
 
 enum BlockStyleListActionType {
   Set = 'set',
   Create = 'create',
   Update = 'update',
-  Delete = 'delete'
+  Delete = 'delete',
 }
 
 type BlockStyleListActions =
-  | {type: BlockStyleListActionType.Set; payload: Record<string, BlockStyle>}
-  | {type: BlockStyleListActionType.Create; payload: BlockStyle}
+  | { type: BlockStyleListActionType.Set; payload: Record<string, BlockStyle> }
+  | { type: BlockStyleListActionType.Create; payload: BlockStyle }
   | {
-      type: BlockStyleListActionType.Update
-      payload: BlockStyle
+      type: BlockStyleListActionType.Update;
+      payload: BlockStyle;
     }
-  | {type: BlockStyleListActionType.Delete; payload: {id: string}}
+  | { type: BlockStyleListActionType.Delete; payload: { id: string } };
 
-const mapBlockStyleToFormValue = (blockStyles: BlockStyle[] | null | undefined) =>
-  blockStyles?.reduce((obj, node) => {
-    obj[node.id] = node
+const mapBlockStyleToFormValue = (
+  blockStyles: BlockStyle[] | null | undefined
+) =>
+  blockStyles?.reduce(
+    (obj, node) => {
+      obj[node.id] = node;
 
-    return obj
-  }, {} as Record<string, BlockStyle>) ?? {}
+      return obj;
+    },
+    {} as Record<string, BlockStyle>
+  ) ?? {};
 
 const blockStyleFormValueReducer = (
   state: Record<string, BlockStyle>,
@@ -90,144 +95,157 @@ const blockStyleFormValueReducer = (
 ): typeof state => {
   switch (action.type) {
     case BlockStyleListActionType.Set:
-      return action.payload
+      return action.payload;
 
     case BlockStyleListActionType.Create:
       return {
         [action.payload.id]: action.payload,
-        ...state
-      }
+        ...state,
+      };
 
     case BlockStyleListActionType.Update: {
-      const newState = {...state}
-      newState[action.payload.id] = action.payload
+      const newState = { ...state };
+      newState[action.payload.id] = action.payload;
 
-      return newState
+      return newState;
     }
 
     case BlockStyleListActionType.Delete: {
-      const newState = {...state}
-      delete newState[action.payload.id]
+      const newState = { ...state };
+      delete newState[action.payload.id];
 
-      return newState
+      return newState;
     }
   }
 
-  return state
-}
+  return state;
+};
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
-const client = getApiClientV2()
+const client = getApiClientV2();
 
 const BlockStyleList = memo(() => {
-  const {t} = useTranslation()
-  const [formValue, dispatchFormValue] = useReducer(blockStyleFormValueReducer, {})
-  const [apiValue, dispatchApiValue] = useReducer(blockStyleFormValueReducer, {})
-  const [blockstyleToDelete, setBlockStyleToDelete] = useState<string | null>(null)
+  const { t } = useTranslation();
+  const [formValue, dispatchFormValue] = useReducer(
+    blockStyleFormValueReducer,
+    {}
+  );
+  const [apiValue, dispatchApiValue] = useReducer(
+    blockStyleFormValueReducer,
+    {}
+  );
+  const [blockstyleToDelete, setBlockStyleToDelete] = useState<string | null>(
+    null
+  );
 
-  const hasEmptyStyle = Object.values(apiValue).some(style => !style.name)
+  const hasEmptyStyle = Object.values(apiValue).some(style => !style.name);
 
-  const {loading} = useBlockStylesQuery({
+  const { loading } = useBlockStylesQuery({
     client,
     fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
       dispatchApiValue({
         type: BlockStyleListActionType.Set,
-        payload: mapBlockStyleToFormValue(newData.blockStyles)
-      })
+        payload: mapBlockStyleToFormValue(newData.blockStyles),
+      });
 
       dispatchFormValue({
         type: BlockStyleListActionType.Set,
-        payload: mapBlockStyleToFormValue(newData.blockStyles)
-      })
-    }
-  })
+        payload: mapBlockStyleToFormValue(newData.blockStyles),
+      });
+    },
+  });
 
   const [createBlockStyle] = useCreateBlockStyleMutation({
     variables: {
       blocks: [],
-      name: ''
+      name: '',
     },
     client,
     onError: showErrors,
     onCompleted(createdBlockStyle) {
       if (!createdBlockStyle.createBlockStyle) {
-        return
+        return;
       }
 
       dispatchApiValue({
         type: BlockStyleListActionType.Create,
-        payload: createdBlockStyle.createBlockStyle
-      })
+        payload: createdBlockStyle.createBlockStyle,
+      });
 
       dispatchFormValue({
         type: BlockStyleListActionType.Create,
-        payload: createdBlockStyle.createBlockStyle
-      })
-    }
-  })
+        payload: createdBlockStyle.createBlockStyle,
+      });
+    },
+  });
 
   const [updateBlockStyle] = useUpdateBlockStyleMutation({
     client,
     onError: showErrors,
     onCompleted(updatedBlockStyle) {
       if (!updatedBlockStyle.updateBlockStyle) {
-        return
+        return;
       }
 
       dispatchApiValue({
         type: BlockStyleListActionType.Update,
-        payload: updatedBlockStyle.updateBlockStyle
-      })
+        payload: updatedBlockStyle.updateBlockStyle,
+      });
 
       dispatchFormValue({
         type: BlockStyleListActionType.Update,
-        payload: updatedBlockStyle.updateBlockStyle
-      })
-    }
-  })
+        payload: updatedBlockStyle.updateBlockStyle,
+      });
+    },
+  });
 
   const [deleteBlockStyle] = useDeleteBlockStyleMutation({
     client,
     onError: showErrors,
     onCompleted(deletedBlockStyle) {
       if (!deletedBlockStyle.deleteBlockStyle) {
-        return
+        return;
       }
 
       dispatchApiValue({
         type: BlockStyleListActionType.Delete,
         payload: {
-          id: deletedBlockStyle.deleteBlockStyle.id
-        }
-      })
+          id: deletedBlockStyle.deleteBlockStyle.id,
+        },
+      });
 
       dispatchFormValue({
         type: BlockStyleListActionType.Delete,
         payload: {
-          id: deletedBlockStyle.deleteBlockStyle.id
-        }
-      })
-    }
-  })
+          id: deletedBlockStyle.deleteBlockStyle.id,
+        },
+      });
+    },
+  });
 
   const shouldUpdateBlockStyle = useCallback(
     (id: string) => {
-      const apiBlockStyle = apiValue[id]
-      const formBlockStyle = formValue[id]
+      const apiBlockStyle = apiValue[id];
+      const formBlockStyle = formValue[id];
 
-      return !equals(apiBlockStyle, formBlockStyle)
+      return !equals(apiBlockStyle, formBlockStyle);
     },
     [apiValue, formValue]
-  )
+  );
 
   return (
     <>
@@ -244,7 +262,8 @@ const BlockStyleList = memo(() => {
               data-testid="create"
               icon={<MdAdd />}
               onClick={() => createBlockStyle()}
-              disabled={hasEmptyStyle}>
+              disabled={hasEmptyStyle}
+            >
               {t('blockStyles.createBlockStyle')}
             </RIconButton>
           </ListViewActions>
@@ -272,9 +291,9 @@ const BlockStyleList = memo(() => {
                         type: BlockStyleListActionType.Update,
                         payload: {
                           ...inputValue,
-                          name: value
-                        }
-                      })
+                          name: value,
+                        },
+                      });
                     }}
                   />
                 </FlexWrapper>
@@ -286,23 +305,25 @@ const BlockStyleList = memo(() => {
                     value={inputValue.blocks}
                     data={Object.values(EditorBlockType).map(blockType => ({
                       value: blockType,
-                      label: blockType
+                      label: blockType,
                     }))}
                     onChange={blocks => {
                       dispatchFormValue({
                         type: BlockStyleListActionType.Update,
                         payload: {
                           ...inputValue,
-                          blocks
-                        }
-                      })
+                          blocks,
+                        },
+                      });
                     }}
                     placement={'auto'}
                   />
                 </FlexWrapper>
 
                 <Flex>
-                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_BLOCK_STYLE']}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_UPDATE_BLOCK_STYLE']}
+                  >
                     <IconButtonTooltip caption={t('save')}>
                       <IconButton
                         type="submit"
@@ -311,15 +332,17 @@ const BlockStyleList = memo(() => {
                         icon={<MdSave />}
                         onClick={() => {
                           updateBlockStyle({
-                            variables: inputValue
-                          })
+                            variables: inputValue,
+                          });
                         }}
                         disabled={!shouldUpdateBlockStyle(blockstyleId)}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_BLOCK_STYLE']}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_DELETE_BLOCK_STYLE']}
+                  >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         color="red"
@@ -342,10 +365,13 @@ const BlockStyleList = memo(() => {
         open={!!blockstyleToDelete}
         backdrop="static"
         size="xs"
-        onClose={() => setBlockStyleToDelete(null)}>
+        onClose={() => setBlockStyleToDelete(null)}
+      >
         <Modal.Title>{t('blockStyles.areYouSure')}</Modal.Title>
         <Modal.Body>
-          {t('blockStyles.areYouSureBody', {blockStyle: formValue[blockstyleToDelete!]?.name})}
+          {t('blockStyles.areYouSureBody', {
+            blockStyle: formValue[blockstyleToDelete!]?.name,
+          })}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -354,26 +380,30 @@ const BlockStyleList = memo(() => {
             onClick={() => {
               deleteBlockStyle({
                 variables: {
-                  id: blockstyleToDelete!
-                }
-              })
-              setBlockStyleToDelete(null)
-            }}>
+                  id: blockstyleToDelete!,
+                },
+              });
+              setBlockStyleToDelete(null);
+            }}
+          >
             {t('blockStyles.areYouSureConfirmation')}
           </Button>
 
-          <Button appearance="subtle" onClick={() => setBlockStyleToDelete(null)}>
+          <Button
+            appearance="subtle"
+            onClick={() => setBlockStyleToDelete(null)}
+          >
             {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
-})
+  );
+});
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_BLOCK_STYLE',
   'CAN_UPDATE_BLOCK_STYLE',
-  'CAN_DELETE_BLOCK_STYLE'
-])(BlockStyleList)
-export {CheckedPermissionComponent as BlockStyleList}
+  'CAN_DELETE_BLOCK_STYLE',
+])(BlockStyleList);
+export { CheckedPermissionComponent as BlockStyleList };

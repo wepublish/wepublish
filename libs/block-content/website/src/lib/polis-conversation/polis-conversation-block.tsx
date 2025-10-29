@@ -1,19 +1,24 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   BlockContent,
-  PolisConversationBlock as PolisConversationBlockType
-} from '@wepublish/website/api'
-import {BuilderPolisConversationBlockProps} from '@wepublish/website/builder'
+  PolisConversationBlock as PolisConversationBlockType,
+} from '@wepublish/website/api';
+import { BuilderPolisConversationBlockProps } from '@wepublish/website/builder';
 
 export const isPolisConversationBlock = (
   block: BlockContent
-): block is PolisConversationBlockType => block.__typename === 'PolisConversationBlock'
+): block is PolisConversationBlockType =>
+  block.__typename === 'PolisConversationBlock';
 
-export const PolisConversationBlockWrapper = styled('div')``
+export const PolisConversationBlockWrapper = styled('div')``;
 
 export function PolisConversationBlock({
   conversationID,
-  className
+  className,
 }: BuilderPolisConversationBlockProps) {
-  return <PolisConversationBlockWrapper className={className}></PolisConversationBlockWrapper>
+  return (
+    <PolisConversationBlockWrapper
+      className={className}
+    ></PolisConversationBlockWrapper>
+  );
 }

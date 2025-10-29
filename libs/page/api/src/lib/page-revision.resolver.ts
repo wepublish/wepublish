@@ -1,13 +1,17 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {PageRevision} from './page.model'
-import {Image, ImageDataloaderService} from '@wepublish/image/api'
-import {PageRevisionService} from './page-revision.service'
-import {Property} from '@wepublish/utils/api'
-import {CurrentUser, UserSession} from '@wepublish/authentication/api'
-import {CanGetPage} from '@wepublish/permissions'
-import {hasPermission} from '@wepublish/permissions/api'
-import {BlockContent, isTeaserSlotsBlock, SlotTeasersLoader} from '@wepublish/block-content/api'
-import {forwardRef, Inject} from '@nestjs/common'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { PageRevision } from './page.model';
+import { Image, ImageDataloaderService } from '@wepublish/image/api';
+import { PageRevisionService } from './page-revision.service';
+import { Property } from '@wepublish/utils/api';
+import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import { CanGetPage } from '@wepublish/permissions';
+import { hasPermission } from '@wepublish/permissions/api';
+import {
+  BlockContent,
+  isTeaserSlotsBlock,
+  SlotTeasersLoader,
+} from '@wepublish/block-content/api';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => PageRevision)
 export class PageRevisionResolver {
@@ -26,36 +30,39 @@ export class PageRevisionResolver {
     return this.revisionService.getProperties(
       revision.id,
       hasPermission(CanGetPage, user?.roles ?? [])
-    )
+    );
   }
 
-  @ResolveField(() => Image, {nullable: true})
+  @ResolveField(() => Image, { nullable: true })
   public async image(@Parent() revision: PageRevision) {
-    const {imageID} = revision
+    const { imageID } = revision;
 
     if (!imageID) {
-      return null
+      return null;
     }
 
-    return this.imageDataloaderService.load(imageID)
+    return this.imageDataloaderService.load(imageID);
   }
 
-  @ResolveField(() => Image, {nullable: true})
+  @ResolveField(() => Image, { nullable: true })
   public socialMediaImage(@Parent() revision: PageRevision) {
-    const {socialMediaImageID} = revision
+    const { socialMediaImageID } = revision;
 
     if (!socialMediaImageID) {
-      return null
+      return null;
     }
 
-    return this.imageDataloaderService.load(socialMediaImageID)
+    return this.imageDataloaderService.load(socialMediaImageID);
   }
 
   @ResolveField(() => [BlockContent])
-  async blocks(@Parent() revision: PageRevision): Promise<(typeof BlockContent)[]> {
+  async blocks(
+    @Parent() revision: PageRevision
+  ): Promise<(typeof BlockContent)[]> {
     if (revision.blocks.some(isTeaserSlotsBlock)) {
-      return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks)
+      return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks);
     }
-    return revision.blocks
+
+    return revision.blocks;
   }
 }

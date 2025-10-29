@@ -1,5 +1,5 @@
-import {PaymentPeriodicity} from '@prisma/client'
-import {mapPaymentPeriodToMonths} from './payment-period-to-months'
+import { PaymentPeriodicity } from '@prisma/client';
+import { mapPaymentPeriodToMonths } from './payment-period-to-months';
 
 describe('mapPaymentPeriodToMonths', () => {
   it.each([
@@ -8,12 +8,12 @@ describe('mapPaymentPeriodToMonths', () => {
     PaymentPeriodicity.biannual,
     PaymentPeriodicity.yearly,
     PaymentPeriodicity.biennial,
-    PaymentPeriodicity.lifetime
+    PaymentPeriodicity.lifetime,
   ])('should format payment period for %s', periodicity => {
-    expect(mapPaymentPeriodToMonths(periodicity)).toMatchSnapshot()
-  })
+    expect(mapPaymentPeriodToMonths(periodicity)).toMatchSnapshot();
+  });
 
   it('should error if if periodicity is not found', () => {
-    expect(() => mapPaymentPeriodToMonths('invalid' as any)).toThrowError()
-  })
-})
+    expect(() => mapPaymentPeriodToMonths('invalid' as any)).toThrowError();
+  });
+});

@@ -1,11 +1,11 @@
-import {css} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {MdFavorite, MdFavoriteBorder} from 'react-icons/md'
+import { css } from '@mui/material';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 
 interface LikeButtonProps {
-  isLiked: boolean
-  likes: number | undefined
-  onLike: () => void
+  isLiked: boolean;
+  likes: number | undefined;
+  onLike: () => void;
 }
 
 const iconButtonStyles = css`
@@ -15,12 +15,38 @@ const iconButtonStyles = css`
   svg {
     font-size: 1.5em;
   }
-`
+`;
 
-export const LikeButton = ({isLiked, likes, onLike}: LikeButtonProps) => {
+export const VideoLikeButton = ({
+  isLiked,
+  likes,
+  onLike,
+}: LikeButtonProps) => {
   const {
-    elements: {IconButton}
-  } = useWebsiteBuilder()
+    elements: { IconButton },
+  } = useWebsiteBuilder();
+
+  return (
+    <IconButton
+      aria-label="Like"
+      size={'small'}
+      onClick={onLike}
+      color="primary"
+      css={iconButtonStyles}
+      disableRipple
+    >
+      {isLiked ?
+        <MdFavorite style={{ color: 'red' }} />
+      : <MdFavoriteBorder />}
+      {likes}
+    </IconButton>
+  );
+};
+
+export const LikeButton = ({ isLiked, likes, onLike }: LikeButtonProps) => {
+  const {
+    elements: { IconButton },
+  } = useWebsiteBuilder();
 
   return (
     <IconButton
@@ -29,9 +55,12 @@ export const LikeButton = ({isLiked, likes, onLike}: LikeButtonProps) => {
       onClick={onLike}
       color={'inherit'}
       css={iconButtonStyles}
-      disableRipple>
-      {isLiked ? <MdFavorite style={{color: 'red'}} /> : <MdFavoriteBorder />}
+      disableRipple
+    >
+      {isLiked ?
+        <MdFavorite style={{ color: 'red' }} />
+      : <MdFavoriteBorder />}
       {likes}
     </IconButton>
-  )
-}
+  );
+};

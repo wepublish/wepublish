@@ -78,6 +78,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
         "noImagesFound": "Aucune image trouvée",
+        "openInNewTab": "URL du contenu ouvre dans un nouvel onglet",
         "pagePreviewLink": "Lien de prévisualisation de la page",
         "peerDisabled": "Ce peer est actuellement désactivé",
         "peeredArticlePreview": "Prévisualisation",
@@ -131,25 +132,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Texte",
-        "default": "Default"
-      }
-    },
-    "articleList": {
-      "filter": {
-        "dates": "Dates",
-        "description": "Filtrer par description",
-        "isDraft": "Brouillon",
-        "isPending": "En attente",
-        "isPublished": "Publié",
-        "lead": "Filtrer par lead",
-        "location": "Location",
-        "name": "Nom",
-        "preTitle": "Filtrer par pré-titre",
-        "providers": "Fournisseurs",
-        "publicationDate": "Date de publication",
-        "reset": "Réinitialiser les filtres",
-        "title": "Filtrer par titre",
-        "includeHidden": "Inclure cachés"
+        "default": "Default",
+        "paywall": "Paywall"
       }
     },
     "articles": {
@@ -369,8 +353,9 @@
       },
       "title": {
         "label": "Titre",
-        "leadText": "Lead ",
-        "title": "Titre"
+        "leadText": "Lead",
+        "title": "Titre",
+        "preTitle": "Pré-titre"
       }
     },
     "cancel": "Annuler",
@@ -594,6 +579,25 @@
         "title": "Events"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Dates",
+        "description": "Filtrer par description",
+        "isDraft": "Brouillon",
+        "isPending": "En attente",
+        "isPublished": "Publié",
+        "lead": "Filtrer par lead",
+        "location": "Location",
+        "name": "Nom",
+        "preTitle": "Filtrer par pré-titre",
+        "providers": "Fournisseurs",
+        "publicationDate": "Date de publication",
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "includeHiddenArticles": "Inclure cachés",
+        "includeHiddenPages": "Inclure cachés"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -705,6 +709,7 @@
       "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
+      "shortDescription": "Brève description",
       "editPaymentSetting": "Modifier les paramètres de paiement",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
@@ -719,7 +724,8 @@
       "tags": "Tags",
       "savedChanges": "Enregistré",
       "successPage": "Redirection vers la page en cas de succès du paiement",
-      "failPage": "Redirection vers la page en cas d'erreur de paiement"
+      "failPage": "Redirection vers la page en cas d'erreur de paiement",
+      "externalReward": "Lien ou description vers une récompense externe (visible uniquement par les abonnés)"
     },
     "memberPlanList": {
       "action": "Actions",
@@ -844,6 +850,8 @@
         "publishAtDateCheckbox": "Définir une date différente pour la disponibilité en ligne",
         "publishDate": "Date de publication",
         "publishPage": "Publier la page",
+        "hidden": "Cacher",
+        "setAsHidden": "Les pages cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
         "slug": "Slug",
         "socialMediaDescription": "Description pour les réseaux sociaux",
         "socialMediaImage": "Image pour les médias sociaux",
@@ -1218,7 +1226,9 @@
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
       "zipCode": "Code Postal",
-      "birthday": "Birthday"
+      "birthday": "Birthday",
+      "note": "Note",
+      "noteHelpText": "Non visible pour l'utilisateur."
     },
     "userList": {
       "overview": {
@@ -1480,6 +1490,31 @@
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
       "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Modifier le paywall",
+        "name": "Nom du paywall (NON visible par l'utilisateur)",
+        "description": "Texte du paywall (visible par l'utilisateur)",
+        "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
+        "active": "Actif",
+        "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
+        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
+        "bypasses": "Contournements",
+        "bypassToken": "Token de contournement",
+        "newBypassToken": "Créer un nouveau token de contournement",
+        "addBypass": "Ajouter",
+        "qrCodeTitle": "Code QR pour le token de contournement",
+        "downloadSvg": "Télécharger SVG",
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Délai de paiement",
+      "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
+      "days": "Jours"
     }
   }
 }

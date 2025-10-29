@@ -1,5 +1,5 @@
-import {Permission} from '@wepublish/permissions'
-import {ApolloServer} from 'apollo-server-express'
+import { Permission } from '@wepublish/permissions';
+import { ApolloServer } from 'apollo-server-express';
 import {
   CreateUserRole,
   DeleteUserRole,
@@ -7,105 +7,110 @@ import {
   UpdateUserRole,
   UserRole,
   UserRoleInput,
-  UserRoleList
-} from '../api/private'
+  UserRoleList,
+} from '../api/private';
 
-import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utility'
+import {
+  createGraphQLTestClientWithPrisma,
+  generateRandomString,
+} from '../utility';
 
-let testServerPrivate: ApolloServer
+let testServerPrivate: ApolloServer;
 
 beforeAll(async () => {
   try {
-    const setupClient = await createGraphQLTestClientWithPrisma()
-    testServerPrivate = setupClient.testServerPrivate
+    const setupClient = await createGraphQLTestClientWithPrisma();
+    testServerPrivate = setupClient.testServerPrivate;
   } catch (error) {
-    console.log('Error', error)
-    throw new Error('Error during test setup')
+    console.log('Error', error);
+    throw new Error('Error during test setup');
   }
-})
+});
 
 describe('User Roles', () => {
   describe('can be created/edited/deleted:', () => {
-    const ids: string[] = []
-    let permissionsList: Permission[]
-    let permissionIDs: string[]
+    const ids: string[] = [];
+    let permissionsList: Permission[];
+    let permissionIDs: string[];
 
     beforeAll(async () => {
       const input: UserRoleInput = {
         name: generateRandomString(),
         description: 'User Role',
-        permissionIDs: []
-      }
+        permissionIDs: [],
+      };
       const res = await testServerPrivate.executeOperation({
         query: CreateUserRole,
         variables: {
-          input
-        }
-      })
-      ids.unshift(res.data?.createUserRole.id)
-    })
+          input,
+        },
+      });
+      ids.unshift(res.data?.createUserRole.id);
+    });
 
     test('can read permission list', async () => {
       const res = await testServerPrivate.executeOperation({
-        query: PermissionList
-      })
-      expect(res).toMatchSnapshot()
+        query: PermissionList,
+      });
+      expect(res).toMatchSnapshot();
 
-      permissionsList = res.data?.permissions
-      permissionIDs = permissionsList.map((permission: Permission) => permission.id)
-    })
+      permissionsList = res.data?.permissions;
+      permissionIDs = permissionsList.map(
+        (permission: Permission) => permission.id
+      );
+    });
 
     test('can be created', async () => {
       const input: UserRoleInput = {
         name: generateRandomString(),
         description: 'New Role',
-        permissionIDs
-      }
+        permissionIDs,
+      };
 
       const res = await testServerPrivate.executeOperation({
         query: CreateUserRole,
         variables: {
-          input
-        }
-      })
+          input,
+        },
+      });
       expect(res).toMatchSnapshot({
         data: {
           createUserRole: {
             id: expect.any(String),
-            name: expect.any(String)
-          }
-        }
-      })
-      ids.unshift(res.data?.createUserRole.id)
-    })
+            name: expect.any(String),
+          },
+        },
+      });
+      ids.unshift(res.data?.createUserRole.id);
+    });
 
     test('can be read in list', async () => {
       const res = await testServerPrivate.executeOperation({
         query: UserRoleList,
         variables: {
-          take: 100
-        }
-      })
+          take: 100,
+        },
+      });
 
-      expect(res.data?.userRoles.nodes).not.toHaveLength(0)
-    })
+      expect(res.data?.userRoles.nodes).not.toHaveLength(0);
+    });
 
     test('can be read by id', async () => {
       const res = await testServerPrivate.executeOperation({
         query: UserRole,
         variables: {
-          id: ids[0]
-        }
-      })
+          id: ids[0],
+        },
+      });
       expect(res).toMatchSnapshot({
         data: {
           userRole: {
             id: expect.any(String),
-            name: expect.any(String)
-          }
-        }
-      })
-    })
+            name: expect.any(String),
+          },
+        },
+      });
+    });
 
     test('can be updated', async () => {
       const res = await testServerPrivate.executeOperation({
@@ -114,37 +119,37 @@ describe('User Roles', () => {
           input: {
             name: generateRandomString(),
             description: 'Updated Role',
-            permissionIDs: [permissionIDs[0], permissionIDs[3]]
+            permissionIDs: [permissionIDs[0], permissionIDs[3]],
           },
-          id: ids[0]
-        }
-      })
+          id: ids[0],
+        },
+      });
 
       expect(res).toMatchSnapshot({
         data: {
           updateUserRole: {
             id: expect.any(String),
-            name: expect.any(String)
-          }
-        }
-      })
-    })
+            name: expect.any(String),
+          },
+        },
+      });
+    });
 
     test('can be deleted', async () => {
       const res = await testServerPrivate.executeOperation({
         query: DeleteUserRole,
         variables: {
-          id: ids[0]
-        }
-      })
+          id: ids[0],
+        },
+      });
 
       expect(res).toMatchSnapshot({
         data: {
-          deleteUserRole: expect.any(Object)
-        }
-      })
-      expect(res.data?.deleteUserRole.id).toBe(ids[0])
-      ids.shift()
-    })
-  })
-})
+          deleteUserRole: expect.any(Object),
+        },
+      });
+      expect(res.data?.deleteUserRole.id).toBe(ids[0]);
+      ids.shift();
+    });
+  });
+});

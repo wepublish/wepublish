@@ -38,6 +38,7 @@ fragment PageWithoutBlocks on Page {
   slug
   url
   previewUrl
+  hidden
 
   tags {
     ...FullTag
@@ -100,6 +101,7 @@ mutation CreatePage(
   $description: String
   $properties: [PropertyInput!]!
   $slug: String
+  $hidden: Boolean = false
   $socialMediaDescription: String
   $socialMediaImageID: String
   $socialMediaTitle: String
@@ -112,6 +114,7 @@ mutation CreatePage(
     description: $description
     properties: $properties
     slug: $slug
+    hidden: $hidden
     socialMediaDescription: $socialMediaDescription
     socialMediaImageID: $socialMediaImageID
     socialMediaTitle: $socialMediaTitle
@@ -129,6 +132,7 @@ mutation UpdatePage(
   $description: String
   $properties: [PropertyInput!]!
   $slug: String
+  $hidden: Boolean = false
   $socialMediaDescription: String
   $socialMediaImageID: String
   $socialMediaTitle: String
@@ -142,6 +146,7 @@ mutation UpdatePage(
     description: $description
     properties: $properties
     slug: $slug
+    hidden: $hidden
     socialMediaDescription: $socialMediaDescription
     socialMediaImageID: $socialMediaImageID
     socialMediaTitle: $socialMediaTitle

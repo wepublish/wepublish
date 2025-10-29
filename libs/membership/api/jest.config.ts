@@ -8,12 +8,12 @@ export default {
     '^.+\\.[tj]s$': [
       'ts-jest',
       {
-        tsconfig: '<rootDir>/tsconfig.spec.json'
-      }
-    ]
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+      },
+    ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/membership/api',
   globalSetup: '<rootDir>/setup-database.js',
-  maxWorkers: 1
-}
+  maxWorkers: 1,
+};

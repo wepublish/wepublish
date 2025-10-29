@@ -1,17 +1,21 @@
-import {Prisma, PrismaClient} from '@prisma/client'
-import {CanGetPoll} from '@wepublish/permissions'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
-import {Context} from '../../context'
-import {authorise} from '../permissions'
+import { Prisma, PrismaClient } from '@prisma/client';
+import { CanGetPoll } from '@wepublish/permissions';
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+} from '@wepublish/utils/api';
+import { Context } from '../../context';
+import { authorise } from '../permissions';
 
 export type PollFilter = {
-  openOnly: boolean
-}
+  openOnly: boolean;
+};
 
 export enum PollSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
-  OpensAt = 'OpensAt'
+  OpensAt = 'OpensAt',
 }
 
 export const createPollOrder = (
@@ -21,47 +25,51 @@ export const createPollOrder = (
   switch (field) {
     case PollSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case PollSort.CreatedAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case PollSort.OpensAt:
     default:
       return {
-        opensAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        opensAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createOpenOnlyFilter = (filter?: Partial<PollFilter>): Prisma.PollWhereInput => {
+const createOpenOnlyFilter = (
+  filter?: Partial<PollFilter>
+): Prisma.PollWhereInput => {
   if (filter?.openOnly) {
     return {
       opensAt: {
-        lte: new Date()
+        lte: new Date(),
       },
       OR: [
         {
-          closedAt: null
+          closedAt: null,
         },
         {
           closedAt: {
-            gte: new Date()
-          }
-        }
-      ]
-    }
+            gte: new Date(),
+          },
+        },
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-export const createPollFilter = (filter?: Partial<PollFilter>): Prisma.PollWhereInput => ({
-  AND: [createOpenOnlyFilter(filter)]
-})
+export const createPollFilter = (
+  filter?: Partial<PollFilter>
+): Prisma.PollWhereInput => ({
+  AND: [createOpenOnlyFilter(filter)],
+});
 
 export const getPolls = async (
   filter: Partial<PollFilter>,
@@ -73,35 +81,35 @@ export const getPolls = async (
   authenticate: Context['authenticate'],
   poll: PrismaClient['poll']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanGetPoll, roles)
+  const { roles } = authenticate();
+  authorise(CanGetPoll, roles);
 
-  const orderBy = createPollOrder(sortedField, order)
-  const where = createPollFilter(filter)
+  const orderBy = createPollOrder(sortedField, order);
+  const where = createPollFilter(filter);
 
   const [totalCount, polls] = await Promise.all([
     poll.count({
       where,
-      orderBy
+      orderBy,
     }),
     poll.findMany({
       where,
       skip,
       take: getMaxTake(take) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined,
+      cursor: cursorId ? { id: cursorId } : undefined,
       include: {
-        answers: true
-      }
-    })
-  ])
+        answers: true,
+      },
+    }),
+  ]);
 
-  const nodes = polls.slice(0, take)
-  const firstPoll = nodes[0]
-  const lastPoll = nodes[nodes.length - 1]
+  const nodes = polls.slice(0, take);
+  const firstPoll = nodes[0];
+  const lastPoll = nodes[nodes.length - 1];
 
-  const hasPreviousPage = Boolean(skip)
-  const hasNextPage = polls.length > nodes.length
+  const hasPreviousPage = Boolean(skip);
+  const hasNextPage = polls.length > nodes.length;
 
   return {
     nodes,
@@ -110,7 +118,7 @@ export const getPolls = async (
       hasPreviousPage,
       hasNextPage,
       startCursor: firstPoll?.id,
-      endCursor: lastPoll?.id
-    }
-  }
-}
+      endCursor: lastPoll?.id,
+    },
+  };
+};

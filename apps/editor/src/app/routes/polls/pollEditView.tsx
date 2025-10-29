@@ -1,129 +1,155 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import {
   FullPoll,
   PollExternalVote,
   PollExternalVoteSource,
   usePollQuery,
-  useUpdatePollMutation
-} from '@wepublish/editor/api'
+  useUpdatePollMutation,
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   PollAnswers,
   PollExternalVotes,
   RichTextBlock,
-  SingleViewTitle
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {useNavigate, useParams} from 'react-router-dom'
-import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
-import {Descendant} from 'slate'
+  SingleViewTitle,
+} from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  Col,
+  DatePicker,
+  FlexboxGrid,
+  Form,
+  Message,
+  Panel,
+  Row,
+  Schema,
+  toaster,
+} from 'rsuite';
+import { Descendant } from 'slate';
 
 const DateLabel = styled(Form.ControlLabel)`
   margin-right: 8px;
-`
+`;
 
 const PollEditor = styled(FlexboxGrid.Item)`
   @media (max-width: 1200px) {
     width: 100%;
   }
   width: 70%;
-`
+`;
 
 const DatesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-`
+`;
 
 const DateItem = styled.div`
   padding: 5px;
-`
+`;
 
 function PollEditView() {
-  const params = useParams()
-  const navigate = useNavigate()
-  const [poll, setPoll] = useState<FullPoll | undefined>(undefined)
-  const [close, setClose] = useState<boolean>(false)
-  const closePath = '/polls'
+  const params = useParams();
+  const navigate = useNavigate();
+  const [poll, setPoll] = useState<FullPoll | undefined>(undefined);
+  const [close, setClose] = useState<boolean>(false);
+  const closePath = '/polls';
 
   /**
    * Handling toasts
    */
   const onErrorToast = (error: ApolloError) => {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error.message}
       </Message>
-    )
-  }
+    );
+  };
   const onCompletedToast = () => {
     toaster.push(
-      <Message type="success" showIcon closable duration={3000}>
+      <Message
+        type="success"
+        showIcon
+        closable
+        duration={3000}
+      >
         {t('pollEditView.savedSuccessfully')}
       </Message>
-    )
-  }
+    );
+  };
 
   // get polls
-  const {data, loading: createLoading} = usePollQuery({
+  const { data, loading: createLoading } = usePollQuery({
     variables: {
-      pollId: params.id
+      pollId: params.id,
     },
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network'
-  })
+    fetchPolicy: 'cache-and-network',
+  });
 
   // updating poll
-  const [updatePoll, {loading: updateLoading, data: updateData}] = useUpdatePollMutation({
-    onError: onErrorToast,
-    onCompleted: onCompletedToast
-  })
-  const {t} = useTranslation()
-  const loading = createLoading || updateLoading
+  const [updatePoll, { loading: updateLoading, data: updateData }] =
+    useUpdatePollMutation({
+      onError: onErrorToast,
+      onCompleted: onCompletedToast,
+    });
+  const { t } = useTranslation();
+  const loading = createLoading || updateLoading;
 
   /**
    * Update poll object after fetching from api
    */
   useEffect(() => {
     if (data?.poll) {
-      setPoll(data.poll)
+      setPoll(data.poll);
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
     if (updateData?.updatePoll) {
-      setPoll(updateData.updatePoll)
+      setPoll(updateData.updatePoll);
     }
-  }, [updateData])
+  }, [updateData]);
 
   /**
    * Form validation model
    */
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
-    question: StringType().isRequired(t('pollEditView.questionRequired'))
-  })
+    question: StringType().isRequired(t('pollEditView.questionRequired')),
+  });
 
   /**
    * FUNCTIONS
    */
   async function saveOrUpdate(): Promise<void> {
     if (!poll) {
-      return
+      return;
     }
-    const opensAt = poll.opensAt ? new Date(poll.opensAt).toISOString() : null
-    const closedAt = poll.closedAt ? new Date(poll.closedAt).toISOString() : null
-    const externalSources = poll.externalVoteSources?.map((voteSource: PollExternalVoteSource) => ({
-      ...voteSource,
-      __typename: undefined,
-      voteAmounts: voteSource.voteAmounts?.map((voteAmount: PollExternalVote) => ({
-        id: voteAmount.id,
-        amount: voteAmount.amount
-      }))
-    }))
+    const opensAt = poll.opensAt ? new Date(poll.opensAt).toISOString() : null;
+    const closedAt =
+      poll.closedAt ? new Date(poll.closedAt).toISOString() : null;
+    const externalSources = poll.externalVoteSources?.map(
+      (voteSource: PollExternalVoteSource) => ({
+        ...voteSource,
+        __typename: undefined,
+        voteAmounts: voteSource.voteAmounts?.map(
+          (voteAmount: PollExternalVote) => ({
+            id: voteAmount.id,
+            amount: voteAmount.amount,
+          })
+        ),
+      })
+    );
 
     await updatePoll({
       variables: {
@@ -135,19 +161,17 @@ function PollEditView() {
         answers: poll.answers?.map(answer => {
           return {
             id: answer.id,
-            answer: answer.answer
-          }
+            answer: answer.answer,
+          };
         }),
-        externalVoteSources: externalSources || []
-      }
-    })
+        externalVoteSources: externalSources || [],
+      },
+    });
 
     if (close) {
-      navigate(closePath)
+      navigate(closePath);
     }
   }
-
-  console.log(poll)
 
   return (
     <Form
@@ -155,7 +179,8 @@ function PollEditView() {
       model={validationModel}
       fluid
       disabled={loading}
-      formValue={{question: poll?.question}}>
+      formValue={{ question: poll?.question }}
+    >
       <FlexboxGrid>
         {/* model title */}
         <FlexboxGrid.Item colspan={24}>
@@ -175,7 +200,10 @@ function PollEditView() {
           <Row>
             {/* question */}
             <Col xs={24}>
-              <Panel header={t('pollEditView.questionPanelHeader')} bordered>
+              <Panel
+                header={t('pollEditView.questionPanelHeader')}
+                bordered
+              >
                 <Form.Group controlId="question">
                   <Form.Control
                     name="question"
@@ -183,9 +211,9 @@ function PollEditView() {
                     value={poll?.question || ''}
                     onChange={(value: string) => {
                       if (!poll) {
-                        return
+                        return;
                       }
-                      setPoll(p => (p ? {...p, question: value} : undefined))
+                      setPoll(p => (p ? { ...p, question: value } : undefined));
                     }}
                   />
                 </Form.Group>
@@ -194,11 +222,14 @@ function PollEditView() {
 
             {/* answers */}
             <Col xs={24}>
-              <Panel header={t('pollEditView.answerPanelHeader')} bordered>
+              <Panel
+                header={t('pollEditView.answerPanelHeader')}
+                bordered
+              >
                 <PollAnswers
                   poll={poll}
                   onPollChange={(poll: FullPoll) => {
-                    setPoll(poll)
+                    setPoll(poll);
                   }}
                 />
               </Panel>
@@ -206,7 +237,10 @@ function PollEditView() {
 
             {/* settings */}
             <Col xs={24}>
-              <Panel header={t('pollEditView.settingsPanelHeader')} bordered>
+              <Panel
+                header={t('pollEditView.settingsPanelHeader')}
+                bordered
+              >
                 {/* opens at */}
                 <DatesWrapper>
                   <DateItem>
@@ -216,12 +250,13 @@ function PollEditView() {
                       format="yyyy-MM-dd HH:mm"
                       onChange={(opensAt: Date | null) => {
                         if (!poll) {
-                          return
+                          return;
                         }
                         setPoll({
                           ...poll,
-                          opensAt: opensAt?.toISOString() || new Date().toISOString()
-                        })
+                          opensAt:
+                            opensAt?.toISOString() || new Date().toISOString(),
+                        });
                       }}
                     />
                   </DateItem>
@@ -229,13 +264,15 @@ function PollEditView() {
                     {/* closes at */}
                     <DateLabel>{t('pollEditView.closesAtLabel')}</DateLabel>
                     <DatePicker
-                      value={poll?.closedAt ? new Date(poll.closedAt) : undefined}
+                      value={
+                        poll?.closedAt ? new Date(poll.closedAt) : undefined
+                      }
                       format="yyyy-MM-dd HH:mm"
                       onChange={(closedAt: Date | null) => {
                         if (!poll) {
-                          return
+                          return;
                         }
-                        setPoll({...poll, closedAt: closedAt?.toISOString()})
+                        setPoll({ ...poll, closedAt: closedAt?.toISOString() });
                       }}
                     />
                   </DateItem>
@@ -245,24 +282,30 @@ function PollEditView() {
 
             {/* poll external votes */}
             <Col xs={24}>
-              <Panel header={t('pollEditView.pollExternalVotesPanelHeader')} bordered>
+              <Panel
+                header={t('pollEditView.pollExternalVotesPanelHeader')}
+                bordered
+              >
                 <PollExternalVotes
                   poll={poll}
                   onPollChange={(poll: FullPoll) => {
-                    setPoll(poll)
+                    setPoll(poll);
                   }}
                 />
               </Panel>
             </Col>
 
             <Col xs={24}>
-              <Panel header={t('pollEditView.infoText')} bordered>
+              <Panel
+                header={t('pollEditView.infoText')}
+                bordered
+              >
                 <div className="richTextFrame">
                   {poll && (
                     <RichTextBlock
                       value={poll?.infoText ? poll?.infoText : []}
                       onChange={value => {
-                        setPoll({...poll, infoText: value as Descendant[]})
+                        setPoll({ ...poll, infoText: value as Descendant[] });
                       }}
                     />
                   )}
@@ -273,11 +316,11 @@ function PollEditView() {
         </PollEditor>
       </FlexboxGrid>
     </Form>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_POLL',
-  'CAN_UPDATE_POLL'
-])(PollEditView)
-export {CheckedPermissionComponent as PollEditView}
+  'CAN_UPDATE_POLL',
+])(PollEditView);
+export { CheckedPermissionComponent as PollEditView };

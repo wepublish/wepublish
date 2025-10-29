@@ -1,4 +1,4 @@
-import z from 'zod'
+import z from 'zod';
 
 export class Validator {
   static createUser = z.object({
@@ -9,12 +9,12 @@ export class Validator {
       .date()
       .refine(data => new Date() > data, {
         path: ['birthday'],
-        message: 'Birthday can not be in the future'
+        message: 'Birthday can not be in the future',
       })
-      .optional()
-  })
+      .optional(),
+  });
 
   static login = z.object({
-    email: z.string().email()
-  })
+    email: z.string().email(),
+  });
 }

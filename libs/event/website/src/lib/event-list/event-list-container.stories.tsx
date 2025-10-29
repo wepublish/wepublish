@@ -1,12 +1,12 @@
-import {Meta} from '@storybook/react'
-import {EventListDocument} from '@wepublish/website/api'
-import {EventListContainer} from './event-list-container'
-import {mockEvent} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { EventListDocument } from '@wepublish/website/api';
+import { EventListContainer } from './event-list-container';
+import { mockEvent } from '@wepublish/storybook/mocks';
 
 export default {
   component: EventListContainer,
-  title: 'Container/EventList'
-} as Meta
+  title: 'Container/EventList',
+} as Meta;
 
 export const Default = {
   args: {},
@@ -17,7 +17,7 @@ export const Default = {
         {
           request: {
             query: EventListDocument,
-            variables: {}
+            variables: {},
           },
           result: {
             data: {
@@ -28,13 +28,13 @@ export const Default = {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+                  startCursor: null,
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+};
