@@ -1630,6 +1630,8 @@
         "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
         "active": "Aktiv",
         "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "alternativeSubscribeUrl": "Alternative URL zur Abo-Seite",
+        "alternativeSubscribeUrlHelpText": "Kann in Kombination mit einem Abonnieren-Block auf einer Seite verwendet werden. Wenn leer gelassen, wird die Standardseite verwendet.",
         "anyMemberPlan": "Die Paywall entfällt für alle Abos",
         "bypasses": "Bypasses",
         "bypassToken": "Bypass-Token",

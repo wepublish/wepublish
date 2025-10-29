@@ -1519,6 +1519,8 @@
         "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
         "active": "Actif",
         "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "alternativeSubscribeUrl": "URL alternative vers la page d’abonnement",
+        "alternativeSubscribeUrlHelpText": "Peut être utilisée en combinaison avec un bloc d’abonnement sur une page. Si laissé vide, la page par défaut sera utilisée.",
         "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
         "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
         "bypasses": "Contournements",
