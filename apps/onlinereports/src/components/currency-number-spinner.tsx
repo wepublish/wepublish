@@ -86,12 +86,12 @@ const buttonStyles = (theme: Theme) => css`
   flex-shrink: 0;
   overflow: hidden;
 
-  @media (hover: hover) {
-    &[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
+  @media (hover: hover) {
     &:hover:not([disabled]) {
       color: rgba(0, 0, 0, 0.87);
       background-color: rgba(0, 0, 0, 0.04);

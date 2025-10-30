@@ -34,6 +34,13 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeSection},
   ${SubscribeNarrowSection} {
     grid-area: var(--grid-area);
+
+    &:is(:nth-of-type(2)) {
+      &:not(:has(+ :nth-of-type(3) > ${SubscribeAmount})) {
+        grid-area: unset;
+        grid-row: 1/3;
+      }
+    }
   }
 `;
 
