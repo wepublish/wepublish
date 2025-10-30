@@ -739,8 +739,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {paymentButtonText}{' '}
+          {donate?.(selectedMemberPlan) ?
+            t('subscribe.subscribeButton.donate')
+          : t('subscribe.subscribeButton.subscribe')}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?
