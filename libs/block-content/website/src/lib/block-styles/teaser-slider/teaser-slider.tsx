@@ -166,7 +166,7 @@ export const TeaserSlider = ({
   blockStyle,
   className,
   teasers,
-  slidesPerViewConfig,
+  slidesPerViewConfig = {},
   ...props
 }: BuilderBlockStyleProps['TeaserSlider']) => {
   const {

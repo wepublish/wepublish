@@ -24,7 +24,7 @@ import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 
 export const ImageSlider = ({
   images,
-  slidesPerViewConfig,
+  slidesPerViewConfig = {},
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const {
     blocks: { Image },

@@ -16,7 +16,7 @@ export type BuilderSlidesPerView = Partial<{
 }>;
 
 export type BuilderSliderConfig = {
-  slidesPerViewConfig: BuilderSlidesPerView;
+  slidesPerViewConfig?: BuilderSlidesPerView;
 };
 
 export type BuilderBlockStyleProps = {
