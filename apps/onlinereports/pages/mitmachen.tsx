@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
+import { UserFormWrapper } from '@wepublish/authentication/website';
 import {
   SubscribeAmount,
+  SubscribeButton,
   SubscribeCancelable,
   SubscribeNarrowSection,
   SubscribeSection,
@@ -26,9 +28,7 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       'challenge'
       'submit';
 
-    ${({ theme }) => theme.breakpoints.down('md')} {
-      gap: ${({ theme }) => theme.spacing(2.5)};
-    }
+    gap: ${({ theme }) => theme.spacing(2.5)};
   }
 
   ${SubscribeSection},
@@ -36,7 +36,7 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
     grid-area: var(--grid-area);
 
     &:is(:nth-of-type(2)) {
-      &:not(:has(+ :nth-of-type(3) > ${SubscribeAmount})) {
+      &:not(:has(+ :nth-of-type(3) > ${UserFormWrapper})) {
         grid-area: unset;
         grid-row: 1/3;
       }
@@ -58,8 +58,17 @@ const SubscribePageWrapper = styled('div')`
     background: ${({ theme }) => theme.palette.secondary.main};
   }
 
+  ${SubscribeButton} {
+    margin-bottom: ${({ theme }) => theme.spacing(4)};
+
+    &:has(+ ${SubscribeCancelable}) {
+      margin-bottom: 0;
+    }
+  }
+
   ${SubscribeCancelable} {
     font-weight: bold;
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
   }
 `;
 
