@@ -14,7 +14,7 @@ import getConfig from 'next/config';
 export default function Index() {
   return (
     <ContentWidthProvider fullWidth>
-      <PageContainer slug={'home'} />
+      <PageContainer slug={''} />
 
       <Link
         href="/a"
@@ -38,7 +38,7 @@ export const getStaticProps: GetStaticProps = async () => {
     client.query({
       query: PageDocument,
       variables: {
-        slug: 'home',
+        slug: '',
       },
     }),
     client.query({
