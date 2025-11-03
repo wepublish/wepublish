@@ -21,6 +21,7 @@ import {
 import { isTeaserListBlock } from '../../teaser/teaser-list-block';
 import {
   BuilderBlockStyleProps,
+  BuilderSlidesPerView,
   BuilderTeaserListBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -103,42 +104,48 @@ export const SliderArrow = styled('button')`
   }
 `;
 
-export const useSlidesPerViewResponsive = () => {
+export const useSlidesPerView = ({
+  xs = 1.4,
+  sm = 2,
+  md = 2.2,
+  lg = 2.3,
+  xl = 2.8,
+}: BuilderSlidesPerView = {}) => {
   const theme = useTheme();
 
-  const sm = useMediaQuery(theme.breakpoints.up('sm'), {
+  const smQuery = useMediaQuery(theme.breakpoints.up('sm'), {
     ssrMatchMedia: () => ({ matches: false }),
   });
 
-  const md = useMediaQuery(theme.breakpoints.up('md'), {
+  const mdQuery = useMediaQuery(theme.breakpoints.up('md'), {
     ssrMatchMedia: () => ({ matches: false }),
   });
 
-  const lg = useMediaQuery(theme.breakpoints.up('lg'), {
+  const lgQuery = useMediaQuery(theme.breakpoints.up('lg'), {
     ssrMatchMedia: () => ({ matches: false }),
   });
 
-  const xl = useMediaQuery(theme.breakpoints.up('xl'), {
+  const xlQuery = useMediaQuery(theme.breakpoints.up('xl'), {
     ssrMatchMedia: () => ({ matches: false }),
   });
 
-  if (xl) {
-    return 2.8;
+  if (xlQuery) {
+    return xl;
   }
 
-  if (lg) {
-    return 2.3;
+  if (lgQuery) {
+    return lg;
   }
 
-  if (md) {
-    return 2.2;
+  if (mdQuery) {
+    return md;
   }
 
-  if (sm) {
-    return 2;
+  if (smQuery) {
+    return sm;
   }
 
-  return 1.4;
+  return xs;
 };
 
 export const useSlidesPadding = () => {
@@ -155,17 +162,13 @@ export const useSlidesPadding = () => {
   return 16;
 };
 
-type TeaserSliderProps = BuilderBlockStyleProps['TeaserSlider'] & {
-  useSlidesPerView?: () => number;
-};
-
 export const TeaserSlider = ({
   blockStyle,
   className,
   teasers,
-  useSlidesPerView = useSlidesPerViewResponsive,
+  slidesPerViewConfig = {},
   ...props
-}: TeaserSliderProps) => {
+}: BuilderBlockStyleProps['TeaserSlider']) => {
   const {
     elements: { H5 },
     blocks: { Teaser },
@@ -175,7 +178,7 @@ export const TeaserSlider = ({
 
   const filledTeasers = teasers.filter(isFilledTeaser);
 
-  const slidesPerView = useSlidesPerView();
+  const slidesPerView = useSlidesPerView(slidesPerViewConfig);
   const slidePadding = useSlidesPadding();
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
