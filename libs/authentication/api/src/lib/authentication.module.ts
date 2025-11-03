@@ -12,6 +12,7 @@ import { AuthenticatedGuard } from './authenticated.guard';
   imports: [
     PrismaModule,
     PassportModule.register({
+      session: false, // would use a cookie if set to true
       defaultStrategy: 'session',
     }),
   ],

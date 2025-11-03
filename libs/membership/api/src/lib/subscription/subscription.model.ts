@@ -66,7 +66,13 @@ export class PublicSubscription {
   url!: string;
 
   @Field(() => Boolean)
+  isActive!: boolean;
+
+  @Field(() => Boolean)
   canExtend!: boolean;
+
+  @Field({ nullable: true })
+  externalReward?: string;
 
   userID!: string;
   user!: User;

@@ -20,6 +20,12 @@
     "noActiveSubscriptions": "Sie haben noch keine aktive Zahlung.",
     "subscribeNow": "Jetzt unterstützen."
   },
+  "subscribe": {
+    "getPaymentText": {
+      "forLowerCase": "mit",
+      "monthlyAmountUndefinedOrZero": "monatlich mit CHF 0.-"
+    }
+  },
   "user": {
     "changeEmailRequest": "Klicken Sie hier, um Ihre E-Mail-Adresse zu ändern.",
     "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Zahlungen}}",

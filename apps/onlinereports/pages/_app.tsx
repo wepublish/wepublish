@@ -9,10 +9,14 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import {
   TitleBlock,
   TitleBlockLead,
+  TitleBlockPreTitle,
   TitleBlockTitle,
 } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { NavbarContainer } from '@wepublish/navigation/website';
+import {
+  FooterContainer,
+  NavbarContainer,
+} from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
@@ -92,8 +96,9 @@ i18next
   });
 z.setErrorMap(zodI18nMap);
 
+// 0-height of last row is needed to make sticky ads work correctly
 const Spacer = styled(Structure)`
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr 0;
   min-height: 100vh;
 
   main {
@@ -151,7 +156,14 @@ const OnlineReportsTitle = styled(TitleBlock)`
   }
 
   ${TitleBlockLead} {
-    font-size: -${({ theme }) => theme.typography.body1.fontSize};
+    font-size: ${({ theme }) => theme.typography.body1.fontSize}px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  ${TitleBlockPreTitle} {
+    display: none;
   }
 `;
 
@@ -196,6 +208,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ArticleAuthors={OnlineReportsArticleAuthors}
             ArticleList={OnlineReportsArticleList}
             Navbar={OnlineReportsNavbar}
+            Footer={OnlineReportsFooter}
             Article={OnlineReportsArticle}
             CommentListItem={OnlineReportsCommentListItem}
             Page={OnlineReportsPage}
@@ -318,7 +331,12 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   <Advertisement type={'half-page'} />
                 </AdvertisementPlacer>
 
-                <OnlineReportsFooter />
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[['about-us']]}
+                  iconSlug="icons"
+                  wepublishLogo="hidden"
+                />
               </Spacer>
 
               <RoutedAdminBar />

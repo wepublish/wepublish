@@ -735,7 +735,8 @@
       "tags": "Tags",
       "savedChanges": "Enregistré",
       "successPage": "Redirection vers la page en cas de succès du paiement",
-      "failPage": "Redirection vers la page en cas d'erreur de paiement"
+      "failPage": "Redirection vers la page en cas d'erreur de paiement",
+      "externalReward": "Lien ou description vers une récompense externe (visible uniquement par les abonnés)"
     },
     "memberPlanList": {
       "action": "Actions",

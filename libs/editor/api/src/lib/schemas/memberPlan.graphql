@@ -10,21 +10,11 @@ fragment MemberPlanRef on MemberPlan {
   image {
     ...FullImage
   }
+  externalReward
 
   successPageId
-  # successPage {
-  #   ...PageRef
-  # }
-
   failPageId
-  # failPage {
-  #   ...PageRef
-  # }
-
   confirmationPageId
-  # confirmationPage {
-  #   ...PageRef
-  # }
 }
 
 fragment FullMemberPlan on MemberPlan {

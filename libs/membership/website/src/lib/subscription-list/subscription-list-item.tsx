@@ -62,6 +62,20 @@ export const SubscriptionListItemActions = styled('div')`
   }
 `;
 
+const isURL = (string: string) => {
+  try {
+    new URL(string);
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+
+  return false;
+};
+
+export const SubscriptionListItemReward = styled('div')``;
+
 export function SubscriptionListItem({
   autoRenew,
   startsAt,
@@ -73,6 +87,7 @@ export function SubscriptionListItem({
   url,
   cancel,
   canExtend,
+  externalReward,
   extend,
   className,
 }: BuilderSubscriptionListItemProps) {
@@ -190,6 +205,28 @@ export function SubscriptionListItem({
             <MdHistory /> <Link href={url}>Details & Zahlungen</Link>
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
+
+        {externalReward && (
+          <SubscriptionListItemReward>
+            <Alert severity="info">
+              {isURL(externalReward) ?
+                <Link
+                  href={externalReward}
+                  target="_blank"
+                >
+                  {t('subscription.externalReward', {
+                    isLink: true,
+                    externalReward,
+                  })}
+                </Link>
+              : t('subscription.externalReward', {
+                  isLink: false,
+                  externalReward,
+                })
+              }
+            </Alert>
+          </SubscriptionListItemReward>
+        )}
 
         {error && <Alert severity="error">{error.message}</Alert>}
 

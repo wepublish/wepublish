@@ -19,12 +19,24 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
-    "cancellable": "Jederzeit kündbar"
+    "cancellable": "Jederzeit kündbar",
+    "subscribeButton": {
+      "subscribe": "abonnieren",
+      "donate": "spenden"
+    },
+    "getPaymentText": {
+      "forLowerCase": "für",
+      "forLowerCaseButton": "für",
+      "forUpperCase": "Für",
+      "monthlyAmountUndefinedOrZero": "Kostenlos",
+      "supportWithMonthlyAmountUndefinedOrZero": "Kostenlos"
+    }
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
+    "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
     "cancelConfirmation": "Das {type, select, Donation {Spende} other {Abo}} wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",

@@ -100,6 +100,7 @@ export type ArticleFilter = {
   published?: InputMaybe<Scalars['Boolean']>;
   shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  tagsNotIn?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -1389,6 +1390,7 @@ export type MemberPlan = HasImage & {
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -2614,7 +2616,9 @@ export type PublicSubscription = HasPaymentMethod & HasUser & {
   canExtend: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -3374,6 +3378,7 @@ export type TagConnection = {
 
 export type TagFilter = {
   tag?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
   type?: InputMaybe<TagType>;
 };
 

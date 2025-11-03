@@ -89,6 +89,9 @@ export class MemberPlan {
   productType!: ProductType;
 
   @Field({ nullable: true })
+  externalReward?: string;
+
+  @Field({ nullable: true })
   successPageId?: string;
 
   @Field({ nullable: true })

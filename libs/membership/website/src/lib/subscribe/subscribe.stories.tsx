@@ -474,7 +474,7 @@ export const OnlyPassword: StoryObj<typeof Subscribe> = {
   ...LoggedOut,
   args: {
     ...LoggedOut.args,
-    fields: ['password'],
+    fields: ['password', 'passwordRepeated'],
   },
 };
 

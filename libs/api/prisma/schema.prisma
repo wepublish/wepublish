@@ -587,6 +587,7 @@ model MemberPlan {
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
   productType                    ProductType              @default(Subscription)
+  externalReward                 String?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
