@@ -9,7 +9,7 @@ import {
 import { PeerProfile } from '../db/peer';
 import { Context } from '../context';
 import { GraphQLImage } from './image';
-import { GraphQLColor } from './color';
+import { ColorScalar } from '@wepublish/utils/api';
 import { GraphQLDateTime } from 'graphql-scalars';
 import { createProxyingResolver, delegateToPeerSchema } from '../utility';
 import { GraphQLRichText } from '@wepublish/richtext/api';
@@ -21,8 +21,8 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     logoID: { type: GraphQLString },
     squareLogoId: { type: GraphQLString },
-    themeColor: { type: new GraphQLNonNull(GraphQLColor) },
-    themeFontColor: { type: new GraphQLNonNull(GraphQLColor) },
+    themeColor: { type: new GraphQLNonNull(ColorScalar) },
+    themeFontColor: { type: new GraphQLNonNull(ColorScalar) },
     callToActionText: { type: new GraphQLNonNull(GraphQLRichText) },
     callToActionURL: { type: new GraphQLNonNull(GraphQLString) },
     callToActionImageURL: { type: GraphQLString },
@@ -53,9 +53,9 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
       }),
     },
 
-    themeColor: { type: new GraphQLNonNull(GraphQLColor) },
+    themeColor: { type: new GraphQLNonNull(ColorScalar) },
     themeFontColor: {
-      type: new GraphQLNonNull(GraphQLColor),
+      type: new GraphQLNonNull(ColorScalar),
       resolve(profile) {
         return profile.themeFontColor ? profile.themeFontColor : '#fff';
       },

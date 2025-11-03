@@ -4,9 +4,12 @@ exports[`Tags can be created 1`] = `
 {
   "data": {
     "createTag": {
+      "color": Any<String>,
       "description": Any<Array>,
       "id": Any<String>,
+      "main": Any<Boolean>,
       "tag": Any<String>,
+      "type": Any<String>,
     },
   },
   "errors": undefined,

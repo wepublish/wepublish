@@ -2448,6 +2448,7 @@ type SystemMailModel {
 }
 
 type Tag {
+  color: Color
   description: RichText
   id: String!
   main: Boolean!
