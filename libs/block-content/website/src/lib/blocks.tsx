@@ -116,6 +116,7 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     [isImageGalleryBlock, block => <blocks.ImageGallery {...block} />],
   ]);
 
+  /*
   console.log(
     'flexBlock',
     cond([
@@ -125,6 +126,7 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       ],
     ])(block)
   );
+  */
 
   return (
     blockStylesCond(block) ??

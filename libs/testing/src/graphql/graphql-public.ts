@@ -1012,6 +1012,25 @@ export type FlexAlignment = {
   y: Scalars['Int'];
 };
 
+export type FlexAlignmentBlocks = {
+  __typename?: 'FlexAlignmentBlocks';
+  h: Scalars['Int'];
+  i: Scalars['String'];
+  static: Scalars['Boolean'];
+  w: Scalars['Int'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+};
+
+export type FlexAlignmentBlocksInput = {
+  h: Scalars['Int'];
+  i: Scalars['String'];
+  static: Scalars['Boolean'];
+  w: Scalars['Int'];
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+};
+
 export type FlexAlignmentInput = {
   h: Scalars['Int'];
   i: Scalars['String'];
@@ -1025,12 +1044,12 @@ export type FlexBlock = BaseBlock & {
   __typename?: 'FlexBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
-  nestedBlocks?: Maybe<Array<BlockType>>;
+  nestedBlocks: Array<NestedBlock>;
   type: BlockType;
 };
 
 export type FlexBlockInput = {
-  nestedBlocks?: InputMaybe<Array<BlockType>>;
+  nestedBlocks: Array<NestedBlockInput>;
   type: BlockType;
 };
 
@@ -2135,6 +2154,17 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page',
 }
+
+export type NestedBlock = {
+  __typename?: 'NestedBlock';
+  alignment: FlexAlignmentBlocks;
+  block?: Maybe<BaseBlock>;
+};
+
+export type NestedBlockInput = {
+  alignment: FlexAlignmentBlocksInput;
+  block?: InputMaybe<BlockType>;
+};
 
 export type NonDbProperty = {
   __typename?: 'NonDbProperty';

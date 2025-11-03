@@ -298,7 +298,24 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     field: props => <FlexBlock {...props} />,
     defaultValue: {
       blockStyle: undefined,
-      nestedBlocks: [],
+      nestedBlocks: [
+        {
+          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          block: null,
+        },
+        {
+          alignment: { i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false },
+          block: null,
+        },
+        {
+          alignment: { i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false },
+          block: null,
+        },
+        {
+          alignment: { i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false },
+          block: null,
+        },
+      ],
     },
     label: 'blocks.flexBlock.label',
     icon: <MdAccountBox />,

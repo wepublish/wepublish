@@ -302,7 +302,20 @@ fragment FullBlock on BlockContent {
   ... on FlexBlock {
     blockStyle
     type
-    nestedBlocks
+    nestedBlocks {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+
+      block {
+        __typename
+      }
+    }
   }
 
   ... on TeaserGridFlexBlock {

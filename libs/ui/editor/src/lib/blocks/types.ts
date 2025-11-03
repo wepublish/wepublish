@@ -5,7 +5,7 @@ import {
   BlockType,
   CommentBlockCommentFragment,
   EditorBlockType,
-  FullBlockFragment,
+  FullBlockFragment, // Corrected context line
   FullCrowdfundingWithActiveGoalFragment,
   FullEventFragment,
   FullImageFragment,
@@ -113,9 +113,35 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
   image?: FullImageFragment | undefined;
 }
 
-export interface FlexBlockValue extends BaseBlockValue {
-  nestedBlocks: BlockType[];
+export interface MinimalBlock {
+  type: BlockType;
 }
+
+export interface NestedBlock {
+  alignment: FlexAlignment;
+  //block?: MinimalBlock | null;
+  block?: { type: BlockType } | null;
+}
+
+export interface FlexBlockValue extends BaseBlockValue {
+  nestedBlocks: Array<NestedBlock>;
+}
+
+const isNestedBlock = (nb: unknown): nb is NestedBlock => {
+  return (
+    !!nb &&
+    typeof nb === 'object' &&
+    Object.prototype.hasOwnProperty.call(nb as object, 'alignment')
+  );
+};
+
+const isMinimalBlock = (nb: unknown): nb is MinimalBlock => {
+  return (
+    !!nb &&
+    typeof nb === 'object' &&
+    Object.prototype.hasOwnProperty.call(nb as object, 'type')
+  );
+};
 
 export enum EmbedType {
   FacebookPost = 'facebookPost',
@@ -739,17 +765,31 @@ export function mapBlockValueToBlockInput(
         },
       };
 
-    case EditorBlockType.FlexBlock:
+    case EditorBlockType.FlexBlock: {
+      /*
       console.log(
         'Mapping FlexBlockValue to BlockInput: libs/ui/editor/src/lib/blocks/types.ts',
         block
       );
-      return {
-        flexBlock: {
-          nestedBlocks: block.value.nestedBlocks,
-          type: BlockType[EditorBlockType.FlexBlock],
-        },
+      */
+      const flex = {
+        nestedBlocks: (block.value.nestedBlocks || []).map(nb => ({
+          alignment: {
+            i: nb.alignment.i,
+            x: nb.alignment.x,
+            y: nb.alignment.y,
+            w: nb.alignment.w,
+            h: nb.alignment.h,
+            static: nb.alignment.static ?? false,
+          },
+          block: nb.block ? nb.block.type : null,
+        })),
+        type: BlockType.FlexBlock,
       };
+
+      // Cast to BlockContentInput because generated types may lag behind server changes.
+      return { flexBlock: flex } as unknown as BlockContentInput;
+    }
   }
 }
 
@@ -1149,8 +1189,42 @@ export function blockForQueryBlock(
         type: EditorBlockType.FlexBlock,
         value: {
           blockStyle: block.blockStyle,
-          nestedBlocks:
-            block.nestedBlocks ? (block.nestedBlocks as BlockType[]) : [],
+          nestedBlocks: (block.nestedBlocks || []).map(nb => {
+            if (!nb) {
+              return {
+                alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
+                block: null,
+              };
+            }
+
+            if (isNestedBlock(nb)) {
+              const s = nb;
+              return {
+                alignment: {
+                  i: s.alignment.i ?? '',
+                  x: s.alignment.x ?? 0,
+                  y: s.alignment.y ?? 0,
+                  w: s.alignment.w ?? 0,
+                  h: s.alignment.h ?? 0,
+                  static: s.alignment.static ?? false,
+                },
+                block: s.block ? { type: s.block.type } : null,
+              };
+            }
+
+            if (isMinimalBlock(nb)) {
+              const s = nb;
+              return {
+                alignment: { i: '', x: 0, y: 0, w: 1, h: 1, static: false },
+                block: { type: s.type },
+              };
+            }
+
+            return {
+              alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
+              block: null,
+            };
+          }),
         },
       };
 

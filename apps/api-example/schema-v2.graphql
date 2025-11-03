@@ -895,6 +895,24 @@ type FlexAlignment {
   y: Int!
 }
 
+type FlexAlignmentBlocks {
+  h: Int!
+  i: String!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
+input FlexAlignmentBlocksInput {
+  h: Int!
+  i: String!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
 input FlexAlignmentInput {
   h: Int!
   i: String!
@@ -907,12 +925,12 @@ input FlexAlignmentInput {
 type FlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
-  nestedBlocks: [BlockType!]
+  nestedBlocks: [NestedBlock!]!
   type: BlockType!
 }
 
 input FlexBlockInput {
-  nestedBlocks: [BlockType!]
+  nestedBlocks: [NestedBlockInput!]!
   type: BlockType!
 }
 
@@ -1599,6 +1617,16 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NestedBlock {
+  alignment: FlexAlignmentBlocks!
+  block: BaseBlock
+}
+
+input NestedBlockInput {
+  alignment: FlexAlignmentBlocksInput!
+  block: BlockType
 }
 
 type NonDbProperty {
