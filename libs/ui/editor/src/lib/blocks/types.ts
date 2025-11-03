@@ -5,7 +5,7 @@ import {
   BlockType,
   CommentBlockCommentFragment,
   EditorBlockType,
-  FullBlockFragment, // Corrected context line
+  FullBlockFragment,
   FullCrowdfundingWithActiveGoalFragment,
   FullEventFragment,
   FullImageFragment,
@@ -787,7 +787,6 @@ export function mapBlockValueToBlockInput(
         type: BlockType.FlexBlock,
       };
 
-      // Cast to BlockContentInput because generated types may lag behind server changes.
       return { flexBlock: flex } as unknown as BlockContentInput;
     }
   }
