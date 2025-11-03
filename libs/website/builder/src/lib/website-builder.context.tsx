@@ -53,6 +53,7 @@ import {
   BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderFlexBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -237,6 +238,7 @@ export type WebsiteBuilderProps = {
     Poll: ComponentType<BuilderPollBlockProps>;
     Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>;
     Listicle: ComponentType<BuilderListicleBlockProps>;
+    FlexBlock: ComponentType<BuilderFlexBlockProps>;
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>;
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>;
     TeaserList: ComponentType<BuilderTeaserListBlockProps>;
@@ -378,6 +380,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent,
+    FlexBlock: NoComponent,
   },
 
   blockStyles: {

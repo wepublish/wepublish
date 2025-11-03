@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderListicleBlockProps,
   BuilderPollBlockProps,
@@ -14,6 +15,7 @@ import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
 import { isImageBlock } from './image/image-block';
@@ -114,6 +116,16 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     [isImageGalleryBlock, block => <blocks.ImageGallery {...block} />],
   ]);
 
+  console.log(
+    'flexBlock',
+    cond([
+      [
+        isFlexBlock,
+        block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
+      ],
+    ])(block)
+  );
+
   return (
     blockStylesCond(block) ??
     facebookEmbedCond(block) ??
@@ -168,6 +180,10 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       [
         isCommentBlock,
         block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />,
+      ],
+      [
+        isFlexBlock,
+        block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
       ],
     ])(block)
   );

@@ -29,6 +29,7 @@ export enum BlockType {
   Comment = 'comment',
   Event = 'event',
   Subscribe = 'subscribe',
+  FlexBlock = 'flexBlock',
 }
 
 registerEnumType(BlockType, {

@@ -297,7 +297,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -307,6 +307,7 @@ export type BlockContentInput = {
   event?: InputMaybe<EventBlockInput>;
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
   facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
+  flexBlock?: InputMaybe<FlexBlockInput>;
   html?: InputMaybe<HtmlBlockInput>;
   image?: InputMaybe<ImageBlockInput>;
   imageGallery?: InputMaybe<ImageGalleryBlockInput>;
@@ -347,6 +348,7 @@ export enum BlockType {
   Event = 'Event',
   FacebookPost = 'FacebookPost',
   FacebookVideo = 'FacebookVideo',
+  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -769,6 +771,7 @@ export enum EditorBlockType {
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
+  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -959,6 +962,19 @@ export type FlexAlignmentInput = {
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
+};
+
+export type FlexBlock = BaseBlock & {
+  __typename?: 'FlexBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  nestedBlocks?: Maybe<Array<BlockType>>;
+  type: BlockType;
+};
+
+export type FlexBlockInput = {
+  nestedBlocks?: InputMaybe<Array<BlockType>>;
+  type: BlockType;
 };
 
 export type FlexTeaser = {

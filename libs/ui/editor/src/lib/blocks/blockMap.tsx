@@ -33,6 +33,7 @@ import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
 import { EventBlock } from './eventBlock';
+import { FlexBlock } from './flexBlock';
 import { HTMLBlock } from './htmlBlock';
 import { ImageBlock } from './imageBlock';
 import { ImageGalleryBlock } from './imageGalleryBlock';
@@ -291,5 +292,15 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: { filter: {}, events: [], blockStyle: undefined },
     label: 'blocks.event.label',
     icon: <MdEvent />,
+  },
+
+  [EditorBlockType.FlexBlock]: {
+    field: props => <FlexBlock {...props} />,
+    defaultValue: {
+      blockStyle: undefined,
+      nestedBlocks: [],
+    },
+    label: 'blocks.flexBlock.label',
+    icon: <MdAccountBox />,
   },
 };

@@ -209,6 +209,7 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     type
   }
+
 }
 
 fragment FullTeaser on Teaser {
@@ -292,6 +293,12 @@ fragment FullTeaser on Teaser {
 
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
+
+  ... on FlexBlock {
+    blockStyle
+    type
+    nestedBlocks
+  }
 
   ... on TeaserGridFlexBlock {
     blockStyle

@@ -2,6 +2,7 @@ import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
+  BlockType,
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
@@ -110,6 +111,10 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
   linkTarget?: string;
   hideButton: boolean;
   image?: FullImageFragment | undefined;
+}
+
+export interface FlexBlockValue extends BaseBlockValue {
+  nestedBlocks: BlockType[];
 }
 
 export enum EmbedType {
@@ -389,6 +394,11 @@ export type EventBlockListValue = BlockListValue<
   EventBlockValue
 >;
 
+export type FlexBlockListValue = BlockListValue<
+  EditorBlockType.FlexBlock,
+  FlexBlockValue
+>;
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -408,7 +418,8 @@ export type BlockValue =
   | CrowdfundingBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
-  | TeaserListBlockListValue;
+  | TeaserListBlockListValue
+  | FlexBlockListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -433,6 +444,7 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
+
     case EditorBlockType.Crowdfunding:
       return {
         crowdfunding: {
@@ -726,6 +738,18 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
+
+    case EditorBlockType.FlexBlock:
+      console.log(
+        'Mapping FlexBlockValue to BlockInput: libs/ui/editor/src/lib/blocks/types.ts',
+        block
+      );
+      return {
+        flexBlock: {
+          nestedBlocks: block.value.nestedBlocks,
+          type: BlockType[EditorBlockType.FlexBlock],
+        },
+      };
   }
 }
 
@@ -843,7 +867,6 @@ export function blockForQueryBlock(
         },
       };
     }
-
     case 'RichTextBlock':
       return {
         key,
@@ -1117,6 +1140,17 @@ export function blockForQueryBlock(
           linkTarget: block.linkTarget ?? '',
           hideButton: block.hideButton ?? false,
           image: block.image ?? undefined,
+        },
+      };
+
+    case 'FlexBlock':
+      return {
+        key,
+        type: EditorBlockType.FlexBlock,
+        value: {
+          blockStyle: block.blockStyle,
+          nestedBlocks:
+            block.nestedBlocks ? (block.nestedBlocks as BlockType[]) : [],
         },
       };
 

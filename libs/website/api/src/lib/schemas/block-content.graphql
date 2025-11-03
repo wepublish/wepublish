@@ -299,6 +299,12 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
+  ... on FlexBlock {
+    blockStyle
+    type
+    nestedBlocks
+  }
+
   ... on TeaserGridFlexBlock {
     ...FullTeaserGridFlexBlock
   }
