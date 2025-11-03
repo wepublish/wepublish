@@ -63,6 +63,8 @@ export const SubscribeBlock = ({
     [memberPlans]
   );
 
+  console.log(subscriptionToUpgrade, memberPlansObj);
+
   const handleOnSelect = useCallback(
     (memberPlanId: string | undefined) => {
       if (memberPlanId) {

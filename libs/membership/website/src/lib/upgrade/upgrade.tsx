@@ -113,21 +113,6 @@ export const Upgrade = ({
   const [error, setError] = useState<Error>();
   const callAction = useAsyncAction(setLoading, setError);
 
-  const { control, handleSubmit, watch, setValue, resetField } = useForm<
-    z.infer<typeof upgradeSchema>
-  >({
-    resolver: zodResolver(upgradeSchema),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-  });
-
-  const selectedPaymentMethodId = watch('paymentMethodId');
-  const selectedMemberPlanId = watch('memberPlanId');
-  const payTransactionFee = watch('payTransactionFee');
-  const monthlyAmount =
-    watch('monthlyAmount') +
-    (payTransactionFee ? transactionFee(watch('monthlyAmount')) : 0);
-
   const availableMemberplans = useMemo(
     () =>
       memberPlans.data?.memberPlans.nodes.filter(
@@ -140,6 +125,29 @@ export const Upgrade = ({
       subscriptionToUpgrade.memberPlan.amountPerMonthMin,
     ]
   );
+
+  const { control, handleSubmit, watch, setValue, resetField } = useForm<
+    z.infer<typeof upgradeSchema>
+  >({
+    resolver: zodResolver(upgradeSchema),
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      memberPlanId:
+        defaults?.memberPlanSlug ?
+          availableMemberplans.find(
+            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+          )?.id
+        : availableMemberplans[0]?.id,
+    },
+  });
+
+  const selectedPaymentMethodId = watch('paymentMethodId');
+  const selectedMemberPlanId = watch('memberPlanId');
+  const payTransactionFee = watch('payTransactionFee');
+  const monthlyAmount =
+    watch('monthlyAmount') +
+    (payTransactionFee ? transactionFee(watch('monthlyAmount')) : 0);
 
   const selectedMemberPlan = useMemo(
     () =>
@@ -233,18 +241,11 @@ export const Upgrade = ({
         <Controller
           name={'memberPlanId'}
           control={control}
-          defaultValue={
-            defaults?.memberPlanSlug ?
-              availableMemberplans.find(
-                memberPlan => memberPlan.slug === defaults?.memberPlanSlug
-              )?.id
-            : availableMemberplans[0]?.id
-          }
           render={({ field }) => (
             <MemberPlanPicker
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={availableMemberplans ?? []}
+              memberPlans={availableMemberplans}
             />
           )}
         />

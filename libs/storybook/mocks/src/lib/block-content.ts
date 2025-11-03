@@ -45,6 +45,7 @@ import { mockArticle, mockArticleRevision } from './article';
 import { mockPage, mockPageRevision } from './page';
 import nanoid from 'nanoid';
 import { mockCrowdfunding } from './crowdfunding';
+import { mockMemberPlan } from './membership';
 
 export const mockTitleBlock = ({
   title = 'Title Block',
@@ -519,8 +520,11 @@ export const mockTeaserGridFlexBlock = ({
 
 export const mockSubscribeBlock = ({
   fields = [],
-  memberPlans = [],
-  memberPlanIds = [],
+  memberPlans = [
+    mockMemberPlan(),
+    mockMemberPlan({ amountPerMonthMin: 10000, amountPerMonthTarget: 15000 }),
+  ],
+  memberPlanIds = [memberPlans[0].id, memberPlans[1].id],
 }: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
   type: BlockType.Subscribe,
   __typename: 'SubscribeBlock',

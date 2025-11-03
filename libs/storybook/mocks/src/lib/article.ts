@@ -7,6 +7,7 @@ import nanoid from 'nanoid';
 import { mockBlockContent } from './block-content';
 import { mockAuthor } from './author';
 import { mockImage } from './image';
+import { faker } from '@faker-js/faker';
 
 export const mockArticleRevision = ({
   title = 'This is an article title',
@@ -38,7 +39,7 @@ export const mockArticleRevision = ({
 });
 
 export const mockArticle = ({
-  id = nanoid(),
+  id = faker.string.nanoid(),
   disableComments = false,
   likes = 5,
   trackingPixels = [],

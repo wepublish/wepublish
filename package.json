@@ -46,7 +46,7 @@
     "@chromatic-com/storybook": "^3.2.6",
     "@emotion/babel-plugin": "11.11.0",
     "@emotion/jest": "^11.11.0",
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^10.1.0",
     "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^2.15.0",
     "@graphql-codegen/fragment-matcher": "^5.0.0",
