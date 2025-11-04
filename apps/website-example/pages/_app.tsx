@@ -62,6 +62,7 @@ i18next
     resources: {
       de: { zod: deTranlations.zod },
     },
+    debug: true,
   });
 
 z.setErrorMap(zodI18nMap);

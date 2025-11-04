@@ -121,60 +121,48 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const getPaymentText = (params: {
-  autoRenew: boolean;
-  extendable: boolean;
-  paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: number;
-  currency: Currency;
-  locale: string;
-  t: {
-    forUpperCase: string;
-    forLowerCase: string;
-    forLowerCaseButton: string;
-    monthlyAmountUndefinedOrZero: string;
-    supportWithMonthlyAmountUndefinedOrZero: string;
-  };
-  isButtonText: boolean;
-}) => {
-  const {
+export const usePaymentText = (
+  autoRenew: boolean,
+  extendable: boolean,
+  paymentPeriodicity: PaymentPeriodicity,
+  monthlyAmount: number,
+  currency: Currency,
+  locale: string
+) => {
+  const { t } = useTranslation();
+
+  return useMemo(() => {
+    const variables = {
+      renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
+      paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
+      formattedAmount: formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
+        locale
+      ),
+      monthlyAmount,
+    };
+
+    console.log(variables);
+
+    if (autoRenew && extendable) {
+      return t('subscribe.subscribeForPeriod', variables);
+    }
+
+    if (extendable) {
+      return t('subscribe.payForPeriod', variables);
+    }
+
+    return t('subscribe.pay', variables);
+  }, [
     autoRenew,
+    currency,
     extendable,
-    paymentPeriodicity,
-    monthlyAmount,
-    currency,
     locale,
+    monthlyAmount,
+    paymentPeriodicity,
     t,
-    isButtonText,
-  } = params;
-
-  if (!monthlyAmount) {
-    return isButtonText ?
-        t.supportWithMonthlyAmountUndefinedOrZero
-      : t.monthlyAmountUndefinedOrZero;
-  }
-
-  if (autoRenew && extendable) {
-    return `${formatRenewalPeriod(paymentPeriodicity)} ${isButtonText ? t.forLowerCaseButton : t.forLowerCase} ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-      currency,
-      locale
-    )}`;
-  }
-
-  if (extendable) {
-    return `${formatPaymentPeriod(paymentPeriodicity)} ${isButtonText ? t.forLowerCaseButton : t.forLowerCase} ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-      currency,
-      locale
-    )}`;
-  }
-
-  return `${t.forUpperCase} ${formatCurrency(
-    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-    currency,
-    locale
-  )}`;
+  ]);
 };
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
@@ -323,68 +311,23 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
-  const paymentText = getPaymentText({
+  const paymentText = usePaymentText(
     autoRenew,
-    extendable: selectedMemberPlan?.extendable ?? true,
-    paymentPeriodicity: selectedPaymentPeriodicity,
+    selectedMemberPlan?.extendable ?? true,
+    selectedPaymentPeriodicity,
     monthlyAmount,
-    currency: selectedMemberPlan?.currency ?? Currency.Chf,
-    locale,
-    t: {
-      forUpperCase: t('subscribe.getPaymentText.forUpperCase'),
-      forLowerCase: t('subscribe.getPaymentText.forLowerCase'),
-      forLowerCaseButton: t('subscribe.getPaymentText.forLowerCaseButton'),
-      monthlyAmountUndefinedOrZero: t(
-        'subscribe.getPaymentText.monthlyAmountUndefinedOrZero'
-      ),
-      supportWithMonthlyAmountUndefinedOrZero: t(
-        'subscribe.getPaymentText.supportWithMonthlyAmountUndefinedOrZero'
-      ),
-    },
-    isButtonText: false,
-  });
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  );
 
-  const paymentButtonText = getPaymentText({
-    autoRenew,
-    extendable: selectedMemberPlan?.extendable ?? true,
-    paymentPeriodicity: selectedPaymentPeriodicity,
-    monthlyAmount,
-    currency: selectedMemberPlan?.currency ?? Currency.Chf,
-    locale,
-    t: {
-      forUpperCase: t('subscribe.getPaymentText.forUpperCase'),
-      forLowerCase: t('subscribe.getPaymentText.forLowerCase'),
-      forLowerCaseButton: t('subscribe.getPaymentText.forLowerCaseButton'),
-      monthlyAmountUndefinedOrZero: t(
-        'subscribe.getPaymentText.monthlyAmountUndefinedOrZero'
-      ),
-      supportWithMonthlyAmountUndefinedOrZero: t(
-        'subscribe.getPaymentText.supportWithMonthlyAmountUndefinedOrZero'
-      ),
-    },
-    isButtonText: true,
-  });
-
-  const monthlyPaymentText = getPaymentText({
-    autoRenew: true,
-    extendable: selectedMemberPlan?.extendable ?? true,
-    paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
-    currency: selectedMemberPlan?.currency ?? Currency.Chf,
-    locale,
-    t: {
-      forUpperCase: t('subscribe.getPaymentText.forUpperCase'),
-      forLowerCase: t('subscribe.getPaymentText.forLowerCase'),
-      forLowerCaseButton: t('subscribe.getPaymentText.forLowerCaseButton'),
-      monthlyAmountUndefinedOrZero: t(
-        'subscribe.getPaymentText.monthlyAmountUndefinedOrZero'
-      ),
-      supportWithMonthlyAmountUndefinedOrZero: t(
-        'subscribe.getPaymentText.supportWithMonthlyAmountUndefinedOrZero'
-      ),
-    },
-    isButtonText: false,
-  });
+  const monthlyPaymentText = usePaymentText(
+    true,
+    selectedMemberPlan?.extendable ?? true,
+    PaymentPeriodicity.Monthly,
+    watch<'monthlyAmount'>('monthlyAmount'),
+    selectedMemberPlan?.currency ?? Currency.Chf,
+    locale
+  );
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -743,10 +686,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentButtonText}{' '}
-          {isDonation ?
-            t('subscribe.subscribeButton.donate')
-          : t('subscribe.subscribeButton.subscribe')}
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?
@@ -773,7 +713,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} Abonnieren`}
+        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
       >
         <H5
           id="modal-modal-title"

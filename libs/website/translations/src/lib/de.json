@@ -17,20 +17,12 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
     "cancellable": "Jederzeit kündbar",
-    "subscribeButton": {
-      "subscribe": "abonnieren",
-      "donate": "spenden"
-    },
-    "getPaymentText": {
-      "forLowerCase": "für",
-      "forLowerCaseButton": "für",
-      "forUpperCase": "Für",
-      "monthlyAmountUndefinedOrZero": "Kostenlos",
-      "supportWithMonthlyAmountUndefinedOrZero": "Kostenlos"
-    }
+    "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
+    "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
+    "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
