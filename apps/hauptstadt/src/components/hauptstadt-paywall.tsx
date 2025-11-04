@@ -28,7 +28,8 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
         subscription =>
           props.memberPlans.find(mb => subscription.memberPlan.id === mb.id) &&
           subscription.extendable &&
-          subscription.autoRenew
+          subscription.autoRenew &&
+          subscription.isActive
       ),
     [data?.subscriptions, props.anyMemberPlan, props.memberPlans]
   );
