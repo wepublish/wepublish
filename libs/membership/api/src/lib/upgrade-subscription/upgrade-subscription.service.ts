@@ -7,10 +7,10 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
 import { descend, sort } from 'ramda';
-import { ForbiddenError } from '@nestjs/apollo';
 import { MemberContextService } from '../legacy/member-context.service';
 import { PaymentsService } from '@wepublish/payment/api';
 
@@ -87,7 +87,7 @@ export class UpgradeSubscriptionService {
     }
 
     if (oldSubscription.userID !== userId) {
-      throw new ForbiddenError(
+      throw new ForbiddenException(
         `Subscription with id ${subscriptionId} does not belong to current user.`
       );
     }
@@ -121,6 +121,7 @@ export class UpgradeSubscriptionService {
         oldSubscription.paymentPeriodicity
       );
     });
+
     const hasCompatibleRenewability = paymentMethods.some(av => {
       if (
         av.forceAutoRenewal &&
@@ -140,7 +141,7 @@ export class UpgradeSubscriptionService {
 
     if (!hasCompatibleRenewability) {
       throw new BadRequestException(
-        `New memberplan with id ${memberPlanId} does not support non extending subscriptiosn but the subscription with id ${oldSubscription.id} does not renew.`
+        `New memberplan with id ${memberPlanId} does not support non extending subscriptiosn but the subscription with id ${subscriptionId} does not renew.`
       );
     }
 
@@ -157,7 +158,7 @@ export class UpgradeSubscriptionService {
 
     if (!oldSubscriptionPeriod) {
       throw new BadRequestException(
-        `Subscription has no subscription period ${oldSubscription.id}`
+        `Subscription has no subscription period ${subscriptionId}`
       );
     }
 

@@ -21,7 +21,6 @@ import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
 import { useTranslation } from 'react-i18next';
 import {
-  usePaymentText,
   SubscribeAmount,
   SubscribeAmountText,
   SubscribeButton,

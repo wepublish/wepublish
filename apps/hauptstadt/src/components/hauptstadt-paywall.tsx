@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { Paywall, useShowPaywall } from '@wepublish/paywall/website';
 import { createWithTheme } from '@wepublish/ui';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import { ProductType, useSubscriptionsQuery } from '@wepublish/website/api';
 import {
   BuilderPaywallProps,
   Paywall as BuilderPaywall,
@@ -29,7 +29,8 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
           props.memberPlans.find(mb => subscription.memberPlan.id === mb.id) &&
           subscription.extendable &&
           subscription.autoRenew &&
-          subscription.isActive
+          subscription.isActive &&
+          subscription.memberPlan.productType === ProductType.Subscription
       ),
     [data?.subscriptions, props.anyMemberPlan, props.memberPlans]
   );
