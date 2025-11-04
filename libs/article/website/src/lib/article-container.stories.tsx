@@ -2,6 +2,10 @@ import { Meta } from '@storybook/react';
 import { ArticleDocument } from '@wepublish/website/api';
 import { ArticleContainer } from './article-container';
 import { mockArticle, mockPeer } from '@wepublish/storybook/mocks';
+import {
+  WithPollBlockDecorators,
+  WithSubscribeBlockDecorators,
+} from '@wepublish/storybook';
 
 const article = mockArticle();
 const articleWithPeer = mockArticle({ peer: mockPeer() });
@@ -9,6 +13,7 @@ const articleWithPeer = mockArticle({ peer: mockPeer() });
 export default {
   component: ArticleContainer,
   title: 'Container/Article',
+  decorators: [WithSubscribeBlockDecorators({}), WithPollBlockDecorators({})],
 } as Meta;
 
 export const ById = {

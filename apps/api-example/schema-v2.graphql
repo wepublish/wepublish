@@ -1313,6 +1313,7 @@ type MemberPlan implements HasImage {
   imageID: String
   maxCount: Int
   name: String!
+  productType: ProductType!
   shortDescription: RichText
   slug: String!
   successPageId: String
@@ -1328,6 +1329,7 @@ type MemberPlanConnection {
 input MemberPlanFilter {
   active: Boolean
   name: String
+  productType: ProductType
   tags: [String!]
 }
 
@@ -2004,6 +2006,11 @@ enum PollVoteSort {
   CreatedAt
 }
 
+enum ProductType {
+  Donation
+  Subscription
+}
+
 type Property {
   id: String!
   key: String!
@@ -2386,12 +2393,26 @@ type Stats {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]!
+  memberPlanIds: [String!]
+  memberPlans: [MemberPlan!]!
   type: BlockType!
+}
+
+enum SubscribeBlockField {
+  Address
+  Birthday
+  EmailRepeated
+  FirstName
+  Password
+  PasswordRepeated
 }
 
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  memberPlanIds: [String!]
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

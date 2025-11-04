@@ -122,7 +122,7 @@ export class TagService {
 function createTagOrder(
   field: TagSort,
   sortOrder: SortOrder
-): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
+): Prisma.TagOrderByWithRelationInput {
   switch (field) {
     case TagSort.Tag:
       return {
