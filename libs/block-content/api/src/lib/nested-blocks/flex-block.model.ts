@@ -8,6 +8,10 @@ import {
 } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
+import {
+  HasBlockContentFlex,
+  BlockContentFlexInput,
+} from '../block-content-flex.model';
 
 @ObjectType()
 export class FlexAlignmentBlocks {
@@ -36,12 +40,9 @@ export class FlexAlignmentBlocksInput extends OmitType(
 ) {}
 
 @ObjectType()
-export class NestedBlock {
+export class NestedBlock extends HasBlockContentFlex {
   @Field(() => FlexAlignmentBlocks)
   alignment!: FlexAlignmentBlocks;
-
-  @Field(() => BaseBlock, { nullable: true })
-  block?: BaseBlock<BlockType> | null;
 }
 
 @InputType()
@@ -53,8 +54,8 @@ export class NestedBlockInput extends OmitType(
   @Field(() => FlexAlignmentBlocksInput)
   alignment!: FlexAlignmentBlocksInput;
 
-  @Field(() => BlockType, { nullable: true })
-  block?: BlockType | null;
+  @Field(() => BlockContentFlexInput)
+  block!: BlockContentFlexInput;
 }
 
 @ObjectType({

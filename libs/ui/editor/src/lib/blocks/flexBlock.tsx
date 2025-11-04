@@ -6,6 +6,8 @@ export const FlexBlock = ({
   onChange,
   autofocus,
 }: BlockProps<FlexBlockValue>) => {
+  console.log('Rendering FlexBlock with value:', value);
+
   return (
     <div>
       <h2>{'Der FlexBlock kommt hier hin.'}</h2>

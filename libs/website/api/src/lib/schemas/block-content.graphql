@@ -298,6 +298,18 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
 
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
+  ... on TeaserGridFlexBlock {
+    ...FullTeaserGridFlexBlock
+  }
+  ... on TeaserGridBlock {
+    ...FullTeaserGridBlock
+  }
+  ... on TeaserListBlock {
+    ...FullTeaserListBlock
+  }
+  ... on TeaserSlotsBlock {
+    ...FullTeaserSlotsBlock
+  }
 
   ... on FlexBlock {
     blockStyle
@@ -314,23 +326,45 @@ fragment FullBlock on BlockContent {
 
       block {
         __typename
+        ... on BildwurfAdBlock {
+          blockStyle
+          type
+          zoneID
+          # Additional fields specific to BildwurfAdBlock
       }
+        ... on TeaserSlotsBlock {
+          title
+          blockStyle
+          type
+          autofillConfig {
+            enabled
+            filter {
+              tags
+              tagObjects {
+                id
+                tag
+              }
+            }
+            sort
+            teaserType
+          }
+          slots {
+            type
+            teaser {
+              __typename
+              ...FullTeaser
     }
   }
 
-  ... on TeaserGridFlexBlock {
-    ...FullTeaserGridFlexBlock
+          autofillTeasers {
+            ...FullTeaser
+          }
+          # Additional fields specific to TeaserSlotsBlock
   }
 
-  ... on TeaserGridBlock {
-    ...FullTeaserGridBlock
   }
 
-  ... on TeaserListBlock {
-    ...FullTeaserListBlock
   }
 
-  ... on TeaserSlotsBlock {
-    ...FullTeaserSlotsBlock
   }
 }

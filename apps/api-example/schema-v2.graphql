@@ -259,6 +259,41 @@ input BildwurfAdBlockInput {
 
 union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
+union BlockContentFlex = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+
+input BlockContentFlexInput {
+  bildwurfAd: BildwurfAdBlockInput
+  comment: CommentBlockInput
+  crowdfunding: CrowdfundingBlockInput
+  embed: IFrameBlockInput
+  event: EventBlockInput
+  facebookPost: FacebookPostBlockInput
+  facebookVideo: FacebookVideoBlockInput
+  flexBlock: TitleBlockInput
+  html: HTMLBlockInput
+  image: ImageBlockInput
+  imageGallery: ImageGalleryBlockInput
+  instagramPost: InstagramPostBlockInput
+  linkPageBreak: BreakBlockInput
+  listicle: ListicleBlockInput
+  polisConversation: PolisConversationBlockInput
+  poll: PollBlockInput
+  quote: QuoteBlockInput
+  richText: RichTextBlockInput
+  soundCloudTrack: SoundCloudTrackBlockInput
+  subscribe: SubscribeBlockInput
+  teaserGrid: TeaserGridBlockInput
+  teaserGridFlex: TeaserGridFlexBlockInput
+  teaserList: TeaserListBlockInput
+  teaserSlots: TeaserSlotsBlockInput
+  tikTokVideo: TikTokVideoBlockInput
+  title: TitleBlockInput
+  twitterTweet: TwitterTweetBlockInput
+  type: String
+  vimeoVideo: VimeoVideoBlockInput
+  youTubeVideo: YouTubeVideoBlockInput
+}
+
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
   comment: CommentBlockInput
@@ -1621,12 +1656,12 @@ enum NavigationLinkType {
 
 type NestedBlock {
   alignment: FlexAlignmentBlocks!
-  block: BaseBlock
+  block: BlockContentFlex!
 }
 
 input NestedBlockInput {
   alignment: FlexAlignmentBlocksInput!
-  block: BlockType
+  block: BlockContentFlexInput!
 }
 
 type NonDbProperty {

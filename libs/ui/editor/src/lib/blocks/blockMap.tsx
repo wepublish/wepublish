@@ -1,3 +1,4 @@
+//import { BlockType as BlockTypeEnum } from '@wepublish/block-content/api';
 import {
   EditorBlockType,
   TeaserListBlockSort,
@@ -51,7 +52,7 @@ import { TeaserGridFlexBlock } from './teaserGridFlexBlock';
 import { TeaserListBlock } from './teaserListBlock';
 import { TeaserSlotsBlock } from './teaserSlotsBlock';
 import { TitleBlock } from './titleBlock';
-import { BlockValue, EmbedType } from './types';
+import { BlockValue, EmbedType, NestedBlock } from './types';
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
@@ -301,20 +302,57 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       nestedBlocks: [
         {
           alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
-          block: null,
+          block: {
+            type: 'teaserSlots',
+            //__typename: 'TeaserSlotsBlock',
+            teaserSlots: {
+              autofillConfig: {
+                enabled: true,
+                sort: TeaserListBlockSort.PublishedAt,
+                filter: {
+                  tags: [],
+                },
+                teaserType: TeaserType.Article,
+              },
+              slots: [],
+            },
+          } as NestedBlock['block'],
         },
+        /*
         {
           alignment: { i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false },
-          block: null,
+          block: {
+            teaserSlots: {
+              autofillConfig: {
+                enabled: false,
+              },
+              slots: [],
+            },
+          },
         },
         {
           alignment: { i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false },
-          block: null,
+          block: {
+            teaserSlots: {
+              autofillConfig: {
+                enabled: false,
+              },
+              slots: [],
+            },
+          },
         },
         {
           alignment: { i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false },
-          block: null,
+          block: {
+            teaserSlots: {
+              autofillConfig: {
+                enabled: false,
+              },
+              slots: [],
+            },
+          },
         },
+        */
       ],
     },
     label: 'blocks.flexBlock.label',

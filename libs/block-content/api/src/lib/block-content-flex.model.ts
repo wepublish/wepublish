@@ -92,10 +92,9 @@ import {
   CrowdfundingBlock,
   CrowdfundingBlockInput,
 } from './crowdfunding/crowdfunding-block.model';
-import { FlexBlock, FlexBlockInput } from './nested-blocks/flex-block.model';
 
-export const BlockContent = createUnionType({
-  name: 'BlockContent',
+export const BlockContentFlex = createUnionType({
+  name: 'BlockContentFlex',
   types: () =>
     [
       UnknownBlock,
@@ -127,7 +126,6 @@ export const BlockContent = createUnionType({
       TeaserGridFlexBlock,
       TeaserListBlock,
       TeaserSlotsBlock,
-      FlexBlock,
     ] as const,
   resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
@@ -187,18 +185,19 @@ export const BlockContent = createUnionType({
         return TeaserListBlock.name;
       case BlockType.TeaserSlots:
         return TeaserSlotsBlock.name;
-      case BlockType.FlexBlock:
-        return FlexBlock.name;
     }
 
-    console.warn(`Block ${value.type} (block-content.model)!`, value);
+    console.warn(
+      `Block ${value.type} not implemented (block-content-flex.model)!`,
+      value
+    );
 
     return UnknownBlock.name;
   },
 });
 
 @InputType()
-export class BlockContentInput {
+export class BlockContentFlexInput {
   @Field(() => RichTextBlockInput, { nullable: true })
   [BlockType.RichText]?: RichTextBlockInput;
   @Field(() => QuoteBlockInput, { nullable: true })
@@ -259,13 +258,17 @@ export class BlockContentInput {
   [BlockType.TeaserList]?: TeaserListBlockInput;
   @Field(() => TeaserSlotsBlockInput, { nullable: true })
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
-  @Field(() => FlexBlockInput, { nullable: true })
-  [BlockType.FlexBlock]?: FlexBlockInput;
+
+  @Field(() => TitleBlockInput, { nullable: true })
+  [BlockType.FlexBlock]?: TitleBlockInput;
+
+  @Field(() => String, { nullable: true })
+  type!: string;
 }
 
-export function mapBlockUnionMap(
-  value: BlockContentInput
-): typeof BlockContent {
+export function mapBlockUnionMapFlex(
+  value: BlockContentFlexInput & { [key in BlockType]?: unknown }
+): typeof BlockContentFlex {
   const valueKeys = Object.keys(value);
 
   if (valueKeys.length === 0) {
@@ -324,30 +327,8 @@ export function mapBlockUnionMap(
       };
     }
 
-    case BlockType.FlexBlock: {
-      const blockValue = value[type];
-
-      console.log('Mapping FlexBlock:', blockValue, value, type);
-
-      return {
-        type,
-        //...blockValue,
-        nestedBlocks:
-          blockValue?.nestedBlocks.map(nb => {
-            console.log('Mapping nested block:', nb);
-            const key = nb.block.type as keyof (typeof nb)['block'];
-            //const key = 'teaserSlots' as keyof (typeof nb)['block'];
-            //nb.block[key].type = nb.block.type;
-            return {
-              alignment: nb.alignment,
-              block: nb.block[key] as typeof BlockContent,
-            };
-          }) ?? [],
-      };
-    }
-
     default: {
-      console.log('Mapping nested block: bbbbb', value, type);
+      console.log('Mapping block of type: block-content-flex.model.ts: ', type);
       const blockValue = value[type];
 
       return { type, ...blockValue };
@@ -356,7 +337,7 @@ export function mapBlockUnionMap(
 }
 
 @InterfaceType()
-export class HasBlockContent {
-  @Field(() => [BlockContent])
-  blocks!: Array<typeof BlockContent>;
+export class HasBlockContentFlex {
+  @Field(() => BlockContentFlex)
+  block!: typeof BlockContentFlex;
 }

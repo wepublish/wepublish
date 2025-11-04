@@ -1,3 +1,4 @@
+//import { BlockType as BlockTypeEnum } from '@wepublish/block-content/api';
 import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
@@ -114,13 +115,14 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
 }
 
 export interface MinimalBlock {
-  type: BlockType;
+  //type: keyof typeof BlockTypeEnum;
+  type: string; //BlockTypeEnum[keyof BlockTypeEnum];
 }
 
 export interface NestedBlock {
   alignment: FlexAlignment;
   //block?: MinimalBlock | null;
-  block?: { type: BlockType } | null;
+  block: (BlockContentInput & { type?: string }) | null;
 }
 
 export interface FlexBlockValue extends BaseBlockValue {
@@ -450,6 +452,8 @@ export type BlockValue =
 export function mapBlockValueToBlockInput(
   block: BlockValue
 ): BlockContentInput {
+  console.log('Mapping BlockValue to BlockInput:', block);
+
   switch (block.type) {
     case EditorBlockType.Comment:
       return {
@@ -766,12 +770,11 @@ export function mapBlockValueToBlockInput(
       };
 
     case EditorBlockType.FlexBlock: {
-      /*
       console.log(
-        'Mapping FlexBlockValue to BlockInput: libs/ui/editor/src/lib/blocks/types.ts',
+        'Got a FlexBlock: libs/ui/editor/src/lib/blocks/types.ts',
         block
       );
-      */
+
       const flex = {
         nestedBlocks: (block.value.nestedBlocks || []).map(nb => ({
           alignment: {
@@ -782,7 +785,7 @@ export function mapBlockValueToBlockInput(
             h: nb.alignment.h,
             static: nb.alignment.static ?? false,
           },
-          block: nb.block ? nb.block.type : null,
+          block: nb.block ? nb.block : null,
         })),
         type: BlockType.FlexBlock,
       };
@@ -1141,6 +1144,7 @@ export function blockForQueryBlock(
       };
 
     case 'TeaserSlotsBlock':
+      console.log('types.ts: TeaserSlotsBlock', block);
       return {
         key,
         type: EditorBlockType.TeaserSlots,
@@ -1183,6 +1187,8 @@ export function blockForQueryBlock(
       };
 
     case 'FlexBlock':
+      console.log('types.ts: FlexBlock', block);
+
       return {
         key,
         type: EditorBlockType.FlexBlock,
@@ -1190,6 +1196,7 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           nestedBlocks: (block.nestedBlocks || []).map(nb => {
             if (!nb) {
+              console.log('types.ts: 1', nb);
               return {
                 alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
                 block: null,
@@ -1198,6 +1205,8 @@ export function blockForQueryBlock(
 
             if (isNestedBlock(nb)) {
               const s = nb;
+
+              console.log('types.ts: 2', s);
               return {
                 alignment: {
                   i: s.alignment.i ?? '',
@@ -1213,11 +1222,16 @@ export function blockForQueryBlock(
 
             if (isMinimalBlock(nb)) {
               const s = nb;
+
+              console.log('types.ts: 3', s);
+
               return {
                 alignment: { i: '', x: 0, y: 0, w: 1, h: 1, static: false },
                 block: { type: s.type },
               };
             }
+
+            console.log('types.ts: 4', nb);
 
             return {
               alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },

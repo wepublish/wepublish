@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
+  BlockType,
   FlexBlock as FlexBlockType,
 } from '@wepublish/website/api';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
+import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -70,11 +72,10 @@ export const FlexBlock = ({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           nestedBlock.block.type &&
           // eslint-disable-next-line @typescript-eslint/no-var-requires
-          require(`@wepublish/website/builder`).blocks[nestedBlock.block.type];
+          //require(`@wepublish/website/builder`).blocks[nestedBlock.block.type];
+          true;
         if (!BlockComponent) {
-          console.warn(
-            `No block component found for type: ${nestedBlock.block.type}`
-          );
+          console.warn(`No block component found for type:`);
           return (
             <div
               key={index}
@@ -87,7 +88,15 @@ export const FlexBlock = ({
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
-            <BlockComponent {...nestedBlock.block} />
+            <TeaserSlotsBlock
+              //{...nestedBlock.block}
+              blockStyle={null}
+              className=""
+              autofillConfig={{ enabled: false, type: BlockType.TeaserSlots }}
+              autofillTeasers={[]}
+              teasers={[]}
+              slots={[]}
+            />
           </NestedBlock>
         );
       })}
