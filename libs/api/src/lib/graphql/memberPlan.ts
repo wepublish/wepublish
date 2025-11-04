@@ -111,8 +111,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     maxCount: { type: GraphQLInt },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
-    externalReward: { type: GraphQLString },
     productType: { type: new GraphQLNonNull(GraphQLProductType) },
+    externalReward: { type: GraphQLString },
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod))
@@ -187,8 +187,8 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     amountPerMonthTarget: { type: GraphQLInt },
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
-    externalReward: { type: GraphQLString },
     productType: { type: new GraphQLNonNull(GraphQLProductType) },
+    externalReward: { type: GraphQLString },
     maxCount: { type: GraphQLInt },
     availablePaymentMethods: {
       type: new GraphQLNonNull(

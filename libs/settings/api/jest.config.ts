@@ -8,5 +8,4 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/settings/api',
-  globalSetup: '<rootDir>/setup-database.js',
 };

@@ -21,7 +21,7 @@ import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
 import { useTranslation } from 'react-i18next';
 import {
-  getPaymentText,
+  usePaymentText,
   SubscribeAmount,
   SubscribeAmountText,
   SubscribeButton,
@@ -31,6 +31,7 @@ import {
   subscribeSchema,
   SubscribeSection,
   SubscribeWrapper,
+  usePaymentText,
 } from '../subscribe/subscribe';
 import { getPaymentPeriodicyMonths } from '../formatters/format-payment-period';
 import styled from '@emotion/styled';
@@ -165,7 +166,7 @@ export const Upgrade = ({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
-  const paymentText = getPaymentText(
+  const paymentText = usePaymentText(
     subscriptionToUpgrade.autoRenew,
     selectedMemberPlan?.extendable ?? true,
     subscriptionToUpgrade.paymentPeriodicity,
@@ -184,7 +185,7 @@ export const Upgrade = ({
     locale
   );
 
-  const monthlyPaymentText = getPaymentText(
+  const monthlyPaymentText = usePaymentText(
     true,
     selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,

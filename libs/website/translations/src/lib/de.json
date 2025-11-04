@@ -17,14 +17,18 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
-    "cancellable": "Jederzeit kündbar"
+    "cancellable": "Jederzeit kündbar",
+    "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
+    "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
+    "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
+    "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
     "cancelConfirmation": "Das {type, select, Donation {Spende} other {Abo}} wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",

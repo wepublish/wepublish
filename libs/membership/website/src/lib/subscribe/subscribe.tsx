@@ -121,7 +121,7 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const getPaymentText = (
+export const usePaymentText = (
   autoRenew: boolean,
   extendable: boolean,
   paymentPeriodicity: PaymentPeriodicity,
@@ -129,31 +129,40 @@ export const getPaymentText = (
   currency: Currency,
   locale: string
 ) => {
-  if (!monthlyAmount) {
-    return 'Kostenlos';
-  }
+  const { t } = useTranslation();
 
-  if (autoRenew && extendable) {
-    return `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-      currency,
-      locale
-    )}`;
-  }
+  return useMemo(() => {
+    const variables = {
+      renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
+      paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
+      formattedAmount: formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
+        locale
+      ),
+      monthlyAmount,
+    };
 
-  if (extendable) {
-    return `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-      currency,
-      locale
-    )}`;
-  }
+    console.log(variables);
 
-  return `Für ${formatCurrency(
-    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+    if (autoRenew && extendable) {
+      return t('subscribe.subscribeForPeriod', variables);
+    }
+
+    if (extendable) {
+      return t('subscribe.payForPeriod', variables);
+    }
+
+    return t('subscribe.pay', variables);
+  }, [
+    autoRenew,
     currency,
-    locale
-  )}`;
+    extendable,
+    locale,
+    monthlyAmount,
+    paymentPeriodicity,
+    t,
+  ]);
 };
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
@@ -302,7 +311,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
-  const paymentText = getPaymentText(
+  const paymentText = usePaymentText(
     autoRenew,
     selectedMemberPlan?.extendable ?? true,
     selectedPaymentPeriodicity,
@@ -311,7 +320,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     locale
   );
 
-  const monthlyPaymentText = getPaymentText(
+  const monthlyPaymentText = usePaymentText(
     true,
     selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,
@@ -704,7 +713,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} Abonnieren`}
+        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
       >
         <H5
           id="modal-modal-title"
