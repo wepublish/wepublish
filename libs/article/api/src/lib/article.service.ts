@@ -500,17 +500,6 @@ export class ArticleService {
     })
   }
 
-  async getTrackingPixels(articleId: string) {
-    return this.prisma.articleTrackingPixels.findMany({
-      where: {
-        articleId
-      },
-      include: {
-        trackingPixelMethod: true
-      }
-    })
-  }
-
   async performFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
       const formattedQuery = searchQuery.replace(/\s+/g, '&')

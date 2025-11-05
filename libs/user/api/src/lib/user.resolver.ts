@@ -1,15 +1,18 @@
 import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
 import {OAuth2Account, PaymentProviderCustomer, User, UserAddress} from './user.model'
 import {PrismaClient} from '@prisma/client'
-import {Property} from '@wepublish/utils/api'
+import {Property, UserPropertyDataloader} from '@wepublish/property/api'
 import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {CurrentUser, UserSession} from '@wepublish/authentication/api'
+import {hasPermission} from '@wepublish/permissions/api'
+import {CanGetUser} from '@wepublish/permissions'
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly imageDataloaderService: ImageDataloaderService
+    private prisma: PrismaClient,
+    private imageDataloaderService: ImageDataloaderService,
+    private propertyDataLoader: UserPropertyDataloader
   ) {}
 
   @ResolveField(() => Image)
@@ -58,17 +61,13 @@ export class UserResolver {
   }
 
   @ResolveField(() => [Property])
-  public async properties(@Parent() {id: userId, properties}: User) {
-    if (properties !== undefined) {
-      return properties
-    }
+  public async properties(
+    @Parent() {id: userId}: User,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    const properties = await this.propertyDataLoader.load(userId)
 
-    return this.prisma.metadataProperty.findMany({
-      where: {
-        userId,
-        public: true
-      }
-    })
+    return properties?.filter(prop => prop.public || hasPermission(CanGetUser, user?.roles ?? []))
   }
 
   @ResolveField(() => [String])

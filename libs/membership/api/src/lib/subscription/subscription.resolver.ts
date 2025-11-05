@@ -5,9 +5,11 @@ import {PrismaClient, Subscription} from '@prisma/client'
 import {URLAdapter} from '@wepublish/nest-modules'
 import {MemberPlan, MemberPlanDataloader} from '@wepublish/member-plan/api'
 import {PaymentMethod, PaymentMethodDataloader} from '@wepublish/payment-method/api'
-import {Property} from '@wepublish/utils/api'
+import {Property, SubscriptionPropertyDataloader} from '@wepublish/property/api'
 import {SubscriptionDeactivationDataloader} from './subscription-deactivation.dataloader'
-import {SubscriptionPropertyDataloader} from './subscription-properties.dataloader'
+import {CanGetSubscription} from '@wepublish/permissions'
+import {hasPermission} from '@wepublish/permissions/api'
+import {CurrentUser, UserSession} from '@wepublish/authentication/api'
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -16,8 +18,8 @@ export class PublicSubscriptionResolver {
     private prisma: PrismaClient,
     private paymentMethodDataloader: PaymentMethodDataloader,
     private deactivationDataloader: SubscriptionDeactivationDataloader,
-    private propertyDataloader: SubscriptionPropertyDataloader,
-    private memberPlanDataloader: MemberPlanDataloader
+    private memberPlanDataloader: MemberPlanDataloader,
+    private propertyDataLoader: SubscriptionPropertyDataloader
   ) {}
 
   @ResolveField(() => SubscriptionDeactivation)
@@ -36,10 +38,15 @@ export class PublicSubscriptionResolver {
   }
 
   @ResolveField(() => [Property])
-  async properties(@Parent() subscription: Subscription) {
-    const properties = (await this.propertyDataloader.load(subscription.id)) ?? []
+  async properties(
+    @Parent() subscription: Subscription,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    const properties = await this.propertyDataLoader.load(subscription.id)
 
-    return properties.filter(p => p.public)
+    return properties?.filter(
+      prop => prop.public || hasPermission(CanGetSubscription, user?.roles ?? [])
+    )
   }
 
   @ResolveField(() => String)

@@ -22,6 +22,7 @@
       "@wepublish/analytics": ["libs/analytics/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
+      "@wepublish/property/api": ["libs/property/api/src/index.ts"],
       "@wepublish/article/api": ["libs/article/api/src/index.ts"],
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],

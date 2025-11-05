@@ -11,7 +11,7 @@ import {
 } from '@wepublish/authentication/api'
 import {Image, ImageDataloaderService} from '@wepublish/image/api'
 import {User, UserDataloaderService} from '@wepublish/user/api'
-import {Tag, TagService} from '@wepublish/tag/api'
+import {CommentTagDataloader, Tag} from '@wepublish/tag/api'
 import {CommentDataloaderService} from './comment-dataloader.service'
 import {RatingSystemService} from './rating-system'
 import {CommentInput, CommentUpdateInput} from './comment.input'
@@ -22,15 +22,15 @@ import {PageDataloaderService} from '@wepublish/page/api'
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
-    private readonly commentService: CommentService,
-    private readonly commentDataloader: CommentDataloaderService,
-    private readonly tagService: TagService,
-    private readonly ratingSystemService: RatingSystemService,
-    private readonly imageDataloaderService: ImageDataloaderService,
-    private readonly userDataloaderService: UserDataloaderService,
-    private readonly urlAdapter: URLAdapter,
-    private readonly articleDataloader: ArticleDataloaderService,
-    private readonly pageDataloader: PageDataloaderService
+    private commentService: CommentService,
+    private commentDataloader: CommentDataloaderService,
+    private tagDataLoader: CommentTagDataloader,
+    private ratingSystemService: RatingSystemService,
+    private imageDataloaderService: ImageDataloaderService,
+    private userDataloaderService: UserDataloaderService,
+    private urlAdapter: URLAdapter,
+    private articleDataloader: ArticleDataloaderService,
+    private pageDataloader: PageDataloaderService
   ) {}
 
   @Query(() => [Comment], {
@@ -124,7 +124,7 @@ export class CommentResolver {
 
   @ResolveField(() => [Tag])
   async tags(@Parent() comment: Comment) {
-    return this.tagService.getTagsByCommentId(comment.id)
+    return this.tagDataLoader.load(comment.id)
   }
 
   @ResolveField(() => Comment, {nullable: true})

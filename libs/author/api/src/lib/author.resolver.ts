@@ -6,14 +6,14 @@ import {AuthorDataloaderService} from './author-dataloader.service'
 import {UserInputError} from '@nestjs/apollo'
 import {AuthorArgs, AuthorsQueryArgs, PaginatedAuthors} from './authors.query'
 import {URLAdapter} from '@wepublish/nest-modules'
-import {Tag, TagService} from '@wepublish/tag/api'
+import {AuthorTagDataloader, Tag} from '@wepublish/tag/api'
 
 @Resolver(() => Author)
 export class AuthorResolver {
   constructor(
     private authorService: AuthorService,
-    private readonly authorDataloader: AuthorDataloaderService,
-    private tagService: TagService,
+    private authorDataloader: AuthorDataloaderService,
+    private tagDataLoader: AuthorTagDataloader,
     private urlAdapter: URLAdapter
   ) {}
 
@@ -60,7 +60,6 @@ export class AuthorResolver {
 
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: Author) {
-    const {id: articleId} = parent
-    return this.tagService.getTagsByAuthorId(articleId)
+    return this.tagDataLoader.load(parent.id)
   }
 }

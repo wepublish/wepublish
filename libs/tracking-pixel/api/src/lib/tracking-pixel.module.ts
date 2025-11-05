@@ -5,6 +5,7 @@ import {
   TrackingPixelModuleOptions,
   TrackingPixelService
 } from './tracking-pixel.service'
+import {TrackingPixelDataloader} from './tracking-pixel.dataloader'
 
 export type TrackingPixelsOptionsFactory = {
   createTrackingPixelsOptions(): Promise<TrackingPixelModuleOptions> | TrackingPixelModuleOptions
@@ -20,8 +21,8 @@ export interface TrackingPixelsAsyncOptions extends Pick<ModuleMetadata, 'import
 @Global()
 @Module({
   imports: [PrismaModule],
-  providers: [TrackingPixelService],
-  exports: [TrackingPixelService]
+  providers: [TrackingPixelService, TrackingPixelDataloader],
+  exports: [TrackingPixelService, TrackingPixelDataloader]
 })
 export class TrackingPixelsModule {
   public static register(config: TrackingPixelModuleOptions): DynamicModule {

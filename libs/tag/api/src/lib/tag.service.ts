@@ -2,7 +2,6 @@ import {Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {TagFilter, TagSort} from './tags.query'
 import {getMaxTake, PrimeDataLoader, SortOrder} from '@wepublish/utils/api'
-import {TagFields} from './tag.model'
 import {TagDataloader} from './tag.dataloader'
 
 @Injectable()
@@ -52,71 +51,6 @@ export class TagService {
         endCursor: lastTag?.id
       }
     }
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByAuthorId(authorId: string): Promise<TagFields[]> {
-    return this.prisma.tag.findMany({
-      where: {
-        authors: {
-          some: {
-            authorId
-          }
-        }
-      }
-    })
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByEventId(eventId: string): Promise<TagFields[]> {
-    return this.prisma.tag.findMany({
-      where: {
-        events: {
-          some: {
-            eventId
-          }
-        }
-      }
-    })
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByArticleId(articleId: string): Promise<TagFields[]> {
-    return this.prisma.tag.findMany({
-      where: {
-        articles: {
-          some: {
-            articleId
-          }
-        }
-      }
-    })
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByPageId(pageId: string): Promise<TagFields[]> {
-    return this.prisma.tag.findMany({
-      where: {
-        pages: {
-          some: {
-            pageId
-          }
-        }
-      }
-    })
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByCommentId(commentId: string): Promise<TagFields[]> {
-    return this.prisma.tag.findMany({
-      where: {
-        comments: {
-          some: {
-            commentId
-          }
-        }
-      }
-    })
   }
 
   private createTagOrder(
