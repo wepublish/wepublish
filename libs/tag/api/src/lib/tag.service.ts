@@ -53,29 +53,6 @@ export class TagService {
     };
   }
 
-  private createTagOrder(
-    field: TagSort,
-    sortOrder: SortOrder
-  ): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
-    switch (field) {
-      case TagSort.Tag:
-        return {
-          tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
-        };
-
-      case TagSort.ModifiedAt:
-        return {
-          modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
-        };
-
-      case TagSort.CreatedAt:
-      default:
-        return {
-          createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
-        };
-    }
-  }
-
   private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     const conditions: Prisma.TagWhereInput[] = [];
 
