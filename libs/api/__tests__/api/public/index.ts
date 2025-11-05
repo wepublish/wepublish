@@ -299,41 +299,6 @@ export type BildwurfAdBlockInput = {
 
 export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
-export type BlockContentFlex = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
-
-export type BlockContentFlexInput = {
-  bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
-  comment?: InputMaybe<CommentBlockInput>;
-  crowdfunding?: InputMaybe<CrowdfundingBlockInput>;
-  embed?: InputMaybe<IFrameBlockInput>;
-  event?: InputMaybe<EventBlockInput>;
-  facebookPost?: InputMaybe<FacebookPostBlockInput>;
-  facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
-  flexBlock?: InputMaybe<TitleBlockInput>;
-  html?: InputMaybe<HtmlBlockInput>;
-  image?: InputMaybe<ImageBlockInput>;
-  imageGallery?: InputMaybe<ImageGalleryBlockInput>;
-  instagramPost?: InputMaybe<InstagramPostBlockInput>;
-  linkPageBreak?: InputMaybe<BreakBlockInput>;
-  listicle?: InputMaybe<ListicleBlockInput>;
-  polisConversation?: InputMaybe<PolisConversationBlockInput>;
-  poll?: InputMaybe<PollBlockInput>;
-  quote?: InputMaybe<QuoteBlockInput>;
-  richText?: InputMaybe<RichTextBlockInput>;
-  soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
-  subscribe?: InputMaybe<SubscribeBlockInput>;
-  teaserGrid?: InputMaybe<TeaserGridBlockInput>;
-  teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
-  teaserList?: InputMaybe<TeaserListBlockInput>;
-  teaserSlots?: InputMaybe<TeaserSlotsBlockInput>;
-  tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
-  title?: InputMaybe<TitleBlockInput>;
-  twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
-  type?: InputMaybe<Scalars['String']>;
-  vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
-  youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
-};
-
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
   comment?: InputMaybe<CommentBlockInput>;
@@ -362,6 +327,7 @@ export type BlockContentInput = {
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
   title?: InputMaybe<TitleBlockInput>;
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
+  type?: InputMaybe<Scalars['String']>;
   vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
   youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
 };
@@ -1122,6 +1088,10 @@ export type HasImage = {
 export type HasImageLc = {
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+};
+
+export type HasOneBlockContent = {
+  block: BlockContent;
 };
 
 export type HasOptionalArticle = {
@@ -2204,15 +2174,15 @@ export enum NavigationLinkType {
   Page = 'Page'
 }
 
-export type NestedBlock = {
+export type NestedBlock = HasOneBlockContent & {
   __typename?: 'NestedBlock';
   alignment: FlexAlignmentBlocks;
-  block: BlockContentFlex;
+  block: BlockContent;
 };
 
 export type NestedBlockInput = {
   alignment: FlexAlignmentBlocksInput;
-  block: BlockContentFlexInput;
+  block: BlockContentInput;
 };
 
 export type NonDbProperty = {

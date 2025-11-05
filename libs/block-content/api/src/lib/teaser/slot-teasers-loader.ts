@@ -84,6 +84,7 @@ export class SlotTeasersLoader {
     { slots }: TeaserSlotsBlock,
     autofillTeasers: (typeof Teaser)[]
   ): Promise<(typeof Teaser | null)[]> {
+    console.log('slot-teasers-loader.ts:', slots);
     return slots?.map(({ teaser: manualTeaser, type }, index) => {
       const autofillIndex = slots
         .slice(0, index)

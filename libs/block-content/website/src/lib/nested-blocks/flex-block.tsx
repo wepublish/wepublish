@@ -8,7 +8,7 @@ import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
-import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
+//import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -39,7 +39,7 @@ export const isFlexBlock = (
   block: Pick<BlockContent, '__typename'>
 ): block is FlexBlockType => {
   const retVal = block.__typename === 'FlexBlock';
-  //console.log('Checking if block is FlexBlock:', block, retVal);
+  console.log('Checking if block is FlexBlock:', block, retVal);
   return retVal;
 };
 
@@ -50,6 +50,8 @@ export const FlexBlock = ({
   return (
     <FlexBlockWrapper>
       {nestedBlocks.map((nestedBlock, index) => {
+        {
+          /*
         if (nestedBlock && nestedBlock.alignment) {
           return (
             <NestedBlock
@@ -82,6 +84,11 @@ export const FlexBlock = ({
             >{`No block component found for type: ${nestedBlock.block.type}`}</div>
           );
         }
+
+        */
+        }
+
+        console.log('Rendering nested block: flex-block.tsx', nestedBlock);
 
         return (
           <NestedBlock
