@@ -53,69 +53,25 @@ export class TagService {
     };
   }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByAuthorId(authorId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        authors: {
-          some: {
-            authorId,
-          },
-        },
-      },
-    });
-  }
+  private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
+    const conditions: Prisma.TagWhereInput[] = [];
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByEventId(eventId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        events: {
-          some: {
-            eventId,
-          },
-        },
-      },
-    });
-  }
+    if (filter?.type) {
+      conditions.push({
+        type: filter.type,
+      });
+    }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByArticleId(articleId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        articles: {
-          some: {
-            articleId,
-          },
+    if (filter?.tag) {
+      conditions.push({
+        tag: {
+          mode: 'insensitive',
+          equals: filter.tag,
         },
-      },
-    });
-  }
+      });
+    }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByPageId(pageId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        pages: {
-          some: {
-            pageId,
-          },
-        },
-      },
-    });
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByCommentId(commentId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        comments: {
-          some: {
-            commentId,
-          },
-        },
-      },
-    });
+    return conditions.length ? { AND: conditions } : {};
   }
 }
 

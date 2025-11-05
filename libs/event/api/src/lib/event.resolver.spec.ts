@@ -16,7 +16,7 @@ import {
 import { EventResolver } from './event.resolver';
 import { EventService } from './event.service';
 import { createMock, PartialMocked } from '@wepublish/testing';
-import { TagService } from '@wepublish/tag/api';
+import { EventTagDataloader } from '@wepublish/tag/api';
 import { URLAdapter } from '@wepublish/nest-modules';
 
 const mockEvent = {
@@ -174,7 +174,7 @@ describe('EventResolver', () => {
     [method in keyof EventDataloaderService]?: jest.Mock;
   };
   let urlAdapter: PartialMocked<URLAdapter>;
-  let tagServiceMock: PartialMocked<TagService>;
+  let tagServiceMock: PartialMocked<EventTagDataloader>;
 
   beforeEach(async () => {
     eventServiceMock = {
@@ -192,7 +192,7 @@ describe('EventResolver', () => {
       load: jest.fn(),
     };
     urlAdapter = createMock(URLAdapter);
-    tagServiceMock = createMock(TagService);
+    tagServiceMock = createMock(EventTagDataloader);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -218,12 +218,12 @@ describe('EventResolver', () => {
           useValue: imageDataloaderServiceMock,
         },
         {
-          provide: URLAdapter,
-          useValue: urlAdapter,
+          provide: EventTagDataloader,
+          useValue: tagServiceMock,
         },
         {
-          provide: TagService,
-          useValue: tagServiceMock,
+          provide: URLAdapter,
+          useValue: urlAdapter,
         },
         {
           provide: PrismaClient,
