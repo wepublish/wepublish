@@ -93,6 +93,10 @@ import {
   CrowdfundingBlockInput,
 } from './crowdfunding/crowdfunding-block.model';
 
+const FlexBlock = {
+  name: 'FlexBlock',
+};
+
 export const BlockContentFlex = createUnionType({
   name: 'BlockContentFlex',
   types: () =>
@@ -184,7 +188,19 @@ export const BlockContentFlex = createUnionType({
       case BlockType.TeaserList:
         return TeaserListBlock.name;
       case BlockType.TeaserSlots:
+        console.log(
+          'Resolving TeaserSlots block: in block-content-flex.model.ts: type the normal way.',
+          TeaserSlotsBlock.name
+        );
         return TeaserSlotsBlock.name;
+
+      case 'TeaserSlots' as unknown as BlockType:
+        console.log('Resolving TeaserSlots block type the hack way.');
+        return TeaserSlotsBlock.name;
+
+      case BlockType.FlexBlock:
+        console.log('Resolving FlexBlock.');
+        return FlexBlock.name;
     }
 
     console.warn(
@@ -269,6 +285,7 @@ export class BlockContentFlexInput {
 export function mapBlockUnionMapFlex(
   value: BlockContentFlexInput & { [key in BlockType]?: unknown }
 ): typeof BlockContentFlex {
+  console.log('block-content-flex.model.ts: mapBlockUnionMapFlex:', value);
   const valueKeys = Object.keys(value);
 
   if (valueKeys.length === 0) {

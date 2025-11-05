@@ -1206,7 +1206,7 @@ export function blockForQueryBlock(
             if (isNestedBlock(nb)) {
               const s = nb;
 
-              console.log('types.ts: 2', s);
+              console.log('types.ts: isNestedBlock: ', s);
               return {
                 alignment: {
                   i: s.alignment.i ?? '',
@@ -1216,7 +1216,7 @@ export function blockForQueryBlock(
                   h: s.alignment.h ?? 0,
                   static: s.alignment.static ?? false,
                 },
-                block: s.block ? { type: s.block.type } : null,
+                block: s.block ? s.block : null,
               };
             }
 

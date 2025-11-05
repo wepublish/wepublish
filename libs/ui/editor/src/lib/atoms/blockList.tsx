@@ -358,7 +358,11 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery({ client });
+  const { data, error } = useBlockStylesQuery({ client });
+
+  if (error) {
+    console.error('Error loading block styles: blockList.tsx:', error);
+  }
 
   const stylesForBlock = useMemo(
     () =>
@@ -376,6 +380,11 @@ function ListItemWrapper({
       ),
     [data?.blockStyles, value.value.blockStyle]
   );
+
+  useEffect(() => {
+    console.log('data loaded: ', data);
+    console.log('error: ', error);
+  }, [data, error]);
 
   useEffect(() => {
     if (blockStyleValue && blockStyleValue.id !== value.value.blockStyle) {

@@ -8,7 +8,6 @@ import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
-import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;

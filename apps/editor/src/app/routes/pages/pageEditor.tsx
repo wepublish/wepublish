@@ -164,6 +164,7 @@ function PageEditor() {
   );
 
   useEffect(() => {
+    console.log('Page data changed:', pageData);
     if (pageData?.page) {
       const { latest, tags, hidden, slug, url } = pageData.page;
       const {
@@ -228,6 +229,21 @@ function PageEditor() {
   useEffect(() => {
     const error =
       createError?.message ?? updateError?.message ?? publishError?.message;
+
+    console.log(
+      'PageEditor error:',
+      createError,
+      updateError,
+      publishError,
+      error,
+      isLoading,
+      isCreating,
+      isUpdating,
+      isPublishing,
+      isNotFound,
+      pageData
+    );
+
     if (error)
       toaster.push(
         <Message
@@ -239,7 +255,17 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [createError, updateError, publishError]);
+  }, [
+    createError,
+    updateError,
+    publishError,
+    isLoading,
+    isCreating,
+    isUpdating,
+    isPublishing,
+    isNotFound,
+    pageData,
+  ]);
 
   function createInput(): CreatePageMutationVariables {
     return {

@@ -300,12 +300,62 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       blockStyle: undefined,
       nestedBlocks: [
+        /*
+        {
+          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          block: {
+            type: 'teaserSlots',
+            teaserSlots: {
+              slots: [
+                {
+                  type: 'Manual',
+                  teaser: {
+                    type: 'article',
+                    articleID: 'cmhjha1km0041q5075iunqhth',
+                  },
+                },
+                {
+                  type: 'Manual',
+                  teaser: {
+                    type: 'article',
+                    articleID: 'cmhj450xi000hq507znrhg6ow',
+                  },
+                },
+                {
+                  type: 'Manual',
+                  teaser: null,
+                },
+                {
+                  type: 'Manual',
+                  teaser: null,
+                },
+                {
+                  type: 'Manual',
+                  teaser: null,
+                },
+                {
+                  type: 'Manual',
+                  teaser: null,
+                },
+              ],
+              title: null,
+              teasers: [],
+              autofillConfig: {
+                enabled: false,
+              },
+              autofillTeasers: [],
+            },
+          } as NestedBlock['block'],
+        },
+        */
+
         {
           alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
           block: {
             type: 'teaserSlots',
             //__typename: 'TeaserSlotsBlock',
             teaserSlots: {
+              //type: 'TeaserSlots',
               autofillConfig: {
                 enabled: true,
                 sort: TeaserListBlockSort.PublishedAt,
@@ -315,9 +365,11 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
                 teaserType: TeaserType.Article,
               },
               slots: [],
+              title: 'Autofill Teaser Slots',
             },
           } as NestedBlock['block'],
         },
+
         /*
         {
           alignment: { i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false },
