@@ -53,69 +53,48 @@ export class TagService {
     };
   }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByAuthorId(authorId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        authors: {
-          some: {
-            authorId,
-          },
-        },
-      },
-    });
+  private createTagOrder(
+    field: TagSort,
+    sortOrder: SortOrder
+  ): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
+    switch (field) {
+      case TagSort.Tag:
+        return {
+          tag: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
+        };
+
+      case TagSort.ModifiedAt:
+        return {
+          modifiedAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
+        };
+
+      case TagSort.CreatedAt:
+      default:
+        return {
+          createdAt: sortOrder === SortOrder.Ascending ? 'asc' : 'desc',
+        };
+    }
   }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByEventId(eventId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        events: {
-          some: {
-            eventId,
-          },
-        },
-      },
-    });
-  }
+  private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
+    const conditions: Prisma.TagWhereInput[] = [];
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByArticleId(articleId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        articles: {
-          some: {
-            articleId,
-          },
-        },
-      },
-    });
-  }
+    if (filter?.type) {
+      conditions.push({
+        type: filter.type,
+      });
+    }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByPageId(pageId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        pages: {
-          some: {
-            pageId,
-          },
+    if (filter?.tag) {
+      conditions.push({
+        tag: {
+          mode: 'insensitive',
+          equals: filter.tag,
         },
-      },
-    });
-  }
+      });
+    }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByCommentId(commentId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        comments: {
-          some: {
-            commentId,
-          },
-        },
-      },
-    });
+    return conditions.length ? { AND: conditions } : {};
   }
 }
 
