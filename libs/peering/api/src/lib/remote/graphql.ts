@@ -1091,7 +1091,7 @@ export type HasImageLc = {
 };
 
 export type HasOneBlockContent = {
-  block: BlockContent;
+  block?: Maybe<BlockContent>;
 };
 
 export type HasOptionalArticle = {
@@ -2177,12 +2177,12 @@ export enum NavigationLinkType {
 export type NestedBlock = HasOneBlockContent & {
   __typename?: 'NestedBlock';
   alignment: FlexAlignmentBlocks;
-  block: BlockContent;
+  block?: Maybe<BlockContent>;
 };
 
 export type NestedBlockInput = {
   alignment: FlexAlignmentBlocksInput;
-  block: BlockContentInput;
+  block?: InputMaybe<BlockContentInput>;
 };
 
 export type NonDbProperty = {

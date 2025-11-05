@@ -354,26 +354,46 @@ export function mapBlockUnionMap(
         nestedBlocks:
           blockValue?.nestedBlocks.map(nb => {
             console.log('Mapping nested block:', nb);
-            const key = nb.block.type as keyof (typeof nb)['block'];
-            const blockContent = nb.block[key] as BlockContentInput; // narrowed from any
+            if (nb.block) {
+              const key = nb.block.type as keyof (typeof nb)['block'];
+              const blockContent = nb.block[key] as BlockContentInput; // narrowed from any
 
-            if (blockContent) {
-              //blockContent.type = toPascalCase(nb.block.type); //nb.block.type;
-              //blockContent.type = nb.block.type;
+              if (blockContent) {
+                console.log('Mapped nested block content: A:', blockContent);
+                //blockContent.type = toPascalCase(nb.block.type); //nb.block.type;
+                blockContent.type = nb.block?.type;
+                return {
+                  alignment: nb.alignment,
+                  //block: nb.block[key] as typeof BlockContent,
+                  block: blockContent,
+                };
+              } else {
+                console.log('Mapped nested block content: B:', nb.block);
+                //const key = 'teaserSlots' as keyof (typeof nb)['block'];
+                //nb.block[key].type = nb.block.type;
+                return {
+                  alignment: nb.alignment,
+                  //block: nb.block[key] as typeof BlockContent,
+                  block: nb.block,
+                };
+              }
+            } else {
+              console.log('Mapped nested block content: C:', nb.block);
+              return {
+                alignment: nb.alignment,
+                block: null,
+              };
             }
-            //const key = 'teaserSlots' as keyof (typeof nb)['block'];
-            //nb.block[key].type = nb.block.type;
-            return {
-              alignment: nb.alignment,
-              //block: nb.block[key] as typeof BlockContent,
-              block: blockContent,
-            };
           }) ?? [],
       };
     }
 
     default: {
-      console.log('Mapping nested block: bbbbb', value, type);
+      console.log(
+        'block-content.model.ts: Mapping block: mapBlockUnionMap(): default (no block type):',
+        value,
+        type
+      );
       const blockValue = value[type];
 
       return { type, ...blockValue };
@@ -398,6 +418,6 @@ export class HasBlockContent {
 
 @InterfaceType()
 export class HasOneBlockContent {
-  @Field(() => BlockContent)
-  block!: typeof BlockContent;
+  @Field(() => BlockContent, { nullable: true })
+  block!: typeof BlockContent | null;
 }

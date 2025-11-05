@@ -1027,7 +1027,7 @@ interface HasImageLc {
 }
 
 interface HasOneBlockContent {
-  block: BlockContent!
+  block: BlockContent
 }
 
 interface HasOptionalArticle {
@@ -1626,12 +1626,12 @@ enum NavigationLinkType {
 
 type NestedBlock implements HasOneBlockContent {
   alignment: FlexAlignmentBlocks!
-  block: BlockContent!
+  block: BlockContent
 }
 
 input NestedBlockInput {
   alignment: FlexAlignmentBlocksInput!
-  block: BlockContentInput!
+  block: BlockContentInput
 }
 
 type NonDbProperty {

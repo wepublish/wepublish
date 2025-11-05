@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  BlockType,
   FlexBlock as FlexBlockType,
 } from '@wepublish/website/api';
-import { BuilderFlexBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderFlexBlockProps,
+  BuilderTeaserSlotsBlockProps,
+} from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
@@ -96,13 +98,13 @@ export const FlexBlock = ({
             {...(nestedBlock.alignment as FlexAlignment)}
           >
             <TeaserSlotsBlock
-              //{...nestedBlock.block}
-              blockStyle={null}
-              className=""
-              autofillConfig={{ enabled: false, type: BlockType.TeaserSlots }}
-              autofillTeasers={[]}
-              teasers={[]}
-              slots={[]}
+              {...(nestedBlock.block as BuilderTeaserSlotsBlockProps)}
+              //blockStyle={null}
+              //className=""
+              //autofillConfig={{ enabled: false, type: BlockType.TeaserSlots }}
+              //autofillTeasers={[]}
+              //teasers={[]}
+              ///slots={[]}
             />
           </NestedBlock>
         );

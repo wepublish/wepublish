@@ -788,9 +788,10 @@ export function mapBlockValueToBlockInput(
           block: nb.block ? nb.block : null,
         })),
         type: BlockType.FlexBlock,
+        blockStyle: block.value.blockStyle,
       };
 
-      return { flexBlock: flex } as unknown as BlockContentInput;
+      return { flexBlock: flex }; //as unknown as BlockContentInput;
     }
   }
 }
@@ -1144,7 +1145,7 @@ export function blockForQueryBlock(
       };
 
     case 'TeaserSlotsBlock':
-      console.log('types.ts: TeaserSlotsBlock', block);
+      console.log('types.ts: blockForQueryBlock():TeaserSlotsBlock', block);
       return {
         key,
         type: EditorBlockType.TeaserSlots,
@@ -1187,7 +1188,7 @@ export function blockForQueryBlock(
       };
 
     case 'FlexBlock':
-      console.log('types.ts: FlexBlock', block);
+      console.log('types.ts: blockForQueryBlock(): FlexBlock', block);
 
       return {
         key,
@@ -1216,7 +1217,7 @@ export function blockForQueryBlock(
                   h: s.alignment.h ?? 0,
                   static: s.alignment.static ?? false,
                 },
-                block: s.block ? { type: s.block.type } : null,
+                block: s.block ? s.block : null,
               };
             }
 

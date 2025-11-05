@@ -44,8 +44,8 @@ export class NestedBlock implements HasOneBlockContent {
   @Field(() => FlexAlignmentBlocks)
   alignment!: FlexAlignmentBlocks;
 
-  @Field(() => BlockContent)
-  block!: typeof BlockContent;
+  @Field(() => BlockContent, { nullable: true })
+  block!: typeof BlockContent | null;
 }
 
 @InputType()
@@ -58,8 +58,10 @@ export class NestedBlockInput extends OmitType(
   alignment!: FlexAlignmentBlocksInput;
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  @Field(() => require('../block-content.model').BlockContentInput)
-  block!: BlockContentInput;
+  @Field(() => require('../block-content.model').BlockContentInput, {
+    nullable: true,
+  })
+  block!: BlockContentInput | null;
 }
 
 @ObjectType({
