@@ -14,6 +14,7 @@ import {useRouter} from 'next/router'
 import {ComponentProps} from 'react'
 
 import {Container} from '../src/components/layout/container'
+import {randomIntFromInterval} from '../src/random-interval'
 
 export default function PageBySlug() {
   const {
@@ -59,6 +60,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: !page.data?.page ? 1 : 60 // every 60 seconds
+    revalidate: !page.data?.page ? 1 : randomIntFromInterval(60, 120)
   }
 }

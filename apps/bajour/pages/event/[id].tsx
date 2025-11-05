@@ -11,6 +11,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {Container} from '../../src/components/layout/container'
+import {randomIntFromInterval} from '../../src/random-interval'
 
 export default function EventById() {
   const {
@@ -56,6 +57,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: randomIntFromInterval(60, 120)
   }
 }

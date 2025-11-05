@@ -50,6 +50,7 @@ import {SearchSlider} from '../../src/components/search-slider/search-slider'
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
+import {randomIntFromInterval} from '../../src/random-interval'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -241,6 +242,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   return {
     props,
-    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
+    revalidate: !article.data?.article ? 1 : randomIntFromInterval(60, 120)
   }
 }

@@ -17,6 +17,7 @@ import {useMemo} from 'react'
 import {z} from 'zod'
 
 import {Container} from '../../src/components/layout/container'
+import {randomIntFromInterval} from '../../src/random-interval'
 
 const take = 25
 
@@ -108,6 +109,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: randomIntFromInterval(60, 120)
   }
 }

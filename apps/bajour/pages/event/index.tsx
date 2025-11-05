@@ -14,12 +14,14 @@ import {
   useEventListQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {Container} from '../../src/components/layout/container'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useMemo} from 'react'
 import {z} from 'zod'
+
+import {Container} from '../../src/components/layout/container'
+import {randomIntFromInterval} from '../../src/random-interval'
 
 const Filter = styled('div')`
   display: grid;
@@ -184,6 +186,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
+    revalidate: randomIntFromInterval(60, 120)
   }
 }
