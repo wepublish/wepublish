@@ -510,6 +510,7 @@ export function mapBlockValueToBlockInput(
       };
 
     case EditorBlockType.Image:
+      console.log('Mapping image BlockValue to BlockInput:', block);
       return {
         image: {
           imageID: block.value.image?.id,
@@ -788,7 +789,7 @@ export function mapBlockValueToBlockInput(
           block: nb.block ? nb.block : null,
         })),
         type: BlockType.FlexBlock,
-        blockStyle: block.value.blockStyle,
+        //blockStyle: block.value.blockStyle,
       };
 
       return { flexBlock: flex }; //as unknown as BlockContentInput;

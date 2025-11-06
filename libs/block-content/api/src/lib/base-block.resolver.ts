@@ -11,10 +11,12 @@ export class BaseBlockResolver {
 
   @ResolveField(() => String, { nullable: true })
   async blockStyleName(@Parent() block: BaseBlock<any>) {
+    /*
     console.log(
       'base-block.resolver.ts - Resolving blockStyleName for block:',
       block.type
     );
+    */
     if (!block.blockStyle) {
       //console.log('No blockStyle defined for block:', block.type);
       return null;

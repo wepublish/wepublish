@@ -298,7 +298,6 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.FlexBlock]: {
     field: props => <FlexBlock {...props} />,
     defaultValue: {
-      blockStyle: undefined,
       nestedBlocks: [
         /*
         {
@@ -410,7 +409,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         */
       ],
     },
-    label: 'blocks.flexBlock.label',
+    label: (() => {
+      console.log(
+        'blockMap.tsx: EditorBlockType.FlexBlock: defaultValue: called.'
+      );
+      return 'blocks.flexBlock.label';
+    })(),
     icon: <MdAccountBox />,
   },
 };

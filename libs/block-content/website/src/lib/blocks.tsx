@@ -57,9 +57,12 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
+import { BlockContent } from '@wepublish/website/api';
 
 export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
   const { blocks, blockStyles } = useWebsiteBuilder();
+
+  console.log('BlockRenderer: memo: received:', block);
 
   const blockStylesCond = cond([
     [isImageSliderBlockStyle, block => <blockStyles.ImageSlider {...block} />],
@@ -185,7 +188,29 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       ],
       [
         isFlexBlock,
-        block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
+        block => {
+          const nestedBlocks = (
+            block as BuilderFlexBlockProps
+          ).nestedBlocks.map(nb => nb.block);
+
+          console.log('FlexBlock nestedBlocks. length:', nestedBlocks.length);
+
+          const children = (
+            <Blocks
+              blocks={nestedBlocks as BlockContent[]}
+              type="Article"
+            />
+          );
+
+          console.log('Rendering FlexBlock with children:', children);
+
+          return (
+            <blocks.FlexBlock
+              {...(block as BuilderFlexBlockProps)}
+              children={children}
+            />
+          );
+        },
       ],
     ])(block)
   );

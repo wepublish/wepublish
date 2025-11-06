@@ -345,18 +345,49 @@ export function mapBlockUnionMap(
 
       console.log(
         'Mapping FlexBlock: : block-content.model.ts',
-        blockValue,
-        value,
-        type
+        type,
+        JSON.stringify(value)
       );
 
       return {
         type,
-        //...blockValue,
+        ...blockValue,
+        nestedBlocks:
+          blockValue?.nestedBlocks.map(nestedBlock => {
+            console.log(
+              'Mapping nested block:',
+              nestedBlock,
+              nestedBlock.block
+            );
+            if (nestedBlock.block) {
+              console.log('Mapped nested block content: A:', nestedBlock.block);
+              const mappedBlock = mapBlockUnionMap(
+                nestedBlock.block as BlockContentInput
+              );
+              return {
+                alignment: nestedBlock.alignment,
+                block: mappedBlock,
+              };
+            } else {
+              console.log('Mapped nested block content: C:', nestedBlock.block);
+              return {
+                alignment: nestedBlock.alignment,
+                block: null,
+              };
+            }
+          }) ?? [],
+      };
+
+      /*
+      return {
+        type,
+        ...blockValue,
+
         nestedBlocks:
           blockValue?.nestedBlocks.map(nb => {
             console.log('Mapping nested block:', nb);
             if (nb.block) {
+              console.log('Mapped nested block content: A:', nb.block);
               const key = nb.block.type as keyof (typeof nb)['block'];
               //const key = 'teaserSlots' as keyof (typeof nb)['block'];
               //nb.block[key].type = nb.block.type;
@@ -372,12 +403,14 @@ export function mapBlockUnionMap(
               };
             }
           }) ?? [],
+
       };
+                 */
     }
 
     default: {
       console.log(
-        'block-content.model.ts: Mapping block: mapBlockUnionMap(): default (no block type):',
+        'block-content.model.ts: Mapping block: mapBlockUnionMap(): default (nothing  special to map here):',
         value,
         type
       );

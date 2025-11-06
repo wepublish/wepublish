@@ -13,8 +13,15 @@ export const FlexBlock = ({
       <h2>{'Der FlexBlock kommt hier hin.'}</h2>
       <textarea
         autoFocus={autofocus}
-        value={JSON.stringify(value, null, 2)}
+        defaultValue={JSON.stringify(value, null, 2)}
         onChange={e => {
+          e.stopPropagation();
+          e.preventDefault();
+          console.log('Textarea change:');
+          return void 0;
+        }}
+        onBlur={e => {
+          console.log('onblur');
           try {
             const parsedValue = JSON.parse(e.target.value);
             onChange(parsedValue);

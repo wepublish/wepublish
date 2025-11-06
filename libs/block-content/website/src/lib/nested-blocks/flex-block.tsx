@@ -11,6 +11,7 @@ import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 //import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
 //import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
+import { Children } from 'react';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -48,6 +49,7 @@ export const isFlexBlock = (
 export const FlexBlock = ({
   className,
   nestedBlocks,
+  children,
 }: BuilderFlexBlockProps) => {
   return (
     <FlexBlockWrapper>
@@ -90,7 +92,7 @@ export const FlexBlock = ({
         */
         }
 
-        console.log('Rendering nested block: flex-block.tsx', nestedBlock);
+        //console.log('Rendering nested block: flex-block.tsx', nestedBlock);
 
         return (
           <NestedBlock
@@ -107,8 +109,12 @@ export const FlexBlock = ({
               //teasers={[]}
               ///slots={[]}
             />
-            */}
             <div>{`Block type: ${JSON.stringify(nestedBlock)}`}</div>
+                        {children}
+            */}
+            {Children.map(children, child => {
+              return child;
+            })}
           </NestedBlock>
         );
       })}
