@@ -1147,30 +1147,38 @@ export function blockForQueryBlock(
 
     case 'TeaserSlotsBlock':
       console.log('types.ts: blockForQueryBlock():TeaserSlotsBlock', block);
-      return {
-        key,
-        type: EditorBlockType.TeaserSlots,
-        value: {
-          blockStyle: block.blockStyle,
-          slots: block.slots.map(({ teaser, type }) => ({
-            type,
-            teaser:
-              !teaser ? null : (
-                ({
-                  ...teaser,
-                  type:
-                    teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                    : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                    : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                    : TeaserType.Custom,
-                } as Teaser)
-              ),
-          })),
-          autofillConfig: block.autofillConfig,
-          autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
-          teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
-        },
-      };
+      return (() => {
+        const retVal = {
+          key,
+          type: EditorBlockType.TeaserSlots as EditorBlockType.TeaserSlots,
+          value: {
+            blockStyle: block.blockStyle,
+            slots: block.slots.map(({ teaser, type }) => ({
+              type,
+              teaser:
+                !teaser ? null : (
+                  ({
+                    ...teaser,
+                    type:
+                      teaser?.__typename === 'ArticleTeaser' ?
+                        TeaserType.Article
+                      : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                      : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                      : TeaserType.Custom,
+                  } as Teaser)
+                ),
+            })),
+            autofillConfig: block.autofillConfig,
+            autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+            teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+          },
+        };
+        console.log(
+          'types.ts: blockForQueryBlock():TeaserSlotsBlock retVal',
+          retVal
+        );
+        return retVal;
+      })();
 
     case 'BreakBlock':
       return {
@@ -1294,6 +1302,8 @@ export function blockForQueryBlock(
 const mapTeaserToQueryTeaser = (
   teaser: FullTeaserFragment | null | undefined
 ): Teaser | null => {
+  console.log('types.ts: mapTeaserToQueryTeaser:', teaser);
+
   if (!teaser) {
     return null;
   }

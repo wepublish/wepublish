@@ -168,6 +168,7 @@ export class TeaserInput {
 export function mapTeaserUnionMap(
   value: TeaserInput | null | undefined
 ): typeof Teaser | null {
+  console.log('teaser.model.ts - mapTeaserUnionMap - input value:', value);
   if (!value) {
     return null;
   }
@@ -188,6 +189,8 @@ export function mapTeaserUnionMap(
 
   const type = valueKeys[0];
   const teaserValue = value[type];
+
+  console.log('teaser.model.ts - mapTeaserUnionMap:', type, teaserValue);
 
   return { type, ...teaserValue } as typeof Teaser;
 }

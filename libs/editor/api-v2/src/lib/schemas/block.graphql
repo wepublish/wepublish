@@ -368,6 +368,7 @@ fragment FullBlock on BlockContent {
       ...FullTeaser
     }
   }
+
   ... on FlexBlock {
     blockStyle
     type

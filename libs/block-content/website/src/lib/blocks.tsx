@@ -189,14 +189,18 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       [
         isFlexBlock,
         block => {
+          const nrOfNestedBlocks = (block as BuilderFlexBlockProps).nestedBlocks
+            .length;
           const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
             (nb, index) => {
+              console.log('blocks.tsx - rendering nested block:', nb, index);
               return (
                 <Block
                   key={index}
                   block={nb.block as BlockContent}
                   type="Article"
                   index={index}
+                  count={nrOfNestedBlocks}
                 />
               );
             }
@@ -222,33 +226,36 @@ type BuilderBlockProps = {
   block: BlockContent;
   type: BuilderBlockRendererProps['type'];
   index: number;
+  count: number;
 };
-export const Block = memo(({ block, type, index }: BuilderBlockProps) => {
-  const {
-    blocks: { Renderer },
-  } = useWebsiteBuilder();
+export const Block = memo(
+  ({ block, type, index, count }: BuilderBlockProps) => {
+    const {
+      blocks: { Renderer },
+    } = useWebsiteBuilder();
 
-  return (
-    <ImageContext.Provider
-      value={
-        // Above the fold images should be loaded with a high priority
-        3 > index ?
-          {
-            fetchPriority: 'high',
-            loading: 'eager',
-          }
-        : {}
-      }
-    >
-      <Renderer
-        block={block}
-        index={0}
-        count={1}
-        type={type}
-      />
-    </ImageContext.Provider>
-  );
-});
+    return (
+      <ImageContext.Provider
+        value={
+          // Above the fold images should be loaded with a high priority
+          3 > index ?
+            {
+              fetchPriority: 'high',
+              loading: 'eager',
+            }
+          : {}
+        }
+      >
+        <Renderer
+          block={block}
+          index={index}
+          count={count}
+          type={type}
+        />
+      </ImageContext.Provider>
+    );
+  }
+);
 
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {

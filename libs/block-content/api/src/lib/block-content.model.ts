@@ -337,6 +337,7 @@ export function mapBlockUnionMap(
             teaser: mapTeaserUnionMap(teaser),
           })) ?? [],
         teasers: [],
+        autofillTeasers: [],
       };
     }
 
