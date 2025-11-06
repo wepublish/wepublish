@@ -326,45 +326,11 @@ fragment FullBlock on BlockContent {
 
       block {
         __typename
-        ... on BildwurfAdBlock {
-          blockStyle
-          type
-          zoneID
-          # Additional fields specific to BildwurfAdBlock
+
+        ...FullTeaserSlotsBlock
+
+        ...BlockWithoutTeaser
       }
-        ... on TeaserSlotsBlock {
-          title
-          blockStyle
-          type
-          autofillConfig {
-            enabled
-            filter {
-              tags
-              tagObjects {
-                id
-                tag
-              }
-            }
-            sort
-            teaserType
-          }
-          slots {
-            type
-            teaser {
-              __typename
-              ...FullTeaser
     }
-  }
-
-          autofillTeasers {
-            ...FullTeaser
-          }
-          # Additional fields specific to TeaserSlotsBlock
-  }
-
-  }
-
-  }
-
   }
 }

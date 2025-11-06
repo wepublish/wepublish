@@ -209,7 +209,6 @@ fragment BlockWithoutTeaser on BlockContent {
     blockStyle
     type
   }
-
 }
 
 fragment FullTeaser on Teaser {
@@ -293,8 +292,6 @@ fragment FullTeaser on Teaser {
 
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
-
-
 
   ... on TeaserGridFlexBlock {
     blockStyle
@@ -385,12 +382,7 @@ fragment FullBlock on BlockContent {
       }
       block {
         __typename
-        ... on BildwurfAdBlock {
-          blockStyle
-          type
-          zoneID
-          # Additional fields specific to BildwurfAdBlock
-        }
+
         ... on TeaserSlotsBlock {
           title
           blockStyle
@@ -419,6 +411,8 @@ fragment FullBlock on BlockContent {
           }
           # Additional fields specific to TeaserSlotsBlock
         }
+
+        ...BlockWithoutTeaser
       }
     }
   }

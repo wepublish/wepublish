@@ -188,10 +188,10 @@ export const BlockContent = createUnionType({
       case BlockType.TeaserList:
         return TeaserListBlock.name;
       case BlockType.TeaserSlots:
-        console.log('Resolving TeaserSlots in block-content.model.ts');
+        console.log('Resolving TeaserSlots in block-content.model.ts', value);
         return TeaserSlotsBlock.name;
       case BlockType.FlexBlock:
-        console.log('Resolving FlexBlock in block-content.model.ts');
+        console.log('Resolving FlexBlock in block-content.model.ts', value);
         return FlexBlock.name;
     }
 
@@ -265,6 +265,9 @@ export class BlockContentInput {
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
   @Field(() => FlexBlockInput, { nullable: true })
   [BlockType.FlexBlock]?: FlexBlockInput;
+
+  @Field(() => String, { nullable: true })
+  type!: string;
 }
 
 export function mapBlockUnionMap(
@@ -353,26 +356,32 @@ export function mapBlockUnionMap(
         nestedBlocks:
           blockValue?.nestedBlocks.map(nb => {
             console.log('Mapping nested block:', nb);
+            if (nb.block) {
             const key = nb.block.type as keyof (typeof nb)['block'];
-            const blockContent = nb.block[key] as typeof BlockContent;
-
-            if (blockContent) {
-              blockContent.type = toPascalCase(nb.block.type); //nb.block.type;
-              //blockContent.type = nb.block.type;
-            }
             //const key = 'teaserSlots' as keyof (typeof nb)['block'];
             //nb.block[key].type = nb.block.type;
             return {
               alignment: nb.alignment,
-              //block: nb.block[key] as typeof BlockContent,
-              block: blockContent,
+              block: nb.block[key] as typeof BlockContent,
             };
+              }
+            } else {
+              console.log('Mapped nested block content: C:', nb.block);
+              return {
+                alignment: nb.alignment,
+                block: null,
+              };
+            }
           }) ?? [],
       };
     }
 
     default: {
-      console.log('Mapping nested block: bbbbb', value, type);
+      console.log(
+        'block-content.model.ts: Mapping block: mapBlockUnionMap(): default (no block type):',
+        value,
+        type
+      );
       const blockValue = value[type];
 
       return { type, ...blockValue };
@@ -380,17 +389,14 @@ export function mapBlockUnionMap(
   }
 }
 
-function toPascalCase(str: string) {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1 $2') // Splits camelCase words into separate words
-    .replace(/[-_]+|[^\p{L}\p{N}]/gu, ' ') // Replaces dashes, underscores, and special characters with spaces
-    .toLowerCase() // Converts the entire string to lowercase
-    .replace(/(?:^|\s)(\p{L})/gu, (_, letter) => letter.toUpperCase()) // Capitalizes the first letter of each word
-    .replace(/\s+/g, ''); // Removes all spaces
-}
-
 @InterfaceType()
 export class HasBlockContent {
   @Field(() => [BlockContent])
   blocks!: Array<typeof BlockContent>;
+}
+
+@InterfaceType()
+export class HasOneBlockContent {
+  @Field(() => BlockContent, { nullable: true })
+  block!: typeof BlockContent | null;
 }

@@ -8,10 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
-import {
-  HasBlockContentFlex,
-  BlockContentFlexInput,
-} from '../block-content-flex.model';
+import type { BlockContentInput } from '../block-content.model';
+import { HasOneBlockContent, BlockContent } from '../block-content.model';
 
 @ObjectType()
 export class FlexAlignmentBlocks {
@@ -39,10 +37,15 @@ export class FlexAlignmentBlocksInput extends OmitType(
   InputType
 ) {}
 
-@ObjectType()
-export class NestedBlock extends HasBlockContentFlex {
+@ObjectType({
+  implements: () => [HasOneBlockContent],
+})
+export class NestedBlock implements HasOneBlockContent {
   @Field(() => FlexAlignmentBlocks)
   alignment!: FlexAlignmentBlocks;
+
+  @Field(() => BlockContent, { nullable: true })
+  block!: typeof BlockContent | null;
 }
 
 @InputType()
@@ -54,8 +57,11 @@ export class NestedBlockInput extends OmitType(
   @Field(() => FlexAlignmentBlocksInput)
   alignment!: FlexAlignmentBlocksInput;
 
-  @Field(() => BlockContentFlexInput)
-  block!: BlockContentFlexInput;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  @Field(() => require('../block-content.model').BlockContentInput, {
+    nullable: true,
+  })
+  block!: BlockContentInput | null;
 }
 
 @ObjectType({

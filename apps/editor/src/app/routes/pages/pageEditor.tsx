@@ -198,6 +198,12 @@ function PageEditor() {
         socialMediaImage: socialMediaImage || undefined,
       });
 
+      console.log(
+        'pageEditor.tsx: blocks from query: useEffect: setBlocks():',
+        blocks,
+        pageData
+      );
+
       setBlocks(blocks.map(blockForQueryBlock));
     }
   }, [pageData]);

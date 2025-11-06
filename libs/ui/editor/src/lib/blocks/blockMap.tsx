@@ -352,6 +352,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         {
           alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
           block: {
+            type: 'unknownBlock',
+            /*
             type: 'teaserSlots',
             //__typename: 'TeaserSlotsBlock',
             teaserSlots: {
@@ -367,6 +369,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
               slots: [],
               title: 'Autofill Teaser Slots',
             },
+            */
           } as NestedBlock['block'],
         },
 
