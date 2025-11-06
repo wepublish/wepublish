@@ -189,18 +189,20 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       [
         isFlexBlock,
         block => {
-          const nestedBlocks = (
-            block as BuilderFlexBlockProps
-          ).nestedBlocks.map(nb => nb.block);
-
-          console.log('FlexBlock nestedBlocks. length:', nestedBlocks.length);
-
-          const children = (
-            <Blocks
-              blocks={nestedBlocks as BlockContent[]}
-              type="Article"
-            />
+          const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
+            (nb, index) => {
+              return (
+                <Block
+                  key={index}
+                  block={nb.block as BlockContent}
+                  type="Article"
+                  index={index}
+                />
+              );
+            }
           );
+
+          //console.log('FlexBlock nestedBlocks. length:', nestedBlocks.length);
 
           console.log('Rendering FlexBlock with children:', children);
 
@@ -213,6 +215,38 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
         },
       ],
     ])(block)
+  );
+});
+
+type BuilderBlockProps = {
+  block: BlockContent;
+  type: BuilderBlockRendererProps['type'];
+  index: number;
+};
+export const Block = memo(({ block, type, index }: BuilderBlockProps) => {
+  const {
+    blocks: { Renderer },
+  } = useWebsiteBuilder();
+
+  return (
+    <ImageContext.Provider
+      value={
+        // Above the fold images should be loaded with a high priority
+        3 > index ?
+          {
+            fetchPriority: 'high',
+            loading: 'eager',
+          }
+        : {}
+      }
+    >
+      <Renderer
+        block={block}
+        index={0}
+        count={1}
+        type={type}
+      />
+    </ImageContext.Provider>
   );
 });
 

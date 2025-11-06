@@ -9,9 +9,9 @@ import {
 } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
+import { Children } from 'react';
 //import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
 //import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
-import { Children } from 'react';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -49,72 +49,25 @@ export const isFlexBlock = (
 export const FlexBlock = ({
   className,
   nestedBlocks,
-  children,
+  children = [],
 }: BuilderFlexBlockProps) => {
+  const childrenArray = Children.toArray(children);
+
+  console.log('FlexBlock childrenArray:', childrenArray);
+
   return (
     <FlexBlockWrapper>
       {nestedBlocks.map((nestedBlock, index) => {
-        {
-          /*
-        if (nestedBlock && nestedBlock.alignment) {
-          return (
-            <NestedBlock
-              key={index}
-              {...(nestedBlock.alignment as FlexAlignment)}
-            >
-              {`${JSON.stringify(nestedBlock)}`}
-            </NestedBlock>
-          );
-        } else if (!nestedBlock || !nestedBlock.block) {
-          return (
-            <div
-              key={index}
-            >{`No block defined ${JSON.stringify(nestedBlock)}`}</div>
-          );
-        }
-
-        const BlockComponent =
-          nestedBlock.block &&
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          nestedBlock.block.type &&
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          //require(`@wepublish/website/builder`).blocks[nestedBlock.block.type];
-          true;
-        if (!BlockComponent) {
-          console.warn(`No block component found for type:`);
-          return (
-            <div
-              key={index}
-            >{`No block component found for type: ${nestedBlock.block.type}`}</div>
-          );
-        }
-
-        */
-        }
-
-        //console.log('Rendering nested block: flex-block.tsx', nestedBlock);
-
         return (
           <NestedBlock
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
-            {/*
-            <TeaserSlotsBlock
-              {...(nestedBlock.block as BuilderTeaserSlotsBlockProps)}
-              //blockStyle={null}
-              //className=""
-              //autofillConfig={{ enabled: false, type: BlockType.TeaserSlots }}
-              //autofillTeasers={[]}
-              //teasers={[]}
-              ///slots={[]}
-            />
-            <div>{`Block type: ${JSON.stringify(nestedBlock)}`}</div>
-                        {children}
-            */}
+            {childrenArray[index]}
+            {/*(children as [])[index]}
             {Children.map(children, child => {
               return child;
-            })}
+            })*/}
           </NestedBlock>
         );
       })}
