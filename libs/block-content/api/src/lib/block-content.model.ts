@@ -357,14 +357,13 @@ export function mapBlockUnionMap(
           blockValue?.nestedBlocks.map(nb => {
             console.log('Mapping nested block:', nb);
             if (nb.block) {
-            const key = nb.block.type as keyof (typeof nb)['block'];
-            //const key = 'teaserSlots' as keyof (typeof nb)['block'];
-            //nb.block[key].type = nb.block.type;
-            return {
-              alignment: nb.alignment,
-              block: nb.block[key] as typeof BlockContent,
-            };
-              }
+              const key = nb.block.type as keyof (typeof nb)['block'];
+              //const key = 'teaserSlots' as keyof (typeof nb)['block'];
+              //nb.block[key].type = nb.block.type;
+              return {
+                alignment: nb.alignment,
+                block: nb.block[key] as typeof BlockContent,
+              };
             } else {
               console.log('Mapped nested block content: C:', nb.block);
               return {

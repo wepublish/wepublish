@@ -5,12 +5,12 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderFlexBlockProps,
-  BuilderTeaserSlotsBlockProps,
+  //BuilderTeaserSlotsBlockProps,
 } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
-import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
-import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
+//import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
+//import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -97,6 +97,7 @@ export const FlexBlock = ({
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
+            {/*
             <TeaserSlotsBlock
               {...(nestedBlock.block as BuilderTeaserSlotsBlockProps)}
               //blockStyle={null}
@@ -106,6 +107,8 @@ export const FlexBlock = ({
               //teasers={[]}
               ///slots={[]}
             />
+            */}
+            <div>{`Block type: ${JSON.stringify(nestedBlock)}`}</div>
           </NestedBlock>
         );
       })}
