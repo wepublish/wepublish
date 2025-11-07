@@ -27,7 +27,6 @@ import {
   addClientCacheToV1Props,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { fetch404 } from '../../../fetch-404';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -125,7 +124,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
   const sessionProps = await getSessionTokenProps(ctx);
 
   if (sessionProps.sessionToken) {
-    const [subscriptions] = await Promise.all([
+    await Promise.all([
       client.query<SubscriptionsQuery>({
         query: SubscriptionsDocument,
       }),
@@ -136,17 +135,6 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
         query: MeDocument,
       }),
     ]);
-
-    if (
-      !subscriptions.error &&
-      !subscriptions.data.subscriptions.find(
-        subscription => subscription.id === ctx.query.id
-      )
-    ) {
-      // {notFound: true} is not supported in getInitialProps
-      await fetch404(ctx);
-      return {};
-    }
   }
 
   const props = addClientCacheToV1Props(client, sessionProps);
