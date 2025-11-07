@@ -22,7 +22,7 @@ async function readCookie(req: NextApiRequest, res: NextApiResponse) {
       (JSON.parse(token.toString()) as SessionWithTokenWithoutUser)
     : null;
 
-  return res.send({ sessionToken });
+  return res.setHeader('Cache-Control', 'no-store').send({ sessionToken });
 }
 
 async function removeCookie(req: NextApiRequest, res: NextApiResponse) {
@@ -31,7 +31,7 @@ async function removeCookie(req: NextApiRequest, res: NextApiResponse) {
     res,
   });
 
-  return res.status(204).send({});
+  return res.setHeader('Cache-Control', 'no-store').status(204).send({});
 }
 
 export default async function handler(
