@@ -2,6 +2,7 @@ import { Field, InputType, Int, ObjectType, OmitType } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { Teaser, TeaserInput } from './teaser.model';
+import type { BlockContentInput } from '../block-content.model';
 
 // We need to use a lazy type reference to avoid circular dependency
 const getBlockContentType = () => {
@@ -65,7 +66,7 @@ export class FlexTeaserInput extends OmitType(
   teaser?: TeaserInput | null;
 
   @Field(() => getBlockContentInputType, { nullable: true })
-  block?: typeof getBlockContentInputType | null;
+  block?: BlockContentInput | null;
 }
 
 @ObjectType({
