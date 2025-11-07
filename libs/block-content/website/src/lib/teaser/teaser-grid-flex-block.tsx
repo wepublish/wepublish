@@ -42,7 +42,7 @@ const sortFlexTeasersByYAndX = sortWith<FlexTeaser>([
 ]);
 
 export const omitEmptyFlexTeasers = filter<FlexTeaser>(item =>
-  isFilledTeaser(item.teaser) || Boolean(item.block)
+  isFilledTeaser(item.teaser) || item.block != null
 );
 
 export const fixFlexTeasers = compose(
@@ -75,7 +75,7 @@ export const TeaserGridFlexBlock = ({
               block={item.block}
               index={index}
               count={sortedTeasers.length}
-              type="Page"
+              type="Page" // Using Page as default type for nested blocks
             />
           );
         }

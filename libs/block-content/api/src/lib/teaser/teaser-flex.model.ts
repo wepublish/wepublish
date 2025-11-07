@@ -65,7 +65,7 @@ export class FlexTeaserInput extends OmitType(
   teaser?: TeaserInput | null;
 
   @Field(() => getBlockContentInputType, { nullable: true })
-  block?: any | null;
+  block?: typeof getBlockContentInputType | null;
 }
 
 @ObjectType({
