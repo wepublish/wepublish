@@ -38,6 +38,7 @@ export const AsyncSessionProvider = memo<
           headers: {
             'Content-Type': 'application/json',
           },
+          cache: 'no-store',
         });
         await getMe();
       } else {
@@ -59,6 +60,7 @@ export const AsyncSessionProvider = memo<
 
     const res = await fetch('/api/cookie', {
       method: 'GET',
+      cache: 'no-store',
     });
     const { sessionToken: token } = await (res.json() as Promise<{
       sessionToken: SessionWithTokenWithoutUser;
