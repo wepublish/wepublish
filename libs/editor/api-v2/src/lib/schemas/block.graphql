@@ -292,6 +292,67 @@ fragment FullTeaser on Teaser {
   }
 }
 
+fragment NestedBlock on BlockContent {
+  ...BlockWithoutTeaser
+
+  ... on TeaserGridBlock {
+    blockStyle
+    type
+    teasers {
+      ...FullTeaser
+    }
+    numColumns
+  }
+
+  ... on TeaserListBlock {
+    title
+    blockStyle
+    type
+    skip
+    take
+    sort
+    teaserType
+    filter {
+      tags
+      tagObjects {
+        id
+        tag
+      }
+    }
+    teasers {
+      ...FullTeaser
+    }
+  }
+
+  ... on TeaserSlotsBlock {
+    title
+    blockStyle
+    type
+    autofillConfig {
+      enabled
+      filter {
+        tags
+        tagObjects {
+          id
+          tag
+        }
+      }
+      sort
+      teaserType
+    }
+    slots {
+      type
+      teaser {
+        __typename
+        ...FullTeaser
+      }
+    }
+    autofillTeasers {
+      ...FullTeaser
+    }
+  }
+}
+
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
@@ -310,6 +371,10 @@ fragment FullBlock on BlockContent {
 
       teaser {
         ...FullTeaser
+      }
+
+      block {
+        ...NestedBlock
       }
     }
   }

@@ -295,9 +295,10 @@ export function mapBlockUnionMap(
         ...blockValue,
         flexTeasers:
           blockValue?.flexTeasers.map(
-            ({ teaser, ...value }: FlexTeaserInput) => ({
+            ({ teaser, block, ...value }: FlexTeaserInput) => ({
               ...value,
               teaser: mapTeaserUnionMap(teaser),
+              block: block ? mapBlockUnionMap(block) : null,
             })
           ) ?? [],
       };

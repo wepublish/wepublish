@@ -964,11 +964,13 @@ export type FlexAlignmentInput = {
 export type FlexTeaser = {
   __typename?: 'FlexTeaser';
   alignment: FlexAlignment;
+  block?: Maybe<BlockContent>;
   teaser?: Maybe<Teaser>;
 };
 
 export type FlexTeaserInput = {
   alignment: FlexAlignmentInput;
+  block?: InputMaybe<BlockContentInput>;
   teaser?: InputMaybe<TeaserInput>;
 };
 

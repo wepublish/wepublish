@@ -41,8 +41,8 @@ const sortFlexTeasersByYAndX = sortWith<FlexTeaser>([
   ascend(teaser => teaser.alignment.x),
 ]);
 
-export const omitEmptyFlexTeasers = filter<FlexTeaser>(teaser =>
-  isFilledTeaser(teaser.teaser)
+export const omitEmptyFlexTeasers = filter<FlexTeaser>(item =>
+  isFilledTeaser(item.teaser) || Boolean(item.block)
 );
 
 export const fixFlexTeasers = compose(
@@ -56,7 +56,7 @@ export const TeaserGridFlexBlock = ({
   className,
 }: BuilderTeaserGridFlexBlockProps) => {
   const {
-    blocks: { Teaser },
+    blocks: { Teaser, Renderer },
   } = useWebsiteBuilder();
 
   const sortedTeasers = useMemo(
@@ -66,14 +66,30 @@ export const TeaserGridFlexBlock = ({
 
   return (
     <TeaserGridFlexBlockWrapper className={className}>
-      {sortedTeasers.map((teaser, index) => (
-        <Teaser
-          key={index}
-          index={index}
-          {...teaser}
-          blockStyle={blockStyle}
-        />
-      ))}
+      {sortedTeasers.map((item, index) => {
+        // If the item has a block, render the block
+        if (item.block) {
+          return (
+            <Renderer
+              key={index}
+              block={item.block}
+              index={index}
+              count={sortedTeasers.length}
+              type="Page"
+            />
+          );
+        }
+        
+        // Otherwise, render the teaser
+        return (
+          <Teaser
+            key={index}
+            index={index}
+            {...item}
+            blockStyle={blockStyle}
+          />
+        );
+      })}
     </TeaserGridFlexBlockWrapper>
   );
 };

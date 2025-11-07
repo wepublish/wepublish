@@ -295,6 +295,7 @@ export interface FlexAlignment {
 export interface FlexTeaser {
   alignment: FlexAlignment;
   teaser: Teaser | null;
+  block: FullBlockFragment | null;
 }
 
 export interface TeaserGridFlexBlockValue extends BaseBlockValue {

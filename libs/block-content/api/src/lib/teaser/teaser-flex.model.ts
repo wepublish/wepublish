@@ -3,6 +3,17 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { Teaser, TeaserInput } from './teaser.model';
 
+// We need to use a lazy type reference to avoid circular dependency
+const getBlockContentType = () => {
+  const { BlockContent } = require('../block-content.model');
+  return BlockContent;
+};
+
+const getBlockContentInputType = () => {
+  const { BlockContentInput } = require('../block-content.model');
+  return BlockContentInput;
+};
+
 @ObjectType()
 export class FlexAlignment {
   @Field()
@@ -36,12 +47,15 @@ export class FlexTeaser {
 
   @Field(() => Teaser, { nullable: true })
   teaser?: typeof Teaser | null;
+
+  @Field(() => getBlockContentType, { nullable: true })
+  block?: BaseBlock<BlockType> | null;
 }
 
 @InputType()
 export class FlexTeaserInput extends OmitType(
   FlexTeaser,
-  ['teaser', 'alignment'] as const,
+  ['teaser', 'alignment', 'block'] as const,
   InputType
 ) {
   @Field(() => FlexAlignmentInput)
@@ -49,6 +63,9 @@ export class FlexTeaserInput extends OmitType(
 
   @Field(() => TeaserInput, { nullable: true })
   teaser?: TeaserInput | null;
+
+  @Field(() => getBlockContentInputType, { nullable: true })
+  block?: any | null;
 }
 
 @ObjectType({

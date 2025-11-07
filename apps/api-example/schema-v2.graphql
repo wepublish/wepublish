@@ -903,11 +903,13 @@ input FlexAlignmentInput {
 
 type FlexTeaser {
   alignment: FlexAlignment!
+  block: BlockContent
   teaser: Teaser
 }
 
 input FlexTeaserInput {
   alignment: FlexAlignmentInput!
+  block: BlockContentInput
   teaser: TeaserInput
 }
 

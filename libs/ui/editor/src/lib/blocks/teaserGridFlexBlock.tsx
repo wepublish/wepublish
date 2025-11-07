@@ -154,6 +154,7 @@ export function TeaserGridFlexBlock({
         static: false,
       },
       teaser: null,
+      block: null,
     };
     onChange({ ...value, flexTeasers: [...flexTeasers, newTeaser] });
   };
@@ -169,10 +170,10 @@ export function TeaserGridFlexBlock({
 
   const handleLayoutChange = (layout: FlexAlignment[]) => {
     const newFlexTeasers = layout.map(v => {
+      const existingItem = flexTeasers.find(flexTeaser => v.i === flexTeaser.alignment.i);
       return {
-        teaser:
-          flexTeasers.find(flexTeaser => v.i === flexTeaser.alignment.i)
-            ?.teaser ?? null,
+        teaser: existingItem?.teaser ?? null,
+        block: existingItem?.block ?? null,
         alignment: v,
       };
     });
@@ -180,10 +181,11 @@ export function TeaserGridFlexBlock({
   };
 
   const handlePinTeaserBlock = (index: string) => {
-    const newTeasers = flexTeasers.map(({ teaser, alignment }) => {
+    const newTeasers = flexTeasers.map(({ teaser, block, alignment }) => {
       return alignment.i === index ?
           {
             teaser,
+            block,
             alignment: {
               i: alignment.i,
               x: alignment.x,
@@ -193,7 +195,7 @@ export function TeaserGridFlexBlock({
               static: !alignment.static,
             },
           }
-        : { teaser, alignment };
+        : { teaser, block, alignment };
     });
     onChange({ ...value, flexTeasers: newTeasers });
   };
@@ -207,7 +209,7 @@ export function TeaserGridFlexBlock({
       ...value,
       flexTeasers: flexTeasers.map(ft => {
         return ft.alignment.i === index ?
-            { alignment: ft.alignment, teaser: teaserLink }
+            { alignment: ft.alignment, teaser: teaserLink, block: ft.block }
           : ft;
       }),
     });
@@ -216,10 +218,10 @@ export function TeaserGridFlexBlock({
   function handleRemoveTeaser(index: string) {
     onChange({
       ...value,
-      flexTeasers: flexTeasers.map(({ teaser, alignment }) => {
+      flexTeasers: flexTeasers.map(({ teaser, block, alignment }) => {
         return alignment.i === index ?
-            { alignment, teaser: null }
-          : { teaser, alignment };
+            { alignment, teaser: null, block }
+          : { teaser, block, alignment };
       }),
     });
   }
