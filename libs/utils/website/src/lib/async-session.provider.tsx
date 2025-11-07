@@ -38,6 +38,7 @@ export const AsyncSessionProvider = memo<
           headers: {
             'Content-Type': 'application/json',
           },
+          cache: 'no-store',
         });
         await getMe();
       } else {
