@@ -242,6 +242,8 @@ export const TeaserImageWrapper = styled('div')`
 // This causes the TeaserLogo to not be properly positioned if a margin exists
 export const TeaserImageInnerWrapper = styled('div')`
   position: relative;
+  height: 100%;
+  width: 100%;
 `;
 
 export const TeaserImage = styled(Image)`
