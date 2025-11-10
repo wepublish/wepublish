@@ -302,9 +302,11 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
           alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
           block: {
             type: 'unknownBlock',
+            blockStyle: undefined,
           } as NestedBlock['block'],
         },
       ],
+      blockStyle: undefined,
     },
     label: (() => {
       return 'blocks.flexBlock.label';

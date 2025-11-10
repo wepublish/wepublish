@@ -11,11 +11,14 @@ import { Children } from 'react';
 const FlexBlockWrapper = styled('div')`
   display: grid;
   column-gap: ${({ theme }) => theme.spacing(2)};
-  row-gap: ${({ theme }) => theme.spacing(2)};
+  row-gap: ${({ theme }) => theme.spacing(8)};
   grid-template-columns: repeat(12, 1fr);
+  grid-column: 1 / -1;
 `;
 export const NestedBlock = styled('div')<FlexAlignment>`
-  background-color: lime;
+  //background-color: lime;
+
+  grid-column: 1 / -1;
 
   ${({ theme, w }) =>
     w > 6 &&
@@ -25,10 +28,13 @@ export const NestedBlock = styled('div')<FlexAlignment>`
 
   ${({ theme, h, w, x, y }) => css`
     ${theme.breakpoints.up('md')} {
+      /*
       grid-column-start: ${x + 1};
       grid-column-end: ${x + 1 + w};
+
       grid-row-start: ${y + 1};
       grid-row-end: ${y + 1 + h};
+      */
     }
   `}
 `;

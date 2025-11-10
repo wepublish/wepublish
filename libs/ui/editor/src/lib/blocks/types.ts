@@ -778,6 +778,7 @@ export function mapBlockValueToBlockInput(
           block: nb.block ? nb.block : null,
         })),
         type: BlockType.FlexBlock,
+        blockStyle: block.value.blockStyle,
       };
 
       return { flexBlock };

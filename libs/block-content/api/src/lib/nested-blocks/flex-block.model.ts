@@ -1,11 +1,4 @@
-import {
-  Field,
-  InputType,
-  Int,
-  ObjectType,
-  OmitType,
-  PartialType,
-} from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType, OmitType } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import type { BlockContentInput } from '../block-content.model';
@@ -73,8 +66,10 @@ export class FlexBlock extends BaseBlock<typeof BlockType.FlexBlock> {
 }
 
 @InputType()
-export class FlexBlockInput extends PartialType(
-  OmitType(FlexBlock, ['type', 'nestedBlocks'])
+export class FlexBlockInput extends OmitType(
+  FlexBlock,
+  ['nestedBlocks', 'type'] as const,
+  InputType
 ) {
   @Field(() => [NestedBlockInput])
   nestedBlocks!: NestedBlockInput[];
@@ -82,6 +77,21 @@ export class FlexBlockInput extends PartialType(
   @Field(() => BlockType)
   type!: typeof BlockType.FlexBlock;
 }
+
+/*
+@InputType()
+export class TeaserSlotsBlockInput extends OmitType(
+  TeaserSlotsBlock,
+  ['teasers', 'autofillTeasers', 'slots', 'autofillConfig', 'type'] as const,
+  InputType
+) {
+  @Field(() => [TeaserSlotInput])
+  slots!: Array<TeaserSlotInput>;
+
+  @Field(() => TeaserSlotsAutofillConfigInput)
+  autofillConfig!: TeaserSlotsAutofillConfigInput;
+}
+*/
 
 export function isFlexBlock(block: BaseBlock<BlockType>): block is FlexBlock {
   return block.type === BlockType.FlexBlock;

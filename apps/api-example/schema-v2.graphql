@@ -931,6 +931,8 @@ type FlexBlock implements BaseBlock {
 }
 
 input FlexBlockInput {
+  blockStyle: String
+  blockStyleName: String
   nestedBlocks: [NestedBlockInput!]!
   type: BlockType!
 }

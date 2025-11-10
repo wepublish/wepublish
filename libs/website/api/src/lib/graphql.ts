@@ -995,6 +995,8 @@ export type FlexBlock = BaseBlock & {
 };
 
 export type FlexBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
   nestedBlocks: Array<NestedBlockInput>;
   type: BlockType;
 };
