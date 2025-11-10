@@ -3,7 +3,8 @@
 const { composePlugins, withNx } = require('@nx/next');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.NODE_ENV === 'production',
+  enabled:
+    process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
   openAnalyzer: false,
 });
 
