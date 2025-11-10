@@ -13,27 +13,61 @@ describe('UpgradeSubscriptionService', () => {
   let prismaMock: {
     subscription: {
       findUnique: jest.Mock;
+      update: jest.Mock;
     };
     memberPlan: {
       findUnique: jest.Mock;
     };
   };
+  let memberContextMock: {
+    cancelInvoicesForSubscription: jest.Mock;
+    cancelRemoteSubscription: jest.Mock;
+    createSubscription: jest.Mock;
+  };
+
+  let paymentServiceMock: {
+    createPaymentWithProvider: jest.Mock;
+  };
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2025-01-01'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
 
   beforeAll(async () => {
     prismaMock = {
       subscription: {
         findUnique: jest.fn(),
+        update: jest.fn(),
       },
       memberPlan: {
         findUnique: jest.fn(),
       },
     };
+    memberContextMock = {
+      cancelInvoicesForSubscription: jest.fn(),
+      cancelRemoteSubscription: jest.fn(),
+      createSubscription: jest.fn(),
+    };
+    paymentServiceMock = {
+      createPaymentWithProvider: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UpgradeSubscriptionService,
-        MemberContextService,
-        PaymentsService,
+        {
+          provide: MemberContextService,
+          useValue: memberContextMock,
+        },
+        {
+          provide: PaymentsService,
+          useValue: paymentServiceMock,
+        },
         {
           provide: PrismaClient,
           useValue: prismaMock,
@@ -44,6 +78,198 @@ describe('UpgradeSubscriptionService', () => {
     service = module.get<UpgradeSubscriptionService>(
       UpgradeSubscriptionService
     );
+  });
+
+  describe('happy path', () => {
+    it('should upgrade a subscription', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        id: 'subscriptionId',
+        userID: 'userId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        extendable: true,
+        autoRenew: true,
+        periods: [
+          {
+            id: '1',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 300,
+            endsAt: new Date('2023-01-01'),
+            createdAt: new Date('2022-01-01'),
+            startsAt: new Date('2022-01-01'),
+            invoice: {
+              paidAt: new Date('2022-01-01'),
+            },
+          },
+          {
+            id: '2',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 400,
+            endsAt: new Date('2024-01-01'),
+            createdAt: new Date('2023-01-01'),
+            startsAt: new Date('2023-01-01'),
+            invoice: {
+              paidAt: new Date('2023-01-01'),
+            },
+          },
+          {
+            id: '3',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 500,
+            endsAt: new Date('2025-01-01'),
+            createdAt: new Date('2024-01-01'),
+            startsAt: new Date('2024-01-01'),
+            invoice: {
+              paidAt: new Date('2024-01-01'),
+            },
+          },
+          {
+            id: '4',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 600,
+            endsAt: new Date('2026-01-01'),
+            createdAt: new Date('2025-01-01'),
+            startsAt: new Date('2025-01-01'),
+            invoice: {
+              paidAt: new Date('2025-01-01'),
+            },
+          },
+          {
+            id: '5',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 700,
+            endsAt: new Date('2027-01-01'),
+            createdAt: new Date('2026-01-01'),
+            startsAt: new Date('2026-01-01'),
+            invoice: {
+              paidAt: null,
+            },
+          },
+        ],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        id: 'memberPlanId',
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: true,
+          },
+        ],
+      });
+      memberContextMock.createSubscription.mockResolvedValue({
+        invoice: {
+          id: 'invoiceId',
+        },
+      });
+
+      await service.upgradeSubscription({
+        subscriptionId: 'subscriptionId',
+        memberPlanId: 'memberPlanId',
+        paymentMethodId: 'paymentMethodId',
+        userId: 'userId',
+        monthlyAmount: 80,
+      });
+
+      expect({
+        cancelInvoicesForSubscription:
+          memberContextMock.cancelInvoicesForSubscription.mock.calls[0],
+        cancelRemoteSubscription:
+          memberContextMock.cancelRemoteSubscription.mock.calls[0],
+        createSubscription: memberContextMock.createSubscription.mock.calls[0],
+        createPaymentWithProvider:
+          paymentServiceMock.createPaymentWithProvider.mock.calls[0],
+        subscriptionUpdate: prismaMock.subscription.update.mock.calls[0],
+      }).toMatchSnapshot();
+    });
+
+    it('should calculate the correct discount', async () => {
+      prismaMock.subscription.findUnique.mockResolvedValue({
+        userID: 'userId',
+        currency: Currency.CHF,
+        paymentPeriodicity: PaymentPeriodicity.yearly,
+        extendable: true,
+        autoRenew: true,
+        periods: [
+          {
+            id: '1',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 300,
+            endsAt: new Date('2023-01-01'),
+            createdAt: new Date('2022-01-01'),
+            startsAt: new Date('2022-01-01'),
+            invoice: {
+              paidAt: new Date('2022-01-01'),
+            },
+          },
+          {
+            id: '2',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 400,
+            endsAt: new Date('2024-01-01'),
+            createdAt: new Date('2023-01-01'),
+            startsAt: new Date('2023-01-01'),
+            invoice: {
+              paidAt: new Date('2023-01-01'),
+            },
+          },
+          {
+            id: '3',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 500,
+            endsAt: new Date('2025-01-01'),
+            createdAt: new Date('2024-01-01'),
+            startsAt: new Date('2024-01-01'),
+            invoice: {
+              paidAt: new Date('2024-01-01'),
+            },
+          },
+          {
+            id: '4',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 600,
+            endsAt: new Date('2026-01-01'),
+            createdAt: new Date('2025-01-01'),
+            startsAt: new Date('2025-01-01'),
+            invoice: {
+              paidAt: new Date('2025-01-01'),
+            },
+          },
+          {
+            id: '5',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 700,
+            endsAt: new Date('2027-01-01'),
+            createdAt: new Date('2026-01-01'),
+            startsAt: new Date('2026-01-01'),
+            invoice: {
+              paidAt: null,
+            },
+          },
+        ],
+      });
+      prismaMock.memberPlan.findUnique.mockResolvedValue({
+        currency: Currency.CHF,
+        availablePaymentMethods: [
+          {
+            paymentMethodIDs: ['paymentMethodId'],
+            paymentPeriodicities: [PaymentPeriodicity.yearly],
+            forceAutoRenewal: true,
+          },
+        ],
+      });
+
+      const result = await service.getInfo({
+        subscriptionId: 'subscriptionId',
+        memberPlanId: 'memberPlanId',
+        userId: 'userId',
+      });
+
+      // Should not be 700 as the period with 700 is unpaid
+      // Should not be 500 but 600 because the period with 500 got extended and paid already
+      expect(result).toBe(600);
+    });
   });
 
   describe('unhappy path', () => {

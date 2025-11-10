@@ -17,7 +17,7 @@ import {
   useAuthorisation,
   useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCancel, MdInfo, MdSave, MdWarning } from 'react-icons/md';
 import {
@@ -104,12 +104,12 @@ function settingsReducer(
 }
 
 function SettingList() {
-  const client = useMemo(() => getApiClientV2(), []);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const { t } = useTranslation();
 
   const isAuthorized = useAuthorisation('CAN_UPDATE_SETTINGS');
 
+  const client = getApiClientV2();
   const {
     data: settingListData,
     loading,

@@ -1,5 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`] = `
+{
+  "cancelInvoicesForSubscription": [
+    "subscriptionId",
+  ],
+  "cancelRemoteSubscription": [
+    {
+      "reason": "userReplacedSubscription",
+      "subscriptionId": "subscriptionId",
+    },
+  ],
+  "createPaymentWithProvider": [
+    {
+      "failureURL": undefined,
+      "invoice": {
+        "id": "invoiceId",
+      },
+      "paymentMethodID": "paymentMethodId",
+      "saveCustomer": true,
+      "successURL": undefined,
+      "userId": "userId",
+    },
+  ],
+  "createSubscription": [
+    {
+      "autoRenew": true,
+      "discount": 600,
+      "extendable": true,
+      "memberPlanId": "memberPlanId",
+      "monthlyAmount": 80,
+      "paymentMethodId": "paymentMethodId",
+      "paymentPeriodicity": "yearly",
+      "properties": [],
+      "replacedSubscriptionId": "subscriptionId",
+      "startsAt": 2025-01-01T00:00:00.000Z,
+      "userID": "userId",
+    },
+  ],
+  "subscriptionUpdate": [
+    {
+      "data": {
+        "deactivation": {
+          "create": {
+            "date": 2025-01-01T00:00:00.000Z,
+            "reason": "userReplacedSubscription",
+          },
+        },
+        "paidUntil": 2025-01-01T00:00:00.000Z,
+        "periods": {
+          "update": {
+            "data": {
+              "endsAt": 2025-01-01T00:00:00.000Z,
+            },
+            "where": {
+              "id": "4",
+            },
+          },
+        },
+      },
+      "where": {
+        "id": "subscriptionId",
+      },
+    },
+  ],
+}
+`;
+
 exports[`UpgradeSubscriptionService unhappy path should throw an error if the memberplan can not be found 1`] = `[NotFoundException: MemberPlan with id memberPlanId was not found.]`;
 
 exports[`UpgradeSubscriptionService unhappy path should throw an error if the memberplan can not be found 2`] = `[NotFoundException: MemberPlan with id memberPlanId was not found.]`;
