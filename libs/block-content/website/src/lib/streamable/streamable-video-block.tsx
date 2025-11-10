@@ -66,7 +66,7 @@ export function StreamableVideoBlock({
     };
   }, [streamableUrl]);
 
-  if (!videoID || !streamableUrl) {
+  if (!streamableUrl) {
     return null;
   }
 
