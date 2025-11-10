@@ -154,7 +154,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Break: FlimmerBreakBlock,
             RichText: FlimmerRichText,
             Title: FlimmerTitle,
-            Subscribe: MitmachenInnerStyled,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}

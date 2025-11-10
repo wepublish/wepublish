@@ -1,6 +1,7 @@
 import { Article } from '@wepublish/website/api';
 import { generateFeed } from './feed-generator';
 import { mockArticle, mockAuthor } from '@wepublish/storybook/mocks';
+import { faker } from '@faker-js/faker/.';
 
 const author = mockAuthor();
 
@@ -15,6 +16,8 @@ const generate = generateFeed({
   },
   updated: new Date('2023-01-01'),
 });
+
+faker.seed(1);
 
 it('should setup the feed', async () => {
   const articles = [

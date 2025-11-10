@@ -81,7 +81,12 @@ const nextConfig = {
   // Not needed for the monorepository but for demo purposes.
   // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
   // This will transpile the ES Modules to CommonJS
-  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
+  transpilePackages: [
+    '@wepublish/ui',
+    '@wepublish/website',
+    'react-tweet',
+    '@faker-js/faker',
+  ],
 };
 
 module.exports = nextConfig;
