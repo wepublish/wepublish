@@ -42,7 +42,7 @@ export const isFlexBlock = (
   block: Pick<BlockContent, '__typename'>
 ): block is FlexBlockType => {
   const retVal = block.__typename === 'FlexBlock';
-  console.log('Checking if block is FlexBlock:', block, retVal);
+  //console.log('Checking if block is FlexBlock:', block, retVal);
   return retVal;
 };
 
@@ -53,7 +53,7 @@ export const FlexBlock = ({
 }: BuilderFlexBlockProps) => {
   const childrenArray = Children.toArray(children);
 
-  console.log('FlexBlock childrenArray:', childrenArray);
+  //console.log('FlexBlock childrenArray:', childrenArray);
 
   return (
     <FlexBlockWrapper>

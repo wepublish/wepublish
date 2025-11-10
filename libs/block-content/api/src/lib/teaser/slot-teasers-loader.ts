@@ -17,14 +17,37 @@ import { isTeaserGridBlock } from './teaser-grid.model';
 @Injectable({ scope: Scope.REQUEST })
 export class SlotTeasersLoader {
   private loadedTeasers: (typeof Teaser)[] = [];
+  private nestedBlocks: BaseBlock<BlockType>[] = [];
 
   constructor(
     private eventService: EventService,
     private articleService: ArticleService
   ) {}
 
-  async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
-    revisionBlocks.forEach(block => {
+  async loadSlotTeasersIntoBlocks(
+    revisionBlocks: BaseBlock<BlockType>[],
+    insideRecursion?: boolean
+  ): Promise<BaseBlock<BlockType>[]> {
+    if (!insideRecursion) {
+      this.nestedBlocks = [];
+    }
+
+    for await (const block of revisionBlocks) {
+      if (Object.prototype.hasOwnProperty.call(block, 'nestedBlocks')) {
+        const flexBlock = block as unknown as {
+          nestedBlocks: { block: BaseBlock<BlockType> }[];
+        };
+        for await (const nestedBlock of flexBlock.nestedBlocks) {
+          if (isTeaserSlotsBlock(nestedBlock.block)) {
+            const blocks = await this.loadSlotTeasersIntoBlocks(
+              [nestedBlock.block],
+              true
+            );
+            this.addNestedBlock(blocks[0]);
+          }
+        }
+      }
+
       if (isTeaserSlotsBlock(block)) {
         this.addLoadedTeaser(
           ...block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
@@ -60,10 +83,21 @@ export class SlotTeasersLoader {
           )
         );
       }
-    });
+    }
 
     const blocks = [];
     for (const block of revisionBlocks) {
+      if (Object.prototype.hasOwnProperty.call(block, 'nestedBlocks')) {
+        const flexBlock = block as unknown as {
+          nestedBlocks: { block: BaseBlock<BlockType> }[];
+        };
+        flexBlock.nestedBlocks.forEach(nestedBlock => {
+          if (isTeaserSlotsBlock(nestedBlock.block)) {
+            nestedBlock.block = this.getNestedBlock();
+          }
+        });
+      }
+
       if (isTeaserSlotsBlock(block)) {
         const autofillTeasers = await this.getAutofillTeasers(block);
         const teasers = await this.getTeasers(block, autofillTeasers);
@@ -76,7 +110,6 @@ export class SlotTeasersLoader {
         blocks.push(block);
       }
     }
-
     return blocks;
   }
 
@@ -84,7 +117,6 @@ export class SlotTeasersLoader {
     { slots }: TeaserSlotsBlock,
     autofillTeasers: (typeof Teaser)[]
   ): Promise<(typeof Teaser | null)[]> {
-    console.log('slot-teasers-loader.ts:', slots);
     return slots?.map(({ teaser: manualTeaser, type }, index) => {
       const autofillIndex = slots
         .slice(0, index)
@@ -181,5 +213,13 @@ export class SlotTeasersLoader {
 
       return ids;
     }, []);
+  }
+
+  getNestedBlock(): BaseBlock<BlockType> {
+    return this.nestedBlocks.shift() as BaseBlock<BlockType>;
+  }
+
+  addNestedBlock(block: BaseBlock<BlockType>) {
+    this.nestedBlocks.push(block);
   }
 }

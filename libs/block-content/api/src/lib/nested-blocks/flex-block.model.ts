@@ -87,3 +87,8 @@ export class FlexBlockInput extends PartialType(
   @Field(() => BlockType)
   type!: typeof BlockType.FlexBlock;
 }
+
+export function isFlexBlock(block: BaseBlock<BlockType>): block is FlexBlock {
+  //console.log('flex-block.model.ts: isFlexBlock():', block);
+  return block.type === BlockType.FlexBlock;
+}

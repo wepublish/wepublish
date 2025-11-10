@@ -62,7 +62,7 @@ import { BlockContent } from '@wepublish/website/api';
 export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
   const { blocks, blockStyles } = useWebsiteBuilder();
 
-  console.log('BlockRenderer: memo: received:', block);
+  //console.log('BlockRenderer: memo: received:', block);
 
   const blockStylesCond = cond([
     [isImageSliderBlockStyle, block => <blockStyles.ImageSlider {...block} />],
@@ -193,7 +193,7 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
             .length;
           const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
             (nb, index) => {
-              console.log('blocks.tsx - rendering nested block:', nb, index);
+              //console.log('blocks.tsx - rendering nested block:', nb, index);
               return (
                 <Block
                   key={index}
@@ -208,7 +208,7 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
 
           //console.log('FlexBlock nestedBlocks. length:', nestedBlocks.length);
 
-          console.log('Rendering FlexBlock with children:', children);
+          //console.log('Rendering FlexBlock with children:', children);
 
           return (
             <blocks.FlexBlock

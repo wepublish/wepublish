@@ -188,10 +188,10 @@ export const BlockContent = createUnionType({
       case BlockType.TeaserList:
         return TeaserListBlock.name;
       case BlockType.TeaserSlots:
-        console.log('Resolving TeaserSlots in block-content.model.ts', value);
+        //console.log('Resolving TeaserSlots in block-content.model.ts', value);
         return TeaserSlotsBlock.name;
       case BlockType.FlexBlock:
-        console.log('Resolving FlexBlock in block-content.model.ts', value);
+        //console.log('Resolving FlexBlock in block-content.model.ts', value);
         return FlexBlock.name;
     }
 
@@ -273,7 +273,7 @@ export class BlockContentInput {
 export function mapBlockUnionMap(
   value: BlockContentInput
 ): typeof BlockContent {
-  console.log('block-content.model.ts: mapBlockUnionMap:', value);
+  //console.log('block-content.model.ts: mapBlockUnionMap:', value);
 
   const valueKeys = Object.keys(value);
 
@@ -320,14 +320,14 @@ export function mapBlockUnionMap(
 
     case BlockType.TeaserSlots: {
       const blockValue = value[type];
-
+      /*
       console.log(
         'Mapping TeaserSlots: block-content.model.ts:',
         blockValue,
         value,
         type
       );
-
+*/
       return {
         type,
         ...blockValue,
@@ -343,25 +343,27 @@ export function mapBlockUnionMap(
 
     case BlockType.FlexBlock: {
       const blockValue = value[type];
-
+      /*
       console.log(
         'Mapping FlexBlock: : block-content.model.ts',
         type,
         JSON.stringify(value)
       );
-
+*/
       return {
         type,
         ...blockValue,
         nestedBlocks:
           blockValue?.nestedBlocks.map(nestedBlock => {
+            /*
             console.log(
               'Mapping nested block:',
               nestedBlock,
               nestedBlock.block
             );
+            */
             if (nestedBlock.block) {
-              console.log('Mapped nested block content: A:', nestedBlock.block);
+              //console.log('Mapped nested block content: A:', nestedBlock.block);
               const mappedBlock = mapBlockUnionMap(
                 nestedBlock.block as BlockContentInput
               );
@@ -370,7 +372,7 @@ export function mapBlockUnionMap(
                 block: mappedBlock,
               };
             } else {
-              console.log('Mapped nested block content: C:', nestedBlock.block);
+              //console.log('Mapped nested block content: C:', nestedBlock.block);
               return {
                 alignment: nestedBlock.alignment,
                 block: null,
@@ -410,11 +412,13 @@ export function mapBlockUnionMap(
     }
 
     default: {
+      /*
       console.log(
         'block-content.model.ts: Mapping block: mapBlockUnionMap(): default (nothing  special to map here):',
         value,
         type
       );
+      */
       const blockValue = value[type];
 
       return { type, ...blockValue };

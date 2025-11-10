@@ -5126,7 +5126,9 @@ export const FullBlockFragmentDoc = gql`
       }
       block {
         __typename
-        ...FullTeaserSlotsBlock
+        ... on TeaserSlotsBlock {
+          ...FullTeaserSlotsBlock
+        }
         ...BlockWithoutTeaser
       }
     }
