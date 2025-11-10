@@ -1,4 +1,3 @@
-//import { BlockType as BlockTypeEnum } from '@wepublish/block-content/api';
 import {
   EditorBlockType,
   TeaserListBlockSort,
@@ -299,120 +298,15 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     field: props => <FlexBlock {...props} />,
     defaultValue: {
       nestedBlocks: [
-        /*
-        {
-          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
-          block: {
-            type: 'teaserSlots',
-            teaserSlots: {
-              slots: [
-                {
-                  type: 'Manual',
-                  teaser: {
-                    type: 'article',
-                    articleID: 'cmhjha1km0041q5075iunqhth',
-                  },
-                },
-                {
-                  type: 'Manual',
-                  teaser: {
-                    type: 'article',
-                    articleID: 'cmhj450xi000hq507znrhg6ow',
-                  },
-                },
-                {
-                  type: 'Manual',
-                  teaser: null,
-                },
-                {
-                  type: 'Manual',
-                  teaser: null,
-                },
-                {
-                  type: 'Manual',
-                  teaser: null,
-                },
-                {
-                  type: 'Manual',
-                  teaser: null,
-                },
-              ],
-              title: null,
-              teasers: [],
-              autofillConfig: {
-                enabled: false,
-              },
-              autofillTeasers: [],
-            },
-          } as NestedBlock['block'],
-        },
-        */
-
         {
           alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
           block: {
             type: 'unknownBlock',
-            /*
-            type: 'teaserSlots',
-            //__typename: 'TeaserSlotsBlock',
-            teaserSlots: {
-              //type: 'TeaserSlots',
-              autofillConfig: {
-                enabled: true,
-                sort: TeaserListBlockSort.PublishedAt,
-                filter: {
-                  tags: [],
-                },
-                teaserType: TeaserType.Article,
-              },
-              slots: [],
-              title: 'Autofill Teaser Slots',
-            },
-            */
           } as NestedBlock['block'],
         },
-
-        /*
-        {
-          alignment: { i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false },
-          block: {
-            teaserSlots: {
-              autofillConfig: {
-                enabled: false,
-              },
-              slots: [],
-            },
-          },
-        },
-        {
-          alignment: { i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false },
-          block: {
-            teaserSlots: {
-              autofillConfig: {
-                enabled: false,
-              },
-              slots: [],
-            },
-          },
-        },
-        {
-          alignment: { i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false },
-          block: {
-            teaserSlots: {
-              autofillConfig: {
-                enabled: false,
-              },
-              slots: [],
-            },
-          },
-        },
-        */
       ],
     },
     label: (() => {
-      console.log(
-        'blockMap.tsx: EditorBlockType.FlexBlock: defaultValue: called.'
-      );
       return 'blocks.flexBlock.label';
     })(),
     icon: <MdAccountBox />,

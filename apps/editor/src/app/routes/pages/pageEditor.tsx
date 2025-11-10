@@ -164,7 +164,6 @@ function PageEditor() {
   );
 
   useEffect(() => {
-    console.log('Page data changed:', pageData);
     if (pageData?.page) {
       const { latest, tags, hidden, slug, url } = pageData.page;
       const {
@@ -198,12 +197,6 @@ function PageEditor() {
         socialMediaImage: socialMediaImage || undefined,
       });
 
-      console.log(
-        'pageEditor.tsx: blocks from query: useEffect: setBlocks():',
-        blocks,
-        pageData
-      );
-
       setBlocks(blocks.map(blockForQueryBlock));
     }
   }, [pageData]);
@@ -235,20 +228,6 @@ function PageEditor() {
   useEffect(() => {
     const error =
       createError?.message ?? updateError?.message ?? publishError?.message;
-
-    console.log(
-      'PageEditor error:',
-      createError,
-      updateError,
-      publishError,
-      error,
-      isLoading,
-      isCreating,
-      isUpdating,
-      isPublishing,
-      isNotFound,
-      pageData
-    );
 
     if (error)
       toaster.push(

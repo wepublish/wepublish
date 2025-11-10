@@ -1,4 +1,3 @@
-//import { BlockType as BlockTypeEnum } from '@wepublish/block-content/api';
 import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
@@ -115,13 +114,11 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
 }
 
 export interface MinimalBlock {
-  //type: keyof typeof BlockTypeEnum;
-  type: string; //BlockTypeEnum[keyof BlockTypeEnum];
+  type: string;
 }
 
 export interface NestedBlock {
   alignment: FlexAlignment;
-  //block?: MinimalBlock | null;
   block: (BlockContentInput & { type?: string }) | null;
 }
 
@@ -452,8 +449,6 @@ export type BlockValue =
 export function mapBlockValueToBlockInput(
   block: BlockValue
 ): BlockContentInput {
-  console.log('Mapping BlockValue to BlockInput:', block);
-
   switch (block.type) {
     case EditorBlockType.Comment:
       return {
@@ -510,7 +505,6 @@ export function mapBlockValueToBlockInput(
       };
 
     case EditorBlockType.Image:
-      console.log('Mapping image BlockValue to BlockInput:', block);
       return {
         image: {
           imageID: block.value.image?.id,
@@ -771,12 +765,7 @@ export function mapBlockValueToBlockInput(
       };
 
     case EditorBlockType.FlexBlock: {
-      console.log(
-        'Got a FlexBlock: libs/ui/editor/src/lib/blocks/types.ts',
-        block
-      );
-
-      const flex = {
+      const flexBlock = {
         nestedBlocks: (block.value.nestedBlocks || []).map(nb => ({
           alignment: {
             i: nb.alignment.i,
@@ -789,10 +778,9 @@ export function mapBlockValueToBlockInput(
           block: nb.block ? nb.block : null,
         })),
         type: BlockType.FlexBlock,
-        //blockStyle: block.value.blockStyle,
       };
 
-      return { flexBlock: flex }; //as unknown as BlockContentInput;
+      return { flexBlock };
     }
   }
 }
@@ -1146,9 +1134,8 @@ export function blockForQueryBlock(
       };
 
     case 'TeaserSlotsBlock':
-      console.log('types.ts: blockForQueryBlock():TeaserSlotsBlock', block);
       return (() => {
-        const retVal = {
+        return {
           key,
           type: EditorBlockType.TeaserSlots as EditorBlockType.TeaserSlots,
           value: {
@@ -1173,11 +1160,6 @@ export function blockForQueryBlock(
             teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
           },
         };
-        console.log(
-          'types.ts: blockForQueryBlock():TeaserSlotsBlock retVal',
-          retVal
-        );
-        return retVal;
       })();
 
     case 'BreakBlock':
@@ -1197,8 +1179,6 @@ export function blockForQueryBlock(
       };
 
     case 'FlexBlock':
-      console.log('types.ts: blockForQueryBlock(): FlexBlock', block);
-
       return {
         key,
         type: EditorBlockType.FlexBlock,
@@ -1206,7 +1186,6 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           nestedBlocks: (block.nestedBlocks || []).map(nb => {
             if (!nb) {
-              console.log('types.ts: 1', nb);
               return {
                 alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
                 block: null,
@@ -1215,8 +1194,6 @@ export function blockForQueryBlock(
 
             if (isNestedBlock(nb)) {
               const s = nb;
-
-              console.log('types.ts: isNestedBlock: ', s);
               return {
                 alignment: {
                   i: s.alignment.i ?? '',
@@ -1232,17 +1209,11 @@ export function blockForQueryBlock(
 
             if (isMinimalBlock(nb)) {
               const s = nb;
-
-              console.log('types.ts: 3', s);
-
               return {
                 alignment: { i: '', x: 0, y: 0, w: 1, h: 1, static: false },
                 block: { type: s.type },
               };
             }
-
-            console.log('types.ts: 4', nb);
-
             return {
               alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
               block: null,
@@ -1302,8 +1273,6 @@ export function blockForQueryBlock(
 const mapTeaserToQueryTeaser = (
   teaser: FullTeaserFragment | null | undefined
 ): Teaser | null => {
-  console.log('types.ts: mapTeaserToQueryTeaser:', teaser);
-
   if (!teaser) {
     return null;
   }

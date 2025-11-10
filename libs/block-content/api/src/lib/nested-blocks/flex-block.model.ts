@@ -68,9 +68,6 @@ export class NestedBlockInput extends OmitType(
   implements: [BaseBlock],
 })
 export class FlexBlock extends BaseBlock<typeof BlockType.FlexBlock> {
-  //@Field(() => [BaseBlock], { nullable: 'items' })
-  //nestedBlocks!: Array<BaseBlock<BlockType> | null>;
-
   @Field(() => [NestedBlock])
   nestedBlocks!: NestedBlock[];
 }
@@ -79,8 +76,6 @@ export class FlexBlock extends BaseBlock<typeof BlockType.FlexBlock> {
 export class FlexBlockInput extends PartialType(
   OmitType(FlexBlock, ['type', 'nestedBlocks'])
 ) {
-  //@Field(() => [BlockType], { nullable: 'items' })
-  //nestedBlocks!: Array<BlockType | null>;
   @Field(() => [NestedBlockInput])
   nestedBlocks!: NestedBlockInput[];
 
@@ -89,6 +84,5 @@ export class FlexBlockInput extends PartialType(
 }
 
 export function isFlexBlock(block: BaseBlock<BlockType>): block is FlexBlock {
-  //console.log('flex-block.model.ts: isFlexBlock():', block);
   return block.type === BlockType.FlexBlock;
 }

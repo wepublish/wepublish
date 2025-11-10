@@ -3,15 +3,10 @@ import {
   BlockContent,
   FlexBlock as FlexBlockType,
 } from '@wepublish/website/api';
-import {
-  BuilderFlexBlockProps,
-  //BuilderTeaserSlotsBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 import { Children } from 'react';
-//import { TeaserSlotsBlock } from '../teaser/teaser-slots-block';
-//import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -41,9 +36,7 @@ export const NestedBlock = styled('div')<FlexAlignment>`
 export const isFlexBlock = (
   block: Pick<BlockContent, '__typename'>
 ): block is FlexBlockType => {
-  const retVal = block.__typename === 'FlexBlock';
-  //console.log('Checking if block is FlexBlock:', block, retVal);
-  return retVal;
+  return block.__typename === 'FlexBlock';
 };
 
 export const FlexBlock = ({
@@ -52,8 +45,6 @@ export const FlexBlock = ({
   children = [],
 }: BuilderFlexBlockProps) => {
   const childrenArray = Children.toArray(children);
-
-  //console.log('FlexBlock childrenArray:', childrenArray);
 
   return (
     <FlexBlockWrapper>
@@ -64,10 +55,6 @@ export const FlexBlock = ({
             {...(nestedBlock.alignment as FlexAlignment)}
           >
             {childrenArray[index]}
-            {/*(children as [])[index]}
-            {Children.map(children, child => {
-              return child;
-            })*/}
           </NestedBlock>
         );
       })}
