@@ -35,14 +35,18 @@ export function StreamableVideoBlock({
   const [aspectRatio, setAspectRatio] = useState<number>(16 / 9);
 
   const streamableUrl = useMemo(() => {
-    if (!videoID) return null;
+    if (!videoID) {
+      return null;
+    }
     return `https://streamable.com/${encodeURIComponent(videoID)}`;
   }, [videoID]);
 
   useEffect(() => {
     let cancelled = false;
     async function fetchOEmbed() {
-      if (!streamableUrl) return;
+      if (!streamableUrl) {
+        return;
+      }
       try {
         const oembedUrl = `https://api.streamable.com/oembed.json?url=${encodeURIComponent(
           streamableUrl
@@ -55,7 +59,9 @@ export function StreamableVideoBlock({
           );
         }
       } catch {
-        if (!cancelled) setAspectRatio(16 / 9);
+        if (!cancelled) {
+          setAspectRatio(16 / 9);
+        }
       }
     }
     fetchOEmbed();
@@ -64,7 +70,9 @@ export function StreamableVideoBlock({
     };
   }, [streamableUrl]);
 
-  if (!videoID || !streamableUrl) return null;
+  if (!videoID || !streamableUrl) {
+    return null;
+  }
 
   return (
     <StreamableVideoBlockWrapper className={className}>
