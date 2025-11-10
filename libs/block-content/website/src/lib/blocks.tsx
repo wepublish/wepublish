@@ -179,7 +179,6 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
             .length;
           const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
             (nb, index) => {
-              //console.log('blocks.tsx - rendering nested block:', nb, index);
               return (
                 <Block
                   key={index}

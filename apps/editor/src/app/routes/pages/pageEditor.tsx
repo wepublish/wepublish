@@ -228,7 +228,6 @@ function PageEditor() {
   useEffect(() => {
     const error =
       createError?.message ?? updateError?.message ?? publishError?.message;
-
     if (error)
       toaster.push(
         <Message
@@ -240,17 +239,7 @@ function PageEditor() {
           {error}
         </Message>
       );
-  }, [
-    createError,
-    updateError,
-    publishError,
-    isLoading,
-    isCreating,
-    isUpdating,
-    isPublishing,
-    isNotFound,
-    pageData,
-  ]);
+  }, [createError, updateError, publishError]);
 
   function createInput(): CreatePageMutationVariables {
     return {

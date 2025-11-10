@@ -13,9 +13,6 @@ export class BaseBlockResolver {
       return null;
     }
 
-    const blockStyleName = (await this.blockStyles.load(block.blockStyle))
-      ?.name;
-
-    return blockStyleName;
+    return (await this.blockStyles.load(block.blockStyle))?.name;
   }
 }

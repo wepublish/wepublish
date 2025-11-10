@@ -314,6 +314,7 @@ export function mapBlockUnionMap(
 
     case BlockType.TeaserSlots: {
       const blockValue = value[type];
+
       return {
         type,
         ...blockValue,
