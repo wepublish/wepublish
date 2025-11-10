@@ -7,6 +7,7 @@ exports[`ArticleService should create an article 1`] = `
       "disableComments": false,
       "hidden": false,
       "likes": undefined,
+      "paywallId": undefined,
       "revisions": {
         "create": {
           "authors": {
@@ -244,7 +245,10 @@ exports[`ArticleService should query an article by slug 1`] = `
       "publishedAt": "asc",
     },
     "where": {
-      "slug": "1234",
+      "slug": {
+        "equals": "1234",
+        "mode": "insensitive",
+      },
     },
   },
 ]
@@ -377,6 +381,7 @@ exports[`ArticleService should query articles based on filter 2`] = `
             },
           },
         },
+        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -586,6 +591,7 @@ exports[`ArticleService should query articles based on filter 3`] = `
             },
           },
         },
+        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -677,21 +683,20 @@ exports[`ArticleService should query articles based on full text search 1`] = `
 [
   [
     "
-          SELECT a.id
-          FROM articles a
-                   JOIN public."articles.revisions" ar
-                        ON a."id" = ar."articleId"
-                            AND ar."publishedAt" IS NOT NULL
-                            AND ar."publishedAt" < NOW()
-          WHERE to_tsvector('german', coalesce(ar.title, '')) ||
-                to_tsvector('german', coalesce(ar."preTitle", '')) ||
-                to_tsvector('german', coalesce(ar.lead, '')) ||
-                jsonb_to_tsvector(
-                        'german',
-                        jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
-                        '["string"]'
-                ) @@ to_tsquery('german'
-              , ",
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ",
     ");
       ",
   ],
@@ -825,6 +830,7 @@ exports[`ArticleService should query articles based on full text search 2`] = `
             },
           },
         },
+        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -1035,6 +1041,7 @@ exports[`ArticleService should query articles based on full text search 3`] = `
             },
           },
         },
+        {},
         {
           "ArticleRevisionDraft": {
             "articleRevision": {
@@ -1126,21 +1133,20 @@ exports[`ArticleService should query articles on all revisions 1`] = `
 [
   [
     "
-          SELECT a.id
-          FROM articles a
-                   JOIN public."articles.revisions" ar
-                        ON a."id" = ar."articleId"
-                            AND ar."publishedAt" IS NOT NULL
-                            AND ar."publishedAt" < NOW()
-          WHERE to_tsvector('german', coalesce(ar.title, '')) ||
-                to_tsvector('german', coalesce(ar."preTitle", '')) ||
-                to_tsvector('german', coalesce(ar.lead, '')) ||
-                jsonb_to_tsvector(
-                        'german',
-                        jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
-                        '["string"]'
-                ) @@ to_tsquery('german'
-              , ",
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ",
     ");
       ",
   ],
@@ -1231,6 +1237,7 @@ exports[`ArticleService should query articles on all revisions 2`] = `
             },
           },
         },
+        {},
         {
           "ArticleRevisionDraft": undefined,
           "ArticleRevisionPending": undefined,
@@ -1355,6 +1362,7 @@ exports[`ArticleService should query articles on all revisions 3`] = `
             },
           },
         },
+        {},
         {
           "ArticleRevisionDraft": undefined,
           "ArticleRevisionPending": undefined,
@@ -1421,6 +1429,7 @@ exports[`ArticleService should query articles using cursor based pagination 1`] 
         {},
         {},
         {},
+        {},
         {
           "hidden": false,
         },
@@ -1447,6 +1456,7 @@ exports[`ArticleService should query articles using cursor based pagination 2`] 
     },
     "where": {
       "AND": [
+        {},
         {},
         {},
         {},
@@ -1588,6 +1598,7 @@ exports[`ArticleService should update an article 2`] = `
       "disableComments": false,
       "hidden": false,
       "likes": undefined,
+      "paywallId": undefined,
       "revisions": {
         "create": {
           "authors": {

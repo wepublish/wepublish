@@ -177,7 +177,10 @@ exports[`PageService should query an page by slug 1`] = `
       "publishedAt": "asc",
     },
     "where": {
-      "slug": "1234",
+      "slug": {
+        "equals": "1234",
+        "mode": "insensitive",
+      },
     },
   },
 ]
