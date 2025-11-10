@@ -1,10 +1,10 @@
 import { generateFeed } from '@wepublish/feed/website';
+import { SortOrder } from '@wepublish/website/api';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
   getV1ApiClient,
-  SortOrder,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
 import getConfig from 'next/config';
