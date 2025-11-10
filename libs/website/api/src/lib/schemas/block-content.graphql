@@ -312,7 +312,7 @@ fragment FullBlock on BlockContent {
   }
 
   ... on FlexBlock {
-    blockStyle
+    blockStyle: blockStyleName
     type
     nestedBlocks {
       alignment {

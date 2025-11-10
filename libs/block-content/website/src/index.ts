@@ -46,3 +46,4 @@ export * from './lib/block-styles/alternating/alternating-teaser-grid';
 export * from './lib/block-styles/alternating/alternating-teaser-list';
 export * from './lib/block-styles/alternating/alternating-teaser-slots';
 export * from './lib/block-styles/alternating/is-alternating';
+export * from './lib/block-styles/tabbed-content/tabbed-content';

@@ -410,7 +410,6 @@ fragment FullBlock on BlockContent {
           autofillTeasers {
             ...FullTeaser
           }
-          # Additional fields specific to TeaserSlotsBlock
         }
 
         ...BlockWithoutTeaser

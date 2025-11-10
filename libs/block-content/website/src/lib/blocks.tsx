@@ -58,6 +58,7 @@ import {
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { BlockContent } from '@wepublish/website/api';
+import { isTabbedContentBlockStyle } from './block-styles/tabbed-content/tabbed-content';
 
 export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
   const { blocks, blockStyles } = useWebsiteBuilder();
@@ -82,6 +83,10 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     [
       isAlternatingTeaserSlotsBlockStyle,
       block => <blockStyles.AlternatingTeaserSlots {...block} />,
+    ],
+    [
+      isTabbedContentBlockStyle,
+      block => <blockStyles.TabbedContent {...block} />,
     ],
   ]);
 
