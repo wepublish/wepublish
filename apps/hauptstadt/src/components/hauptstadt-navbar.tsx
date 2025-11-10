@@ -219,14 +219,20 @@ const NAVBAR_SHADOW_BOTTOM_EXTEND = 20;
 
 const NavBackgroundWrapper = styled('div', {
   shouldForwardProp: propName =>
-    propName !== 'clipLeft' && propName !== 'clipRight',
-})<{ clipLeft: number; clipRight: number }>`
-  filter: drop-shadow(0px 1px 5px rgba(0, 0, 0, 0.19));
-  clip-path: inset(
-    0 ${({ clipRight }) => clipRight}px -${NAVBAR_SHADOW_BOTTOM_EXTEND}px
-      ${({ clipLeft }) => clipLeft}px
-  );
-`;
+    propName !== 'clipLeft' &&
+    propName !== 'clipRight' &&
+    propName !== 'navbarState',
+})<{
+  clipLeft: number;
+  clipRight: number;
+  navbarState: NavbarState[];
+}>(({ clipLeft, clipRight, navbarState }) => ({
+  filter:
+    navbarState.includes(NavbarState.Diagonal) ?
+      'drop-shadow(0px 1px 5px rgba(0,0,0,0.19))'
+    : 'none',
+  clipPath: `inset(0 ${clipRight}px -${NAVBAR_SHADOW_BOTTOM_EXTEND}px ${clipLeft}px)`,
+}));
 
 export const NavbarLinks = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
@@ -633,6 +639,7 @@ export function HauptstadtNavbar({
           ref={navBackgroundRef}
           clipLeft={clipInset.left}
           clipRight={clipInset.right}
+          navbarState={navbarState}
         >
           <NavbarInnerWrapper
             ref={navInnerRef}
