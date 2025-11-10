@@ -4,7 +4,7 @@ import {
   StreamableVideoBlock as StreamableVideoBlockType,
 } from '@wepublish/website/api';
 import { BuilderStreamableVideoBlockProps } from '@wepublish/website/builder';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export const isStreamableVideoBlock = (
@@ -34,39 +34,35 @@ export function StreamableVideoBlock({
 }: BuilderStreamableVideoBlockProps) {
   const [aspectRatio, setAspectRatio] = useState<number>(16 / 9);
 
-  const streamableUrl = useMemo(() => {
-    if (!videoID) {
-      return null;
-    }
-    return `https://streamable.com/${encodeURIComponent(videoID)}`;
-  }, [videoID]);
+  const streamableUrl =
+    videoID ? `https://streamable.com/${encodeURIComponent(videoID)}` : null;
 
   useEffect(() => {
-    let cancelled = false;
-    async function fetchOEmbed() {
-      if (!streamableUrl) {
-        return;
-      }
+    if (!streamableUrl) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    async function fetchOEmbed(url: string) {
       try {
         const oembedUrl = `https://api.streamable.com/oembed.json?url=${encodeURIComponent(
-          streamableUrl
+          url
         )}`;
-        const res = await fetch(oembedUrl);
+        const res = await fetch(oembedUrl, { signal: controller.signal });
         const data: { width?: number; height?: number } = await res.json();
-        if (!cancelled) {
-          setAspectRatio(
-            data.width && data.height ? data.width / data.height : 16 / 9
-          );
-        }
+        setAspectRatio(
+          data.width && data.height ? data.width / data.height : 16 / 9
+        );
       } catch {
-        if (!cancelled) {
-          setAspectRatio(16 / 9);
-        }
+        setAspectRatio(16 / 9);
       }
     }
-    fetchOEmbed();
+
+    fetchOEmbed(streamableUrl);
+
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, [streamableUrl]);
 
