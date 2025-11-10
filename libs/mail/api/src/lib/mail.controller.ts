@@ -1,34 +1,34 @@
-import {Logger} from '@nestjs/common'
-import {MailLogState, PrismaClient, User} from '@prisma/client'
-import {generateJWT} from '@wepublish/utils/api'
-import {randomUUID} from 'crypto'
-import {MailContext} from './mail-context'
+import { Logger } from '@nestjs/common';
+import { MailLogState, PrismaClient, User } from '@prisma/client';
+import { generateJWT } from '@wepublish/utils/api';
+import { randomUUID } from 'crypto';
+import { MailContext } from './mail-context';
 
-const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
+const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60;
 
 export enum mailLogType {
   SubscriptionFlow,
   UserFlow,
-  SystemMail
+  SystemMail,
 }
 
 export type MailControllerConfig = {
-  daysAwayFromEnding?: number | null
-  externalMailTemplateId: string
-  recipient: User
-  isRetry?: boolean
-  periodicJobRunDate?: Date | null
-  optionalData: Record<string, any>
-  mailType: mailLogType
-}
+  daysAwayFromEnding?: number | null;
+  externalMailTemplateId: string;
+  recipient: User;
+  isRetry?: boolean;
+  periodicJobRunDate?: Date | null;
+  optionalData: Record<string, any>;
+  mailType: mailLogType;
+};
 
 export class MailController {
-  private readonly logger = new Logger('MailController')
+  private logger = new Logger('MailController');
 
   constructor(
-    private readonly prismaService: PrismaClient,
-    private readonly mailContext: MailContext,
-    private readonly config: MailControllerConfig
+    private prismaService: PrismaClient,
+    private mailContext: MailContext,
+    private config: MailControllerConfig
   ) {}
 
   /**
@@ -37,10 +37,12 @@ export class MailController {
    */
   private generateMailIdentifier() {
     return `${this.config.mailType}-${
-      this.config.periodicJobRunDate ? this.config.periodicJobRunDate.toISOString() : 'null'
+      this.config.periodicJobRunDate ?
+        this.config.periodicJobRunDate.toISOString()
+      : 'null'
     }-${this.config.daysAwayFromEnding}-${this.config.externalMailTemplateId}-${
       this.config.recipient.id
-    }`
+    }`;
   }
 
   /**
@@ -51,9 +53,9 @@ export class MailController {
   private async checkIfMailIsSent(): Promise<number> {
     return this.prismaService.mailLog.count({
       where: {
-        mailIdentifier: this.generateMailIdentifier()
-      }
-    })
+        mailIdentifier: this.generateMailIdentifier(),
+      },
+    });
   }
 
   /**
@@ -62,11 +64,12 @@ export class MailController {
    */
   private buildData() {
     // avoid unwanted data mutation by reference
-    const recipient = JSON.parse(JSON.stringify(this.config.recipient))
-    recipient.password = 'hidden'
-    recipient.roleIDs = ['hidden']
+    const recipient = JSON.parse(JSON.stringify(this.config.recipient));
+    recipient.password = 'hidden';
+    recipient.roleIDs = ['hidden'];
 
-    if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
+    if (!process.env['JWT_SECRET_KEY'])
+      throw new Error('No JWT_SECRET_KEY defined in environment.');
 
     return {
       user: recipient,
@@ -76,9 +79,9 @@ export class MailController {
         audience: 'audience',
         id: recipient.id,
         expiresInMinutes: ONE_WEEK_IN_MINUTES,
-        secret: process.env['JWT_SECRET_KEY']
-      })
-    }
+        secret: process.env['JWT_SECRET_KEY'],
+      }),
+    };
   }
 
   /**
@@ -91,27 +94,27 @@ export class MailController {
     if (this.config.isRetry && (await this.checkIfMailIsSent())) {
       this.logger.warn(
         `Mail with id <${this.generateMailIdentifier()}> is already sent. Skipping...`
-      )
+      );
 
-      return
+      return;
     }
 
-    const mailLogId = randomUUID()
+    const mailLogId = randomUUID();
 
     await this.mailContext.sendRemoteTemplateDirect({
       mailLogID: mailLogId,
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
-      data: this.buildData()
-    })
+      data: this.buildData(),
+    });
 
     await this.prismaService.mailLog.create({
       data: {
         id: mailLogId,
         recipient: {
           connect: {
-            id: this.config.recipient.id
-          }
+            id: this.config.recipient.id,
+          },
         },
         state: MailLogState.submitted,
         sentDate: new Date(),
@@ -119,10 +122,10 @@ export class MailController {
         mailIdentifier: this.generateMailIdentifier(),
         mailTemplate: {
           connect: {
-            externalMailTemplateId: this.config.externalMailTemplateId
-          }
-        }
-      }
-    })
+            externalMailTemplateId: this.config.externalMailTemplateId,
+          },
+        },
+      },
+    });
   }
 }

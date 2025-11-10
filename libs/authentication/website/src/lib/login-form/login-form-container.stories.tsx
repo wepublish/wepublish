@@ -1,12 +1,15 @@
-import {StoryObj} from '@storybook/react'
-import {LoginWithCredentialsDocument, LoginWithEmailDocument} from '@wepublish/website/api'
-import {LoginFormContainer} from './login-form-container'
-import * as loginFormStories from './login-form.stories'
+import { StoryObj } from '@storybook/react';
+import {
+  LoginWithCredentialsDocument,
+  LoginWithEmailDocument,
+} from '@wepublish/website/api';
+import { LoginFormContainer } from './login-form-container';
+import * as loginFormStories from './login-form.stories';
 
 export default {
   title: 'Container/Login Form',
-  component: LoginFormContainer
-}
+  component: LoginFormContainer,
+};
 
 export const WithEmail: StoryObj = {
   args: {},
@@ -18,17 +21,17 @@ export const WithEmail: StoryObj = {
           request: {
             query: LoginWithEmailDocument,
             variables: {
-              email: 'foobar@email.com'
-            }
+              email: 'foobar@email.com',
+            },
           },
           result: {
-            data: {sendWebsiteLogin: 'foobar@email.com'}
-          }
-        }
-      ]
-    }
-  }
-}
+            data: { sendWebsiteLogin: 'foobar@email.com' },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const WithCredentials: StoryObj = {
   args: {},
@@ -41,20 +44,20 @@ export const WithCredentials: StoryObj = {
             query: LoginWithCredentialsDocument,
             variables: {
               email: 'foobar@email.com',
-              password: '12345678'
-            }
+              password: '12345678',
+            },
           },
           result: {
             data: {
               createSession: {
                 createdAt: new Date('2023-01-01'),
                 expiresAt: new Date('2023-02-01'),
-                token: '1234-1234'
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+                token: '1234-1234',
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+};

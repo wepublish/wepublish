@@ -1,9 +1,16 @@
-import {ArgsType, Directive, Field, InputType, ObjectType, PickType} from '@nestjs/graphql'
+import {
+  ArgsType,
+  Directive,
+  Field,
+  InputType,
+  ObjectType,
+  PickType,
+} from '@nestjs/graphql';
 import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoal,
-  CrowdfundingGoalWithProgress
-} from './crowdfunding-goal.model'
+  CrowdfundingGoalWithProgress,
+} from './crowdfunding-goal.model';
 
 /**
  * This Memberplan is only here to provide the interface and
@@ -12,10 +19,10 @@ import {
 @ObjectType()
 class CrowdfundingMemberPlan {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  name!: string
+  name!: string;
 }
 
 @InputType()
@@ -29,70 +36,81 @@ export class CreateCrowdfundingMemberPlan extends PickType(
 @Directive('@key(fields: "id")')
 export class Crowdfunding {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  name!: string
+  name!: string;
 
-  @Field(() => Date, {nullable: true})
-  countSubscriptionsFrom!: Date | null
+  @Field(() => Date, { nullable: true })
+  countSubscriptionsFrom!: Date | null;
 
-  @Field(() => Date, {nullable: true})
-  countSubscriptionsUntil!: Date | null
+  @Field(() => Date, { nullable: true })
+  countSubscriptionsUntil!: Date | null;
 
-  @Field(() => Number, {nullable: true})
-  additionalRevenue!: number | null
+  @Field(() => Number, { nullable: true })
+  additionalRevenue!: number | null;
 
-  @Field(() => Number, {nullable: true})
-  revenue?: number
+  @Field(() => Number, { nullable: true })
+  revenue?: number;
 
   @Field(type => [CrowdfundingGoal])
-  goals?: CrowdfundingGoal[]
+  goals?: CrowdfundingGoal[];
 
   @Field(type => [CrowdfundingMemberPlan])
-  memberPlans?: CrowdfundingMemberPlan[]
+  memberPlans?: CrowdfundingMemberPlan[];
 }
 
 @ObjectType()
 export class CrowdfundingWithActiveGoal extends Crowdfunding {
-  @Field(() => CrowdfundingGoalWithProgress, {nullable: true})
-  activeCrowdfundingGoal?: CrowdfundingGoalWithProgress
+  @Field(() => CrowdfundingGoalWithProgress, { nullable: true })
+  activeCrowdfundingGoal?: CrowdfundingGoalWithProgress;
 }
 
 @ArgsType()
 export class CrowdfundingId {
   @Field()
-  id!: string
+  id!: string;
 }
 
 @InputType()
 export class CreateCrowdfundingInput extends PickType(
   Crowdfunding,
-  ['name', 'countSubscriptionsFrom', 'countSubscriptionsUntil', 'additionalRevenue'],
+  [
+    'name',
+    'countSubscriptionsFrom',
+    'countSubscriptionsUntil',
+    'additionalRevenue',
+  ],
   InputType
 ) {
-  @Field(() => [CreateCrowdfundingGoalInput], {nullable: true})
-  goals?: CreateCrowdfundingGoalInput[]
+  @Field(() => [CreateCrowdfundingGoalInput], { nullable: true })
+  goals?: CreateCrowdfundingGoalInput[];
 
-  @Field(() => [CreateCrowdfundingMemberPlan], {nullable: true})
-  memberPlans?: CreateCrowdfundingMemberPlan[]
+  @Field(() => [CreateCrowdfundingMemberPlan], { nullable: true })
+  memberPlans?: CreateCrowdfundingMemberPlan[];
 }
 
 @InputType()
 export class UpdateCrowdfundingInput extends PickType(
   Crowdfunding,
-  ['id', 'name', 'countSubscriptionsFrom', 'countSubscriptionsUntil', 'additionalRevenue'],
+  [
+    'id',
+    'name',
+    'countSubscriptionsFrom',
+    'countSubscriptionsUntil',
+    'additionalRevenue',
+  ],
   InputType
 ) {
-  @Field(() => [CreateCrowdfundingGoalInput], {nullable: true})
-  goals!: CreateCrowdfundingGoalInput[]
+  @Field(() => [CreateCrowdfundingGoalInput], { nullable: true })
+  goals!: CreateCrowdfundingGoalInput[];
 
-  @Field(() => [CreateCrowdfundingMemberPlan], {nullable: true})
-  memberPlans?: CreateCrowdfundingMemberPlan[]
+  @Field(() => [CreateCrowdfundingMemberPlan], { nullable: true })
+  memberPlans?: CreateCrowdfundingMemberPlan[];
 }

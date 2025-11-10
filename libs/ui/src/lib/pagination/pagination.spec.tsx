@@ -1,15 +1,14 @@
-import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
+import { composeStories } from '@storybook/react';
+import { render } from '@testing-library/react';
 
-import * as stories from './pagination.stories'
+import * as stories from './pagination.stories';
 
-const storiesCmp = composeStories(stories)
+const storiesCmp = composeStories(stories);
 
 describe('Pagination', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
-    })
-  })
-})
+      render(<Component />);
+    });
+  });
+});

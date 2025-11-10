@@ -1,5 +1,8 @@
-import {Action, LookupActionInput} from './subscription-event-dictionary.type'
-import {startOfDay, subDays} from 'date-fns'
+import {
+  Action,
+  LookupActionInput,
+} from './subscription-event-dictionary.type';
+import { startOfDay, subDays } from 'date-fns';
 import {
   MailTemplate,
   PaymentMethod,
@@ -7,9 +10,9 @@ import {
   Subscription,
   SubscriptionEvent,
   SubscriptionFlow,
-  SubscriptionInterval
-} from '@prisma/client'
-import {Injectable, NotFoundException} from '@nestjs/common'
+  SubscriptionInterval,
+} from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 /**
  * This class loads all subscription flows and allows filtering by member plan,
@@ -19,12 +22,12 @@ import {Injectable, NotFoundException} from '@nestjs/common'
 @Injectable()
 export class SubscriptionEventDictionary {
   private allFlows: (SubscriptionFlow & {
-    actions: Action[]
-    paymentMethods: PaymentMethod[]
-    intervals: (SubscriptionInterval & {mailTemplate: MailTemplate | null})[]
-  })[] = []
+    actions: Action[];
+    paymentMethods: PaymentMethod[];
+    intervals: (SubscriptionInterval & { mailTemplate: MailTemplate | null })[];
+  })[] = [];
 
-  constructor(private readonly prismaService: PrismaClient) {}
+  constructor(private prismaService: PrismaClient) {}
 
   /**
    * Get the earliest date when an invoice must be created.
@@ -32,23 +35,26 @@ export class SubscriptionEventDictionary {
    * @returns The earliest date.
    */
   public async getEarliestInvoiceCreationDate(date: Date): Promise<Date> {
-    await this.initialize()
-    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
+    await this.initialize();
+    const allIntervals = this.allFlows.map(flow => flow.intervals).flat();
     const allCreationEvents = allIntervals.filter(
       interval => interval.event === SubscriptionEvent.INVOICE_CREATION
-    )
+    );
 
     if (allCreationEvents.length === 0) {
-      throw new NotFoundException('No invoice creation date found!')
+      throw new NotFoundException('No invoice creation date found!');
     }
 
-    let earliest = Number.MAX_SAFE_INTEGER
+    let earliest = Number.MAX_SAFE_INTEGER;
     for (const event of allCreationEvents) {
-      if (event.daysAwayFromEnding !== null && event.daysAwayFromEnding < earliest) {
-        earliest = event.daysAwayFromEnding
+      if (
+        event.daysAwayFromEnding !== null &&
+        event.daysAwayFromEnding < earliest
+      ) {
+        earliest = event.daysAwayFromEnding;
       }
     }
-    return subDays(this.normalizeDate(date), earliest)
+    return subDays(this.normalizeDate(date), earliest);
   }
 
   /**
@@ -57,23 +63,23 @@ export class SubscriptionEventDictionary {
    * @returns An array of dates.
    */
   public async getDatesWithCustomEvent(date: Date): Promise<Date[]> {
-    await this.initialize()
-    const customEventDaysAwayFromEnding: number[] = []
-    const allIntervals = this.allFlows.map(flow => flow.intervals).flat()
+    await this.initialize();
+    const customEventDaysAwayFromEnding: number[] = [];
+    const allIntervals = this.allFlows.map(flow => flow.intervals).flat();
     const allCustomEvents = allIntervals.filter(
       interval => interval.event === SubscriptionEvent.CUSTOM
-    )
+    );
     for (const event of allCustomEvents) {
       if (
         event.daysAwayFromEnding !== null &&
         !customEventDaysAwayFromEnding.includes(event.daysAwayFromEnding)
       ) {
-        customEventDaysAwayFromEnding.push(event.daysAwayFromEnding)
+        customEventDaysAwayFromEnding.push(event.daysAwayFromEnding);
       }
     }
     return customEventDaysAwayFromEnding.map(daysAwayFromEnding =>
       subDays(this.normalizeDate(date), daysAwayFromEnding)
-    )
+    );
   }
 
   /**
@@ -85,18 +91,20 @@ export class SubscriptionEventDictionary {
    * @param query The filter of the above properties.
    * @returns An array of MailTemplates.
    */
-  public async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
-    await this.initialize()
+  public async getActionsForSubscriptions(
+    query: LookupActionInput
+  ): Promise<Action[]> {
+    await this.initialize();
     if (query.daysAwayFromEnding && query.events) {
       throw new Error(
         'Its not supported to query for daysAwayFromEnding combined with an event list'
-      )
+      );
     }
 
-    const defaultFlow = this.allFlows.find(flow => flow.default)
+    const defaultFlow = this.allFlows.find(flow => flow.default);
 
     if (!defaultFlow) {
-      throw new Error('Default flow is missing!')
+      throw new Error('Default flow is missing!');
     }
 
     const filteredFlows = this.allFlows.filter(
@@ -105,13 +113,21 @@ export class SubscriptionEventDictionary {
         flow.paymentMethods.map(pm => pm.id).includes(query.paymentMethodId) &&
         flow.periodicities.includes(query.periodicity) &&
         flow.autoRenewal.includes(query.autorenwal)
-    )
+    );
 
     if (filteredFlows.length === 0) {
-      return this.getActionByDay(defaultFlow.actions, query.daysAwayFromEnding, query.events)
+      return this.getActionByDay(
+        defaultFlow.actions,
+        query.daysAwayFromEnding,
+        query.events
+      );
     }
 
-    return this.getActionByDay(filteredFlows[0].actions, query.daysAwayFromEnding, query.events)
+    return this.getActionByDay(
+      filteredFlows[0].actions,
+      query.daysAwayFromEnding,
+      query.events
+    );
   }
 
   /**
@@ -125,10 +141,10 @@ export class SubscriptionEventDictionary {
           paymentMethods: true,
           intervals: {
             include: {
-              mailTemplate: true
-            }
-          }
-        }
+              mailTemplate: true,
+            },
+          },
+        },
       })
     ).map(flow => {
       return {
@@ -136,26 +152,29 @@ export class SubscriptionEventDictionary {
         actions: flow.intervals.map(int => ({
           type: int.event,
           daysAwayFromEnding: int.daysAwayFromEnding,
-          externalMailTemplate: int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null
-        }))
-      }
-    })
+          externalMailTemplate:
+            int.mailTemplate ? int.mailTemplate.externalMailTemplateId : null,
+        })),
+      };
+    });
 
-    const defaultFlows = this.allFlows.filter(flow => flow.default)
+    const defaultFlows = this.allFlows.filter(flow => flow.default);
 
     if (defaultFlows.length === 0) {
-      throw new NotFoundException('Default user subscription flow not found!')
+      throw new NotFoundException('Default user subscription flow not found!');
     }
 
     if (defaultFlows.length > 1) {
-      throw new Error('Multiple default memberplans found! This is a data integrity error!')
+      throw new Error(
+        'Multiple default memberplans found! This is a data integrity error!'
+      );
     }
 
-    const nonDefaultFlows = this.allFlows.filter(flow => !flow.default)
+    const nonDefaultFlows = this.allFlows.filter(flow => !flow.default);
     if (nonDefaultFlows.filter(flow => !flow.memberPlanId).length) {
       throw new Error(
         'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
-      )
+      );
     }
   }
 
@@ -173,17 +192,19 @@ export class SubscriptionEventDictionary {
     lookupEvents: SubscriptionEvent[] | undefined
   ): Action[] {
     if (lookupEvents) {
-      return timeline.filter(e => lookupEvents.includes(e.type))
+      return timeline.filter(e => lookupEvents.includes(e.type));
     }
     // Return user actions for null and 0!
     if (!daysAwayFromEnding) {
-      return timeline.filter(t => t.daysAwayFromEnding === 0 || t.daysAwayFromEnding === null)
+      return timeline.filter(
+        t => t.daysAwayFromEnding === 0 || t.daysAwayFromEnding === null
+      );
     }
-    return timeline.filter(t => t.daysAwayFromEnding === daysAwayFromEnding)
+    return timeline.filter(t => t.daysAwayFromEnding === daysAwayFromEnding);
   }
 
   private normalizeDate(date: Date): Date {
-    return startOfDay(date)
+    return startOfDay(date);
   }
 
   /**
@@ -201,54 +222,54 @@ export class SubscriptionEventDictionary {
       where: {
         default: false,
         memberPlan: {
-          id: subsciption.memberPlanID
+          id: subsciption.memberPlanID,
         },
         autoRenewal: {
-          has: subsciption.autoRenew
+          has: subsciption.autoRenew,
         },
         periodicities: {
-          has: subsciption.paymentPeriodicity
+          has: subsciption.paymentPeriodicity,
         },
         paymentMethods: {
           some: {
-            id: subsciption.paymentMethodID
-          }
-        }
+            id: subsciption.paymentMethodID,
+          },
+        },
       },
       include: {
         intervals: {
           where: {
-            event: subscriptionEvent
+            event: subscriptionEvent,
           },
           include: {
-            mailTemplate: true
-          }
-        }
-      }
-    })
+            mailTemplate: true,
+          },
+        },
+      },
+    });
     if (!flow) {
       flow = await this.prismaService.subscriptionFlow.findFirst({
         where: {
-          default: true
+          default: true,
         },
         include: {
           intervals: {
             where: {
-              event: subscriptionEvent
+              event: subscriptionEvent,
             },
             include: {
-              mailTemplate: true
-            }
-          }
-        }
-      })
+              mailTemplate: true,
+            },
+          },
+        },
+      });
     }
     if (flow && flow.intervals[0]) {
       if (!flow.intervals[0].mailTemplate) {
-        return undefined
+        return undefined;
       }
-      return flow.intervals[0].mailTemplate.externalMailTemplateId
+      return flow.intervals[0].mailTemplate.externalMailTemplateId;
     }
-    return undefined
+    return undefined;
   }
 }

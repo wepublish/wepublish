@@ -12,24 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: bitnami/postgresql:14
+        image: postgres:17
         env:
-          ALLOW_EMPTY_PASSWORD: yes
-          POSTGRESQL_DATABASE: wepublish
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: wepublish
         ports:
           - 5432:5432
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
       - run: npm ci
       - run: npm run test-website -- --code-coverage
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/wepublish_test?schema=public'
+          DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
 
 
       - name: Upload coverage to Codecov

@@ -75,6 +75,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
         "noImagesFound": "Keine Bilder gefunden",
+        "openInNewTab": "Inhalt URL öffnet in einem neuen Tab",
         "pagePreviewLink": "Vorschau Link",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
         "peeredArticlePreview": "Vorschau",
@@ -127,25 +128,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
-      }
-    },
-    "articleList": {
-      "filter": {
-        "dates": "Daten",
-        "description": "Nach Beschreibung filtern",
-        "isDraft": "Entwurf",
-        "isPending": "Geplant",
-        "isPublished": "Publiziert",
-        "lead": "Nach Lead filtern",
-        "location": "Veranstaltungsort",
-        "name": "Name",
-        "preTitle": "Nach Pre-Titel filtern",
-        "providers": "Anbieter",
-        "publicationDate": "Publikationsdatum",
-        "reset": "Filter zurücksetzen",
-        "title": "Nach Titel filtern",
-        "includeHidden": "Ausgeblendete Artikel"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articles": {
@@ -235,7 +219,9 @@
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
-          "LOGGED_OUT": "nur ausgeloggt"
+          "LOGGED_OUT": "nur ausgeloggt",
+          "SUBSCRIBED": "nur abonniert",
+          "UNSUBSCRIBED": "nicht abonniert"
         },
         "actions": "Aktionen",
         "image": "Bild",
@@ -345,7 +331,18 @@
         "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
       },
       "subscribe": {
-        "label": "Abonnieren"
+        "label": "Abonnieren",
+        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
+        "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
+        "selectFields": "Eingabefelder",
+        "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "FirstName": "Vorname",
+        "Birthday": "Geburtstag",
+        "Address": "Adresse",
+        "EmailRepeated": "Email wiederholen",
+        "Password": "Passwort",
+        "PasswordRepeated": "Passwort wiederholen"
       },
       "image": {
         "label": "Bild",
@@ -420,8 +417,9 @@
       },
       "title": {
         "label": "Titel",
-        "leadText": "Lead-Text ",
-        "title": "Titel"
+        "leadText": "Lead-Text",
+        "title": "Titel",
+        "preTitle": "Oberzeile"
       }
     },
     "cancel": "Abbrechen",
@@ -645,6 +643,25 @@
         "title": "Events"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Daten",
+        "description": "Nach Beschreibung filtern",
+        "isDraft": "Entwurf",
+        "isPending": "Geplant",
+        "isPublished": "Publiziert",
+        "lead": "Nach Lead filtern",
+        "location": "Veranstaltungsort",
+        "name": "Name",
+        "preTitle": "Nach Pre-Titel filtern",
+        "providers": "Anbieter",
+        "publicationDate": "Publikationsdatum",
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "includeHiddenArticles": "Ausgeblendete Artikel",
+        "includeHiddenPages": "Ausgeblendete Seiten"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Aktionen",
@@ -758,6 +775,7 @@
       "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createMemberPlanHeader": "Erstelle Memberplan",
       "description": "Beschreibung",
+      "shortDescription": "Kurze Beschreibung",
       "editPaymentSetting": "Zahlungseinstellung bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Lade",
@@ -772,7 +790,8 @@
       "tags": "Tags",
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
-      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
+      "externalReward": "Link oder Beschreibung zu einer externer Belohnung (nur für Abonnenten sichtbar)"
     },
     "memberPlanList": {
       "action": "Aktionen",
@@ -789,7 +808,8 @@
         "quarterly": "Vierteljährlich",
         "yearly": "Jährlich",
         "biennial": "Zweijährlich",
-        "lifetime": "Lebenslang"
+        "lifetime": "Lebenslang",
+        "donationOnce": "Einmalige Spende"
       },
       "title": "Abo Pläne"
     },
@@ -906,6 +926,8 @@
         "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "publishDate": "Publikationsdatum",
         "publishPage": "Seite publizieren",
+        "hidden": "Ausblenden",
+        "setAsHidden": "Ausgeblendete Seiten werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -1159,6 +1181,8 @@
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
+      "newArticlePeering": "Neue erstellte Artikel werden automatisch gepeered.",
+      "newArticlePaywall": "Neue erstellte Artikel benötigen ein Abo um gelesen zu werden.",
       "warnings": {
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
@@ -1167,7 +1191,9 @@
         "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
         "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
-        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
+        "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
+        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
       }
     },
     "subscriptionFlow": {
@@ -1242,9 +1268,12 @@
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
-        "createTag": "Neuen Tag",
+        "createTag": "Neuer Tag",
+        "editTag": "{{tag}} Bearbeiten",
         "placeholder": "Name des Tags",
         "title": "Tags",
+        "name": "Name",
+        "description": "Beschreibung",
         "markAsMain": "Als Haupt-Tag verwenden"
       }
     },
@@ -1312,7 +1341,9 @@
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
       "zipCode": "PLZ",
-      "birthday": "Geburtstag"
+      "birthday": "Geburtstag",
+      "note": "Notiz",
+      "noteHelpText": "Nicht für den Nutzer sichtbar."
     },
     "userList": {
       "overview": {
@@ -1433,6 +1464,8 @@
       "extendableHelpText": "Bestimme, ob ein Abo eines Benutzers - automatisch oder manuell - verlängert werden kann oder nicht. Probeabos können in der Regel nicht verlängert werden.",
       "maxCount": "Maximale Anzahl Abos pro Benutzer:in",
       "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",
+      "maxCountDonation": "Maximale Anzahl Spenden pro Benutzer:in",
+      "maxCountDonationHelpText": "Limitiere die Anzahl Spenden, welche ein:e Benutzer:in für diesen Plan tätigen kann.",
       "trialMemberplanAlert": "Dieser Abo-Plan ist für Probeabos konfiguriert.",
       "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
       "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
@@ -1442,7 +1475,11 @@
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
       "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
       "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
-      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden.",
+      "productType": "Produkttyp",
+      "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird.",
+      "productTypeSubscription": "Abonnement",
+      "productTypeDonation": "Spende"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",
@@ -1582,6 +1619,31 @@
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
       "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
       "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Paywall bearbeiten",
+        "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
+        "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
+        "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
+        "active": "Aktiv",
+        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "anyMemberPlan": "Die Paywall entfällt für alle Abos",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass-Token",
+        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
+        "newBypassToken": "Neuen Bypass-Token erstellen",
+        "addBypass": "hinzufügen",
+        "qrCodeTitle": "QR-Code für Bypass-Token",
+        "downloadSvg": "SVG herunterladen",
+        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Zahlungsfrist",
+      "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
+      "days": "Tage"
     }
   }
 }

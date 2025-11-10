@@ -33,34 +33,37 @@ import {
   CustomTeaser,
   FullTeaserGridFlexBlockFragment,
   FlexAlignment,
-  CrowdfundingBlock
-} from '@wepublish/website/api'
-import {mockImage} from './image'
-import {mockRichText} from './richtext'
-import {mockPoll} from './poll'
-import {mockEvent} from './event'
-import {mockComment} from './comment'
-import {mockArticle, mockArticleRevision} from './article'
-import {mockPage, mockPageRevision} from './page'
-import nanoid from 'nanoid'
-import {partial} from 'ramda'
-import {mockCrowdfunding} from './crowdfunding'
+  CrowdfundingBlock,
+  SubscribeBlock,
+} from '@wepublish/website/api';
+import { mockImage } from './image';
+import { mockRichText } from './richtext';
+import { mockPoll } from './poll';
+import { mockEvent } from './event';
+import { mockComment } from './comment';
+import { mockArticle, mockArticleRevision } from './article';
+import { mockPage, mockPageRevision } from './page';
+import nanoid from 'nanoid';
+import { mockCrowdfunding } from './crowdfunding';
+import { mockMemberPlan } from './membership';
 
 export const mockTitleBlock = ({
   title = 'Title Block',
-  lead = 'Lead'
+  lead = 'Lead',
+  preTitle = 'Pre-Title',
 }: Partial<TitleBlock> = {}): TitleBlock => ({
   type: BlockType.Title,
   __typename: 'TitleBlock',
   blockStyle: null,
   blockStyleName: null,
   lead,
-  title
-})
+  title,
+  preTitle,
+});
 
 export const mockImageBlock = ({
   image = mockImage(),
-  linkUrl = null
+  linkUrl = null,
 }: Partial<ImageBlock> = {}): ImageBlock => ({
   type: BlockType.Image,
   __typename: 'ImageBlock',
@@ -69,23 +72,23 @@ export const mockImageBlock = ({
   caption: 'Caption',
   image,
   imageID: image?.id,
-  linkUrl
-})
+  linkUrl,
+});
 
 export const mockRichTextBlock = ({
-  richText = mockRichText()
+  richText = mockRichText(),
 }: Partial<RichTextBlock> = {}): RichTextBlock => ({
   type: BlockType.RichText,
   __typename: 'RichTextBlock',
   blockStyle: null,
   blockStyleName: null,
-  richText
-})
+  richText,
+});
 
 export const mockQuoteBlock = ({
   image = mockImage(),
   author = 'John Doe',
-  quote = 'This is a quote that is very long so that we can make sure that linebreaks correctly happen.'
+  quote = 'This is a quote that is very long so that we can make sure that linebreaks correctly happen.',
 }: Partial<QuoteBlock> = {}): QuoteBlock => ({
   type: BlockType.Quote,
   __typename: 'QuoteBlock',
@@ -94,8 +97,8 @@ export const mockQuoteBlock = ({
   quote,
   author,
   image,
-  imageID: image?.id
-})
+  imageID: image?.id,
+});
 
 export const mockBreakBlock = ({
   hideButton = true,
@@ -104,7 +107,7 @@ export const mockBreakBlock = ({
   linkTarget = '__blank',
   linkText = 'Button Text',
   linkURL = 'https://example.com',
-  text = 'Foobar'
+  text = 'Foobar',
 }: Partial<BreakBlock> = {}): BreakBlock => ({
   type: BlockType.LinkPageBreak,
   __typename: 'BreakBlock',
@@ -117,19 +120,27 @@ export const mockBreakBlock = ({
   linkTarget,
   linkText,
   linkURL,
-  text
-})
-
-export const mockPollBlock = ({poll = mockPoll()}: Partial<PollBlock> = {}): PollBlock => ({
+  text,
+});
+export const mockPollBlock = ({
+  poll = mockPoll(),
+}: Partial<PollBlock> = {}): PollBlock => ({
   type: BlockType.Poll,
   __typename: 'PollBlock',
   blockStyle: null,
   blockStyleName: null,
-  poll
-})
+  poll,
+});
 
 export const mockEventBlock = ({
-  events = [mockEvent(), mockEvent(), mockEvent(), mockEvent(), mockEvent(), mockEvent()]
+  events = [
+    mockEvent(),
+    mockEvent(),
+    mockEvent(),
+    mockEvent(),
+    mockEvent(),
+    mockEvent(),
+  ],
 }: Partial<EventBlock> = {}): EventBlock => ({
   type: BlockType.Event,
   __typename: 'EventBlock',
@@ -138,20 +149,20 @@ export const mockEventBlock = ({
   events,
   filter: {
     __typename: 'EventBlockFilter',
-    events: events.map(({id}) => id),
-    tags: []
-  }
-})
+    events: events.map(({ id }) => id),
+    tags: [],
+  },
+});
 
 export const mockHTMLBlock = ({
-  html = '<script>console.log("html block");</script>'
+  html = '<script>console.log("html block");</script>',
 }: Partial<HtmlBlock> = {}): HtmlBlock => ({
   type: BlockType.Html,
   __typename: 'HTMLBlock',
   blockStyle: null,
   blockStyleName: null,
-  html
-})
+  html,
+});
 
 export const mockListicleBlock = ({
   items = [
@@ -159,31 +170,31 @@ export const mockListicleBlock = ({
       __typename: 'ListicleItem',
       richText: mockRichText(),
       image: mockImage(),
-      title: 'Foobar'
+      title: 'Foobar',
     },
     {
       __typename: 'ListicleItem',
       richText: mockRichText(),
       image: mockImage(),
-      title: 'Bazfoo'
+      title: 'Bazfoo',
     },
     {
       __typename: 'ListicleItem',
       richText: mockRichText(),
       image: mockImage(),
-      title: 'Foobaz'
-    }
-  ] as ListicleItem[]
+      title: 'Foobaz',
+    },
+  ] as ListicleItem[],
 }: Partial<ListicleBlock> = {}): ListicleBlock => ({
   type: BlockType.Listicle,
   __typename: 'ListicleBlock',
   blockStyle: null,
   blockStyleName: null,
-  items
-})
+  items,
+});
 
 export const mockCommentBlock = ({
-  comments = [mockComment(), mockComment(), mockComment()]
+  comments = [mockComment(), mockComment(), mockComment()],
 }: Partial<CommentBlock> = {}): CommentBlock => ({
   type: BlockType.Comment,
   __typename: 'CommentBlock',
@@ -192,128 +203,128 @@ export const mockCommentBlock = ({
   comments,
   filter: {
     __typename: 'CommentBlockFilter',
-    comments: comments.map(({id}) => id),
-    tags: []
-  }
-})
+    comments: comments.map(({ id }) => id),
+    tags: [],
+  },
+});
 
 export const mockCrowdfundingBlock = ({
-  crowdfunding = mockCrowdfunding()
+  crowdfunding = mockCrowdfunding(),
 }: Partial<CrowdfundingBlock> = {}) => ({
   type: BlockType.Crowdfunding,
   __typename: 'CrowdfundingBlock',
   blockStyle: null,
   blockStyleName: null,
-  crowdfunding
-})
+  crowdfunding,
+});
 
 export const mockBildwurfBlock = ({
-  zoneID = '77348'
+  zoneID = '77348',
 }: Partial<BildwurfAdBlock> = {}): BildwurfAdBlock => ({
   type: BlockType.BildwurfAd,
   __typename: 'BildwurfAdBlock',
   blockStyle: null,
   blockStyleName: null,
-  zoneID
-})
+  zoneID,
+});
 
 export const mockFacebookPostBlock = ({
   postID = 'pfbid02JcJeoMg7KasRL8dNjgRJJDFiU8YzeBzEeGeXtqpsE2bnTmeH2y6LRsu7RnmhkPxel',
-  userID = 'ladolcekita'
+  userID = 'ladolcekita',
 }: Partial<FacebookPostBlock> = {}): FacebookPostBlock => ({
   type: BlockType.FacebookPost,
   __typename: 'FacebookPostBlock',
   blockStyle: null,
   blockStyleName: null,
   postID,
-  userID
-})
+  userID,
+});
 
 export const mockFacebookVideoBlock = ({
   userID = '100064959061177',
-  videoID = '1310370486335266'
+  videoID = '1310370486335266',
 }: Partial<FacebookVideoBlock> = {}): FacebookVideoBlock => ({
   type: BlockType.FacebookVideo,
   __typename: 'FacebookVideoBlock',
   blockStyle: null,
   blockStyleName: null,
   userID,
-  videoID
-})
+  videoID,
+});
 
 export const mockInstagramPostBlock = ({
-  postID = 'CvACOxxIqT2'
+  postID = 'CvACOxxIqT2',
 }: Partial<InstagramPostBlock> = {}): InstagramPostBlock => ({
   type: BlockType.InstagramPost,
   __typename: 'InstagramPostBlock',
   blockStyle: null,
   blockStyleName: null,
-  postID
-})
+  postID,
+});
 
 export const mockTikTokVideoBlock = ({
   userID = 'scout2015',
-  videoID = '6718335390845095173'
+  videoID = '6718335390845095173',
 }: Partial<TikTokVideoBlock> = {}): TikTokVideoBlock => ({
   type: BlockType.TikTokVideo,
   __typename: 'TikTokVideoBlock',
   blockStyle: null,
   blockStyleName: null,
   userID,
-  videoID
-})
+  videoID,
+});
 
 export const mockVimeoVideoBlock = ({
-  videoID = '104626862'
+  videoID = '104626862',
 }: Partial<VimeoVideoBlock> = {}): VimeoVideoBlock => ({
   type: BlockType.VimeoVideo,
   __typename: 'VimeoVideoBlock',
   blockStyle: null,
   blockStyleName: null,
-  videoID
-})
+  videoID,
+});
 
 export const mockYouTubeVideoBlock = ({
-  videoID = 'CCOdQsZa15o'
+  videoID = 'CCOdQsZa15o',
 }: Partial<YouTubeVideoBlock> = {}): YouTubeVideoBlock => ({
   type: BlockType.YouTubeVideo,
   __typename: 'YouTubeVideoBlock',
   blockStyle: null,
   blockStyleName: null,
-  videoID
-})
+  videoID,
+});
 
 export const mockSoundCloudTrackBlock = ({
-  trackID = '744469711'
+  trackID = '744469711',
 }: Partial<SoundCloudTrackBlock> = {}): SoundCloudTrackBlock => ({
   type: BlockType.SoundCloudTrack,
   __typename: 'SoundCloudTrackBlock',
   blockStyle: null,
   blockStyleName: null,
-  trackID
-})
+  trackID,
+});
 
 export const mockTwitterTweetBlock = ({
   userID = 'WePublish_media',
-  tweetID = '1600079498845863937'
+  tweetID = '1600079498845863937',
 }: Partial<TwitterTweetBlock> = {}): TwitterTweetBlock => ({
   type: BlockType.TwitterTweet,
   __typename: 'TwitterTweetBlock',
   blockStyle: null,
   blockStyleName: null,
   tweetID,
-  userID
-})
+  userID,
+});
 
 export const mockPolisConversationBlock = ({
-  conversationID = '744469711'
+  conversationID = '744469711',
 }: Partial<PolisConversationBlock> = {}): PolisConversationBlock => ({
   type: BlockType.PolisConversation,
   __typename: 'PolisConversationBlock',
   blockStyle: null,
   blockStyleName: null,
-  conversationID
-})
+  conversationID,
+});
 
 export const mockIFrameBlock = ({
   url = 'https=/www.example.com',
@@ -321,7 +332,7 @@ export const mockIFrameBlock = ({
   width = 560,
   height = 314,
   styleCustom = 'background: #aaa; padding: 50px;',
-  sandbox = ''
+  sandbox = '',
 }: Partial<IFrameBlock> = {}): IFrameBlock => ({
   type: BlockType.Embed,
   __typename: 'IFrameBlock',
@@ -332,41 +343,41 @@ export const mockIFrameBlock = ({
   styleCustom,
   title,
   url,
-  width
-})
+  width,
+});
 
 export const mockImageGalleryBlock = ({
   images = [
     {
       __typename: 'ImageGalleryImage',
       image: mockImage(),
-      caption: 'Foobar'
+      caption: 'Foobar',
     },
     {
       __typename: 'ImageGalleryImage',
       image: mockImage(),
-      caption: 'Bazfoo'
+      caption: 'Bazfoo',
     },
     {
       __typename: 'ImageGalleryImage',
       image: mockImage(),
-      caption: 'Foobaz'
-    }
-  ]
+      caption: 'Foobaz',
+    },
+  ],
 }: Partial<ImageGalleryBlock> = {}): ImageGalleryBlock => ({
   type: BlockType.ImageGallery,
   __typename: 'ImageGalleryBlock',
   blockStyle: null,
   blockStyleName: null,
-  images
-})
+  images,
+});
 
 export const mockPageTeaser = ({
   image = mockImage(),
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
-  page = mockPage({latest: mockPageRevision({blocks: []})})
+  page = mockPage({ latest: mockPageRevision({ blocks: [] }) }),
 }: Partial<FullPageTeaserFragment> = {}): FullPageTeaserFragment => ({
   __typename: 'PageTeaser',
   type: TeaserType.Page,
@@ -374,15 +385,15 @@ export const mockPageTeaser = ({
   lead,
   title,
   preTitle,
-  page
-})
+  page,
+});
 
 export const mockEventTeaser = ({
   image = mockImage(),
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
-  event = mockEvent()
+  event = mockEvent(),
 }: Partial<FullEventTeaserFragment> = {}): FullEventTeaserFragment => ({
   __typename: 'EventTeaser',
   type: TeaserType.Event,
@@ -390,15 +401,15 @@ export const mockEventTeaser = ({
   lead,
   title,
   preTitle,
-  event
-})
+  event,
+});
 
 export const mockArticleTeaser = ({
   image = mockImage(),
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
-  article = mockArticle({latest: mockArticleRevision({blocks: []})})
+  article = mockArticle({ latest: mockArticleRevision({ blocks: [] }) }),
 }: Partial<FullArticleTeaserFragment> = {}): FullArticleTeaserFragment => ({
   __typename: 'ArticleTeaser',
   type: TeaserType.Article,
@@ -406,14 +417,14 @@ export const mockArticleTeaser = ({
   lead,
   title,
   preTitle,
-  article
-})
+  article,
+});
 
 export const mockCustomTeaser = ({
   image = mockImage(),
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
-  title = 'This is a title'
+  title = 'This is a title',
 }: Partial<CustomTeaser> = {}): CustomTeaser => ({
   __typename: 'CustomTeaser',
   type: TeaserType.Article,
@@ -423,23 +434,24 @@ export const mockCustomTeaser = ({
   title,
   preTitle,
   properties: [],
-  contentUrl: 'https://example.com'
-})
+  contentUrl: 'https://example.com',
+  openInNewTab: false,
+});
 
 export const mockTeaserListBlock = ({
   filter = {
-    tags: []
+    tags: [],
   },
   title = null,
-  teasers = [mockArticleTeaser(), mockArticleTeaser(), mockArticleTeaser()]
+  teasers = [mockArticleTeaser(), mockArticleTeaser(), mockArticleTeaser()],
 }: Partial<FullTeaserListBlockFragment> = {}): FullTeaserListBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserListBlock',
   blockStyle: null,
   filter,
   title,
-  teasers
-})
+  teasers,
+});
 
 export const mockTeaserGridBlock = ({
   numColumns = 3,
@@ -449,22 +461,25 @@ export const mockTeaserGridBlock = ({
     mockEventTeaser(),
     mockCustomTeaser(),
     mockPageTeaser(),
-    mockArticleTeaser()
-  ]
+    mockArticleTeaser(),
+  ],
+  blockStyle,
 }: Partial<FullTeaserGridBlockFragment> = {}): FullTeaserGridBlockFragment => ({
   type: BlockType.TeaserList,
   __typename: 'TeaserGridBlock',
-  blockStyle: null,
+  blockStyle,
   teasers,
-  numColumns
-})
+  numColumns,
+});
 
-export const mockFlexAlignment = (props: Omit<FlexAlignment, 'static' | 'i'>): FlexAlignment => ({
+export const mockFlexAlignment = (
+  props: Omit<FlexAlignment, 'static' | 'i'>
+): FlexAlignment => ({
   __typename: 'FlexAlignment',
   static: false,
   i: nanoid(),
-  ...props
-})
+  ...props,
+});
 
 export const mockTeaserGridFlexBlock = ({
   flexTeasers = [
@@ -473,35 +488,52 @@ export const mockTeaserGridFlexBlock = ({
         h: 2,
         w: 4,
         x: 0,
-        y: 0
+        y: 0,
       }),
-      teaser: mockArticleTeaser()
+      teaser: mockArticleTeaser(),
     },
     {
       alignment: mockFlexAlignment({
         h: 2,
         w: 4,
         x: 0,
-        y: 2
+        y: 2,
       }),
-      teaser: mockArticleTeaser()
+      teaser: mockArticleTeaser(),
     },
     {
       alignment: mockFlexAlignment({
         h: 4,
         w: 8,
         x: 4,
-        y: 0
+        y: 0,
       }),
-      teaser: mockArticleTeaser()
-    }
-  ]
+      teaser: mockArticleTeaser(),
+    },
+  ],
 }: Partial<FullTeaserGridFlexBlockFragment> = {}): FullTeaserGridFlexBlockFragment => ({
   type: BlockType.TeaserGridFlex,
   __typename: 'TeaserGridFlexBlock',
   blockStyle: null,
-  flexTeasers
-})
+  flexTeasers,
+});
+
+export const mockSubscribeBlock = ({
+  fields = [],
+  memberPlans = [
+    mockMemberPlan(),
+    mockMemberPlan({ amountPerMonthMin: 10000, amountPerMonthTarget: 15000 }),
+  ],
+  memberPlanIds = [memberPlans[0].id, memberPlans[1].id],
+}: Partial<SubscribeBlock> = {}): SubscribeBlock => ({
+  type: BlockType.Subscribe,
+  __typename: 'SubscribeBlock',
+  blockStyle: null,
+  blockStyleName: null,
+  fields,
+  memberPlans,
+  memberPlanIds,
+});
 
 export const mockBlockContent = ({
   title = mockTitleBlock(),
@@ -527,8 +559,8 @@ export const mockBlockContent = ({
   imageGallery = mockImageGalleryBlock(),
   teaserList = mockTeaserListBlock(),
   col6 = mockTeaserGridBlock(),
-  col1 = mockTeaserGridBlock({numColumns: 1, teasers: [mockEventTeaser()]}),
-  flex = mockTeaserGridFlexBlock()
+  col1 = mockTeaserGridBlock({ numColumns: 1, teasers: [mockEventTeaser()] }),
+  flex = mockTeaserGridFlexBlock(),
 } = {}) =>
   [
     title,
@@ -555,5 +587,5 @@ export const mockBlockContent = ({
     teaserList,
     col6,
     col1,
-    flex
-  ].filter(block => !!block) as FullBlockFragment[]
+    flex,
+  ].filter(block => !!block) as FullBlockFragment[];

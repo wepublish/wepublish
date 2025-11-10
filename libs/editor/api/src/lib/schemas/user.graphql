@@ -26,6 +26,7 @@ fragment FullUser on User {
   }
   email
   emailVerifiedAt
+  note
   roles {
     ...FullUserRole
   }
@@ -78,7 +79,14 @@ query UserList(
   $order: SortOrder
   $sort: UserSort
 ) {
-  users(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  users(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullUser
     }
@@ -118,7 +126,11 @@ mutation UpdateUser($id: String!, $input: UserInput!) {
   }
 }
 
-mutation ResetUserPassword($id: String!, $password: String!, $sendMail: Boolean) {
+mutation ResetUserPassword(
+  $id: String!
+  $password: String!
+  $sendMail: Boolean
+) {
   resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
     ...FullUser
   }

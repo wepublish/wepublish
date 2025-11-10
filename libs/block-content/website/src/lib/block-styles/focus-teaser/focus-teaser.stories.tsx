@@ -1,27 +1,31 @@
-import {Meta} from '@storybook/react'
-import {FocusTeaser} from './focus-teaser'
-import {mockArticleTeaser, mockEventTeaser, mockPageTeaser} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { FocusTeaser } from './focus-teaser';
+import {
+  mockArticleTeaser,
+  mockEventTeaser,
+  mockPageTeaser,
+} from '@wepublish/storybook/mocks';
 
 export default {
   component: FocusTeaser,
-  title: 'Blocks/Teaser List/Block Styles/Focus Teaser'
-} as Meta
+  title: 'Blocks/Teaser List/Block Styles/Focus Teaser',
+} as Meta;
 
 export const Article = {
   args: {
     title: 'Foobar Title',
     filter: {
-      tags: []
+      tags: [],
     },
     teasers: [
       mockArticleTeaser(),
       mockArticleTeaser(),
       mockArticleTeaser(),
       mockArticleTeaser(),
-      mockArticleTeaser()
-    ]
-  }
-}
+      mockArticleTeaser(),
+    ],
+  },
+};
 
 export const Page = {
   ...Article,
@@ -32,10 +36,10 @@ export const Page = {
       mockPageTeaser(),
       mockPageTeaser(),
       mockPageTeaser(),
-      mockPageTeaser()
-    ]
-  }
-}
+      mockPageTeaser(),
+    ],
+  },
+};
 
 export const Event = {
   ...Article,
@@ -46,10 +50,10 @@ export const Event = {
       mockEventTeaser(),
       mockEventTeaser(),
       mockEventTeaser(),
-      mockEventTeaser()
-    ]
-  }
-}
+      mockEventTeaser(),
+    ],
+  },
+};
 
 export const WithLink = {
   ...Article,
@@ -57,7 +61,7 @@ export const WithLink = {
     ...Article.args,
     title: 'Foobar Title',
     filter: {
-      tags: [Article.args.teasers[0].article?.tags[0].id]
-    }
-  }
-}
+      tags: [Article.args.teasers[0].article?.tags[0].id],
+    },
+  },
+};

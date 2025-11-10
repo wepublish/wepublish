@@ -1,19 +1,23 @@
-import {Args, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {Public} from '@wepublish/authentication/api'
-import {Author} from './author.model'
-import {AuthorService} from './author.service'
-import {AuthorDataloaderService} from './author-dataloader.service'
-import {BadRequestException} from '@nestjs/common'
-import {AuthorArgs, AuthorsQueryArgs, PaginatedAuthors} from './authors.query'
-import {URLAdapter} from '@wepublish/nest-modules'
-import {Tag, TagService} from '@wepublish/tag/api'
-import {NotFoundException} from '@nestjs/common'
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Public } from '@wepublish/authentication/api';
+import { Author } from './author.model';
+import { AuthorService } from './author.service';
+import { AuthorDataloaderService } from './author-dataloader.service';
+import { BadRequestException } from '@nestjs/common';
+import {
+  AuthorArgs,
+  AuthorsQueryArgs,
+  PaginatedAuthors,
+} from './authors.query';
+import { URLAdapter } from '@wepublish/nest-modules';
+import { Tag, TagService } from '@wepublish/tag/api';
+import { NotFoundException } from '@nestjs/common';
 
 @Resolver(() => Author)
 export class AuthorResolver {
   constructor(
     private authorService: AuthorService,
-    private readonly authorDataloader: AuthorDataloaderService,
+    private authorDataloader: AuthorDataloaderService,
     private tagService: TagService,
     private urlAdapter: URLAdapter
   ) {}
@@ -21,35 +25,38 @@ export class AuthorResolver {
   @Public()
   @Query(() => Author, {
     nullable: true,
-    description: 'Get an author by ID or slug'
+    description: 'Get an author by ID or slug',
   })
   async author(@Args() args: AuthorArgs) {
     if (args.id != null) {
-      const author = await this.authorDataloader.load(args.id)
+      const author = await this.authorDataloader.load(args.id);
 
       if (!author) {
-        throw new NotFoundException(`Author with id ${args.id} was not found.`)
+        throw new NotFoundException(`Author with id ${args.id} was not found.`);
       }
 
-      return author
+      return author;
     }
 
     if (args.slug != null) {
-      const author = await this.authorService.getAuthorBySlug(args.slug)
+      const author = await this.authorService.getAuthorBySlug(args.slug);
 
       if (!author) {
-        throw new NotFoundException(`Author with slug ${args.slug} was not found.`)
+        throw new NotFoundException(
+          `Author with slug ${args.slug} was not found.`
+        );
       }
 
-      return author
+      return author;
     }
 
-    throw new BadRequestException('Author id or slug required.')
+    throw new BadRequestException('Author id or slug required.');
   }
 
   @Public()
   @Query(() => PaginatedAuthors, {
-    description: 'Get a paginated list of authors with optional filtering and sorting'
+    description:
+      'Get a paginated list of authors with optional filtering and sorting',
   })
   async authors(@Args() args: AuthorsQueryArgs) {
     return this.authorService.getAuthors(
@@ -59,17 +66,17 @@ export class AuthorResolver {
       args.cursor || null,
       args.skip || 0,
       args.take || 10
-    )
+    );
   }
 
-  @ResolveField(() => String, {nullable: true})
+  @ResolveField(() => String, { nullable: true })
   async url(@Parent() parent: Author) {
-    return this.urlAdapter.getAuthorURL(parent)
+    return this.urlAdapter.getAuthorURL(parent);
   }
 
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: Author) {
-    const {id: articleId} = parent
-    return this.tagService.getTagsByAuthorId(articleId)
+    const { id: articleId } = parent;
+    return this.tagService.getTagsByAuthorId(articleId);
   }
 }

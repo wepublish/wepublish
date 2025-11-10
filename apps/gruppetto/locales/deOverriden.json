@@ -1,0 +1,10 @@
+{
+  "navbar": {
+    "subscribe": "Abo lösen"
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
+    }
+  }
+}

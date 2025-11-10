@@ -1,5 +1,5 @@
-import styled from '@emotion/styled'
-import React, {useRef, useState} from 'react'
+import styled from '@emotion/styled';
+import React, { useRef, useState } from 'react';
 
 const Input = styled.input`
   position: absolute;
@@ -8,9 +8,12 @@ const Input = styled.input`
   width: 0;
   height: 0;
   opacity: 0;
-`
+`;
 
-const FileDropInputWrapper = styled.div<{dragging: boolean; disabled: boolean}>`
+const FileDropInputWrapper = styled.div<{
+  dragging: boolean;
+  disabled: boolean;
+}>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,54 +30,59 @@ const FileDropInputWrapper = styled.div<{dragging: boolean; disabled: boolean}>`
   position: relative;
   font-size: 16px;
   text-align: center;
-  border-color: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
-  color: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
-  fill: ${({dragging}) => (dragging ? '#3498ff' : '#004299')};
-  cursor: ${({disabled}) => (disabled ? 'not-allowed' : 'pointer')};
-`
+  border-color: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
+  color: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
+  fill: ${({ dragging }) => (dragging ? '#3498ff' : '#004299')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`;
 
 export interface FileDropInputProps {
-  disabled?: boolean
+  disabled?: boolean;
 
-  icon?: React.ReactElement
-  text?: string
+  icon?: React.ReactElement;
+  text?: string;
 
-  onDrop: (fileList: File[]) => void
+  onDrop: (fileList: File[]) => void;
 }
 
-export function FileDropInput({disabled = false, onDrop, icon, text}: FileDropInputProps) {
-  const [dragging, setDragging] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+export function FileDropInput({
+  disabled = false,
+  onDrop,
+  icon,
+  text,
+}: FileDropInputProps) {
+  const [dragging, setDragging] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleDragIn(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
-    setDragging(true)
+    setDragging(true);
   }
 
   function handleDragOut(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
-    setDragging(false)
+    setDragging(false);
   }
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
-    setDragging(false)
+    setDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      onDrop(Array.from(e.dataTransfer.files))
-      e.dataTransfer.clearData()
+      onDrop(Array.from(e.dataTransfer.files));
+      e.dataTransfer.clearData();
     }
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
-      onDrop(Array.from(e.target.files))
+      onDrop(Array.from(e.target.files));
     }
   }
 
@@ -85,7 +93,8 @@ export function FileDropInput({disabled = false, onDrop, icon, text}: FileDropIn
       onDrop={!disabled ? handleDrop : undefined}
       onDragOver={!disabled ? handleDragIn : undefined}
       onDragLeave={!disabled ? handleDragOut : undefined}
-      onClick={() => inputRef.current!.click()}>
+      onClick={() => inputRef.current!.click()}
+    >
       {icon && icon}
       <div>{text}</div>
       <Input
@@ -96,5 +105,5 @@ export function FileDropInput({disabled = false, onDrop, icon, text}: FileDropIn
         disabled={disabled}
       />
     </FileDropInputWrapper>
-  )
+  );
 }

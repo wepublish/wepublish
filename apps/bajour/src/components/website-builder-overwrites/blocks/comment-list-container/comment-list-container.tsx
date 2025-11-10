@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   CommentContent,
   CommentEditorWrapper,
@@ -6,38 +6,38 @@ import {
   CommentListContainer as BaseCommentListContainer,
   CommentListItemActions,
   CommentListItemChildren,
-  CommentWrapper
-} from '@wepublish/comments/website'
-import {theme} from '@wepublish/ui'
+  CommentWrapper,
+} from '@wepublish/comments/website';
+import { theme } from '@wepublish/ui';
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
   ${CommentListItemChildren} {
-    background-color: ${({theme}) => theme.palette.common.white};
-    padding-top: ${({theme}) => theme.spacing(1)};
-    border-color: ${({theme}) => theme.palette.secondary.light};
+    background-color: ${({ theme }) => theme.palette.common.white};
+    padding-top: ${({ theme }) => theme.spacing(1)};
+    border-color: ${({ theme }) => theme.palette.secondary.light};
 
     ${CommentWrapper} {
-      background-color: ${({theme}) => theme.palette.common.white};
+      background-color: ${({ theme }) => theme.palette.common.white};
       padding: 0;
     }
 
     ${CommentHeader} {
-      background-color: ${({theme}) => theme.palette.common.white};
-      border-top-right-radius: ${({theme}) => theme.spacing(2.5)};
-      border-top-left-radius: ${({theme}) => theme.spacing(2.5)};
+      background-color: ${({ theme }) => theme.palette.common.white};
+      border-top-right-radius: ${({ theme }) => theme.spacing(2.5)};
+      border-top-left-radius: ${({ theme }) => theme.spacing(2.5)};
     }
 
     ${CommentContent} {
       padding-top: 0;
       padding-bottom: 0;
-      background-color: ${({theme}) => theme.palette.common.white};
+      background-color: ${({ theme }) => theme.palette.common.white};
     }
 
     ${CommentListItemActions} {
-      background-color: ${({theme}) => theme.palette.common.white};
-      padding: ${({theme}) => theme.spacing(1.5)};
-      border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
-      border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
+      background-color: ${({ theme }) => theme.palette.common.white};
+      padding: ${({ theme }) => theme.spacing(1.5)};
+      border-bottom-right-radius: ${({ theme }) => theme.spacing(2.5)};
+      border-bottom-left-radius: ${({ theme }) => theme.spacing(2.5)};
     }
   }
 
@@ -52,17 +52,17 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
   }
 
   ${CommentListItemActions} {
-    padding: ${({theme}) => theme.spacing(1.5)};
+    padding: ${({ theme }) => theme.spacing(1.5)};
     margin-bottom: 0;
   }
 
   ${theme.breakpoints.up('md')} {
-    max-width: ${({theme}) => theme.spacing(95)};
-    width: ${({theme}) => theme.spacing(95)};
+    max-width: ${({ theme }) => theme.spacing(95)};
+    width: ${({ theme }) => theme.spacing(95)};
     margin: 0 auto;
   }
 
   ${CommentEditorWrapper} {
-    margin-top: ${({theme}) => theme.spacing(2)};
+    margin-top: ${({ theme }) => theme.spacing(2)};
   }
-`
+`;

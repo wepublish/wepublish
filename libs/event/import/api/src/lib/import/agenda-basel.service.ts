@@ -1,11 +1,15 @@
-import {CACHE_MANAGER} from '@nestjs/cache-manager'
-import {Inject, Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {ImageFetcherService, MediaAdapter} from '@wepublish/image/api'
-import {Cache} from 'cache-manager'
-import {EventFromSource} from './events-import.model'
-import {CreateEventParams, EventsProvider, ImportedEventParams} from './events-import.service'
-import {KulturagendaParser} from './kulturagenda-parser'
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { ImageFetcherService, MediaAdapter } from '@wepublish/image/api';
+import { Cache } from 'cache-manager';
+import { EventFromSource } from './events-import.model';
+import {
+  CreateEventParams,
+  EventsProvider,
+  ImportedEventParams,
+} from './events-import.service';
+import { KulturagendaParser } from './kulturagenda-parser';
 
 @Injectable()
 export class AgendaBaselService implements EventsProvider {
@@ -17,60 +21,65 @@ export class AgendaBaselService implements EventsProvider {
     private parser: KulturagendaParser
   ) {}
 
-  readonly name = 'AgendaBasel'
-  readonly url = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+  readonly name = 'AgendaBasel';
+  readonly url = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml';
 
   private async getEvents() {
-    const cachedEvents = await this.cacheManager.get<EventFromSource[]>('agenda-basel-events')
+    const cachedEvents = await this.cacheManager.get<EventFromSource[]>(
+      'agenda-basel-events'
+    );
 
     if (cachedEvents) {
-      return cachedEvents
+      return cachedEvents;
     }
 
-    const events = await this.parser.fetchAndParseKulturagenda(this.url, this.name)
-    const ttl = 8 * 60 * 60 * 1000 // 8 hours
+    const events = await this.parser.fetchAndParseKulturagenda(
+      this.url,
+      this.name
+    );
+    const ttl = 8 * 60 * 60 * 1000; // 8 hours
 
-    await this.cacheManager.set('agenda-basel-events', events, ttl)
+    await this.cacheManager.set('agenda-basel-events', events, ttl);
 
-    return events
+    return events;
   }
 
   async importedEvents(): Promise<EventFromSource[]> {
-    const parsedEvents = await this.getEvents()
-    return parsedEvents
+    const parsedEvents = await this.getEvents();
+    return parsedEvents;
   }
 
-  async importedEvent({id}: ImportedEventParams): Promise<EventFromSource> {
-    const parsedEvents = await this.getEvents()
+  async importedEvent({ id }: ImportedEventParams): Promise<EventFromSource> {
+    const parsedEvents = await this.getEvents();
 
-    const event = parsedEvents.find(e => e.id === id)
+    const event = parsedEvents.find(e => e.id === id);
 
     if (!event) {
-      throw Error(`Event with id ${id} not found.`)
+      throw Error(`Event with id ${id} not found.`);
     }
 
-    return event
+    return event;
   }
 
-  async createEvent({id}: CreateEventParams): Promise<string> {
-    const parsedEvents = await this.getEvents()
-    let createdImageId = null
+  async createEvent({ id }: CreateEventParams): Promise<string> {
+    const parsedEvents = await this.getEvents();
+    let createdImageId = null;
 
-    const event = parsedEvents?.find(e => e.id === id)
+    const event = parsedEvents?.find(e => e.id === id);
 
     if (!event) {
-      throw Error(`Event with id ${id} not found.`)
+      throw Error(`Event with id ${id} not found.`);
     }
 
     if (event.imageUrl) {
-      const file = this.imageFetcher.fetch(event.imageUrl)
-      const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file)
+      const file = this.imageFetcher.fetch(event.imageUrl);
+      const image = await this.mediaAdapter.uploadImageFromArrayBuffer(file);
 
       const createdImage = await this.prisma.image.create({
-        data: image
-      })
+        data: image,
+      });
 
-      createdImageId = createdImage.id
+      createdImageId = createdImage.id;
     }
 
     const createdEvent = await this.prisma.event.create({
@@ -82,10 +91,10 @@ export class AgendaBaselService implements EventsProvider {
         imageId: createdImageId || null,
         endsAt: event.endsAt,
         externalSourceName: event.externalSourceName,
-        externalSourceId: event.externalSourceId
-      }
-    })
+        externalSourceId: event.externalSourceId,
+      },
+    });
 
-    return createdEvent.id
+    return createdEvent.id;
   }
 }
