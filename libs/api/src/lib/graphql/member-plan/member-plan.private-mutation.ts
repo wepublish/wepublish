@@ -103,6 +103,7 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
   const {
     extendable,
     amountPerMonthMin,
+    amountPerMonthMax,
     amountPerMonthTarget,
     availablePaymentMethods,
   } = input;
@@ -111,6 +112,18 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
   );
 
   if (!extendable && hasForceAutoRenew) {
+    throw new InvalidMemberPlanSettings();
+  }
+
+  if (amountPerMonthMax === 0) {
+    return;
+  }
+
+  if (
+    amountPerMonthMin != null &&
+    amountPerMonthMax != null &&
+    amountPerMonthMax < amountPerMonthMin
+  ) {
     throw new InvalidMemberPlanSettings();
   }
 

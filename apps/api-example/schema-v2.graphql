@@ -1299,6 +1299,7 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan implements HasImage {
+  amountPerMonthMax: Int
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!

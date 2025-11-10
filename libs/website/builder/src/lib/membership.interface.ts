@@ -93,6 +93,7 @@ export type BuilderTransactionFeeProps = {
 
 export type BuilderPaymentAmountProps = {
   amountPerMonthMin: number;
+  amountPerMonthMax: number;
   amountPerMonthTarget: number | undefined;
   currency: Currency;
   donate: boolean;
