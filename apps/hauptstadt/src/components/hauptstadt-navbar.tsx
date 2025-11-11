@@ -214,25 +214,45 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   }
 `;
 
-const NAVBAR_SHADOW_CLIP_MIN = 0;
-const NAVBAR_SHADOW_BOTTOM_EXTEND = 20;
-
 const NavBackgroundWrapper = styled('div', {
-  shouldForwardProp: propName =>
-    propName !== 'clipLeft' &&
-    propName !== 'clipRight' &&
-    propName !== 'navbarState',
+  shouldForwardProp: propName => propName !== 'navbarState',
 })<{
-  clipLeft: number;
-  clipRight: number;
   navbarState: NavbarState[];
-}>(({ clipLeft, clipRight, navbarState }) => ({
-  filter:
+}>`
+  filter: ${({ navbarState }) =>
     navbarState.includes(NavbarState.Diagonal) ?
       'drop-shadow(0px 1px 5px rgba(0,0,0,0.19))'
-    : 'none',
-  clipPath: `inset(0 ${clipRight}px -${NAVBAR_SHADOW_BOTTOM_EXTEND}px ${clipLeft}px)`,
-}));
+    : 'none'};
+  width: 100%;
+  clip-path: inset(0 5px -20px 5px);
+
+  margin: 0 auto;
+
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    max-width: ${({ theme }) =>
+      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xs}px;
+  }
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    max-width: ${({ theme }) =>
+      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.sm}px;
+  }
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    max-width: ${({ theme }) =>
+      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.md}px;
+  }
+  ${({ theme }) => theme.breakpoints.up('lg')} {
+    max-width: ${({ theme }) =>
+      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.lg}px;
+  }
+  ${({ theme }) => theme.breakpoints.up('xl')} {
+    max-width: ${({ theme }) =>
+      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xl}px;
+  }
+  ${({ theme }) => theme.breakpoints.up('xxl')} {
+    max-width: ${({ theme }) =>
+      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xxl}px;
+  }
+`;
 
 export const NavbarLinks = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
@@ -565,66 +585,6 @@ export function HauptstadtNavbar({
   );
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
 
-  const [clipInset, setClipInset] = useState({
-    left: NAVBAR_SHADOW_CLIP_MIN,
-    right: NAVBAR_SHADOW_CLIP_MIN,
-  });
-  const navBackgroundRef = useRef<HTMLDivElement | null>(null);
-  const navInnerRef = useRef<HTMLDivElement | null>(null);
-
-  // Justiere die Clip-Insets dynamisch anhand der tatsächlichen Nav-Breite.
-  useEffect(() => {
-    const backgroundElement = navBackgroundRef.current;
-    const innerElement = navInnerRef.current;
-
-    if (!backgroundElement || !innerElement) {
-      return;
-    }
-
-    const updateClipInset = () => {
-      const backgroundRect = backgroundElement.getBoundingClientRect();
-      const innerRect = innerElement.getBoundingClientRect();
-
-      const nextLeft = Math.max(
-        NAVBAR_SHADOW_CLIP_MIN,
-        Math.round(innerRect.left - backgroundRect.left) + 1
-      );
-      const nextRight = Math.max(
-        NAVBAR_SHADOW_CLIP_MIN,
-        Math.round(backgroundRect.right - innerRect.right) + 1
-      );
-
-      setClipInset(previous => {
-        if (previous.left === nextLeft && previous.right === nextRight) {
-          return previous;
-        }
-
-        return {
-          left: nextLeft,
-          right: nextRight,
-        };
-      });
-    };
-
-    const handleResize = () => {
-      window.requestAnimationFrame(updateClipInset);
-    };
-
-    const observer =
-      typeof ResizeObserver !== 'undefined' ?
-        new ResizeObserver(handleResize)
-      : null;
-
-    updateClipInset();
-    observer?.observe(backgroundElement);
-    observer?.observe(innerElement);
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [navbarState]);
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarHeight} />
@@ -635,16 +595,8 @@ export function HauptstadtNavbar({
         elevation={0}
         color={'transparent'}
       >
-        <NavBackgroundWrapper
-          ref={navBackgroundRef}
-          clipLeft={clipInset.left}
-          clipRight={clipInset.right}
-          navbarState={navbarState}
-        >
-          <NavbarInnerWrapper
-            ref={navInnerRef}
-            navbarState={navbarState}
-          >
+        <NavBackgroundWrapper navbarState={navbarState}>
+          <NavbarInnerWrapper navbarState={navbarState}>
             <NavbarMain>
               <NavbarIconButtonWrapper>
                 <NavbarMenuButton
