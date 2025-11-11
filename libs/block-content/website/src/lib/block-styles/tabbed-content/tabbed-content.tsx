@@ -7,11 +7,10 @@ import { BlockContent, FlexBlock } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 import { isFlexBlock } from '../../nested-blocks/flex-block';
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
+import { Box, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
 import { Children } from 'react';
-import type {} from '@mui/lab/themeAugmentation';
+import styled from '@emotion/styled';
+import { TeaserSlotsBlockWrapper } from '../../teaser/teaser-slots-block';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -35,12 +34,79 @@ const CustomTabPanel = (props: TabPanelProps) => {
   );
 };
 
+const CustomTabPanelStyled = styled(CustomTabPanel)`
+  background: linear-gradient(
+    to bottom,
+    rgb(174, 179, 190),
+    rgba(174, 179, 190, 0.4)
+  );
+  position: relative;
+  top: -1px;
+
+  ${TeaserSlotsBlockWrapper} {
+    & > h1 {
+      display: none;
+    }
+  }
+`;
+
+const Tabs = styled(MuiTabs)`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  & .MuiTabs-indicator {
+    display: none;
+  }
+`;
+
+const Tab = styled(MuiTab)`
+  background-color: rgba(0, 0, 0, 1);
+  color: rgba(255, 255, 255, 1);
+  font-size: 16px;
+  font-weight: 700;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  margin-right: 4px;
+  padding: 7px 20px 2px 20px;
+  text-transform: none;
+  flex-grow: 1;
+  align-items: flex-start;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover: {
+    //color: '#40a9ff';
+    opacity: 1;
+  }
+
+  &.Mui-selected {
+    background-color: rgb(174, 179, 190);
+    color: rgba(255, 255, 255, 1);
+  }
+
+  &.mui-focusvisible: {
+    backgroundcolor: #d1eaff;
+  }
+
+  & > span: {
+    display: none;
+  }
+`;
+
 const a11yProps = (index: number) => {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
 };
+
+export const TabbedContentWrapper = styled('div')`
+  width: 100%;
+  grid-column: -1/1;
+`;
 
 export const TabbedContent = ({
   className,
@@ -55,10 +121,7 @@ export const TabbedContent = ({
   };
 
   return (
-    <Box
-      sx={{ width: '100%', gridColumn: '-1/1' }}
-      className={className}
-    >
+    <TabbedContentWrapper className={className}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={value}
@@ -67,6 +130,7 @@ export const TabbedContent = ({
         >
           {nestedBlocks.map((nestedBlock, index) => (
             <Tab
+              disableRipple={true}
               key={index}
               label={nestedBlock.block.title || `Tab ${index + 1}`}
               {...a11yProps(index)}
@@ -75,15 +139,15 @@ export const TabbedContent = ({
         </Tabs>
       </Box>
       {nestedBlocks.map((nestedBlock, index) => (
-        <CustomTabPanel
+        <CustomTabPanelStyled
           value={value}
           index={index}
           key={index}
         >
           {childrenArray[index]}
-        </CustomTabPanel>
+        </CustomTabPanelStyled>
       ))}
-    </Box>
+    </TabbedContentWrapper>
   );
 };
 
