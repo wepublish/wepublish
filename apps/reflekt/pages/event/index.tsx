@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
 import { EventSort, SortOrder } from '@wepublish/website/api';
 import {
@@ -81,7 +80,7 @@ export default function EventList() {
   }, [data?.events?.totalCount]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <>
       <Filter>
         <DateTimePicker
           label="Von"
@@ -149,7 +148,7 @@ export default function EventList() {
           }
         />
       )}
-    </LocalizationProvider>
+    </>
   );
 }
 
