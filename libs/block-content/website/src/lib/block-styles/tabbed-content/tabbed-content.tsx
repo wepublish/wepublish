@@ -10,15 +10,29 @@ import * as React from 'react';
 import { Box, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
 import { Children } from 'react';
 import styled from '@emotion/styled';
-import { TeaserSlotsBlockWrapper } from '../../teaser/teaser-slots-block';
+import {
+  TeaserSlotsBlockWrapper,
+  TeaserSlotsBlockTeasers,
+} from '../../teaser/teaser-slots-block';
+import {
+  TeaserWrapper,
+  TeaserImageWrapper,
+  TeaserContentWrapper,
+} from 'apps/tsri/src/components/tsri-base-teaser';
 
-interface TabPanelProps {
+export const TabbedContentWrapper = styled('div')`
+  width: 100%;
+  grid-column: -1/1;
+  container: tabbed-content/inline-size;
+`;
+
+interface TabPanelBaseProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
 
-const CustomTabPanel = (props: TabPanelProps) => {
+const TabPanelBase = (props: TabPanelBaseProps) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -29,12 +43,14 @@ const CustomTabPanel = (props: TabPanelProps) => {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <TabPanelBox>{children}</TabPanelBox>}
     </div>
   );
 };
 
-const CustomTabPanelStyled = styled(CustomTabPanel)`
+const TabPanelBox = styled('div')``;
+
+const TabPanel = styled(TabPanelBase)`
   background: linear-gradient(
     to bottom,
     rgb(174, 179, 190),
@@ -42,18 +58,102 @@ const CustomTabPanelStyled = styled(CustomTabPanel)`
   );
   position: relative;
   top: -1px;
+  z-index: 0;
+
+  @container tabbed-content (width > 700px) {
+    padding: 7cqw 1.3cqw 0 5.58cqw;
+  }
 
   ${TeaserSlotsBlockWrapper} {
     & > h1 {
       display: none;
     }
   }
+
+  ${TeaserSlotsBlockTeasers} {
+    display: grid;
+
+    @container tabbed-content (width > 700px) {
+      grid-template-columns: 58.42cqw 32.5cqw !important;
+      grid-template-rows: repeat(5, auto) !important;
+      column-gap: 2.2cqw;
+      row-gap: 1.77cqw;
+    }
+  }
+
+  ${TeaserWrapper} {
+
+    ${TeaserImageWrapper} {
+      display: none;
+    }
+
+    &:is(:nth-of-type(1)) {
+      container: teaser/normal;
+      grid-column: 1 / 2;
+      grid-row: -1 / 1;
+
+      ${TeaserContentWrapper} {
+        @container tabbed-content (width > 700px) {
+          grid-template-rows: 58.42cqw auto auto auto !important;
+          grid-template-columns: 100%;
+        }
+      }
+
+      ${TeaserImageWrapper} {
+        display: grid;
+        z-index: 1;
+
+        @container tabbed-content (width > 700px) {
+          aspect-ratio: 1.0;
+          border-top-left-radius: 1.3cqw;
+          border-top-right-radius: 1.3cqw;
+          grid-column: 1 / 2;
+          grid-row: 1 / 2;
+
+          & img {
+            width: auto;
+            height: 58.42cqw;
+            object-fit: cover;
+            max-height: unset;
+          }
+        }
+      }
+    }
+
+
+    &:is(:nth-of-type(2)) {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+    }
+    &:is(:nth-of-type(3)) {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+    }
+    &:is(:nth-of-type(4)) {
+      grid-column: 2 / 3;
+      grid-row: 3 / 4;
+    }
+    &:is(:nth-of-type(5)) {
+      grid-column: 2 / 3;
+      grid-row: 4 / 5;
+    }
+    &:is(:nth-of-type(6)) {
+      grid-column: 2 / 3;
+      grid-row: 5 / 6;
+    }
+  }
+
+  ${TeaserContentWrapper} {
+    background-color: #AEB3BE;
+  }
+}
 `;
 
 const Tabs = styled(MuiTabs)`
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  min-height: unset;
 
   & .MuiTabs-indicator {
     display: none;
@@ -72,6 +172,12 @@ const Tab = styled(MuiTab)`
   text-transform: none;
   flex-grow: 1;
   align-items: flex-start;
+  min-height: unset;
+
+  @container tabbed-content (width > 700px) {
+    font-size: 1.5cqw;
+    padding: 0.65cqw 2.79cqw 0.37cqw 2.79cqw;
+  }
 
   &:last-child {
     margin-right: 0;
@@ -102,11 +208,6 @@ const a11yProps = (index: number) => {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 };
-
-export const TabbedContentWrapper = styled('div')`
-  width: 100%;
-  grid-column: -1/1;
-`;
 
 export const TabbedContent = ({
   className,
@@ -139,13 +240,13 @@ export const TabbedContent = ({
         </Tabs>
       </Box>
       {nestedBlocks.map((nestedBlock, index) => (
-        <CustomTabPanelStyled
+        <TabPanel
           value={value}
           index={index}
           key={index}
         >
           {childrenArray[index]}
-        </CustomTabPanelStyled>
+        </TabPanel>
       ))}
     </TabbedContentWrapper>
   );

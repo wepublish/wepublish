@@ -19,12 +19,15 @@ export const TeaserSlotsBlockWrapper = styled('section')`
   gap: ${({ theme }) => theme.spacing(3)};
 `;
 
-export const TeaserSlotsBlockTeasers = styled('div')`
+export const TeaserSlotsBlockTeasers = styled('ul')`
   display: grid;
   column-gap: ${({ theme }) => theme.spacing(2)};
   row-gap: ${({ theme }) => theme.spacing(5)};
   grid-template-columns: 1fr;
   align-items: stretch;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
