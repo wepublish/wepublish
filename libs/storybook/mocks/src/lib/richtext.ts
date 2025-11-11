@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Descendant } from 'slate';
 
 export const mockRichText = () =>
@@ -119,6 +120,18 @@ export const mockRichText = () =>
         },
         {
           text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        },
+      ],
+    },
+  ] as Descendant[];
+
+export const mockShortRichText = () =>
+  [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: faker.lorem.sentence(),
         },
       ],
     },

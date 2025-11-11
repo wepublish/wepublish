@@ -11,6 +11,7 @@ import {
   FullImageFragment,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlockField,
   TeaserInput,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
@@ -67,7 +68,10 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string;
 }
 
-export type SubscribeBlockValue = BaseBlockValue;
+export interface SubscribeBlockValue extends BaseBlockValue {
+  memberPlanIds: string[];
+  fields: SubscribeBlockField[];
+}
 
 export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined;
@@ -501,6 +505,8 @@ export function mapBlockValueToBlockInput(
       return {
         subscribe: {
           blockStyle: block.value.blockStyle,
+          memberPlanIds: block.value.memberPlanIds ?? [],
+          fields: block.value.fields,
         },
       };
 
@@ -1068,6 +1074,8 @@ export function blockForQueryBlock(
         type: EditorBlockType.Subscribe,
         value: {
           blockStyle: block.blockStyle,
+          fields: block.fields ?? [],
+          memberPlanIds: block.memberPlanIds ?? [],
         },
       };
 

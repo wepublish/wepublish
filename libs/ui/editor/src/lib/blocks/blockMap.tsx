@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
   TeaserType,
@@ -261,7 +262,16 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Subscribe]: {
     field: props => <SubscribeBlock {...props} />,
-    defaultValue: { blockStyle: undefined },
+    defaultValue: {
+      blockStyle: undefined,
+      memberPlanIds: [],
+      fields: [
+        SubscribeBlockField.FirstName,
+        SubscribeBlockField.Password,
+        SubscribeBlockField.PasswordRepeated,
+        SubscribeBlockField.Address,
+      ],
+    },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,
   },

@@ -1494,6 +1494,7 @@ export type MemberPlan = HasImage & {
   imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
+  productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: Maybe<Scalars['String']>;
@@ -1510,6 +1511,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -2631,6 +2633,11 @@ export enum PollVoteSort {
   CreatedAt = 'CreatedAt',
 }
 
+export enum ProductType {
+  Donation = 'Donation',
+  Subscription = 'Subscription',
+}
+
 export type Property = {
   __typename?: 'Property';
   id: Scalars['String'];
@@ -3273,12 +3280,26 @@ export type SubscribeBlock = BaseBlock & {
   __typename?: 'SubscribeBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  fields: Array<SubscribeBlockField>;
+  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  memberPlans: Array<MemberPlan>;
   type: BlockType;
 };
+
+export enum SubscribeBlockField {
+  Address = 'Address',
+  Birthday = 'Birthday',
+  EmailRepeated = 'EmailRepeated',
+  FirstName = 'FirstName',
+  Password = 'Password',
+  PasswordRepeated = 'PasswordRepeated',
+}
 
 export type SubscribeBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  fields?: Array<SubscribeBlockField>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type SubscriptionCreatedAction = BaseAction &

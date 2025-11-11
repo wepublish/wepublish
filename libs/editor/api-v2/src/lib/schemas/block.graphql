@@ -207,6 +207,8 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     blockStyle
+    memberPlanIds
+    fields
     type
   }
 }

@@ -2,11 +2,16 @@ import styled from '@emotion/styled';
 import { Meta, StoryFn } from '@storybook/react';
 import { Blocks } from './blocks';
 import { mockBlockContent } from '@wepublish/storybook/mocks';
+import {
+  WithPollBlockDecorators,
+  WithSubscribeBlockDecorators,
+} from '@wepublish/storybook';
 
 export default {
   component: Blocks,
   title: 'Blocks/Blocks',
-} as Meta;
+  decorators: [WithSubscribeBlockDecorators({}), WithPollBlockDecorators({})],
+} as Meta<typeof Blocks>;
 
 const blocks = mockBlockContent();
 

@@ -1,0 +1,26 @@
+{
+  "website": {
+    "production": {
+      "deployment": true,
+      "custom_domain": "https://reflekt.wepublish.media",
+      "env": {
+        "DEPLOY_ENV": "production"
+      },
+      "secret_env": []
+    },
+    "staging": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
+      "secret_env": []
+    }
+  }
+}
