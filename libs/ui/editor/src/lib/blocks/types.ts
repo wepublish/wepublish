@@ -1130,7 +1130,7 @@ export function blockForQueryBlock(
           teasers: block.teasers.map(teaser => [
             nanoid(),
             mapTeaserToQueryTeaser(teaser) as Teaser | null,
-          ]),
+          ]) as Array<[string, Teaser | null]>,
         },
       };
 

@@ -86,7 +86,30 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     ],
     [
       isTabbedContentBlockStyle,
-      block => <blockStyles.TabbedContent {...block} />,
+      block => {
+        const nrOfNestedBlocks = (block as BuilderFlexBlockProps).nestedBlocks
+          .length;
+        const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
+          (nb, index) => {
+            return (
+              <Block
+                key={index}
+                block={nb.block as BlockContent}
+                type="Article"
+                index={index}
+                count={nrOfNestedBlocks}
+              />
+            );
+          }
+        );
+
+        return (
+          <blockStyles.TabbedContent
+            {...(block as BuilderFlexBlockProps)}
+            children={children}
+          />
+        );
+      },
     ],
   ]);
 
