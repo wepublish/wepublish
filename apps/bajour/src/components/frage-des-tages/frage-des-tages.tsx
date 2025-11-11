@@ -14,6 +14,7 @@ import {
 import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
+  BuilderTeaserSlotsBlockProps,
 } from '@wepublish/website/builder';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -156,7 +157,7 @@ const ReadMoreButton = styled(Button)`
 export const FrageDesTages = ({
   teasers,
   className,
-}: BuilderTeaserListBlockProps) => {
+}: BuilderTeaserListBlockProps | BuilderTeaserSlotsBlockProps) => {
   const article = (teasers[0] as ArticleTeaser | undefined)?.article;
 
   const { data: commentsData } = useCommentListQuery({
