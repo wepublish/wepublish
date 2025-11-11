@@ -55,7 +55,10 @@ export const TabbedContent = ({
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box
+      sx={{ width: '100%', gridColumn: '-1/1' }}
+      className={className}
+    >
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={value}
