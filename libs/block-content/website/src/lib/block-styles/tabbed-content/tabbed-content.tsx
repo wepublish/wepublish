@@ -54,8 +54,6 @@ export const TabbedContent = ({
     setValue(newValue);
   };
 
-  console.log('tabbed-content.tsx:', { nestedBlocks, childrenArray });
-
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
