@@ -2113,6 +2113,9 @@ type Query {
   """Returns an image by id."""
   getImage(id: String!): Image!
 
+  """Returns images by tag."""
+  getImagesByTag(tag: String!): [Image!]!
+
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
 
