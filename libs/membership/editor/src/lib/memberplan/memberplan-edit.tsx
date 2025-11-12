@@ -6,6 +6,7 @@ import {
   FullPaymentMethodFragment,
   MemberPlanInput,
   PaymentMethod,
+  ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
   usePaymentMethodListQuery,
@@ -103,8 +104,10 @@ function MemberPlanEdit() {
       tags: [],
       slug: '',
       name: '',
+      externalReward: undefined,
       extendable: true,
       maxCount: undefined,
+      productType: ProductType.Subscription,
     };
 
     setMemberPlan(initMemberPlan);
@@ -192,7 +195,9 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
+      externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
+      productType: memberPlan.productType,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,
       failPageId: memberPlan.failPageId,

@@ -62,6 +62,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (is404) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
 

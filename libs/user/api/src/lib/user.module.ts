@@ -12,9 +12,10 @@ import { UserService } from './user.service';
 import { UserResolver } from './user.resolver';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
+import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
-  imports: [PrismaModule, ImageModule],
+  imports: [PrismaModule, ImageModule, PropertyModule],
   providers: [
     UserDataloaderService,
     HasUserResolver,

@@ -16,7 +16,6 @@ import { BuilderBannerProps } from '@wepublish/website/builder';
 import { useCallback, useEffect, useState } from 'react';
 
 const StyledBanner = styled(Banner)`
-  z-index: unset;
   position: unset;
   top: unset;
   background-color: ${({ theme }) => theme.palette.primary.main};
@@ -89,11 +88,11 @@ export const HauptstadtBannerContainer = styled(Container, {
   padding: 0 !important;
   position: fixed;
   top: var(--changing-navbar-height);
-  z-index: 100;
+  z-index: 1;
   left: 50%;
   transition:
-    transform 300ms ease-out,
-    top 300ms ease-out;
+    clip-path 10000ms ease-out,
+    transform 300ms ease-out;
   transform: translate3d(
     -50%,
     ${({ isScrolled }) =>
@@ -139,9 +138,10 @@ export const HauptstadtBannerContainer = styled(Container, {
       transform: translate3d(
         -50%,
         ${({ isScrolled }) =>
-          isScrolled ? `calc(var(--changing-navbar-height) / -2)` : '0'},
+          isScrolled ? `calc(var(--changing-navbar-height) / -2)` : 0},
         0
       );
+
       ${({ isScrolled }) =>
         isScrolled &&
         css`

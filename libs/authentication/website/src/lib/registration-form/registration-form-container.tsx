@@ -10,12 +10,12 @@ export type RegistrationFormContainerProps<
   T extends Exclude<BuilderUserFormFields, 'flair'> = Exclude<
     BuilderUserFormFields,
     'flair'
-  >
+  >,
 > = BuilderContainerProps &
   Pick<BuilderRegistrationFormProps<T>, 'fields' | 'schema'>;
 
 export function RegistrationFormContainer<
-  T extends Exclude<BuilderUserFormFields, 'flair'>
+  T extends Exclude<BuilderUserFormFields, 'flair'>,
 >({ className, fields, schema }: RegistrationFormContainerProps<T>) {
   const { RegistrationForm } = useWebsiteBuilder();
   const {

@@ -55,6 +55,7 @@ describe('MailController', () => {
     birthday: null,
     flair: null,
     userImageID: null,
+    note: null,
   };
 
   beforeEach(async () => {

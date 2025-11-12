@@ -408,6 +408,7 @@ export type MemberPlan = {
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -415,6 +416,7 @@ export type MemberPlan = {
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: Maybe<Scalars['String']>;
@@ -431,6 +433,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -443,11 +446,13 @@ export type MemberPlanInput = {
   currency: Currency;
   description?: InputMaybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
   failPageId?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  productType: ProductType;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: InputMaybe<Scalars['String']>;
@@ -1089,6 +1094,11 @@ export type PollWithAnswers = {
   question?: Maybe<Scalars['String']>;
 };
 
+export enum ProductType {
+  Donation = 'Donation',
+  Subscription = 'Subscription'
+}
+
 export type Properties = {
   __typename?: 'Properties';
   key: Scalars['String'];
@@ -1586,6 +1596,7 @@ export type User = {
   lastLogin?: Maybe<Scalars['DateTime']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   properties: Array<Properties>;
   roles: Array<UserRole>;
@@ -1634,6 +1645,7 @@ export type UserInput = {
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  note?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
   userImageID?: InputMaybe<Scalars['String']>;

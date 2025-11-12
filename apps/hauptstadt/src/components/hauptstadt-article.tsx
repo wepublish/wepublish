@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { NoSsr, Typography } from '@mui/material';
+import { css, NoSsr, Typography } from '@mui/material';
 import { Article, ArticleInfoWrapper } from '@wepublish/article/website';
 import {
   ImageBlockWrapper,
@@ -7,6 +7,7 @@ import {
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper,
   TeaserSlotsBlockWrapper,
+  TitleBlockLead,
   TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
@@ -53,6 +54,16 @@ export const HauptstadtArticle = createWithTheme(
       padding-top: var(--article-content-row-gap);
       border-top: 1px solid ${({ theme }) => theme.palette.primary.main};
     }
+
+    ${({ data }) =>
+      data?.article.latest.properties.find(
+        prop => prop.key === 'type' && prop.value === 'opinion'
+      ) &&
+      css`
+        ${TitleBlockLead} {
+          font-style: italic;
+        }
+      `}
   `,
   contentTheme
 );

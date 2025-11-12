@@ -6,9 +6,7 @@ import { AuthenticationService } from './authentication.service';
 @Injectable()
 export class SessionStrategy extends PassportStrategy(Strategy, 'session') {
   constructor(private authService: AuthenticationService) {
-    super({
-      session: false, // would use a cookie if set to true
-    });
+    super();
   }
 
   public async validate(token: string) {

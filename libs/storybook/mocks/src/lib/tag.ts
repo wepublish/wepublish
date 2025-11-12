@@ -1,17 +1,18 @@
 import { FullTagFragment, TagType } from '@wepublish/website/api';
-import nanoid from 'nanoid';
 import { mockRichText } from './richtext';
+import { faker } from '@faker-js/faker';
 
 export const mockTag = ({
-  tag = 'Concert',
+  id = faker.string.nanoid(),
+  tag = faker.word.noun(),
   main = false,
   description = mockRichText(),
 }: Partial<FullTagFragment> = {}): FullTagFragment => ({
   __typename: 'Tag',
-  id: nanoid(),
+  id,
   tag,
   description,
   main,
-  url: 'https://example.com',
+  url: faker.internet.url(),
   type: TagType.Article,
 });

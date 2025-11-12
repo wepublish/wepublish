@@ -68,6 +68,7 @@ input ArticleFilter {
   published: Boolean
   shared: Boolean
   tags: [String!]
+  tagsNotIn: [String!]
   title: String
 }
 
@@ -1307,12 +1308,14 @@ type MemberPlan implements HasImage {
   currency: Currency!
   description: RichText
   extendable: Boolean!
+  externalReward: String
   failPageId: String
   id: String!
   image: Image
   imageID: String
   maxCount: Int
   name: String!
+  productType: ProductType!
   shortDescription: RichText
   slug: String!
   successPageId: String
@@ -1328,6 +1331,7 @@ type MemberPlanConnection {
 input MemberPlanFilter {
   active: Boolean
   name: String
+  productType: ProductType
   tags: [String!]
 }
 
@@ -2004,6 +2008,11 @@ enum PollVoteSort {
   CreatedAt
 }
 
+enum ProductType {
+  Donation
+  Subscription
+}
+
 type Property {
   id: String!
   key: String!
@@ -2023,7 +2032,9 @@ type PublicSubscription implements HasPaymentMethod & HasUser {
   canExtend: Boolean!
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
+  externalReward: String
   id: String!
+  isActive: Boolean!
   memberPlan: MemberPlan!
   monthlyAmount: Int!
   paidUntil: DateTime
@@ -2397,12 +2408,26 @@ input StreamableVideoBlockInput {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]!
+  memberPlanIds: [String!]
+  memberPlans: [MemberPlan!]!
   type: BlockType!
+}
+
+enum SubscribeBlockField {
+  Address
+  Birthday
+  EmailRepeated
+  FirstName
+  Password
+  PasswordRepeated
 }
 
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  memberPlanIds: [String!]
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {
@@ -2475,6 +2500,7 @@ type TagConnection {
 
 input TagFilter {
   tag: String
+  tags: [String!]
   type: TagType
 }
 

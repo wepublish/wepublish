@@ -51,7 +51,6 @@ import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import theme from '../src/theme';
-import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
   locale: de,
@@ -138,7 +137,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
             Title: TsriTitle,
-            Subscribe: MitmachenInner,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,

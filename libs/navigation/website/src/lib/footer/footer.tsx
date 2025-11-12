@@ -60,12 +60,12 @@ export const FooterIconsWrapper = styled.div`
 `;
 
 export const FooterIcons = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: row wrap;
   align-items: center;
   justify-self: center;
+  gap: ${({ theme }) => theme.spacing(3)};
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     justify-self: end;
@@ -217,7 +217,7 @@ export const FooterMainLinks = styled(FooterCategoryLinks)`
   grid-auto-rows: max-content;
 `;
 
-const FooterPaper = ({
+export const FooterPaper = ({
   main,
   categories,
   children,

@@ -15,8 +15,9 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.8",
     "@nx/webpack": "20.7.2",
-    "@sentry/nestjs": "^8.34.0",
-    "@sentry/profiling-node": "^8.34.0",
+    "@sentry/core": "^10.19.0",
+    "@sentry/nestjs": "^10.19.0",
+    "@sentry/profiling-node": "^10.19.0",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "minio": "^8.0.1",
@@ -34,8 +35,5 @@
   },
   "devDependencies": {
     "@types/multer": "^1.4.11"
-  },
-  "overrides": {
-    "stylus": "0.0.1-security"
   }
 }

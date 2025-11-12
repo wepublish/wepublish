@@ -102,6 +102,7 @@ const revertTeaserToDefault = ({ theme }: { theme: Theme }) => css`
 
   ${TeaserImageWrapper} {
     padding-bottom: ${theme.spacing(1.5)};
+    align-items: center;
   }
 `;
 
@@ -121,7 +122,7 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
     margin-bottom: 0;
     padding-bottom: 0;
     display: grid;
-    align-items: center;
+    align-items: start;
   }
 
   ${TeaserImage} {

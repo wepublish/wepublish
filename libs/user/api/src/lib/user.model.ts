@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { Image, UploadImageInput } from '@wepublish/image/api';
-import { Property } from '@wepublish/utils/api';
+import { Property } from '@wepublish/property/api';
 
 @ObjectType()
 export class UserAddress {

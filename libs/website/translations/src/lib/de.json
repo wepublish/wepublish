@@ -17,25 +17,32 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
-    "cancellable": "Jederzeit kündbar"
+    "cancellable": "Jederzeit kündbar",
+    "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
+    "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
+    "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
-    "subscriptionIsUnpaid": "Abo ist unbezahlt",
-    "cancelSubscription": "Abo kündigen",
-    "cancelSubscriptionConfirmationText": "Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offenen Rechnungen des Abos werden storniert.",
-    "renewSubscriptionConfirmationText": "Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
+    "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
+    "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
+    "cancelConfirmation": "Das {type, select, Donation {Spende} other {Abo}} wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
+    "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
     "subscribeNow": "Jetzt ein Abo lösen."
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
-    "activeSubscriptions": "Aktive Abos",
-    "viewCancelledSubscriptions": "Gekündigte Abos anzeigen"
+    "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Abos}}",
+    "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",
+    "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
+    "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen"
   },
   "zod": {
     "errors": {

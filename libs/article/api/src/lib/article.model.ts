@@ -11,13 +11,7 @@ import {
 import { Image } from '@wepublish/image/api';
 import { Author } from '@wepublish/author/api';
 import { Tag } from '@wepublish/tag/api';
-import {
-  DateFilter,
-  PaginatedType,
-  Property,
-  PropertyInput,
-  SortOrder,
-} from '@wepublish/utils/api';
+import { DateFilter, PaginatedType, SortOrder } from '@wepublish/utils/api';
 import {
   BlockContent,
   BlockContentInput,
@@ -26,6 +20,7 @@ import {
 import { HasOptionalPeerLc, Peer } from '@wepublish/peering/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
 import { HasOptionalPaywall, Paywall } from '@wepublish/paywall/api';
+import { Property, PropertyInput } from '@wepublish/property/api';
 
 export enum ArticleSort {
   CreatedAt = 'CreatedAt',
@@ -249,6 +244,8 @@ export class ArticleFilter {
   authors?: string[];
   @Field(() => [String], { nullable: true })
   tags?: string[];
+  @Field(() => [String], { nullable: true })
+  tagsNotIn?: string[];
 
   @Field({ nullable: true })
   peerId?: string;

@@ -13,6 +13,7 @@ import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
@@ -61,15 +62,6 @@ export const SubscribeWrapper = styled('form')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
   align-content: start;
-  grid-template-areas:
-    'returning'
-    'memberPlans'
-    'monthlyAmount'
-    'userForm'
-    'paymentPeriodicity'
-    'challenge'
-    'transactionFee'
-    'submit';
 `;
 
 export type SubscribeSectionProps = {
@@ -77,10 +69,10 @@ export type SubscribeSectionProps = {
 };
 
 export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+  --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
   align-content: start;
-  grid-area: ${({ area = 'auto' }) => area};
 
   &:empty {
     display: none;
@@ -129,7 +121,7 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const getPaymentText = (
+export const usePaymentText = (
   autoRenew: boolean,
   extendable: boolean,
   paymentPeriodicity: PaymentPeriodicity,
@@ -137,31 +129,40 @@ export const getPaymentText = (
   currency: Currency,
   locale: string
 ) => {
-  if (!monthlyAmount) {
-    return 'Kostenlos';
-  }
+  const { t } = useTranslation();
 
-  if (autoRenew && extendable) {
-    return `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-      currency,
-      locale
-    )}`;
-  }
+  return useMemo(() => {
+    const variables = {
+      renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
+      paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
+      formattedAmount: formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
+        locale
+      ),
+      monthlyAmount,
+    };
 
-  if (extendable) {
-    return `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-      currency,
-      locale
-    )}`;
-  }
+    console.log(variables);
 
-  return `Für ${formatCurrency(
-    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+    if (autoRenew && extendable) {
+      return t('subscribe.subscribeForPeriod', variables);
+    }
+
+    if (extendable) {
+      return t('subscribe.payForPeriod', variables);
+    }
+
+    return t('subscribe.pay', variables);
+  }, [
+    autoRenew,
     currency,
-    locale
-  )}`;
+    extendable,
+    locale,
+    monthlyAmount,
+    paymentPeriodicity,
+    t,
+  ]);
 };
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
@@ -178,7 +179,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate,
   hidePaymentAmount = memberPlan =>
     !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
@@ -309,7 +309,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
-  const paymentText = getPaymentText(
+  const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
+
+  const paymentText = usePaymentText(
     autoRenew,
     selectedMemberPlan?.extendable ?? true,
     selectedPaymentPeriodicity,
@@ -318,7 +320,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     locale
   );
 
-  const monthlyPaymentText = getPaymentText(
+  const monthlyPaymentText = usePaymentText(
     true,
     selectedMemberPlan?.extendable ?? true,
     PaymentPeriodicity.Monthly,
@@ -438,7 +440,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     return (
       userSubscriptions.data?.subscriptions.some(
         ({ memberPlan, deactivation }) =>
-          memberPlan.id === selectedMemberPlanId && !deactivation
+          memberPlan.id === selectedMemberPlanId &&
+          memberPlan.productType === ProductType.Subscription &&
+          !deactivation
       ) ?? false
     );
   }, [
@@ -535,7 +539,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   {...field}
                   error={error}
                   slug={selectedMemberPlan?.slug}
-                  donate={!!donate?.(selectedMemberPlan)}
+                  donate={isDonation}
                   amountPerMonthMin={amountPerMonthMin}
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
@@ -682,8 +686,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText}{' '}
-          {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?
@@ -710,7 +713,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} Abonnieren`}
+        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
       >
         <H5
           id="modal-modal-title"

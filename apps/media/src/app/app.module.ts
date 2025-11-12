@@ -46,7 +46,12 @@ import { ImageCacheService } from './imageCache.service';
       inject: [ConfigService],
     }),
     TokenModule.registerAsync({
-      imports: [ConfigModule, PassportModule],
+      imports: [
+        ConfigModule,
+        PassportModule.register({
+          session: false, // would use a cookie if set to true
+        }),
+      ],
       useFactory: (config: ConfigService) => ({
         token: config.getOrThrow('TOKEN'),
       }),

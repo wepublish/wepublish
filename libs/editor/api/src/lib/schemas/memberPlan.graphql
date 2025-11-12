@@ -5,25 +5,16 @@ fragment MemberPlanRef on MemberPlan {
   shortDescription
   slug
   active
+  productType
   tags
   image {
     ...FullImage
   }
+  externalReward
 
   successPageId
-  # successPage {
-  #   ...PageRef
-  # }
-
   failPageId
-  # failPage {
-  #   ...PageRef
-  # }
-
   confirmationPageId
-  # confirmationPage {
-  #   ...PageRef
-  # }
 }
 
 fragment FullMemberPlan on MemberPlan {
@@ -45,7 +36,7 @@ fragment FullMemberPlan on MemberPlan {
 }
 
 query MemberPlanList(
-  $filter: String
+  $filter: MemberPlanFilter
   $cursor: String
   $take: Int
   $skip: Int
@@ -53,7 +44,7 @@ query MemberPlanList(
   $sort: MemberPlanSort
 ) {
   memberPlans(
-    filter: {name: $filter}
+    filter: $filter
     cursor: $cursor
     take: $take
     skip: $skip
