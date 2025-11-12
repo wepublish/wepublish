@@ -110,7 +110,7 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
   position: absolute;
   @container toolbar (width > 200px) {
     top: 0.5cqw;
-    right: 1.5cqw;
+    right: 3.15cqw;
     column-gap: 0.9cqw;
   }
   display: grid;
