@@ -283,7 +283,9 @@ export const TeaserTitle = styled('h1')`
   }
 `;
 
-export const TeaserLead = styled('p')``;
+export const TeaserLead = styled('p')`
+  display: none;
+`;
 
 export const TeaserAuthors = styled('span')``;
 
@@ -421,7 +423,7 @@ export const TsriTeaser = ({
           {/* title end */}
 
           {/* lead start */}
-          {lead && 1 < 0 && (
+          {lead && (
             <Typography
               variant="teaserLead"
               component={TeaserLead}

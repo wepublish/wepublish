@@ -24,6 +24,7 @@ import {
   TeaserTime,
   TeaserAuthors,
   TeaserPreTitleWrapper,
+  TeaserLead,
 } from 'apps/tsri/src/components/tsri-base-teaser';
 
 export const TabbedContentWrapper = styled('div')`
@@ -67,7 +68,7 @@ const TabPanel = styled(TabPanelBase)`
   z-index: 0;
 
   @container tabbed-content (width > 700px) {
-    padding: 7cqw 1.3cqw 0 5.58cqw;
+    padding: 7cqw 1.3cqw 10cqw 5.58cqw;
   }
 
   ${TeaserSlotsBlockWrapper} {
@@ -102,7 +103,7 @@ const TabPanel = styled(TabPanelBase)`
 
       ${TeaserContentWrapper} {
         @container tabbed-content (width > 700px) {
-          grid-template-rows: 58.42cqw min-content min-content min-content;
+          grid-template-rows: 58.42cqw min-content auto min-content;
           grid-template-columns: 100%;
         }
 
@@ -158,8 +159,17 @@ const TabPanel = styled(TabPanelBase)`
         word-break: break-word;
       }
 
+      ${TeaserLead} {
+        display: block;
+        padding: 0.4cqw 1cqw 2cqw 1cqw;
+        grid-row: 3 / 4;
+        background-color: white;
+        height: 100%;
+      }
+
       ${TeaserMetadata} {
         padding: 0.4cqw 1cqw;
+        grid-row: 4 / 5;
       }
 
     }
