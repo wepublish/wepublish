@@ -241,6 +241,17 @@ export const TeaserImageCaption = styled('figcaption')``;
 
 export const TeaserPeerLogo = styled(Image)``;
 
+export const TeaserPreTitle = styled('div')`
+  color: white;
+  background-color: black;
+  @container teaser (width > 200px) {
+    font-size: calc((9 * 100cqw / 16) * 0.045) !important;
+    line-height: calc((9 * 100cqw / 16) * 0.045) !important;
+    font-weight: bold;
+    padding: 0 0.5cqw;
+  }
+`;
+
 export const TeaserContentWrapper = styled('article')`
   overflow: hidden;
   display: grid;
@@ -248,11 +259,14 @@ export const TeaserContentWrapper = styled('article')`
   grid-template-columns: 50% 50%;
   gap: 0;
   @container teaser (width > 200px) {
-    border-radius: calc((9 * 100cqw / 16) * 0.02);
+    border-radius: calc((9 * 100cqw / 16) * 0.03);
   }
 
   &:hover {
-    background-color: orange;
+    ${TeaserPreTitle} {
+      background-color: #f5ff64;
+      color: black;
+    }
   }
 `;
 
@@ -278,18 +292,7 @@ export const TeaserPreTitleNoContent = styled('div')``;
 export const TeaserPreTitleWrapper = styled('div')`
   grid-row: 2;
   grid-column: 2 / 3;
-  background-color: black;
-`;
-
-export const TeaserPreTitle = styled('div')`
-  color: white;
-  position: relative;
-  @container teaser (width > 200px) {
-    font-size: calc((9 * 100cqw / 16) * 0.045) !important;
-    font-weight: bold;
-    top: calc((9 * 100cqw / 16) * -0.012);
-    padding: 0 0.5cqw;
-  }
+  background-color: transparent;
 `;
 
 export const TeaserMetadata = styled('div')`

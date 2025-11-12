@@ -18,6 +18,12 @@ import {
   TeaserWrapper,
   TeaserImageWrapper,
   TeaserContentWrapper,
+  TeaserPreTitle,
+  TeaserTitle,
+  TeaserMetadata,
+  TeaserTime,
+  TeaserAuthors,
+  TeaserPreTitleWrapper,
 } from 'apps/tsri/src/components/tsri-base-teaser';
 
 export const TabbedContentWrapper = styled('div')`
@@ -82,6 +88,7 @@ const TabPanel = styled(TabPanelBase)`
   }
 
   ${TeaserWrapper} {
+    aspect-ratio: 2.06;
 
     ${TeaserImageWrapper} {
       display: none;
@@ -91,11 +98,16 @@ const TabPanel = styled(TabPanelBase)`
       container: teaser/normal;
       grid-column: 1 / 2;
       grid-row: -1 / 1;
+      aspect-ratio: unset;
 
       ${TeaserContentWrapper} {
         @container tabbed-content (width > 700px) {
-          grid-template-rows: 58.42cqw auto auto auto !important;
+          grid-template-rows: 58.42cqw min-content min-content min-content;
           grid-template-columns: 100%;
+        }
+
+        & > * {
+          grid-column: -1 / 1;
         }
       }
 
@@ -118,9 +130,68 @@ const TabPanel = styled(TabPanelBase)`
           }
         }
       }
+
+      ${TeaserPreTitleWrapper} {
+        grid-row: 1 / 2;
+        z-index: 2;
+        align-self: end;
+      }
+
+      ${TeaserPreTitle} {
+        display: inline-block;
+        padding: 0.2cqw 1cqw;
+        font-size: 1cqw;
+        font-weight: 500;
+      }
+
+      ${TeaserTitle} {
+        padding: 1.8cqw 1cqw;
+        grid-row: 2 / 3;
+        font-size: 2cqw;
+
+        white-space: nowrap;
+        word-break: normal;
+        word-wrap: nowrap;
+        text-wrap: wrap;
+
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      ${TeaserMetadata} {
+        padding: 0.4cqw 1cqw;
+      }
+
     }
 
+    &:is(:nth-of-type(1) ~ *) {
+      ${TeaserContentWrapper} {
+        grid-template-rows: 26% 11.6% min-content min-content;
+        grid-template-columns: 15.9% 84.1%;
+      }
 
+      ${TeaserPreTitle} {
+        display: inline-block;
+        padding: 0.65cqw 1.5cqw;
+      }
+
+      ${TeaserTitle} {
+        padding: 2.2cqw 1.5cqw 4cqw;
+      }
+
+      ${TeaserMetadata} {
+        padding: 0 1.5cqw;
+        color: transparent;
+      }
+
+      ${TeaserAuthors} {
+        color: black;
+      }
+
+      ${TeaserTime} {
+        display: none;
+      }
+    }
     &:is(:nth-of-type(2)) {
       grid-column: 2 / 3;
       grid-row: 1 / 2;
@@ -175,8 +246,12 @@ const Tab = styled(MuiTab)`
   min-height: unset;
 
   @container tabbed-content (width > 700px) {
-    font-size: 1.5cqw;
-    padding: 0.65cqw 2.79cqw 0.37cqw 2.79cqw;
+    font-size: 1.4cqw;
+    line-height: 1.4cqw;
+    padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
+    margin-right: 0.25cqw;
+    border-top-left-radius: 1cqw;
+    border-top-right-radius: 1cqw;
   }
 
   &:last-child {
