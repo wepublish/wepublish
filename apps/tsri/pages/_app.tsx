@@ -52,6 +52,7 @@ import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
+import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
   locale: de,

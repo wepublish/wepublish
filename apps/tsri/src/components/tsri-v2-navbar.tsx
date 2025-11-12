@@ -29,11 +29,8 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-// Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
-import { FiMenu, FiPlus } from 'react-icons/fi';
+import { FiMenu, FiPlus, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
-
-// fonts import { Tiempos } from '../theme';
 
 enum NavbarState {
   Low,
@@ -47,20 +44,11 @@ enum ScrollDirection {
 
 const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
   :root {
-    --navbar-height: 80px;
-    --scrolled-navbar-height: 55px;
+    --navbar-height: 23.9cqw;
+    --scrolled-navbar-height: 13.95cqw;
     --changing-navbar-height: ${state.includes(NavbarState.Low) ?
       'var(--navbar-height)'
     : 'var(--scrolled-navbar-height)'};
-
-    ${theme.breakpoints.up('sm')} {
-      --navbar-height: 109px;
-    }
-
-    ${theme.breakpoints.up('lg')} {
-      --navbar-height: 308px;
-      --scrolled-navbar-height: 124px;
-    }
   }
 `;
 
@@ -102,75 +90,33 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 })<{
   navbarState: NavbarState[];
 }>`
-  display: grid;
-  grid-template-columns: 1fr max-content 1fr;
-  row-gap: ${({ theme }) => theme.spacing(0.5)};
-  align-content: start;
   min-height: unset;
   padding: 0;
+  padding-left: 1.8cqw !important;
+  padding-right: 1.8cqw !important;
   margin: 0 auto;
   width: 100%;
-  height: var(--changing-navbar-height);
   background-color: ${({ theme }) => theme.palette.background.paper};
   transform: translate3d(0, 0, 0);
   transition: height 300ms ease-out;
-  background-color: lightblue;
-
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    min-height: unset;
-    padding: 0;
-    row-gap: ${({ theme }) => theme.spacing(1)};
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    min-height: unset;
-    padding: 0;
-    row-gap: ${({ theme }) => theme.spacing(1.5)};
-    max-width: ${({ theme }) => theme.breakpoints.values.md}px;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    max-width: ${({ theme }) => theme.breakpoints.values.lg}px;
-  }
-`;
-
-export const NavbarLinks = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
-})<{ isMenuOpen?: boolean }>`
-  display: none;
-  gap: ${({ theme }) => theme.spacing(2)};
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
-
-  @media (min-width: 740px) {
-    // custom for maximum space usage
-    display: flex;
-  }
-`;
-
-export const NavbarLink = styled(Link)`
-  font-size: 1rem;
-  text-decoration: none;
-  color: ${({ theme }) => theme.palette.common.black};
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 1.3rem;
-  }
+  max-width: 1333px;
+  min-height: unset;
+  container: toolbar/inline-size;
+  position: relative;
+  height: var(--changing-navbar-height);
 `;
 
 export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+  position: absolute;
+  @container toolbar (width > 200px) {
+    top: 0.5cqw;
+    right: 1.5cqw;
+    column-gap: 0.9cqw;
+  }
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: end;
-  gap: ${({ theme }) => theme.spacing(2)};
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -179,38 +125,44 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
     `}
 `;
 
-export const NavbarActions = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
-})<{ isMenuOpen?: boolean }>`
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-self: end;
-  gap: ${({ theme }) => theme.spacing(1)};
-  padding-right: ${({ theme }) => theme.spacing(1)};
-  justify-self: end;
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    gap: ${({ theme }) => theme.spacing(2)};
+export const NavbarHamburgerButton = styled(IconButton)`
+  padding: 0;
+  background-color: black;
+  border-radius: 50%;
+  @container toolbar (width > 200px) {
+    width: 3.917442cqw;
+    height: 3.917442cqw;
+  }
+  > svg {
+    stroke-width: 1.25px;
+    stroke: white;
+    font-size: 2.5cqw;
+  }
+  &:hover {
+    background-color: #f5ff64;
+    > svg {
+      stroke: black;
+    }
   }
 `;
 
-export const NavbarMenuButton = styled(IconButton)`
-  position: relative;
+export const NavbarSearchButton = styled(IconButton)`
   padding: 0;
-
+  background-color: black;
+  border-radius: 50%;
+  @container toolbar (width > 200px) {
+    width: 3.917442cqw;
+    height: 3.917442cqw;
+  }
   > svg {
-    font-size: 28px;
     stroke-width: 1.25px;
-
-    ${({ theme }) => theme.breakpoints.up('lg')} {
-      font-size: 35px;
+    stroke: white;
+    font-size: 2.5cqw;
+  }
+  &:hover {
+    background-color: #f5ff64;
+    > svg {
+      stroke: black;
     }
   }
 `;
@@ -220,15 +172,23 @@ export const NavbarIconButtonWrapper = styled('div')`
   justify-content: center;
   align-items: center;
   aspect-ratio: 1;
-  padding-left: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const NavbarSearchIconButtonWrapper = styled(NavbarIconButtonWrapper)`
-  padding-left: 0;
+export const NavbarActions = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-self: end;
+  gap: 1cqw;
+  justify-self: end;
 
-  svg {
-    stroke-width: 0;
-  }
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
 `;
 
 export const NavbarLoginLink = styled(Link, {
@@ -247,52 +207,120 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-export const NavbarLogoWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 220px;
-
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    width: 350px;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    width: 440px;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    width: 550px;
-  }
-`;
-
 const TsriLogo = styled('img', {
   shouldForwardProp: propName =>
     propName !== 'isScrolled' && propName !== 'isMenuOpen',
 })<{ isScrolled?: boolean; isMenuOpen?: boolean }>`
-  width: 350px;
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
-  margin: 8px 0 0 0;
+  position: absolute;
+
+  @container toolbar (width > 200px) {
+    width: 32.55cqw;
+    height: auto;
+    top: 0.5cqw;
+    left: 2cqw;
+  }
 
   ${({ theme, isScrolled, isMenuOpen }) =>
     isScrolled &&
     !isMenuOpen &&
     css`
-      ${theme.breakpoints.up('sm')} {
-        width: 220px;
-      }
-
-      ${theme.breakpoints.up('lg')} {
-        width: 208px;
-        margin-top: 18px;
-      }
-
-      ${theme.breakpoints.up('xl')} {
-        width: 208px;
-        margin-top: 18px;
+      @container toolbar (width > 200px) {
+        width: 23.3cqw;
       }
     `}
+`;
+
+const TsriClaim = styled('img', {
+  shouldForwardProp: propName =>
+    propName !== 'isScrolled' && propName !== 'isMenuOpen',
+})<{ isScrolled?: boolean; isMenuOpen?: boolean }>`
+  transition:
+    width 300ms ease-out,
+    top 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  position: absolute;
+
+  @container toolbar (width > 200px) {
+    width: 26cqw;
+    height: auto;
+    top: 14cqw;
+    left: 2cqw;
+  }
+
+  ${({ theme, isScrolled, isMenuOpen }) =>
+    isScrolled &&
+    !isMenuOpen &&
+    css`
+      @container toolbar (width > 200px) {
+        width: 18.61cqw;
+        top: 10cqw;
+      }
+    `}
+`;
+
+const NavbarTabs = styled('div')`
+  display: grid;
+  grid-row-template: repeat(2, 1fr);
+  padding-bottom: 0.15cqw;
+  position: absolute;
+  @container toolbar (width > 200px) {
+    width: 32.7cqw;
+    bottom: 0;
+    right: 3.15cqw;
+    row-gap: 0.15cqw;
+  }
+`;
+const BecomeMemberTab = styled('button')`
+  background-color: black;
+  color: white;
+  font-size: 1.6cqm;
+  line-height: 1.6cqm;
+  text-align: left;
+  border: 0;
+  outline: 0;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75cqw 1cqw;
+  border-top-left-radius: 1cqw;
+  border-top-right-radius: 1cqw;
+
+  &:hover {
+    background-color: #f5ff64;
+    color: black;
+  }
+
+  & > * {
+    text-decoration: none;
+    color: inherit;
+  }
+`;
+const RegisterNewsLetterTab = styled('button')`
+  background-color: black;
+  color: white;
+  font-size: 1.6cqm;
+  line-height: 1.6cqm;
+  text-align: left;
+  border: 0;
+  outline: 0;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75cqw 1cqw;
+  border-top-left-radius: 1cqw;
+  border-top-right-radius: 1cqw;
+
+  &:hover {
+    background-color: #f5ff64;
+    color: black;
+  }
+
+  & > * {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 const HauptstadtOpenInvoices = styled('div')`
@@ -382,7 +410,6 @@ export function TsriV2Navbar({
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
-  const headerItems = data?.navigations?.find(({ key }) => key === headerSlug);
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = useMemo(
@@ -434,19 +461,32 @@ export function TsriV2Navbar({
             aria-label="Startseite"
             isMenuOpen={isMenuOpen}
           >
-            <NavbarLogoWrapper>
-              <TsriLogo
-                src="/logo.svg"
-                alt="Tsüri"
-                isScrolled={isScrolled}
-                isMenuOpen={isMenuOpen}
-              />
-            </NavbarLogoWrapper>
+            <TsriLogo
+              src="/logo.svg"
+              alt="Tsüri"
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+            />
+            <TsriClaim
+              src="/claim.gif"
+              alt="Unabhängig, Kritisch, Lokal."
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+            />
           </NavbarLoginLink>
 
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <NavbarMenuButton
+              <NavbarSearchButton
+                size="small"
+                aria-label="Suche"
+                color={'inherit'}
+              >
+                <FiSearch />
+              </NavbarSearchButton>
+            </NavbarIconButtonWrapper>
+            <NavbarIconButtonWrapper>
+              <NavbarHamburgerButton
                 size="small"
                 aria-label="Menu"
                 onClick={toggleMenu}
@@ -464,40 +504,18 @@ export function TsriV2Navbar({
                     </Box>
                   </HauptstadtOpenInvoices>
                 )}
-              </NavbarMenuButton>
+              </NavbarHamburgerButton>
             </NavbarIconButtonWrapper>
-
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
-                  >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
-            )}
           </NavbarMain>
 
-          {/*<NavbarActions isMenuOpen={isMenuOpen}>
-            {(!isScrolled || isMenuOpen) && (
-              <Link
-                href="/search"
-                color="inherit"
-              >
-                <NavbarSearchIconButtonWrapper>
-                  <NavbarMenuButton
-                    color="inherit"
-                    size="small"
-                  >
-                    <MdSearch aria-label="Suche" />
-                  </NavbarMenuButton>
-                </NavbarSearchIconButtonWrapper>
-              </Link>
-            )}
-          </NavbarActions>*/}
+          <NavbarTabs>
+            <BecomeMemberTab>
+              <a href="#">Member werden</a>
+            </BecomeMemberTab>
+            <RegisterNewsLetterTab>
+              <a href="#">Newsletter kostenlos abonnieren</a>
+            </RegisterNewsLetterTab>
+          </NavbarTabs>
         </NavbarInnerWrapper>
       </AppBar>
 
