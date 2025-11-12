@@ -8,6 +8,7 @@ export enum BlockType {
   InstagramPost = 'instagramPost',
   TwitterTweet = 'twitterTweet',
   VimeoVideo = 'vimeoVideo',
+  StreamableVideo = 'streamableVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
