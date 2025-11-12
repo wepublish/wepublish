@@ -459,7 +459,7 @@ export function MemberPlanForm({
               <CurrencyInput
                 name="amountPerMonthMax"
                 currency={memberPlan?.currency ?? 'CHF'}
-                centAmount={memberPlan?.amountPerMonthMax || 0}
+                centAmount={memberPlan?.amountPerMonthMax ?? null}
                 disabled={loading}
                 onChange={centAmount => {
                   if (!memberPlan) {
@@ -467,7 +467,7 @@ export function MemberPlanForm({
                   }
                   setMemberPlan({
                     ...memberPlan,
-                    amountPerMonthMax: centAmount || 0,
+                    amountPerMonthMax: centAmount ?? null,
                   });
                 }}
               />

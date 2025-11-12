@@ -164,13 +164,10 @@ function MemberPlanEdit() {
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
 
-    amountPerMonthMax: Schema.Types.NumberType().addRule(value => {
-      const numericValue = Number(value);
-      const min = Number(memberPlan?.amountPerMonthMin ?? 0) / 100;
-
-      if (numericValue === 0) return true;
-      return numericValue >= min;
-    }, t('memberPlanEdit.maxPriceMustBeGreaterThanMin')),
+    amountPerMonthMax: Schema.Types.NumberType().min(
+      (memberPlan?.amountPerMonthMin || 0) / 100,
+      t('memberPlanEdit.maxPriceMustBeGreaterThanMin')
+    ),
 
     amountPerMonthTarget: Schema.Types.NumberType().min(
       ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,

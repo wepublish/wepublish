@@ -115,10 +115,6 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
     throw new InvalidMemberPlanSettings();
   }
 
-  if (amountPerMonthMax === 0) {
-    return;
-  }
-
   if (
     amountPerMonthMin != null &&
     amountPerMonthMax != null &&
