@@ -381,8 +381,6 @@ export const TsriTeaser = ({
     date,
   } = useWebsiteBuilder();
 
-  console.log('Teaser render', { teaser, alignment, className, blockStyle });
-
   return (
     true && (
       <TeaserWrapper {...alignment}>
