@@ -179,8 +179,18 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  hidePaymentAmount = memberPlan =>
-    !!memberPlan?.tags?.includes('hide-payment-amount'),
+  hidePaymentAmount = memberPlan => {
+    if (!memberPlan) {
+      return false;
+    }
+
+    const { tags, amountPerMonthMin, amountPerMonthMax } = memberPlan;
+    const hideByTag = tags?.includes('hide-payment-amount');
+    const hasMax = typeof amountPerMonthMax === 'number';
+    const hasFixedAmount = hasMax && amountPerMonthMin === amountPerMonthMax;
+
+    return hideByTag || hasFixedAmount;
+  },
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
@@ -310,6 +320,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   );
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
+  const shouldHidePaymentAmount = hidePaymentAmount(selectedMemberPlan);
 
   const paymentText = usePaymentText(
     autoRenew,
@@ -464,6 +475,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [deactivateSubscriptionId, userInvoices.data?.invoices]);
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
+  const amountPerMonthMax =
+    selectedMemberPlan?.amountPerMonthMax || amountPerMonthMin * 5;
 
   return (
     <SubscribeWrapper
@@ -521,7 +534,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       <SubscribeSection area="monthlyAmount">
-        {!hidePaymentAmount(selectedMemberPlan) && (
+        {!shouldHidePaymentAmount && (
           <Controller
             name={'monthlyAmount'}
             control={control}
@@ -541,6 +554,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   slug={selectedMemberPlan?.slug}
                   donate={isDonation}
                   amountPerMonthMin={amountPerMonthMin}
+                  amountPerMonthMax={amountPerMonthMax}
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }
