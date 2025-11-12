@@ -12,15 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .setHeader('Content-Type', 'application/xml')
     .setHeader(
       'Cache-Control',
-      's-maxage=599, stale-while-revalidate=599, maxage=599, stale-while-revalidate=604800, stale-if-error=86400, public'
+      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public'
     )
     .setHeader(
       'CDN-Cache-Control',
-      's-maxage=599, stale-while-revalidate=599, maxage=599, stale-while-revalidate=604800, stale-if-error=86400, public'
+      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public'
     )
     .setHeader(
       'Vercel-CDN-Cache-Control',
-      's-maxage=599, stale-while-revalidate=599, maxage=599, stale-while-revalidate=604800, stale-if-error=86400, public'
+      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public'
     )
     .send(await getSitemap(req))
 }
