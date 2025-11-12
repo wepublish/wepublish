@@ -1,5 +1,4 @@
 import {PageContainer} from '@wepublish/page/website'
-import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -33,7 +32,10 @@ export default function PageBySlug() {
   )
 }
 
-export const getStaticPaths = getPagePathsBasedOnPage('home')
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking'
+})
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {slug, id} = params || {}

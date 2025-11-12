@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import {capitalize, Chip} from '@mui/material'
 import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
 import {CommentListContainer} from '@wepublish/comments/website'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   addClientCacheToV1Props,
   ArticleDocument,
@@ -86,7 +85,10 @@ export default function ArticleBySlugOrId() {
   )
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('')
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking'
+})
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {id, slug} = params || {}

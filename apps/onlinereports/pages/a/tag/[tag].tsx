@@ -11,7 +11,7 @@ import {
   useArticleListQuery
 } from '@wepublish/website/api'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticPaths, GetStaticProps} from 'next'
+import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useMemo} from 'react'
@@ -97,12 +97,11 @@ export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking'
-  }
-}
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking'
+})
+
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {tag} = params || {}
 

@@ -4,7 +4,6 @@ import {ArticleAuthor} from '@wepublish/author/website'
 import {CommentListContainer} from '@wepublish/comments/website'
 import {ContentWrapper} from '@wepublish/content/website'
 import {H2} from '@wepublish/ui'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {CommentItemType, Tag} from '@wepublish/website/api'
 import {
   addClientCacheToV1Props,
@@ -99,7 +98,10 @@ export default function ArticleBySlugOrId() {
   )
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('')
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking'
+})
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {id, slug} = params || {}
