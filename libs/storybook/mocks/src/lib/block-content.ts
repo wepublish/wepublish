@@ -122,6 +122,7 @@ export const mockBreakBlock = ({
   linkURL,
   text,
 });
+
 export const mockPollBlock = ({
   poll = mockPoll(),
 }: Partial<PollBlock> = {}): PollBlock => ({

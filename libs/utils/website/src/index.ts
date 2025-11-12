@@ -4,7 +4,6 @@ export * from './lib/get-session-token-props';
 export * from './lib/next-wepublish-link';
 export * from './lib/session.provider';
 export * from './lib/async-session.provider';
-export * from './lib/prerender-teaser-paths';
 export * from './lib/user-country';
 export * from './lib/pages/profile/profile-page';
 export * from './lib/pages/profile/subscription/subscription-page';

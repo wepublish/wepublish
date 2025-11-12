@@ -77,6 +77,46 @@ const nextConfig = {
       },
     ];
   },
+  headers: async () => [
+    {
+      source: '/_next/data/:path*',
+      headers: [
+        {
+          key: 'cache-control',
+          value:
+            's-maxage=59, stale-while-revalidate=59, maxage=59, stale-while-revalidate=604800, stale-if-error=86400, public',
+        },
+      ],
+    },
+    {
+      source: '/:path*',
+      headers: [
+        {
+          key: 'cache-control',
+          value:
+            'public, max-age=0, s-maxage=59, stale-while-revalidate=604800, stale-if-error=86400',
+        },
+      ],
+    },
+    {
+      source: '/profile',
+      headers: [
+        {
+          key: 'cache-control',
+          value: 'no-store',
+        },
+      ],
+    },
+    {
+      source: '/profile/:path*',
+      headers: [
+        {
+          key: 'cache-control',
+          value: 'no-store',
+        },
+      ],
+    },
+  ],
 };
 
 const plugins = [
