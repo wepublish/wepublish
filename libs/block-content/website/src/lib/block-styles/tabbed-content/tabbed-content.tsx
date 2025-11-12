@@ -75,6 +75,7 @@ const TabPanel = styled(TabPanelBase)`
     & > h1 {
       display: none;
     }
+    position: relative;
   }
 
   ${TeaserSlotsBlockTeasers} {
@@ -176,12 +177,17 @@ const TabPanel = styled(TabPanelBase)`
 
     &:is(:nth-of-type(1) ~ *) {
       ${TeaserContentWrapper} {
-        grid-template-rows: 26% 11.6% min-content min-content;
+        grid-template-rows: 26% 7.9% min-content min-content;
         grid-template-columns: 15.9% 84.1%;
       }
 
+      ${TeaserPreTitleWrapper} {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
       ${TeaserPreTitle} {
-        display: inline-block;
         padding: 0.65cqw 1.5cqw;
       }
 
@@ -221,6 +227,48 @@ const TabPanel = styled(TabPanelBase)`
     &:is(:nth-of-type(6)) {
       grid-column: 2 / 3;
       grid-row: 5 / 6;
+    }
+    &:is(:nth-of-type(7)) {
+      position: absolute;
+      bottom: -9cqw;
+      right: 0;
+      z-index: 2;
+      background-color: transparent;
+      display: block;
+      aspect-ratio: auto;
+      height: auto;
+      width: 20cqw;
+      
+      & * {
+        background-color: transparent;
+
+        & > * {
+          display: none;
+        }
+      }
+
+      ${TeaserContentWrapper} {
+        grid-template-rows: unset;
+        grid-template-columns: unset;
+        border-radius: unset;
+      }
+
+      & ${TeaserTitle} {
+        font-size: 8cqw !important;
+        text-align: right;
+        display: block;
+        padding: 0;
+
+        & > * {
+          display: block;
+          text-decoration: underline;
+
+          &:hover {
+            background-color: #f5ff64;
+            color: black;
+          }
+        }
+      }
     }
   }
 
@@ -269,7 +317,6 @@ const Tab = styled(MuiTab)`
   }
 
   &:hover: {
-    //color: '#40a9ff';
     opacity: 1;
   }
 
