@@ -48,18 +48,24 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       `
     //--navbar-height: 23.9cqw;
     //--scrolled-navbar-height: 12.83cqw;
-    --navbar-height: 10cqw;
-    --scrolled-navbar-height: 7cqw;
+    //--navbar-height: 10cqw;
+    //--scrolled-navbar-height: 7cqw;
+    --navbar-aspect-ratio: 6.5 / 1;
+    --scrolled-navbar-aspect-ratio: 9 / 1;
     `
     : `
     //--navbar-height: 14.42cqw;
     //--scrolled-navbar-height: 11.81cqw;
-    --navbar-height: 10cqw;
-    --scrolled-navbar-height: 7cqw;
+    //--navbar-height: 10cqw;
+    //--scrolled-navbar-height: 7cqw;
+    --navbar-aspect-ratio: 8 / 1;
+    --scrolled-navbar-aspect-ratio: 9.5 / 1;
     `}
-    --changing-navbar-height: ${state.includes(NavbarState.Low) ?
-      'var(--navbar-height)'
-    : 'var(--scrolled-navbar-height)'};
+    --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
+      //'var(--navbar-height)'
+      //: 'var(--scrolled-navbar-height)'};
+      'var(--navbar-aspect-ratio)'
+    : 'var(--scrolled-navbar-aspect-ratio)'};
   }
 `;
 
@@ -110,13 +116,17 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   width: 100%;
   background-color: ${({ theme }) => theme.palette.background.paper};
   transform: translate3d(0, 0, 0);
-  transition: height 300ms ease-out;
+  transition: aspect-ratio 300ms ease-out;
   max-width: 1333px;
-  min-height: unset;
   container: toolbar/inline-size;
   position: relative;
-  height: var(--changing-navbar-height);
   box-sizing: border-box;
+  /*
+  height: var(--changing-navbar-height) !important;
+  min-height: var(--changing-navbar-height) !important;
+  max-height: var(--changing-navbar-height) !important;
+  */
+  aspect-ratio: var(--changing-aspect-ratio) !important;
 `;
 
 export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
@@ -286,7 +296,7 @@ const TsriClaim = styled('img', {
   @container toolbar (width > 200px) {
     width: 26cqw;
     height: auto;
-    top: 14cqw;
+    top: 13.5cqw;
     left: 2cqw;
   }
 
