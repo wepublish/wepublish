@@ -42,14 +42,21 @@ enum ScrollDirection {
   Down,
 }
 
-const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
+const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
-    /*
-    --navbar-height: 23.9cqw;
-    --scrolled-navbar-height: 13.95cqw;
-    */
-    --navbar-height: 16cqw;
-    --scrolled-navbar-height: 8cqw;
+    ${isHomePage ?
+      `
+    //--navbar-height: 23.9cqw;
+    //--scrolled-navbar-height: 12.83cqw;
+    --navbar-height: 10cqw;
+    --scrolled-navbar-height: 7cqw;
+    `
+    : `
+    //--navbar-height: 14.42cqw;
+    //--scrolled-navbar-height: 11.81cqw;
+    --navbar-height: 10cqw;
+    --scrolled-navbar-height: 7cqw;
+    `}
     --changing-navbar-height: ${state.includes(NavbarState.Low) ?
       'var(--navbar-height)'
     : 'var(--scrolled-navbar-height)'};
@@ -99,9 +106,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   navbarState: NavbarState[];
 }>`
   min-height: unset;
-  padding: 0;
-  padding-left: 1.8cqw !important;
-  padding-right: 1.8cqw !important;
   margin: 0 auto;
   width: 100%;
   background-color: ${({ theme }) => theme.palette.background.paper};
@@ -112,13 +116,14 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   container: toolbar/inline-size;
   position: relative;
   height: var(--changing-navbar-height);
+  box-sizing: border-box;
 `;
 
 export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
   position: absolute;
   @container toolbar (width > 200px) {
-    top: 0.5cqw;
-    right: 3.15cqw;
+    top: 1.3cqw;
+    right: 2.5cqw;
     column-gap: 0.9cqw;
   }
   display: grid;
@@ -217,33 +222,61 @@ export const NavbarLoginLink = styled(Link, {
 
 const TsriLogo = styled('img', {
   shouldForwardProp: propName =>
-    propName !== 'isScrolled' && propName !== 'isMenuOpen',
-})<{ isScrolled?: boolean; isMenuOpen?: boolean }>`
+    propName !== 'isScrolled' &&
+    propName !== 'isMenuOpen' &&
+    propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isMenuOpen?: boolean; isHomePage?: boolean }>`
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
 
+  // not scrolled --> blue logo, larger
   @container toolbar (width > 200px) {
-    width: 32.55cqw;
+    width: 24.2cqw;
     height: auto;
     top: 0.5cqw;
     left: 2cqw;
   }
 
-  ${({ theme, isScrolled, isMenuOpen }) =>
+  // scrolled --> blue logo, smaller
+  ${({ isScrolled, isMenuOpen }) =>
     isScrolled &&
     !isMenuOpen &&
     css`
       @container toolbar (width > 200px) {
-        width: 23.3cqw;
+        width: 18.6cqw;
+      }
+    `}
+
+  // on home page, not scrolled --> black logo, larger
+  ${({ isHomePage }) =>
+    isHomePage &&
+    css`
+      @container toolbar (width > 200px) {
+        width: 32.55cqw;
+      }
+    `}
+
+  // on home page, scrolled --> black logo, smaller
+  ${({ isScrolled, isMenuOpen, isHomePage }) =>
+    isHomePage &&
+    isScrolled &&
+    !isMenuOpen &&
+    css`
+      @container toolbar (width > 200px) {
+        //width: 23.3cqw;
+        //width: 18.6cqw;
+        width: 21cqw;
       }
     `}
 `;
 
 const TsriClaim = styled('img', {
   shouldForwardProp: propName =>
-    propName !== 'isScrolled' && propName !== 'isMenuOpen',
-})<{ isScrolled?: boolean; isMenuOpen?: boolean }>`
+    propName !== 'isScrolled' &&
+    propName !== 'isMenuOpen' &&
+    propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isMenuOpen?: boolean; isHomePage?: boolean }>`
   transition:
     width 300ms ease-out,
     top 300ms ease-out;
@@ -262,73 +295,110 @@ const TsriClaim = styled('img', {
     !isMenuOpen &&
     css`
       @container toolbar (width > 200px) {
-        width: 18.61cqw;
-        top: 10cqw;
+        //width: 18.61cqw;
+        //width: 14.85cqw;
+        width: 16.77cqw;
+        top: 9.7cqw;
       }
+    `}
+
+  ${({ isHomePage }) =>
+    !isHomePage &&
+    css`
+      display: none;
     `}
 `;
 
-const NavbarTabs = styled('div')`
-  display: grid;
-  grid-row-template: repeat(2, 1fr);
-  padding-bottom: 0.15cqw;
-  position: absolute;
-  @container toolbar (width > 200px) {
-    width: 33.4cqw;
-    bottom: 0;
-    right: 3.25cqw;
-    row-gap: 0.15cqw;
+const navbarTabStyles = () => css`
+  background-color: black;
+  color: white;
+  font-size: 1.2cqw;
+  line-height: 1.2cqw;
+  text-align: left;
+  border: 0;
+  outline: 0;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75cqw 1cqw;
+  border-top-left-radius: 1cqw;
+  border-top-right-radius: 1cqw;
+  box-sizing: border-box;
+  grid-column: 2 / 3;
+
+  &:hover {
+    background-color: #f5ff64;
+    color: black;
+  }
+
+  & > * {
+    text-decoration: none;
+    color: inherit;
   }
 `;
+
 const BecomeMemberTab = styled('button')`
-  background-color: black;
-  color: white;
-  font-size: 1.6cqm;
-  line-height: 1.6cqm;
-  text-align: left;
-  border: 0;
-  outline: 0;
-  user-select: none;
-  cursor: pointer;
-  font-weight: 700;
-  padding: 0.75cqw 1cqw;
-  border-top-left-radius: 1cqw;
-  border-top-right-radius: 1cqw;
+  ${navbarTabStyles()}
+  grid-row: 1 / 2;
+`;
 
+const RegisterNewsLetterTab = styled('button')`
+  ${navbarTabStyles()}
+  grid-row: 2 / 3;
+`;
+
+const PreTitleTab = styled('div')`
+  ${navbarTabStyles()}
+  background-color: #0C9FED;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  box-model: border-box;
+  cursor: default;
   &:hover {
-    background-color: #f5ff64;
-    color: black;
-  }
-
-  & > * {
-    text-decoration: none;
-    color: inherit;
+    background-color: #0c9fed;
+    color: white;
   }
 `;
-const RegisterNewsLetterTab = styled('button')`
-  background-color: black;
-  color: white;
-  font-size: 1.6cqm;
-  line-height: 1.6cqm;
-  text-align: left;
-  border: 0;
-  outline: 0;
-  user-select: none;
-  cursor: pointer;
-  font-weight: 700;
-  padding: 0.75cqw 1cqw;
-  border-top-left-radius: 1cqw;
-  border-top-right-radius: 1cqw;
 
-  &:hover {
-    background-color: #f5ff64;
-    color: black;
+const NavbarTabs = styled('div', {
+  shouldForwardProp: propName =>
+    propName !== 'navbarState' && propName !== 'isHomePage',
+})<{
+  navbarState: NavbarState[];
+  isHomePage: boolean;
+}>`
+  display: grid;
+  grid-template-rows: repeat(2, min-content);
+  border-bottom: 0.15cqw solid transparent;
+  margin: 0 auto;
+  align-self: flex-end;
+
+  @container toolbar (width > 200px) {
+    grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
+    width: 100%;
+    row-gap: 0.15cqw;
+    column-gap: 2.2cqw;
   }
 
-  & > * {
-    text-decoration: none;
-    color: inherit;
-  }
+  ${({ navbarState }) =>
+    navbarState.includes(NavbarState.High) &&
+    css`
+      ${RegisterNewsLetterTab} {
+        display: none;
+      }
+
+      ${BecomeMemberTab} {
+        grid-row: 2 / 3;
+      }
+    `}
+
+  ${({ isHomePage }) =>
+    isHomePage &&
+    css`
+      ${PreTitleTab} {
+        display: none;
+      }
+    `}
 `;
 
 const HauptstadtOpenInvoices = styled('div')`
@@ -452,7 +522,13 @@ export function TsriV2Navbar({
     isMenuOpen,
     hasActiveSubscription
   );
-  const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
+
+  const isHomePage = essentialPageProps?.Page.slug === '';
+
+  const navbarHeight = useMemo(
+    () => cssVariables(navbarState, isHomePage),
+    [navbarState, isHomePage]
+  );
 
   return (
     <NavbarWrapper className={className}>
@@ -470,22 +546,20 @@ export function TsriV2Navbar({
             aria-label="Startseite"
             isMenuOpen={isMenuOpen}
           >
-            {essentialPageProps?.Page.slug === '' && (
-              <>
-                <TsriLogo
-                  src="/logo.svg"
-                  alt="Tsüri"
-                  isScrolled={isScrolled}
-                  isMenuOpen={isMenuOpen}
-                />
-                <TsriClaim
-                  src="/claim.gif"
-                  alt="Unabhängig, Kritisch, Lokal."
-                  isScrolled={isScrolled}
-                  isMenuOpen={isMenuOpen}
-                />
-              </>
-            )}
+            <TsriLogo
+              src={`${essentialPageProps?.Page.slug === '' ? '/logo.svg' : '/logo_blue.svg'}`}
+              alt="Tsüri"
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+              isHomePage={isHomePage}
+            />
+            <TsriClaim
+              src="/claim.gif"
+              alt="Unabhängig, Kritisch, Lokal."
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+              isHomePage={isHomePage}
+            />
           </NavbarLoginLink>
 
           <NavbarMain>
@@ -521,7 +595,13 @@ export function TsriV2Navbar({
             </NavbarIconButtonWrapper>
           </NavbarMain>
 
-          <NavbarTabs>
+          <NavbarTabs
+            navbarState={navbarState}
+            isHomePage={isHomePage}
+          >
+            <PreTitleTab>
+              <span>Pretitle lorem ipsum dolor sit amet</span>
+            </PreTitleTab>
             <BecomeMemberTab>
               <a href="#">Member werden</a>
             </BecomeMemberTab>
