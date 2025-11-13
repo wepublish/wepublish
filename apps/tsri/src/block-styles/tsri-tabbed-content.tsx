@@ -58,7 +58,7 @@ export const TabPanel = styled(TabPanelDefault)`
   }
 
   ${TeaserWrapper} {
-    aspect-ratio: 2.06;
+    aspect-ratio: 2.06 !important;
 
     ${TeaserImageWrapper} {
       display: none;

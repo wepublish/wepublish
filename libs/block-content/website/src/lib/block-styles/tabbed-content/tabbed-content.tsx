@@ -316,11 +316,13 @@ export const Tab = styled(MuiTab)`
     margin-right: 0;
   }
 
-  &:hover: {
-    opacity: 1;
+  &:hover {
+    background-color: #f5ff64;
+    color: black;
   }
 
-  &.Mui-selected {
+  &.Mui-selected,
+  &.Mui-selected:hover {
     background-color: rgb(174, 179, 190);
     color: rgba(255, 255, 255, 1);
   }
