@@ -118,7 +118,7 @@ export const TabPanel = styled(TabPanelBase)`
         z-index: 1;
 
         @container tabbed-content (width > 700px) {
-          aspect-ratio: 1.0;
+          aspect-ratio: 1;
           border-top-left-radius: 1.3cqw;
           border-top-right-radius: 1.3cqw;
           grid-column: 1 / 2;
@@ -172,7 +172,6 @@ export const TabPanel = styled(TabPanelBase)`
         padding: 0.4cqw 1cqw;
         grid-row: 4 / 5;
       }
-
     }
 
     &:is(:nth-of-type(1) ~ *) {
@@ -235,9 +234,9 @@ export const TabPanel = styled(TabPanelBase)`
       z-index: 2;
       background-color: transparent;
       display: block;
-      aspect-ratio: auto;
+      aspect-ratio: auto !important;
       height: auto;
-      width: 20cqw;
+      width: 100%;
 
       & * {
         background-color: transparent;
@@ -251,16 +250,19 @@ export const TabPanel = styled(TabPanelBase)`
         grid-template-rows: unset;
         grid-template-columns: unset;
         border-radius: unset;
+        background-color: transparent;
       }
 
       & ${TeaserTitle} {
-        font-size: 8cqw !important;
+        @container tabbed-content (width > 700px) {
+          font-size: 2cqw !important;
+        }
         text-align: right;
-        display: block;
+        display: inline-block;
         padding: 0;
 
         & > * {
-          display: block;
+          display: inline;
           text-decoration: underline;
 
           &:hover {
@@ -273,9 +275,8 @@ export const TabPanel = styled(TabPanelBase)`
   }
 
   ${TeaserContentWrapper} {
-    background-color: #AEB3BE;
+    background-color: #aeb3be;
   }
-}
 `;
 
 export const Tabs = styled(MuiTabs)`
