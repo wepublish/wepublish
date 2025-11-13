@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import {
-  AppBar,
+  AppBar as MuiAppBar,
   Box,
   css,
   GlobalStyles,
@@ -44,12 +44,20 @@ enum ScrollDirection {
 
 const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
   :root {
+    /*
     --navbar-height: 23.9cqw;
     --scrolled-navbar-height: 13.95cqw;
+    */
+    --navbar-height: 16cqw;
+    --scrolled-navbar-height: 8cqw;
     --changing-navbar-height: ${state.includes(NavbarState.Low) ?
       'var(--navbar-height)'
     : 'var(--scrolled-navbar-height)'};
   }
+`;
+
+export const AppBar = styled(MuiAppBar)`
+  background-color: white;
 `;
 
 export const NavbarWrapper = styled('nav')`
@@ -266,9 +274,9 @@ const NavbarTabs = styled('div')`
   padding-bottom: 0.15cqw;
   position: absolute;
   @container toolbar (width > 200px) {
-    width: 32.7cqw;
+    width: 33.4cqw;
     bottom: 0;
-    right: 3.15cqw;
+    right: 3.25cqw;
     row-gap: 0.15cqw;
   }
 `;

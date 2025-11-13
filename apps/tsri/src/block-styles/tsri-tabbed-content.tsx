@@ -1,63 +1,31 @@
-import { hasBlockStyle } from '../../has-blockstyle';
-import {
-  BuilderBlockStyleProps,
-  //useWebsiteBuilder,
-} from '@wepublish/website/builder';
-import { BlockContent, FlexBlock } from '@wepublish/website/api';
-import { allPass } from 'ramda';
-import { isFlexBlock } from '../../nested-blocks/flex-block';
-import * as React from 'react';
-import { Box, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
-import { Children } from 'react';
 import styled from '@emotion/styled';
+import { Box } from '@mui/material';
 import {
-  TeaserSlotsBlockWrapper,
+  a11yProps,
+  Tab,
+  TabbedContentWrapper,
+  TabPanel as TabPanelDefault,
+  Tabs,
   TeaserSlotsBlockTeasers,
-} from '../../teaser/teaser-slots-block';
-import {
-  TeaserWrapper,
-  TeaserImageWrapper,
-  TeaserContentWrapper,
-  TeaserPreTitle,
-  TeaserTitle,
-  TeaserMetadata,
-  TeaserTime,
-  TeaserAuthors,
-  TeaserPreTitleWrapper,
-  TeaserLead,
+  TeaserSlotsBlockWrapper,
 } from '@wepublish/block-content/website';
+import { BuilderBlockStyleProps } from '@wepublish/website/builder';
+import * as React from 'react';
 
-export const TabbedContentWrapper = styled('div')`
-  width: 100%;
-  grid-column: -1/1;
-  container: tabbed-content/inline-size;
-`;
+import {
+  TeaserAuthors,
+  TeaserContentWrapper,
+  TeaserImageWrapper,
+  TeaserLead,
+  TeaserMetadata,
+  TeaserPreTitle,
+  TeaserPreTitleWrapper,
+  TeaserTime,
+  TeaserTitle,
+  TeaserWrapper,
+} from '../components/tsri-base-teaser';
 
-interface TabPanelBaseProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-export const TabPanelBase = (props: TabPanelBaseProps) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <TabPanelBox>{children}</TabPanelBox>}
-    </div>
-  );
-};
-
-export const TabPanelBox = styled('div')``;
-
-export const TabPanel = styled(TabPanelBase)`
+export const TabPanel = styled(TabPanelDefault)`
   background: linear-gradient(
     to bottom,
     rgb(174, 179, 190),
@@ -278,75 +246,12 @@ export const TabPanel = styled(TabPanelBase)`
 }
 `;
 
-export const Tabs = styled(MuiTabs)`
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  min-height: unset;
-
-  & .MuiTabs-indicator {
-    display: none;
-  }
-`;
-
-export const Tab = styled(MuiTab)`
-  background-color: rgba(0, 0, 0, 1);
-  color: rgba(255, 255, 255, 1);
-  font-size: 16px;
-  font-weight: 700;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  margin-right: 4px;
-  padding: 7px 20px 2px 20px;
-  text-transform: none;
-  flex-grow: 1;
-  align-items: flex-start;
-  min-height: unset;
-
-  @container tabbed-content (width > 700px) {
-    font-size: 1.4cqw;
-    line-height: 1.4cqw;
-    padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
-    margin-right: 0.25cqw;
-    border-top-left-radius: 1cqw;
-    border-top-right-radius: 1cqw;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  &:hover: {
-    opacity: 1;
-  }
-
-  &.Mui-selected {
-    background-color: rgb(174, 179, 190);
-    color: rgba(255, 255, 255, 1);
-  }
-
-  &.mui-focusvisible: {
-    backgroundcolor: #d1eaff;
-  }
-
-  & > span: {
-    display: none;
-  }
-`;
-
-export const a11yProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-};
-
 export const TabbedContent = ({
   className,
   nestedBlocks,
   children = [],
 }: BuilderBlockStyleProps['TabbedContent']) => {
-  const childrenArray = Children.toArray(children);
+  const childrenArray = React.Children.toArray(children);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -365,7 +270,10 @@ export const TabbedContent = ({
             <Tab
               disableRipple={true}
               key={index}
-              label={nestedBlock.block.title || `Tab ${index + 1}`}
+              label={
+                (nestedBlock.block as { title: string }).title ||
+                `Tab ${index + 1}`
+              }
               {...a11yProps(index)}
             />
           ))}
@@ -383,8 +291,3 @@ export const TabbedContent = ({
     </TabbedContentWrapper>
   );
 };
-
-export const isTabbedContentBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
-): block is FlexBlock =>
-  allPass([hasBlockStyle('TabbedContent'), isFlexBlock])(block);

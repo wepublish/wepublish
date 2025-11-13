@@ -41,6 +41,7 @@ import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
@@ -144,6 +145,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
+            TabbedContent,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
