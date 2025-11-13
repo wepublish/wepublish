@@ -367,6 +367,7 @@ export function TsriV2Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
+  essentialPageProps,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -469,18 +470,23 @@ export function TsriV2Navbar({
             aria-label="Startseite"
             isMenuOpen={isMenuOpen}
           >
-            <TsriLogo
-              src="/logo.svg"
-              alt="Tsüri"
-              isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
-            />
-            <TsriClaim
-              src="/claim.gif"
-              alt="Unabhängig, Kritisch, Lokal."
-              isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
-            />
+            {essentialPageProps?.Page &&
+              essentialPageProps.Page.slug === '' && (
+                <>
+                  <TsriLogo
+                    src="/logo.svg"
+                    alt="Tsüri"
+                    isScrolled={isScrolled}
+                    isMenuOpen={isMenuOpen}
+                  />
+                  <TsriClaim
+                    src="/claim.gif"
+                    alt="Unabhängig, Kritisch, Lokal."
+                    isScrolled={isScrolled}
+                    isMenuOpen={isMenuOpen}
+                  />
+                </>
+              )}
           </NavbarLoginLink>
 
           <NavbarMain>

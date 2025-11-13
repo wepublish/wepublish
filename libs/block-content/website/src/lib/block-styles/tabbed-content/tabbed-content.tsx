@@ -365,7 +365,10 @@ export const TabbedContent = ({
             <Tab
               disableRipple={true}
               key={index}
-              label={nestedBlock.block.title || `Tab ${index + 1}`}
+              label={
+                (nestedBlock.block as { title: string }).title ||
+                `Tab ${index + 1}`
+              }
               {...a11yProps(index)}
             />
           ))}

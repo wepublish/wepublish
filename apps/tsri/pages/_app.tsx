@@ -1,3 +1,4 @@
+import { NormalizedCacheObject } from '@apollo/client';
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
 import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
@@ -23,9 +24,15 @@ import {
 } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SessionWithTokenWithoutUser,
+  V1_CLIENT_STATE_PROP_NAME,
+} from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  EssentialPageProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -115,6 +122,26 @@ type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & { emotionCache?: EmotionCache };
 
+const getEssentialPageProps = (pageProps: {
+  [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
+}) => {
+  const essentialProps: EssentialPageProps = {} as EssentialPageProps;
+
+  const pp = (
+    pageProps as {
+      [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
+    }
+  )?.[V1_CLIENT_STATE_PROP_NAME];
+
+  (pp ? Object.getOwnPropertyNames(pp) : []).forEach(propName => {
+    if (propName.startsWith('Page')) {
+      essentialProps.Page = pp[propName] as EssentialPageProps['Page'];
+    }
+  });
+
+  return essentialProps;
+};
+
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const siteTitle = 'Tsri';
 
@@ -122,6 +149,12 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+
+  const essentialPageProps = getEssentialPageProps(
+    pageProps as {
+      [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
+    }
+  );
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -232,6 +265,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
+                essentialPageProps={essentialPageProps}
               />
 
               <main>
