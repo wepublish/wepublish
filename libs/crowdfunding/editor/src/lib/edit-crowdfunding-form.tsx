@@ -85,7 +85,7 @@ export const EditCrowdfundingForm = () => {
       goals: crowdfunding.goals?.map(removeIdAndTypename),
       memberPlans: crowdfunding.memberPlans || [],
       revenue: undefined,
-      activeCrowdfundingGoal: undefined,
+      activeGoal: undefined,
     };
     updateCrowdfunding({ variables: { input: processedCrowdfunding } });
   };

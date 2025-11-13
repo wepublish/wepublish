@@ -81,7 +81,7 @@ export const CrowdfundingBlock = ({
     elements: { H5 },
   } = useWebsiteBuilder();
 
-  const activeCrowdfunding = crowdfunding?.activeCrowdfundingGoal;
+  const activeCrowdfunding = crowdfunding?.activeGoal;
   const progress = activeCrowdfunding?.progress ?? 0;
   const revenue = crowdfunding?.revenue ?? 0;
   const goalAmount = activeCrowdfunding?.amount ?? 0;
@@ -134,7 +134,7 @@ export const CrowdfundingBlock = ({
               </CfProgressBarInnerAmount>
 
               <CfProgressBarInnerTitle>
-                {crowdfunding.activeCrowdfundingGoal?.title || ''}
+                {crowdfunding.activeGoal?.title || ''}
               </CfProgressBarInnerTitle>
             </CfProgressBarInnerItem>
           </CfProgressBarInner>

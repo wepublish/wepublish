@@ -2,7 +2,7 @@ import {
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
   UpdateCrowdfundingInput,
-  FullCrowdfundingWithActiveGoalFragment,
+  FullCrowdfundingFragment,
 } from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,7 @@ import {
   DateTimePicker,
   CrowdfundingProgressBar,
 } from '@wepublish/ui/editor';
+import styled from '@emotion/styled';
 
 type CrowdfundingFormData = (
   | CreateCrowdfundingInput
@@ -33,6 +34,12 @@ interface CrowdfundingFormProps {
   onAddGoal: (goal: CreateCrowdfundingGoalInput) => void;
   onRemoveGoal: (index: number) => void;
 }
+
+const CrowdfundingFormWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+`;
 
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   const { t } = useTranslation();
@@ -55,7 +62,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   }, [memberPlanData?.memberPlans]);
 
   return (
-    <div
+    <CrowdfundingFormWrapper
       style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }}
     >
       <Panel
@@ -92,9 +99,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
         style={{ overflow: 'initial' }}
       >
         <CrowdfundingProgressBar
-          crowdfunding={
-            props.crowdfunding as Partial<FullCrowdfundingWithActiveGoalFragment>
-          }
+          crowdfunding={props.crowdfunding as Partial<FullCrowdfundingFragment>}
         />
       </Panel>
 
@@ -107,6 +112,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           <Form.ControlLabel>
             {t('crowdfunding.form.memberPlans')}
           </Form.ControlLabel>
+
           <CheckPicker
             block
             virtualized
@@ -200,6 +206,6 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           />
         </Form.Group>
       </Panel>
-    </div>
+    </CrowdfundingFormWrapper>
   );
 };

@@ -1,58 +1,33 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   PaymentPeriodicity,
   PrismaClient,
   Crowdfunding,
-  MemberPlan,
   CrowdfundingGoal,
+  MemberPlan,
 } from '@prisma/client';
 import {
   CreateCrowdfundingInput,
-  CrowdfundingWithActiveGoal,
   UpdateCrowdfundingInput,
 } from './crowdfunding.model';
 import { CrowdfundingGoalWithProgress } from './crowdfunding-goal.model';
+import { PrimeDataLoader } from '@wepublish/utils/api';
+import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
 
 @Injectable()
 export class CrowdfundingService {
   constructor(private prisma: PrismaClient) {}
 
-  async getCrowdfundingById(id: string): Promise<CrowdfundingWithActiveGoal> {
-    const crowdfunding = await this.prisma.crowdfunding.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        goals: true,
-        memberPlans: true,
-      },
-    });
-    if (!crowdfunding) throw new NotFoundException();
-
-    const revenue = await this.getRevenue({ crowdfunding });
-
-    return {
-      ...crowdfunding,
-      revenue,
-      activeCrowdfundingGoal: this.getActiveGoalWithProgress({
-        revenue,
-        crowdfunding,
-      }),
-    };
-  }
-
   public getActiveGoalWithProgress({
-    crowdfunding,
+    goals,
     revenue,
   }: {
-    crowdfunding: Crowdfunding & { goals: CrowdfundingGoal[] };
+    goals: CrowdfundingGoal[];
     revenue: number;
   }): CrowdfundingGoalWithProgress | undefined {
-    const activeGoal = crowdfunding.goals
-      ?.sort((goalA, goalB) => {
-        return goalA.amount - goalB.amount;
-      })
-      ?.find((goal, goalIndex) => {
+    const activeGoal = goals
+      .sort((goalA, goalB) => goalA.amount - goalB.amount)
+      .find((goal, goalIndex) => {
         const progress = (revenue * 100) / goal.amount;
 
         // if total amount is still 0 return first goal
@@ -66,7 +41,7 @@ export class CrowdfundingService {
         }
 
         // last goal
-        if (goalIndex + 1 === crowdfunding.goals?.length) {
+        if (goalIndex + 1 === goals?.length) {
           return true;
         }
 
@@ -83,19 +58,19 @@ export class CrowdfundingService {
     };
   }
 
-  public async getRevenue({
-    crowdfunding,
-  }: {
-    crowdfunding: Crowdfunding & { memberPlans: MemberPlan[] };
-  }): Promise<number> {
+  public async getRevenue(
+    crowdfunding: Crowdfunding,
+    memberPlans: MemberPlan[]
+  ): Promise<number> {
     const memberPlanIds: string[] =
-      crowdfunding.memberPlans?.map(memberPlan => memberPlan.id) || [];
+      memberPlans.map(memberPlan => memberPlan.id) || [];
 
     const invoiceFilter = {
       some: {
         AND: [] as any[],
       },
     };
+
     if (crowdfunding.countSubscriptionsFrom) {
       invoiceFilter.some.AND.push({
         paidAt: {
@@ -103,6 +78,7 @@ export class CrowdfundingService {
         },
       });
     }
+
     if (crowdfunding.countSubscriptionsUntil) {
       invoiceFilter.some.AND.push({
         paidAt: {
@@ -129,6 +105,7 @@ export class CrowdfundingService {
         const monthFactor = this.calcMonthFactor(
           subscription.paymentPeriodicity
         );
+
         return total + subscription.monthlyAmount * monthFactor;
       }, 0) + (crowdfunding.additionalRevenue || 0)
     );
@@ -153,13 +130,9 @@ export class CrowdfundingService {
     }
   }
 
+  @PrimeDataLoader(CrowdfundingDataloaderService)
   async getCrowdfundings() {
-    return await this.prisma.crowdfunding.findMany({
-      include: {
-        goals: true,
-        memberPlans: true,
-      },
-    });
+    return await this.prisma.crowdfunding.findMany({});
   }
 
   async createCrowdfunding(crowdfunding: CreateCrowdfundingInput) {
@@ -173,20 +146,14 @@ export class CrowdfundingService {
           connect: crowdfunding.memberPlans,
         },
       },
-      include: {
-        goals: true,
-        memberPlans: true,
-      },
     });
   }
 
-  async updateCrowdfunding(
-    crowdfunding: UpdateCrowdfundingInput
-  ): Promise<CrowdfundingWithActiveGoal> {
+  async updateCrowdfunding(crowdfunding: UpdateCrowdfundingInput) {
     const { id, goals, memberPlans, ...crowdfundingWithoutAssociations } =
       crowdfunding;
 
-    const updatedCrowdfunding = await this.prisma.crowdfunding.update({
+    return await this.prisma.crowdfunding.update({
       data: {
         ...crowdfundingWithoutAssociations,
         goals: {
@@ -201,24 +168,7 @@ export class CrowdfundingService {
       where: {
         id,
       },
-      include: {
-        goals: true,
-        memberPlans: true,
-      },
     });
-
-    const revenue = await this.getRevenue({
-      crowdfunding: updatedCrowdfunding,
-    });
-
-    return {
-      ...updatedCrowdfunding,
-      revenue,
-      activeCrowdfundingGoal: this.getActiveGoalWithProgress({
-        revenue,
-        crowdfunding: updatedCrowdfunding,
-      }),
-    };
   }
 
   async delete(id: string): Promise<undefined> {

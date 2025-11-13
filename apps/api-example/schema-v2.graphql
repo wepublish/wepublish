@@ -227,6 +227,15 @@ interface BaseBlock {
   type: BlockType!
 }
 
+interface BaseCrowdfundingGoal {
+  amount: Float!
+  createdAt: DateTime!
+  description: String
+  id: String!
+  modifiedAt: DateTime!
+  title: String!
+}
+
 interface BaseNavigationLink {
   createdAt: DateTime!
   id: String!
@@ -556,13 +565,14 @@ input CreateCrowdfundingMemberPlan {
 }
 
 type Crowdfunding {
+  activeGoal: CrowdfundingGoalWithProgress
   additionalRevenue: Float
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
   goals: [CrowdfundingGoal!]!
   id: String!
-  memberPlans: [CrowdfundingMemberPlan!]!
+  memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String!
   revenue: Float
@@ -571,7 +581,7 @@ type Crowdfunding {
 type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   blockStyle: String
   blockStyleName: String
-  crowdfunding: CrowdfundingWithActiveGoal
+  crowdfunding: Crowdfunding
   crowdfundingId: String
   type: BlockType!
 }
@@ -582,7 +592,7 @@ input CrowdfundingBlockInput {
   crowdfundingId: String
 }
 
-type CrowdfundingGoal {
+type CrowdfundingGoal implements BaseCrowdfundingGoal {
   amount: Float!
   createdAt: DateTime!
   description: String
@@ -591,7 +601,7 @@ type CrowdfundingGoal {
   title: String!
 }
 
-type CrowdfundingGoalWithProgress {
+type CrowdfundingGoalWithProgress implements BaseCrowdfundingGoal {
   amount: Float!
   createdAt: DateTime!
   description: String
@@ -599,25 +609,6 @@ type CrowdfundingGoalWithProgress {
   modifiedAt: DateTime!
   progress: Float
   title: String!
-}
-
-type CrowdfundingMemberPlan {
-  id: String!
-  name: String!
-}
-
-type CrowdfundingWithActiveGoal {
-  activeCrowdfundingGoal: CrowdfundingGoalWithProgress
-  additionalRevenue: Float
-  countSubscriptionsFrom: DateTime
-  countSubscriptionsUntil: DateTime
-  createdAt: DateTime!
-  goals: [CrowdfundingGoal!]!
-  id: String!
-  memberPlans: [CrowdfundingMemberPlan!]!
-  modifiedAt: DateTime!
-  name: String!
-  revenue: Float
 }
 
 enum Currency {
@@ -998,7 +989,7 @@ interface HasOptionalArticle {
 }
 
 interface HasOptionalCrowdfunding {
-  crowdfunding: CrowdfundingWithActiveGoal
+  crowdfunding: Crowdfunding
   crowdfundingId: String
 }
 
@@ -1357,7 +1348,7 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  """Create a new Crowdfunding"""
+  """Create a new crowdfunding"""
   createCrowdfunding(input: CreateCrowdfundingInput!): Crowdfunding!
 
   """Creates a new event."""
@@ -1508,8 +1499,8 @@ type Mutation {
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
-  """Update a single crowdfunding"""
-  updateCrowdfunding(input: UpdateCrowdfundingInput!): CrowdfundingWithActiveGoal!
+  """Updates a single crowdfunding"""
+  updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
@@ -2089,10 +2080,10 @@ type Query {
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
-  """Get a single crowdfunding by id with calculated progress"""
-  crowdfunding(id: String!): CrowdfundingWithActiveGoal!
+  """Get a single crowdfunding by id"""
+  crowdfunding(id: String!): Crowdfunding!
 
-  """Returns a paginated list of crowdfundings."""
+  """Returns a list of crowdfundings."""
   crowdfundings: [Crowdfunding!]!
 
   "\n      Returns daily stats in a given timeframe.\n    "

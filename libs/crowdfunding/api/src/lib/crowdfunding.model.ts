@@ -1,6 +1,5 @@
 import {
   ArgsType,
-  Directive,
   Field,
   InputType,
   ObjectType,
@@ -11,29 +10,16 @@ import {
   CrowdfundingGoal,
   CrowdfundingGoalWithProgress,
 } from './crowdfunding-goal.model';
-
-/**
- * This Memberplan is only here to provide the interface and
- * can be removed when MemberPlans are moved to APIv2
- */
-@ObjectType()
-class CrowdfundingMemberPlan {
-  @Field()
-  id!: string;
-
-  @Field()
-  name!: string;
-}
+import { MemberPlan } from '@wepublish/member-plan/api';
 
 @InputType()
 export class CreateCrowdfundingMemberPlan extends PickType(
-  CrowdfundingMemberPlan,
+  MemberPlan,
   ['id'],
   InputType
 ) {}
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Crowdfunding {
   @Field()
   id!: string;
@@ -56,20 +42,17 @@ export class Crowdfunding {
   @Field(() => Number, { nullable: true })
   additionalRevenue!: number | null;
 
-  @Field(() => Number, { nullable: true })
-  revenue?: number;
-
   @Field(type => [CrowdfundingGoal])
   goals?: CrowdfundingGoal[];
 
-  @Field(type => [CrowdfundingMemberPlan])
-  memberPlans?: CrowdfundingMemberPlan[];
-}
+  @Field(type => [MemberPlan])
+  memberPlans?: MemberPlan[];
 
-@ObjectType()
-export class CrowdfundingWithActiveGoal extends Crowdfunding {
+  @Field(() => Number, { nullable: true })
+  revenue?: number;
+
   @Field(() => CrowdfundingGoalWithProgress, { nullable: true })
-  activeCrowdfundingGoal?: CrowdfundingGoalWithProgress;
+  activeGoal?: CrowdfundingGoalWithProgress;
 }
 
 @ArgsType()

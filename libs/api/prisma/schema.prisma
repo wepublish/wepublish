@@ -1424,13 +1424,14 @@ model Crowdfunding {
 }
 
 model CrowdfundingGoal {
-  id             String       @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt      DateTime     @default(now())
-  modifiedAt     DateTime     @updatedAt
-  title          String
-  description    String?
-  amount         Int
-  Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
+  id          String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime @default(now())
+  modifiedAt  DateTime @updatedAt
+  title       String
+  description String?
+  amount      Int
+
+  crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
   crowdfundingId String
 
   @@map("crowdfunding_goals")
