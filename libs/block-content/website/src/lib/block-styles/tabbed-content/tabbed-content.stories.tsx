@@ -1,6 +1,5 @@
 import { Meta } from '@storybook/react';
 import { TabbedContent } from './tabbed-content';
-import { TeaserSlotsBlock } from '../../teaser/teaser-slots-block';
 import { mockArticleTeaser } from '@wepublish/storybook/mocks';
 export default {
   component: TabbedContent,
@@ -8,7 +7,7 @@ export default {
 } as Meta;
 
 const mockTeaserSlotsBlock = ({
-  title = undefined,
+  title = 'test title',
   teasers = [
     mockArticleTeaser(),
     mockArticleTeaser(),
@@ -46,8 +45,8 @@ const mockTeaserSlotsBlock = ({
   slots,
 });
 
-const mockNestedBlock = (block: typeof TeaserSlotsBlock) => ({
-  alignment: {
+const mockNestedBlock = ({
+  alignment = {
     i: '',
     x: 0,
     y: 0,
@@ -55,34 +54,26 @@ const mockNestedBlock = (block: typeof TeaserSlotsBlock) => ({
     h: 0,
     static: false,
   },
+  block = mockTeaserSlotsBlock(),
+} = {}) => ({
+  alignment,
   block,
 });
 
-const mockTabbedContentBock = () => ({
-  blockStyle: 'TabbedContent',
-  nestedBlocks: [
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
-    mockNestedBlock(
-      mockTeaserSlotsBlock() as unknown as typeof TeaserSlotsBlock
-    ),
+const mockTabbedContentBock = ({
+  blockStyle = 'TabbedContent',
+  nestedBlocks = [
+    mockNestedBlock(),
+    mockNestedBlock(),
+    mockNestedBlock(),
+    mockNestedBlock(),
+    mockNestedBlock(),
+    mockNestedBlock(),
+    mockNestedBlock(),
   ],
+} = {}) => ({
+  blockStyle,
+  nestedBlocks,
 });
 
 export const Default = {
