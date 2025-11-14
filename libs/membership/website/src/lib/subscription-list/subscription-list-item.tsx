@@ -84,6 +84,7 @@ export function SubscriptionListItem({
   monthlyAmount,
   deactivation,
   memberPlan: { image, name, currency, productType },
+  extendable,
   url,
   cancel,
   canExtend,
@@ -198,7 +199,8 @@ export function SubscriptionListItem({
 
           <SubscriptionListItemMetaItem>
             <MdAttachMoney /> Kostet{' '}
-            {formatCurrency(monthlyAmount / 100, currency, locale)} pro Monat
+            {formatCurrency(monthlyAmount / 100, currency, locale)}{' '}
+            {extendable ? 'pro Monat' : ''}
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
@@ -232,16 +234,18 @@ export function SubscriptionListItem({
 
         {!deactivation && (
           <SubscriptionListItemActions>
-            <Button
-              onClick={() => setConfirmCancel(true)}
-              disabled={loading}
-              variant="text"
-              color="secondary"
-            >
-              {t('subscription.cancel', {
-                type: productType,
-              })}
-            </Button>
+            {(extendable || !paidUntil) && (
+              <Button
+                onClick={() => setConfirmCancel(true)}
+                disabled={loading}
+                variant="text"
+                color="secondary"
+              >
+                {t('subscription.cancel', {
+                  type: productType,
+                })}
+              </Button>
+            )}
 
             {canExtend && (
               <Button
