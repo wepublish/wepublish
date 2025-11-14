@@ -303,20 +303,41 @@ fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
 
 fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
-
   ... on TeaserGridFlexBlock {
     ...FullTeaserGridFlexBlock
   }
-
   ... on TeaserGridBlock {
     ...FullTeaserGridBlock
   }
-
   ... on TeaserListBlock {
     ...FullTeaserListBlock
   }
-
   ... on TeaserSlotsBlock {
     ...FullTeaserSlotsBlock
+  }
+
+  ... on FlexBlock {
+    blockStyle: blockStyleName
+    type
+    nestedBlocks {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+
+      block {
+        __typename
+
+        ... on TeaserSlotsBlock {
+          ...FullTeaserSlotsBlock
+        }
+
+        ...BlockWithoutTeaser
+      }
+    }
   }
 }
