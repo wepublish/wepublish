@@ -822,6 +822,7 @@ export const AllPermissions: Permission[] = [
   CanGetCrowdfundings,
   CanCreateCrowdfunding,
   CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding,
   CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
@@ -944,6 +945,11 @@ export const AllPermissions: Permission[] = [
 ];
 
 export const EditorPermissions: Permission[] = [
+  CanGetCrowdfunding,
+  CanGetCrowdfundings,
+  CanCreateCrowdfunding,
+  CanUpdateCrowdfunding,
+  CanDeleteCrowdfunding,
   CanGetComments,
   CanUpdateComments,
   CanTakeActionOnComment,

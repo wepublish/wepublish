@@ -24,6 +24,9 @@
     "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
     "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
   },
+  "crowdfunding": {
+    "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person} other {Personen}} abonniert}}"
+  },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },

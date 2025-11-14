@@ -14,7 +14,7 @@ import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
-import { CrowdfundingApiModule } from '@wepublish/crowdfunding/api';
+import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -513,7 +513,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
     }),
     BannerApiModule,
     VersionInformationModule,
-    CrowdfundingApiModule,
+    CrowdfundingModule,
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
       imports: [ConfigModule],

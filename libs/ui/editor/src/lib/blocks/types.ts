@@ -5,7 +5,7 @@ import {
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
-  FullCrowdfundingWithActiveGoalFragment,
+  FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
   FullTeaserFragment,
@@ -77,10 +77,7 @@ export interface PollBlockValue extends BaseBlockValue {
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
-  crowdfunding:
-    | Partial<FullCrowdfundingWithActiveGoalFragment>
-    | null
-    | undefined;
+  crowdfunding: Partial<FullCrowdfundingFragment> | null | undefined;
 }
 
 export interface EventBlockValue extends BaseBlockValue {
