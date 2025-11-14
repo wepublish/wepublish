@@ -4,18 +4,14 @@ import { FullImageFragment, NavigationListQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
 export type EssentialPageProps = {
-  Page: {
-    __typename: string;
-    id: string;
-    publishedAt: string;
-    modifiedAt: string;
+  Page?: {
     url: string;
     slug: string;
-    tags: string[];
-    latest: {
-      __ref: string;
-    };
   };
+  Article?: {
+    preTitle?: string;
+  };
+  pageType: string;
 };
 
 export type BuilderNavbarProps = PropsWithChildren<

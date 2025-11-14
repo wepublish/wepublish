@@ -13,9 +13,11 @@ import { forceHideBanner } from '@wepublish/banner/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
+import { PageType } from '@wepublish/utils/website';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import {
   BuilderNavbarProps,
+  EssentialPageProps,
   IconButton,
   Link,
   useWebsiteBuilder,
@@ -31,7 +33,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { FiMenu, FiPlus, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
-
 enum NavbarState {
   Low,
   High,
@@ -498,6 +499,20 @@ export function TsriV2Navbar({
     onMenuToggle?.(newState);
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
+  const getTabText = (essentialPageProps: EssentialPageProps | undefined) => {
+    if (essentialPageProps) {
+      switch (essentialPageProps.pageType) {
+        case PageType.Article:
+          return essentialPageProps.Article?.preTitle || '';
+        case PageType.Author:
+          return 'Ich bin Tsüri!';
+        case PageType.AuthorList:
+          return 'Wir sind Tsüri!';
+      }
+    }
+    return '';
+  };
+
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
@@ -533,16 +548,18 @@ export function TsriV2Navbar({
     hasActiveSubscription
   );
 
-  const isHomePage = essentialPageProps?.Page.slug === '';
+  const isHomePage = essentialPageProps?.Page?.slug === '';
 
-  const navbarHeight = useMemo(
+  const tabText = getTabText(essentialPageProps);
+
+  const navbarStyles = useMemo(
     () => cssVariables(navbarState, isHomePage),
     [navbarState, isHomePage]
   );
 
   return (
     <NavbarWrapper className={className}>
-      <GlobalStyles styles={navbarHeight} />
+      <GlobalStyles styles={navbarStyles} />
       {isMenuOpen && forceHideBanner}
 
       <AppBar
@@ -557,7 +574,7 @@ export function TsriV2Navbar({
             isMenuOpen={isMenuOpen}
           >
             <TsriLogo
-              src={`${essentialPageProps?.Page.slug === '' ? '/logo.svg' : '/logo_blue.svg'}`}
+              src={`${essentialPageProps?.Page?.slug === '' ? '/logo.svg' : '/logo_blue.svg'}`}
               alt="Tsüri"
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
@@ -610,7 +627,7 @@ export function TsriV2Navbar({
             isHomePage={isHomePage}
           >
             <PreTitleTab>
-              <span>Pretitle lorem ipsum dolor sit amet</span>
+              <span>{tabText}</span>
             </PreTitleTab>
             <BecomeMemberTab>
               <a href="#">Member werden</a>
