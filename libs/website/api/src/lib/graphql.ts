@@ -1228,12 +1228,6 @@ export type ImageGalleryImageInput = {
   imageID?: InputMaybe<Scalars['String']>;
 };
 
-export enum ImageOutput {
-  Jpeg = 'jpeg',
-  Png = 'png',
-  Webp = 'webp'
-}
-
 export enum ImageRotation {
   Auto = 'Auto',
   Rotate0 = 'Rotate0',
@@ -1247,8 +1241,6 @@ export type ImageTransformation = {
   grayscale?: InputMaybe<Scalars['Boolean']>;
   height?: InputMaybe<Scalars['Int']>;
   negate?: InputMaybe<Scalars['Boolean']>;
-  output?: InputMaybe<ImageOutput>;
-  quality?: InputMaybe<Scalars['Float']>;
   rotation?: InputMaybe<ImageRotation>;
   sharpen?: InputMaybe<Scalars['Boolean']>;
   width?: InputMaybe<Scalars['Int']>;
@@ -4448,34 +4440,20 @@ export const FullTrackingPixelFragmentDoc = gql`
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
   url
-  xxl: transformURL(input: {width: 1500, output: png, quality: 0.8})
-  xl: transformURL(input: {width: 1200, output: png, quality: 0.8})
-  l: transformURL(input: {width: 1000, output: png, quality: 0.8})
-  m: transformURL(input: {width: 800, output: png, quality: 0.8})
-  s: transformURL(input: {width: 500, output: png, quality: 0.8})
-  xs: transformURL(input: {width: 300, output: png, quality: 0.8})
-  xxs: transformURL(input: {width: 200, output: png, quality: 0.8})
-  xxlSquare: transformURL(
-    input: {width: 1500, height: 1500, output: png, quality: 0.8}
-  )
-  xlSquare: transformURL(
-    input: {width: 1200, height: 1200, output: png, quality: 0.8}
-  )
-  lSquare: transformURL(
-    input: {width: 1000, height: 1000, output: png, quality: 0.8}
-  )
-  mSquare: transformURL(
-    input: {width: 800, height: 800, output: png, quality: 0.8}
-  )
-  sSquare: transformURL(
-    input: {width: 500, height: 500, output: png, quality: 0.8}
-  )
-  xsSquare: transformURL(
-    input: {width: 300, height: 300, output: png, quality: 0.8}
-  )
-  xxsSquare: transformURL(
-    input: {width: 200, height: 200, output: png, quality: 0.8}
-  )
+  xxl: transformURL(input: {width: 1500})
+  xl: transformURL(input: {width: 1200})
+  l: transformURL(input: {width: 1000})
+  m: transformURL(input: {width: 800})
+  s: transformURL(input: {width: 500})
+  xs: transformURL(input: {width: 300})
+  xxs: transformURL(input: {width: 200})
+  xxlSquare: transformURL(input: {width: 1500, height: 1500})
+  xlSquare: transformURL(input: {width: 1200, height: 1200})
+  lSquare: transformURL(input: {width: 1000, height: 1000})
+  mSquare: transformURL(input: {width: 800, height: 800})
+  sSquare: transformURL(input: {width: 500, height: 500})
+  xsSquare: transformURL(input: {width: 300, height: 300})
+  xxsSquare: transformURL(input: {width: 200, height: 200})
 }
     `;
 export const FullImageFragmentDoc = gql`

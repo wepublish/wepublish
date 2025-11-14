@@ -1226,12 +1226,6 @@ export type ImageGalleryImageInput = {
   imageID?: InputMaybe<Scalars['String']>;
 };
 
-export enum ImageOutput {
-  Jpeg = 'jpeg',
-  Png = 'png',
-  Webp = 'webp'
-}
-
 export enum ImageRotation {
   Auto = 'Auto',
   Rotate0 = 'Rotate0',
@@ -1245,8 +1239,6 @@ export type ImageTransformation = {
   grayscale?: InputMaybe<Scalars['Boolean']>;
   height?: InputMaybe<Scalars['Int']>;
   negate?: InputMaybe<Scalars['Boolean']>;
-  output?: InputMaybe<ImageOutput>;
-  quality?: InputMaybe<Scalars['Float']>;
   rotation?: InputMaybe<ImageRotation>;
   sharpen?: InputMaybe<Scalars['Boolean']>;
   width?: InputMaybe<Scalars['Int']>;

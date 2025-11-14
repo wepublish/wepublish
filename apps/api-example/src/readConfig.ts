@@ -98,12 +98,9 @@ type noCharge = {
   offSessionPayments: boolean;
 };
 
-type karmaMediaServer = {
-  type: 'karma';
-};
-
 type novaMediaServer = {
   type: 'nova';
+  quality: number;
 };
 
 type Mollie = {
@@ -159,7 +156,7 @@ type Config = {
   general: General;
   mailProvider: MailProvider;
   paymentProviders: PaymentProvider[];
-  mediaServer: karmaMediaServer | novaMediaServer;
+  mediaServer: novaMediaServer;
   challenge: AlgebraicCaptcha | Turnstile;
   trackingPixelProviders: TrackingPixels[];
   ga?: GoogleAnalyticsConfig;
