@@ -124,6 +124,7 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
 export const usePaymentText = (
   autoRenew: boolean,
   extendable: boolean,
+  productType: ProductType,
   paymentPeriodicity: PaymentPeriodicity,
   monthlyAmount: number,
   currency: Currency,
@@ -133,6 +134,7 @@ export const usePaymentText = (
 
   return useMemo(() => {
     const variables = {
+      productType,
       renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
       paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
       formattedAmount: formatCurrency(
@@ -142,8 +144,6 @@ export const usePaymentText = (
       ),
       monthlyAmount,
     };
-
-    console.log(variables);
 
     if (autoRenew && extendable) {
       return t('subscribe.subscribeForPeriod', variables);
@@ -314,6 +314,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const paymentText = usePaymentText(
     autoRenew,
     selectedMemberPlan?.extendable ?? true,
+    selectedMemberPlan?.productType ?? ProductType.Subscription,
     selectedPaymentPeriodicity,
     monthlyAmount,
     selectedMemberPlan?.currency ?? Currency.Chf,
@@ -323,6 +324,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const monthlyPaymentText = usePaymentText(
     true,
     selectedMemberPlan?.extendable ?? true,
+    selectedMemberPlan?.productType ?? ProductType.Subscription,
     PaymentPeriodicity.Monthly,
     watch<'monthlyAmount'>('monthlyAmount'),
     selectedMemberPlan?.currency ?? Currency.Chf,
