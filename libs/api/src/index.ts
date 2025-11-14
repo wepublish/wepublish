@@ -21,7 +21,6 @@ export * from './lib/db/payment';
 export * from './lib/db/mailLog';
 export * from './lib/db/subscription';
 
-export * from './lib/media/karmaMediaAdapter';
 export * from './lib/media/novaMediaAdapter';
 
 export * from './lib/utility';

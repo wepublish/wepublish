@@ -97,6 +97,7 @@ trackingPixelProviders:
     usePublisherInternalKey: true
 mediaServer:
   type: 'nova'
+  quality: 1
 ga:
   credentials:
   property:

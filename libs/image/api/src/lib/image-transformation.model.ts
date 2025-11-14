@@ -1,10 +1,4 @@
-import {
-  Field,
-  Float,
-  InputType,
-  Int,
-  registerEnumType,
-} from '@nestjs/graphql';
+import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
 
 export enum ImageRotation {
   Auto = 'auto',
@@ -18,16 +12,6 @@ registerEnumType(ImageRotation, {
   name: 'ImageRotation',
 });
 
-export enum ImageOutput {
-  png = 'png',
-  jpeg = 'jpeg',
-  webp = 'webp',
-}
-
-registerEnumType(ImageOutput, {
-  name: 'ImageOutput',
-});
-
 @InputType()
 export class ImageTransformation {
   @Field(() => Int, { nullable: true })
@@ -38,12 +22,6 @@ export class ImageTransformation {
 
   @Field(() => ImageRotation, { nullable: true })
   rotation?: ImageRotation;
-
-  @Field(() => Float, { nullable: true })
-  quality?: number;
-
-  @Field(() => ImageOutput, { nullable: true })
-  output?: ImageOutput;
 
   @Field(() => Boolean, { nullable: true })
   blur?: boolean | number | null;
