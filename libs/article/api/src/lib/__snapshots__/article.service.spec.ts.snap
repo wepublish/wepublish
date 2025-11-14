@@ -1501,19 +1501,6 @@ exports[`ArticleService should return paginated articles 1`] = `
 }
 `;
 
-exports[`ArticleService should return the tracking pixels of an article 1`] = `
-[
-  {
-    "include": {
-      "trackingPixelMethod": true,
-    },
-    "where": {
-      "articleId": "1234",
-    },
-  },
-]
-`;
-
 exports[`ArticleService should unpublish & archive all pending revisions on publish 1`] = `
 [
   {
