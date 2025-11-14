@@ -4,7 +4,8 @@ import {
   PrismaClient,
   Crowdfunding,
   CrowdfundingGoal,
-  MemberPlan,
+  Prisma,
+  CrowdfundingGoalType,
 } from '@prisma/client';
 import {
   CreateCrowdfundingInput,
@@ -19,19 +20,26 @@ export class CrowdfundingService {
   constructor(private prisma: PrismaClient) {}
 
   public getActiveGoalWithProgress({
+    goalType,
     goals,
     revenue,
+    subscriptions,
   }: {
+    goalType: CrowdfundingGoalType;
     goals: CrowdfundingGoal[];
     revenue: number;
+    subscriptions: number;
   }): CrowdfundingGoalWithProgress | undefined {
+    const value =
+      goalType === CrowdfundingGoalType.Revenue ? revenue : subscriptions;
+
     const activeGoal = goals
       .sort((goalA, goalB) => goalA.amount - goalB.amount)
       .find((goal, goalIndex) => {
-        const progress = (revenue * 100) / goal.amount;
+        const progress = (value * 100) / goal.amount;
 
         // if total amount is still 0 return first goal
-        if (revenue === 0 && goalIndex === 0) {
+        if (value === 0 && goalIndex === 0) {
           return true;
         }
 
@@ -54,38 +62,54 @@ export class CrowdfundingService {
 
     return {
       ...activeGoal,
-      progress: Math.round((revenue * 100) / activeGoal.amount),
+      progress: (value * 100) / activeGoal.amount,
     };
   }
 
   public async getRevenue(
     crowdfunding: Crowdfunding,
-    memberPlans: MemberPlan[]
+    memberPlanIds: string[]
   ): Promise<number> {
-    const memberPlanIds: string[] =
-      memberPlans.map(memberPlan => memberPlan.id) || [];
+    const subscriptions = await this.getSubscriptions(
+      crowdfunding,
+      memberPlanIds
+    );
 
+    return (
+      subscriptions.reduce((total, subscription) => {
+        const monthFactor = this.calcMonthFactor(
+          subscription.paymentPeriodicity
+        );
+
+        return total + subscription.monthlyAmount * monthFactor;
+      }, 0) + (crowdfunding.additionalRevenue || 0)
+    );
+  }
+
+  public async getSubscriptions(
+    crowdfunding: Crowdfunding,
+    memberPlanIds: string[]
+  ) {
     const invoiceFilter = {
       some: {
-        AND: [] as any[],
+        AND: [
+          crowdfunding.countSubscriptionsFrom ?
+            {
+              paidAt: {
+                gte: crowdfunding.countSubscriptionsFrom.toISOString(),
+              },
+            }
+          : {},
+          crowdfunding.countSubscriptionsUntil ?
+            {
+              paidAt: {
+                lte: crowdfunding.countSubscriptionsUntil.toISOString(),
+              },
+            }
+          : {},
+        ],
       },
-    };
-
-    if (crowdfunding.countSubscriptionsFrom) {
-      invoiceFilter.some.AND.push({
-        paidAt: {
-          gte: crowdfunding.countSubscriptionsFrom.toISOString(),
-        },
-      });
-    }
-
-    if (crowdfunding.countSubscriptionsUntil) {
-      invoiceFilter.some.AND.push({
-        paidAt: {
-          lte: crowdfunding.countSubscriptionsUntil.toISOString(),
-        },
-      });
-    }
+    } satisfies Prisma.InvoiceListRelationFilter;
 
     const subscriptions = await this.prisma.subscription.findMany({
       where: {
@@ -100,30 +124,22 @@ export class CrowdfundingService {
       },
     });
 
-    return (
-      subscriptions.reduce((total, subscription) => {
-        const monthFactor = this.calcMonthFactor(
-          subscription.paymentPeriodicity
-        );
-
-        return total + subscription.monthlyAmount * monthFactor;
-      }, 0) + (crowdfunding.additionalRevenue || 0)
-    );
+    return subscriptions;
   }
 
   calcMonthFactor(paymentPeriodicity: PaymentPeriodicity): number {
     switch (paymentPeriodicity) {
-      case 'monthly':
+      case PaymentPeriodicity.monthly:
         return 1;
-      case 'quarterly':
+      case PaymentPeriodicity.quarterly:
         return 3;
-      case 'biannual':
+      case PaymentPeriodicity.biannual:
         return 6;
-      case 'yearly':
+      case PaymentPeriodicity.yearly:
         return 12;
-      case 'biennial':
+      case PaymentPeriodicity.biennial:
         return 24;
-      case 'lifetime':
+      case PaymentPeriodicity.lifetime:
         return 1200;
       default:
         return 0;

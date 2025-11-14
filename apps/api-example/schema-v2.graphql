@@ -555,6 +555,7 @@ input CreateCrowdfundingInput {
   additionalRevenue: Float
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
+  goalType: CrowdfundingGoalType!
   goals: [CreateCrowdfundingGoalInput!]
   memberPlans: [CreateCrowdfundingMemberPlan!]
   name: String!
@@ -570,12 +571,14 @@ type Crowdfunding {
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
   createdAt: DateTime!
+  goalType: CrowdfundingGoalType!
   goals: [CrowdfundingGoal!]!
   id: String!
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String!
   revenue: Float
+  subscriptions: Int
 }
 
 type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
@@ -599,6 +602,11 @@ type CrowdfundingGoal implements BaseCrowdfundingGoal {
   id: String!
   modifiedAt: DateTime!
   title: String!
+}
+
+enum CrowdfundingGoalType {
+  Revenue
+  Subscription
 }
 
 type CrowdfundingGoalWithProgress implements BaseCrowdfundingGoal {
@@ -2719,10 +2727,11 @@ input UpdateCrowdfundingInput {
   additionalRevenue: Float
   countSubscriptionsFrom: DateTime
   countSubscriptionsUntil: DateTime
+  goalType: CrowdfundingGoalType
   goals: [CreateCrowdfundingGoalInput!]
   id: String!
   memberPlans: [CreateCrowdfundingMemberPlan!]
-  name: String!
+  name: String
 }
 
 """The `Upload` scalar type represents a file upload."""

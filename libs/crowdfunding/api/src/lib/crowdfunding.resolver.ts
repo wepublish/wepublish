@@ -92,15 +92,27 @@ export class CrowdfundingResolver {
   async revenue(@Parent() parent: PCrowdfunding) {
     return this.crowdfundingService.getRevenue(
       parent,
-      await this.memberPlans(parent)
+      (await this.memberPlans(parent)).map(({ id }) => id)
     );
+  }
+
+  @ResolveField(() => Number)
+  async subscriptions(@Parent() parent: PCrowdfunding) {
+    return (
+      await this.crowdfundingService.getSubscriptions(
+        parent,
+        (await this.memberPlans(parent)).map(({ id }) => id)
+      )
+    ).length;
   }
 
   @ResolveField(() => String, { nullable: true })
   async activeGoal(@Parent() parent: PCrowdfunding) {
     return this.crowdfundingService.getActiveGoalWithProgress({
+      goalType: parent.goalType,
       goals: await this.goals(parent),
       revenue: await this.revenue(parent),
+      subscriptions: await this.subscriptions(parent),
     });
   }
 }

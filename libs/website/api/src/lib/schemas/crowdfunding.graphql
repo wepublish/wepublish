@@ -2,6 +2,8 @@ fragment FullCrowdfunding on Crowdfunding {
   id
   name
   revenue
+  subscriptions
+  goalType
 
   activeGoal {
     id

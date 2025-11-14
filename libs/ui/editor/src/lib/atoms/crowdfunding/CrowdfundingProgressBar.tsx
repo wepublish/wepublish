@@ -1,4 +1,7 @@
-import { FullCrowdfundingFragment } from '@wepublish/editor/api-v2';
+import {
+  CrowdfundingGoalType,
+  FullCrowdfundingFragment,
+} from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { Progress } from 'rsuite';
 
@@ -20,9 +23,14 @@ export function CrowdfundingProgressBar({
   return (
     <>
       <h3>
-        {t('crowdfunding.form.revenue', {
-          revenue: formatMoney(crowdfunding.revenue || 0),
-        })}
+        {crowdfunding.goalType === CrowdfundingGoalType.Revenue ?
+          t('crowdfunding.form.revenue', {
+            revenue: formatMoney(crowdfunding.revenue || 0),
+          })
+        : t('crowdfunding.form.subscriptions', {
+            subscriptions: crowdfunding.subscriptions,
+          })
+        }
       </h3>
 
       <Progress.Line

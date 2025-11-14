@@ -603,6 +603,7 @@ export type CreateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goalType: CrowdfundingGoalType;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name: Scalars['String'];
@@ -619,12 +620,14 @@ export type Crowdfunding = {
   countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  goalType: CrowdfundingGoalType;
   goals: Array<CrowdfundingGoal>;
   id: Scalars['String'];
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   revenue?: Maybe<Scalars['Float']>;
+  subscriptions?: Maybe<Scalars['Int']>;
 };
 
 export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
@@ -651,6 +654,11 @@ export type CrowdfundingGoal = BaseCrowdfundingGoal & {
   modifiedAt: Scalars['DateTime'];
   title: Scalars['String'];
 };
+
+export enum CrowdfundingGoalType {
+  Revenue = 'Revenue',
+  Subscription = 'Subscription'
+}
 
 export type CrowdfundingGoalWithProgress = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoalWithProgress';
@@ -3621,10 +3629,11 @@ export type UpdateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goalType?: InputMaybe<CrowdfundingGoalType>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
-  name: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UploadImageInput = {

@@ -1409,16 +1409,22 @@ enum BannerActionRole {
   OTHER   @map("other")
 }
 
+enum CrowdfundingGoalType {
+  Revenue      @map("Revenue")
+  Subscription @map("Subscription")
+}
+
 model Crowdfunding {
-  id                      String             @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt               DateTime           @default(now())
-  modifiedAt              DateTime           @updatedAt
+  id                      String               @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt               DateTime             @default(now())
+  modifiedAt              DateTime             @updatedAt
   name                    String
   countSubscriptionsFrom  DateTime?
   countSubscriptionsUntil DateTime?
   additionalRevenue       Int?
   memberPlans             MemberPlan[]
   goals                   CrowdfundingGoal[]
+  goalType                CrowdfundingGoalType @default(Revenue)
 
   @@map("crowdfundings")
 }
