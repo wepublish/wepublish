@@ -25,7 +25,7 @@ import {
   TeaserAuthors,
   TeaserPreTitleWrapper,
   TeaserLead,
-} from '@wepublish/block-content/website';
+} from '../../teaser/base-teaser';
 
 export const TabbedContentWrapper = styled('div')`
   width: 100%;

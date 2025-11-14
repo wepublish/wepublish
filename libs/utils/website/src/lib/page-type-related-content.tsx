@@ -1,10 +1,10 @@
 import { NormalizedCacheObject } from '@apollo/client';
-import { EssentialPageProps } from '@wepublish/website/builder';
 import {
   SessionWithTokenWithoutUser,
   V1_CLIENT_STATE_PROP_NAME,
 } from '@wepublish/website/api';
-
+import { EssentialPageProps } from '@wepublish/website/builder';
+import { Page, ArticleRevision } from '@wepublish/website/api';
 export enum PageType {
   Article = 'Article',
   ArticleList = 'ArticleList',
@@ -91,17 +91,8 @@ export const getPageType = (pageProps: {
   return pageType;
 };
 
-type PageData = {
-  url: string;
-  slug: string;
-};
-
-type ArticleData = {
-  preTitle: string;
-};
-
 const getPageData = (pageProps: NormalizedCacheObject) => {
-  let pageData: PageData | null = null;
+  let pageData: Pick<Page, 'slug' | 'url'> | undefined = undefined;
   const rootQuery = pageProps.ROOT_QUERY;
   if (rootQuery) {
     Object.getOwnPropertyNames(rootQuery).some(propName => {
@@ -109,7 +100,7 @@ const getPageData = (pageProps: NormalizedCacheObject) => {
         case 'page':
           pageData = pageProps[
             (rootQuery[propName] as { __ref: string }).__ref
-          ] as PageData;
+          ] as Pick<Page, 'slug' | 'url'>;
           return true;
       }
       return false;
@@ -120,7 +111,7 @@ const getPageData = (pageProps: NormalizedCacheObject) => {
 };
 
 const getArticleData = (pageProps: NormalizedCacheObject) => {
-  let articleData: ArticleData | null = null;
+  let articleData: Pick<ArticleRevision, 'preTitle'> | undefined = undefined;
   const rootQuery = pageProps.ROOT_QUERY;
   if (rootQuery) {
     Object.getOwnPropertyNames(rootQuery).some(propName => {
@@ -131,7 +122,7 @@ const getArticleData = (pageProps: NormalizedCacheObject) => {
               pageProps[(rootQuery[propName] as { __ref: string }).__ref]
                 ?.latest as { __ref: string }
             ).__ref
-          ] as ArticleData;
+          ] as Pick<ArticleRevision, 'preTitle'>;
           return true;
       }
       return false;
@@ -163,10 +154,10 @@ export const getPageTypeRelatedContent = (pProps: {
   if (rootQuery) {
     switch (pageType) {
       case PageType.Page:
-        essentialProps.Page = getPageData(pp) as unknown as PageData;
+        essentialProps.Page = getPageData(pp);
         break;
       case PageType.Article:
-        essentialProps.Article = getArticleData(pp) as unknown as ArticleData;
+        essentialProps.Article = getArticleData(pp);
         break;
     }
   }

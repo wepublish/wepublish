@@ -261,9 +261,6 @@ export class BlockContentInput {
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
   @Field(() => FlexBlockInput, { nullable: true })
   [BlockType.FlexBlock]?: FlexBlockInput;
-
-  @Field(() => String, { nullable: true })
-  type!: string;
 }
 
 export function mapBlockUnionMap(

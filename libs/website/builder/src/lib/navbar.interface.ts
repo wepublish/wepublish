@@ -2,17 +2,7 @@ import { QueryResult } from '@apollo/client';
 import { ButtonProps } from '@wepublish/ui';
 import { FullImageFragment, NavigationListQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
-
-export type EssentialPageProps = {
-  Page?: {
-    url: string;
-    slug: string;
-  };
-  Article?: {
-    preTitle?: string;
-  };
-  pageType: string;
-};
+import { EssentialPageProps } from './page.interface';
 
 export type BuilderNavbarProps = PropsWithChildren<
   Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error'> & {

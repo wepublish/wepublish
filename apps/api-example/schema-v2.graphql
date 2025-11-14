@@ -287,7 +287,6 @@ input BlockContentInput {
   tikTokVideo: TikTokVideoBlockInput
   title: TitleBlockInput
   twitterTweet: TwitterTweetBlockInput
-  type: String
   vimeoVideo: VimeoVideoBlockInput
   youTubeVideo: YouTubeVideoBlockInput
 }
