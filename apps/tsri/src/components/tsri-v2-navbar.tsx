@@ -574,7 +574,7 @@ export function TsriV2Navbar({
             isMenuOpen={isMenuOpen}
           >
             <TsriLogo
-              src={`${essentialPageProps?.Page?.slug === '' ? '/logo.svg' : '/logo_blue.svg'}`}
+              src={`${isHomePage ? '/logo.svg' : '/logo_blue.svg'}`}
               alt="Tsüri"
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
