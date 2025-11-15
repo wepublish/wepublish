@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ImageService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient } from '@prisma/client';
-import { UserInputError } from '@nestjs/apollo';
 import { PaymentProviderCustomerInput, User, UserInput } from './user.model';
 import { Validator } from '@wepublish/user';
 import { unselectPassword } from '@wepublish/authentication/api';
@@ -74,7 +73,7 @@ export class ProfileService {
       });
 
       if (userExists) {
-        throw new UserInputError(`Email already in use`);
+        throw new BadRequestException(`Email already in use`);
       }
     }
 

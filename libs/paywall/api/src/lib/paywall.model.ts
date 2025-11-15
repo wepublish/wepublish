@@ -4,7 +4,6 @@ import {
   ObjectType,
   OmitType,
   PartialType,
-  InputType,
 } from '@nestjs/graphql';
 import { MemberPlan } from '@wepublish/member-plan/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
@@ -48,6 +47,9 @@ export class Paywall {
   @Field(() => GraphQLRichText, { nullable: true })
   circumventDescription?: Descendant[];
 
+  @Field({ nullable: true })
+  alternativeSubscribeUrl?: string;
+
   @Field()
   anyMemberPlan!: boolean;
 
@@ -61,29 +63,17 @@ export class Paywall {
   bypasses!: PaywallBypass[];
 }
 
-@InputType()
-export class CreatePaywallBypassInput {
-  @Field()
-  token!: string;
-}
-
-@InputType()
-export class UpdatePaywallBypassInput {
-  @Field()
-  id!: string;
-
-  @Field()
-  token!: string;
-}
-
 @ArgsType()
 export class CreatePaywallInput extends OmitType(
   Paywall,
   ['id', 'memberPlans', 'bypasses', 'createdAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(() => [String], { defaultValue: [] })
+  @Field(() => [String])
   memberPlanIds!: string[];
+
+  @Field(() => [String])
+  bypassTokens!: string[];
 }
 
 @ArgsType()
@@ -93,7 +83,4 @@ export class UpdatePaywallInput extends PartialType(
 ) {
   @Field()
   id!: string;
-
-  @Field(() => [String], { nullable: true })
-  bypassTokens?: string[];
 }

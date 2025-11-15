@@ -190,6 +190,26 @@ mutation Resubscribe(
   )
 }
 
+mutation Upgrade(
+  $subscriptionId: String!
+  $memberPlanId: String!
+  $paymentMethodId: String!
+  $monthlyAmount: Int!
+  $successURL: String
+  $failureURL: String
+) {
+  upgradeSubscription(
+    subscriptionId: $subscriptionId
+    memberPlanId: $memberPlanId
+    paymentMethodId: $paymentMethodId
+    monthlyAmount: $monthlyAmount
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
 mutation PayInvoice(
   $invoiceId: String!
   $paymentMethodId: String
@@ -305,5 +325,17 @@ query NewSubscribers($start: DateTime!, $end: DateTime) {
   newSubscribers(start: $start, end: $end) {
     monthlyAmount
     memberPlan
+  }
+}
+
+query UpgradeSubscriptionInfo(
+  $memberPlanId: String!
+  $subscriptionId: String!
+) {
+  upgradeSubscriptionInfo(
+    memberPlanId: $memberPlanId
+    subscriptionId: $subscriptionId
+  ) {
+    discountAmount
   }
 }

@@ -12,7 +12,7 @@ import {
   PollDataloaderService,
   PrismaFullPoll,
 } from './poll-dataloader.service';
-import { UserInputError } from '@nestjs/apollo';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver(() => FullPoll)
 export class PollResolver {
@@ -24,7 +24,7 @@ export class PollResolver {
     const poll = await this.pollDataloader.load(id);
 
     if (!poll) {
-      throw new UserInputError('Poll not found');
+      throw new BadRequestException('Poll not found');
     }
 
     return poll;
