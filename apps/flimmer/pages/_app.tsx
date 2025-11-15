@@ -21,6 +21,7 @@ import {
   authLink,
   NextWepublishLink,
   SubscribePage,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';

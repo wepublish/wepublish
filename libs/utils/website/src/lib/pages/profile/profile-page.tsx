@@ -17,7 +17,6 @@ import {
   LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
-  ProductType,
   InvoicesDocument,
   SubscriptionsDocument,
   ProductType,
