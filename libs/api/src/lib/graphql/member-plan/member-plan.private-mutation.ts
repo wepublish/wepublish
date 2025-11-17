@@ -35,6 +35,14 @@ type CreateMemberPlanInput = Omit<
   availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
 };
 
+type MemberPlanIntegrityInput = {
+  extendable: boolean;
+  amountPerMonthMin: number;
+  amountPerMonthMax: number | null;
+  amountPerMonthTarget: number | null;
+  availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
+};
+
 export const createMemberPlan = (
   { availablePaymentMethods, ...input }: CreateMemberPlanInput,
   authenticate: Context['authenticate'],
@@ -43,7 +51,13 @@ export const createMemberPlan = (
   const { roles } = authenticate();
   authorise(CanCreateMemberPlan, roles);
 
-  checkMemberPlanIntegrity({ availablePaymentMethods, ...input });
+  checkMemberPlanIntegrity({
+    extendable: input.extendable ?? true,
+    amountPerMonthMin: input.amountPerMonthMin,
+    amountPerMonthMax: input.amountPerMonthMax ?? null,
+    amountPerMonthTarget: input.amountPerMonthTarget ?? null,
+    availablePaymentMethods,
+  });
 
   return memberPlan.create({
     data: {
@@ -76,7 +90,35 @@ export const updateMemberPlan = async (
   const { roles } = authenticate();
   authorise(CanCreateMemberPlan, roles);
 
-  checkMemberPlanIntegrity({ availablePaymentMethods, ...input });
+  const existingMemberPlan = await memberPlan.findUniqueOrThrow({
+    where: { id },
+    select: {
+      extendable: true,
+      amountPerMonthMin: true,
+      amountPerMonthMax: true,
+      amountPerMonthTarget: true,
+    },
+  });
+
+  checkMemberPlanIntegrity({
+    extendable: resolveBooleanUpdate(
+      input.extendable,
+      existingMemberPlan.extendable
+    ),
+    amountPerMonthMin: resolveNumberUpdate(
+      input.amountPerMonthMin,
+      existingMemberPlan.amountPerMonthMin
+    ),
+    amountPerMonthMax: resolveNullableNumberUpdate(
+      input.amountPerMonthMax,
+      existingMemberPlan.amountPerMonthMax
+    ),
+    amountPerMonthTarget: resolveNullableNumberUpdate(
+      input.amountPerMonthTarget,
+      existingMemberPlan.amountPerMonthTarget
+    ),
+    availablePaymentMethods,
+  });
 
   return memberPlan.update({
     where: { id },
@@ -99,7 +141,7 @@ export const updateMemberPlan = async (
   });
 };
 
-function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
+function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   const {
     extendable,
     amountPerMonthMin,
@@ -115,11 +157,7 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
     throw new InvalidMemberPlanSettings();
   }
 
-  if (
-    amountPerMonthMin != null &&
-    amountPerMonthMax != null &&
-    amountPerMonthMax < amountPerMonthMin
-  ) {
+  if (amountPerMonthMax != null && amountPerMonthMax < amountPerMonthMin) {
     throw new InvalidMemberPlanSettings();
   }
 
@@ -129,4 +167,69 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
   ) {
     throw new MonthlyTargetAmountNotEnough();
   }
+}
+
+function resolveBooleanUpdate(
+  value: Prisma.BoolFieldUpdateOperationsInput | boolean | undefined,
+  fallback: boolean
+): boolean {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
+  if (value && typeof value === 'object' && 'set' in value) {
+    const nextValue = value.set;
+
+    if (typeof nextValue === 'boolean') {
+      return nextValue;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveNumberUpdate(
+  value: Prisma.FloatFieldUpdateOperationsInput | number | undefined,
+  fallback: number
+): number {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (value && typeof value === 'object' && 'set' in value) {
+    const nextValue = value.set;
+
+    if (typeof nextValue === 'number') {
+      return nextValue;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveNullableNumberUpdate(
+  value:
+    | Prisma.NullableFloatFieldUpdateOperationsInput
+    | number
+    | null
+    | undefined,
+  fallback: number | null
+): number | null {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (value === null) {
+    return null;
+  }
+
+  if (value && typeof value === 'object' && 'set' in value) {
+    const nextValue = value.set;
+
+    if (typeof nextValue === 'number' || nextValue === null) {
+      return nextValue ?? null;
+    }
+  }
+
+  return fallback;
 }
