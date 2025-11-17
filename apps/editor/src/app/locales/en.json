@@ -788,6 +788,7 @@
       "currency": "Currency",
       "currencyRequired": "Currency required",
       "amountPerMonthMin": "Minimal amount / month",
+      "amountPerMonthMax": "Maximal amount / month",
       "amountPerMonthMinRequired": "Minimal amount required",
       "amountPerMonthMinZero": "Minimal amount cannot be less than 0",
       "autoRenewalDescription": "Forces auto renewal of subscription",
