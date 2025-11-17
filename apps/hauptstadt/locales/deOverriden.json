@@ -17,8 +17,7 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {{exactAmount, select, true {} other {Ab}} {yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
     },
-    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen.",
-    "payForPeriod": "{productType, select, Subscription {{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} other {{monthlyAmount, select, 0 {Gratis} other {{formattedAmount}}}}"
+    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
   },
   "user": {
     "activeSubscriptions": "{type, select, Donation {Spenden} other {Aktive Abos}}",

@@ -161,6 +161,7 @@ export const usePaymentText = (
     locale,
     monthlyAmount,
     paymentPeriodicity,
+    productType,
     t,
   ]);
 };
