@@ -472,7 +472,7 @@ export function MemberPlanForm({
                 }}
               />
               <HelpText>
-                {t('memberplanForm.amountPerMonthMinHelpText')}
+                {t('memberplanForm.amountPerMonthMaxHelpText')}
               </HelpText>
             </Col>
 

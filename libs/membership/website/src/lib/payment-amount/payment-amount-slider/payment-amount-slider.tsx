@@ -51,7 +51,7 @@ export const PaymentAmountSlider = forwardRef<
             value={value}
             onChange={(_, val) => onChange(val as number)}
             min={amountPerMonthMin}
-            max={amountPerMonthMax}
+            max={amountPerMonthMax ?? amountPerMonthMin * 5}
             valueLabelFormat={val =>
               formatCurrency(val / 100, currency ?? Currency.Chf, locale)
             }

@@ -8,6 +8,8 @@ export interface CurrencyInputProps {
   disabled?: boolean;
   name: string;
 }
+const toDisplayValue = (value: number | null) =>
+  value != null ? (value / 100).toFixed(2) : '';
 
 export function CurrencyInput({
   currency,
@@ -16,10 +18,7 @@ export function CurrencyInput({
   name,
   onChange,
 }: CurrencyInputProps) {
-  const toDisplayValue = (value: number | null) =>
-    value != null ? (value / 100).toFixed(2) : '';
-
-  const [amount, setAmount] = useState<number | string | any>(
+  const [amount, setAmount] = useState<number | string | any>(() =>
     toDisplayValue(centAmount)
   );
 

@@ -63,7 +63,12 @@ export type BuilderMemberPlanPickerProps = {
 
 export type BuilderMemberPlanItemProps = Pick<
   FullMemberPlanFragment,
-  'amountPerMonthMin' | 'currency' | 'extendable' | 'shortDescription' | 'tags'
+  | 'amountPerMonthMin'
+  | 'amountPerMonthMax'
+  | 'currency'
+  | 'extendable'
+  | 'shortDescription'
+  | 'tags'
 > &
   Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
 
@@ -93,7 +98,7 @@ export type BuilderTransactionFeeProps = {
 
 export type BuilderPaymentAmountProps = {
   amountPerMonthMin: number;
-  amountPerMonthMax: number;
+  amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
   currency: Currency;
   donate: boolean;
@@ -139,7 +144,6 @@ export type BuilderSubscribeProps<
     firstName: string;
   }>;
   deactivateSubscriptionId?: string;
-  hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;
