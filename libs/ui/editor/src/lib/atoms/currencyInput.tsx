@@ -8,6 +8,7 @@ export interface CurrencyInputProps {
   disabled?: boolean;
   name: string;
 }
+
 const toDisplayValue = (value: number | null) =>
   value != null ? (value / 100).toFixed(2) : '';
 
