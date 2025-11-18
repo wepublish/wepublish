@@ -182,30 +182,7 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       ],
       [
         isFlexBlock,
-        block => {
-          const nrOfNestedBlocks = (block as BuilderFlexBlockProps).nestedBlocks
-            .length;
-          const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
-            (nb, index) => {
-              return (
-                <Block
-                  key={index}
-                  block={nb.block as BlockContent}
-                  type="Article"
-                  index={index}
-                  count={nrOfNestedBlocks}
-                />
-              );
-            }
-          );
-
-          return (
-            <blocks.FlexBlock
-              {...(block as BuilderFlexBlockProps)}
-              children={children}
-            />
-          );
-        },
+        block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
       ],
     ])(block)
   );
