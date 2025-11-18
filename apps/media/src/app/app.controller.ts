@@ -37,7 +37,7 @@ const linkCache = new NodeCache({
   stdTTL: 3000,
 });
 const HTTP_CODE_FOUND = 301;
-const HTTP_CODE_NOT_FOUD = 307;
+const HTTP_CODE_NOT_FOUND = 307;
 
 @Controller({
   version: '1',
@@ -114,7 +114,7 @@ export class AppController {
       let httpCode = HTTP_CODE_FOUND;
       if (!uriFromCache.exists) {
         res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
-        httpCode = HTTP_CODE_NOT_FOUD;
+        httpCode = HTTP_CODE_NOT_FOUND;
       }
       res.redirect(
         httpCode,
@@ -131,7 +131,7 @@ export class AppController {
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=60`);
       res.redirect(
-        HTTP_CODE_NOT_FOUD,
+        HTTP_CODE_NOT_FOUND,
         `${process.env['S3_PUBLIC_HOST']}/${uri}`
       );
       linkCache.set(cacheKey, { uri, exists: false }, 120);
