@@ -439,6 +439,7 @@ export function TsriV2Navbar({
   onMenuToggle,
   navPaperClassName,
   pageTypeBasedProps,
+  imagesBase64 = {},
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -497,7 +498,7 @@ export function TsriV2Navbar({
         case PageType.Author:
           return 'Ich bin Tsüri!';
         case PageType.AuthorList:
-          return 'Wir sind Tsüri!';
+          return 'Mir sind Tsüri!';
       }
     }
     return '';
@@ -564,14 +565,22 @@ export function TsriV2Navbar({
             isMenuOpen={isMenuOpen}
           >
             <TsriLogo
-              src={`${isHomePage ? '/logo.svg' : '/logo_blue.svg'}`}
+              src={
+                isHomePage ?
+                  imagesBase64?.logoDefault ?
+                    imagesBase64.logoDefault
+                  : '/logo.svg'
+                : imagesBase64?.logoAlternative ?
+                  imagesBase64.logoAlternative
+                : '/logo_blue.svg'
+              }
               alt="Tsüri"
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
               isHomePage={isHomePage}
             />
             <TsriClaim
-              src="/claim.gif"
+              src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
               alt="Unabhängig, Kritisch, Lokal."
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
