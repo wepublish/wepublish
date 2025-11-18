@@ -52,6 +52,11 @@ export const SubscriptionListItemMetaItem = styled('li')`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+// Used to hide it on demand by medias
+export const SubscriptionListItemPaymentPeriodicity = styled(
+  SubscriptionListItemMetaItem
+)``;
+
 export const SubscriptionListItemActions = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -192,9 +197,9 @@ export function SubscriptionListItem({
           )}
 
           {!autoRenew && (
-            <SubscriptionListItemMetaItem>
+            <SubscriptionListItemPaymentPeriodicity>
               <MdTimelapse /> Gültig für {subscriptionDuration}
-            </SubscriptionListItemMetaItem>
+            </SubscriptionListItemPaymentPeriodicity>
           )}
 
           <SubscriptionListItemMetaItem>
