@@ -163,6 +163,12 @@ fragment BlockWithoutTeaser on BlockContent {
     videoID
   }
 
+  ... on StreamableVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
   ... on YouTubeVideoBlock {
     blockStyle
     type

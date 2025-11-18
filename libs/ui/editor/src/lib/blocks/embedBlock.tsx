@@ -13,6 +13,7 @@ import { IframeEmbed } from './embeds/iframe';
 import { InstagramPostEmbed } from './embeds/instagram';
 import { PolisEmbed } from './embeds/polis';
 import { SoundCloudTrackEmbed } from './embeds/soundCloud';
+import { StreamableVideoEmbed } from './embeds/streamable';
 import { TikTokVideoEmbed } from './embeds/tikTok';
 import { TwitterTweetEmbed } from './embeds/twitter';
 import { VimeoVideoEmbed } from './embeds/vimeo';
@@ -154,6 +155,9 @@ export function EmbedPreview({ value }: EmbedPreviewProps) {
 
     case EmbedType.BildwurfAd:
       return <BildwurfAdEmbed zoneID={value.zoneID} />;
+
+    case EmbedType.StreamableVideo:
+      return <StreamableVideoEmbed videoID={value.videoID} />;
 
     default:
       return value.url ?

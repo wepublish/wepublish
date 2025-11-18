@@ -114,6 +114,7 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
 }
 
 export enum EmbedType {
+  StreamableVideo = 'streamableVideo',
   FacebookPost = 'facebookPost',
   FacebookVideo = 'facebookVideo',
   InstagramPost = 'instagramPost',
@@ -136,6 +137,11 @@ interface FacebookPostEmbed extends BaseBlockValue {
 interface FacebookVideoEmbed extends BaseBlockValue {
   type: EmbedType.FacebookVideo;
   userID: string | null | undefined;
+  videoID: string | null | undefined;
+}
+
+interface StreamableVideoEmbed extends BaseBlockValue {
+  type: EmbedType.StreamableVideo;
   videoID: string | null | undefined;
 }
 
@@ -200,6 +206,7 @@ export type EmbedBlockValue =
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | StreamableVideoEmbed
   | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed;
@@ -569,6 +576,14 @@ export function mapBlockValueToBlockInput(
             },
           };
 
+        case EmbedType.StreamableVideo:
+          return {
+            streamableVideo: {
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle,
+            },
+          };
+
         case EmbedType.InstagramPost:
           return {
             instagramPost: {
@@ -889,6 +904,17 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           type: EmbedType.FacebookVideo,
           userID: block.userID,
+          videoID: block.videoID,
+        },
+      };
+
+    case 'StreamableVideoBlock':
+      return {
+        key,
+        type: EditorBlockType.Embed,
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.StreamableVideo,
           videoID: block.videoID,
         },
       };

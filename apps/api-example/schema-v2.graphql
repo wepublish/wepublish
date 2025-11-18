@@ -266,7 +266,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -287,6 +287,7 @@ input BlockContentInput {
   quote: QuoteBlockInput
   richText: RichTextBlockInput
   soundCloudTrack: SoundCloudTrackBlockInput
+  streamableVideo: StreamableVideoBlockInput
   subscribe: SubscribeBlockInput
   teaserGrid: TeaserGridBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
@@ -326,6 +327,7 @@ enum BlockType {
   Quote
   RichText
   SoundCloudTrack
+  StreamableVideo
   Subscribe
   TeaserGrid
   TeaserGridFlex
@@ -2387,6 +2389,19 @@ type Stats {
   articlesCount: Int!
   authorsCount: Int!
   firstArticleDate: DateTime
+}
+
+type StreamableVideoBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  type: BlockType!
+  videoID: String
+}
+
+input StreamableVideoBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  videoID: String
 }
 
 type SubscribeBlock implements BaseBlock {

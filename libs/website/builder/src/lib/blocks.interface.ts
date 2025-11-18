@@ -27,6 +27,7 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
+  StreamableVideoBlock,
   YouTubeVideoBlock,
 } from '@wepublish/website/api';
 
@@ -81,6 +82,12 @@ export type BuilderTwitterTweetBlockProps = Omit<TwitterTweetBlock, 'type'> & {
   className?: string;
 };
 export type BuilderVimeoVideoBlockProps = Omit<VimeoVideoBlock, 'type'> & {
+  className?: string;
+};
+export type BuilderStreamableVideoBlockProps = Omit<
+  StreamableVideoBlock,
+  'type'
+> & {
   className?: string;
 };
 export type BuilderYouTubeVideoBlockProps = Omit<YouTubeVideoBlock, 'type'> & {
