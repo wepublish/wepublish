@@ -21,6 +21,7 @@ import {
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import { getPageTypeBasedContent } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
@@ -40,16 +41,18 @@ import Script from 'next/script';
 import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
+import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
+import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
-import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
+import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -120,19 +123,22 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
+  const pageTypeRelatedContent = getPageTypeBasedContent(pageProps);
+
   return (
     <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          Navbar={TsriNavbar}
+          Navbar={TsriV2Navbar}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           PaymentAmount={PaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           blocks={{
-            BaseTeaser: TsriTeaser,
+            BaseTeaser: TsriBaseTeaser,
+            TeaserGridFlex: TsriTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
@@ -140,6 +146,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
+            TabbedContent,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -226,6 +233,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
+                pageTypeBasedContent={pageTypeBasedContent}
               />
 
               <main>

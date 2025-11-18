@@ -1,0 +1,24 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"></link>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #storybook-root {
+    margin: 0;
+    padding: 0;
+    scale: 0.7;
+    transform-origin: top;
+
+    &:has( > nav > header) {
+      min-height: 120vh;
+      scale: unset;
+      transform-origin: unset;
+    }
+  }
+</style>

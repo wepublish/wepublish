@@ -10,6 +10,7 @@ export * from './commentBlock';
 export * from './CrowdfundingBlock';
 export * from './embedBlock';
 export * from './eventBlock';
+export * from './flexBlock';
 export * from './htmlBlock';
 export * from './imageBlock';
 export * from './imageGalleryBlock';
