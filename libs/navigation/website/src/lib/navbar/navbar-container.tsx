@@ -9,7 +9,6 @@ import {
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
-  EssentialPageProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
@@ -24,6 +23,7 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'loginBtn'
     | 'profileBtn'
     | 'subscribeBtn'
+    | 'pageTypeBasedProps'
   > &
     BuilderContainerProps
 >;
@@ -38,8 +38,8 @@ export function NavbarContainer({
   profileBtn,
   subscribeBtn,
   children,
-  essentialPageProps,
-}: NavbarContainerProps & { essentialPageProps?: EssentialPageProps }) {
+  pageTypeBasedProps,
+}: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
   const { data, loading, error } = useNavigationListQuery();
   const { data: peerInfoData } = usePeerProfileQuery();
@@ -64,7 +64,7 @@ export function NavbarContainer({
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
       hasRunningSubscription={!!hasRunningSubscription}
-      essentialPageProps={essentialPageProps}
+      pageTypeBasedProps={pageTypeBasedProps}
     >
       {children}
     </Navbar>
