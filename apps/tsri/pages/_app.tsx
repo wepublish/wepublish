@@ -46,12 +46,13 @@ import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
+import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaser } from '../src/components/tsri-teaser';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
+import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -121,7 +122,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
-
+  
   const pageTypeRelatedContent = getPageTypeRelatedContent(pageProps);
 
   return (
@@ -136,7 +137,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           PaymentAmount={PaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           blocks={{
-            BaseTeaser: TsriTeaser,
+            BaseTeaser: TsriBaseTeaser,
+            TeaserGridFlex: TsriTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
