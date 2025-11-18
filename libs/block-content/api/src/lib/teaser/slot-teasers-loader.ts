@@ -31,7 +31,7 @@ export class SlotTeasersLoader {
     if (!insideRecursion) {
       this.nestedBlocks = [];
     }
-
+    
     for await (const block of revisionBlocks) {
       if (Object.prototype.hasOwnProperty.call(block, 'nestedBlocks')) {
         const flexBlock = block as unknown as {
@@ -47,7 +47,6 @@ export class SlotTeasersLoader {
           }
         }
       }
-
       if (isTeaserSlotsBlock(block)) {
         this.addLoadedTeaser(
           ...block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
@@ -97,7 +96,7 @@ export class SlotTeasersLoader {
           }
         });
       }
-
+      
       if (isTeaserSlotsBlock(block)) {
         const autofillTeasers = await this.getAutofillTeasers(block);
         const teasers = await this.getTeasers(block, autofillTeasers);
@@ -110,6 +109,7 @@ export class SlotTeasersLoader {
         blocks.push(block);
       }
     }
+
     return blocks;
   }
 
@@ -214,11 +214,11 @@ export class SlotTeasersLoader {
       return ids;
     }, []);
   }
-
+  
   getNestedBlock(): BaseBlock<BlockType> {
     return this.nestedBlocks.shift() as BaseBlock<BlockType>;
   }
-
+  
   addNestedBlock(block: BaseBlock<BlockType>) {
     this.nestedBlocks.push(block);
   }

@@ -27,6 +27,7 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
+  StreamableVideoBlock,
   YouTubeVideoBlock,
   FlexBlock,
 } from '@wepublish/website/api';
@@ -47,6 +48,7 @@ export type BuilderFlexBlockProps = FlexBlock & {
   className?: string;
   children?: React.ReactNode;
 };
+
 export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {
   className?: string;
 };
@@ -86,6 +88,12 @@ export type BuilderTwitterTweetBlockProps = Omit<TwitterTweetBlock, 'type'> & {
   className?: string;
 };
 export type BuilderVimeoVideoBlockProps = Omit<VimeoVideoBlock, 'type'> & {
+  className?: string;
+};
+export type BuilderStreamableVideoBlockProps = Omit<
+  StreamableVideoBlock,
+  'type'
+> & {
   className?: string;
 };
 export type BuilderYouTubeVideoBlockProps = Omit<YouTubeVideoBlock, 'type'> & {

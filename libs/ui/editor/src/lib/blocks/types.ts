@@ -147,6 +147,7 @@ const isMinimalBlock = (nb: unknown): nb is MinimalBlock => {
 };
 
 export enum EmbedType {
+  StreamableVideo = 'streamableVideo',
   FacebookPost = 'facebookPost',
   FacebookVideo = 'facebookVideo',
   InstagramPost = 'instagramPost',
@@ -169,6 +170,11 @@ interface FacebookPostEmbed extends BaseBlockValue {
 interface FacebookVideoEmbed extends BaseBlockValue {
   type: EmbedType.FacebookVideo;
   userID: string | null | undefined;
+  videoID: string | null | undefined;
+}
+
+interface StreamableVideoEmbed extends BaseBlockValue {
+  type: EmbedType.StreamableVideo;
   videoID: string | null | undefined;
 }
 
@@ -233,6 +239,7 @@ export type EmbedBlockValue =
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | StreamableVideoEmbed
   | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed;
@@ -609,6 +616,14 @@ export function mapBlockValueToBlockInput(
             },
           };
 
+        case EmbedType.StreamableVideo:
+          return {
+            streamableVideo: {
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle,
+            },
+          };
+
         case EmbedType.InstagramPost:
           return {
             instagramPost: {
@@ -769,7 +784,7 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
-
+      
     case EditorBlockType.FlexBlock: {
       const flexBlock = {
         nestedBlocks: (block.value.nestedBlocks || []).map(nb => ({
@@ -786,7 +801,7 @@ export function mapBlockValueToBlockInput(
         type: BlockType.FlexBlock,
         blockStyle: block.value.blockStyle,
       };
-
+      
       return { flexBlock };
     }
   }
@@ -906,6 +921,7 @@ export function blockForQueryBlock(
         },
       };
     }
+
     case 'RichTextBlock':
       return {
         key,
@@ -948,6 +964,17 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           type: EmbedType.FacebookVideo,
           userID: block.userID,
+          videoID: block.videoID,
+        },
+      };
+
+    case 'StreamableVideoBlock':
+      return {
+        key,
+        type: EditorBlockType.Embed,
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.StreamableVideo,
           videoID: block.videoID,
         },
       };
@@ -1144,31 +1171,31 @@ export function blockForQueryBlock(
 
     case 'TeaserSlotsBlock':
       return (() => {
-        return {
-          key,
+      return {
+        key,
           type: EditorBlockType.TeaserSlots as EditorBlockType.TeaserSlots,
-          value: {
-            blockStyle: block.blockStyle,
-            slots: block.slots.map(({ teaser, type }) => ({
-              type,
-              teaser:
-                !teaser ? null : (
-                  ({
-                    ...teaser,
-                    type:
+        value: {
+          blockStyle: block.blockStyle,
+          slots: block.slots.map(({ teaser, type }) => ({
+            type,
+            teaser:
+              !teaser ? null : (
+                ({
+                  ...teaser,
+                  type:
                       teaser?.__typename === 'ArticleTeaser' ?
                         TeaserType.Article
-                      : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                      : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                      : TeaserType.Custom,
-                  } as Teaser)
-                ),
-            })),
-            autofillConfig: block.autofillConfig,
-            autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
-            teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
-          },
-        };
+                    : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                    : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                    : TeaserType.Custom,
+                } as Teaser)
+              ),
+          })),
+          autofillConfig: block.autofillConfig,
+          autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+          teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+        },
+      };
       })();
 
     case 'BreakBlock':
@@ -1186,7 +1213,7 @@ export function blockForQueryBlock(
           image: block.image ?? undefined,
         },
       };
-
+      
     case 'FlexBlock':
       return {
         key,
@@ -1200,7 +1227,7 @@ export function blockForQueryBlock(
                 block: null,
               };
             }
-
+            
             if (isNestedBlock(nb)) {
               const s = nb;
               return {
@@ -1215,7 +1242,7 @@ export function blockForQueryBlock(
                 block: s.block ? s.block : null,
               };
             }
-
+            
             if (isMinimalBlock(nb)) {
               const s = nb;
               return {

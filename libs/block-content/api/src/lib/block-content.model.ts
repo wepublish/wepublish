@@ -92,6 +92,10 @@ import {
   CrowdfundingBlock,
   CrowdfundingBlockInput,
 } from './crowdfunding/crowdfunding-block.model';
+import {
+  StreamableVideoBlock,
+  StreamableVideoBlockInput,
+} from './embed/streamable-block.model';
 import { FlexBlock, FlexBlockInput } from './nested-blocks/flex-block.model';
 
 export const BlockContent = createUnionType({
@@ -121,6 +125,7 @@ export const BlockContent = createUnionType({
       TikTokVideoBlock,
       TwitterTweetBlock,
       VimeoVideoBlock,
+      StreamableVideoBlock,
       YouTubeVideoBlock,
       SubscribeBlock,
       TeaserGridBlock,
@@ -163,6 +168,8 @@ export const BlockContent = createUnionType({
         return FacebookPostBlock.name;
       case BlockType.FacebookVideo:
         return FacebookVideoBlock.name;
+      case BlockType.StreamableVideo:
+        return StreamableVideoBlock.name;
       case BlockType.InstagramPost:
         return InstagramPostBlock.name;
       case BlockType.PolisConversation:
@@ -244,6 +251,8 @@ export class BlockContentInput {
   [BlockType.SoundCloudTrack]?: SoundCloudTrackBlockInput;
   @Field(() => TikTokVideoBlockInput, { nullable: true })
   [BlockType.TikTokVideo]?: TikTokVideoBlockInput;
+  @Field(() => StreamableVideoBlockInput, { nullable: true })
+  [BlockType.StreamableVideo]?: StreamableVideoBlockInput;
   @Field(() => TwitterTweetBlockInput, { nullable: true })
   [BlockType.TwitterTweet]?: TwitterTweetBlockInput;
   @Field(() => VimeoVideoBlockInput, { nullable: true })
@@ -261,9 +270,6 @@ export class BlockContentInput {
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
   @Field(() => FlexBlockInput, { nullable: true })
   [BlockType.FlexBlock]?: FlexBlockInput;
-
-  @Field(() => String, { nullable: true })
-  type!: string;
 }
 
 export function mapBlockUnionMap(
@@ -327,7 +333,7 @@ export function mapBlockUnionMap(
         autofillTeasers: [],
       };
     }
-
+    
     case BlockType.FlexBlock: {
       const blockValue = value[type];
       return {

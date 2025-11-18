@@ -303,7 +303,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     label: 'blocks.event.label',
     icon: <MdEvent />,
   },
-
+  
   [EditorBlockType.FlexBlock]: {
     field: props => <FlexBlock {...props} />,
     defaultValue: {
