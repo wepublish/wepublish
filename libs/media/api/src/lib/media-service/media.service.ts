@@ -52,6 +52,10 @@ const fallbackImageRatios: FallbackImageRatio[] = [
     heightRatio: 16,
   },
 ];
+export type ImageURIObject = {
+  uri: string;
+  exists: boolean;
+};
 
 @Injectable()
 export class MediaService {
@@ -78,11 +82,11 @@ export class MediaService {
   public async getImageUri(
     imageId: string,
     transformations: TransformationsDto
-  ): Promise<{ uri: string; exists: boolean }> {
+  ): Promise<ImageURIObject> {
     const transformationsKey = getTransformationKey(
       removeSignatureFromTransformations(transformations)
     );
-    let objectUri: string = `images/${imageId}/${transformationsKey}`;
+    const objectUri = `images/${imageId}/${transformationsKey}`;
     try {
       await this.storage.hasFile(this.config.transformationBucket, objectUri);
     } catch (e: any) {
@@ -132,7 +136,7 @@ export class MediaService {
   private async transformImage(
     imageId: string,
     transformations: TransformationsDto
-  ): Promise<{ uri: string; exists: boolean }> {
+  ): Promise<ImageURIObject> {
     let imageStream: Readable;
     let imageExists = true;
     try {
@@ -222,8 +226,8 @@ export class MediaService {
     ).metadata();
     transformGuard.checkImageSize(metadata);
 
-    let uri: string = '';
-    let exists: boolean = true;
+    let uri;
+    let exists = true;
     if (imageExists) {
       uri = `images/${imageId}/${transformationsKey}`;
       await this.storage.saveFile(

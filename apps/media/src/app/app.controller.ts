@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  ImageURIObject,
   MediaService,
   SupportedImagesValidator,
   TokenAuthGuard,
@@ -35,6 +36,8 @@ const linkCache = new NodeCache({
   useClones: true,
   stdTTL: 3000,
 });
+const HTTP_CODE_FOUND = 301;
+const HTTP_CODE_NOT_FOUD = 307;
 
 @Controller({
   version: '1',
@@ -95,7 +98,7 @@ export class AppController {
     )}`;
 
     // Check if image is cached
-    const linkFromCache: [string, number] = linkCache.get(cacheKey);
+    const uriFromCache: ImageURIObject = linkCache.get(cacheKey);
 
     res.setHeader('Content-Type', 'image/webp');
 
@@ -107,13 +110,15 @@ export class AppController {
       );
     }
 
-    if (linkFromCache) {
-      if (linkFromCache[1] !== 301) {
+    if (uriFromCache) {
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
         res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
+        httpCode = HTTP_CODE_NOT_FOUD;
       }
       res.redirect(
-        linkFromCache[1],
-        `${process.env['S3_PUBLIC_HOST']}/${linkFromCache[0]}`
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
       );
       return;
     }
@@ -125,13 +130,16 @@ export class AppController {
 
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=60`);
-      res.redirect(404, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
-      linkCache.set(cacheKey, [uri, 404], 120);
+      res.redirect(
+        HTTP_CODE_NOT_FOUD,
+        `${process.env['S3_PUBLIC_HOST']}/${uri}`
+      );
+      linkCache.set(cacheKey, { uri, exists: false }, 120);
     } else {
-      linkCache.set(cacheKey, [uri, 301]);
+      linkCache.set(cacheKey, { uri, exists: true });
     }
 
-    res.redirect(301, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
+    res.redirect(HTTP_CODE_FOUND, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
   }
 
   @UseGuards(TokenAuthGuard)
