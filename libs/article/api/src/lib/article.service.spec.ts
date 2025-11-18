@@ -459,14 +459,6 @@ describe('ArticleService', () => {
     expect(prismaMock.article.update).not.toHaveBeenCalled();
   });
 
-  it('should return the tracking pixels of an article', async () => {
-    await service.getTrackingPixels('1234');
-
-    expect(
-      prismaMock.articleTrackingPixels.findMany?.mock.calls[0]
-    ).toMatchSnapshot();
-  });
-
   describe('unhappy path', () => {
     it('updateArticle should throw if article can not be found', async () => {
       await expect(async () => {

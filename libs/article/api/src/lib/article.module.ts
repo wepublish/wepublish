@@ -6,7 +6,6 @@ import { ArticleResolver } from './article.resolver';
 import { ArticleService } from './article.service';
 import { ArticleRevisionDataloaderService } from './article-revision-dataloader.service';
 import { ArticleRevisionResolver } from './article-revision.resolver';
-import { ArticleRevisionService } from './article-revision.service';
 import { AuthorModule } from '@wepublish/author/api';
 import {
   HasArticleLcResolver,
@@ -17,6 +16,7 @@ import {
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
+import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
   imports: [
@@ -25,6 +25,7 @@ import { TagModule } from '@wepublish/tag/api';
     AuthorModule,
     SettingModule,
     TagModule,
+    PropertyModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [
@@ -33,7 +34,7 @@ import { TagModule } from '@wepublish/tag/api';
     ArticleService,
     ArticleResolver,
     ArticleRevisionResolver,
-    ArticleRevisionService,
+
     HasArticleResolver,
     HasArticleLcResolver,
     HasOptionalArticleResolver,
@@ -43,7 +44,6 @@ import { TagModule } from '@wepublish/tag/api';
     ArticleDataloaderService,
     ArticleRevisionDataloaderService,
     ArticleService,
-    ArticleRevisionService,
   ],
 })
 export class ArticleModule {}
