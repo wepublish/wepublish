@@ -257,7 +257,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -278,6 +278,7 @@ input BlockContentInput {
   quote: QuoteBlockInput
   richText: RichTextBlockInput
   soundCloudTrack: SoundCloudTrackBlockInput
+  streamableVideo: StreamableVideoBlockInput
   subscribe: SubscribeBlockInput
   teaserGrid: TeaserGridBlockInput
   teaserGridFlex: TeaserGridFlexBlockInput
@@ -317,6 +318,7 @@ enum BlockType {
   Quote
   RichText
   SoundCloudTrack
+  StreamableVideo
   Subscribe
   TeaserGrid
   TeaserGridFlex
@@ -1306,12 +1308,14 @@ type MemberPlan implements HasImage {
   currency: Currency!
   description: RichText
   extendable: Boolean!
+  externalReward: String
   failPageId: String
   id: String!
   image: Image
   imageID: String
   maxCount: Int
   name: String!
+  productType: ProductType!
   shortDescription: RichText
   slug: String!
   successPageId: String
@@ -1327,6 +1331,7 @@ type MemberPlanConnection {
 input MemberPlanFilter {
   active: Boolean
   name: String
+  productType: ProductType
   tags: [String!]
 }
 
@@ -2003,6 +2008,11 @@ enum PollVoteSort {
   CreatedAt
 }
 
+enum ProductType {
+  Donation
+  Subscription
+}
+
 type Property {
   id: String!
   key: String!
@@ -2022,7 +2032,9 @@ type PublicSubscription implements HasPaymentMethod & HasUser {
   canExtend: Boolean!
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
+  externalReward: String
   id: String!
+  isActive: Boolean!
   memberPlan: MemberPlan!
   monthlyAmount: Int!
   paidUntil: DateTime
@@ -2380,15 +2392,42 @@ type Stats {
   firstArticleDate: DateTime
 }
 
-type SubscribeBlock implements BaseBlock {
+type StreamableVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   type: BlockType!
+  videoID: String
+}
+
+input StreamableVideoBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  videoID: String
+}
+
+type SubscribeBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  fields: [SubscribeBlockField!]!
+  memberPlanIds: [String!]
+  memberPlans: [MemberPlan!]!
+  type: BlockType!
+}
+
+enum SubscribeBlockField {
+  Address
+  Birthday
+  EmailRepeated
+  FirstName
+  Password
+  PasswordRepeated
 }
 
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
+  memberPlanIds: [String!]
 }
 
 type SubscriptionCreatedAction implements BaseAction & HasSubscriptionLc {

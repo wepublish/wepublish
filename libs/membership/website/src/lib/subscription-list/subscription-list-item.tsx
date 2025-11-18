@@ -62,6 +62,20 @@ export const SubscriptionListItemActions = styled('div')`
   }
 `;
 
+const isURL = (string: string) => {
+  try {
+    new URL(string);
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+
+  return false;
+};
+
+export const SubscriptionListItemReward = styled('div')``;
+
 export function SubscriptionListItem({
   autoRenew,
   startsAt,
@@ -69,10 +83,11 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: { image, name, currency },
+  memberPlan: { image, name, currency, productType },
   url,
   cancel,
   canExtend,
+  externalReward,
   extend,
   className,
 }: BuilderSubscriptionListItemProps) {
@@ -161,8 +176,11 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung
-              ist unbezahlt
+              <MdOutlinePayments />
+
+              {t('subscription.unpaid', {
+                type: productType,
+              })}
             </SubscriptionListItemMetaItem>
           )}
 
@@ -188,6 +206,28 @@ export function SubscriptionListItem({
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
 
+        {externalReward && (
+          <SubscriptionListItemReward>
+            <Alert severity="info">
+              {isURL(externalReward) ?
+                <Link
+                  href={externalReward}
+                  target="_blank"
+                >
+                  {t('subscription.externalReward', {
+                    isLink: true,
+                    externalReward,
+                  })}
+                </Link>
+              : t('subscription.externalReward', {
+                  isLink: false,
+                  externalReward,
+                })
+              }
+            </Alert>
+          </SubscriptionListItemReward>
+        )}
+
         {error && <Alert severity="error">{error.message}</Alert>}
 
         {!deactivation && (
@@ -198,7 +238,9 @@ export function SubscriptionListItem({
               variant="text"
               color="secondary"
             >
-              Abo kündigen
+              {t('subscription.cancel', {
+                type: productType,
+              })}
             </Button>
 
             {canExtend && (
@@ -220,12 +262,16 @@ export function SubscriptionListItem({
           await callAction(cancel)();
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={t('subscription.cancelSubscription')}
+        submitText={t('subscription.cancel', {
+          type: productType,
+        })}
       >
         <H5 component="h1">{name} wirklich kündigen?</H5>
 
         <Paragraph gutterBottom={false}>
-          {t('subscription.cancelSubscriptionConfirmationText')}
+          {t('subscription.cancelConfirmation', {
+            type: productType,
+          })}
         </Paragraph>
       </Modal>
 
@@ -238,10 +284,14 @@ export function SubscriptionListItem({
         }}
         submitText={`Jetzt um ${subscriptionDuration} verlängern`}
       >
-        <H5 component="h1">Abo frühzeitig verlängern?</H5>
+        <H5 component="h1">
+          {t('subscription.extendEarly', {
+            type: productType,
+          })}
+        </H5>
 
         <Paragraph gutterBottom={false}>
-          {t('subscription.renewSubscriptionConfirmationText', {
+          {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,
           })}
         </Paragraph>

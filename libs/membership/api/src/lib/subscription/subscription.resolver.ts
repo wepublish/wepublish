@@ -11,9 +11,19 @@ import {
   PaymentMethod,
   PaymentMethodDataloader,
 } from '@wepublish/payment-method/api';
-import { Property } from '@wepublish/utils/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
-import { SubscriptionPropertyDataloader } from './subscription-properties.dataloader';
+import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import { Subscription as PSubscription } from '@prisma/client';
+import { hasPermission } from '@wepublish/permissions/api';
+import {
+  CanGetSubscription,
+  CanGetSubscriptions,
+} from '@wepublish/permissions';
+import { isActiveSubscription } from './is-subscription-active';
+import {
+  Property,
+  SubscriptionPropertyDataloader,
+} from '@wepublish/property/api';
 
 @Resolver(() => PublicSubscription)
 export class PublicSubscriptionResolver {
@@ -22,8 +32,8 @@ export class PublicSubscriptionResolver {
     private prisma: PrismaClient,
     private paymentMethodDataloader: PaymentMethodDataloader,
     private deactivationDataloader: SubscriptionDeactivationDataloader,
-    private propertyDataloader: SubscriptionPropertyDataloader,
-    private memberPlanDataloader: MemberPlanDataloader
+    private memberPlanDataloader: MemberPlanDataloader,
+    private propertyDataLoader: SubscriptionPropertyDataloader
   ) {}
 
   @ResolveField(() => SubscriptionDeactivation)
@@ -42,11 +52,16 @@ export class PublicSubscriptionResolver {
   }
 
   @ResolveField(() => [Property])
-  async properties(@Parent() subscription: Subscription) {
-    const properties =
-      (await this.propertyDataloader.load(subscription.id)) ?? [];
+  async properties(
+    @Parent() subscription: Subscription,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    const properties = await this.propertyDataLoader.load(subscription.id);
 
-    return properties.filter(p => p.public);
+    return properties?.filter(
+      prop =>
+        prop.public || hasPermission(CanGetSubscription, user?.roles ?? [])
+    );
   }
 
   @ResolveField(() => String)
@@ -88,5 +103,41 @@ export class PublicSubscriptionResolver {
       // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
       paymentMethod?.slug !== 'payrexx-subscription'
     );
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async isActive(@Parent() parent: PSubscription) {
+    const paymentMethod = await this.paymentMethodDataloader.load(
+      parent.paymentMethodID
+    );
+
+    return isActiveSubscription({
+      startsAt: parent.startsAt,
+      paidUntil: parent.paidUntil,
+      gracePeriod: paymentMethod?.gracePeriod ?? 0,
+    });
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async externalReward(
+    @Parent() parent: PSubscription,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    const canManage = hasPermission(
+      [CanGetSubscription, CanGetSubscriptions],
+      user?.roles ?? []
+    );
+    const isOwn = parent.userID === user?.user.id;
+
+    const [memberPlan, isActive] = await Promise.all([
+      this.memberPlanDataloader.load(parent.memberPlanID),
+      this.isActive(parent),
+    ]);
+
+    if (canManage || (isOwn && isActive)) {
+      return memberPlan?.externalReward;
+    }
+
+    return null;
   }
 }

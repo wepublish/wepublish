@@ -109,6 +109,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (is404) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
 
@@ -136,6 +137,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: !article.data?.article ? 1 : 60, // every 60 seconds
+    revalidate: 60, // every 60 seconds
   };
 };

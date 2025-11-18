@@ -278,7 +278,18 @@
         "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
       },
       "subscribe": {
-        "label": "S'abonner"
+        "label": "S'abonner",
+        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlansPlaceholder": "Afficher tous les plans",
+        "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
+        "selectFields": "Champs de saisie",
+        "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "FirstName": "Prénom",
+        "Birthday": "Date de naissance",
+        "Address": "Adresse",
+        "EmailRepeated": "Répéter l’email",
+        "Password": "Mot de passe",
+        "PasswordRepeated": "Répéter le mot de passe"
       },
       "image": {
         "label": "Image",
@@ -724,7 +735,8 @@
       "tags": "Tags",
       "savedChanges": "Enregistré",
       "successPage": "Redirection vers la page en cas de succès du paiement",
-      "failPage": "Redirection vers la page en cas d'erreur de paiement"
+      "failPage": "Redirection vers la page en cas d'erreur de paiement",
+      "externalReward": "Lien ou description vers une récompense externe (visible uniquement par les abonnés)"
     },
     "memberPlanList": {
       "action": "Actions",
@@ -739,7 +751,8 @@
         "quarterly": "Trimestriel",
         "yearly": "Annuel",
         "biennial": "Biennal",
-        "lifetime": "À vie"
+        "lifetime": "À vie",
+        "donationOnce": "Don unique"
       },
       "title": "Plans membres"
     },
@@ -1348,13 +1361,19 @@
       "extendableHelpText": "Détermine si l'abonnement d'un utilisateur peut être renouvelé - automatiquement ou manuellement - ou non. En règle générale, les abonnements d'essai ne peuvent pas être prolongés.",
       "maxCount": "Nombre maximum d'abonnements par utilisateur",
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
+      "maxCountDonation": "Nombre maximum de dons par utilisateur:trice",
+      "maxCountDonationHelpText": "Limite le nombre de dons qu'un:e utilisateur:trice peut effectuer pour ce plan.",
       "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
       "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
       "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
-      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page."
+      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page.",
+      "productType": "Type de produit",
+      "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
+      "productTypeSubscription": "Abonnement",
+      "productTypeDonation": "Don"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",

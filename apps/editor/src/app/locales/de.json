@@ -331,7 +331,18 @@
         "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
       },
       "subscribe": {
-        "label": "Abonnieren"
+        "label": "Abonnieren",
+        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
+        "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
+        "selectFields": "Eingabefelder",
+        "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "FirstName": "Vorname",
+        "Birthday": "Geburtstag",
+        "Address": "Adresse",
+        "EmailRepeated": "Email wiederholen",
+        "Password": "Passwort",
+        "PasswordRepeated": "Passwort wiederholen"
       },
       "image": {
         "label": "Bild",
@@ -779,7 +790,8 @@
       "tags": "Tags",
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
-      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
+      "externalReward": "Link oder Beschreibung zu einer externer Belohnung (nur für Abonnenten sichtbar)"
     },
     "memberPlanList": {
       "action": "Aktionen",
@@ -796,7 +808,8 @@
         "quarterly": "Vierteljährlich",
         "yearly": "Jährlich",
         "biennial": "Zweijährlich",
-        "lifetime": "Lebenslang"
+        "lifetime": "Lebenslang",
+        "donationOnce": "Einmalige Spende"
       },
       "title": "Abo Pläne"
     },
@@ -1451,6 +1464,8 @@
       "extendableHelpText": "Bestimme, ob ein Abo eines Benutzers - automatisch oder manuell - verlängert werden kann oder nicht. Probeabos können in der Regel nicht verlängert werden.",
       "maxCount": "Maximale Anzahl Abos pro Benutzer:in",
       "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",
+      "maxCountDonation": "Maximale Anzahl Spenden pro Benutzer:in",
+      "maxCountDonationHelpText": "Limitiere die Anzahl Spenden, welche ein:e Benutzer:in für diesen Plan tätigen kann.",
       "trialMemberplanAlert": "Dieser Abo-Plan ist für Probeabos konfiguriert.",
       "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
       "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
@@ -1460,7 +1475,11 @@
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
       "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
       "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
-      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden.",
+      "productType": "Produkttyp",
+      "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird.",
+      "productTypeSubscription": "Abonnement",
+      "productTypeDonation": "Spende"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",

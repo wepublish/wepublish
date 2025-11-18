@@ -1,0 +1,1688 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArticleService should create an article 1`] = `
+[
+  {
+    "data": {
+      "disableComments": false,
+      "hidden": false,
+      "likes": undefined,
+      "paywallId": undefined,
+      "revisions": {
+        "create": {
+          "authors": {
+            "createMany": {
+              "data": [
+                {
+                  "authorId": "1234",
+                },
+                {
+                  "authorId": "12345",
+                },
+              ],
+            },
+          },
+          "blocks": [
+            undefined,
+          ],
+          "breaking": false,
+          "hideAuthor": false,
+          "properties": {
+            "createMany": {
+              "data": [
+                {
+                  "id": "123",
+                  "key": "key",
+                  "public": true,
+                  "value": "value",
+                },
+              ],
+            },
+          },
+          "socialMediaAuthors": {
+            "createMany": {
+              "data": [
+                {
+                  "authorId": "1234",
+                },
+                {
+                  "authorId": "12345",
+                },
+              ],
+            },
+          },
+          "userId": "1234",
+        },
+      },
+      "shared": false,
+      "slug": undefined,
+      "tags": {
+        "createMany": {
+          "data": [
+            {
+              "tagId": "1234",
+            },
+            {
+              "tagId": "12345",
+            },
+          ],
+          "skipDuplicates": true,
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`ArticleService should create an article 2`] = `
+[
+  {
+    "data": undefined,
+  },
+]
+`;
+
+exports[`ArticleService should create an article 3`] = `
+[
+  {
+    "title": {
+      "lead": "Lead",
+      "title": "Title",
+    },
+  },
+  0,
+  [
+    {
+      "title": {
+        "lead": "Lead",
+        "title": "Title",
+      },
+    },
+  ],
+]
+`;
+
+exports[`ArticleService should delete an article 1`] = `
+[
+  {
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should dislike an article 1`] = `
+[
+  {
+    "data": {
+      "likes": {
+        "decrement": 1,
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should like an article 1`] = `
+[
+  {
+    "data": {
+      "likes": {
+        "increment": 1,
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should not override the original publication date if newer 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2022-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2023-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should override the original publication date if older 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2022-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2022-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should override the original publication date if the original date is in the future 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2026-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2026-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should publish a revision 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2025-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2025-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query an article by slug 1`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "slug": {
+        "equals": "1234",
+        "mode": "insensitive",
+      },
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles based on filter 1`] = `undefined`;
+
+exports[`ArticleService should query articles based on filter 2`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "skip": 5,
+    "take": 6,
+    "where": {
+      "AND": [
+        {
+          "id": {
+            "in": [
+              "12345",
+            ],
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {},
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "peerId": "1234",
+        },
+        {
+          "id": {
+            "notIn": [
+              "1234",
+            ],
+          },
+        },
+        {
+          "OR": [
+            {
+              "publishedAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "archivedAt": null,
+                  "publishedAt": null,
+                },
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "publishedAt": {
+                    "gt": 2023-01-01T00:00:00.000Z,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles based on filter 3`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {
+          "id": {
+            "in": [
+              "12345",
+            ],
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {},
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "peerId": "1234",
+        },
+        {
+          "id": {
+            "notIn": [
+              "1234",
+            ],
+          },
+        },
+        {
+          "OR": [
+            {
+              "publishedAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "archivedAt": null,
+                  "publishedAt": null,
+                },
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "publishedAt": {
+                    "gt": 2023-01-01T00:00:00.000Z,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles based on full text search 1`] = `
+[
+  [
+    "
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ",
+    ");
+      ",
+  ],
+  "body",
+]
+`;
+
+exports[`ArticleService should query articles based on full text search 2`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "skip": 5,
+    "take": 6,
+    "where": {
+      "AND": [
+        {
+          "id": {
+            "in": [
+              "1234",
+              "1235",
+            ],
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {},
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "peerId": "1234",
+        },
+        {
+          "id": {
+            "notIn": [
+              "1234",
+            ],
+          },
+        },
+        {
+          "OR": [
+            {
+              "publishedAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "archivedAt": null,
+                  "publishedAt": null,
+                },
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "publishedAt": {
+                    "gt": 2023-01-01T00:00:00.000Z,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles based on full text search 3`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {
+          "id": {
+            "in": [
+              "1234",
+              "1235",
+            ],
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {},
+        {
+          "ArticleRevisionDraft": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPending": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "ArticleRevisionPublished": {
+            "articleRevision": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "peerId": "1234",
+        },
+        {
+          "id": {
+            "notIn": [
+              "1234",
+            ],
+          },
+        },
+        {
+          "OR": [
+            {
+              "publishedAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "archivedAt": null,
+                  "publishedAt": null,
+                },
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "publishedAt": {
+                    "gt": 2023-01-01T00:00:00.000Z,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles on all revisions 1`] = `
+[
+  [
+    "
+        SELECT a.id
+        FROM articles a
+          JOIN public."articles.revisions" ar
+            ON a."id" = ar."articleId"
+            AND ar."publishedAt" IS NOT NULL
+            AND ar."publishedAt" < NOW()
+        WHERE to_tsvector('german', coalesce(ar.title, '')) ||
+              to_tsvector('german', coalesce(ar."preTitle", '')) ||
+              to_tsvector('german', coalesce(ar.lead, '')) ||
+              jsonb_to_tsvector(
+                'german',
+                jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
+                '["string"]'
+              ) @@ to_tsquery('german', ",
+    ");
+      ",
+  ],
+  "body",
+]
+`;
+
+exports[`ArticleService should query articles on all revisions 2`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "skip": 5,
+    "take": 6,
+    "where": {
+      "AND": [
+        {
+          "id": {
+            "in": [
+              "12345",
+            ],
+          },
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {},
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "peerId": "1234",
+        },
+        {
+          "id": {
+            "notIn": [
+              "1234",
+            ],
+          },
+        },
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles on all revisions 3`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {
+          "id": {
+            "in": [
+              "12345",
+            ],
+          },
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "preTitle": {
+                "contains": "preTitle",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "lead": {
+                "contains": "lead",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "shared": true,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {},
+        {
+          "ArticleRevisionDraft": undefined,
+          "ArticleRevisionPending": undefined,
+          "ArticleRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "authors": {
+                "some": {
+                  "authorId": {
+                    "in": [
+                      "1234",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "peerId": "1234",
+        },
+        {
+          "id": {
+            "notIn": [
+              "1234",
+            ],
+          },
+        },
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles using cursor based pagination 1`] = `
+[
+  {
+    "cursor": {
+      "id": "1234",
+    },
+    "orderBy": {
+      "publishedAt": "desc",
+    },
+    "skip": undefined,
+    "take": 11,
+    "where": {
+      "AND": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "hidden": false,
+        },
+        {},
+        {},
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should query articles using cursor based pagination 2`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "desc",
+    },
+    "where": {
+      "AND": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "hidden": false,
+        },
+        {},
+        {},
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`ArticleService should return paginated articles 1`] = `
+{
+  "nodes": [
+    {
+      "id": "123",
+    },
+  ],
+  "pageInfo": {
+    "endCursor": "123",
+    "hasNextPage": true,
+    "hasPreviousPage": true,
+    "startCursor": "123",
+  },
+  "totalCount": 1000,
+}
+`;
+
+exports[`ArticleService should unpublish & archive all pending revisions on publish 1`] = `
+[
+  {
+    "data": {
+      "archivedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": null,
+    },
+    "where": {
+      "articleId": "1234",
+      "publishedAt": {
+        "gte": 2023-01-01T00:00:00.000Z,
+      },
+    },
+  },
+]
+`;
+
+exports[`ArticleService should unpublish an article 1`] = `
+[
+  {
+    "data": {
+      "publishedAt": null,
+      "revisions": {
+        "updateMany": {
+          "data": {
+            "archivedAt": 2023-01-01T00:00:00.000Z,
+            "publishedAt": null,
+          },
+          "where": {
+            "publishedAt": {
+              "not": null,
+            },
+          },
+        },
+      },
+    },
+    "include": {
+      "revisions": {
+        "orderBy": {
+          "createdAt": "desc",
+        },
+        "take": 1,
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should unpublish an article 2`] = `
+[
+  {
+    "data": {
+      "archivedAt": null,
+    },
+    "where": {
+      "id": "1234-1234",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should update an article 1`] = `
+[
+  {
+    "include": {
+      "tags": true,
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should update an article 2`] = `
+[
+  {
+    "data": {
+      "disableComments": false,
+      "hidden": false,
+      "likes": undefined,
+      "paywallId": undefined,
+      "revisions": {
+        "create": {
+          "authors": {
+            "createMany": {
+              "data": [
+                {
+                  "authorId": "1234",
+                },
+                {
+                  "authorId": "12345",
+                },
+              ],
+            },
+          },
+          "blocks": [
+            undefined,
+          ],
+          "breaking": false,
+          "hideAuthor": false,
+          "properties": {
+            "createMany": {
+              "data": [
+                {
+                  "key": "key",
+                  "public": true,
+                  "value": "value",
+                },
+              ],
+            },
+          },
+          "socialMediaAuthors": {
+            "createMany": {
+              "data": [
+                {
+                  "authorId": "1234",
+                },
+                {
+                  "authorId": "12345",
+                },
+              ],
+            },
+          },
+          "userId": "1234",
+        },
+        "updateMany": {
+          "data": {
+            "archivedAt": 2023-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "archivedAt": null,
+            "publishedAt": null,
+          },
+        },
+      },
+      "shared": false,
+      "slug": undefined,
+      "tags": {
+        "createMany": {
+          "data": [
+            {
+              "tagId": "12345",
+            },
+          ],
+        },
+        "deleteMany": {
+          "tagId": {
+            "notIn": [
+              "1234",
+              "12345",
+            ],
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`ArticleService should update an article 3`] = `
+[
+  {
+    "title": {
+      "lead": "Lead",
+      "title": "Title",
+    },
+  },
+  0,
+  [
+    {
+      "title": {
+        "lead": "Lead",
+        "title": "Title",
+      },
+    },
+  ],
+]
+`;

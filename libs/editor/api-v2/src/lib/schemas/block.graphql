@@ -163,6 +163,12 @@ fragment BlockWithoutTeaser on BlockContent {
     videoID
   }
 
+  ... on StreamableVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
   ... on YouTubeVideoBlock {
     blockStyle
     type
@@ -207,6 +213,8 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     blockStyle
+    memberPlanIds
+    fields
     type
   }
 }

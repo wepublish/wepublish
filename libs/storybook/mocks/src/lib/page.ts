@@ -6,6 +6,7 @@ import { mockTag } from './tag';
 import nanoid from 'nanoid';
 import { mockBlockContent } from './block-content';
 import { mockImage } from './image';
+import { faker } from '@faker-js/faker';
 
 export const mockPageRevision = ({
   title = 'This is a page title',
@@ -31,7 +32,7 @@ export const mockPageRevision = ({
 });
 
 export const mockPage = ({
-  id = nanoid(),
+  id = faker.string.nanoid(),
   tags = [mockTag({ main: true }), mockTag()],
   latest = mockPageRevision(),
 }: Partial<FullPageFragment> = {}): FullPageFragment => ({

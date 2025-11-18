@@ -21,6 +21,7 @@ import {
   AvailablePaymentMethod,
   Currency,
   PaymentPeriodicity,
+  ProductType,
 } from '@prisma/client';
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
@@ -28,6 +29,14 @@ export const GraphQLSupportedCurrency = new GraphQLEnumType({
   values: {
     CHF: { value: Currency.CHF },
     EUR: { value: Currency.EUR },
+  },
+});
+
+export const GraphQLProductType = new GraphQLEnumType({
+  name: 'ProductType',
+  values: {
+    Subscription: { value: ProductType.Subscription },
+    Donation: { value: ProductType.Donation },
   },
 });
 
@@ -102,6 +111,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     maxCount: { type: GraphQLInt },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    productType: { type: new GraphQLNonNull(GraphQLProductType) },
+    externalReward: { type: GraphQLString },
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod))
@@ -109,26 +120,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     },
     migrateToTargetPaymentMethodID: { type: GraphQLString },
     successPageId: { type: GraphQLString },
-    // successPage: {
-    //   type: GraphQLPage,
-    //   resolve: createProxyingResolver(({successPageId}, args, {loaders}) => {
-    //     return successPageId ? loaders.pages.load(successPageId) : null
-    //   })
-    // },
     failPageId: { type: GraphQLString },
-    // failPage: {
-    //   type: GraphQLPage,
-    //   resolve: createProxyingResolver(({failPageId}, args, {loaders}) => {
-    //     return failPageId ? loaders.pages.load(failPageId) : null
-    //   })
-    // },
     confirmationPageId: { type: GraphQLString },
-    // confirmationPage: {
-    //   type: GraphQLPage,
-    //   resolve: createProxyingResolver(({confirmationPageId}, args, {loaders}) => {
-    //     return confirmationPageId ? loaders.pages.load(confirmationPageId) : null
-    //   })
-    // }
   }),
 });
 
@@ -138,6 +131,7 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     active: { type: GraphQLBoolean },
     tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
+    productType: { type: GraphQLProductType },
   }),
 });
 
@@ -193,6 +187,8 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     amountPerMonthTarget: { type: GraphQLInt },
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    productType: { type: new GraphQLNonNull(GraphQLProductType) },
+    externalReward: { type: GraphQLString },
     maxCount: { type: GraphQLInt },
     availablePaymentMethods: {
       type: new GraphQLNonNull(

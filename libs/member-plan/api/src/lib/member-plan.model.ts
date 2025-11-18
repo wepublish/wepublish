@@ -10,7 +10,7 @@ import { HasImage, Image } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
 import { PaymentMethod } from '@wepublish/payment-method/api';
-import { PaymentPeriodicity } from '@prisma/client';
+import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
 
 export enum MemberPlanSort {
   createdAt = 'createdAt',
@@ -21,13 +21,12 @@ registerEnumType(MemberPlanSort, {
   name: 'MemberPlanSort',
 });
 
-enum Currency {
-  CHF = 'CHF',
-  EUR = 'EUR',
-}
-
 registerEnumType(Currency, {
   name: 'Currency',
+});
+
+registerEnumType(ProductType, {
+  name: 'ProductType',
 });
 
 @ObjectType()
@@ -86,6 +85,12 @@ export class MemberPlan {
   @Field(() => [AvailablePaymentMethod])
   availablePaymentMethods!: AvailablePaymentMethod[];
 
+  @Field(() => ProductType)
+  productType!: ProductType;
+
+  @Field({ nullable: true })
+  externalReward?: string;
+
   @Field({ nullable: true })
   successPageId?: string;
 
@@ -109,4 +114,7 @@ export class MemberPlanFilter {
 
   @Field(() => [String], { nullable: true })
   tags?: string[];
+
+  @Field(() => ProductType, { nullable: true })
+  productType?: ProductType;
 }
