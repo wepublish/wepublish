@@ -18,8 +18,8 @@ export default {
   docs: {},
 
   stories: [
-    '../../../apps/**/src/**/*.mdx',
-    '../../../apps/**/src/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../../apps/tsri/src/**/*.mdx',
+    '../../../apps/tsri/src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
 
   addons: [
