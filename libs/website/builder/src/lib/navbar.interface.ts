@@ -2,7 +2,6 @@ import { QueryResult } from '@apollo/client';
 import { ButtonProps } from '@wepublish/ui';
 import { FullImageFragment, NavigationListQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
-import { PageTypeBasedProps } from './page.interface';
 
 export type BuilderNavbarProps = PropsWithChildren<
   Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error'> & {
@@ -17,11 +16,5 @@ export type BuilderNavbarProps = PropsWithChildren<
     subscribeBtn?: ButtonProps | null;
     hasUnpaidInvoices: boolean;
     hasRunningSubscription: boolean;
-    pageTypeBasedProps?: PageTypeBasedProps;
-    imagesBase64?: {
-      logoDefault?: string;
-      logoAlternative?: string;
-      claim?: string;
-    };
   }
 >;
