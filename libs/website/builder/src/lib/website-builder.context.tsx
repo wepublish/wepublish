@@ -53,6 +53,7 @@ import {
   BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderFlexBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -393,6 +394,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent,
+    TabbedContent: NoComponent,
   },
 
   date: {
