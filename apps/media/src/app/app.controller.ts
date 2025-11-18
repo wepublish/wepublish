@@ -27,26 +27,24 @@ import {
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
-import { ImageCacheService } from './imageCache.service';
+import NodeCache from 'node-cache';
+
+const linkCache = new NodeCache({
+  checkperiod: 60,
+  deleteOnExpire: true,
+  useClones: true,
+  stdTTL: 3000,
+});
 
 @Controller({
   version: '1',
 })
 export class AppController {
-  constructor(
-    private media: MediaService,
-    private imageCacheService: ImageCacheService
-  ) {}
+  constructor(private media: MediaService) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
     res.status(200).send({ status: 'ok' });
-  }
-
-  @Get('/cacheState')
-  async cacheState(@Res() res: Response) {
-    const state = this.imageCacheService.state();
-    res.status(state.healty ? 200 : 500).send(state.stats);
   }
 
   @Get('/favicon.ico')
@@ -97,7 +95,7 @@ export class AppController {
     )}`;
 
     // Check if image is cached
-    const cachedBuffer = this.imageCacheService.get(cacheKey);
+    const linkFromCache: [string, number] = linkCache.get(cacheKey);
 
     res.setHeader('Content-Type', 'image/webp');
 
@@ -109,32 +107,26 @@ export class AppController {
       );
     }
 
-    if (cachedBuffer[0]) {
-      if (cachedBuffer[1] !== 200) {
+    if (linkFromCache[0]) {
+      if (linkFromCache[1] !== 301) {
         res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
       }
-      res.status(cachedBuffer[1]);
-      res.end(cachedBuffer[0]);
+      res.status(linkFromCache[1]);
+      res.end(linkFromCache[0]);
       return;
     }
 
-    // Not in cache, fetch and process image
-    const [file, imageExists] = await this.media.getImage(
-      imageId,
-      transformations
-    );
+    const imageUri = await this.media.getImageUri(imageId, transformations);
 
-    const buffer = await this.media.bufferStream(file);
-
-    if (!imageExists) {
+    if (!imageUri) {
       res.status(404);
       res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
-      this.imageCacheService.set(cacheKey, buffer, 404, 120);
+      linkCache.set(cacheKey, [imageUri, 404], 120);
     } else {
-      this.imageCacheService.set(cacheKey, buffer);
+      linkCache.set(cacheKey, [imageUri, 301]);
     }
 
-    res.end(buffer);
+    res.redirect(301, `${process.env['S3_PUBLIC_HOST']}/${imageUri}`);
   }
 
   @UseGuards(TokenAuthGuard)

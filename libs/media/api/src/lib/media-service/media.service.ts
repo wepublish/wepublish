@@ -75,26 +75,23 @@ export class MediaService {
     });
   }
 
-  public async getImage(imageId: string, transformations: TransformationsDto) {
+  public async getImageUri(
+    imageId: string,
+    transformations: TransformationsDto
+  ): Promise<string> {
     const transformationsKey = getTransformationKey(
       removeSignatureFromTransformations(transformations)
     );
-
-    let file: Readable;
+    let objectUri: string = `images/${imageId}/${transformationsKey}`;
     try {
-      file = await this.storage.getFile(
-        this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}`
-      );
+      await this.storage.hasFile(this.config.transformationBucket, objectUri);
     } catch (e: any) {
       if (e.code == 'NoSuchKey') {
         return await this.transformImage(imageId, transformations);
       }
       throw e;
     }
-    const fileBuffer = await this.bufferStream(file);
-
-    return await Promise.all([Readable.from(fileBuffer), true]);
+    return objectUri;
   }
 
   private getFallbackImage(transformations: TransformationsDto): Readable {
@@ -158,15 +155,7 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
     if (!imageExists) {
-      try {
-        imageStream = await this.storage.getFile(
-          this.config.transformationBucket,
-          `images/fallback/${transformationsKey}`
-        );
-        return Promise.all([imageStream, imageExists]);
-      } catch (e: any) {
-        // Intentionally ignore if fallback image is not found
-      }
+      return `images/fallback/${transformationsKey}`;
     }
 
     const transformGuard = new TransformGuard();
@@ -233,24 +222,27 @@ export class MediaService {
     ).metadata();
     transformGuard.checkImageSize(metadata);
 
+    let objectUri: string = '';
     if (imageExists) {
+      objectUri = `images/${imageId}/${transformationsKey}`;
       await this.storage.saveFile(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}`,
+        objectUri,
         transformedImage.clone(),
         metadata.size,
         { ContentType: `image/${metadata.format}` }
       );
     } else {
+      objectUri = `images/fallback/${transformationsKey}`;
       await this.storage.saveFile(
         this.config.transformationBucket,
-        `images/fallback/${transformationsKey}`,
+        objectUri,
         transformedImage.clone(),
         metadata.size,
         { ContentType: `image/${metadata.format}` }
       );
     }
-    return Promise.all([transformedImage, imageExists]);
+    return objectUri;
   }
 
   public async saveImage(imageId: string, image: Buffer) {
