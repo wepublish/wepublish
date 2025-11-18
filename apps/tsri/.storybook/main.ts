@@ -1,5 +1,5 @@
-import { StorybookConfig } from 'storybook/internal/types';
 import { configureSort } from 'storybook-multilevel-sort';
+import { StorybookConfig } from 'storybook/internal/types';
 
 configureSort({
   storyOrder: {
@@ -50,7 +50,7 @@ export default {
     '@chromatic-com/storybook',
   ],
 
-  babel: (config: any) => {
+  babel: (config, options) => {
     config.overrides?.push({
       presets: [
         [

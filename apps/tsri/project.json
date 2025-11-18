@@ -69,11 +69,12 @@
     },
     "build-storybook": {
       "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
+      "outputs": [
+        "{options.outputDir}"
+      ],
       "options": {
         "configDir": "apps/tsri/.storybook",
-        "outputDir": "dist/storybook/tsri",
-        "babelConfig": "apps/tsri/.storybook/.babelrc"
+        "outputDir": "dist/storybook/tsri"
       },
       "configurations": {
         "ci": {
