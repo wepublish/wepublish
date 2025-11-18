@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Chip, css, SxProps, Typography } from '@mui/material';
+import { Chip, css, Typography } from '@mui/material';
 import {
   selectTeaserAuthors,
   selectTeaserDate,
@@ -24,168 +24,6 @@ import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { isDailyBriefingTeaser } from './daily-briefing/daily-briefing-teaser';
-
-/*
-export const TeaserWrapper = styled('article')<FlexAlignment>`
-  display: grid;
-
-  ${({ theme, w }) =>
-    w > 6 &&
-    css`
-      grid-column: 1 / -1;
-
-      ${theme.breakpoints.up('md')} {
-        ${TeaserTitle} {
-          font-size: ${theme.typography.h3.fontSize};
-          line-height: ${theme.typography.h3.lineHeight};
-        }
-
-        ${TeaserLead} {
-          font-size: ${theme.typography.h6.fontSize};
-          line-height: ${theme.typography.h6.lineHeight};
-        }
-      }
-    `}
-
-  ${({ theme, h, w, x, y }) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-column-start: ${x + 1};
-      grid-column-end: ${x + 1 + w};
-      grid-row-start: ${y + 1};
-      grid-row-end: ${y + 1 + h};
-    }
-  `}
-`;
-
-export const TeaserImageWrapper = styled('div')`
-  grid-column: 1/13;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  grid-area: image;
-  position: relative;
-
-  &:empty {
-    min-height: ${({ theme }) => theme.spacing(4)};
-  }
-`;
-export const TeaserImageInnerWrapper = styled('div')`
-  position: relative;
-`;
-
-export const TeaserImage = styled(Image)`
-  max-height: 400px;
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-
-  :where(${TeaserWrapper}:hover &) {
-    transform: scale(1.1);
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    aspect-ratio: 1;
-  }
-`;
-
-export const TeaserPeerLogo = styled(Image)`
-  border-radius: 50%;
-  position: absolute;
-  bottom: ${({ theme }) => theme.spacing(2)};
-  right: ${({ theme }) => theme.spacing(2)};
-  width: 50px;
-  height: 50px;
-`;
-
-export const TeaserContentWrapper = styled('div')`
-  display: grid;
-  column-gap: ${({ theme }) => theme.spacing(2)};
-  grid-auto-rows: max-content;
-  align-items: start;
-  grid-template-areas:
-    'image'
-    'pretitle'
-    'title'
-    'lead'
-    'authors';
-`;
-
-export const TeaserTitle = styled('h1')`
-  grid-area: title;
-`;
-
-export const TeaserLead = styled('p')`
-  font-weight: 300;
-  grid-area: lead;
-`;
-
-export const TeaserAuthors = styled('span')`
-  font-weight: 500;
-`;
-
-export const TeaserPreTitleNoContent = styled('div')`
-  transition: background-color 0.3s ease-in-out;
-  background-color: ${({ theme }) => theme.palette.common.black};
-  height: 3px;
-  width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing(1.5)};
-
-  :where(${TeaserWrapper}:hover &) {
-    background-color: ${({ theme }) => theme.palette.primary.main};
-  }
-`;
-
-export const TeaserPreTitleWrapper = styled('div')`
-  transition: background-color 0.3s ease-in-out;
-  background-color: ${({ theme }) => theme.palette.accent.main};
-  height: 3px;
-  width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing(1.5)};
-  grid-area: pretitle;
-
-  :where(${TeaserWrapper}:hover &) {
-    background-color: ${({ theme }) => theme.palette.primary.main};
-  }
-`;
-
-export const TeaserPreTitle = styled('div')`
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  padding: ${({ theme }) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
-  background-color: ${({ theme }) => theme.palette.accent.main};
-  color: ${({ theme }) => theme.palette.accent.contrastText};
-  width: fit-content;
-  transform: translateY(-100%);
-
-  :where(${TeaserWrapper}:hover &) {
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    color: ${({ theme }) => theme.palette.primary.contrastText};
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 18px;
-  }
-`;
-
-export const TeaserMetadata = styled('div')`
-  grid-area: authors;
-`;
-
-export const TeaserTime = styled('time')`
-  font-weight: 400;
-`;
-
-export const TeaserTags = styled('div')`
-  display: none;
-  flex-flow: row wrap;
-  gap: ${({ theme }) => theme.spacing(1)};
-  grid-area: tags;
-`;
-
-*/
 
 export const TeaserWrapper = styled('li')<FlexAlignment>`
   list-style: none;
@@ -241,6 +79,17 @@ export const TeaserImageCaption = styled('figcaption')``;
 
 export const TeaserPeerLogo = styled(Image)``;
 
+export const TeaserPreTitle = styled('div')`
+  color: white;
+  background-color: black;
+  @container teaser (width > 200px) {
+    font-size: calc((9 * 100cqw / 16) * 0.045) !important;
+    line-height: calc((9 * 100cqw / 16) * 0.045) !important;
+    font-weight: bold;
+    padding: 0 0.5cqw;
+  }
+`;
+
 export const TeaserContentWrapper = styled('article')`
   overflow: hidden;
   display: grid;
@@ -248,11 +97,14 @@ export const TeaserContentWrapper = styled('article')`
   grid-template-columns: 50% 50%;
   gap: 0;
   @container teaser (width > 200px) {
-    border-radius: calc((9 * 100cqw / 16) * 0.02);
+    border-radius: calc((9 * 100cqw / 16) * 0.03);
   }
 
   &:hover {
-    background-color: orange;
+    ${TeaserPreTitle} {
+      background-color: #f5ff64;
+      color: black;
+    }
   }
 `;
 
@@ -269,7 +121,9 @@ export const TeaserTitle = styled('h1')`
   }
 `;
 
-export const TeaserLead = styled('p')``;
+export const TeaserLead = styled('p')`
+  display: none;
+`;
 
 export const TeaserAuthors = styled('span')``;
 
@@ -278,18 +132,7 @@ export const TeaserPreTitleNoContent = styled('div')``;
 export const TeaserPreTitleWrapper = styled('div')`
   grid-row: 2;
   grid-column: 2 / 3;
-  background-color: black;
-`;
-
-export const TeaserPreTitle = styled('div')`
-  color: white;
-  position: relative;
-  @container teaser (width > 200px) {
-    font-size: calc((9 * 100cqw / 16) * 0.045) !important;
-    font-weight: bold;
-    top: calc((9 * 100cqw / 16) * -0.012);
-    padding: 0 0.5cqw;
-  }
+  background-color: transparent;
 `;
 
 export const TeaserMetadata = styled('div')`
@@ -307,11 +150,6 @@ export const TeaserMetadata = styled('div')`
 export const TeaserTime = styled('time')``;
 
 export const TeaserTags = styled('div')``;
-
-const stretchToParentHeight = {
-  display: 'grid',
-  alignItems: 'stretch',
-} satisfies SxProps;
 
 const TeaserContent = ({
   href,
@@ -376,8 +214,6 @@ export const TsriTeaser = ({
     date,
   } = useWebsiteBuilder();
 
-  console.log('Teaser render', { teaser, alignment, className, blockStyle });
-
   return (
     true && (
       <TeaserWrapper {...alignment}>
@@ -418,7 +254,7 @@ export const TsriTeaser = ({
           {/* title end */}
 
           {/* lead start */}
-          {lead && 1 < 0 && (
+          {lead && (
             <Typography
               variant="teaserLead"
               component={TeaserLead}
