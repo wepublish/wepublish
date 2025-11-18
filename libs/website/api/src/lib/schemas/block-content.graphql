@@ -105,7 +105,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on SubscribeBlock {
-    blockStyle
+    blockStyle: blockStyleName
     memberPlanIds
     memberPlans {
       ...FullMemberPlan
@@ -324,7 +324,7 @@ fragment FullBlock on BlockContent {
   ... on TeaserSlotsBlock {
     ...FullTeaserSlotsBlock
   }
-  
+
   ... on FlexBlock {
     blockStyle: blockStyleName
     type
@@ -337,18 +337,18 @@ fragment FullBlock on BlockContent {
         h
         static
       }
-      
+
       block {
         __typename
-        
+
         ... on TeaserSlotsBlock {
           ...FullTeaserSlotsBlock
         }
-        
+
         ... on TeaserListBlock {
           ...FullTeaserListBlock
         }
-        
+
         ...BlockWithoutTeaser
       }
     }

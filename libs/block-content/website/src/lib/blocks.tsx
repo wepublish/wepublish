@@ -35,6 +35,7 @@ import { isTikTokVideoBlock } from './tik-tok/tik-tok-video-block';
 import { isTwitterTweetBlock } from './twitter/twitter-tweet-block';
 import { isVimeoVideoBlock } from './vimeo/vimeo-video-block';
 import { isYouTubeVideoBlock } from './youtube/youtube-video-block';
+import { isStreamableVideoBlock } from './streamable/streamable-video-block';
 import { isTeaserGridBlock } from './teaser/teaser-grid-block';
 import { isImageGalleryBlock } from './image-gallery/image-gallery-block';
 import { isPollBlock } from './poll/poll-block';
@@ -99,6 +100,7 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     [isTwitterTweetBlock, block => <blocks.TwitterTweet {...block} />],
     [isVimeoVideoBlock, block => <blocks.VimeoVideo {...block} />],
     [isYouTubeVideoBlock, block => <blocks.YouTubeVideo {...block} />],
+    [isStreamableVideoBlock, block => <blocks.StreamableVideo {...block} />],
     [
       isPolisConversationBlock,
       block => <blocks.PolisConversation {...block} />,

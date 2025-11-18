@@ -337,6 +337,7 @@ export type BlockContent =
   | QuoteBlock
   | RichTextBlock
   | SoundCloudTrackBlock
+  | StreamableVideoBlock
   | SubscribeBlock
   | TeaserGridBlock
   | TeaserGridFlexBlock
@@ -369,6 +370,7 @@ export type BlockContentInput = {
   quote?: InputMaybe<QuoteBlockInput>;
   richText?: InputMaybe<RichTextBlockInput>;
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
+  streamableVideo?: InputMaybe<StreamableVideoBlockInput>;
   subscribe?: InputMaybe<SubscribeBlockInput>;
   teaserGrid?: InputMaybe<TeaserGridBlockInput>;
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
@@ -377,7 +379,6 @@ export type BlockContentInput = {
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
   title?: InputMaybe<TitleBlockInput>;
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
-  type?: InputMaybe<Scalars['String']>;
   vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
   youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
 };
@@ -411,6 +412,7 @@ export enum BlockType {
   Quote = 'Quote',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
+  StreamableVideo = 'StreamableVideo',
   Subscribe = 'Subscribe',
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -3274,6 +3276,20 @@ export type Stats = {
   articlesCount: Scalars['Int'];
   authorsCount: Scalars['Int'];
   firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
+export type StreamableVideoBlock = BaseBlock & {
+  __typename?: 'StreamableVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  type: BlockType;
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type StreamableVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  videoID?: InputMaybe<Scalars['String']>;
 };
 
 export type SubscribeBlock = BaseBlock & {
