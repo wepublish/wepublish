@@ -3,22 +3,8 @@ import {
   SessionWithTokenWithoutUser,
   V1_CLIENT_STATE_PROP_NAME,
 } from '@wepublish/website/api';
-import { EssentialPageProps } from '@wepublish/website/builder';
 import { Page, ArticleRevision } from '@wepublish/website/api';
-export enum PageType {
-  Article = 'Article',
-  ArticleList = 'ArticleList',
-  ArticleListByTag = 'ArticleListByTag',
-  Author = 'Author',
-  AuthorList = 'AuthorList',
-  Event = 'Event',
-  EventList = 'EventList',
-  Profile = 'Profile',
-  ProfileList = 'ProfileList',
-  SearchResults = 'SearchResults',
-  Page = 'Page',
-  Unknown = 'Unknown',
-}
+import { PageTypeBasedProps, PageType } from '@wepublish/website/builder';
 
 export const getPageType = (pageProps: {
   [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
@@ -132,14 +118,14 @@ const getArticleData = (pageProps: NormalizedCacheObject) => {
   return articleData;
 };
 
-export const getPageTypeRelatedContent = (pProps: {
+export const getPageTypeBasedContent = (pProps: {
   sessionToken?: SessionWithTokenWithoutUser | undefined;
 }) => {
   const pageProps = pProps as {
     [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
   };
   const pageType = getPageType(pageProps);
-  const essentialProps: EssentialPageProps = {
+  const essentialProps: PageTypeBasedProps = {
     pageType,
   };
 

@@ -13,13 +13,13 @@ import { forceHideBanner } from '@wepublish/banner/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
-import { PageType } from '@wepublish/utils/website';
 import { FullNavigationFragment } from '@wepublish/website/api';
+import { PageType } from '@wepublish/website/builder';
 import {
   BuilderNavbarProps,
-  EssentialPageProps,
   IconButton,
   Link,
+  PageTypeBasedProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import {
@@ -47,24 +47,14 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
       `
-    //--navbar-height: 23.9cqw;
-    //--scrolled-navbar-height: 12.83cqw;
-    //--navbar-height: 10cqw;
-    //--scrolled-navbar-height: 7cqw;
     --navbar-aspect-ratio: 6.5 / 1;
     --scrolled-navbar-aspect-ratio: 9 / 1;
     `
     : `
-    //--navbar-height: 14.42cqw;
-    //--scrolled-navbar-height: 11.81cqw;
-    //--navbar-height: 10cqw;
-    //--scrolled-navbar-height: 7cqw;
     --navbar-aspect-ratio: 8 / 1;
     --scrolled-navbar-aspect-ratio: 9.5 / 1;
     `}
     --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
-      //'var(--navbar-height)'
-      //: 'var(--scrolled-navbar-height)'};
       'var(--navbar-aspect-ratio)'
     : 'var(--scrolled-navbar-aspect-ratio)'};
   }
@@ -448,7 +438,7 @@ export function TsriV2Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
-  essentialPageProps,
+  pageTypeBasedProps,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -499,11 +489,11 @@ export function TsriV2Navbar({
     onMenuToggle?.(newState);
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
-  const getTabText = (essentialPageProps: EssentialPageProps | undefined) => {
-    if (essentialPageProps) {
-      switch (essentialPageProps.pageType) {
+  const getTabText = (pageTypeBasedProps: PageTypeBasedProps | undefined) => {
+    if (pageTypeBasedProps) {
+      switch (pageTypeBasedProps.pageType) {
         case PageType.Article:
-          return essentialPageProps.Article?.preTitle || '';
+          return pageTypeBasedProps.Article?.preTitle || '';
         case PageType.Author:
           return 'Ich bin Tsüri!';
         case PageType.AuthorList:
@@ -548,9 +538,9 @@ export function TsriV2Navbar({
     hasActiveSubscription
   );
 
-  const isHomePage = essentialPageProps?.Page?.slug === '';
+  const isHomePage = pageTypeBasedProps?.Page?.slug === '';
 
-  const tabText = getTabText(essentialPageProps);
+  const tabText = getTabText(pageTypeBasedProps);
 
   const navbarStyles = useMemo(
     () => cssVariables(navbarState, isHomePage),
