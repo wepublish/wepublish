@@ -78,7 +78,7 @@ export class MediaService {
   public async getImageUri(
     imageId: string,
     transformations: TransformationsDto
-  ): Promise<string> {
+  ): Promise<{ uri: string; exists: boolean }> {
     const transformationsKey = getTransformationKey(
       removeSignatureFromTransformations(transformations)
     );
@@ -91,7 +91,7 @@ export class MediaService {
       }
       throw e;
     }
-    return objectUri;
+    return { uri: objectUri, exists: true };
   }
 
   private getFallbackImage(transformations: TransformationsDto): Readable {
@@ -132,7 +132,7 @@ export class MediaService {
   private async transformImage(
     imageId: string,
     transformations: TransformationsDto
-  ) {
+  ): Promise<{ uri: string; exists: boolean }> {
     let imageStream: Readable;
     let imageExists = true;
     try {
@@ -155,7 +155,7 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
     if (!imageExists) {
-      return `images/fallback/${transformationsKey}`;
+      return { uri: `images/fallback/${transformationsKey}`, exists: false };
     }
 
     const transformGuard = new TransformGuard();
@@ -222,27 +222,29 @@ export class MediaService {
     ).metadata();
     transformGuard.checkImageSize(metadata);
 
-    let objectUri: string = '';
+    let uri: string = '';
+    let exists: boolean = true;
     if (imageExists) {
-      objectUri = `images/${imageId}/${transformationsKey}`;
+      uri = `images/${imageId}/${transformationsKey}`;
       await this.storage.saveFile(
         this.config.transformationBucket,
-        objectUri,
+        uri,
         transformedImage.clone(),
         metadata.size,
         { ContentType: `image/${metadata.format}` }
       );
     } else {
-      objectUri = `images/fallback/${transformationsKey}`;
+      exists = false;
+      uri = `images/fallback/${transformationsKey}`;
       await this.storage.saveFile(
         this.config.transformationBucket,
-        objectUri,
+        uri,
         transformedImage.clone(),
         metadata.size,
         { ContentType: `image/${metadata.format}` }
       );
     }
-    return objectUri;
+    return { uri, exists };
   }
 
   public async saveImage(imageId: string, image: Buffer) {

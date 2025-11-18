@@ -107,26 +107,31 @@ export class AppController {
       );
     }
 
-    if (linkFromCache[0]) {
+    if (linkFromCache) {
       if (linkFromCache[1] !== 301) {
         res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
       }
-      res.status(linkFromCache[1]);
-      res.end(linkFromCache[0]);
+      res.redirect(
+        linkFromCache[1],
+        `${process.env['S3_PUBLIC_HOST']}/${linkFromCache[0]}`
+      );
       return;
     }
 
-    const imageUri = await this.media.getImageUri(imageId, transformations);
+    const { uri, exists } = await this.media.getImageUri(
+      imageId,
+      transformations
+    );
 
-    if (!imageUri) {
-      res.status(404);
-      res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
-      linkCache.set(cacheKey, [imageUri, 404], 120);
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=60`);
+      res.redirect(404, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
+      linkCache.set(cacheKey, [uri, 404], 120);
     } else {
-      linkCache.set(cacheKey, [imageUri, 301]);
+      linkCache.set(cacheKey, [uri, 301]);
     }
 
-    res.redirect(301, `${process.env['S3_PUBLIC_HOST']}/${imageUri}`);
+    res.redirect(301, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
   }
 
   @UseGuards(TokenAuthGuard)
