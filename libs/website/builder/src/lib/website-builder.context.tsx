@@ -396,6 +396,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     FocusTeaser: NoComponent,
     ContextBox: NoComponent,
     Banner: NoComponent,
+    TabbedContent: NoComponent,
   },
 
   date: {

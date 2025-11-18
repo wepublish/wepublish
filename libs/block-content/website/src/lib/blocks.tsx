@@ -58,7 +58,7 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
-import { BlockContent } from '@wepublish/website/api';
+import { isTabbedContentBlockStyle } from './block-styles/tabbed-content/tabbed-content';
 
 export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
   const { blocks, blockStyles } = useWebsiteBuilder();
@@ -83,6 +83,12 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     [
       isAlternatingTeaserSlotsBlockStyle,
       block => <blockStyles.AlternatingTeaserSlots {...block} />,
+    ],
+    [
+      isTabbedContentBlockStyle,
+      block => (
+        <blockStyles.TabbedContent {...(block as BuilderFlexBlockProps)} />
+      ),
     ],
   ]);
 
@@ -204,41 +210,6 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     ])(block)
   );
 });
-
-type BuilderBlockProps = {
-  block: BlockContent;
-  type: BuilderBlockRendererProps['type'];
-  index: number;
-  count: number;
-};
-export const Block = memo(
-  ({ block, type, index, count }: BuilderBlockProps) => {
-    const {
-      blocks: { Renderer },
-    } = useWebsiteBuilder();
-
-    return (
-      <ImageContext.Provider
-        value={
-          // Above the fold images should be loaded with a high priority
-          3 > index ?
-            {
-              fetchPriority: 'high',
-              loading: 'eager',
-            }
-          : {}
-        }
-      >
-        <Renderer
-          block={block}
-          index={index}
-          count={count}
-          type={type}
-        />
-      </ImageContext.Provider>
-    );
-  }
-);
 
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {

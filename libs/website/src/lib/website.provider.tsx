@@ -42,6 +42,7 @@ import {
   RichTextBlock,
   SoundCloudTrackBlock,
   BaseTeaser,
+  TabbedContent,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
@@ -292,6 +293,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             AlternatingTeaserGrid: AlternatingTeaserGridBlock,
             AlternatingTeaserList: AlternatingTeaserListBlock,
             AlternatingTeaserSlots: AlternatingTeaserSlotsBlock,
+            TabbedContent,
           }}
           richtext={{ RenderElement, RenderLeaf, RenderRichtext }}
           date={{
