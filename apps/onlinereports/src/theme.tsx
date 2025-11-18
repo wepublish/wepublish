@@ -115,6 +115,16 @@ const theme = createTheme(WePTheme, {
       fontStyle: 'italic',
       fontWeight: 600,
     },
+    blockBreakBody: {
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '16px',
+      lineHeight: '1.7',
+      fontWeight: 300,
+      color: palette?.text?.primary ?? 'inherit',
+      [breakpoints.up('md')]: {
+        fontSize: '22px',
+      },
+    },
     fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
   },
   components: {

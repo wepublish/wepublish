@@ -22,7 +22,7 @@ import {
 import { EventService } from './event.service';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { EventDataloaderService } from './event-dataloader.service';
-import { Tag, TagService } from '@wepublish/tag/api';
+import { EventTagDataloader, Tag } from '@wepublish/tag/api';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { Event as PEvent } from '@prisma/client';
 import { Permissions } from '@wepublish/permissions/api';
@@ -34,7 +34,7 @@ export class EventResolver {
     private eventService: EventService,
     private eventDataloader: EventDataloaderService,
     private urlAdapter: URLAdapter,
-    private tagService: TagService,
+    private tagDataLoader: EventTagDataloader,
     private imageDataloaderService: ImageDataloaderService
   ) {}
 
@@ -92,8 +92,7 @@ export class EventResolver {
 
   @ResolveField(() => [Tag], { nullable: true })
   async tags(@Parent() parent: Event) {
-    const { id: eventId } = parent;
-    return this.tagService.getTagsByEventId(eventId);
+    return this.tagDataLoader.load(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })

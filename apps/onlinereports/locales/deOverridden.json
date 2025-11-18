@@ -13,15 +13,21 @@
   },
   "subscription": {
     "unpaid": "Rechnung ist unbezahlt",
-    "cancel": "Zahlung kündigen",
-    "cancelConfirmation": "Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offenen Rechnungen werden storniert.",
-    "renewConfirmation": "Wir freuen uns, dass Sie Ihren Unterstützungsbeitrag frühzeitig um ein {subscriptionDuration} verlängern möchten. Weiterfahren?",
+    "cancel": "{type, select, Donation {Spende} other {Zahlung}} kündigen",
+    "cancelConfirmation": "Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen werden storniert.",
+    "extendEarly": "{type, select, Donation {Spende} other {Zahlung}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass Sie Ihren Unterstützungsbeitrag frühzeitig um ein {subscriptionDuration} verlängern möchten. Weiterfahren?",
     "noActiveSubscriptions": "Sie haben noch keine aktive Zahlung.",
     "subscribeNow": "Jetzt unterstützen."
   },
+  "subscribe": {
+    "subscribeForPeriod": "{renewalPeriod} mit {formattedAmount}",
+    "payForPeriod": "{paymentPeriod} mit {formattedAmount}",
+    "pay": "Mit {formattedAmount}}"
+  },
   "user": {
     "changeEmailRequest": "Klicken Sie hier, um Ihre E-Mail-Adresse zu ändern.",
-    "activeSubscriptions": "Aktive Zahlungen",
+    "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Zahlungen}}",
     "viewCancelledSubscriptions": "Frühere Zahlungen anzeigen"
   }
 }
