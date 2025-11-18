@@ -121,7 +121,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
-  const pageTypeRelatedContent = getPageTypeBasedContent(pageProps);
+  const pageTypeBasedContent = getPageTypeBasedContent(pageProps);
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -229,7 +229,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                pageTypeBasedContent={pageTypeBasedContent}
+                pageTypeBasedProps={pageTypeBasedContent}
               />
 
               <main>
