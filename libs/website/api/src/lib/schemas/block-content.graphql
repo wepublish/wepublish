@@ -345,6 +345,10 @@ fragment FullBlock on BlockContent {
           ...FullTeaserSlotsBlock
         }
         
+        ... on TeaserListBlock {
+          ...FullTeaserListBlock
+        }
+        
         ...BlockWithoutTeaser
       }
     }

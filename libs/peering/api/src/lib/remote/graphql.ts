@@ -327,7 +327,6 @@ export type BlockContentInput = {
   tikTokVideo?: InputMaybe<TikTokVideoBlockInput>;
   title?: InputMaybe<TitleBlockInput>;
   twitterTweet?: InputMaybe<TwitterTweetBlockInput>;
-  type?: InputMaybe<Scalars['String']>;
   vimeoVideo?: InputMaybe<VimeoVideoBlockInput>;
   youTubeVideo?: InputMaybe<YouTubeVideoBlockInput>;
 };

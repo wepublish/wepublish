@@ -420,6 +420,26 @@ fragment FullBlock on BlockContent {
           }
         }
         
+        ... on TeaserListBlock {
+          title
+          blockStyle
+          type
+          skip
+          take
+          sort
+          teaserType
+          filter {
+            tags
+            tagObjects {
+              id
+              tag
+            }
+          }
+          teasers {
+            ...FullTeaser
+          }
+        }
+        
         ...BlockWithoutTeaser
       }
     }
