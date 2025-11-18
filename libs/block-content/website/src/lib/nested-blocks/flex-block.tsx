@@ -3,10 +3,12 @@ import {
   BlockContent,
   FlexBlock as FlexBlockType,
 } from '@wepublish/website/api';
-import { BuilderFlexBlockProps } from '@wepublish/website/builder';
+import {
+  BuilderFlexBlockProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
-import { Children } from 'react';
 
 const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -48,9 +50,10 @@ export const isFlexBlock = (
 export const FlexBlock = ({
   className,
   nestedBlocks,
-  children = [],
 }: BuilderFlexBlockProps) => {
-  const childrenArray = Children.toArray(children);
+  const {
+    blocks: { Renderer },
+  } = useWebsiteBuilder();
 
   return (
     <FlexBlockWrapper>
@@ -60,7 +63,12 @@ export const FlexBlock = ({
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
-            {childrenArray[index]}
+            <Renderer
+              block={nestedBlock.block as BlockContent}
+              type="Article"
+              index={index}
+              count={nestedBlocks.length}
+            />
           </NestedBlock>
         );
       })}
