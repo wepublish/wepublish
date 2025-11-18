@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 import {
+<<<<<<< Updated upstream
   AppBar,
+=======
+  AppBar as MuiAppBar,
+>>>>>>> Stashed changes
   Box,
   css,
   GlobalStyles,
@@ -13,9 +17,17 @@ import { forceHideBanner } from '@wepublish/banner/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
+<<<<<<< Updated upstream
 import { FullNavigationFragment } from '@wepublish/website/api';
 import {
   BuilderNavbarProps,
+=======
+import { PageType } from '@wepublish/utils/website';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import {
+  BuilderNavbarProps,
+  EssentialPageProps,
+>>>>>>> Stashed changes
   IconButton,
   Link,
   useWebsiteBuilder,
@@ -29,12 +41,17 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+<<<<<<< Updated upstream
 // Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
 import { FiMenu, FiPlus } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
 // fonts import { Tiempos } from '../theme';
 
+=======
+import { FiMenu, FiPlus, FiSearch } from 'react-icons/fi';
+import { MdWarning } from 'react-icons/md';
+>>>>>>> Stashed changes
 enum NavbarState {
   Low,
   High,
@@ -45,6 +62,7 @@ enum ScrollDirection {
   Down,
 }
 
+<<<<<<< Updated upstream
 const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
   :root {
     --navbar-height: 80px;
@@ -64,6 +82,39 @@ const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
   }
 `;
 
+=======
+const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
+  :root {
+    ${isHomePage ?
+      `
+    //--navbar-height: 23.9cqw;
+    //--scrolled-navbar-height: 12.83cqw;
+    //--navbar-height: 10cqw;
+    //--scrolled-navbar-height: 7cqw;
+    --navbar-aspect-ratio: 6.5 / 1;
+    --scrolled-navbar-aspect-ratio: 9 / 1;
+    `
+    : `
+    //--navbar-height: 14.42cqw;
+    //--scrolled-navbar-height: 11.81cqw;
+    //--navbar-height: 10cqw;
+    //--scrolled-navbar-height: 7cqw;
+    --navbar-aspect-ratio: 8 / 1;
+    --scrolled-navbar-aspect-ratio: 9.5 / 1;
+    `}
+    --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
+      //'var(--navbar-height)'
+      //: 'var(--scrolled-navbar-height)'};
+      'var(--navbar-aspect-ratio)'
+    : 'var(--scrolled-navbar-aspect-ratio)'};
+  }
+`;
+
+export const AppBar = styled(MuiAppBar)`
+  background-color: white;
+`;
+
+>>>>>>> Stashed changes
 export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;
@@ -102,6 +153,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 })<{
   navbarState: NavbarState[];
 }>`
+<<<<<<< Updated upstream
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
   row-gap: ${({ theme }) => theme.spacing(0.5)};
@@ -166,11 +218,41 @@ export const NavbarLink = styled(Link)`
 `;
 
 export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+=======
+  min-height: unset;
+  margin: 0 auto;
+  width: 100%;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  transform: translate3d(0, 0, 0);
+  transition: aspect-ratio 300ms ease-out;
+  max-width: 1333px;
+  container: toolbar/inline-size;
+  position: relative;
+  box-sizing: border-box;
+  /*
+  height: var(--changing-navbar-height) !important;
+  min-height: var(--changing-navbar-height) !important;
+  max-height: var(--changing-navbar-height) !important;
+  */
+  aspect-ratio: var(--changing-aspect-ratio) !important;
+`;
+
+export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+  position: absolute;
+  @container toolbar (width > 200px) {
+    top: 1.3cqw;
+    right: 2.5cqw;
+    column-gap: 0.9cqw;
+  }
+>>>>>>> Stashed changes
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: end;
+<<<<<<< Updated upstream
   gap: ${({ theme }) => theme.spacing(2)};
+=======
+>>>>>>> Stashed changes
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -179,6 +261,7 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
     `}
 `;
 
+<<<<<<< Updated upstream
 export const NavbarActions = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
@@ -211,6 +294,46 @@ export const NavbarMenuButton = styled(IconButton)`
 
     ${({ theme }) => theme.breakpoints.up('lg')} {
       font-size: 35px;
+=======
+export const NavbarHamburgerButton = styled(IconButton)`
+  padding: 0;
+  background-color: black;
+  border-radius: 50%;
+  @container toolbar (width > 200px) {
+    width: 3.917442cqw;
+    height: 3.917442cqw;
+  }
+  > svg {
+    stroke-width: 1.25px;
+    stroke: white;
+    font-size: 2.5cqw;
+  }
+  &:hover {
+    background-color: #f5ff64;
+    > svg {
+      stroke: black;
+    }
+  }
+`;
+
+export const NavbarSearchButton = styled(IconButton)`
+  padding: 0;
+  background-color: black;
+  border-radius: 50%;
+  @container toolbar (width > 200px) {
+    width: 3.917442cqw;
+    height: 3.917442cqw;
+  }
+  > svg {
+    stroke-width: 1.25px;
+    stroke: white;
+    font-size: 2.5cqw;
+  }
+  &:hover {
+    background-color: #f5ff64;
+    > svg {
+      stroke: black;
+>>>>>>> Stashed changes
     }
   }
 `;
@@ -220,6 +343,7 @@ export const NavbarIconButtonWrapper = styled('div')`
   justify-content: center;
   align-items: center;
   aspect-ratio: 1;
+<<<<<<< Updated upstream
   padding-left: ${({ theme }) => theme.spacing(1)};
 `;
 
@@ -229,6 +353,25 @@ export const NavbarSearchIconButtonWrapper = styled(NavbarIconButtonWrapper)`
   svg {
     stroke-width: 0;
   }
+=======
+`;
+
+export const NavbarActions = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-self: end;
+  gap: 1cqw;
+  justify-self: end;
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
+>>>>>>> Stashed changes
 `;
 
 export const NavbarLoginLink = styled(Link, {
@@ -247,6 +390,7 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
+<<<<<<< Updated upstream
 export const NavbarLogoWrapper = styled('div')`
   display: flex;
   flex-direction: column;
@@ -274,11 +418,83 @@ const TsriLogo = styled('img', {
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
   margin: 8px 0 0 0;
+=======
+const TsriLogo = styled('img', {
+  shouldForwardProp: propName =>
+    propName !== 'isScrolled' &&
+    propName !== 'isMenuOpen' &&
+    propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isMenuOpen?: boolean; isHomePage?: boolean }>`
+  transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  position: absolute;
+
+  // not scrolled --> blue logo, larger
+  @container toolbar (width > 200px) {
+    width: 24.2cqw;
+    height: auto;
+    top: 0.5cqw;
+    left: 2cqw;
+  }
+
+  // scrolled --> blue logo, smaller
+  ${({ isScrolled, isMenuOpen }) =>
+    isScrolled &&
+    !isMenuOpen &&
+    css`
+      @container toolbar (width > 200px) {
+        width: 18.6cqw;
+      }
+    `}
+
+  // on home page, not scrolled --> black logo, larger
+  ${({ isHomePage }) =>
+    isHomePage &&
+    css`
+      @container toolbar (width > 200px) {
+        width: 32.55cqw;
+      }
+    `}
+
+  // on home page, scrolled --> black logo, smaller
+  ${({ isScrolled, isMenuOpen, isHomePage }) =>
+    isHomePage &&
+    isScrolled &&
+    !isMenuOpen &&
+    css`
+      @container toolbar (width > 200px) {
+        //width: 23.3cqw;
+        //width: 18.6cqw;
+        width: 21cqw;
+      }
+    `}
+`;
+
+const TsriClaim = styled('img', {
+  shouldForwardProp: propName =>
+    propName !== 'isScrolled' &&
+    propName !== 'isMenuOpen' &&
+    propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isMenuOpen?: boolean; isHomePage?: boolean }>`
+  transition:
+    width 300ms ease-out,
+    top 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  position: absolute;
+
+  @container toolbar (width > 200px) {
+    width: 26cqw;
+    height: auto;
+    top: 13.5cqw;
+    left: 2cqw;
+  }
+>>>>>>> Stashed changes
 
   ${({ theme, isScrolled, isMenuOpen }) =>
     isScrolled &&
     !isMenuOpen &&
     css`
+<<<<<<< Updated upstream
       ${theme.breakpoints.up('sm')} {
         width: 220px;
       }
@@ -291,6 +507,111 @@ const TsriLogo = styled('img', {
       ${theme.breakpoints.up('xl')} {
         width: 208px;
         margin-top: 18px;
+=======
+      @container toolbar (width > 200px) {
+        //width: 18.61cqw;
+        //width: 14.85cqw;
+        width: 16.77cqw;
+        top: 9.7cqw;
+      }
+    `}
+
+  ${({ isHomePage }) =>
+    !isHomePage &&
+    css`
+      display: none;
+    `}
+`;
+
+const navbarTabStyles = () => css`
+  background-color: black;
+  color: white;
+  font-size: 1.2cqw;
+  line-height: 1.2cqw;
+  text-align: left;
+  border: 0;
+  outline: 0;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75cqw 1cqw;
+  border-top-left-radius: 1cqw;
+  border-top-right-radius: 1cqw;
+  box-sizing: border-box;
+  grid-column: 2 / 3;
+
+  &:hover {
+    background-color: #f5ff64;
+    color: black;
+  }
+
+  & > * {
+    text-decoration: none;
+    color: inherit;
+  }
+`;
+
+const BecomeMemberTab = styled('button')`
+  ${navbarTabStyles()}
+  grid-row: 1 / 2;
+`;
+
+const RegisterNewsLetterTab = styled('button')`
+  ${navbarTabStyles()}
+  grid-row: 2 / 3;
+`;
+
+const PreTitleTab = styled('div')`
+  ${navbarTabStyles()}
+  background-color: #0C9FED;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  box-model: border-box;
+  cursor: default;
+  &:hover {
+    background-color: #0c9fed;
+    color: white;
+  }
+`;
+
+const NavbarTabs = styled('div', {
+  shouldForwardProp: propName =>
+    propName !== 'navbarState' && propName !== 'isHomePage',
+})<{
+  navbarState: NavbarState[];
+  isHomePage: boolean;
+}>`
+  display: grid;
+  grid-template-rows: repeat(2, min-content);
+  border-bottom: 0.15cqw solid transparent;
+  margin: 0 auto;
+  align-self: flex-end;
+
+  @container toolbar (width > 200px) {
+    grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
+    width: 100%;
+    row-gap: 0.15cqw;
+    column-gap: 2.2cqw;
+  }
+
+  ${({ navbarState }) =>
+    navbarState.includes(NavbarState.High) &&
+    css`
+      ${RegisterNewsLetterTab} {
+        display: none;
+      }
+
+      ${BecomeMemberTab} {
+        grid-row: 2 / 3;
+      }
+    `}
+
+  ${({ isHomePage }) =>
+    isHomePage &&
+    css`
+      ${PreTitleTab} {
+        display: none;
+>>>>>>> Stashed changes
       }
     `}
 `;
@@ -313,6 +634,15 @@ export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   navPaperClassName?: string;
+<<<<<<< Updated upstream
+=======
+
+  imagesBase64?: {
+    logoBlack?: string;
+    logoBlue?: string;
+    claim?: string;
+  };
+>>>>>>> Stashed changes
 }
 
 export function TsriV2Navbar({
@@ -331,6 +661,11 @@ export function TsriV2Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
+<<<<<<< Updated upstream
+=======
+  essentialPageProps,
+  imagesBase64 = {},
+>>>>>>> Stashed changes
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -381,8 +716,26 @@ export function TsriV2Navbar({
     onMenuToggle?.(newState);
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
+<<<<<<< Updated upstream
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
   const headerItems = data?.navigations?.find(({ key }) => key === headerSlug);
+=======
+  const getTabText = (essentialPageProps: EssentialPageProps | undefined) => {
+    if (essentialPageProps) {
+      switch (essentialPageProps.pageType) {
+        case PageType.Article:
+          return essentialPageProps.Article?.preTitle || '';
+        case PageType.Author:
+          return 'Ich bin Tsüri!';
+        case PageType.AuthorList:
+          return 'Mir sind Tsüri!';
+      }
+    }
+    return '';
+  };
+
+  const mainItems = data?.navigations?.find(({ key }) => key === slug);
+>>>>>>> Stashed changes
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = useMemo(
@@ -416,11 +769,27 @@ export function TsriV2Navbar({
     isMenuOpen,
     hasActiveSubscription
   );
+<<<<<<< Updated upstream
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
 
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarHeight} />
+=======
+
+  const isHomePage = essentialPageProps?.Page?.slug === '';
+
+  const tabText = getTabText(essentialPageProps);
+
+  const navbarStyles = useMemo(
+    () => cssVariables(navbarState, isHomePage),
+    [navbarState, isHomePage]
+  );
+
+  return (
+    <NavbarWrapper className={className}>
+      <GlobalStyles styles={navbarStyles} />
+>>>>>>> Stashed changes
       {isMenuOpen && forceHideBanner}
 
       <AppBar
@@ -434,6 +803,7 @@ export function TsriV2Navbar({
             aria-label="Startseite"
             isMenuOpen={isMenuOpen}
           >
+<<<<<<< Updated upstream
             <NavbarLogoWrapper>
               <TsriLogo
                 src="/logo.svg"
@@ -442,11 +812,48 @@ export function TsriV2Navbar({
                 isMenuOpen={isMenuOpen}
               />
             </NavbarLogoWrapper>
+=======
+            <TsriLogo
+              src={
+                isHomePage ?
+                  imagesBase64?.logoBlack ?
+                    imagesBase64.logoBlack
+                  : '/logo.svg'
+                : imagesBase64?.logoBlue ?
+                  imagesBase64.logoBlue
+                : '/logo_blue.svg'
+              }
+              alt="Tsüri"
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+              isHomePage={isHomePage}
+            />
+            <TsriClaim
+              src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
+              alt="Unabhängig, Kritisch, Lokal."
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+              isHomePage={isHomePage}
+            />
+>>>>>>> Stashed changes
           </NavbarLoginLink>
 
           <NavbarMain>
             <NavbarIconButtonWrapper>
+<<<<<<< Updated upstream
               <NavbarMenuButton
+=======
+              <NavbarSearchButton
+                size="small"
+                aria-label="Suche"
+                color={'inherit'}
+              >
+                <FiSearch />
+              </NavbarSearchButton>
+            </NavbarIconButtonWrapper>
+            <NavbarIconButtonWrapper>
+              <NavbarHamburgerButton
+>>>>>>> Stashed changes
                 size="small"
                 aria-label="Menu"
                 onClick={toggleMenu}
@@ -464,6 +871,7 @@ export function TsriV2Navbar({
                     </Box>
                   </HauptstadtOpenInvoices>
                 )}
+<<<<<<< Updated upstream
               </NavbarMenuButton>
             </NavbarIconButtonWrapper>
 
@@ -498,6 +906,26 @@ export function TsriV2Navbar({
               </Link>
             )}
           </NavbarActions>*/}
+=======
+              </NavbarHamburgerButton>
+            </NavbarIconButtonWrapper>
+          </NavbarMain>
+
+          <NavbarTabs
+            navbarState={navbarState}
+            isHomePage={isHomePage}
+          >
+            <PreTitleTab>
+              <span>{tabText}</span>
+            </PreTitleTab>
+            <BecomeMemberTab>
+              <a href="#">Member werden</a>
+            </BecomeMemberTab>
+            <RegisterNewsLetterTab>
+              <a href="#">Newsletter kostenlos abonnieren</a>
+            </RegisterNewsLetterTab>
+          </NavbarTabs>
+>>>>>>> Stashed changes
         </NavbarInnerWrapper>
       </AppBar>
 

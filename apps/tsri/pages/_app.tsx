@@ -21,6 +21,7 @@ import {
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import { getPageTypeRelatedContent } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
@@ -120,6 +121,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+  
+  const pageTypeRelatedContent = getPageTypeRelatedContent(pageProps);
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -228,6 +231,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
+                essentialPageProps={pageTypeRelatedContent}
               />
 
               <main>
