@@ -99,11 +99,13 @@ export class CrowdfundingResolver {
   @ResolveField(() => Number)
   async subscriptions(@Parent() parent: PCrowdfunding) {
     return (
-      await this.crowdfundingService.getSubscriptions(
-        parent,
-        (await this.memberPlans(parent)).map(({ id }) => id)
-      )
-    ).length;
+      (
+        await this.crowdfundingService.getSubscriptions(
+          parent,
+          (await this.memberPlans(parent)).map(({ id }) => id)
+        )
+      ).length + (parent.additionalRevenue ?? 0)
+    );
   }
 
   @ResolveField(() => String, { nullable: true })

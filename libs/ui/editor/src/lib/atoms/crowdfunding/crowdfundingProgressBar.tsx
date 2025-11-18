@@ -28,7 +28,7 @@ export function CrowdfundingProgressBar({
             revenue: formatMoney(crowdfunding.revenue || 0),
           })
         : t('crowdfunding.form.subscriptions', {
-            subscriptions: crowdfunding.subscriptions,
+            subscriptions: crowdfunding.subscriptions ?? 0,
           })
         }
       </h3>
