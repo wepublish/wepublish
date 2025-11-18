@@ -19,3 +19,4 @@ export * from './lib/with-session-provider';
 export * from './lib/page-type-based-content';
 export * from './lib/with-builder-router';
 export * from './lib/i18n-formatter';
+export * from './lib/page-type-related-content';
