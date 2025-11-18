@@ -31,5 +31,3 @@ export * from './lib/teaser-slot/teaser-slots.model';
 export * from './lib/block-content.model';
 export * from './lib/block-type.model';
 export * from './lib/block-content.module';
-
-export * from './lib/nested-blocks/flex-block.model';
