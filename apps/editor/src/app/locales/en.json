@@ -321,6 +321,9 @@
         "removeBlock": "Remove Block",
         "unlockBlock": "Unlock"
       },
+      "flexBlock": {
+        "label": "Flex Block"
+      },
       "html": {
         "close": "Close",
         "confirm": "Confirm",

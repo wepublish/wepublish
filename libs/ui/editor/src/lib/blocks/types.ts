@@ -2,6 +2,7 @@ import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
+  BlockType,
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
@@ -115,6 +116,35 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
   hideButton: boolean;
   image?: FullImageFragment | undefined;
 }
+
+export interface MinimalBlock {
+  type: string;
+}
+
+export interface NestedBlock {
+  alignment: FlexAlignment;
+  block: (BlockContentInput & { type?: string }) | null;
+}
+
+export interface FlexBlockValue extends BaseBlockValue {
+  nestedBlocks: Array<NestedBlock>;
+}
+
+const isNestedBlock = (nb: unknown): nb is NestedBlock => {
+  return (
+    !!nb &&
+    typeof nb === 'object' &&
+    Object.prototype.hasOwnProperty.call(nb as object, 'alignment')
+  );
+};
+
+const isMinimalBlock = (nb: unknown): nb is MinimalBlock => {
+  return (
+    !!nb &&
+    typeof nb === 'object' &&
+    Object.prototype.hasOwnProperty.call(nb as object, 'type')
+  );
+};
 
 export enum EmbedType {
   StreamableVideo = 'streamableVideo',
@@ -400,6 +430,11 @@ export type EventBlockListValue = BlockListValue<
   EventBlockValue
 >;
 
+export type FlexBlockListValue = BlockListValue<
+  EditorBlockType.FlexBlock,
+  FlexBlockValue
+>;
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -419,7 +454,8 @@ export type BlockValue =
   | CrowdfundingBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
-  | TeaserListBlockListValue;
+  | TeaserListBlockListValue
+  | FlexBlockListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -444,6 +480,7 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
+
     case EditorBlockType.Crowdfunding:
       return {
         crowdfunding: {
@@ -747,6 +784,26 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
+      
+    case EditorBlockType.FlexBlock: {
+      const flexBlock = {
+        nestedBlocks: (block.value.nestedBlocks || []).map(nb => ({
+          alignment: {
+            i: nb.alignment.i,
+            x: nb.alignment.x,
+            y: nb.alignment.y,
+            w: nb.alignment.w,
+            h: nb.alignment.h,
+            static: nb.alignment.static ?? false,
+          },
+          block: nb.block ? nb.block : null,
+        })),
+        type: BlockType.FlexBlock,
+        blockStyle: block.value.blockStyle,
+      };
+      
+      return { flexBlock };
+    }
   }
 }
 
@@ -1107,15 +1164,16 @@ export function blockForQueryBlock(
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => [
             nanoid(),
-            mapTeaserToQueryTeaser(teaser),
-          ]),
+            mapTeaserToQueryTeaser(teaser) as Teaser | null,
+          ]) as Array<[string, Teaser | null]>,
         },
       };
 
     case 'TeaserSlotsBlock':
+      return (() => {
       return {
         key,
-        type: EditorBlockType.TeaserSlots,
+          type: EditorBlockType.TeaserSlots as EditorBlockType.TeaserSlots,
         value: {
           blockStyle: block.blockStyle,
           slots: block.slots.map(({ teaser, type }) => ({
@@ -1125,7 +1183,8 @@ export function blockForQueryBlock(
                 ({
                   ...teaser,
                   type:
-                    teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
+                      teaser?.__typename === 'ArticleTeaser' ?
+                        TeaserType.Article
                     : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
                     : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
                     : TeaserType.Custom,
@@ -1137,6 +1196,7 @@ export function blockForQueryBlock(
           teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
         },
       };
+      })();
 
     case 'BreakBlock':
       return {
@@ -1151,6 +1211,50 @@ export function blockForQueryBlock(
           linkTarget: block.linkTarget ?? '',
           hideButton: block.hideButton ?? false,
           image: block.image ?? undefined,
+        },
+      };
+      
+    case 'FlexBlock':
+      return {
+        key,
+        type: EditorBlockType.FlexBlock,
+        value: {
+          blockStyle: block.blockStyle,
+          nestedBlocks: (block.nestedBlocks || []).map(nb => {
+            if (!nb) {
+              return {
+                alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
+                block: null,
+              };
+            }
+            
+            if (isNestedBlock(nb)) {
+              const s = nb;
+              return {
+                alignment: {
+                  i: s.alignment.i ?? '',
+                  x: s.alignment.x ?? 0,
+                  y: s.alignment.y ?? 0,
+                  w: s.alignment.w ?? 0,
+                  h: s.alignment.h ?? 0,
+                  static: s.alignment.static ?? false,
+                },
+                block: s.block ? s.block : null,
+              };
+            }
+            
+            if (isMinimalBlock(nb)) {
+              const s = nb;
+              return {
+                alignment: { i: '', x: 0, y: 0, w: 1, h: 1, static: false },
+                block: { type: s.type },
+              };
+            }
+            return {
+              alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
+              block: null,
+            };
+          }),
         },
       };
 

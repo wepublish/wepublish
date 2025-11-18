@@ -6,6 +6,7 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { hasPermission } from '@wepublish/permissions/api';
 import {
   BlockContent,
+  isFlexBlock,
   isTeaserSlotsBlock,
   SlotTeasersLoader,
 } from '@wepublish/block-content/api';
@@ -59,7 +60,10 @@ export class PageRevisionResolver {
   async blocks(
     @Parent() revision: PageRevision
   ): Promise<(typeof BlockContent)[]> {
-    if (revision.blocks.some(isTeaserSlotsBlock)) {
+    if (
+      revision.blocks.some(isTeaserSlotsBlock) ||
+      revision.blocks.some(isFlexBlock)
+    ) {
       return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks);
     }
 

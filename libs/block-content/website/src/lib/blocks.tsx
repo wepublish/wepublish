@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderListicleBlockProps,
   BuilderPollBlockProps,
@@ -14,6 +15,7 @@ import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
 import { isImageBlock } from './image/image-block';
@@ -56,6 +58,7 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
+import { BlockContent } from '@wepublish/website/api';
 
 export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
   const { blocks, blockStyles } = useWebsiteBuilder();
@@ -171,9 +174,71 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
         isCommentBlock,
         block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />,
       ],
+      [
+        isFlexBlock,
+        block => {
+          const nrOfNestedBlocks = (block as BuilderFlexBlockProps).nestedBlocks
+            .length;
+          const children = (block as BuilderFlexBlockProps).nestedBlocks.map(
+            (nb, index) => {
+              return (
+                <Block
+                  key={index}
+                  block={nb.block as BlockContent}
+                  type="Article"
+                  index={index}
+                  count={nrOfNestedBlocks}
+                />
+              );
+            }
+          );
+
+          return (
+            <blocks.FlexBlock
+              {...(block as BuilderFlexBlockProps)}
+              children={children}
+            />
+          );
+        },
+      ],
     ])(block)
   );
 });
+
+type BuilderBlockProps = {
+  block: BlockContent;
+  type: BuilderBlockRendererProps['type'];
+  index: number;
+  count: number;
+};
+export const Block = memo(
+  ({ block, type, index, count }: BuilderBlockProps) => {
+    const {
+      blocks: { Renderer },
+    } = useWebsiteBuilder();
+
+    return (
+      <ImageContext.Provider
+        value={
+          // Above the fold images should be loaded with a high priority
+          3 > index ?
+            {
+              fetchPriority: 'high',
+              loading: 'eager',
+            }
+          : {}
+        }
+      >
+        <Renderer
+          block={block}
+          index={index}
+          count={count}
+          type={type}
+        />
+      </ImageContext.Provider>
+    );
+  }
+);
 
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {

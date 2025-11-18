@@ -257,7 +257,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -267,6 +267,7 @@ input BlockContentInput {
   event: EventBlockInput
   facebookPost: FacebookPostBlockInput
   facebookVideo: FacebookVideoBlockInput
+  flexBlock: FlexBlockInput
   html: HTMLBlockInput
   image: ImageBlockInput
   imageGallery: ImageGalleryBlockInput
@@ -307,6 +308,7 @@ enum BlockType {
   Event
   FacebookPost
   FacebookVideo
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -721,6 +723,7 @@ enum EditorBlockType {
   Crowdfunding
   Embed
   Event
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -894,6 +897,24 @@ type FlexAlignment {
   y: Int!
 }
 
+type FlexAlignmentBlocks {
+  h: Int!
+  i: String!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
+input FlexAlignmentBlocksInput {
+  h: Int!
+  i: String!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
 input FlexAlignmentInput {
   h: Int!
   i: String!
@@ -901,6 +922,20 @@ input FlexAlignmentInput {
   w: Int!
   x: Int!
   y: Int!
+}
+
+type FlexBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  nestedBlocks: [NestedBlock!]!
+  type: BlockType!
+}
+
+input FlexBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  nestedBlocks: [NestedBlockInput!]!
+  type: BlockType!
 }
 
 type FlexTeaser {
@@ -992,6 +1027,10 @@ interface HasImage {
 interface HasImageLc {
   image: Image
   imageId: String
+}
+
+interface HasOneBlockContent {
+  block: BlockContent
 }
 
 interface HasOptionalArticle {
@@ -1588,6 +1627,16 @@ enum NavigationLinkType {
   Article
   External
   Page
+}
+
+type NestedBlock implements HasOneBlockContent {
+  alignment: FlexAlignmentBlocks!
+  block: BlockContent
+}
+
+input NestedBlockInput {
+  alignment: FlexAlignmentBlocksInput!
+  block: BlockContentInput
 }
 
 type NonDbProperty {

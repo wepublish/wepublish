@@ -269,6 +269,9 @@
         "removeBlock": "Supprimer le bloc",
         "unlockBlock": "Déverrouiller la position bloc"
       },
+      "flexBlock": {
+        "label": "Flex Block"
+      },
       "html": {
         "close": "Fermer",
         "confirm": "Confirmer",

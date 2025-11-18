@@ -3,7 +3,7 @@ import {
   CanCreateBlockStyle,
   CanDeleteBlockStyle,
   CanUpdateBlockStyle,
-} from '../../../../../permissions/src/lib/permissions';
+} from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { Public } from '@wepublish/authentication/api';
 import {
