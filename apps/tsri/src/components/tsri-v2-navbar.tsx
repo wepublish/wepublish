@@ -1,10 +1,6 @@
 import styled from '@emotion/styled';
 import {
-<<<<<<< Updated upstream
-  AppBar,
-=======
   AppBar as MuiAppBar,
->>>>>>> Stashed changes
   Box,
   css,
   GlobalStyles,
@@ -17,17 +13,11 @@ import { forceHideBanner } from '@wepublish/banner/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
-<<<<<<< Updated upstream
-import { FullNavigationFragment } from '@wepublish/website/api';
-import {
-  BuilderNavbarProps,
-=======
 import { PageType } from '@wepublish/utils/website';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import {
   BuilderNavbarProps,
   EssentialPageProps,
->>>>>>> Stashed changes
   IconButton,
   Link,
   useWebsiteBuilder,
@@ -41,17 +31,8 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-<<<<<<< Updated upstream
-// Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
-import { FiMenu, FiPlus } from 'react-icons/fi';
-import { MdWarning } from 'react-icons/md';
-
-// fonts import { Tiempos } from '../theme';
-
-=======
 import { FiMenu, FiPlus, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
->>>>>>> Stashed changes
 enum NavbarState {
   Low,
   High,
@@ -62,27 +43,6 @@ enum ScrollDirection {
   Down,
 }
 
-<<<<<<< Updated upstream
-const cssVariables = (state: NavbarState[]) => (theme: Theme) => css`
-  :root {
-    --navbar-height: 80px;
-    --scrolled-navbar-height: 55px;
-    --changing-navbar-height: ${state.includes(NavbarState.Low) ?
-      'var(--navbar-height)'
-    : 'var(--scrolled-navbar-height)'};
-
-    ${theme.breakpoints.up('sm')} {
-      --navbar-height: 109px;
-    }
-
-    ${theme.breakpoints.up('lg')} {
-      --navbar-height: 308px;
-      --scrolled-navbar-height: 124px;
-    }
-  }
-`;
-
-=======
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
@@ -114,7 +74,6 @@ export const AppBar = styled(MuiAppBar)`
   background-color: white;
 `;
 
->>>>>>> Stashed changes
 export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;
@@ -153,72 +112,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 })<{
   navbarState: NavbarState[];
 }>`
-<<<<<<< Updated upstream
-  display: grid;
-  grid-template-columns: 1fr max-content 1fr;
-  row-gap: ${({ theme }) => theme.spacing(0.5)};
-  align-content: start;
-  min-height: unset;
-  padding: 0;
-  margin: 0 auto;
-  width: 100%;
-  height: var(--changing-navbar-height);
-  background-color: ${({ theme }) => theme.palette.background.paper};
-  transform: translate3d(0, 0, 0);
-  transition: height 300ms ease-out;
-  background-color: lightblue;
-
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    min-height: unset;
-    padding: 0;
-    row-gap: ${({ theme }) => theme.spacing(1)};
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    min-height: unset;
-    padding: 0;
-    row-gap: ${({ theme }) => theme.spacing(1.5)};
-    max-width: ${({ theme }) => theme.breakpoints.values.md}px;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    max-width: ${({ theme }) => theme.breakpoints.values.lg}px;
-  }
-`;
-
-export const NavbarLinks = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
-})<{ isMenuOpen?: boolean }>`
-  display: none;
-  gap: ${({ theme }) => theme.spacing(2)};
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
-
-  @media (min-width: 740px) {
-    // custom for maximum space usage
-    display: flex;
-  }
-`;
-
-export const NavbarLink = styled(Link)`
-  font-size: 1rem;
-  text-decoration: none;
-  color: ${({ theme }) => theme.palette.common.black};
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 1.3rem;
-  }
-`;
-
-export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
-=======
   min-height: unset;
   margin: 0 auto;
   width: 100%;
@@ -244,15 +137,10 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
     right: 2.5cqw;
     column-gap: 0.9cqw;
   }
->>>>>>> Stashed changes
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: end;
-<<<<<<< Updated upstream
-  gap: ${({ theme }) => theme.spacing(2)};
-=======
->>>>>>> Stashed changes
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -261,40 +149,6 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
     `}
 `;
 
-<<<<<<< Updated upstream
-export const NavbarActions = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
-})<{ isMenuOpen?: boolean }>`
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-self: end;
-  gap: ${({ theme }) => theme.spacing(1)};
-  padding-right: ${({ theme }) => theme.spacing(1)};
-  justify-self: end;
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    gap: ${({ theme }) => theme.spacing(2)};
-  }
-`;
-
-export const NavbarMenuButton = styled(IconButton)`
-  position: relative;
-  padding: 0;
-
-  > svg {
-    font-size: 28px;
-    stroke-width: 1.25px;
-
-    ${({ theme }) => theme.breakpoints.up('lg')} {
-      font-size: 35px;
-=======
 export const NavbarHamburgerButton = styled(IconButton)`
   padding: 0;
   background-color: black;
@@ -333,7 +187,6 @@ export const NavbarSearchButton = styled(IconButton)`
     background-color: #f5ff64;
     > svg {
       stroke: black;
->>>>>>> Stashed changes
     }
   }
 `;
@@ -343,17 +196,6 @@ export const NavbarIconButtonWrapper = styled('div')`
   justify-content: center;
   align-items: center;
   aspect-ratio: 1;
-<<<<<<< Updated upstream
-  padding-left: ${({ theme }) => theme.spacing(1)};
-`;
-
-export const NavbarSearchIconButtonWrapper = styled(NavbarIconButtonWrapper)`
-  padding-left: 0;
-
-  svg {
-    stroke-width: 0;
-  }
-=======
 `;
 
 export const NavbarActions = styled('div', {
@@ -371,7 +213,6 @@ export const NavbarActions = styled('div', {
     css`
       z-index: -1;
     `}
->>>>>>> Stashed changes
 `;
 
 export const NavbarLoginLink = styled(Link, {
@@ -390,35 +231,6 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-<<<<<<< Updated upstream
-export const NavbarLogoWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 220px;
-
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    width: 350px;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    width: 440px;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    width: 550px;
-  }
-`;
-
-const TsriLogo = styled('img', {
-  shouldForwardProp: propName =>
-    propName !== 'isScrolled' && propName !== 'isMenuOpen',
-})<{ isScrolled?: boolean; isMenuOpen?: boolean }>`
-  width: 350px;
-  transition: width 300ms ease-out;
-  transform: translate3d(0, 0, 0);
-  margin: 8px 0 0 0;
-=======
 const TsriLogo = styled('img', {
   shouldForwardProp: propName =>
     propName !== 'isScrolled' &&
@@ -488,26 +300,11 @@ const TsriClaim = styled('img', {
     top: 13.5cqw;
     left: 2cqw;
   }
->>>>>>> Stashed changes
 
   ${({ theme, isScrolled, isMenuOpen }) =>
     isScrolled &&
     !isMenuOpen &&
     css`
-<<<<<<< Updated upstream
-      ${theme.breakpoints.up('sm')} {
-        width: 220px;
-      }
-
-      ${theme.breakpoints.up('lg')} {
-        width: 208px;
-        margin-top: 18px;
-      }
-
-      ${theme.breakpoints.up('xl')} {
-        width: 208px;
-        margin-top: 18px;
-=======
       @container toolbar (width > 200px) {
         //width: 18.61cqw;
         //width: 14.85cqw;
@@ -611,7 +408,6 @@ const NavbarTabs = styled('div', {
     css`
       ${PreTitleTab} {
         display: none;
->>>>>>> Stashed changes
       }
     `}
 `;
@@ -634,15 +430,6 @@ export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   navPaperClassName?: string;
-<<<<<<< Updated upstream
-=======
-
-  imagesBase64?: {
-    logoBlack?: string;
-    logoBlue?: string;
-    claim?: string;
-  };
->>>>>>> Stashed changes
 }
 
 export function TsriV2Navbar({
@@ -661,11 +448,7 @@ export function TsriV2Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
-<<<<<<< Updated upstream
-=======
   essentialPageProps,
-  imagesBase64 = {},
->>>>>>> Stashed changes
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -716,10 +499,6 @@ export function TsriV2Navbar({
     onMenuToggle?.(newState);
   }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
-<<<<<<< Updated upstream
-  const mainItems = data?.navigations?.find(({ key }) => key === slug);
-  const headerItems = data?.navigations?.find(({ key }) => key === headerSlug);
-=======
   const getTabText = (essentialPageProps: EssentialPageProps | undefined) => {
     if (essentialPageProps) {
       switch (essentialPageProps.pageType) {
@@ -728,14 +507,13 @@ export function TsriV2Navbar({
         case PageType.Author:
           return 'Ich bin Tsüri!';
         case PageType.AuthorList:
-          return 'Mir sind Tsüri!';
+          return 'Wir sind Tsüri!';
       }
     }
     return '';
   };
 
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
->>>>>>> Stashed changes
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = useMemo(
@@ -769,13 +547,6 @@ export function TsriV2Navbar({
     isMenuOpen,
     hasActiveSubscription
   );
-<<<<<<< Updated upstream
-  const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
-
-  return (
-    <NavbarWrapper className={className}>
-      <GlobalStyles styles={navbarHeight} />
-=======
 
   const isHomePage = essentialPageProps?.Page?.slug === '';
 
@@ -789,7 +560,6 @@ export function TsriV2Navbar({
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarStyles} />
->>>>>>> Stashed changes
       {isMenuOpen && forceHideBanner}
 
       <AppBar
@@ -803,46 +573,24 @@ export function TsriV2Navbar({
             aria-label="Startseite"
             isMenuOpen={isMenuOpen}
           >
-<<<<<<< Updated upstream
-            <NavbarLogoWrapper>
-              <TsriLogo
-                src="/logo.svg"
-                alt="Tsüri"
-                isScrolled={isScrolled}
-                isMenuOpen={isMenuOpen}
-              />
-            </NavbarLogoWrapper>
-=======
             <TsriLogo
-              src={
-                isHomePage ?
-                  imagesBase64?.logoBlack ?
-                    imagesBase64.logoBlack
-                  : '/logo.svg'
-                : imagesBase64?.logoBlue ?
-                  imagesBase64.logoBlue
-                : '/logo_blue.svg'
-              }
+              src={`${isHomePage ? '/logo.svg' : '/logo_blue.svg'}`}
               alt="Tsüri"
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
               isHomePage={isHomePage}
             />
             <TsriClaim
-              src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
+              src="/claim.gif"
               alt="Unabhängig, Kritisch, Lokal."
               isScrolled={isScrolled}
               isMenuOpen={isMenuOpen}
               isHomePage={isHomePage}
             />
->>>>>>> Stashed changes
           </NavbarLoginLink>
 
           <NavbarMain>
             <NavbarIconButtonWrapper>
-<<<<<<< Updated upstream
-              <NavbarMenuButton
-=======
               <NavbarSearchButton
                 size="small"
                 aria-label="Suche"
@@ -853,7 +601,6 @@ export function TsriV2Navbar({
             </NavbarIconButtonWrapper>
             <NavbarIconButtonWrapper>
               <NavbarHamburgerButton
->>>>>>> Stashed changes
                 size="small"
                 aria-label="Menu"
                 onClick={toggleMenu}
@@ -871,42 +618,6 @@ export function TsriV2Navbar({
                     </Box>
                   </HauptstadtOpenInvoices>
                 )}
-<<<<<<< Updated upstream
-              </NavbarMenuButton>
-            </NavbarIconButtonWrapper>
-
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
-                  >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
-            )}
-          </NavbarMain>
-
-          {/*<NavbarActions isMenuOpen={isMenuOpen}>
-            {(!isScrolled || isMenuOpen) && (
-              <Link
-                href="/search"
-                color="inherit"
-              >
-                <NavbarSearchIconButtonWrapper>
-                  <NavbarMenuButton
-                    color="inherit"
-                    size="small"
-                  >
-                    <MdSearch aria-label="Suche" />
-                  </NavbarMenuButton>
-                </NavbarSearchIconButtonWrapper>
-              </Link>
-            )}
-          </NavbarActions>*/}
-=======
               </NavbarHamburgerButton>
             </NavbarIconButtonWrapper>
           </NavbarMain>
@@ -925,7 +636,6 @@ export function TsriV2Navbar({
               <a href="#">Newsletter kostenlos abonnieren</a>
             </RegisterNewsLetterTab>
           </NavbarTabs>
->>>>>>> Stashed changes
         </NavbarInnerWrapper>
       </AppBar>
 
