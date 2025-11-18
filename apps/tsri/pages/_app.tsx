@@ -115,6 +115,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+  
   const pageTypeBasedContent = getPageTypeBasedContent(pageProps);
 
   return (
