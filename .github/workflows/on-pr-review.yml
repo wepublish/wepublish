@@ -141,7 +141,7 @@ jobs:
             name: review-${{ github.event.pull_request.number }}-minio
           spec:
             rules:
-              - host: https://storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+              - host: storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev
                 http:
                   paths:
                     - path: /
