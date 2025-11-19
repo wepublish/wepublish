@@ -128,29 +128,30 @@ jobs:
 
           helm repo add minio https://charts.min.io
           helm upgrade --install review-${{ github.event.pull_request.number }}-minio minio/minio --version 4.0.15 -n reviews -f values.yaml
+          
           cat > minio-ingress.yaml <<'EOF'
-            apiVersion: networking.k8s.io/v1
-            kind: Ingress
-            metadata:
-              labels:
-                app.kubernetes.io/instance: review-${{ github.event.pull_request.number }}-minio
-                app.kubernetes.io/managed-by: Helm
-                app.kubernetes.io/name: minio
-                helm.sh/chart: minio-4.0.15
-              name: review-${{ github.event.pull_request.number }}-minio
-            spec:
-              rules:
-                - host: ${S3_PUBLIC_URL}
-                  http:
-                    paths:
-                      - path: /
-                        pathType: ImplementationSpecific
-                        backend:
-                          service:
-                            name: review-${{ github.event.pull_request.number }}-minio
-                            port:
-                              number: 9000
-            EOF
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            labels:
+              app.kubernetes.io/instance: review-${{ github.event.pull_request.number }}-minio
+              app.kubernetes.io/managed-by: Helm
+              app.kubernetes.io/name: minio
+              helm.sh/chart: minio-4.0.15
+            name: review-${{ github.event.pull_request.number }}-minio
+          spec:
+            rules:
+              - host: ${S3_PUBLIC_URL}
+                http:
+                  paths:
+                    - path: /
+                      pathType: ImplementationSpecific
+                      backend:
+                        service:
+                          name: review-${{ github.event.pull_request.number }}-minio
+                          port:
+                            number: 9000
+          EOF
         
             kubectl apply -n reviews -f minio-ingress.yaml
 
