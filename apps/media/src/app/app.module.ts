@@ -11,11 +11,17 @@ import { MulterModule } from '@nestjs/platform-express';
 import { PassportModule } from '@nestjs/passport';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
+    }),
+    CacheModule.register({
+      ttl: 86400,
+      max: 100000,
+      isGlobal: true,
     }),
     MulterModule.register({}),
     MediaServiceModule.forRootAsync({

@@ -11,8 +11,8 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  NotFoundException,
-} from '@nestjs/common';
+  NotFoundException, Inject
+} from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ImageURIObject,
@@ -28,14 +28,9 @@ import {
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
-import NodeCache from 'node-cache';
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {Cache} from 'cache-manager'
 
-const linkCache = new NodeCache({
-  checkperiod: 60,
-  deleteOnExpire: true,
-  useClones: true,
-  stdTTL: 3000,
-});
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
 
@@ -43,7 +38,7 @@ const HTTP_CODE_NOT_FOUND = 307;
   version: '1',
 })
 export class AppController {
-  constructor(private media: MediaService) {}
+  constructor(private media: MediaService, @Inject(CACHE_MANAGER) private linkCache: Cache,) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
@@ -98,7 +93,7 @@ export class AppController {
     )}`;
 
     // Check if image is cached
-    const uriFromCache: ImageURIObject = linkCache.get(cacheKey);
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
     res.setHeader('Content-Type', 'image/webp');
 
@@ -134,10 +129,10 @@ export class AppController {
         HTTP_CODE_NOT_FOUND,
         `${process.env['S3_PUBLIC_HOST']}/${uri}`
       );
-      linkCache.set(cacheKey, { uri, exists: false }, 120);
+      await this.linkCache.set(cacheKey, { uri, exists: false }, 120);
       return;
     } else {
-      linkCache.set(cacheKey, { uri, exists: true });
+      await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
     res.redirect(HTTP_CODE_FOUND, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
