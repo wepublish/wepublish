@@ -1,7 +1,6 @@
 export * from './lib/article.model';
 export * from './lib/article.service';
 export * from './lib/article-dataloader.service';
-export * from './lib/article-revision.service';
 export * from './lib/article-revision-dataloader.service';
 export * from './lib/article.module';
 

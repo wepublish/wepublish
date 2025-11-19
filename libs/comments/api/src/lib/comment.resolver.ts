@@ -19,7 +19,7 @@ import {
 } from '@wepublish/authentication/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { User, UserDataloaderService } from '@wepublish/user/api';
-import { Tag, TagService } from '@wepublish/tag/api';
+import { CommentTagDataloader, Tag } from '@wepublish/tag/api';
 import { CommentDataloaderService } from './comment-dataloader.service';
 import { RatingSystemService } from './rating-system';
 import { CommentInput, CommentUpdateInput } from './comment.input';
@@ -32,7 +32,7 @@ export class CommentResolver {
   constructor(
     private commentService: CommentService,
     private commentDataloader: CommentDataloaderService,
-    private tagService: TagService,
+    private tagDataLoader: CommentTagDataloader,
     private ratingSystemService: RatingSystemService,
     private imageDataloaderService: ImageDataloaderService,
     private userDataloaderService: UserDataloaderService,
@@ -147,7 +147,7 @@ export class CommentResolver {
 
   @ResolveField(() => [Tag])
   async tags(@Parent() comment: Comment) {
-    return this.tagService.getTagsByCommentId(comment.id);
+    return this.tagDataLoader.load(comment.id);
   }
 
   @ResolveField(() => Comment, { nullable: true })

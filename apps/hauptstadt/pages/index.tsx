@@ -20,7 +20,7 @@ export default function Index() {
         href="/a?page=2"
         css={{ justifySelf: 'center', fontWeight: 400 }}
       >
-        Alle Hauptstadt-Artikel
+        Ältere Hauptstadt-Artikel
       </Link>
     </ContentWidthProvider>
   );
