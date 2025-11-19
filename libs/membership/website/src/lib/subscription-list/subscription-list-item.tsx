@@ -21,7 +21,7 @@ import {
   formatPaymentTimeline,
 } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -124,14 +124,23 @@ export function SubscriptionListItem({
         <SubscriptionListItemMeta>
           <SubscriptionListItemMetaItem>
             <MdCalendarMonth />
+
             <span>
-              Abgeschlossen am{' '}
-              <time
-                suppressHydrationWarning
-                dateTime={startsAt}
-              >
-                {date.format(new Date(startsAt))}
-              </time>
+              <Trans
+                i18nKey="subscription.startsAt"
+                values={{
+                  type: productType,
+                  startsAt: date.format(new Date(startsAt)),
+                }}
+                components={{
+                  time: (
+                    <time
+                      suppressHydrationWarning
+                      dateTime={startsAt}
+                    />
+                  ),
+                }}
+              />
             </span>
           </SubscriptionListItemMetaItem>
 
