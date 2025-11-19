@@ -136,7 +136,8 @@ COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
+RUN npm install prisma @prisma/client @types/node bcrypt typescript &&  \
+    npx prisma generate && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
