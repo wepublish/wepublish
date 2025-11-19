@@ -70,7 +70,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  height: var(--navbar-height);
+  height: auto;
   pointer-events: none;
 
   > * {
@@ -112,11 +112,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   container: toolbar/inline-size;
   position: relative;
   box-sizing: border-box;
-  /*
-  height: var(--changing-navbar-height) !important;
-  min-height: var(--changing-navbar-height) !important;
-  max-height: var(--changing-navbar-height) !important;
-  */
   aspect-ratio: var(--changing-aspect-ratio) !important;
 `;
 
@@ -681,13 +676,13 @@ export function TsriV2Navbar({
 export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen: boolean }>`
-  padding: ${({ theme }) => theme.spacing(2.5)};
-  background-color: ${({ theme }) => theme.palette.primary.main};
+  padding: 2rem;
+  background: linear-gradient(to bottom, rgb(12 159 237), rgba(12 159 237 0.4));
   color: ${({ theme }) => theme.palette.primary.contrastText};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
   position: absolute;
-  top: calc(var(--navbar-height) - 2px);
+  top: 0;
   left: 0;
   right: 0;
   transform: translate3d(
@@ -699,6 +694,9 @@ export const NavPaperWrapper = styled('div', {
   overflow-y: scroll;
   max-height: 100vh;
   padding-bottom: ${({ theme }) => theme.spacing(10)};
+  height: 200px;
+  background: red;
+  z-index: 10;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
