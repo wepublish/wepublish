@@ -11,12 +11,17 @@ import { MulterModule } from '@nestjs/platform-express';
 import { PassportModule } from '@nestjs/passport';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
-import { ImageCacheService } from './imageCache.service';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
+    }),
+    CacheModule.register({
+      ttl: 86400,
+      max: 100000,
+      isGlobal: true,
     }),
     MulterModule.register({}),
     MediaServiceModule.forRootAsync({
@@ -60,12 +65,11 @@ import { ImageCacheService } from './imageCache.service';
   ],
   controllers: [AppController],
   providers: [
-    ImageCacheService,
     {
       provide: APP_FILTER,
       useClass: SentryGlobalFilter,
     },
   ],
-  exports: [ImageCacheService],
+  exports: [],
 })
 export class AppModule {}
