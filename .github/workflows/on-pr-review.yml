@@ -371,6 +371,7 @@ jobs:
               S3_SECRET_KEY: secretKey
               S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
               S3_PORT: '9000'
+              S3_PUBLIC_HOST: 'https://storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev/wepublish-transformed'
             resources:
               requests:
                 memory: "64Mi"
