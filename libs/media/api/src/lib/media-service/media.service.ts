@@ -134,6 +134,7 @@ export class MediaService {
     imageId: string,
     transformations: TransformationsDto
   ): Promise<ImageURIObject> {
+    const originalTransformations = structuredClone(transformations);
     let imageStream: Readable;
     let imageExists = true;
     try {
@@ -168,7 +169,7 @@ export class MediaService {
     }
 
     const transformGuard = new TransformGuard();
-    transformGuard.validateSignature(imageId, transformations);
+    transformGuard.validateSignature(imageId, originalTransformations);
 
     const sharpInstance = imageStream.pipe(
       sharp({
