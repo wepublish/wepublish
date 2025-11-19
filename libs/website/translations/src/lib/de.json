@@ -20,9 +20,16 @@
       "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
     "cancellable": "Jederzeit kündbar",
-    "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
-    "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
-    "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
+    "support": {
+      "subscribeForPeriod": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
+      "payForPeriod": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
+      "pay": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
+    },
+    "button": {
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
+    }
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
