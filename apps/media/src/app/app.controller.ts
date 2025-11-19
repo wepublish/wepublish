@@ -135,6 +135,7 @@ export class AppController {
         `${process.env['S3_PUBLIC_HOST']}/${uri}`
       );
       linkCache.set(cacheKey, { uri, exists: false }, 120);
+      return;
     } else {
       linkCache.set(cacheKey, { uri, exists: true });
     }

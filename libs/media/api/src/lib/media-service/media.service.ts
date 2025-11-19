@@ -87,13 +87,10 @@ export class MediaService {
       removeSignatureFromTransformations(transformations)
     );
     const objectUri = `images/${imageId}/${transformationsKey}`;
-    try {
-      await this.storage.hasFile(this.config.transformationBucket, objectUri);
-    } catch (e: any) {
-      if (e.code == 'NoSuchKey') {
-        return await this.transformImage(imageId, transformations);
-      }
-      throw e;
+    if (
+      !(await this.storage.hasFile(this.config.transformationBucket, objectUri))
+    ) {
+      return await this.transformImage(imageId, transformations);
     }
     return { uri: objectUri, exists: true };
   }
@@ -158,8 +155,16 @@ export class MediaService {
     const transformationsKey = getTransformationKey(
       removeSignatureFromTransformations(transformations)
     );
+
     if (!imageExists) {
-      return { uri: `images/fallback/${transformationsKey}`, exists: false };
+      if (
+        await this.storage.hasFile(
+          this.config.transformationBucket,
+          `images/fallback/${transformationsKey}`
+        )
+      ) {
+        return { uri: `images/fallback/${transformationsKey}`, exists: false };
+      }
     }
 
     const transformGuard = new TransformGuard();
