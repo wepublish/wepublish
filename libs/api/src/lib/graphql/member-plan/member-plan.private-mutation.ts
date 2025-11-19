@@ -101,14 +101,14 @@ export const updateMemberPlan = async (
   });
 
   checkMemberPlanIntegrity({
-    extendable: resolveBooleanUpdate(
-      input.extendable,
-      existingMemberPlan.extendable
-    ),
-    amountPerMonthMin: resolveNumberUpdate(
-      input.amountPerMonthMin,
-      existingMemberPlan.amountPerMonthMin
-    ),
+    extendable:
+      (input.extendable as boolean | undefined) ??
+      existingMemberPlan.extendable,
+
+    amountPerMonthMin:
+      (input.amountPerMonthMin as number | undefined) ??
+      existingMemberPlan.amountPerMonthMin,
+
     amountPerMonthMax: resolveNullableNumberUpdate(
       input.amountPerMonthMax,
       existingMemberPlan.amountPerMonthMax
@@ -167,44 +167,6 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   ) {
     throw new MonthlyTargetAmountNotEnough();
   }
-}
-
-function resolveBooleanUpdate(
-  value: Prisma.BoolFieldUpdateOperationsInput | boolean | undefined,
-  fallback: boolean
-): boolean {
-  if (typeof value === 'boolean') {
-    return value;
-  }
-
-  if (value && typeof value === 'object' && 'set' in value) {
-    const nextValue = value.set;
-
-    if (typeof nextValue === 'boolean') {
-      return nextValue;
-    }
-  }
-
-  return fallback;
-}
-
-function resolveNumberUpdate(
-  value: Prisma.FloatFieldUpdateOperationsInput | number | undefined,
-  fallback: number
-): number {
-  if (typeof value === 'number') {
-    return value;
-  }
-
-  if (value && typeof value === 'object' && 'set' in value) {
-    const nextValue = value.set;
-
-    if (typeof nextValue === 'number') {
-      return nextValue;
-    }
-  }
-
-  return fallback;
 }
 
 function resolveNullableNumberUpdate(
