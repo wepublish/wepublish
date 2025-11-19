@@ -109,14 +109,18 @@ export const updateMemberPlan = async (
       (input.amountPerMonthMin as number | undefined) ??
       existingMemberPlan.amountPerMonthMin,
 
-    amountPerMonthMax: resolveNullableNumberUpdate(
-      input.amountPerMonthMax,
-      existingMemberPlan.amountPerMonthMax
-    ),
-    amountPerMonthTarget: resolveNullableNumberUpdate(
-      input.amountPerMonthTarget,
-      existingMemberPlan.amountPerMonthTarget
-    ),
+    amountPerMonthMax:
+      input.amountPerMonthMax === null ?
+        null
+      : ((input.amountPerMonthMax as number | undefined) ??
+        existingMemberPlan.amountPerMonthMax),
+
+    amountPerMonthTarget:
+      input.amountPerMonthTarget === null ?
+        null
+      : ((input.amountPerMonthTarget as number | undefined) ??
+        existingMemberPlan.amountPerMonthMax),
+
     availablePaymentMethods,
   });
 
@@ -167,31 +171,4 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   ) {
     throw new MonthlyTargetAmountNotEnough();
   }
-}
-
-function resolveNullableNumberUpdate(
-  value:
-    | Prisma.NullableFloatFieldUpdateOperationsInput
-    | number
-    | null
-    | undefined,
-  fallback: number | null
-): number | null {
-  if (typeof value === 'number') {
-    return value;
-  }
-
-  if (value === null) {
-    return null;
-  }
-
-  if (value && typeof value === 'object' && 'set' in value) {
-    const nextValue = value.set;
-
-    if (typeof nextValue === 'number' || nextValue === null) {
-      return nextValue ?? null;
-    }
-  }
-
-  return fallback;
 }
