@@ -1623,7 +1623,12 @@
         "countSubscriptionsFrom": "Include only subscriptions paid from date",
         "countSubscriptionsUntil": "Include only subscriptions paid until date",
         "revenue": "Already CHF {{revenue}} financed",
-        "goals": "Goals"
+        "subscriptions": "Already {{subscriptions}} subscribed",
+        "goalType": "Goal type",
+        "goalType_Revenue": "Revenue",
+        "goalType_Subscription": "Subscription count",
+        "goals": "Goals",
+        "crowdfunding": "Crowdfunding"
       },
       "goalsForm": {
         "title": "Title",

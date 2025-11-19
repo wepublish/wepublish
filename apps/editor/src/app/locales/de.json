@@ -1555,7 +1555,12 @@
         "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
         "revenue": "Bereits CHF {{revenue}} finanziert",
-        "goals": "Ziele"
+        "subscriptions": "Bereits {{subscriptions}} abonnieren",
+        "goals": "Ziele",
+        "crowdfunding": "Crowdfunding",
+        "goalType": "Zieltyp",
+        "goalType_Revenue": "Einnahmen",
+        "goalType_Subscription": "Anzahl Abos"
       },
       "goalsForm": {
         "title": "Titel",

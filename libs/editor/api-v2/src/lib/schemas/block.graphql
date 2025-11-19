@@ -94,7 +94,7 @@ fragment BlockWithoutTeaser on BlockContent {
     crowdfunding {
       id
       name
-      activeCrowdfundingGoal {
+      activeGoal {
         id
         title
         description
@@ -158,6 +158,12 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on VimeoVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
+  ... on StreamableVideoBlock {
     blockStyle
     type
     videoID
