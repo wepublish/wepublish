@@ -46,6 +46,7 @@ import {
 } from '../src/components/hauptstadt-article';
 import { HauptstadtAuthorChip } from '../src/components/hauptstadt-author-chip';
 import { HauptstadtBanner } from '../src/components/hauptstadt-banner';
+import { HauptstadtBlockRenderer } from '../src/components/hauptstadt-block-renderer';
 import { HauptstadtBreakBlock } from '../src/components/hauptstadt-break';
 import { HauptstadtCommentList } from '../src/components/hauptstadt-comment';
 import { HauptstadtContentWrapper } from '../src/components/hauptstadt-content-wrapper';
@@ -149,6 +150,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           CommentList={HauptstadtCommentList}
           SubscriptionListItem={HauptstadtSubscriptionListItem}
           blocks={{
+            Renderer: HauptstadtBlockRenderer,
             Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
             BaseTeaser: HauptstadtTeaser,

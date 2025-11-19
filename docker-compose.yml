@@ -96,9 +96,13 @@ services:
   storage:
     image: minio/minio:latest
     entrypoint: ["/bin/sh"]
-    command: ["-ec",
+    command:  ["-ec",
       "mkdir -p /data/wepublish-staff /data/wepublish-transformed; \
-               exec minio server /data --console-address=:9001"]
+   minio server /data --console-address=:9001 & \
+   sleep 3; \
+   mc alias set local http://127.0.0.1:9000 ${S3_ACCESS_KEY} ${S3_SECRET_KEY}; \
+   mc anonymous set download local/wepublish-transformed; \
+   wait"]
     ports:
       - "9000:9000"
       - "9001:9001"

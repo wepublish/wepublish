@@ -130,7 +130,7 @@ fragment BlockWithoutTeaser on BlockContent {
   ... on CrowdfundingBlock {
     blockStyle: blockStyleName
     crowdfunding {
-      ...CrowdfundingWithActiveGoal
+      ...FullCrowdfunding
     }
   }
 
@@ -187,6 +187,11 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on YouTubeVideoBlock {
+    blockStyle: blockStyleName
+    videoID
+  }
+
+  ... on StreamableVideoBlock {
     blockStyle: blockStyleName
     videoID
   }

@@ -51,7 +51,7 @@ const Heading = styled.h1`
 interface SingleViewTitleProps {
   title?: string;
   loading: boolean;
-  loadingTitle: string;
+  loadingTitle?: string;
   saveBtnTitle: string;
   saveAndCloseBtnTitle: string;
   closePath: string;
@@ -77,7 +77,7 @@ export function SingleViewTitle({
       return (
         <>
           <Loader />
-          {loadingTitle}
+          {loadingTitle ?? title}
         </>
       );
     }

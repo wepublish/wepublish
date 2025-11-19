@@ -11,10 +11,11 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  NotFoundException,
-} from '@nestjs/common';
+  NotFoundException, Inject
+} from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  ImageURIObject,
   MediaService,
   SupportedImagesValidator,
   TokenAuthGuard,
@@ -27,26 +28,21 @@ import {
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
-import { ImageCacheService } from './imageCache.service';
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {Cache} from 'cache-manager'
+
+const HTTP_CODE_FOUND = 301;
+const HTTP_CODE_NOT_FOUND = 307;
 
 @Controller({
   version: '1',
 })
 export class AppController {
-  constructor(
-    private media: MediaService,
-    private imageCacheService: ImageCacheService
-  ) {}
+  constructor(private media: MediaService, @Inject(CACHE_MANAGER) private linkCache: Cache,) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
     res.status(200).send({ status: 'ok' });
-  }
-
-  @Get('/cacheState')
-  async cacheState(@Res() res: Response) {
-    const state = this.imageCacheService.state();
-    res.status(state.healty ? 200 : 500).send(state.stats);
   }
 
   @Get('/favicon.ico')
@@ -97,7 +93,7 @@ export class AppController {
     )}`;
 
     // Check if image is cached
-    const cachedBuffer = this.imageCacheService.get(cacheKey);
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
     res.setHeader('Content-Type', 'image/webp');
 
@@ -109,32 +105,37 @@ export class AppController {
       );
     }
 
-    if (cachedBuffer[0]) {
-      if (cachedBuffer[1] !== 200) {
+    if (uriFromCache) {
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
         res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
+        httpCode = HTTP_CODE_NOT_FOUND;
       }
-      res.status(cachedBuffer[1]);
-      res.end(cachedBuffer[0]);
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
       return;
     }
 
-    // Not in cache, fetch and process image
-    const [file, imageExists] = await this.media.getImage(
+    const { uri, exists } = await this.media.getImageUri(
       imageId,
       transformations
     );
 
-    const buffer = await this.media.bufferStream(file);
-
-    if (!imageExists) {
-      res.status(404);
-      res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
-      this.imageCacheService.set(cacheKey, buffer, 404, 120);
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=60`);
+      res.redirect(
+        HTTP_CODE_NOT_FOUND,
+        `${process.env['S3_PUBLIC_HOST']}/${uri}`
+      );
+      await this.linkCache.set(cacheKey, { uri, exists: false }, 120);
+      return;
     } else {
-      this.imageCacheService.set(cacheKey, buffer);
+      await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
-    res.end(buffer);
+    res.redirect(HTTP_CODE_FOUND, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
   }
 
   @UseGuards(TokenAuthGuard)
