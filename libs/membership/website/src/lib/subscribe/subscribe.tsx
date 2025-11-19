@@ -36,7 +36,6 @@ import {
   getPaymentPeriodicyMonths,
 } from '../formatters/format-payment-period';
 import { formatRenewalPeriod } from '../formatters/format-renewal-period';
-import { replace, toLower } from 'ramda';
 import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
 import { Modal } from '@wepublish/website/builder';
@@ -121,39 +120,54 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
-export const usePaymentText = (
-  autoRenew: boolean,
-  extendable: boolean,
-  productType: ProductType,
-  paymentPeriodicity: PaymentPeriodicity,
-  monthlyAmount: number,
-  currency: Currency,
-  locale: string
-) => {
+export const usePaymentText = ({
+  type = 'button',
+  autoRenew,
+  extendable,
+  productType,
+  paymentPeriodicity,
+  monthlyAmount,
+  currency,
+  siteTitle,
+  locale,
+}: {
+  type?: 'button' | 'support';
+  autoRenew: boolean;
+  extendable: boolean;
+  productType: ProductType;
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  currency: Currency;
+  siteTitle: string;
+  locale: string;
+}) => {
   const { t } = useTranslation();
 
   return useMemo(() => {
     const variables = {
       productType,
       renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
+      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
       paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
+      paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
         currency,
         locale
       ),
       monthlyAmount,
+      siteTitle,
     };
 
     if (autoRenew && extendable) {
-      return t('subscribe.subscribeForPeriod', variables);
+      return t(`subscribe.${type}.subscribeForPeriod`, variables);
     }
 
     if (extendable) {
-      return t('subscribe.payForPeriod', variables);
+      return t(`subscribe.${type}.payForPeriod`, variables);
     }
 
-    return t('subscribe.pay', variables);
+    return t(`subscribe.${type}.pay`, variables);
   }, [
     autoRenew,
     currency,
@@ -161,6 +175,9 @@ export const usePaymentText = (
     locale,
     monthlyAmount,
     paymentPeriodicity,
+    productType,
+    type,
+    siteTitle,
     t,
   ]);
 };
@@ -311,25 +328,28 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
-  const paymentText = usePaymentText(
+  const paymentText = usePaymentText({
     autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    selectedMemberPlan?.productType ?? ProductType.Subscription,
-    selectedPaymentPeriodicity,
+    extendable: selectedMemberPlan?.extendable ?? true,
+    productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
+    paymentPeriodicity: selectedPaymentPeriodicity,
     monthlyAmount,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
+    siteTitle,
+    locale,
+  });
 
-  const monthlyPaymentText = usePaymentText(
-    true,
-    selectedMemberPlan?.extendable ?? true,
-    selectedMemberPlan?.productType ?? ProductType.Subscription,
-    PaymentPeriodicity.Monthly,
-    watch<'monthlyAmount'>('monthlyAmount'),
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
+  const supportText = usePaymentText({
+    type: 'support',
+    autoRenew: true,
+    extendable: selectedMemberPlan?.extendable ?? true,
+    productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
+    paymentPeriodicity: PaymentPeriodicity.Monthly,
+    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
+    siteTitle,
+    locale,
+  });
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -533,8 +553,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   component={SubscribeAmountText}
                   gutterBottom={false}
                 >
-                  Ich unterstütze {siteTitle}{' '}
-                  {replace(/^./, toLower)(monthlyPaymentText)}
+                  {supportText}
                 </Paragraph>
 
                 <PaymentAmount

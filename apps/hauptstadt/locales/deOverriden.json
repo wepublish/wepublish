@@ -17,8 +17,12 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {{exactAmount, select, true {} other {Ab}} {yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
     },
-    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen.",
-    "payForPeriod": "{productType, select, Subscription {{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} other {{monthlyAmount, select, 0 {Gratis} other {{formattedAmount}}}}"
+    "support": {
+      "subscribeForPeriod": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
+      "payForPeriod": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
+      "pay": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
+    },
+    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
   },
   "subscription": {
     "startsAt": "{type, select, Subscription {Abgeschlossen am <time>{startsAt}</time>} other {<time>{startsAt}</time>}}"
