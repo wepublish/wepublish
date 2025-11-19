@@ -11,8 +11,9 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  NotFoundException, Inject
-} from '@nestjs/common'
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ImageURIObject,
@@ -28,8 +29,8 @@ import {
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
-import {CACHE_MANAGER} from '@nestjs/cache-manager'
-import {Cache} from 'cache-manager'
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
@@ -38,7 +39,10 @@ const HTTP_CODE_NOT_FOUND = 307;
   version: '1',
 })
 export class AppController {
-  constructor(private media: MediaService, @Inject(CACHE_MANAGER) private linkCache: Cache,) {}
+  constructor(
+    private media: MediaService,
+    @Inject(CACHE_MANAGER) private linkCache: Cache
+  ) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
@@ -98,10 +102,10 @@ export class AppController {
     res.setHeader('Content-Type', 'image/webp');
 
     if (process.env['NODE_ENV'] === 'production') {
-      // max-age = 365days, immutable, stale-if-error = 30days, stale-while-revalidate = 1day
+      // max-age = 4hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
         'Cache-Control',
-        `public, max-age=31536000, immutable, stale-if-error=2592000, stale-while-revalidate=86400`
+        `public, max-age=14400, immutable, stale-if-error=604800, stale-while-revalidate=86400`
       );
     }
 
@@ -110,6 +114,9 @@ export class AppController {
       if (!uriFromCache.exists) {
         res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
         httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        // On access refresh cache ttl
+        await this.linkCache.set(cacheKey, uriFromCache);
       }
       res.redirect(
         httpCode,
