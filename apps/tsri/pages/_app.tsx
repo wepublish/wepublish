@@ -234,7 +234,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 headerSlug="header"
                 iconSlug="icons"
                 pageTypeBasedProps={pageTypeBasedContent}
-                test={'test'}
               />
 
               <main>
