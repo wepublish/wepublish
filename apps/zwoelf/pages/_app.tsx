@@ -207,7 +207,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   href: 'https://shop.zwoelf.ch/produkt-kategorie/abos/',
                   target: '_blank',
                 }}
-                loginBtn={null}
               />
 
               <main>
