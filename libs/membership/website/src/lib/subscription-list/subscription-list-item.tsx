@@ -21,7 +21,7 @@ import {
   formatPaymentTimeline,
 } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -51,6 +51,11 @@ export const SubscriptionListItemMetaItem = styled('li')`
   justify-content: start;
   gap: ${({ theme }) => theme.spacing(1)};
 `;
+
+// Used to hide it on demand by medias
+export const SubscriptionListItemPaymentPeriodicity = styled(
+  SubscriptionListItemMetaItem
+)``;
 
 export const SubscriptionListItemActions = styled('div')`
   display: grid;
@@ -119,14 +124,23 @@ export function SubscriptionListItem({
         <SubscriptionListItemMeta>
           <SubscriptionListItemMetaItem>
             <MdCalendarMonth />
+
             <span>
-              Abgeschlossen am{' '}
-              <time
-                suppressHydrationWarning
-                dateTime={startsAt}
-              >
-                {date.format(new Date(startsAt))}
-              </time>
+              <Trans
+                i18nKey="subscription.startsAt"
+                values={{
+                  type: productType,
+                  startsAt: date.format(new Date(startsAt)),
+                }}
+                components={{
+                  time: (
+                    <time
+                      suppressHydrationWarning
+                      dateTime={startsAt}
+                    />
+                  ),
+                }}
+              />
             </span>
           </SubscriptionListItemMetaItem>
 
@@ -192,9 +206,9 @@ export function SubscriptionListItem({
           )}
 
           {!autoRenew && (
-            <SubscriptionListItemMetaItem>
+            <SubscriptionListItemPaymentPeriodicity>
               <MdTimelapse /> Gültig für {subscriptionDuration}
-            </SubscriptionListItemMetaItem>
+            </SubscriptionListItemPaymentPeriodicity>
           )}
 
           <SubscriptionListItemMetaItem>

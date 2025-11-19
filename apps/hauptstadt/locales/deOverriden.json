@@ -20,6 +20,9 @@
     "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen.",
     "payForPeriod": "{productType, select, Subscription {{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}} other {{monthlyAmount, select, 0 {Gratis} other {{formattedAmount}}}}"
   },
+  "subscription": {
+    "startsAt": "{type, select, Subscription {Abgeschlossen am <time>{startsAt}</time>} other {<time>{startsAt}</time>}}"
+  },
   "user": {
     "activeSubscriptions": "{type, select, Donation {Spenden} other {Aktive Abos}}",
     "cancelledSubscriptions": "Gekündigte Abos & Alte Spenden",

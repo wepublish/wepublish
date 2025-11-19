@@ -35,7 +35,8 @@
     "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
-    "subscribeNow": "Jetzt ein Abo lösen."
+    "subscribeNow": "Jetzt ein Abo lösen.",
+    "startsAt": "Abgeschlossen am <time>{startsAt}</time>"
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",

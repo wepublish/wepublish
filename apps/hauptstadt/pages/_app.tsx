@@ -70,6 +70,7 @@ import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
+import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
 import {
   HauptstadtAlternatingTeaser,
   HauptstadtFocusTeaser,
@@ -168,6 +169,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanPicker={HauptstadtMemberPlanPicker}
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
+          SubscriptionListItem={HauptstadtSubscriptionListItem}
           blocks={{
             Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
