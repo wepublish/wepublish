@@ -14,6 +14,7 @@ env:
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  S3_PUBLIC_URL: https://storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
@@ -105,7 +106,7 @@ jobs:
               policy: none
               purge: false
             - name: wepublish-transformed
-              policy: none
+              policy: download
               purge: false
 
           persistence:
