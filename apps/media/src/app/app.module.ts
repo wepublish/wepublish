@@ -19,8 +19,8 @@ import { CacheModule } from '@nestjs/cache-manager';
       cache: true,
     }),
     CacheModule.register({
-      ttl: 86400,
-      max: 100000,
+      ttl: 172800,
+      max: 1000000,
       isGlobal: true,
     }),
     MulterModule.register({}),
