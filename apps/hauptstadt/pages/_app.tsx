@@ -15,6 +15,7 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   AsyncSessionProvider,
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
   withJwtHandler,
@@ -27,19 +28,12 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
-import { mergeDeepRight } from 'ramda';
-import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -71,6 +65,7 @@ import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
+import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
 import {
   HauptstadtAlternatingTeaser,
   HauptstadtFocusTeaser,
@@ -89,23 +84,7 @@ setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverriden);
 
 z.setErrorMap(zodI18nMap);
 
@@ -169,6 +148,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanPicker={HauptstadtMemberPlanPicker}
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
+          SubscriptionListItem={HauptstadtSubscriptionListItem}
           blocks={{
             Renderer: HauptstadtBlockRenderer,
             Title: HauptstadtTitleBlock,
