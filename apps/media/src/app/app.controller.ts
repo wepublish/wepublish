@@ -102,17 +102,17 @@ export class AppController {
     res.setHeader('Content-Type', 'image/webp');
 
     if (process.env['NODE_ENV'] === 'production') {
-      // max-age = 4hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
+      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
         'Cache-Control',
-        `public, max-age=14400, immutable, stale-if-error=604800, stale-while-revalidate=86400`
+        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
       );
     }
 
     if (uriFromCache) {
       let httpCode = HTTP_CODE_FOUND;
       if (!uriFromCache.exists) {
-        res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
+        res.setHeader('Cache-Control', `public, max-age=600`);
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
         // On access refresh cache ttl
@@ -131,12 +131,12 @@ export class AppController {
     );
 
     if (!exists) {
-      res.setHeader('Cache-Control', `public, max-age=60`);
+      res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(
         HTTP_CODE_NOT_FOUND,
         `${process.env['S3_PUBLIC_HOST']}/${uri}`
       );
-      await this.linkCache.set(cacheKey, { uri, exists: false }, 120);
+      await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
       return;
     } else {
       await this.linkCache.set(cacheKey, { uri, exists: true });
