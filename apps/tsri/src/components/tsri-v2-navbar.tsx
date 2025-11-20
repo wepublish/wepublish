@@ -4,12 +4,10 @@ import {
   Box,
   css,
   GlobalStyles,
-  Theme,
   Toolbar,
   useTheme,
 } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
-import { forceHideBanner } from '@wepublish/banner/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
@@ -31,8 +29,9 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FiMenu, FiPlus, FiSearch } from 'react-icons/fi';
+import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
+
 enum NavbarState {
   Low,
   High,
@@ -60,8 +59,14 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   }
 `;
 
-export const AppBar = styled(MuiAppBar)`
+export const AppBar = styled(MuiAppBar)<{ isMenuOpen?: boolean }>`
   background-color: white;
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      background-color: transparent;
+    `}
 `;
 
 export const NavbarWrapper = styled('nav')`
@@ -97,23 +102,48 @@ const getNavbarState = (
   return [NavbarState.High];
 };
 
-export const NavbarInnerWrapper = styled(Toolbar, {
-  shouldForwardProp: propName => propName !== 'navbarState',
-})<{
-  navbarState: NavbarState[];
-}>`
-  min-height: unset;
-  margin: 0 auto;
-  width: 100%;
-  background-color: ${({ theme }) => theme.palette.background.paper};
-  transform: translate3d(0, 0, 0);
-  transition: aspect-ratio 300ms ease-out;
-  max-width: 1333px;
-  container: toolbar/inline-size;
-  position: relative;
-  box-sizing: border-box;
-  aspect-ratio: var(--changing-aspect-ratio) !important;
+export const navbarButtonStyles = () => css`
+  padding: 0;
+  background-color: black;
+  border-radius: 50%;
+  @container toolbar (width > 200px) {
+    width: 3.917442cqw;
+    height: 3.917442cqw;
+  }
+  > svg {
+    stroke-width: 1.25px;
+    stroke: white;
+    font-size: 2.5cqw;
+  }
+  &:hover {
+    background-color: #f5ff64;
+    > svg {
+      stroke: black;
+    }
+  }
 `;
+
+export const NavbarInstaButton = styled(IconButton)`
+  ${navbarButtonStyles()}
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+  pointer-events: none;
+`;
+
+const FiMenu = styled(FiMenuDefault)`
+  transition: transform 300ms ease-out;
+  transform: rotate(0);
+`;
+
+export const NavbarHamburgerButton = styled(IconButton)`
+  ${navbarButtonStyles()}
+`;
+
+export const NavbarSearchButton = styled(IconButton)`
+  ${navbarButtonStyles()}
+`;
+
+export const NavbarIconButtonWrapper = styled('div')``;
 
 export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
   position: absolute;
@@ -123,64 +153,23 @@ export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
     column-gap: 0.9cqw;
   }
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: repeat(3, min-content);
   align-items: center;
   justify-self: end;
+  pointer-events: all;
+  z-index: 30;
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
-      z-index: -1;
+      ${NavbarInstaButton} {
+        opacity: 1;
+        pointer-events: all;
+      }
+      ${FiMenu} {
+        transform: rotate(90deg);
+      }
     `}
-`;
-
-export const NavbarHamburgerButton = styled(IconButton)`
-  padding: 0;
-  background-color: black;
-  border-radius: 50%;
-  @container toolbar (width > 200px) {
-    width: 3.917442cqw;
-    height: 3.917442cqw;
-  }
-  > svg {
-    stroke-width: 1.25px;
-    stroke: white;
-    font-size: 2.5cqw;
-  }
-  &:hover {
-    background-color: #f5ff64;
-    > svg {
-      stroke: black;
-    }
-  }
-`;
-
-export const NavbarSearchButton = styled(IconButton)`
-  padding: 0;
-  background-color: black;
-  border-radius: 50%;
-  @container toolbar (width > 200px) {
-    width: 3.917442cqw;
-    height: 3.917442cqw;
-  }
-  > svg {
-    stroke-width: 1.25px;
-    stroke: white;
-    font-size: 2.5cqw;
-  }
-  &:hover {
-    background-color: #f5ff64;
-    > svg {
-      stroke: black;
-    }
-  }
-`;
-
-export const NavbarIconButtonWrapper = styled('div')`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 1;
 `;
 
 export const NavbarActions = styled('div', {
@@ -196,7 +185,7 @@ export const NavbarActions = styled('div', {
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
-      z-index: -1;
+      z-index: 20;
     `}
 `;
 
@@ -260,8 +249,6 @@ const TsriLogo = styled('img', {
     !isMenuOpen &&
     css`
       @container toolbar (width > 200px) {
-        //width: 23.3cqw;
-        //width: 18.6cqw;
         width: 21cqw;
       }
     `}
@@ -358,16 +345,20 @@ const PreTitleTab = styled('div')`
 
 const NavbarTabs = styled('div', {
   shouldForwardProp: propName =>
-    propName !== 'navbarState' && propName !== 'isHomePage',
+    propName !== 'navbarState' &&
+    propName !== 'isHomePage' &&
+    propName !== 'isMenuOpen',
 })<{
   navbarState: NavbarState[];
   isHomePage: boolean;
+  isMenuOpen?: boolean;
 }>`
   display: grid;
   grid-template-rows: repeat(2, min-content);
   border-bottom: 0.15cqw solid transparent;
   margin: 0 auto;
   align-self: flex-end;
+  pointer-events: all;
 
   @container toolbar (width > 200px) {
     grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
@@ -376,8 +367,8 @@ const NavbarTabs = styled('div', {
     column-gap: 2.2cqw;
   }
 
-  ${({ navbarState }) =>
-    navbarState.includes(NavbarState.High) &&
+  ${({ navbarState, isMenuOpen }) =>
+    (navbarState.includes(NavbarState.High) || isMenuOpen) &&
     css`
       ${RegisterNewsLetterTab} {
         display: none;
@@ -385,6 +376,14 @@ const NavbarTabs = styled('div', {
 
       ${BecomeMemberTab} {
         grid-row: 2 / 3;
+      }
+    `}
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      ${PreTitleTab} {
+        display: none;
       }
     `}
 
@@ -409,6 +408,42 @@ const HauptstadtOpenInvoices = styled('div')`
   color: ${({ theme }) => theme.palette.error.main};
   font-size: 0.875em;
   font-weight: 600;
+`;
+
+export const NavbarInnerWrapper = styled(Toolbar, {
+  shouldForwardProp: propName =>
+    propName !== 'navbarState' && propName !== 'isMenuOpen',
+})<{
+  navbarState: NavbarState[];
+  isMenuOpen?: boolean;
+}>`
+  min-height: unset !important;
+  margin: 0 auto;
+  width: 100%;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  transition: aspect-ratio 300ms ease-out;
+  max-width: 1333px;
+  container: toolbar/inline-size;
+  position: static;
+  box-sizing: border-box;
+  aspect-ratio: var(--changing-aspect-ratio) !important;
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      background-color: transparent;
+      pointer-events: none;
+
+      ${TsriLogo} {
+        display: none;
+      }
+      ${TsriClaim} {
+        display: none;
+      }
+      ${NavbarTabs} {
+        display: none;
+      }
+    `}
 `;
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
@@ -502,23 +537,22 @@ export function TsriV2Navbar({
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
-  const categories = useMemo(
-    () =>
-      categorySlugs.map(categorySlugArray =>
-        categorySlugArray.reduce((navigations, categorySlug) => {
-          const navItem = data?.navigations?.find(
-            ({ key }) => key === categorySlug
-          );
+  const categories = useMemo(() => {
+    console.log('categorySlugs', categorySlugs);
+    return categorySlugs.map(categorySlugArray =>
+      categorySlugArray.reduce((navigations, categorySlug) => {
+        const navItem = data?.navigations?.find(
+          ({ key }) => key === categorySlug
+        );
 
-          if (navItem) {
-            navigations.push(navItem);
-          }
+        if (navItem) {
+          navigations.push(navItem);
+        }
 
-          return navigations;
-        }, [] as FullNavigationFragment[])
-      ),
-    [categorySlugs, data?.navigations]
-  );
+        return navigations;
+      }, [] as FullNavigationFragment[])
+    );
+  }, [categorySlugs, data?.navigations]);
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -546,14 +580,14 @@ export function TsriV2Navbar({
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarStyles} />
-      {isMenuOpen && forceHideBanner}
-
       <AppBar
-        position="static"
+        isMenuOpen={isMenuOpen}
         elevation={0}
-        color={'transparent'}
       >
-        <NavbarInnerWrapper navbarState={navbarState}>
+        <NavbarInnerWrapper
+          navbarState={navbarState}
+          isMenuOpen={isMenuOpen}
+        >
           <NavbarLoginLink
             href="/"
             aria-label="Startseite"
@@ -583,42 +617,45 @@ export function TsriV2Navbar({
             />
           </NavbarLoginLink>
 
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <NavbarSearchButton
-                size="small"
-                aria-label="Suche"
-                color={'inherit'}
-              >
-                <FiSearch />
-              </NavbarSearchButton>
-            </NavbarIconButtonWrapper>
-            <NavbarIconButtonWrapper>
-              <NavbarHamburgerButton
-                size="small"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <FiMenu />}
-                {isMenuOpen && <FiPlus css={{ transform: 'rotate(45deg)' }} />}
+          <NavbarMain isMenuOpen={isMenuOpen}>
+            <NavbarInstaButton
+              size="small"
+              aria-label="Instagram"
+              color={'inherit'}
+            >
+              <FiInstagram />
+            </NavbarInstaButton>
+            <NavbarSearchButton
+              size="small"
+              aria-label="Suche"
+              color={'inherit'}
+            >
+              <FiSearch />
+            </NavbarSearchButton>
 
-                {hasUnpaidInvoices && profileBtn && (
-                  <HauptstadtOpenInvoices>
-                    <MdWarning size={24} />
+            <NavbarHamburgerButton
+              size="small"
+              aria-label="Menu"
+              onClick={toggleMenu}
+              color={'inherit'}
+            >
+              <FiMenu />
+              {hasUnpaidInvoices && profileBtn && (
+                <HauptstadtOpenInvoices>
+                  <MdWarning size={24} />
 
-                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Abo Jetzt Bezahlen
-                    </Box>
-                  </HauptstadtOpenInvoices>
-                )}
-              </NavbarHamburgerButton>
-            </NavbarIconButtonWrapper>
+                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                    Abo Jetzt Bezahlen
+                  </Box>
+                </HauptstadtOpenInvoices>
+              )}
+            </NavbarHamburgerButton>
           </NavbarMain>
 
           <NavbarTabs
             navbarState={navbarState}
             isHomePage={isHomePage}
+            isMenuOpen={isMenuOpen}
           >
             <PreTitleTab>
               <span>{tabText}</span>
@@ -631,44 +668,44 @@ export function TsriV2Navbar({
             </RegisterNewsLetterTab>
           </NavbarTabs>
         </NavbarInnerWrapper>
+
+        {Boolean(mainItems || categories?.length) && (
+          <NavPaper
+            hasRunningSubscription={hasRunningSubscription}
+            hasUnpaidInvoices={hasUnpaidInvoices}
+            subscribeBtn={subscribeBtn}
+            profileBtn={profileBtn}
+            loginBtn={loginBtn}
+            main={mainItems}
+            categories={categories}
+            closeMenu={toggleMenu}
+            isMenuOpen={isMenuOpen}
+            className={navPaperClassName}
+          >
+            {iconItems?.links.map((link, index) => (
+              <Link
+                key={index}
+                href={navigationLinkToUrl(link)}
+                onClick={() => {
+                  if (controlledIsMenuOpen === undefined) {
+                    setInternalMenuOpen(false);
+                  }
+
+                  onMenuToggle?.(false);
+                }}
+                color="inherit"
+              >
+                <TextToIcon
+                  title={link.label}
+                  size={32}
+                />
+              </Link>
+            ))}
+
+            {children}
+          </NavPaper>
+        )}
       </AppBar>
-
-      {Boolean(mainItems || categories?.length) && (
-        <NavPaper
-          hasRunningSubscription={hasRunningSubscription}
-          hasUnpaidInvoices={hasUnpaidInvoices}
-          subscribeBtn={subscribeBtn}
-          profileBtn={profileBtn}
-          loginBtn={loginBtn}
-          main={mainItems}
-          categories={categories}
-          closeMenu={toggleMenu}
-          isMenuOpen={isMenuOpen}
-          className={navPaperClassName}
-        >
-          {iconItems?.links.map((link, index) => (
-            <Link
-              key={index}
-              href={navigationLinkToUrl(link)}
-              onClick={() => {
-                if (controlledIsMenuOpen === undefined) {
-                  setInternalMenuOpen(false);
-                }
-
-                onMenuToggle?.(false);
-              }}
-              color="inherit"
-            >
-              <TextToIcon
-                title={link.label}
-                size={32}
-              />
-            </Link>
-          ))}
-
-          {children}
-        </NavPaper>
-      )}
     </NavbarWrapper>
   );
 }
@@ -677,47 +714,37 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen: boolean }>`
   padding: 2rem;
-  background: linear-gradient(to bottom, rgb(12 159 237), rgba(12 159 237 0.4));
-  color: ${({ theme }) => theme.palette.primary.contrastText};
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(3)};
-  position: absolute;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, white 40%, rgb(12, 159, 237)),
+    rgb(12, 159, 237)
+  );
+  color: black;
   top: 0;
   left: 0;
   right: 0;
   transform: translate3d(
-    ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-100%')},
     0,
+    ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-100%')},
     0
   );
   transition: transform 300ms ease-in-out;
   overflow-y: scroll;
   max-height: 100vh;
-  padding-bottom: ${({ theme }) => theme.spacing(10)};
-  height: 200px;
-  background: red;
-  z-index: 10;
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(6)};
-      row-gap: ${theme.spacing(12)};
-      grid-template-columns: 1fr 1fr;
-      padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
-    }
-  `}
-`;
-
-export const NavPaperCategory = styled('div')`
+  z-index: 2;
+  height: auto;
   display: grid;
-  gap: ${({ theme }) => theme.spacing(1)};
-  grid-auto-rows: max-content;
+  grid-template-columns: 14.88% auto 25.6%;
+  position: absolute;
 `;
+
+export const NavPaperCategory = styled('div')``;
 
 export const NavPaperName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
   font-size: ${({ theme }) => theme.typography.body2.fontSize};
+  font-size: 3rem !important;
 `;
 
 export const NavPaperSeparator = styled('hr')`
@@ -734,27 +761,48 @@ export const NavPaperSeparator = styled('hr')`
 
 export const NavPaperLinksGroup = styled('div')`
   display: grid;
-  grid-template-columns: 1fr;
-  gap: ${({ theme }) => theme.spacing(3)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('sm')} {
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-  `}
+  column-gap: 2cqw;
+  grid-column: 2 / 3;
+  grid-template-columns: repeat(3, min-content);
 `;
 
-const navPaperLinkStyling = (theme: Theme) => css`
-  ${theme.breakpoints.up('sm')} {
-    border-bottom: 0;
+export const NavPaperCategoryLinksTitle = styled('h6')`
+  font-weight: 700 !important;
+  font-size: 1.675cqw !important;
+  line-height: 2.2cqw !important;
+  color: white;
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 0.3cqw;
+  margin: 0;
+`;
+
+export const NavPaperCategoryLinks = styled('ul')`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: 700 !important;
+  font-size: 1.675cqw !important;
+  line-height: 2.2cqw !important;
+`;
+
+export const NavPaperCategoryLinkItem = styled('li')`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+export const CategoryLink = styled(Link)`
+  color: inherit;
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 0.3cqw;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #f5ff64;
+    text-decoration: none;
   }
-`;
-
-export const NavPaperCategoryLinks = styled('div')`
-  display: grid;
-  grid-auto-rows: max-content;
-  font-weight: ${({ theme }) => theme.typography.fontWeightMedium};
-  font-size: ${({ theme }) => theme.typography.h6.fontSize};
 `;
 
 export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
@@ -763,6 +811,7 @@ export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
   span {
     font-family: inherhit;
   }
+  display: none;
 `;
 
 export const NavPaperChildrenWrapper = styled('div')`
@@ -789,6 +838,12 @@ export const NavPaperActions = styled('div')`
   flex-flow: row wrap;
   gap: ${({ theme }) => theme.spacing(2)};
   margin-top: ${({ theme }) => theme.spacing(5)};
+`;
+
+export const categoryLinkComponent = styled('span')`
+  font-weight: 700 !important;
+  font-size: 1.675cqw !important;
+  line-height: 2.2cqw !important;
 `;
 
 const NavPaper = ({
@@ -820,7 +875,6 @@ const NavPaper = ({
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const { hasUser, logout } = useUser();
-  const theme = useTheme();
 
   const showMenu = true;
 
@@ -833,6 +887,7 @@ const NavPaper = ({
       isMenuOpen={isMenuOpen}
       className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
     >
+      {/*
       {children && (
         <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>
       )}
@@ -858,6 +913,7 @@ const NavPaper = ({
             </Link>
           );
         })}
+
 
         <NavPaperActions>
           {hasUnpaidInvoices && profileBtn && (
@@ -923,6 +979,7 @@ const NavPaper = ({
           )}
         </NavPaperActions>
       </NavPaperMainLinks>
+        */}
 
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
@@ -931,26 +988,20 @@ const NavPaper = ({
 
             {categoryArray.map(nav => (
               <NavPaperCategory key={nav.id}>
+                <H6 component={NavPaperCategoryLinksTitle}>{nav.name}</H6>
                 <NavPaperCategoryLinks>
                   {nav.links?.map((link, index) => {
                     const url = navigationLinkToUrl(link);
 
                     return (
-                      <Link
-                        href={url}
-                        key={index}
-                        color="inherit"
-                        underline="none"
-                        css={navPaperLinkStyling(theme)}
-                        onClick={closeMenu}
-                      >
-                        <H6
-                          component="span"
-                          css={{ fontWeight: '400' }}
+                      <NavPaperCategoryLinkItem key={index}>
+                        <CategoryLink
+                          href={url}
+                          onClick={closeMenu}
                         >
                           {link.label}
-                        </H6>
-                      </Link>
+                        </CategoryLink>
+                      </NavPaperCategoryLinkItem>
                     );
                   })}
                 </NavPaperCategoryLinks>
