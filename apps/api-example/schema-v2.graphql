@@ -1155,12 +1155,6 @@ input ImageGalleryImageInput {
   imageID: String
 }
 
-enum ImageOutput {
-  jpeg
-  png
-  webp
-}
-
 enum ImageRotation {
   Auto
   Rotate0
@@ -1174,8 +1168,6 @@ input ImageTransformation {
   grayscale: Boolean
   height: Int
   negate: Boolean
-  output: ImageOutput
-  quality: Float
   rotation: ImageRotation
   sharpen: Boolean
   width: Int

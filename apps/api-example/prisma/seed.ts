@@ -78,6 +78,7 @@ async function seedImages(prisma: PrismaClient) {
   const mediaAdapter = new NovaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),
     process.env.MEDIA_SERVER_TOKEN,
+    { quality: 1 },
     internalUrl ? new URL(internalUrl) : undefined
   );
 
