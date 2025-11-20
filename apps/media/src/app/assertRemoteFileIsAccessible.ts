@@ -1,4 +1,6 @@
-export async function assertRemoteFileIsAccessible(url): Promise<boolean> {
+export async function assertRemoteFileIsAccessible(
+  url: string
+): Promise<boolean> {
   try {
     const res = await fetch(url, {
       method: 'HEAD',
