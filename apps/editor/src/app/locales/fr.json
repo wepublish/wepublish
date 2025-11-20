@@ -1432,7 +1432,11 @@
       "rangeLastWeek": "Semaine dernière",
       "rangeLastMonth": "Mois dernier",
       "rangeLastQuarter": "Dernier trimestre",
-      "rangeLastYear": "Année dernière"
+      "rangeLastYear": "Année dernière",
+      "rangeNextWeek": "Semaine prochaine",
+      "rangeNextMonth": "Mois prochain",
+      "rangeNextQuarter": "Trimestre prochain",
+      "rangeNextYear": "Année prochaine"
     },
     "audience": {
       "legend": {

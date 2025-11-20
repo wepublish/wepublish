@@ -1534,7 +1534,11 @@
       "rangeLastWeek": "Letzte Woche",
       "rangeLastMonth": "Letzter Monat",
       "rangeLastQuarter": "Letztes Quartal",
-      "rangeLastYear": "Letztes Jahr"
+      "rangeLastYear": "Letztes Jahr",
+      "rangeNextWeek": "Nächste Woche",
+      "rangeNextMonth": "Nächster Monat",
+      "rangeNextQuarter": "Nächstes Quartal",
+      "rangeNextYear": "Nächstes Jahr"
     },
     "audience": {
       "legend": {
