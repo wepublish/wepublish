@@ -7,10 +7,12 @@ import { DailySubscriptionStatsUser } from '@wepublish/editor/api-v2';
 import { useExportSubscriptionsAsCsv } from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TbUserDown } from 'react-icons/tb';
 import {
   Col,
   DateRangePicker,
   Grid,
+  IconButton,
   Panel,
   Radio,
   RadioGroup,
@@ -82,7 +84,7 @@ export function AudienceFilter({
     i18n: { language },
   } = useTranslation();
 
-  const { initDownload, getCsv } = useExportSubscriptionsAsCsv();
+  const { initDownload, getCsv, loading } = useExportSubscriptionsAsCsv();
 
   // load available subscription plans
   const { data: memberPlans } = useMemberPlanListQuery();
@@ -178,7 +180,10 @@ export function AudienceFilter({
     <Grid style={{ width: '100%' }}>
       <Row>
         {/* select date range */}
-        <Col xs={4}>
+        <Col
+          xs={24}
+          xl={4}
+        >
           <RadioGroup
             name="aggregation-picker"
             inline
@@ -193,7 +198,10 @@ export function AudienceFilter({
           </RadioGroup>
         </Col>
 
-        <Col xs={6}>
+        <Col
+          xs={24}
+          xl={6}
+        >
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
@@ -236,7 +244,10 @@ export function AudienceFilter({
         </Col>
 
         {/* filter data */}
-        <Col xs={14}>
+        <Col
+          xs={24}
+          xl={14}
+        >
           <Panel
             header={t('audienceFilter.panelHeader')}
             bordered
@@ -244,15 +255,32 @@ export function AudienceFilter({
             <Row>
               {Object.keys(clientFilter).map((filterKey, filterIndex) => (
                 <Col
-                  xs={12}
+                  xs={24}
+                  xl={12}
                   key={`client-filter-${filterIndex}`}
                 >
-                  <AudienceFilterToggle
-                    filterKey={filterKey as keyof AudienceClientFilter}
-                    clientFilter={clientFilter}
-                    setClientFilter={setClientFilter}
-                  />
-                  <button onClick={() => handleClick(filterKey)}>CSV</button>
+                  <Row>
+                    <Col
+                      xl={16}
+                      xs={9}
+                    >
+                      <AudienceFilterToggle
+                        filterKey={filterKey as keyof AudienceClientFilter}
+                        clientFilter={clientFilter}
+                        setClientFilter={setClientFilter}
+                      />
+                    </Col>
+                    <Col
+                      xl={8}
+                      xs={15}
+                    >
+                      <IconButton
+                        icon={<TbUserDown />}
+                        loading={loading}
+                        onClick={() => handleClick(filterKey)}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
               ))}
             </Row>
