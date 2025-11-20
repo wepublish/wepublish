@@ -1,7 +1,6 @@
 import {
   FullMemberPlanFragment,
   FullPaymentFragment,
-  usePageLazyQuery,
   usePayInvoiceMutation,
   useSubscribeMutation,
   useUpgradeMutation,
@@ -24,7 +23,6 @@ export const useSubscribe = (
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [fetchPage] = usePageLazyQuery();
   const [result] = useSubscribeMutation({
     ...params[0],
   });
@@ -34,27 +32,12 @@ export const useSubscribe = (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const [{ data: successPage }, { data: failPage }] = await Promise.all([
-        memberPlan?.successPageId ?
-          fetchPage({
-            variables: {
-              id: memberPlan.successPageId,
-            },
-          })
-        : { data: undefined },
-        memberPlan?.failPageId ?
-          fetchPage({
-            variables: {
-              id: memberPlan.failPageId,
-            },
-          })
-        : { data: undefined },
-      ]);
-
       const successUrl = relativeToAbsolute(
-        successPage?.page?.url ?? '/profile'
+        memberPlan?.successPage?.url ?? '/profile'
       );
-      const failUrl = relativeToAbsolute(failPage?.page?.url ?? '/profile');
+      const failUrl = relativeToAbsolute(
+        memberPlan?.failPage?.url ?? '/profile'
+      );
 
       setRedirectPages({
         successUrl,
@@ -84,7 +67,7 @@ export const useSubscribe = (
           (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
       });
     },
-    [fetchPage, result]
+    [result]
   );
 
   return [callback, redirectPages, stripeClientSecret] as const;
@@ -96,7 +79,6 @@ export const useUpgrade = (
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
 
-  const [fetchPage] = usePageLazyQuery();
   const [result] = useUpgradeMutation({
     ...params[0],
   });
@@ -106,27 +88,12 @@ export const useUpgrade = (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const [{ data: successPage }, { data: failPage }] = await Promise.all([
-        memberPlan?.successPageId ?
-          fetchPage({
-            variables: {
-              id: memberPlan.successPageId,
-            },
-          })
-        : { data: undefined },
-        memberPlan?.failPageId ?
-          fetchPage({
-            variables: {
-              id: memberPlan.failPageId,
-            },
-          })
-        : { data: undefined },
-      ]);
-
       const successUrl = relativeToAbsolute(
-        successPage?.page?.url ?? '/profile'
+        memberPlan?.successPage?.url ?? '/profile'
       );
-      const failUrl = relativeToAbsolute(failPage?.page?.url ?? '/profile');
+      const failUrl = relativeToAbsolute(
+        memberPlan?.failPage?.url ?? '/profile'
+      );
 
       setRedirectPages({
         successUrl,
@@ -156,7 +123,7 @@ export const useUpgrade = (
           (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
       });
     },
-    [fetchPage, result]
+    [result]
   );
 
   return [callback, redirectPages, stripeClientSecret] as const;
@@ -167,7 +134,6 @@ export const usePayInvoice = (
 ) => {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [redirectPages, setRedirectPages] = useState<RedirectPages>();
-  const [fetchPage] = usePageLazyQuery();
 
   const [result] = usePayInvoiceMutation({
     ...params[0],
@@ -178,27 +144,10 @@ export const usePayInvoice = (
       memberPlan: FullMemberPlanFragment | undefined | null,
       ...callbackParams: Parameters<typeof result>
     ) => {
-      const [{ data: successPage }, { data: failPage }] = await Promise.all([
-        memberPlan?.successPageId ?
-          fetchPage({
-            variables: {
-              id: memberPlan.successPageId,
-            },
-          })
-        : { data: undefined },
-        memberPlan?.failPageId ?
-          fetchPage({
-            variables: {
-              id: memberPlan.failPageId,
-            },
-          })
-        : { data: undefined },
-      ]);
-
       const successUrl =
-        successPage?.page?.url ?? window.location.origin + '/profile';
+        memberPlan?.successPage?.url ?? window.location.origin + '/profile';
       const failUrl =
-        failPage?.page?.url ?? window.location.origin + '/profile';
+        memberPlan?.failPage?.url ?? window.location.origin + '/profile';
 
       setRedirectPages({
         successUrl,
@@ -228,7 +177,7 @@ export const usePayInvoice = (
           (window.location.href = `${failUrl}?error=${encodeURIComponent(error.message)}`),
       });
     },
-    [fetchPage, result]
+    [result]
   );
 
   return [callback, redirectPages, stripeClientSecret] as const;

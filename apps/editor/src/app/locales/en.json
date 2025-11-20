@@ -1711,7 +1711,8 @@
         "addBypass": "add",
         "qrCodeTitle": "QR Code for Bypass Token",
         "downloadSvg": "Download SVG",
-        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch"
+        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch",
+        "upgrade": "Texts when paywall allows and supports upgrading"
       },
       "overview": {
         "areYouSure": "Are you sure?",

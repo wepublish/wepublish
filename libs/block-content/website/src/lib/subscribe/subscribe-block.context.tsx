@@ -4,7 +4,10 @@ import {
   useSubscribe,
   useUpgrade,
 } from '@wepublish/payment/website';
-import { useUpgradeSubscriptionInfoLazyQuery } from '@wepublish/website/api';
+import {
+  useResubscribeMutation,
+  useUpgradeSubscriptionInfoLazyQuery,
+} from '@wepublish/website/api';
 import { BuilderSubscribeProps } from '@wepublish/website/builder';
 
 import { ComponentProps, createContext, useContext } from 'react';
@@ -16,6 +19,7 @@ export type SubscribeBlockContextProps = {
 
   subscribe: ReturnType<typeof useSubscribe>[0];
   upgrade: ReturnType<typeof useUpgrade>[0];
+  resubscribe: ReturnType<typeof useResubscribeMutation>;
   upgradeInfo: ReturnType<typeof useUpgradeSubscriptionInfoLazyQuery>;
   register: ReturnType<typeof useRegister>['register'];
 

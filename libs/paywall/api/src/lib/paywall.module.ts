@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
 import { PaywallService } from './paywall.service';
@@ -10,7 +10,7 @@ import {
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
-  imports: [PrismaModule, MemberPlanModule],
+  imports: [PrismaModule, forwardRef(() => MemberPlanModule)],
   providers: [
     PaywallDataloaderService,
     PaywallService,

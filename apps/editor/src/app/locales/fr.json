@@ -1529,7 +1529,8 @@
         "addBypass": "Ajouter",
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
-        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch",
+        "upgrade": "Textes lorsque le paywall permet et prend en charge la mise à niveau"
       },
       "overview": {
         "areYouSure": "Êtes-vous sûr ?",

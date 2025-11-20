@@ -6,6 +6,8 @@ fragment FullPaywall on Paywall {
   description
   circumventDescription
   alternativeSubscribeUrl
+  upgradeDescription
+  upgradeCircumventDescription
   memberPlans {
     id
   }

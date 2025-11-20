@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
 import { CreatePaywallInput, UpdatePaywallInput } from './paywall.model';
-import { MemberPlanDataloader } from '@wepublish/member-plan/api';
 
 @Injectable()
 export class PaywallService {
@@ -38,6 +37,9 @@ export class PaywallService {
         ...input,
         description: input.description as any[],
         circumventDescription: input.circumventDescription as any[],
+        upgradeDescription: input.upgradeDescription as any[],
+        upgradeCircumventDescription:
+          input.upgradeCircumventDescription as any[],
         memberPlans: {
           createMany: {
             data: memberPlanIds.map(memberPlanId => ({
@@ -71,6 +73,9 @@ export class PaywallService {
         ...input,
         description: input.description as any[],
         circumventDescription: input.circumventDescription as any[],
+        upgradeDescription: input.upgradeDescription as any[],
+        upgradeCircumventDescription:
+          input.upgradeCircumventDescription as any[],
         memberPlans:
           memberPlanIds ?
             {
@@ -116,7 +121,7 @@ export class PaywallService {
     });
   }
 
-  @PrimeDataLoader(MemberPlanDataloader)
+  // @PrimeDataLoader(MemberPlanDataloader)
   public getPaywallMemberplans(id: string) {
     return this.prisma.memberPlan.findMany({
       where: {

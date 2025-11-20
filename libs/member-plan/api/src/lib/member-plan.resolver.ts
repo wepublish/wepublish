@@ -22,13 +22,16 @@ import { MemberPlanService } from './member-plan.service';
 import { MemberPlanDataloader } from './member-plan.dataloader';
 import { hasPermission } from '@wepublish/permissions/api';
 import { CanGetMemberPlan, CanGetMemberPlans } from '@wepublish/permissions';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject } from '@nestjs/common';
+import { Page, PageDataloaderService } from '@wepublish/page/api';
 
 @Resolver(() => MemberPlan)
 export class MemberPlanResolver {
   constructor(
     private memberPlanService: MemberPlanService,
-    private memberPlanDataloader: MemberPlanDataloader
+    private memberPlanDataloader: MemberPlanDataloader,
+    @Inject(forwardRef(() => PageDataloaderService))
+    private pageDataloader: PageDataloaderService
   ) {}
 
   @Public()
@@ -90,5 +93,26 @@ export class MemberPlanResolver {
     );
 
     return canManage ? parent.externalReward : null;
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async successPage(@Parent() parent: MemberPlan) {
+    return parent.successPageId ?
+        this.pageDataloader.load(parent.successPageId)
+      : null;
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async failPage(@Parent() parent: MemberPlan) {
+    return parent.failPageId ?
+        this.pageDataloader.load(parent.failPageId)
+      : null;
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async confirmationPage(@Parent() parent: MemberPlan) {
+    return parent.confirmationPageId ?
+        this.pageDataloader.load(parent.confirmationPageId)
+      : null;
   }
 }

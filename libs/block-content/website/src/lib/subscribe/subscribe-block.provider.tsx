@@ -6,6 +6,7 @@ import {
   useSubscriptionsQuery,
   useInvoicesQuery,
   useUpgradeSubscriptionInfoLazyQuery,
+  useResubscribeMutation,
 } from '@wepublish/website/api';
 import { useSubscribe, useUpgrade } from '@wepublish/payment/website';
 
@@ -26,6 +27,7 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
     fetchPolicy: 'cache-first',
   });
   const { register, challenge } = useRegister();
+  const resubscribe = useResubscribeMutation();
 
   return (
     <SubscribeBlockContext.Provider
@@ -40,6 +42,7 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
           subscribeStripeClientSecret ?? upgradeStripeClientSecret,
         register,
         challenge,
+        resubscribe,
       }}
     >
       {children}

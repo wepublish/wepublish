@@ -39,19 +39,19 @@ fragment FullMemberPlan on MemberPlan {
   extendable
   productType
   successPageId
-  # successPage {
-  #   url
-  # }
+  successPage {
+    url
+  }
 
   failPageId
-  # failPage {
-  #   url
-  # }
+  failPage {
+    url
+  }
 
   confirmationPageId
-  # confirmationPage {
-  #   url
-  # }
+  confirmationPage {
+    url
+  }
 }
 
 fragment FullPayment on Payment {

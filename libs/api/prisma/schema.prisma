@@ -1441,9 +1441,13 @@ model Paywall {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                    String? @unique
-  description             Json?
-  circumventDescription   Json?
+  name String? @unique
+
+  description                  Json?
+  upgradeDescription           Json?
+  circumventDescription        Json?
+  upgradeCircumventDescription Json?
+
   anyMemberPlan           Boolean @default(false)
   active                  Boolean @default(true)
   alternativeSubscribeUrl String?

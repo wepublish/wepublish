@@ -56,6 +56,16 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
       texts={{
         subscribe: canUpgrade ? 'Jetzt Abo Upgraden' : undefined,
       }}
+      description={
+        canUpgrade ?
+          (props.upgradeDescription ?? props.description)
+        : props.description
+      }
+      circumventDescription={
+        canUpgrade ?
+          (props.upgradeCircumventDescription ?? props.circumventDescription)
+        : props.circumventDescription
+      }
     />
   );
 })`

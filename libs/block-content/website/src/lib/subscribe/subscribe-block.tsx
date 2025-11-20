@@ -28,6 +28,7 @@ export const SubscribeBlock = ({
   const {
     register: [register],
     subscribe,
+    resubscribe: [resubscribe],
     upgrade,
     upgradeInfo: [fetchUpgradeInfo, upgradeInfo],
     stripeClientSecret,
@@ -36,7 +37,7 @@ export const SubscribeBlock = ({
   } = useSubscribeBlock();
   const { userSubscriptions } = subscribeProps;
   const {
-    query: { upgradeSubscriptionId },
+    query: { upgradeSubscriptionId, deactivateSubscriptionId, userId },
   } = useContext(BuilderRouterContext);
 
   const subscriptionToUpgrade = useMemo(() => {
@@ -128,6 +129,21 @@ export const SubscribeBlock = ({
               throw result.errors;
             }
           }}
+          onResubscribe={async formData => {
+            const selectedMemberplan = memberPlans.find(
+              mb => mb.id === formData.memberPlanId
+            );
+
+            await resubscribe({
+              variables: formData,
+              async onCompleted() {
+                window.location.href =
+                  selectedMemberplan?.confirmationPage?.url ?? '';
+              },
+            });
+          }}
+          deactivateSubscriptionId={deactivateSubscriptionId as string}
+          returningUserId={userId as string}
         />
       )}
 

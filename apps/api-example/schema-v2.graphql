@@ -1302,11 +1302,13 @@ type MemberPlan implements HasImage {
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
   description: RichText
   extendable: Boolean!
   externalReward: String
+  failPage: Page
   failPageId: String
   id: String!
   image: Image
@@ -1316,6 +1318,7 @@ type MemberPlan implements HasImage {
   productType: ProductType!
   shortDescription: RichText
   slug: String!
+  successPage: Page
   successPageId: String
   tags: [String!]
 }
@@ -1378,7 +1381,7 @@ type Mutation {
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]!, name: String): Paywall!
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1523,7 +1526,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!], name: String): Paywall!
+  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1796,6 +1799,8 @@ type Paywall {
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String
+  upgradeCircumventDescription: RichText
+  upgradeDescription: RichText
 }
 
 type PaywallBypass {

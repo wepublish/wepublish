@@ -1384,11 +1384,13 @@ export type MemberPlan = HasImage & {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
+  failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -1398,6 +1400,7 @@ export type MemberPlan = HasImage & {
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
+  successPage?: Maybe<Page>;
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
@@ -1709,6 +1712,8 @@ export type MutationCreatePaywallArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   memberPlanIds: Array<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -2045,6 +2050,8 @@ export type MutationUpdatePaywallArgs = {
   id: Scalars['String'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   name?: InputMaybe<Scalars['String']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -2364,6 +2371,8 @@ export type Paywall = {
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
+  upgradeCircumventDescription?: Maybe<Scalars['RichText']>;
+  upgradeDescription?: Maybe<Scalars['RichText']>;
 };
 
 export type PaywallBypass = {
