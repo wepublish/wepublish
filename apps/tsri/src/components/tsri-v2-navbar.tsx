@@ -5,7 +5,6 @@ import {
   css,
   GlobalStyles,
   Toolbar,
-  useTheme,
 } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
@@ -86,10 +85,9 @@ export const NavbarWrapper = styled('nav')`
 const getNavbarState = (
   isScrolled: boolean,
   scrollDirection: ScrollDirection,
-  isMenuOpen: boolean,
   hasActiveSubscription: boolean
 ): NavbarState[] => {
-  if (isMenuOpen || !isScrolled) {
+  if (!isScrolled) {
     return [NavbarState.Low];
   }
 
@@ -126,7 +124,7 @@ export const navbarButtonStyles = () => css`
 export const NavbarInstaButton = styled(IconButton)`
   ${navbarButtonStyles()}
   opacity: 0;
-  transition: opacity 300ms ease-out;
+  transition: opacity 300ms ease-in-out;
   pointer-events: none;
 `;
 
@@ -146,16 +144,18 @@ export const NavbarSearchButton = styled(IconButton)`
 export const NavbarIconButtonWrapper = styled('div')``;
 
 export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
-  position: absolute;
+  grid-column: 2 / 3;
+  grid-row: -1 / 1;
+
   @container toolbar (width > 200px) {
-    top: 1.3cqw;
-    right: 2.5cqw;
+    margin: 1.3cqw 2.5cqw 0 0;
     column-gap: 0.9cqw;
   }
   display: grid;
   grid-template-columns: repeat(3, min-content);
   align-items: center;
   justify-self: end;
+  align-self: flex-start;
   pointer-events: all;
   z-index: 30;
 
@@ -189,28 +189,24 @@ export const NavbarActions = styled('div', {
     `}
 `;
 
-export const NavbarLoginLink = styled(Link, {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
-})<{ isMenuOpen: boolean }>`
+export const NavbarLoginLink = styled(Link)`
   color: unset;
+  position: relative;
+  grid-column: 1 / 2;
+  grid-row: -1 / 1;
+  align-self: flex-start;
   display: grid;
   align-items: center;
   justify-items: center;
   justify-self: left;
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
+  visibility: visible;
+  transition: visibility 300ms ease-in-out;
 `;
 
 const TsriLogo = styled('img', {
   shouldForwardProp: propName =>
-    propName !== 'isScrolled' &&
-    propName !== 'isMenuOpen' &&
-    propName !== 'isHomePage',
-})<{ isScrolled?: boolean; isMenuOpen?: boolean; isHomePage?: boolean }>`
+    propName !== 'isScrolled' && propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isHomePage?: boolean }>`
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
@@ -224,9 +220,8 @@ const TsriLogo = styled('img', {
   }
 
   // scrolled --> blue logo, smaller
-  ${({ isScrolled, isMenuOpen }) =>
+  ${({ isScrolled }) =>
     isScrolled &&
-    !isMenuOpen &&
     css`
       @container toolbar (width > 200px) {
         width: 18.6cqw;
@@ -243,10 +238,9 @@ const TsriLogo = styled('img', {
     `}
 
   // on home page, scrolled --> black logo, smaller
-  ${({ isScrolled, isMenuOpen, isHomePage }) =>
+  ${({ isScrolled, isHomePage }) =>
     isHomePage &&
     isScrolled &&
-    !isMenuOpen &&
     css`
       @container toolbar (width > 200px) {
         width: 21cqw;
@@ -256,10 +250,8 @@ const TsriLogo = styled('img', {
 
 const TsriClaim = styled('img', {
   shouldForwardProp: propName =>
-    propName !== 'isScrolled' &&
-    propName !== 'isMenuOpen' &&
-    propName !== 'isHomePage',
-})<{ isScrolled?: boolean; isMenuOpen?: boolean; isHomePage?: boolean }>`
+    propName !== 'isScrolled' && propName !== 'isHomePage',
+})<{ isScrolled?: boolean; isHomePage?: boolean }>`
   transition:
     width 300ms ease-out,
     top 300ms ease-out;
@@ -273,9 +265,8 @@ const TsriClaim = styled('img', {
     left: 2cqw;
   }
 
-  ${({ theme, isScrolled, isMenuOpen }) =>
+  ${({ isScrolled }) =>
     isScrolled &&
-    !isMenuOpen &&
     css`
       @container toolbar (width > 200px) {
         //width: 18.61cqw;
@@ -345,13 +336,10 @@ const PreTitleTab = styled('div')`
 
 const NavbarTabs = styled('div', {
   shouldForwardProp: propName =>
-    propName !== 'navbarState' &&
-    propName !== 'isHomePage' &&
-    propName !== 'isMenuOpen',
+    propName !== 'navbarState' && propName !== 'isHomePage',
 })<{
   navbarState: NavbarState[];
   isHomePage: boolean;
-  isMenuOpen?: boolean;
 }>`
   display: grid;
   grid-template-rows: repeat(2, min-content);
@@ -359,6 +347,10 @@ const NavbarTabs = styled('div', {
   margin: 0 auto;
   align-self: flex-end;
   pointer-events: all;
+  grid-column: -1 / 1;
+  grid-row: -1 / 1;
+  visibility: visible;
+  transition: visibility 300ms ease-in-out;
 
   @container toolbar (width > 200px) {
     grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
@@ -367,8 +359,8 @@ const NavbarTabs = styled('div', {
     column-gap: 2.2cqw;
   }
 
-  ${({ navbarState, isMenuOpen }) =>
-    (navbarState.includes(NavbarState.High) || isMenuOpen) &&
+  ${({ navbarState }) =>
+    navbarState.includes(NavbarState.High) &&
     css`
       ${RegisterNewsLetterTab} {
         display: none;
@@ -376,14 +368,6 @@ const NavbarTabs = styled('div', {
 
       ${BecomeMemberTab} {
         grid-row: 2 / 3;
-      }
-    `}
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      ${PreTitleTab} {
-        display: none;
       }
     `}
 
@@ -420,13 +404,17 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   min-height: unset !important;
   margin: 0 auto;
   width: 100%;
-  background-color: ${({ theme }) => theme.palette.background.paper};
-  transition: aspect-ratio 300ms ease-out;
+  background-color: white;
   max-width: 1333px;
   container: toolbar/inline-size;
   position: static;
   box-sizing: border-box;
   aspect-ratio: var(--changing-aspect-ratio) !important;
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  transition:
+    background-color 100ms ease-out 200ms,
+    aspect-ratio 300ms ease-out;
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -434,14 +422,11 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       background-color: transparent;
       pointer-events: none;
 
-      ${TsriLogo} {
-        display: none;
-      }
-      ${TsriClaim} {
-        display: none;
+      ${NavbarLoginLink} {
+        visibility: hidden;
       }
       ${NavbarTabs} {
-        display: none;
+        visibility: hidden;
       }
     `}
 `;
@@ -564,7 +549,6 @@ export function TsriV2Navbar({
   const navbarState = getNavbarState(
     isScrolled,
     scrollDirection,
-    isMenuOpen,
     hasActiveSubscription
   );
 
@@ -591,7 +575,6 @@ export function TsriV2Navbar({
           <NavbarLoginLink
             href="/"
             aria-label="Startseite"
-            isMenuOpen={isMenuOpen}
           >
             <TsriLogo
               src={
@@ -605,14 +588,12 @@ export function TsriV2Navbar({
               }
               alt="Tsüri"
               isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
               isHomePage={isHomePage}
             />
             <TsriClaim
               src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
               alt="Unabhängig, Kritisch, Lokal."
               isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
               isHomePage={isHomePage}
             />
           </NavbarLoginLink>
@@ -655,7 +636,6 @@ export function TsriV2Navbar({
           <NavbarTabs
             navbarState={navbarState}
             isHomePage={isHomePage}
-            isMenuOpen={isMenuOpen}
           >
             <PreTitleTab>
               <span>{tabText}</span>
@@ -713,7 +693,7 @@ export function TsriV2Navbar({
 export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen: boolean }>`
-  padding: 2rem;
+  padding: 0.5cqw 24px 0 24px;
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, white 40%, rgb(12, 159, 237)),
@@ -729,13 +709,31 @@ export const NavPaperWrapper = styled('div', {
     0
   );
   transition: transform 300ms ease-in-out;
-  overflow-y: scroll;
+  overflow-y: hidden;
   max-height: 100vh;
   z-index: 2;
   height: auto;
   display: grid;
-  grid-template-columns: 14.88% auto 25.6%;
+  grid-template-rows: min-content 6cqw;
+  grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
   position: absolute;
+
+  ${NavbarTabs} {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    grid-template-rows: min-content;
+    grid-template-columns: calc(100% - 33.75%) 33.75%;
+    width: 100%;
+    border-bottom: none;
+
+    ${BecomeMemberTab} {
+      font-size: 0.75cqw;
+      line-height: 0.75cqw;
+      padding: 0.5cqw 0.75cqw;
+      border-top-left-radius: 0.5cqw;
+      border-top-right-radius: 0.5cqw;
+    }
+  }
 `;
 
 export const NavPaperCategory = styled('div')``;
@@ -762,14 +760,16 @@ export const NavPaperSeparator = styled('hr')`
 export const NavPaperLinksGroup = styled('div')`
   display: grid;
   column-gap: 2cqw;
+  grid-row: 1 / 2;
   grid-column: 2 / 3;
   grid-template-columns: repeat(3, min-content);
+  margin: 0 0 0 3cqw;
 `;
 
 export const NavPaperCategoryLinksTitle = styled('h6')`
   font-weight: 700 !important;
-  font-size: 1.675cqw !important;
-  line-height: 2.2cqw !important;
+  font-size: min(1.25cqw, 1.4rem) !important;
+  line-height: min(1.66cqw, 1.86rem) !important;
   color: white;
   display: inline-block;
   white-space: nowrap;
@@ -782,8 +782,8 @@ export const NavPaperCategoryLinks = styled('ul')`
   margin: 0;
   padding: 0;
   font-weight: 700 !important;
-  font-size: 1.675cqw !important;
-  line-height: 2.2cqw !important;
+  font-size: min(1.25cqw, 1.4rem) !important;
+  line-height: min(1.66cqw, 1.86rem) !important;
 `;
 
 export const NavPaperCategoryLinkItem = styled('li')`
@@ -980,7 +980,6 @@ const NavPaper = ({
         </NavPaperActions>
       </NavPaperMainLinks>
         */}
-
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
           <NavPaperLinksGroup key={arrayIndex}>
@@ -1009,6 +1008,14 @@ const NavPaper = ({
             ))}
           </NavPaperLinksGroup>
         ))}
+      <NavbarTabs
+        navbarState={[]}
+        isHomePage={false}
+      >
+        <BecomeMemberTab>
+          <a href="#">Member werden</a>
+        </BecomeMemberTab>
+      </NavbarTabs>
     </NavPaperWrapper>
   );
 };
