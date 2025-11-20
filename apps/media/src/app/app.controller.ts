@@ -31,9 +31,11 @@ import 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
+let S3_PUBLIC_URL_IS_CORRECT = false;
 
 @Controller({
   version: '1',
@@ -130,19 +132,22 @@ export class AppController {
       transformations
     );
 
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_PUBLIC_URL_IS_CORRECT) {
+      S3_PUBLIC_URL_IS_CORRECT = await assertRemoteFileIsAccessible(url);
+    }
+
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
-      res.redirect(
-        HTTP_CODE_NOT_FOUND,
-        `${process.env['S3_PUBLIC_HOST']}/${uri}`
-      );
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
       await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
       return;
     } else {
       await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
-    res.redirect(HTTP_CODE_FOUND, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
+    res.redirect(HTTP_CODE_FOUND, url);
   }
 
   @UseGuards(TokenAuthGuard)
