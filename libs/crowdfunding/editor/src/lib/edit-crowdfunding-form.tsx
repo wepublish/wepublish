@@ -73,6 +73,7 @@ export const EditCrowdfundingForm = () => {
     onError: showError,
     onCompleted: data => {
       setCrowdfunding(stripTypename(data.updateCrowdfunding));
+
       if (shouldClose) {
         navigate(closePath);
       }
@@ -85,8 +86,10 @@ export const EditCrowdfundingForm = () => {
       goals: crowdfunding.goals?.map(removeIdAndTypename),
       memberPlans: crowdfunding.memberPlans || [],
       revenue: undefined,
-      activeCrowdfundingGoal: undefined,
+      subscriptions: undefined,
+      activeGoal: undefined,
     };
+
     updateCrowdfunding({ variables: { input: processedCrowdfunding } });
   };
 
@@ -120,7 +123,6 @@ export const EditCrowdfundingForm = () => {
         title={t('crowdfunding.edit.title', {
           crowdfundingName: crowdfunding.name,
         })}
-        loadingTitle={t('crowdfunding.edit.title')}
         saveBtnTitle={t('save')}
         saveAndCloseBtnTitle={t('saveAndClose')}
         closePath={closePath}

@@ -13,5 +13,4 @@ export * from './lib/graphql/sort-order';
 export * from './lib/graphql/max-limit';
 export * from './lib/graphql/paginated-type';
 export * from './lib/graphql/date-comparison';
-export * from './lib/graphql/property';
 export * from './lib/graphql/slug';

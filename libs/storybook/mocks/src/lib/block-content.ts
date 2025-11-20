@@ -18,6 +18,7 @@ import {
   InstagramPostBlock,
   TikTokVideoBlock,
   VimeoVideoBlock,
+  StreamableVideoBlock,
   YouTubeVideoBlock,
   SoundCloudTrackBlock,
   TwitterTweetBlock,
@@ -122,6 +123,7 @@ export const mockBreakBlock = ({
   linkURL,
   text,
 });
+
 export const mockPollBlock = ({
   poll = mockPoll(),
 }: Partial<PollBlock> = {}): PollBlock => ({
@@ -279,6 +281,16 @@ export const mockVimeoVideoBlock = ({
 }: Partial<VimeoVideoBlock> = {}): VimeoVideoBlock => ({
   type: BlockType.VimeoVideo,
   __typename: 'VimeoVideoBlock',
+  blockStyle: null,
+  blockStyleName: null,
+  videoID,
+});
+
+export const mockStreamableVideoBlock = ({
+  videoID = 'abc123',
+}: Partial<StreamableVideoBlock> = {}): StreamableVideoBlock => ({
+  type: BlockType.StreamableVideo,
+  __typename: 'StreamableVideoBlock',
   blockStyle: null,
   blockStyleName: null,
   videoID,

@@ -58,6 +58,7 @@ import {
   BuilderTitleBlockProps,
   BuilderTwitterTweetBlockProps,
   BuilderVimeoVideoBlockProps,
+  BuilderStreamableVideoBlockProps,
   BuilderYouTubeVideoBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderTeaserSlotsBlockProps,
@@ -229,6 +230,7 @@ export type WebsiteBuilderProps = {
     InstagramPost: ComponentType<BuilderInstagramPostBlockProps>;
     TwitterTweet: ComponentType<BuilderTwitterTweetBlockProps>;
     VimeoVideo: ComponentType<BuilderVimeoVideoBlockProps>;
+    StreamableVideo: ComponentType<BuilderStreamableVideoBlockProps>;
     YouTubeVideo: ComponentType<BuilderYouTubeVideoBlockProps>;
     SoundCloudTrack: ComponentType<BuilderSoundCloudTrackBlockProps>;
     PolisConversation: ComponentType<BuilderPolisConversationBlockProps>;
@@ -364,6 +366,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     InstagramPost: NoComponent,
     TwitterTweet: NoComponent,
     VimeoVideo: NoComponent,
+    StreamableVideo: NoComponent,
     YouTubeVideo: NoComponent,
     SoundCloudTrack: NoComponent,
     PolisConversation: NoComponent,

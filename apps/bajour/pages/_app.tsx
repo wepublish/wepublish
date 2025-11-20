@@ -15,6 +15,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -28,19 +29,13 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
-import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -63,23 +58,7 @@ setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator();
 z.setErrorMap(zodI18nMap);
 
 const dateFormatter = (date: Date, includeTime = true) =>

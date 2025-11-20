@@ -15,7 +15,7 @@ import { CommentDataloaderService } from './comment-dataloader.service';
 import { CommentResolver } from './comment.resolver';
 import { CommentService } from './comment.service';
 import { RatingSystemService } from './rating-system/rating-system.service';
-import { TagService } from '@wepublish/tag/api';
+import { CommentTagDataloader } from '@wepublish/tag/api';
 import { Descendant } from 'slate';
 import request from 'supertest';
 import {
@@ -74,26 +74,26 @@ const mockComment: Comment = {
   userRatings: [],
 };
 
-describe('UserConsentResolver', () => {
+describe('CommentResolver', () => {
   let app: INestApplication;
   let commentService: PartialMocked<CommentService>;
   let commentDataloader: PartialMocked<CommentDataloaderService>;
-  let tagService: PartialMocked<TagService>;
   let ratingSystemService: PartialMocked<RatingSystemService>;
   let imageDataloaderService: PartialMocked<ImageDataloaderService>;
   let userDataloaderService: PartialMocked<UserDataloaderService>;
   let articleDataloaderService: PartialMocked<ArticleDataloaderService>;
   let pageDataloaderService: PartialMocked<PageDataloaderService>;
+  let commentTagDataloader: PartialMocked<CommentTagDataloader>;
 
   beforeEach(async () => {
     commentService = createMock(CommentService);
     commentDataloader = createMock(CommentDataloaderService);
-    tagService = createMock(TagService);
     ratingSystemService = createMock(RatingSystemService);
     imageDataloaderService = createMock(ImageDataloaderService);
     userDataloaderService = createMock(UserDataloaderService);
     articleDataloaderService = createMock(ArticleDataloaderService);
     pageDataloaderService = createMock(PageDataloaderService);
+    commentTagDataloader = createMock(CommentTagDataloader);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -121,10 +121,6 @@ describe('UserConsentResolver', () => {
           useValue: commentDataloader,
         },
         {
-          provide: TagService,
-          useValue: tagService,
-        },
-        {
           provide: RatingSystemService,
           useValue: ratingSystemService,
         },
@@ -143,6 +139,10 @@ describe('UserConsentResolver', () => {
         {
           provide: PageDataloaderService,
           useValue: pageDataloaderService,
+        },
+        {
+          provide: CommentTagDataloader,
+          useValue: commentTagDataloader,
         },
       ],
     }).compile();
