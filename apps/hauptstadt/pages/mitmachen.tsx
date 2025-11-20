@@ -4,7 +4,11 @@ import {
   ssrAuthLink,
   SubscribePage,
 } from '@wepublish/utils/website';
-import { getV1ApiClient, PageDocument } from '@wepublish/website/api';
+import {
+  getV1ApiClient,
+  PageDocument,
+  ProductType,
+} from '@wepublish/website/api';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { sortBy } from 'ramda';
@@ -23,6 +27,11 @@ export const MitmachenInner = (props: ComponentProps<typeof SubscribePage>) => {
     <HauptstadtContentFullWidth>
       <SubscribePage
         {...props}
+        filter={memberPlans =>
+          memberPlans.filter(
+            memberPlan => memberPlan.productType === ProductType.Subscription
+          )
+        }
         sort={sortBy(memberPlan => {
           const tag = memberPlan.tags
             ?.find(tag => tag.startsWith('sort-order:'))

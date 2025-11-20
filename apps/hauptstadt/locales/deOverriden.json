@@ -22,6 +22,9 @@
       "payForPeriod": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
       "pay": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
     },
+    "button": {
+      "pay": "{productType, select, Subscription {{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}} other {{formattedAmount}}}"
+    },
     "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
   },
   "subscription": {

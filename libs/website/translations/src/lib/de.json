@@ -41,7 +41,7 @@
     "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
     "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
     "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
-    "cancelConfirmation": "Das {type, select, Donation {Spende} other {Abo}} wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.",
+    "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.}}",
     "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
     "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",

@@ -21,7 +21,7 @@ export const HauptstadtBlockRenderer = (props: BuilderBlockRendererProps) => {
 
   const block =
     isOldRelatedArticles(props.block) ?
-      { ...props.block, numColumns: 3 }
+      ({ ...props.block, numColumns: 3 } as TeaserGridBlock)
     : props.block;
 
   return (
