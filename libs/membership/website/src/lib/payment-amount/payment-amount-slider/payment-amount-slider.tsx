@@ -25,7 +25,16 @@ export const PaymentAmountSlider = forwardRef<
   BuilderPaymentAmountProps
 >(
   (
-    { className, currency, amountPerMonthMin, donate, name, value, onChange },
+    {
+      className,
+      currency,
+      amountPerMonthMin,
+      amountPerMonthMax,
+      donate,
+      name,
+      value,
+      onChange,
+    },
     ref
   ) => {
     const {
@@ -42,7 +51,7 @@ export const PaymentAmountSlider = forwardRef<
             value={value}
             onChange={(_, val) => onChange(val as number)}
             min={amountPerMonthMin}
-            max={amountPerMonthMin * 5}
+            max={amountPerMonthMax ?? amountPerMonthMin * 5}
             valueLabelFormat={val =>
               formatCurrency(val / 100, currency ?? Currency.Chf, locale)
             }

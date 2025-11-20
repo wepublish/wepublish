@@ -253,6 +253,7 @@ type MemberPlan {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthMax: Int
   amountPerMonthTarget: Int
   currency: Currency!
   maxCount: Int
@@ -998,6 +999,7 @@ input MemberPlanInput {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthMax: Int
   amountPerMonthTarget: Int
   currency: Currency!
   extendable: Boolean!

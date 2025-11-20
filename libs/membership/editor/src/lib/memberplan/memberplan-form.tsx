@@ -451,6 +451,31 @@ export function MemberPlanForm({
               </HelpText>
             </Col>
 
+            {/* maximal monthly amount */}
+            <Col xs={12}>
+              <Form.ControlLabel>
+                {t('memberPlanEdit.amountPerMonthMax')}
+              </Form.ControlLabel>
+              <CurrencyInput
+                name="amountPerMonthMax"
+                currency={memberPlan?.currency ?? 'CHF'}
+                centAmount={memberPlan?.amountPerMonthMax ?? null}
+                disabled={loading}
+                onChange={centAmount => {
+                  if (!memberPlan) {
+                    return;
+                  }
+                  setMemberPlan({
+                    ...memberPlan,
+                    amountPerMonthMax: centAmount ?? null,
+                  });
+                }}
+              />
+              <HelpText>
+                {t('memberplanForm.amountPerMonthMaxHelpText')}
+              </HelpText>
+            </Col>
+
             {/* target monthly amount */}
             <Col xs={12}>
               <Form.ControlLabel>

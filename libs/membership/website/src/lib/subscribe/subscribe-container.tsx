@@ -39,7 +39,6 @@ export type SubscribeContainerProps<
     | 'transactionFee'
     | 'transactionFeeText'
     | 'returningUserId'
-    | 'hidePaymentAmount'
   > & {
     sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[];
     filter?: (
