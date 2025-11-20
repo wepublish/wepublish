@@ -4,10 +4,19 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SessionWithTokenWithoutUser,
+  useSubscriptionsQuery,
+} from '@wepublish/website/api';
 import { MemberPlanListQueryVariables } from '@wepublish/website/api';
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
-import { SubscribeContainer } from '@wepublish/membership/website';
+import {
+  AuthTokenStorageKey,
+  useUser,
+} from '@wepublish/authentication/website';
+import {
+  SubscribeContainer,
+  UpgradeContainer,
+} from '@wepublish/membership/website';
 import {
   getV1ApiClient,
   LoginWithJwtDocument,
@@ -18,7 +27,7 @@ import {
   InvoicesDocument,
   addClientCacheToV1Props,
 } from '@wepublish/website/api';
-import { ComponentProps } from 'react';
+import { ComponentProps, useMemo } from 'react';
 
 type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>;
 
@@ -31,46 +40,94 @@ export function SubscribePage(props: SubscribePageProps) {
       mail,
       lastName,
       deactivateSubscriptionId,
+      upgradeSubscriptionId,
       userId,
     },
   } = useRouter();
 
+  const { hasUser } = useUser();
+
+  const userSubscriptions = useSubscriptionsQuery({
+    fetchPolicy: 'cache-only',
+    skip: !hasUser,
+  });
+
+  const subscriptionToUpgrade = useMemo(() => {
+    return userSubscriptions.data?.subscriptions.find(
+      subscription => subscription.id === upgradeSubscriptionId
+    );
+  }, [upgradeSubscriptionId, userSubscriptions.data?.subscriptions]);
+
   return (
-    <SubscribeContainer
-      {...props}
-      defaults={{
-        email: mail as string | undefined,
-        firstName: firstName as string | undefined,
-        name: lastName as string | undefined,
-        memberPlanSlug: memberPlanBySlug as string | undefined,
-        ...props.defaults,
-      }}
-      filter={memberPlans => {
-        const parentFiltered = props.filter?.(memberPlans) ?? memberPlans;
+    <>
+      {!subscriptionToUpgrade && (
+        <SubscribeContainer
+          {...props}
+          defaults={{
+            email: mail as string | undefined,
+            firstName: firstName as string | undefined,
+            name: lastName as string | undefined,
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+            ...props.defaults,
+          }}
+          filter={memberPlans => {
+            const parentFiltered = props.filter?.(memberPlans) ?? memberPlans;
 
-        const preselectedMemberPlan = parentFiltered.find(
-          ({ slug }) => slug === memberPlanBySlug
-        );
+            const preselectedMemberPlan = parentFiltered.find(
+              ({ slug }) => slug === memberPlanBySlug
+            );
 
-        if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
-          return parentFiltered.filter(
-            memberPlan =>
-              memberPlan.amountPerMonthMin >=
-                preselectedMemberPlan.amountPerMonthMin ||
-              memberPlan === preselectedMemberPlan
-          );
-        }
+            if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
+              return parentFiltered.filter(
+                memberPlan =>
+                  memberPlan.amountPerMonthMin >=
+                    preselectedMemberPlan.amountPerMonthMin ||
+                  memberPlan === preselectedMemberPlan
+              );
+            }
 
-        return preselectedMemberPlan && additionalMemberPlans !== 'all' ?
-            [preselectedMemberPlan]
-          : parentFiltered;
-      }}
-      deactivateSubscriptionId={
-        props.deactivateSubscriptionId ??
-        (deactivateSubscriptionId as string | undefined)
-      }
-      returningUserId={userId as string | undefined}
-    />
+            return preselectedMemberPlan && additionalMemberPlans !== 'all' ?
+                [preselectedMemberPlan]
+              : parentFiltered;
+          }}
+          deactivateSubscriptionId={
+            props.deactivateSubscriptionId ??
+            (deactivateSubscriptionId as string | undefined)
+          }
+          returningUserId={userId as string | undefined}
+        />
+      )}
+
+      {subscriptionToUpgrade && (
+        <UpgradeContainer
+          {...props}
+          defaults={{
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+          }}
+          filter={memberPlans => {
+            const parentFiltered = props.filter?.(memberPlans) ?? memberPlans;
+
+            const preselectedMemberPlan = parentFiltered.find(
+              ({ slug }) => slug === memberPlanBySlug
+            );
+
+            if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
+              return parentFiltered.filter(
+                memberPlan =>
+                  memberPlan.amountPerMonthMin >=
+                    preselectedMemberPlan.amountPerMonthMin ||
+                  memberPlan === preselectedMemberPlan
+              );
+            }
+
+            return preselectedMemberPlan && additionalMemberPlans !== 'all' ?
+                [preselectedMemberPlan]
+              : parentFiltered;
+          }}
+          upgradeSubscriptionId={upgradeSubscriptionId as string}
+        />
+      )}
+    </>
   );
 }
 

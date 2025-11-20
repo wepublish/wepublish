@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { SessionService } from './session.service';
 import { UserService } from '@wepublish/user/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { MemberRegistrationInput } from './register.model';
 import { Validator } from './validator';
-import { InternalError } from '@wepublish/api';
 import crypto from 'crypto';
 import { UserEvent } from '@prisma/client';
 import { logger } from '@wepublish/utils/api';
@@ -42,7 +41,8 @@ export class RegisterService {
         'Could not create new user for email "%s"',
         email
       );
-      throw new InternalError();
+
+      throw new InternalServerErrorException();
     }
 
     const externalMailTemplateId = await this.mailContext.getUserTemplateName(
