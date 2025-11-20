@@ -35,7 +35,7 @@ import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
-let S3_PUBLIC_URL_IS_CORRECT = false;
+let S3_HOST_CHECKED = false;
 
 @Controller({
   version: '1',
@@ -101,8 +101,6 @@ export class AppController {
     // Check if image is cached
     const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
-    res.setHeader('Content-Type', 'image/webp');
-
     if (process.env['NODE_ENV'] === 'production') {
       // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
@@ -134,8 +132,8 @@ export class AppController {
 
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
 
-    if (!S3_PUBLIC_URL_IS_CORRECT) {
-      S3_PUBLIC_URL_IS_CORRECT = await assertRemoteFileIsAccessible(url);
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
     }
 
     if (!exists) {
