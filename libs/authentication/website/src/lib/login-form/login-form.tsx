@@ -8,6 +8,7 @@ import {
 } from '@wepublish/website/builder';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -60,6 +61,7 @@ export function LoginForm({
   const {
     elements: { Alert, TextField },
   } = useWebsiteBuilder();
+  const { t } = useTranslation();
 
   type FormInput = z.infer<typeof loginFormSchema>;
   const { handleSubmit, control, watch, setValue } = useForm<FormInput>({
@@ -156,10 +158,9 @@ export function LoginForm({
 
         {loginLinkSent && (
           <Alert severity="success">
-            Falls ein Account unter der Email &quot;
-            {loginWithEmail.data?.sendWebsiteLogin}&quot; besteht, sollte bald
-            ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment
-            dauern. Bitte prüfe auch deinen Spam-Ordner.
+            {t('login.alertLoginLinkSent', {
+              email: loginWithEmail.data?.sendWebsiteLogin,
+            })}
           </Alert>
         )}
 

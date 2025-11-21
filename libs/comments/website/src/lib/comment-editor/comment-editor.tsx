@@ -491,7 +491,7 @@ export const CommentEditor = ({
                   css={newAccountsHeadingStyles}
                   gutterBottom={true}
                 >
-                  Noch kein Account?
+                  Noch keinen Account?
                 </H3>
                 <Register>
                   <Button
