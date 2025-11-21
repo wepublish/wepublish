@@ -28,7 +28,7 @@ export default function PageBySlugOrId() {
 
 //export const getStaticPaths = getPagePathsBasedOnPage('');
 
-export const getStaticPaths = async () => '';
+export const getStaticPaths = async () => [];
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
